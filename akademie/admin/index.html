@@ -330,9 +330,13 @@
           <!-- Start koučinku (dávka 9, 15. 9. 2026). Nepovinný: prázdné pole = na sloupec
                se nesahá a `client-remind` bere jako dosud datum pozvánky. -->
           <input type="date" id="kiStart" title="Start koučinku (nepovinné)" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
+          <!-- Konec zaplaceného období (22. 9. 2026). Nepovinný, ale bez něj se klientovi
+               appka po konci NEZAVŘE sama: automat `koucink-konec` jede výhradně podle
+               tohohle data. Prázdné pole = na sloupec se nesahá. -->
+          <input type="date" id="kiKonec" title="Konec koučinku (nepovinné, ale bez něj se appka sama nezavře)" style="background:#1a130c;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 11px;color:#ece4d9;font-family:inherit;font-size:.88rem;">
           <button class="mlogbtn" id="kiSend">📨 Zapnout přístup + poslat mail</button>
         </div>
-        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména, zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.<br>Start koučinku je nepovinný. Když ho vyplníš, první výzva k týdennímu reportu přijde klientovi až po prvním týdnu od startu; když ho necháš prázdný, systém bere datum pozvánky.</p>
+        <p class="muted" style="margin:.4rem 0 0;font-size:.78rem;">Oslovení se předvyplní z jména, zkontroluj 5. pád, jde přepsat. Mail odejde hned po kliknutí.<br>Start koučinku je nepovinný. Když ho vyplníš, první výzva k týdennímu reportu přijde klientovi až po prvním týdnu od startu; když ho necháš prázdný, systém bere datum pozvánky.<br>Konec koučinku je taky nepovinný, ale rozhoduje o automatu: když ho vyplníš, appka se klientovi po uplynutí období zavře sama a přijde mu rozloučení. Prázdný konec znamená ruční ukončení.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:.7rem 0 .2rem;">
           <span class="muted" style="font-size:.85rem;font-weight:700;">📁 Dokument pro VŠECHNY klienty:</span>
           <input type="file" id="kiSharedFile" style="font-size:.82rem;color:#b7ab9b;max-width:250px;">
@@ -725,6 +729,15 @@
            : d==='prilis_stare' ? 'je víc než rok zpátky, zkontroluj rok.'
            : 'nepodařilo se ho přečíst.';
     }
+    // ⛔ VLASTNÍ PŘEKLAD, NE `kdStartDuvod`. Konec má jiné meze než start (dva roky
+    // dopředu místo 90 dní), takže sdílená hláška by Martinovi řekla nepravdu.
+    function kdKonecDuvod(d){
+      return d==='tvar_RRRR-MM-DD' ? 'zadej datum v kalendáři, ne ručně (čekám tvar 2026-12-31).'
+           : d==='datum_neexistuje' ? 'takové datum neexistuje (třeba 31. února).'
+           : d==='prilis_daleko_v_budoucnu' ? 'je víc než dva roky v budoucnu, zkontroluj rok.'
+           : d==='prilis_stare' ? 'je víc než rok zpátky, zkontroluj rok.'
+           : 'nepodařilo se ho přečíst.';
+    }
     // Kdy klientovi přijde PRVNÍ výzva k reportu, když start je zadaný. Musí držet krok
     // s `PRVNI_VYZVA_PO_DNECH` v `client-remind/cerstvy-klient.ts` (dnes 6 dní) a se
     // skutečností, že výzvy chodí v NEDĚLI ráno. Ukazuje se DŮSLEDEK, ne jen uložené datum:
@@ -795,6 +808,15 @@
       if(d&&d.start_chyba) return '⚠️ start se teď nepodařilo načíst ('+String(d.start_chyba)+'). Neznamená to, že není zadaný, a proto se teď ukládat nedá.';
       if(d&&d.start_at) return kdStartDusledek(d,d.start_at);
       return 'prázdné = systém bere datum pozvánky'+((d&&d.granted_at)?(' ('+fmtDay(d.granted_at)+')'):'');
+    }
+    // 🏁 Konec zaplaceného období. Věta říká DŮSLEDEK, ne jen stav: prázdné pole
+    // nevypadá jako chyba, takže by si nikdo nevšiml, že se klientovi appka sama
+    // nezavře. Ochranná lhůta žije v `app_config.koucink_konec_grace_dny`, tady se
+    // schválně NEOPAKUJE číslem: dvě místa s jednou hodnotou se rozejdou.
+    function kdKonecStatText(d){
+      if(d&&d.start_chyba) return '⚠️ konec se teď nepodařilo načíst. Neznamená to, že není zadaný, a proto se teď ukládat nedá.';
+      if(d&&d.konec_at) return 'Po tomhle datu (plus ochranná lhůta) se klientovi appka zavře sama a přijde mu rozloučení.';
+      return 'prázdné = appka se sama nezavře a rozloučení nepřijde, musíš ho ukončit ručně';
     }
     // ⛔ OPRAVA 8. 8. 2026: `token` se nabíral JEDNOU při startu (`getSessionRetry`) a už se
     // nikdy neaktualizoval. supabase-js si session na pozadí obnovuje (`autoRefreshToken`),
@@ -1679,7 +1701,7 @@
     $('kiSend').addEventListener('click',function(){
       var b=$('kiSend'); if(b.disabled) return; // dvojklik = dvojitý mail klientovi
       var email=($('kiEmail').value||'').trim().toLowerCase(), name=($('kiName').value||'').trim(), vok=($('kiVok').value||'').trim(), kind=$('kiKind').value, plan=$('kiPlan').value;
-      var start=($('kiStart').value||'').trim();
+      var start=($('kiStart').value||'').trim(), konec=($('kiKonec').value||'').trim();
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ toast('Zadej platný e-mail'); return; }
       var what=kind==='stavajici'?'„Konec Excelu" (stávající klient)':'pozvánka s dotazníkem (nový klient)';
       /* Start se do potvrzení VYPISUJE. Je to věta o tom, co komu odejde a od kdy se
@@ -1689,18 +1711,24 @@
          protože „kdo někdy reportoval, tomu se nesahá" je první podmínka na serveru. */
       var startTxt=start?('\nStart koučinku: '+czDatum(start)+', první výzva k reportu '+kdPrvniVyzva(start)+' (pokud klient ještě žádný report neposlal)')
                         :'\nStart koučinku: nezadán (systém bere datum pozvánky)';
-      if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"'+startTxt)) return;
+      /* Konec se do potvrzení VYPISUJE ze stejného důvodu jako start: překlep v roce
+         se nejlíp chytá tady. A prázdný konec musí být vidět jako ROZHODNUTÍ, ne jako
+         nevyplněná kolonka, protože znamená „automat se tohohle klienta netýká". */
+      var konecTxt=konec?('\nKonec koučinku: '+czDatum(konec)+' (pak se mu appka zavře sama a přijde rozloučení)')
+                        :'\nKonec koučinku: nezadán (appka se sama nezavře, budeš ho ukončovat ručně)';
+      if(!confirm('Zapnout klientskou sekci pro '+email+' ('+(plan==='diamond'?'Diamond':'Gold')+') a HNED poslat mail: '+what+'?\nOslovení v mailu: „Ahoj '+(vok||'(bez jména)')+'"'+startTxt+konecTxt)) return;
       var origTxt=b.textContent; b.disabled=true; b.textContent='📨 Posílám…';
-      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan,start_at:start}).then(function(o){
+      api({action:'client_invite',email:email,name:name,osloveni:vok,kind:kind,plan:plan,start_at:start,konec_at:konec}).then(function(o){
         b.disabled=false; b.textContent=origTxt;
         /* ⛔ `ok` z API znamená ZAPSANÝ NÁROK, ne odeslaný mail. Když nárok je a mail
            selhal, klient přístup MÁ a stačí mail poslat znovu; hlásí se to jinak než
            „nezapsalo se nic", protože každá z těch dvou situací se řeší jinak. */
-        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value='';$('kiStart').value=''; loadKlienti(); }
+        if(o.j&&o.j.ok&&o.j.mail_ok!==false){ toast('📨 Posláno na '+email); $('kiEmail').value='';$('kiName').value='';$('kiVok').value='';$('kiStart').value='';$('kiKonec').value=''; loadKlienti(); }
         else if(o.j&&o.j.ok){ toast('⚠️ Přístup zapsán, ale MAIL NEODEŠEL ('+((o.j.mail_status)||'?')+'). Pošli ho znovu.'); loadKlienti(); }
         /* Vadné datum startu zastaví CELOU pozvánku dřív, než se cokoli zapíše (server
            vrací důvod). Hláška proto musí říct, co s tím, ne jen „chyba". */
         else if(o.j&&o.j.error==='start_at'){ toast('🔴 Start koučinku: '+kdStartDuvod(o.j.duvod)+' Nic se neposlalo, oprav datum a klikni znovu.'); }
+        else if(o.j&&o.j.error==='konec_at'){ toast('🔴 Konec koučinku: '+kdKonecDuvod(o.j.duvod)+' Nic se neposlalo, oprav datum a klikni znovu.'); }
         else toast('🔴 Přístup se NEZAPSAL: '+((o.j&&(o.j.entitlement||o.j.error))||o.status));
       }).catch(function(){ b.disabled=false; b.textContent=origTxt; toast('Chyba spojení'); });
     });
@@ -2203,6 +2231,20 @@
         +'<button class="mlogbtn" id="kdStartSave"'+(d.start_chyba?' disabled':'')+' style="padding:6px 12px;">Uložit start</button>'
         +'<span id="kdStartStat" class="'+(d.start_chyba?'':'muted')+'" style="font-size:.78rem;'+(d.start_chyba?'color:#F6CD63;':'')+'">'
         +esc(kdStartStatText(d))
+        +'</span></div>'
+        // 🏁 KONEC ZAPLACENÉHO OBDOBÍ (22. 9. 2026).
+        // ⛔⛔ BEZ TOHOHLE DATA SE KLIENTOVI APPKA SAMA NEZAVŘE. Automat `koucink-konec`
+        // jede výhradně podle něj; kdo ho vyplněné nemá, toho se netýká. Ke 22. 9. 2026
+        // ho nemá ani jeden z dvaceti aktivních klientů, takže automat zatím nemá
+        // co zavírat a ticho neznamená, že je všechno v pořádku.
+        // ⛔ Pole se zamyká stejným příznakem jako start (`start_chyba`): obě hodnoty
+        // jdou z téhož čtení `entitlements` a prázdno po chybě by konec SMAZALO.
+        +'<div style="margin:0 0 .8rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
+        +'<span style="font-size:.85rem;color:#cbbfae;">🏁 Konec koučinku:</span>'
+        +'<input type="date" id="kdKonec" value="'+esc(d.konec_at||'')+'"'+(d.start_chyba?' disabled':'')+' style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;">'
+        +'<button class="mlogbtn" id="kdKonecSave"'+(d.start_chyba?' disabled':'')+' style="padding:6px 12px;">Uložit konec</button>'
+        +'<span id="kdKonecStat" class="'+(d.start_chyba?'':'muted')+'" style="font-size:.78rem;'+(d.start_chyba?'color:#F6CD63;':'')+'">'
+        +esc(kdKonecStatText(d))
         +'</span></div>';
       function kdTgIn(id,label,unit,ph){
         var v=tg[id]==null?'':String(tg[id]);
@@ -2394,7 +2436,8 @@
       // Kdo má zaplacenou Academy, o appku nepřijde, to hlídá server.
       h+='<h4 style="margin:1.6rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">🚪 Ukončení koučinku</h4>'
         +'<div style="background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.28);border-radius:10px;padding:12px;">'
-        +'<p class="muted" style="margin:0 0 8px;font-size:.85rem;">Zavře klientskou sekci a odebere přístup do appky Tvůj Coach. Data a účet zůstávají, jde to kdykoli vrátit pozvánkou. Kdo má zaplacenou Academy, o appku nepřijde.</p>'
+        +'<p class="muted" style="margin:0 0 8px;font-size:.85rem;">Zavře klientskou sekci a odebere přístup do appky Tvůj Coach. Data a účet zůstávají, jde to kdykoli vrátit pozvánkou. Kdo má zaplacenou Academy, o appku nepřijde a mail mu to tak i napíše. Ostatní dostanou v mailu jednorázový kód na roční VIP se slevou 20 %, platný 14 dní.</p>'
+        +'<p class="muted" style="margin:0 0 8px;font-size:.8rem;">Nemusíš na to čekat ručně: když vyplníš 🏁 <strong>Konec koučinku</strong> nahoře, udělá tohle všechno automat sám po uplynutí období.</p>'
         +'<label style="display:block;font-size:.78rem;color:#8F8A99;margin-bottom:8px;">Oslovení do mailu <span style="color:#6d6879;">(5. pád, např. Petře)</span>'
         +'<input type="text" id="kdOffVok" value="'+esc(kliVok(KDET.name))+'" placeholder="nech prázdné pro obecné „Ahoj,“" style="width:100%;box-sizing:border-box;margin-top:3px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:7px 10px;color:#fff;font-family:inherit;font-size:.9rem;"></label>'
         // Rod v mailu. Mail je psaný v 1. osobě minulého času („jsi do toho dal"),
@@ -2458,7 +2501,7 @@
         // Radši nepošleme nic než mail ve špatném rodě. Tichý fallback na mužský rod byl
         // přesně ta vada, kvůli které tenhle přepínač vznikl (u tichého odchodu mail není).
         if(!tiche && rod!=='z' && rod!=='m'){ toast('Vyber prosím rod (žena/muž), bez něj mail neodesílám.'); return; }
-        var co=tiche?'BEZ mailu' : 'a HNED poslat mail s nabídkou Tvůj Coach a Academy (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+')';
+        var co=tiche?'BEZ mailu' : 'a HNED poslat rozlučkový mail (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+'). Kdo nemá zaplacenou Academy, dostane v něm jednorázový kód na roční VIP se slevou 20 %, platný 14 dní';
         if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, odebere se přístup do appky Tvůj Coach, '+co+'.\n\nData ani účet se nemažou.')) return;
         b.disabled=true; b.textContent='Ukončuji…';
         api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche,rod:rod}).then(function(o){
@@ -2470,10 +2513,27 @@
               toast('Tenhle klient už ukončený je, nic se neposlalo.');
               $('kdet').classList.remove('on'); loadKlienti(); return;
             }
-            var pozn = o.j.mel_academy ? ' Appku si nechává, má zaplacenou Academy.' : '';
-            toast('🚪 Koučink ukončen.'+(tiche?'':' Mail odešel.')+pozn);
+            // ⛔ Text musí sedět s tím, co dostal KLIENT. Do 22. 9. 2026 tvrdil toast
+            // „appku si nechává" a mail témuž člověku psal, že přístup skončil.
+            // Obojí dnes rozhoduje `mel_academy` a mail má dvě znění.
+            var pozn = o.j.mel_academy
+              ? ' Appku si nechává, má zaplacenou Academy (mail mu to tak i říká).'
+              : (o.j.promo ? (' Dostal kód na roční VIP: '+o.j.promo+' (platí 14 dní).') : '');
+            var mailText = tiche ? '' : (o.j.mail_ok===false ? ' ⚠️ MAIL NEODEŠEL (Resend '+(o.j.mail_status||'?')+'), pošli mu ho jinak.' : ' Mail odešel.');
+            toast('🚪 Koučink ukončen.'+mailText+pozn);
             $('kdet').classList.remove('on'); loadKlienti();
-          } else { toast('Chyba: '+((o.j&&o.j.error)||o.status)); b.disabled=false; b.textContent='Ukončit koučink'; }
+          }
+          // ⛔ DVA STAVY, KDE SE NIC NEZMĚNILO, a Martin to musí poznat: jinak by
+          // si myslel, že klient ukončený je, a už se k tomu nevrátil.
+          else if(o.j&&o.j.error==='promo_selhalo'){
+            toast('Slevový kód se nepodařilo založit ve Stripu, takže jsem NIC neukončil ani neposlal. Zkontroluj kupón a klíč. Detail: '+(o.j.detail||''));
+            b.disabled=false; b.textContent='Ukončit koučink';
+          }
+          else if(o.j&&o.j.error==='appka_neodpovedela'){
+            toast('Appka Tvůj Coach neodpověděla ('+(o.j.detail||'')+'), takže jsem koučink NEUKONČIL. Zkus to za chvíli znovu.');
+            b.disabled=false; b.textContent='Ukončit koučink';
+          }
+          else { toast('Chyba: '+((o.j&&o.j.error)||o.status)); b.disabled=false; b.textContent='Ukončit koučink'; }
         }).catch(function(){ toast('Chyba spojení'); b.disabled=false; b.textContent='Ukončit koučink'; });
       });
       // 🚩 Uložení startu koučinku. ⛔ Prázdné pole tady start MAŽE (na rozdíl od pozvánky,
@@ -2499,6 +2559,29 @@
           else if(o.j&&o.j.error==='start_at') toast('Start koučinku: '+kdStartDuvod(o.j.duvod)+' Nic se neuložilo.');
           else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, start nemá kam uložit.');
           else if(o.j&&o.j.error==='ukonceny_klient') toast('Klient je ukončený, start se mu neukládá. Když se vrací, pozvi ho znovu.');
+          else toast('Chyba: '+((o.j&&o.j.error)||o.status));
+        }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
+      });
+      // 🏁 Uložení konce koučinku. Stejná mechanika jako u startu: prázdné pole tady
+      // konec MAŽE (Martin vidí, co v poli je, takže co smaže, chce smazat).
+      var kdKonecSave=$('kdKonecSave');
+      if(kdKonecSave) kdKonecSave.addEventListener('click',function(){
+        var b=kdKonecSave; if(b.disabled) return;
+        var v=($('kdKonec').value||'').trim();
+        if(!confirm(v?('Nastavit konec koučinku pro '+email+' na '+czDatum(v)+'?\nPo tomhle datu (plus ochranná lhůta) se mu appka zavře sama a přijde mu rozloučení s nabídkou VIP.')
+                     :('Smazat konec koučinku pro '+email+'?\nPak se mu appka sama nezavře a rozloučení nepřijde; budeš ho muset ukončit ručně.'))) return;
+        var t0=b.textContent; b.disabled=true; b.textContent='Ukládám…';
+        api({action:'client_konec_save',email:email,konec_at:v}).then(function(o){
+          b.disabled=false; b.textContent=t0;
+          if(o.j&&o.j.ok){
+            if(KDET.data) KDET.data.konec_at=o.j.konec_den||null;
+            $('kdKonecStat').textContent=kdKonecStatText(KDET.data||{konec_at:o.j.konec_den});
+            toast(o.j.konec_den?('🏁 Konec nastaven na '+czDatum(o.j.konec_den)):'🏁 Konec smazán');
+            loadKlienti();
+          }
+          else if(o.j&&o.j.error==='konec_at') toast('Konec koučinku: '+kdKonecDuvod(o.j.duvod)+' Nic se neuložilo.');
+          else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, konec nemá kam uložit.');
+          else if(o.j&&o.j.error==='ukonceny_klient') toast('Klient je už ukončený, konec se mu neukládá.');
           else toast('Chyba: '+((o.j&&o.j.error)||o.status));
         }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
       });

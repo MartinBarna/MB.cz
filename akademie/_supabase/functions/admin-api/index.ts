@@ -11,7 +11,20 @@ import { applySyncPlan, type TcReport } from "./tc-report-sync.ts";
 // Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
 import { onboardKoucink, posliUvitaciMail } from "../_shared/koucink-onboarding.ts";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
-import { buildOffboardMail } from "./offboard-mail.ts";
+import { buildOffboardMail } from "../_shared/offboard-mail.ts";
+// ⭐ Odeslani pres spolecny helper: cte `id` z odpovedi Resendu a zapisuje ho do
+// `email_events`. Bez toho se bounce teto cesty nedaji sparovat (nalez V1, 16. 9. 2026).
+import { odesliPresResend } from "../_shared/resend-odeslat.ts";
+// ⛔ Zavreni koucinku (appka + narok + znacka) i promo kod na rocni VIP zijou
+// v `_shared`, protoze totez potrebuje automat `koucink-konec`. Dve kopie by se
+// rozesly v pojistce na Academy a nekomu by sebraly clenstvi za 8 900 Kc.
+import {
+  konecDoPole,
+  maZaplacenouAcademy,
+  overKonecKoucinku,
+  ukonciPristup,
+  vytvorPromoKod,
+} from "../_shared/koucink-konec.ts";
 // Prevod terminu konzultace mezi ceskym casem a UTC + stav hovoru. Ciste funkce
 // ve vlastnim souboru, at jdou otestovat bez nastartovani serveru (`konzultace.test.ts`).
 import { isoNaPoleFormulare, stavHovoru, terminNaIso } from "./konzultace.ts";
@@ -21,6 +34,10 @@ import { overStart } from "./start-klienta.ts";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+// ⚠️ RESTRICTED klic Stripu s pravem na PROMOTION CODES. Tentyz secret cte
+// `academy-stripe-webhook` a `app-purchase-bridge`; pro zakladani kodu k odchodu
+// z koucinku potrebuje navic pravo ZAPISU (Martin ho prepne ve Stripe dashboardu).
+const STRIPE_PROMO_KEY = Deno.env.get("STRIPE_RESTRICTED_PROMO_KEY") ?? "";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -2453,6 +2470,11 @@ Deno.serve(async (req) => {
         start_at: startChyba ? null : (ent.data?.start_at ?? null),
         granted_at: startChyba ? null : (ent.data?.granted_at ?? null),
         start_chyba: startChyba,
+        // ⭐ Konec zaplaceného období. Karta ho musí UKAZOVAT, ne jen umět uložit:
+        //    podle něj se klientovi appka zavře sama a jediný, kdo pozná, že tam
+        //    datum chybí, je ten, kdo ho vidí napsané. Chyba čtení = prázdno a
+        //    `start_chyba` (týž zdroj) už UI říká, že se má pole zablokovat.
+        konec_at: startChyba ? null : konecDoPole(ent.data?.expires_at ?? null),
         konzultace_intake: konzChyba ? [] : ((konz.data as unknown[]) ?? []),
         konz_chyba: konzChyba,
       });
@@ -2650,6 +2672,38 @@ Deno.serve(async (req) => {
       //    zmizel. Tiché „ok" by Martina nechalo věřit, že start uložil.
       if (!count) return json({ error: "neni_klient" }, 404);
       return json({ ok: true, start_at: prevod.start });
+    }
+
+    // KONEC KOUČINKU u UŽ pozvaného klienta (22. 9. 2026).
+    //
+    // ⛔⛔ BEZ TOHOHLE POLE JE AUTOMAT `koucink-konec` MRTVÝ. Změřeno 22. 9. 2026:
+    //    všech 20 aktivních koučinkových nároků má `expires_at` prázdné, protože
+    //    `client_invite` ho schválně neposílá a přes Stripe koučink zatím nikdo
+    //    nekoupil. Automat pracuje výhradně s datem konce, takže bez něj nezavře
+    //    nikoho a nula zavřených by vypadala jako „všechno v pořádku".
+    // ⛔ Prázdná hodnota tady znamená VYMAZAT konec (na rozdíl od pozvánky, kde
+    //    znamená „nesahej"). Je to formulář, kde Martin vidí, co v poli je.
+    // ⚠️ Datum se ukládá jako KONEC DNE (`T23:59:59Z`), ne jako půlnoc na jeho
+    //    začátku: poslední den spolupráce má klient ještě zaplacený.
+    if (action === "client_konec_save") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      const prevod = overKonecKoucinku(body.konec_at);
+      if (!prevod.ok) return json({ error: "konec_at", duvod: prevod.duvod }, 400);
+      // ⛔ Tři stavy odděleně (CLAUDE.md 13), symetricky s `client_start_save`:
+      //    chyba čtení = 500, prázdno = 404, ukončený klient = 409.
+      const { data: entRow, error: entChyba } = await admin.from("entitlements").select("active")
+        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (entChyba) return json({ error: "db", detail: String(entChyba.message ?? entChyba).slice(0, 160) }, 500);
+      if (!entRow) return json({ error: "neni_klient" }, 404);
+      if (entRow.active !== true) return json({ error: "ukonceny_klient" }, 409);
+      const { error, count } = await admin.from("entitlements")
+        .update({ expires_at: prevod.konec }, { count: "exact" })
+        .eq("email", email).eq("product", "coaching");
+      if (error) return json({ error: "db", detail: String(error.message ?? error).slice(0, 160) }, 500);
+      // ⛔ Nula změněných řádků NENÍ úspěch: řádek mezi čtením a zápisem zmizel.
+      if (!count) return json({ error: "neni_klient" }, 404);
+      return json({ ok: true, konec_at: prevod.konec, konec_den: konecDoPole(prevod.konec) });
     }
 
     if (action === "client_remind_toggle") {
@@ -3659,11 +3713,18 @@ Deno.serve(async (req) => {
       //    než čeká. Validace je v `start-klienta.ts` a má vlastní testy (31. 2., rok 2027).
       const startPrevod = overStart(body.start_at);
       if (!startPrevod.ok) return json({ error: "start_at", duvod: startPrevod.duvod }, 400);
+      // ⭐ KONEC ZAPLACENÉHO OBDOBÍ (22. 9. 2026). Nepovinný, ale bez něj se klientovi
+      //    appka po konci nezavře sama: automat `koucink-konec` jede VÝHRADNĚ podle
+      //    tohohle data. Prázdné pole = na sloupec se nesahá (stejně jako u startu),
+      //    takže prodloužení koupené přes Stripe o svoje datum nepřijde.
+      const konecPrevod = overKonecKoucinku(body.konec_at);
+      if (!konecPrevod.ok) return json({ error: "konec_at", duvod: konecPrevod.duvod }, 400);
       const vysledek = await onboardKoucink(admin, {
         email, name, osloveni, kind,
         source: "admin-klient-invite",
         plan: body.plan === "diamond" ? "diamond" : (body.plan === "gold" ? "gold" : undefined),
         ...(startPrevod.start ? { startAt: startPrevod.start } : {}),
+        ...(konecPrevod.konec ? { expiresAt: konecPrevod.konec } : {}),
         resendKey: RESEND_KEY,
       });
       // ⛔⛔ `ok` ZNAMENÁ „NÁROK JE ZAPSANÝ", ne „mail odešel" (oprava po revizi 2. 9. 2026).
@@ -3674,6 +3735,15 @@ Deno.serve(async (req) => {
       // incident 27. 7. 2026, jen o patro výš. Selhání mailu se hlásí ZVLÁŠŤ: přístup
       // zapsaný je, mail se dá poslat znovu.
       const narokOk = vysledek.entitlement === "ok";
+      // ⛔⛔ RAZÍTKO PŘEDCHOZÍHO ODCHODU SE MAŽE. Klíč razítka je e-mail, takže bez
+      //    tohohle by se vracejícímu klientovi automat po druhém konci nikdy neozval
+      //    a appku by mu nezavřel: našel by si hotové razítko a přeskočil ho.
+      //    ⚠️ Maže se jen při ÚSPĚŠNĚ zapsaném nároku. Kdyby se smazalo i po selhání,
+      //    přišli bychom o evidenci minulého odchodu a nezískali nic.
+      if (narokOk) {
+        const { error: razErr } = await admin.from("koucink_konec_sent").delete().eq("email", email);
+        if (razErr) console.error("client_invite: smazani razitka koucink_konec_sent selhalo: " + razErr.message);
+      }
       return json({
         ok: narokOk,
         entitlement: vysledek.entitlement,
@@ -3720,99 +3790,28 @@ Deno.serve(async (req) => {
       return json({ ok: r.ok, mail_status: r.mail_status, mail_skip: r.mail_skip ?? null, priloha: r.priloha });
     }
 
-    // Ukonceni koucinku: odebere klientskou sekci, s ni i appku Tvuj Coach, a posle mail
-    // s nabidkou, jak muze pokracovat bez koucinku (Martin 26. 7. 2026).
-    // Protejsek k `client_invite`. Do te doby sla pozvanka udelit, ale odebrat nesla nijak.
+    // Ukonceni koucinku RUCNE z karty klienta. Protejsek k `client_invite`.
+    //
+    // ⛔⛔ ZAVŘENÍ PŘÍSTUPU UŽ NENÍ TADY. Od 22. 9. 2026 ho dělá `ukonciPristup`
+    //    v `_shared/koucink-konec.ts`, protože totéž potřebuje i automat
+    //    `koucink-konec`. Dvě kopie by se dřív nebo později rozešly v POJISTCE na
+    //    Academy (kdo má zaplacenou Academy, o appku přijít nesmí) a někomu by
+    //    sebraly členství za 8 900 Kč.
+    // ⛔⛔ ZMĚNA POŘADÍ, KTERÁ OPRAVUJE TICHOU ŠKODU: dřív se nejdřív vypnul nárok
+    //    a teprve pak se volala appka, a to volání viselo v `try { } catch { }`.
+    //    Když `academy-grant` neodpověděl, koučink byl vypnutý, appka klientovi
+    //    zůstala a NIKDE to nekřiklo. Teď se při selhání appky nemění nic a Martin
+    //    dostane 502 s důvodem.
     if (action === "client_offboard") {
       const email = low(body.email);
       const osloveni = String(body.osloveni ?? "").trim().slice(0, 60);
       const tiche = body.tiche === true; // odchod bez mailu (Martin nekdy jen uklizi seznam)
       if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
 
-      // 1) Vypnout koucinkovy narok. Tim zmizi z klientske sekce i ze `clients_list`.
-      // ⛔ OPRAVA 27. 7. 2026: tady se taky vybíralo neexistující `id`, takže select
-      // skončil chybou, `ent` bylo null a tahle akce vracela „neni_klient" (404)
-      // pro ÚPLNĚ KAŽDÉHO. Odebrání klienta tedy nešlo vůbec. Klíč je (email, product).
-      const { data: ent } = await admin.from("entitlements").select("active")
-        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
-      if (!ent) return json({ error: "neni_klient" }, 404);
-      // ⛔ Uz ukonceny klient: skoncit HNED. Od 27. 7. jsou byvali klienti v seznamu
-      // videt a jsou proklikatelni, takze na nich jde tohle tlacitko zmacknout znovu.
-      // Bez teto pojistky by se jim rozlouckovy mail poslal PODRUHE a znovu by se
-      // volalo odebrani appky. Zadna cast teto akce neni idempotentni sama o sobe.
-      if (!ent.active) return json({ ok: true, uz_ukoncen: true, mail: "preskocen" });
-      await admin.from("entitlements").update({ active: false })
-        .eq("email", email).eq("product", "coaching");
-
-      // 2) ⛔ POJISTKA: kdo ma zaplacenou Academy, o appku PRIJIT NESMI.
-      // `revoke_app_access` v appce rusi vsechny granty se zdrojem 'academy' bez Stripe,
-      // a ten zdroj se do `subscriptions` zapisuje natvrdo i u koucinku. Bez tehle kontroly
-      // by odchod z koucinku sebral appku i cloveku, ktery si Academy koupil za 8 900 Kc.
-      // (Kdo si TC plati sam pres Stripe, je v poradku, toho `revoke_app_access` nesaha.)
-      // ⛔ FAIL-CLOSED: kdyz se Academy NEPODARI precist, chovame se, jako by ji mel
-      // (set-expiry misto revoke). Vzit appku cloveku, ktery si Academy koupil za
-      // 8 900 Kc, je horsi nez nechat rok navic tomu, kdo ji nema.
-      // ⛔ Cte se i `expires_at`: refund Academy nastavuje JEN expires_at a `active` necha
-      // true (adversarni revize 1. 9., nalez 1). Bez teto podminky by clovek s refundovanou
-      // Academy dostal offboardem rok appky zdarma.
-      const { data: academyEnt, error: acadErr } = await admin.from("entitlements").select("active, expires_at")
-        .eq("email", email).eq("product", "academy").limit(1).maybeSingle();
-      const maAcademy = acadErr ? true
-        : (!!academyEnt?.active && (!academyEnt.expires_at || Date.parse(String(academyEnt.expires_at)) > Date.now()));
-
-      // ⭐ 1. 9. 2026: kdo ma zaplacenou Academy, appka mu NEZUSTAVA navzdy (to byl
-      // koucinkovy rezim), ale prepne se na rocni Academy grant: rok od konce koucinku.
-      // Jde pres akci `set-expiry` (SQL set_app_access_expiry, 0120), protoze pojistka
-      // v grant_app_access degradaci neomezeneho grantu schvalne blokuje.
-      let gres = "no-secret";
-      {
-        try {
-          const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
-          const gsec = gs?.value ? String(gs.value) : "";
-          if (gsec) {
-            const payload = maAcademy
-              ? { email, action: "set-expiry", expires_at: new Date(Date.now() + 365 * 864e5).toISOString(), source: "academy" }
-              : { email, action: "revoke", source: "koucink-konec" };
-            const r = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
-              method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-              body: JSON.stringify(payload),
-            }).catch(() => null);
-            // deno-lint-ignore no-explicit-any
-            if (r && r.ok) { const jj: any = await r.json().catch(() => ({})); gres = String(jj.result || "ok"); }
-            else gres = r ? "http-" + r.status : "fetch-fail";
-          }
-        } catch { /* best-effort, odchod z koucinku to neshodi */ }
-      }
-      try {
-        await admin.from("tvujcoach_grants").insert({ email, action: maAcademy ? "set-expiry" : "revoke", result: gres, source: "koucink-konec" });
-      } catch { /* log je bonus */ }
-
-      // 3) Prehodit znacku v marketingovych kontaktech: coaching-active -> coaching-ex.
-      // ⚠️ Doplneno 27. 7. 2026. Konvence tech dvou tagu je popsana v CLAUDE.md uz dlouho,
-      // ale kod `coaching-ex` NIKDY nenastavoval, takze ukonceny klient zustal veden
-      // jako aktivni. Dnes na tom nezavisi zadne odesilani (overeno grepem), ale prvni
-      // rozesilka cilena na `coaching-active` by trefila i lidi, kteri uz klienti nejsou.
-      // Kontakt se NEMAZE a nic jineho se nemeni, jen se zmeni jeden tag za druhy.
-      try {
-        const { data: cc } = await admin.from("customer_contacts").select("tags").eq("email", email).maybeSingle();
-        if (cc) {
-          const tags = Array.isArray(cc.tags) ? (cc.tags as string[]) : [];
-          const nove = tags.filter((t) => t !== "coaching-active");
-          if (!nove.includes("coaching-ex")) nove.push("coaching-ex");
-          await admin.from("customer_contacts").update({ tags: nove }).eq("email", email);
-        }
-      } catch { /* znacka je bonus, odchod z koucinku to neshodi */ }
-
-      if (tiche) return json({ ok: true, mail: "preskocen", tvujcoach: gres, mel_academy: maAcademy });
-
-      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-      if (!RESEND_KEY) return json({ ok: true, mail: "no_resend", tvujcoach: gres, mel_academy: maAcademy });
-
       // Rod klienta. Admin posílá 'z' (žena) nebo 'm' (muž); bez hodnoty zůstává
       // mužský rod, tedy dosavadní chování.
       // ⚠️ 3. 8. 2026 dostala Jana Kaločayová tenhle mail celý v mužském rodě.
-      // Tvary se proto píšou přes `rd()`, ne natvrdo. Kdo sem přidá další větu
-      // s příčestím minulým, MUSÍ ji tím taky prohnat.
+      // Tvary se proto píšou přes rodové větve v `offboard-mail.ts`, ne natvrdo.
       // ⚠️ Chybějící rod se LOGUJE. Tichý pád na mužský rod je přesně ta vada, kterou
       // tenhle přepínač řeší, takže se o něm musí dát dozvědět i bez stížnosti klientky.
       const rodRaw = String(body.rod ?? "").trim().toLowerCase();
@@ -3821,52 +3820,140 @@ Deno.serve(async (req) => {
       }
       // „ž" je tu pro případ, že by někdo poslal celé slovo „žena": bez toho by diakritika
       // spadla do mužské větve úplně tiše.
-      const zena = rodRaw.startsWith("z") || rodRaw.startsWith("ž");
+      const rod: "z" | "m" = (rodRaw.startsWith("z") || rodRaw.startsWith("ž")) ? "z" : "m";
 
-      const confirmDecision = await guardSend(admin, {
+      // ⛔ BRÁNA A PROMO KÓD SE ŘEŠÍ PŘED ZÁSAHEM. Podle rozhodnutí brány se pozná,
+      //    jestli je promo kód vůbec potřeba, a kdyby ho Stripe nezaložil, nemá smysl
+      //    cokoli zavírat: Martin to zkusí za chvíli znovu a klient mezitím o nic
+      //    nepřišel. Opačné pořadí by nechalo člověka zavřeného bez rozloučení.
+      const confirmDecision = tiche ? null : await guardSend(admin, {
         email,
         mailClass: "client_operational",
         functionName: "admin-api",
         path: "admin-api.client_offboard.confirm",
       });
-      if (confirmDecision.action === "skip") {
-        await logMailSkip(admin, confirmDecision);
-        return json({
-          ok: true,
-          mail: "preskocen",
-          mail_reason: confirmDecision.reason,
-          tvujcoach: gres,
-          mel_academy: maAcademy,
-        });
-      }
-      const salesDecision = await guardSend(admin, {
+      const salesDecision = tiche ? null : await guardSend(admin, {
         email,
         mailClass: "marketing",
         functionName: "admin-api",
         path: "admin-api.client_offboard.sales",
       });
-      if (salesDecision.action === "skip") await logMailSkip(admin, salesDecision);
+      const posleMail = !tiche && confirmDecision?.action === "send";
 
-      // ⚠️ Zamerne tu NENI zadna cena. Ceny appky (249 a 499) uz jsou natvrdo v sablonach
-      // v `email_templates` a pri zmene cenika se na ne zapomina. Tenhle mail proto odkazuje
-      // na cenik, at nevznika dalsi misto, ktere se musi hlidat.
+      // Promo kód na roční VIP jen tomu, komu appka opravdu skončí a komu smí jít
+      // prodejní blok. Kdo má Academy, appku si nechává a nabídka by mu lhala.
+      const maAcademyPred = await maZaplacenouAcademy(admin, email);
+      let promoKod = "";
+      if (posleMail && salesDecision?.action === "send" && !maAcademyPred) {
+        const { data: coupon } = await admin.from("app_config").select("value")
+          .eq("key", "koucink_vip_coupon_id").maybeSingle();
+        const p = await vytvorPromoKod(STRIPE_PROMO_KEY, {
+          couponId: String(coupon?.value ?? "").trim(),
+          email,
+        });
+        if (!p.ok) {
+          // ⛔ MAIL BEZ KÓDU NEJDE VEN a raději se nezavírá nic. Mail slibuje slevu;
+          //    s kódem, který ve Stripu není, by člověk v pokladně viděl „neplatný
+          //    kód" a nekoupil nic. Martin to vidí hned a může zvolit tichý odchod.
+          return json({
+            error: "promo_selhalo",
+            detail: p.chyba,
+            hint: "zkontroluj app_config.koucink_vip_coupon_id a pravo zapisu u STRIPE_RESTRICTED_PROMO_KEY; nic se nezavrelo",
+          }, 502);
+        }
+        promoKod = p.kod;
+      }
+
+      const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
+      const u = await ukonciPristup(admin, { email, grantSecret: String(gs?.value ?? "") });
+      if (u.stav === "neni_klient") return json({ error: "neni_klient" }, 404);
+      // ⛔ Uz ukonceny klient: skoncit HNED. Byvali klienti jsou v seznamu videt a
+      // jdou proklikat, takze na nich jde tohle tlacitko zmacknout znovu. Bez teto
+      // pojistky by se jim rozlouckovy mail poslal PODRUHE.
+      if (u.stav === "uz_ukoncen") return json({ ok: true, uz_ukoncen: true, mail: "preskocen" });
+      if (u.stav === "appka_selhala") {
+        return json({
+          error: "appka_neodpovedela",
+          detail: u.tvujcoach,
+          hint: "narok ZUSTAVA aktivni, nic se nezmenilo; zkus to za chvili znovu",
+        }, 502);
+      }
+      if (u.stav === "narok_selhal") {
+        return json({ error: "db", detail: u.detail ?? "narok se nevypnul", tvujcoach: u.tvujcoach }, 500);
+      }
+
+      // Razítko do společné historie odchodů. Automat podle něj pozná, že rozloučení
+      // už proběhlo, a nepošle druhé. ⛔ Při nové pozvánce se maže (`client_invite`),
+      // jinak by se vracejícímu klientovi automat podruhé nikdy neozval.
+      try {
+        await admin.from("koucink_konec_sent").upsert({
+          email,
+          stav: "hotovo",
+          duvod: "rucne_z_adminu" + (tiche ? ":tiche" : ""),
+          promo_code: promoKod || null,
+          ma_academy: u.maAcademy,
+          sent_at: new Date().toISOString(),
+          sent_ok: posleMail,
+        }, { onConflict: "email" });
+      } catch { /* razítko je evidence, odchod z koučinku to neshodí */ }
+
+      if (tiche) return json({ ok: true, mail: "preskocen", tvujcoach: u.tvujcoach, mel_academy: u.maAcademy });
+      if (confirmDecision && confirmDecision.action === "skip") {
+        await logMailSkip(admin, confirmDecision);
+        return json({
+          ok: true,
+          mail: "preskocen",
+          mail_reason: confirmDecision.reason,
+          tvujcoach: u.tvujcoach,
+          mel_academy: u.maAcademy,
+        });
+      }
+      if (salesDecision && salesDecision.action === "skip") await logMailSkip(admin, salesDecision);
+
+      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      if (!RESEND_KEY) return json({ ok: true, mail: "no_resend", tvujcoach: u.tvujcoach, mel_academy: u.maAcademy });
+
+      // ⚠️ Zamerne tu NENI zadna cena. Ceny appky uz jsou natvrdo v sablonach
+      // v `email_templates` a pri zmene cenika se na ne zapomina. Tenhle mail proto
+      // mluvi o SLEVE V PROCENTECH, castku rekne az pokladna.
       const { subject, html } = buildOffboardMail({
         osloveni,
-        zena,
-        includeSales: salesDecision.action === "send",
+        rod,
+        includeSales: salesDecision?.action === "send",
+        maAcademy: u.maAcademy,
+        promoKod,
       });
 
-      const rs = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html, reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"] }),
-      });
+      // ⭐ Odeslani pres spolecny helper: precte `id` z odpovedi Resendu a zapise ho
+      // do `email_events`. Bez toho se bounce ani stiznost na spam u teto cesty
+      // NEDAJI SPAROVAT a nic je nezastavi (nalez V1 auditu mailovych toku).
+      const rs = await odesliPresResend(
+        RESEND_KEY,
+        {
+          from: "Martin Barna <news@martinbarna.cz>",
+          to: [email],
+          subject,
+          html,
+          reply_to: "martin@martinbarna.cz",
+          bcc: ["fitness.barna@gmail.com"],
+        },
+        { admin, via: "admin-api.client_offboard", email, detail: { track: "koucink-konec", ma_academy: u.maAcademy } },
+      );
+      if (!rs.ok) {
+        // ⛔ Razítko zůstává (přístup je zavřený), ale `sent_ok` musí říct pravdu.
+        try {
+          await admin.from("koucink_konec_sent").update({ sent_ok: false, duvod: "rucne_z_adminu:resend_" + rs.status })
+            .eq("email", email);
+        } catch { /* evidence */ }
+      }
       return json({
         ok: true,
         mail_status: rs.status,
-        sales: salesDecision.action,
-        tvujcoach: gres,
-        mel_academy: maAcademy,
+        mail_ok: rs.ok,
+        sales: salesDecision?.action ?? "skip",
+        promo: promoKod || null,
+        tvujcoach: u.tvujcoach,
+        mel_academy: u.maAcademy,
       });
     }
 
