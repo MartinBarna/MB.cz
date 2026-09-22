@@ -16,6 +16,9 @@ const MUST_IMPORT_GUARD = [
   "videokurz-onboarding/index.ts",
   "admin-api/index.ts",
   "_shared/koucink-onboarding.ts",
+  // Automat „konec koucinku" (22. 9. 2026): posila zakaznikovi tyz mail jako rucni
+  // odchod z admina, takze pred nej patri tataz brana.
+  "koucink-konec/index.ts",
 ];
 
 const SCAN_DIRS = [
@@ -29,6 +32,7 @@ const SCAN_DIRS = [
   "grant-videokurz-z-appky",
   "videokurz-onboarding",
   "admin-api",
+  "koucink-konec",
   "_shared",
 ];
 
@@ -82,7 +86,29 @@ for (const dir of SCAN_DIRS) {
   }
 }
 
-check("alespoň 9 customer/admin fetchů v rozsahu", sites.length >= 9, String(sites.length));
+// ⚠️ ČÍSLO KLESLO Z 9 NA 8 A JE TO POSUN K LEPŠÍMU, ne ztráta cesty (22. 9. 2026).
+//    `admin-api` (rozloučení po konci koučinku) přestal volat Resend přímo a posílá
+//    přes `_shared/resend-odeslat.ts`, takže jeho `fetch` z tohohle seznamu zmizel
+//    a zůstal jediný, ten v helperu. Kontrola měří RAW volání: každé nové znamená
+//    další cestu, která si musí sama hlídat bránu i `provider_id`.
+// ⛔ Kdo tohle číslo ZVYŠUJE, přidává cestu mimo helper a musí napsat proč.
+check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 && sites.length <= 9, String(sites.length));
+
+// ⛔ AUTOMAT NESMI ODESILAT PRIMO. Cely smysl `_shared/resend-odeslat.ts` je, ze
+//    kazde odeslani nechava `provider_id`, podle ktereho se paruje bounce. Kdyby si
+//    `koucink-konec` zavolal Resend sam, jeho maily by uz nikdy nikdo nezastavil.
+{
+  const kk = await Deno.readTextFile(new URL("koucink-konec/index.ts", ROOT));
+  check("koucink-konec nevola Resend primo", !kk.includes(RESEND));
+  check("koucink-konec posila pres helper", kk.includes("odesliPresResend"));
+  // ⛔ Brana PRED stavbou mailu, stejne jako u rucniho odchodu.
+  check("koucink-konec ma guard pred stavbou mailu",
+    kk.indexOf("koucink-konec.confirm") < kk.indexOf("buildOffboardMail({"));
+  // ⛔ Razitko PRED prvnim nevratnym krokem (Martin 17. 9.: radeji nikdy mail navic).
+  check("koucink-konec zabira razitko pred zavrenim pristupu",
+    kk.indexOf("const zabrano = await zaber(email)") > 0 &&
+    kk.indexOf("const zabrano = await zaber(email)") < kk.indexOf("await ukonciPristup(admin,"));
+}
 
 const ALLOW_WITHOUT_LOCAL_GUARD = new Set([
   // Transport. Guard je v poukaz-vydat/core.ts + index.ts před sendMail.
