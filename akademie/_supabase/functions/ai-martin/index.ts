@@ -658,7 +658,7 @@ async function streamGrokReply(
 ): Promise<Response> {
   const upstream = await postWithRetry('https://api.x.ai/v1/chat/completions',
     { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-    { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, stream: true,
+    { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, stream: true, reasoning_effort: 'low',
       stream_options: { include_usage: true }, messages: grokMsgs });
   // Selhání PŘED prvním bajtem řešíme ještě klasickým JSONem: klient tak dostane stejnou
   // chybovou hlášku jako doteď a nemusí řešit poloprázdný stream.
@@ -831,7 +831,7 @@ Deno.serve(async (req: Request) => {
       if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits, via, email);
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-        { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, messages: grokMsgs });
+        { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, reasoning_effort: 'low', messages: grokMsgs });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
