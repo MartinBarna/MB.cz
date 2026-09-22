@@ -115,6 +115,7 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
 {
   const kk = await Deno.readTextFile(new URL("koucink-konec/index.ts", ROOT));
   const kkCore = await Deno.readTextFile(new URL("koucink-konec/core.ts", ROOT));
+  const sdilene = await Deno.readTextFile(new URL("_shared/koucink-konec.ts", ROOT));
   check("koucink-konec nevola Resend primo", !kk.includes(RESEND));
   check("core nevola Resend primo", !kkCore.includes(RESEND));
   check("koucink-konec posila pres helper", kk.includes("odesliPresResend"));
@@ -142,6 +143,53 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
     !kk.includes('r.stav === "opakovat" || r.stav === "opakovat_mail"'));
   check("razitka se ctou i se `sent_ok` (podle nej se pozna chybejici rozlouceni)",
     kk.includes("promo_code,pokusy,updated_at,duvod,sent_ok"));
+  // ⛔⛔ [revize R3, nalez S3] ZAMEK NESMI STAT NA `count: "exact"`.
+  //    Dokumentace PostgREST popisuje `Prefer: count=` u CTENI; ze u PATCH vrati
+  //    pocet zmenenych radku, nikde netvrdi. `.select()` vraci aktualizovane
+  //    radky, coz dokumentovane je, a delka pole je meritelna vec.
+  check("prevezmi nepouziva count:exact", !kk.includes('{ count: "exact" }'));
+  check("prevezmi pocita vracene radky", kk.includes('await q.select("email")'));
+  // ⛔⛔ [revize R3, nalez V1] `rezervovano` -> `rezervovano` splni svou vlastni
+  //    podminku PORAD. Vylucovacim ho dela az podminka na stari v TEMZE UPDATE.
+  check("prevezmi pridava podminku na stari u zaseknute rezervace",
+    kk.includes('if (jenZaseknute) q = q.lt("updated_at"'));
+  const adm = await Deno.readTextFile(new URL("admin-api/index.ts", ROOT));
+  check("admin zamek taky nepouziva count:exact u razitka",
+    !/koucink_konec_sent[\s\S]{0,400}?\{ count: "exact" \}/.test(adm));
+  check("admin zamyka podminenym updatem se `select`",
+    adm.includes('const { data: zamekRows, error: zamekErr } = await zq.select("email")'));
+  check("admin ma podminku na stari u zaseknute rezervace",
+    adm.includes('zq = zq.lt("updated_at"'));
+  // ⛔⛔ [revize R3, nalez V1] CERSTVA REZERVACE PATRI BEZICIMU AUTOMATU.
+  //    Bez teto vetve by admin prosel i tehdy, kdyz cron toho cloveka prave
+  //    zpracovava, a klient by dostal rozlouceni dvakrat.
+  check("admin odmita cerstvou rezervaci 409",
+    adm.includes('if (razitkoStav === "rezervovano" && !rezervaceZaseknuta) {') &&
+      adm.includes('error: "prave_zpracovava_automat"'));
+  check("admin pozna zaseknutou rezervaci podle stari",
+    adm.includes("const rezervaceZaseknuta = razitkoStav ===") && adm.includes("ZASEKNUTO_PO_MS"));
+  // ⛔⛔ [revize R3, nalez S5] Doposlat jde i z `chyba_nejiste`, protoze prave
+  //    tam alert Martina posila. Do R3 ta cesta v kodu nebyla.
+  check("admin umi doposlat i z `chyba_nejiste`",
+    adm.includes('razitkoStav === "opakovat_mail" || razitkoStav === "chyba_nejiste"'));
+
+  // ⛔⛔ [revize R3, nalez S6] PROMO KOD SE OVERUJE NA `active`.
+  //    Stripe archivuje kody, kdyz prestane platit jejich kupon; archivovany kod
+  //    v pokladne slevu neda a mail by slibil neco, co neplati.
+  check("promo kod se cte i s `active`",
+    sdilene.includes("active: prvni.active === true") &&
+      sdilene.includes("if (nalez && nalez.active) return { ok: true, kod, id: nalez.id };") &&
+      sdilene.includes("if (nalez && !nalez.active) return { ok: false, chyba: CHYBA_KOD_NEAKTIVNI };"));
+  check("`already exists` se overuje druhym GETem, ne bere jako uspech",
+    sdilene.includes("const znovu = await najdiPromoKod(stripeKey, kod, timeoutMs);") &&
+      sdilene.includes("if (znovu && znovu.active) return { ok: true, kod, id: znovu.id };"));
+  check("archivovany kod ma vlastni chybovy kod (jde na nej reagovat)",
+    sdilene.includes("export const CHYBA_KOD_NEAKTIVNI") && kkCore.includes("deps.kodNeaktivni"));
+
+  // ⛔⛔ [revize R3, nalez V2] ZADNY ZAPIS PRED ZAMKEM.
+  predTim("admin zamyka DRIV, nez zapise promo kod", adm,
+    "const { data: zamekRows, error: zamekErr } = await zq.select(\"email\")",
+    'duvod: "promo_pending:rucne"');
   predTim("core: zavreni pristupu az po promo kodu", kkCore, "deps.zalozPromo(email, promo)", "deps.ukonciPristup(email)");
   predTim("core: mail az po zavreni pristupu", kkCore, "deps.ukonciPristup(email)", "deps.posliMail(email,");
   // ⛔⛔ [revize R1, nalez V1] Jiste neodeslani po ZAVRENEM pristupu musi koncit
@@ -163,7 +211,6 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   //    rezervace to sice dozene, ale az za pul hodiny, tedy v praxi az zitra.
   //    Kontrola je STATICKA schvalne: chovani se bez site otestovat neda,
   //    ale zmizeni `AbortSignal` ano, a prave to se stane pri prvnim refaktoru.
-  const sdilene = await Deno.readTextFile(new URL("_shared/koucink-konec.ts", ROOT));
   check("Stripe ma tvrdy timeout",
     /fetch\("https:\/\/api\.stripe\.com[\s\S]{0,600}?AbortSignal\.timeout\(/.test(sdilene));
   check("most do appky ma tvrdy timeout",

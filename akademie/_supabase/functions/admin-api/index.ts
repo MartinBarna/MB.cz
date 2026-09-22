@@ -21,8 +21,10 @@ import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import {
   konecDoPole,
   maZaplacenouAcademy,
+  ZASEKNUTO_PO_MS,
   overKonecKoucinku,
   ukonciPristup,
+  CHYBA_KOD_NEAKTIVNI,
   vygenerujPromoKod,
   zajistiPromoKod,
 } from "../_shared/koucink-konec.ts";
@@ -2409,7 +2411,7 @@ Deno.serve(async (req) => {
 
     if (action === "client_detail") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      const [reps, intake, notes, docsOwn, remindCfg, targets, contact, ent, konz, acad] = await Promise.all([
+      const [reps, intake, notes, docsOwn, remindCfg, targets, contact, ent, konz, acad, razKonec] = await Promise.all([
         admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
         admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
@@ -2443,6 +2445,8 @@ Deno.serve(async (req) => {
         // JEN ten a `active` nechává `true` (táž podmínka jako v `maZaplacenouAcademy`).
         admin.from("entitlements").select("active,expires_at")
           .eq("email", email).eq("product", "academy").limit(1).maybeSingle(),
+        // Stav razítka odchodu (kvůli doposlání po nejistotě).
+        admin.from("koucink_konec_sent").select("stav").eq("email", email).maybeSingle(),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
@@ -2489,6 +2493,10 @@ Deno.serve(async (req) => {
           ? null
           : (!!acad.data?.active &&
             (!acad.data.expires_at || Date.parse(String(acad.data.expires_at)) > Date.now())),
+        // ⭐ Stav razítka odchodu. Karta podle něj pozná, že rozloučení už jednou
+        //    odcházelo a skončilo v nejistotě, a zeptá se, než ho pošle znovu
+        //    (revize R3, nález S5).
+        konec_stav: razKonec.error ? null : String(razKonec.data?.stav ?? ""),
         konzultace_intake: konzChyba ? [] : ((konz.data as unknown[]) ?? []),
         konz_chyba: konzChyba,
       });
@@ -3887,12 +3895,65 @@ Deno.serve(async (req) => {
         }, 500);
       }
       const razitkoStav = String(razitkoRow?.stav ?? "");
-      const jenDoposlat = razitkoStav === "opakovat_mail";
-      // ⛔ ROZDĚLANÁ PRÁCE JE I `opakovat` a `rezervovano` (revize R2, nález S5).
+      // ⛔ ČERSTVÁ REZERVACE PATŘÍ BĚŽÍCÍMU AUTOMATU (revize R3, nálezy V1 a N8).
+      //    Zámek `rezervovano` → `rezervovano` svou vlastní podmínku splní POŘÁD,
+      //    takže by prošel i tehdy, když cron toho člověka právě zpracovává, a oba
+      //    by poslali mail. Rozlišuje to stáří: starší než ochranná lhůta je
+      //    opuštěná rezervace (tu si admin vzít smí), mladší je živá práce.
+      const razitkoStari = Date.now() - Date.parse(String(razitkoRow?.updated_at ?? ""));
+      const rezervaceZaseknuta = razitkoStav === "rezervovano" &&
+        (!Number.isFinite(razitkoStari) || razitkoStari > ZASEKNUTO_PO_MS);
+      if (razitkoStav === "rezervovano" && !rezervaceZaseknuta) {
+        return json({
+          error: "prave_zpracovava_automat",
+          hint: "razitko je cerstve rezervovane, automat na nem prave pracuje; pockej par minut",
+        }, 409);
+      }
+      // ⛔ DOPOSLAT JDE I Z `chyba_nejiste` (revize R3, nález S5). Alert u toho
+      //    stavu Martina posílá do admina, ale tlačítko tu cestu nemělo: skončilo
+      //    na „už je ukončený". Je to VĚDOMÉ rozhodnutí člověka (mail mohl odejít),
+      //    proto se na něj UI ptá zvlášť.
+      const jenDoposlat = razitkoStav === "opakovat_mail" || razitkoStav === "chyba_nejiste";
+      // ⛔ ROZDĚLANÁ PRÁCE JE I `opakovat` a opuštěné `rezervovano` (nález S5 z R2).
       //    Uložený kód se použije u KAŽDÉHO z nich, ne jen u `opakovat_mail`.
       //    Stav `opakovat` s vyplněným kódem vzniká, když Stripe prošel a appka ne;
       //    založit druhý kód by ve Stripu nechalo nepoužitou slevu.
-      const rozdelano = jenDoposlat || razitkoStav === "opakovat" || razitkoStav === "rezervovano";
+      const rozdelano = jenDoposlat || razitkoStav === "opakovat" || rezervaceZaseknuta;
+
+      // ⛔⛔ ZÁMEK JAKO PRVNÍ ZÁPIS (revize R3, nález V2). Do R3 se nejdřív upsertl
+      //    promo kód a teprve pak se zamykalo, takže ten upsert uměl vrátit stav
+      //    řádku, který si mezitím vzal cron, zpátky na `opakovat`, a zámek pak
+      //    prošel. Dva kódy ve Stripu, dva maily. Pořadí je proto: ČTENÍ (výš),
+      //    ZÁMEK, a teprve pak jakýkoli zápis.
+      // ⚠️ Zamyká se JEN rozdělaná práce. U čerstvého odchodu (žádné razítko, nebo
+      //    `hotovo` po dřívějším ukončení) se zamykat nemá co; tam drží pořadí
+      //    `ukonciPristup`, který na už ukončeném nároku vrátí `uz_ukoncen`.
+      if (rozdelano) {
+        // ⛔ Počet se bere z VRÁCENÝCH ŘÁDKŮ, ne z `count: "exact"` (nález S3):
+        //    u PATCH není počet změněných řádků dokumentovaný, `.select()` ano.
+        // ⛔ U opuštěné rezervace se do TÉHOŽ UPDATE přidává podmínka na stáří,
+        //    jinak by `rezervovano` → `rezervovano` prošlo dvěma volajícím naráz.
+        let zq = admin.from("koucink_konec_sent")
+          .update({ stav: "rezervovano", updated_at: new Date().toISOString() })
+          .eq("email", email).eq("stav", razitkoStav);
+        if (rezervaceZaseknuta) {
+          zq = zq.lt("updated_at", new Date(Date.now() - ZASEKNUTO_PO_MS).toISOString());
+        }
+        const { data: zamekRows, error: zamekErr } = await zq.select("email");
+        if (zamekErr) {
+          return json({
+            error: "razitko_neprecteno",
+            detail: String(zamekErr.message ?? zamekErr).slice(0, 160),
+            hint: "razitko se nepodarilo zamknout; NIC se nezavrelo",
+          }, 500);
+        }
+        if (!Array.isArray(zamekRows) || zamekRows.length !== 1) {
+          return json({
+            error: "prave_zpracovava_automat",
+            hint: "razitko si mezitim vzal nekdo jiny; pockej par minut a zkus to znovu",
+          }, 409);
+        }
+      }
 
       // Promo kód na roční VIP jen tomu, komu appka opravdu skončí a komu smí jít
       // prodejní blok. Kdo má Academy, appku si nechává a nabídka by mu lhala.
@@ -3930,16 +3991,43 @@ Deno.serve(async (req) => {
           //    kliknutí by založilo další. `zajistiPromoKod` je se stejným textem
           //    idempotentní, takže opakování kód nezdvojí.
           const kod = vygenerujPromoKod();
-          try {
-            await admin.from("koucink_konec_sent").upsert({
-              email,
-              stav: rozdelano ? razitkoStav : "rezervovano",
-              promo_code: kod,
-              duvod: "promo_pending:rucne",
-              updated_at: new Date().toISOString(),
-            }, { onConflict: "email" });
-          } catch { /* zápis se ověří návratem Stripu níž */ }
-          const p = await zajistiPromoKod(STRIPE_PROMO_KEY, { couponId, email, kod });
+          // ⛔⛔ NÁVRAT ZÁPISU SE ČTE (revize R3, nález V2). Do R3 tu byl `try/catch`
+          //    s komentářem „zápis se ověří návratem Stripu", což nebyla pravda:
+          //    `{ error }` se nečetl vůbec a Stripe se volal tak jako tak. Bez
+          //    uloženého kódu by další pokus založil ve Stripu další slevu.
+          // ⛔ Stav se tu UŽ NEMĚNÍ: řádek drží zámek výš (`rezervovano`). Psát
+          //    sem stav znamenalo vracet cronův řádek zpátky na `opakovat`.
+          const { error: kodErr } = await admin.from("koucink_konec_sent").upsert({
+            email,
+            stav: "rezervovano",
+            promo_code: kod,
+            duvod: "promo_pending:rucne",
+            updated_at: new Date().toISOString(),
+          }, { onConflict: "email" });
+          if (kodErr) {
+            return json({
+              error: "razitko_neprecteno",
+              detail: String(kodErr.message ?? kodErr).slice(0, 160),
+              hint: "promo kod se nepodarilo ulozit; Stripe jsem nevolal a NIC se nezavrelo",
+            }, 500);
+          }
+          let p = await zajistiPromoKod(STRIPE_PROMO_KEY, { couponId, email, kod });
+          // ⛔ Archivovaný kód se nedá oživit a Stripe nedovolí založit aktivní
+          //    se stejným textem (nález S6). Jeden nový pokus, pak se to vzdá.
+          if (!p.ok && p.chyba === CHYBA_KOD_NEAKTIVNI) {
+            const novy = vygenerujPromoKod();
+            const { error: novyErr } = await admin.from("koucink_konec_sent")
+              .update({ promo_code: novy, duvod: "promo_pending:nahrada_archivovaneho", updated_at: new Date().toISOString() })
+              .eq("email", email);
+            if (novyErr) {
+              return json({
+                error: "razitko_neprecteno",
+                detail: String(novyErr.message ?? novyErr).slice(0, 160),
+                hint: "nahradni promo kod se nepodarilo ulozit; NIC se nezavrelo",
+              }, 500);
+            }
+            p = await zajistiPromoKod(STRIPE_PROMO_KEY, { couponId, email, kod: novy });
+          }
           if (!p.ok) {
             // ⛔ KUPÓN JE NASTAVENÝ A PŘESTO SELHAL: to je porucha, ne konfigurace.
             //    Mail slibuje slevu; s kódem, který ve Stripu není, by člověk
@@ -3951,33 +4039,6 @@ Deno.serve(async (req) => {
             }, 502);
           }
           promoKod = p.kod;
-        }
-      }
-
-      // ⛔⛔ JEDEN ZÁMEK PRO TLAČÍTKO I PRO CRON (revize R2, nález S6). Do R2 admin
-      //    stav jen PŘEČETL, takže když si cron mezitím týž řádek převzal, oba
-      //    došly k odeslání a klient dostal rozloučení DVAKRÁT. Okno je krátké,
-      //    ale v kódu bylo. Podmíněný `update` s počtem řádků ten závod rozhoduje
-      //    stejně jako `prevezmi` v automatu: kdo prohraje, neodesílá.
-      // ⚠️ Zamyká se JEN rozdělaná práce. U čerstvého odchodu (žádné razítko, nebo
-      //    `hotovo` po dřívějším ukončení) se zamykat nemá co; tam drží pořadí
-      //    `ukonciPristup`, který na už ukončeném nároku vrátí `uz_ukoncen`.
-      if (rozdelano) {
-        const { count: zamek, error: zamekErr } = await admin.from("koucink_konec_sent")
-          .update({ stav: "rezervovano", updated_at: new Date().toISOString() }, { count: "exact" })
-          .eq("email", email).eq("stav", razitkoStav);
-        if (zamekErr) {
-          return json({
-            error: "razitko_neprecteno",
-            detail: String(zamekErr.message ?? zamekErr).slice(0, 160),
-            hint: "razitko se nepodarilo zamknout; NIC se nezavrelo",
-          }, 500);
-        }
-        if (!zamek) {
-          return json({
-            error: "prave_zpracovava_automat",
-            hint: "tenhle klient je prave v rukou automatu; pockej par minut a zkus to znovu",
-          }, 409);
         }
       }
 

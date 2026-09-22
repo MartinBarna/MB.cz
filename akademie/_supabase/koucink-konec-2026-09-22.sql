@@ -120,7 +120,7 @@ comment on column public.koucink_konec_sent.pokusy is
 comment on column public.koucink_konec_sent.updated_at is
   'Posledni zmena stavu. Rezervace starsi nez 30 minut se bere jako opustena.';
 comment on column public.koucink_konec_sent.sent_ok is
-  'false = odeslani se neprokazalo (brana skip, nebo nejistota). Mail se NEOPAKUJE, resi to Martin.';
+  'TRI stavy: true = odeslani se prokazalo; null = nikdy se neposilalo (lze doposlat); false = nekdo se pokusil a vysledek se neprokazal (automat NEOPAKUJE, resi clovek). Sam o sobe mail nezastavi, zastavi ho az uzavreny stav.';
 
 -- Automat běží service-rolí a musí umět razítko i MAZAT (návrat klienta).
 grant select, insert, update, delete on table public.koucink_konec_sent to service_role;

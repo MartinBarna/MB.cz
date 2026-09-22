@@ -171,6 +171,18 @@ export const PROMO_PLATNOST_DNI = 14;
 //    Čísla jsou úmyslně nízká: Stripe i most do appky běžně odpovídají do vteřiny,
 //    takže patnáct a dvacet vteřin je už jasná porucha, ne pomalá síť.
 export const VYCHOZI_TIMEOUT_STRIPE_MS = 15_000;
+
+/**
+ * Jak dlouho se čeká, než se rezervace razítka bere jako opuštěná.
+ * ⛔ Když edge funkci zabije timeout cronu, `catch` v kódu se neprovede a řádek
+ *    zůstane v `rezervovano` navždy. Třicet minut je pohodlně nad stropem jednoho
+ *    běhu a pohodlně pod denní periodou cronu.
+ * ⛔⛔ JE TO ZÁROVEŇ PODMÍNKA ZÁMKU (revize R3, nález V1): přechod
+ *    `rezervovano` → `rezervovano` splní svou vlastní podmínku pořád, takže ho
+ *    vylučovacím dělá až stáří. Proto je konstanta tady a ne ve dvou kopiích:
+ *    kdyby se rozešla, zámek tlačítka a zámek cronu by prošly naráz.
+ */
+export const ZASEKNUTO_PO_MS = 30 * 60 * 1000;
 export const VYCHOZI_TIMEOUT_APPKA_MS = 20_000;
 
 /**
@@ -220,16 +232,37 @@ export function promoForm(
   };
 }
 
+/**
+ * Kód s tímhle textem ve Stripu je, ale je archivovaný (typicky proto, že
+ * přestal platit jeho kupón). Volající si má vylosovat NOVÝ text.
+ * ⛔ Je to vlastní kód, ne obecná chyba: obecnou chybu by opakování nespravilo,
+ *    tuhle ano, a jen jednou.
+ */
+export const CHYBA_KOD_NEAKTIVNI = "kod_neaktivni";
+
 export type PromoVysledek =
   | { ok: true; kod: string; id: string }
   | { ok: false; chyba: string };
 
-/** Najde kód ve Stripu podle jeho textu. `null` = není, `undefined` = nepodařilo se zjistit. */
+/**
+ * Najde kód ve Stripu podle jeho textu.
+ * `null` = takový kód není, `undefined` = nepodařilo se zjistit.
+ *
+ * ⛔⛔ ČTE SE `active` (revize R3, nález S6). Do R3 stačilo, že list vrátil
+ *    JAKÝKOLI objekt, a kód se bral jako použitelný. Jenže Stripe archivuje
+ *    promo kódy, jakmile přestane platit jejich kupón („if the underlying coupon
+ *    for a promotion code becomes invalid, all of its promotion codes become
+ *    permanently inactive"), a takový kód v pokladně slevu nedá. Mail by slíbil
+ *    slevu a člověk by v pokladně viděl, že kód neplatí.
+ * ⚠️ Filtr `active=true` se schválně NEPOSÍLÁ: potřebujeme rozeznat „kód není"
+ *    od „kód je, ale je archivovaný". To jsou dva různé závěry (založit nový text
+ *    versus zkusit POST) a filtr by je slil do jednoho prázdného seznamu.
+ */
 async function najdiPromoKod(
   stripeKey: string,
   kod: string,
   timeoutMs: number,
-): Promise<{ id: string } | null | undefined> {
+): Promise<{ id: string; active: boolean } | null | undefined> {
   let res: Response;
   try {
     res = await fetch(
@@ -241,9 +274,9 @@ async function najdiPromoKod(
   }
   if (!res.ok) return undefined;
   try {
-    const j = await res.json() as { data?: { id?: unknown }[] };
+    const j = await res.json() as { data?: { id?: unknown; active?: unknown }[] };
     const prvni = Array.isArray(j.data) ? j.data[0] : undefined;
-    return prvni ? { id: String(prvni.id ?? "") } : null;
+    return prvni ? { id: String(prvni.id ?? ""), active: prvni.active === true } : null;
   } catch {
     return undefined;
   }
@@ -278,7 +311,11 @@ export async function zajistiPromoKod(
 
   // 1) Nemáme ho ve Stripu už z minula? (Opakovaný pokus po pádu sítě.)
   const nalez = await najdiPromoKod(stripeKey, kod, timeoutMs);
-  if (nalez) return { ok: true, kod, id: nalez.id };
+  if (nalez && nalez.active) return { ok: true, kod, id: nalez.id };
+  // ⛔ Kód existuje, ale je archivovaný. Stripe nedovolí založit aktivní kód
+  //    s týmž textem, takže tenhle se musí zahodit a volající si má vylosovat
+  //    nový. Vlastní chybový kód, ať to jde odlišit od poruchy Stripu.
+  if (nalez && !nalez.active) return { ok: false, chyba: CHYBA_KOD_NEAKTIVNI };
   // `undefined` = nevíme. Pokračujeme na POST; při kolizi se to pozná z odpovědi.
 
   const form = promoForm({
@@ -312,9 +349,14 @@ export async function zajistiPromoKod(
     return { ok: true, kod, id };
   }
   if (res.status === 400 && telo.includes("already exists")) {
-    // Kód tam je, jen ho GET nepřečetl. To je přesně stav, kvůli kterému tahle
-    // funkce dostává text kódu zvenčí.
-    return { ok: true, kod, id: "" };
+    // Kód s tímhle textem existuje, ale GET ho neviděl (síť, nebo ho vidí jinak).
+    // ⛔ NEBERE SE ROVNOU JAKO ÚSPĚCH (revize R3, nález S6): může být archivovaný,
+    //    a to by znamenalo mail se slevou, kterou pokladna neuzná. Jeden dotaz
+    //    navíc rozhodne.
+    const znovu = await najdiPromoKod(stripeKey, kod, timeoutMs);
+    if (znovu && znovu.active) return { ok: true, kod, id: znovu.id };
+    if (znovu && !znovu.active) return { ok: false, chyba: CHYBA_KOD_NEAKTIVNI };
+    return { ok: false, chyba: "stripe_kod_existuje_ale_neprecten" };
   }
   return { ok: false, chyba: "stripe_" + res.status + ":" + telo.slice(0, 160) };
 }

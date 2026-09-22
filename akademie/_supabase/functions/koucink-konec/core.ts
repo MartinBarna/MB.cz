@@ -36,13 +36,11 @@ export const STAVY_UZAVRENE: StavRazitka[] = ["hotovo", "chyba_nejiste", "vzdano
  */
 export const MAX_POKUSU = 5;
 
-/**
- * Jak dlouho se čeká, než se rezervace bere jako opuštěná.
- * ⛔ Když edge funkci zabije timeout cronu, `catch` v kódu se neprovede a řádek
- *    zůstane v `rezervovano` navždy (nález V2). Třicet minut je pohodlně nad
- *    stropem jednoho běhu a pohodlně pod denní periodou cronu.
- */
-export const ZASEKNUTO_PO_MS = 30 * 60 * 1000;
+// ⛔ Ochranná lhůta rezervace žije v `_shared`, protože ji potřebuje i ruční
+//    odchod z admina (`client_offboard`). Dvě kopie téhle konstanty by znamenaly,
+//    že zámek tlačítka a zámek cronu se rozejdou a oba by prošly naráz.
+export { ZASEKNUTO_PO_MS } from "../_shared/koucink-konec.ts";
+import { ZASEKNUTO_PO_MS } from "../_shared/koucink-konec.ts";
 
 export type RazitkoRadek = {
   email: string;
@@ -98,9 +96,21 @@ export type BehDeps = {
   ctiRazitko: (email: string) => Promise<{ radek: RazitkoRadek | null; chyba: string }>;
   /**
    * Přepne razítko na `rezervovano`, ale JEN když má pořád očekávaný stav.
-   * Vrací počet změněných řádků: 1 = vyhrál jsem závod, 0 = nevyhrál.
+   * Vrací počet SKUTEČNĚ změněných řádků: 1 = vyhrál jsem závod, 0 = nevyhrál.
+   *
+   * ⛔⛔ `zaseknute` MUSÍ PŘIDAT PODMÍNKU NA STÁŘÍ (revize R3, nález V1).
+   *    Přechod `rezervovano` → `rezervovano` totiž svou vlastní podmínku splní
+   *    POŘÁD: druhý volající ji po commitu prvního splní znovu a oba by
+   *    pokračovali k odeslání. U `opakovat` → `rezervovano` se to stát nemůže,
+   *    protože zápis podmínku poruší. Tady ji poruší jen čas, takže se do
+   *    TÉHOŽ UPDATE přidává `updated_at < now() - 30 min`.
    */
-  prevezmi: (email: string, zeStavu: string, pokusy: number) => Promise<{ pocet: number; chyba: string }>;
+  prevezmi: (
+    email: string,
+    zeStavu: string,
+    pokusy: number,
+    jenZaseknute: boolean,
+  ) => Promise<{ pocet: number; chyba: string }>;
   /** Zapíše libovolná pole razítka. */
   nastavRazitko: (email: string, pole: Record<string, unknown>) => Promise<boolean>;
   maAcademy: (email: string) => Promise<boolean>;
@@ -114,10 +124,12 @@ export type BehDeps = {
    */
   vylosujKod: () => string;
   /**
-   * Zajistí, že kód s tímhle textem ve Stripu existuje. Idempotentní: opakování
-   * se stejným textem kód nezdvojí.
+   * Zajistí, že kód s tímhle textem ve Stripu existuje a je AKTIVNÍ.
+   * Idempotentní: opakování se stejným textem kód nezdvojí.
    */
   zalozPromo: (email: string, kod: string) => Promise<PromoVysledekJadro>;
+  /** Chybový kód, který znamená „text je obsazený archivovaným kódem". */
+  kodNeaktivni: string;
   ukonciPristup: (email: string) => Promise<UkonceniVysledek>;
   posliMail: (
     email: string,
@@ -151,10 +163,16 @@ export type RozhodnutiOPrevzatem =
   | "nevim"
   /** Je zase klient. Rozdělaná práce se ZAHODÍ, ne dokončí. */
   | "znovu_klient"
-  /** Přístup je zavřený, ale rozloučení chybí. Poslat POUZE mail. */
+  /** Přístup je zavřený a rozloučení NIKDY neodešlo. Poslat POUZE mail. */
   | "dokonci_mail"
-  /** Přístup je zavřený a rozloučení už proběhlo. Jen uzavřít razítko. */
+  /** Přístup je zavřený a rozloučení už prokazatelně proběhlo. Jen uzavřít. */
   | "uzavri_bez_mailu"
+  /**
+   * Přístup je zavřený a o mailu se ví jen to, že se o něj někdo pokusil.
+   * ⛔ NEPOSÍLAT: mohl odejít. Rozhodne člověk (Martin 17. 9.: „raději nikdy
+   *    mail navíc"). Razítko jde na `chyba_nejiste` a jde alert.
+   */
+  | "nejiste_rozhodne_clovek"
   /** Běžná cesta: zavřít přístup a poslat rozloučení. */
   | "zavri";
 
@@ -188,8 +206,25 @@ export function rozhodniOPrevzatem(
     const mez = opts.tedMs - Math.max(0, opts.graceDny) * 86400000;
     return konec <= mez ? "zavri" : "znovu_klient";
   }
-  // Nárok je vypnutý. Rozhoduje jediná otázka: odešlo už rozloučení?
-  return opts.sentOk === true ? "uzavri_bez_mailu" : "dokonci_mail";
+  // ⛔ `opakovat_mail` JE VÝSLOVNÉ „mail jistě neodešel" (Resend 4xx, chybějící
+  //    klíč). Ten stav rozhoduje sám a `sentOk` ho nepřebíjí; jinak by se
+  //    `sent_ok: false`, který k němu patří, přečetl jako nejistota a rozloučení
+  //    by se nedoposlalo nikdy.
+  if (opts.predchozi === "opakovat_mail") return "dokonci_mail";
+
+  // Nárok je vypnutý. Rozhodují TŘI stavy `sentOk`, ne dva (revize R3, nález S4).
+  // ⛔ `true`  = odeslání se prokázalo   => není co dělat
+  // ⛔ `null`  = nikdy se neposílalo     => doposlat
+  // ⛔ `false` = někdo se pokusil a výsledek se neprokázal => NEPOSÍLAT
+  //    Do R3 se `false` slévalo s `null` do „doposlat". Jenže `false` píše i
+  //    větev 5xx a `sit:`, kde mail MOHL odejít: kdyby se ten zápis nepovedl
+  //    (nebo proces umřel), další běh by poslal DRUHÝ mail. To je přesně to,
+  //    co Martinovo „raději nikdy mail navíc" zakazuje.
+  // ⚠️ Stav `opakovat_mail` sem nespadá: ten sám o sobě znamená JISTÉ neodeslání
+  //    (Resend 4xx, chybějící klíč) a řeší se výš.
+  if (opts.sentOk === true) return "uzavri_bez_mailu";
+  if (opts.sentOk === false) return "nejiste_rozhodne_clovek";
+  return "dokonci_mail";
 }
 
 /**
@@ -276,20 +311,24 @@ export async function zaber(email: string, deps: BehDeps): Promise<ZaberVysledek
     return { stav: "obsazeno", duvod: stav };
   }
 
-  const p = await deps.prevezmi(email, stav, pokusy + 1);
-  if (p.chyba) return { stav: "chyba", detail: p.chyba };
-  if (p.pocet !== 1) return { stav: "obsazeno", duvod: "zavod:" + stav };
-
+  // ⛔⛔ ALERT JDE PŘED ZÁMKEM (revize R3, nález S3). Opuštěná rezervace je fakt
+  //    o stavu databáze, ne odměna za vyhraný závod. Kdyby se hlásila až po
+  //    úspěšném převzetí a to by z jakéhokoli důvodu neprocházelo, řádek by
+  //    visel dál a NIKDO by se to nedozvěděl. Strop alertů na běh drží šum.
   if (zaseknute) {
     await deps.alert(
-      "⚠️ Konec koučinku: opuštěná rezervace, beru ji znovu",
+      "⚠️ Konec koučinku: opuštěná rezervace",
       "Klient: " + email + "\nRazítko viselo v `rezervovano` déle než 30 minut.\n\n" +
         "Nejspíš předchozí běh zabil timeout cronu (120 s) nebo strop běhu.\n" +
         "Stav klienta může být rozpracovaný: zkontroluj `entitlements` a `tvujcoach_grants`.\n" +
-        "Automat teď postup zkusí znovu od začátku.",
+        "Automat se ji teď pokusí převzít a dokončit.",
       email,
     );
   }
+
+  const p = await deps.prevezmi(email, stav, pokusy + 1, zaseknute);
+  if (p.chyba) return { stav: "chyba", detail: p.chyba };
+  if (p.pocet !== 1) return { stav: "obsazeno", duvod: "zavod:" + stav };
   return {
     stav: "ok",
     predchozi: zaseknute ? "zaseknute" : (stav as "opakovat" | "opakovat_mail"),
@@ -384,6 +423,24 @@ export async function zpracujJednoho(
       });
       return { email, vysledek: "preskoceno", duvod: "uz_odeslano" };
     }
+    if (rozhodnuti === "nejiste_rozhodne_clovek") {
+      // ⛔ Přístup je zavřený, mail MOHL odejít a nikdo to neprokázal. Automat to
+      //    neopakuje; uzavře razítko na `chyba_nejiste` a rozhodne člověk.
+      await deps.nastavRazitko(email, {
+        stav: "chyba_nejiste",
+        duvod: "nejiste_z_minula",
+        updated_at: ted(),
+      });
+      await deps.alert(
+        "⚠️ Konec koučinku: rozdělané odeslání skončilo v nejistotě",
+        "Klient: " + email + "\n\nPřístup je zavřený, ale nevíme, jestli mu rozloučení došlo.\n" +
+          "Automat ho NEZOPAKUJE (mail navíc je horší než mail chybějící).\n\n" +
+          "Zkontroluj Resend a rozhodni: v kartě klienta je tlačítko Ukončit koučink,\n" +
+          "které u tohohle stavu POŠLE JEN MAIL (zeptá se tě na potvrzení).",
+        email,
+      );
+      return { email, vysledek: "chyba_nejiste", duvod: "nejiste_z_minula" };
+    }
     if (rozhodnuti === "dokonci_mail") {
       // ⛔⛔ TOHLE JE OPRAVA V1: přístup je zavřený, rozloučení CHYBÍ. Dřív to
       //    skončilo jako `zavren_jinde` (bez mailu a bez alertu), takže převzatá
@@ -473,7 +530,32 @@ export async function zpracujJednoho(
       }
       promo = kod;
     }
-    const p = await deps.zalozPromo(email, promo);
+    let p = await deps.zalozPromo(email, promo);
+    // ⛔ ARCHIVOVANÝ KÓD SE NEDÁ OŽIVIT a Stripe nedovolí založit aktivní kód
+    //    s týmž textem (revize R3, nález S6). Stává se to, když Martin vymění
+    //    kupón: „if the underlying coupon for a promotion code becomes invalid,
+    //    all of its promotion codes become permanently inactive."
+    //    ⇒ Vylosuje se NOVÝ text, uloží se a zkusí se to ještě JEDNOU. Víc pokusů
+    //      nemá smysl: druhá kolize je při 31^6 kombinacích porucha, ne náhoda.
+    if (!p.ok && p.chyba === deps.kodNeaktivni) {
+      const novy = deps.vylosujKod();
+      const ulozenoNovy = await deps.nastavRazitko(email, {
+        promo_code: novy,
+        duvod: "promo_pending:nahrada_archivovaneho",
+        updated_at: ted(),
+      });
+      if (!ulozenoNovy) {
+        await deps.alert(
+          "🔴 Konec koučinku: náhradní promo kód se nepodařilo uložit",
+          "Klient: " + email + "\n\nPůvodní kód je ve Stripu archivovaný a nový se nepodařilo\n" +
+            "zapsat, takže jsem Stripe nevolal. NIC se nezavřelo a mail NEODESEL.",
+          email,
+        );
+        return { email, vysledek: "opakovat", duvod: "promo_neulozen" };
+      }
+      promo = novy;
+      p = await deps.zalozPromo(email, novy);
+    }
     if (!p.ok) {
       await deps.nastavRazitko(email, { stav: "opakovat", duvod: "promo:" + p.chyba, updated_at: ted() });
       await deps.alert(
@@ -544,7 +626,11 @@ export async function zpracujJednoho(
 
   const r = await deps.posliMail(email, { maAcademy, promoKod: promo, includeSales: sales.action === "send" });
   if (r.ok) {
-    await deps.nastavRazitko(email, {
+    // ⛔⛔ NÁVRAT ZÁPISU SE ČTE (revize R3, nález S4). Když se `hotovo` neuloží,
+    //    v tabulce zůstane `rezervovano`, další běh ho po půl hodině převezme
+    //    jako zaseknutý a mail by odešel PODRUHÉ. Tohle je jediné místo, kde se
+    //    o tom dá dozvědět, protože Resend už zásilku přijal.
+    const ulozeno = await deps.nastavRazitko(email, {
       stav: "hotovo",
       duvod: "odeslano",
       ma_academy: maAcademy,
@@ -552,13 +638,26 @@ export async function zpracujJednoho(
       sent_ok: true,
       updated_at: ted(),
     });
+    if (!ulozeno) {
+      await deps.alert(
+        "🔴 Konec koučinku: mail ODEŠEL, ale razítko se neuložilo",
+        "Klient: " + email + "\n\nRozloučení Resend přijal, ale zápis do `koucink_konec_sent`\n" +
+          "selhal. Řádek zůstal rozpracovaný a další běh by ho mohl vzít znovu.\n\n" +
+          "⛔ Nastav mu ručně `stav='hotovo'`, `sent_ok=true`, ať mu mail nepřijde podruhé.",
+        email,
+      );
+    }
     return { email, vysledek: "hotovo", duvod: "odeslano" };
   }
 
   // ⛔⛔ ROZHODUJE, JESTLI TĚLO MAILU MOHLO DOJÍT NA RESEND.
   const teloMohloDojit = r.status >= 500 || String(r.chyba ?? "").startsWith("sit:");
   if (teloMohloDojit) {
-    await deps.nastavRazitko(email, {
+    // ⛔⛔ I TENHLE ZÁPIS SE OVĚŘUJE (revize R3, nález S4). Když se neuloží,
+    //    zůstane `rezervovano` se starým `sent_ok`, a to je přesně stav, ze
+    //    kterého by se po půl hodině stal „doposlat". Proto se `sent_ok: false`
+    //    zapisuje i tehdy, když stav selže, a při selhání jde alert navíc.
+    const ulozeno = await deps.nastavRazitko(email, {
       stav: "chyba_nejiste",
       duvod: "resend:" + (r.chyba ?? r.status),
       ma_academy: maAcademy,
@@ -566,6 +665,16 @@ export async function zpracujJednoho(
       sent_ok: false,
       updated_at: ted(),
     });
+    if (!ulozeno) {
+      await deps.alert(
+        "🔴 Konec koučinku: nejisté odeslání se nepodařilo zapsat",
+        "Klient: " + email + "\n\nMail MOHL odejít a zápis stavu selhal, takže v tabulce\n" +
+          "zůstalo rozpracované razítko.\n\n" +
+          "⛔ Nastav mu ručně `stav='chyba_nejiste'` a `sent_ok=false`, jinak se mu\n" +
+          "automat může pokusit poslat rozloučení znovu.",
+        email,
+      );
+    }
     await deps.alert(
       "⚠️ Konec koučinku: NEVÍM, jestli rozlučkový mail odešel",
       "Klient: " + email + "\nStav Resendu: " + r.status + "\nChyba: " + (r.chyba ?? "") +

@@ -42,6 +42,7 @@ import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.
 import { emailySeznam } from "../_shared/mail-seznam.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import {
+  CHYBA_KOD_NEAKTIVNI,
   maZaplacenouAcademy,
   ukonciPristup,
   vyberKeUkonceni,
@@ -55,6 +56,7 @@ import {
   type RazitkoRadek,
   razitkaDoFronty,
   zaber,
+  ZASEKNUTO_PO_MS,
   zpracujJednoho,
 } from "./core.ts";
 
@@ -259,12 +261,27 @@ Deno.serve(async (req: Request): Promise<Response> => {
       if (error) return { radek: null, chyba: String((error as { message?: unknown }).message ?? error).slice(0, 160) };
       return { radek: (data as RazitkoRadek | null) ?? null, chyba: "" };
     },
-    async prevezmi(email, zeStavu, pokusy) {
-      const { error, count } = await admin.from("koucink_konec_sent")
-        .update({ stav: "rezervovano", pokusy, updated_at: new Date().toISOString() }, { count: "exact" })
+    async prevezmi(email, zeStavu, pokusy, jenZaseknute) {
+      // ⛔⛔ POČET SE BERE Z VRÁCENÝCH ŘÁDKŮ, NE Z `count: "exact"` (revize R3,
+      //    nález S3). Dokumentace PostgREST popisuje `Prefer: count=` u ČTENÍ
+      //    (stránka Pagination and Count ukazuje jen GET); že u PATCH vrátí počet
+      //    změněných řádků, nikde netvrdí. Zámek přitom stál na tom, že vyjde
+      //    přesně 1. `.select()` naproti tomu vrací aktualizované řádky
+      //    (`Prefer: return=representation`), což je dokumentované chování,
+      //    a délka pole je měřitelná věc, ne domněnka.
+      //    https://docs.postgrest.org/en/stable/references/api/pagination_count.html
+      let q = admin.from("koucink_konec_sent")
+        .update({ stav: "rezervovano", pokusy, updated_at: new Date().toISOString() })
         .eq("email", email).eq("stav", zeStavu);
+      // ⛔⛔ ZÁMEK MUSÍ BÝT VYLUČOVACÍ I PRO `rezervovano` → `rezervovano`
+      //    (revize R3, nález V1). Ten přechod svou vlastní podmínku splní POŘÁD,
+      //    takže druhý volající prošel taky a oba poslali mail. Podmínku porušuje
+      //    až čas: v TÉMŽE UPDATE se proto žádá, aby razítko bylo starší než
+      //    ochranná lhůta. Kdo přijde druhý, uvidí čerstvé `updated_at` a mine.
+      if (jenZaseknute) q = q.lt("updated_at", new Date(Date.now() - ZASEKNUTO_PO_MS).toISOString());
+      const { data, error } = await q.select("email");
       if (error) return { pocet: 0, chyba: String((error as { message?: unknown }).message ?? error).slice(0, 160) };
-      return { pocet: Number(count ?? 0), chyba: "" };
+      return { pocet: Array.isArray(data) ? data.length : 0, chyba: "" };
     },
     async nastavRazitko(email, pole) {
       const { error } = await admin.from("koucink_konec_sent").update(pole).eq("email", email);
@@ -294,6 +311,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
       const p = await zajistiPromoKod(STRIPE_PROMO_KEY, { couponId, email, kod, timeoutMs: STRIPE_TIMEOUT_MS });
       return p.ok ? { ok: true, kod: p.kod } : { ok: false, chyba: p.chyba };
     },
+    // ⛔ Archivovaný kód (typicky proto, že Martin vyměnil kupón) se nedá oživit
+    //    a Stripe nedovolí založit aktivní kód s týmž textem. Jádro si proto
+    //    vylosuje nový, uloží ho a zkusí to ještě jednou.
+    kodNeaktivni: CHYBA_KOD_NEAKTIVNI,
     ukonciPristup: (email) => ukonciPristup(admin, { email, grantSecret, timeoutMs: APPKA_TIMEOUT_MS }),
     async posliMail(email, opts) {
       // ⛔ ROD JE `neutral` A NENÍ TO LENOST. Automat pohlaví klienta nezná

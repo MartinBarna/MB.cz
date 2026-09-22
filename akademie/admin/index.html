@@ -2521,6 +2521,13 @@
           ? 'Nabídku VIP nedostane, appku už má.'
           : 'Když Academy nemá, dostane jednorázový kód na roční VIP se slevou 20 %, platný 14 dní.';
         var co=tiche?'BEZ mailu' : 'a HNED poslat rozlučkový mail (oslovení: „Ahoj '+(vok||'(bez jména)')+'", psaný pro '+(rod==='z'?'ŽENU':'MUŽE')+')';
+        /* ⛔⛔ DOPOSLÁNÍ PO NEJISTOTĚ SE PTÁ ZVLÁŠŤ (revize R3, nález S5). Stav
+           `chyba_nejiste` znamená, že mail MOHL odejít: automat ho proto nikdy
+           neopakuje a rozhoduje člověk. Tlačítko tu cestu od R3 má, ale nesmí
+           ji udělat mlčky, jinak z „radši nikdy mail navíc" zbude jen heslo. */
+        if(!tiche && (KDET.data||{}).konec_stav==='chyba_nejiste'){
+          if(!confirm('POZOR: tomuhle klientovi UŽ jednou rozloučení odcházelo a nevíme, jestli došlo.\n\nMail možná už dostal. Poslat ho znovu?\n\nZkontroluj si radši Resend, než to potvrdíš.')) return;
+        }
         if(!confirm('Ukončit koučink pro '+email+'?\n\nZavře se klientská sekce, '+oAppce+', '+co+'.\n'+(tiche?'':oNabidce+'\n')+'\nData ani účet se nemažou.')) return;
         b.disabled=true; b.textContent='Ukončuji…';
         api({action:'client_offboard',email:email,osloveni:vok,tiche:tiche,rod:rod}).then(function(o){
