@@ -218,7 +218,7 @@
   }
 
   // Zmenšený export (assets/curated-foods.min.json, viz export-curated-foods-min.mjs):
-  // {cols:[...], rows:[[...],...]} místo pole objektů — kvůli 43 130 položkám na
+  // {cols:[...], rows:[[...],...]} místo pole objektů — kvůli 45 939 položkám na
   // mobilu. Převede se zpátky na pole objektů se STEJNÝM tvarem jako plný export,
   // aby searchCurated/macrosFor/render v index.html zůstaly beze změny.
   function fromMin(min) {

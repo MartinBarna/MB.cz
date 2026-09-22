@@ -2266,9 +2266,13 @@
   /**
    * Kalorická podlaha pro NEZNÁMÉ pohlaví, tedy výchozí hodnota pro `cileTreninkVolno`.
    * ⛔⛔ ZDROJ PRAVDY je `kcalFloorForSex` v appce (`src/engine/goals.ts`): žena 1200,
-   * muž i „other" 1500, bez pohlaví 1200. Sem se neimportuje (tenhle soubor je čistá
-   * IIFE bez závislostí), takže se podlaha PŘEDÁVÁ třetím parametrem. Kdo zná pohlaví
-   * klienta, musí ho poslat, jinak platí opatrných 1200.
+   * muž i „other" 1500; od 22. 9. 2026 (R3-S1) je i bez vyplněného pohlaví 1500,
+   * ne 1200 (při nejistotě platí přísnější hranice). Sem se neimportuje (tenhle
+   * soubor je čistá IIFE bez závislostí), takže se podlaha PŘEDÁVÁ třetím
+   * parametrem: kdo zná pohlaví klienta, musí ho poslat.
+   * ⚠️ Konstanta `KCAL_PODLAHA_NEZNAME` níž zůstává 1200 a NEMĚNÍ SE spolu s tímhle
+   * komentářem: je to jen záložní hodnota pro volajícího, který podlahu zvenčí
+   * nepředá, ne kopie appkové podlahy pro neznámé pohlaví.
    * ⚠️ `computeTargets` výš vlastní kalorickou podlahu NEMÁ, takže tohle je jediné místo,
    * kde na webu podlaha vzniká.
    * ⛔ Táž konstanta i tentýž default jsou v appce, hlídá parita.
