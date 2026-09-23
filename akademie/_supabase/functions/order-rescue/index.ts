@@ -17,6 +17,10 @@ import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { ostopkuj } from "./stopa.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu i fronta s opakovanim, pri trvale chybe 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+// Ceny v sablonach (23. 9. 2026). ⛔ Tenhle renderer do 23. 9. NEKONTROLOVAL nevyplnene
+// promenne: `{{neco}}`, ktere nezna, poslal cloveku doslova. S cenami v promennych by
+// zachranny mail k objednavce nesl text „{{cena_academy_mesic}} Kc". Kontrola je PRED razitkem.
+import { alertCeny, chybejiciPromenne, nactiCeny } from "../_shared/ceny.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -231,7 +235,11 @@ Deno.serve(async (req) => {
   if (typeof body.test_email === "string" && body.test_email.includes("@")) {
     const tpl = await getTpl(String(body.product || "videokurz"));
     if (!tpl) return json({ error: "no_template" }, 400);
-    const v = vars(String(body.name ?? ""));
+    const cenyT = await nactiCeny(admin);
+    const v = { ...vars(String(body.name ?? "")), ...cenyT.hodnoty };
+    // ⛔ Nevyplnena promenna (cena, ktera se nenacetla, nebo preklep) = neposilat.
+    const chybiT = chybejiciPromenne(tpl, v);
+    if (chybiT.length) return json({ error: "chybi_promenne", chybi: chybiT, ceny: cenyT.chyby }, 503);
     // ⭐ [17. 9. 2026] Vysledek testovaciho odeslani se vraci v odpovedi. Driv se
     //    zahazoval a "ok: true" znamenalo jen "brana pustila", ne "mail odesel".
     let testOdpoved: { ok: boolean; status: number } | null = null;
@@ -271,6 +279,10 @@ Deno.serve(async (req) => {
 
   let sent = 0, skipped = 0;
   const results: Record<string, unknown>[] = [];
+  // Ceny jednou za beh. Co se nenacetlo, CHYBI: mail, ktery to potrebuje, se preskoci BEZ
+  // razitka `reminded_at`, takze ho beh za dve hodiny zkusi znovu (okno 72 h).
+  const ceny = await nactiCeny(admin);
+  const nevyplneno = new Set<string>();
   // ⛔ [R1, nález N5] STROP ALERTŮ. Při výpadku sítě by z jednoho běhu odešlo až deset
   //    stejných mailů Martinovi (a cron jede každé dvě hodiny). Dál se už jen počítá
   //    a celé číslo je v odpovědi.
@@ -300,8 +312,16 @@ Deno.serve(async (req) => {
     }
     const tpl = await getTpl(String(p.product));
     if (!tpl) { skipped++; continue; }
+    const v = { ...vars(String(p.name ?? "")), ...ceny.hodnoty };
+    // ⛔ PRED branou i razitkem: chybejici promenna = mail neodejde a razitko se nezapise.
+    const chybi = chybejiciPromenne(tpl, v);
+    if (chybi.length) {
+      skipped++;
+      nevyplneno.add(tpl.track + ": " + chybi.join(","));
+      results.push({ order: p.order_id, odlozeno: "chybi_promenne", chybi });
+      continue;
+    }
     try {
-      const v = vars(String(p.name ?? ""));
       // MERENI: zachranny mail nese odkaz na PLATBU, takze proklik je tady nejcennejsi
       // cislo v celem mailingu. Lead nemusi existovat (objednavka chodi i od cloveka, ktery
       // nikdy nebyl v `leads`); pak se zmeri trat a krok, jen to nejde pripsat osobe.
@@ -439,5 +459,12 @@ Deno.serve(async (req) => {
       results.push({ order: p.order_id, error: String(e).slice(0, 100) });
     }
   }
-  return json({ ok: true, due: (pend ?? []).length, sent, skipped, alerty_potlaceno: alertuPotlaceno, results });
+  if (nevyplneno.size > 0) {
+    await alertCeny(admin, RESEND_KEY, "order-rescue:promenne", "[VYRIDIT] order-rescue: zachranny mail neodesel, chybi promenna",
+      "Tyhle zachranne maily NEODESLY (razitko se nezapsalo, beh za dve hodiny to zkusi znovu, dokud trva okno 72 h):\n\n"
+        + [...nevyplneno].join("\n") + "\n\nNacteni cen: " + (ceny.chyby.length ? ceny.chyby.join("; ") : "ok")
+        + "\n\nCo s tim: kdyz chybi cena, zkontroluj pricing_plans (appka) a app_config cena_* (Academy). "
+        + "Kdyz jde o jinou promennou, je to preklep v sablone rescue-*.");
+  }
+  return json({ ok: true, due: (pend ?? []).length, sent, skipped, alerty_potlaceno: alertuPotlaceno, ceny: ceny.chyby.length ? ceny.chyby : "ok", results });
 });

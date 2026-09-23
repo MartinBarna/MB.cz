@@ -24,7 +24,15 @@ přes **Resend HTTP API**. Engine počítá a rozhoduje; copy mailů žije v DB.
   `{{lead_magnet_url}}`, `{{plan_page_url}}`, `{{course_url}}`, `{{free_lessons_url}}`,
   `{{course_price}}`, `{{discount_pct}}`, `{{discount_price}}`, `{{discount_code}}`,
   `{{unsubscribe_url}}`.
+- **Ceny (od 23. 9. 2026):** `{{cena_basic_mesic}}`, `{{cena_basic_rok}}`, `{{cena_vip_mesic}}`,
+  `{{cena_vip_rok}}` (z `pricing_plans` appky), `{{cena_videokurz}}` (= `{{course_price}}`),
+  `{{cena_academy}}`, `{{cena_academy_mesic}}`, `{{cena_academy_upgrade}}`,
+  `{{cena_academy_po_odectu}}`, `{{cena_academy_3_mesice}}`, `{{cena_konzultace}}`,
+  `{{cena_konzultace_sleva}}`, `{{cena_balicek}}`, `{{cena_doplatek_videokurz}}`
+  (z Academy `app_config`, klíče `cena_*`). Formát „8 900" bez „Kč", šablona píše `{{cena_academy}} Kč`.
+  Zdroj a pravidla: `_shared/ceny.ts`. ⛔ Cenu do šablony nepiš číslem, jen proměnnou.
 - Pojistka: mail s nevyplněným tokenem se **neodešle** (funkce hodí chybu).
+  Cena, která se nenačetla, chybu NEhodí: mail tiše počká na další běh a Martinovi přijde alert.
 
 ## Sekvence (track / step → key, rozestup PO kroku)
 **existing-leadmagnet** (leady, co už PDF mají — NEposílá se jim magnet znovu):

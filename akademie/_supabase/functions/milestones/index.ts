@@ -19,6 +19,10 @@ import { ostopkuj } from "./stopa.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu i cteni s opakovanim, pri trvale chybe 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+// Ceny v sablonach (23. 9. 2026). ⛔ Tenhle renderer do 23. 9. NEKONTROLOVAL nevyplnene
+// promenne: `{{neco}}`, ktere nezna, poslal cloveku doslova. S cenami v promennych by to
+// znamenalo mail s textem „{{cena_academy_mesic}} Kc". Proto kontrola PRED odeslanim.
+import { alertCeny, chybejiciPromenne, nactiCeny } from "../_shared/ceny.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -225,7 +229,11 @@ Deno.serve(async (req) => {
     const ms = msIn === 100 ? 100 : msIn === 30 ? 30 : 50;
     const tpl = await getTpl(ms);
     if (!tpl) return json({ error: "no_template" }, 400);
-    const v = vars(String(body.name ?? ""));
+    const cenyT = await nactiCeny(admin);
+    const v = { ...vars(String(body.name ?? "")), ...cenyT.hodnoty };
+    // ⛔ Nevyplnena promenna (cena, ktera se nenacetla, nebo preklep) = neposilat.
+    const chybiT = chybejiciPromenne(tpl, v);
+    if (chybiT.length) return json({ error: "chybi_promenne", chybi: chybiT, ceny: cenyT.chyby }, 503);
     // ⛔ TEST rezim se ZAMERNE nemeri: nahled Martinovi by vyrobil otevreni a proklik
     //    bez odpovidajiciho odeslani a nafoukl by statistiku trate.
     await send(String(body.test_email), "[TEST] " + fill(tpl.subject, v), wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v)));
@@ -279,6 +287,10 @@ Deno.serve(async (req) => {
 
   const tpl30 = await getTpl(30), tpl50 = await getTpl(50), tpl100 = await getTpl(100);
   if (!tpl30 || !tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
+  // Ceny jednou za beh. Co se nenacetlo, CHYBI; mail, ktery to potrebuje, dnes neodejde
+  // a `milestone_sent` se nezapise, takze ho zitrejsi beh zkusi znovu.
+  const ceny = await nactiCeny(admin);
+  const nevyplneno = new Set<string>();
 
   // JEDNO MISTO, KTERE MILNIKOVY MAIL SLOZI, ZMERI A ODESLE.
   // ⛔ `px_odeslano` je jmenovatel pro open a click rate. `milestones` do `email_events`
@@ -296,6 +308,13 @@ Deno.serve(async (req) => {
     unsub: string,
     milnik: number,
   ) => {
+    // ⛔ PRED renderem i odeslanim. Vyjimka spadne do `catch` ve smycce: mail neodejde,
+    //    `milestone_sent` se nezapise a na konci behu jde alert Martinovi.
+    const chybi = chybejiciPromenne(tpl, v);
+    if (chybi.length) {
+      nevyplneno.add(TRACK + "/" + milnik + ": " + chybi.join(","));
+      throw new Error("chybi_promenne:" + chybi.join(","));
+    }
     const holeHtml = wrap(fill(tpl.preheader, v), renderBlocks(tpl.blocks, v), unsub);
     const html = await ostopkuj(holeHtml, { track: TRACK, step: milnik, key: String(tpl.key ?? ""), lead_id: leadId }, MAIL_TRACK_SECRET, SUPABASE_URL);
     const providerId = await send(email, fill(tpl.subject, v), html, unsub);
@@ -328,7 +347,7 @@ Deno.serve(async (req) => {
     const leadId = li?.id ? li.id : null;   // bez leada se mail posle dal, jen nebude komu pripsat
     const done = cnt.get(String(u.id)) ?? 0;
     const name = String((u.user_metadata as Record<string, unknown>)?.full_name ?? "");
-    const v = vars(name);
+    const v = { ...vars(name), ...ceny.hodnoty };
     try {
       if (done >= VK_TOTAL && !already.has(email + ":100")) {
         await posliMilnik(email, leadId, tpl100, v, unsub, 100);
@@ -355,5 +374,12 @@ Deno.serve(async (req) => {
       results.push({ email, error: String(e).slice(0, 100) });
     }
   }
-  return json({ ok: true, sends, marked_skipped: marked, results });
+  if (nevyplneno.size > 0) {
+    await alertCeny(admin, RESEND_KEY, "milestones:promenne", "[VYRIDIT] milestones: milnikovy mail neodesel, chybi promenna",
+      "Tyhle milnikove maily dnes NEODESLY (nic se nezapsalo, zitrejsi beh v 6:15 to zkusi znovu):\n\n"
+        + [...nevyplneno].join("\n") + "\n\nNacteni cen: " + (ceny.chyby.length ? ceny.chyby.join("; ") : "ok")
+        + "\n\nCo s tim: kdyz chybi cena, zkontroluj pricing_plans (appka) a app_config cena_* (Academy). "
+        + "Kdyz jde o jinou promennou, je to preklep v sablone milestone-videokurz.");
+  }
+  return json({ ok: true, sends, marked_skipped: marked, ceny: ceny.chyby.length ? ceny.chyby : "ok", results });
 });

@@ -37,6 +37,9 @@ import {
 import { isoNaPoleFormulare, stavHovoru, terminNaIso } from "./konzultace.ts";
 // Start koučinku: čistá validace data ve vlastním souboru, ať jde otestovat bez serveru.
 import { overStart } from "./start-klienta.ts";
+// Ceny v sablonach (23. 9. 2026): nahled a validace pri ulozeni musi znat tytez promenne
+// jako `drip-send`, jinak by ulozeni sablony s `{{cena_*}}` spadlo na `unresolved_token`.
+import { type Ceny, chybejiciCeny, nactiCeny, slevyVideokurzu } from "../_shared/ceny.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -128,7 +131,6 @@ const DQ = String.fromCharCode(34);
 const SITE = "https://martinbarna.cz";
 const COURSE_URL = "https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs";
 const FREE_LESSONS_URL = "https://www.martinbarna.cz/videokurz#zdarma";
-const COURSE_PRICE = 1490;
 const DISCOUNT_CODE = "ZACNI15";
 const DISCOUNT_PCT = 15;
 const DISCOUNT2_CODE = "JESTE20";
@@ -279,23 +281,26 @@ function vokativ(fn: string, seg: string): string {
   if ("bdflmnptvw".includes(last)) return fn + "e";
   return fn;
 }
-function buildVars(name: string, seg: Seg, unsub: string, email = "vzorek@example.cz"): Record<string, string> {
+/** Ceny pro nahled a validaci, stejne jako v `drip-send`. Co se nenacetlo, CHYBI. */
+function cenyProSablony(ceny: Ceny): Record<string, string> {
+  return { ...ceny.hodnoty, ...slevyVideokurzu(ceny, { discount_price: DISCOUNT_PCT, discount2_price: DISCOUNT2_PCT }) };
+}
+function buildVars(name: string, seg: Seg, unsub: string, cenyVars: Record<string, string>, email = "vzorek@example.cz"): Record<string, string> {
   // STEJNA sada tokenu jako drip-send/index.ts buildVars — kdyz tam pribude token, doplnit i sem!
   const parts = (name || "").trim().split(" ").filter((x) => x.length > 0);
   const t = parts[0] || "";
   const fn = vokativ(t ? t.charAt(0).toUpperCase() + t.slice(1) : "", seg);
-  const dprice = Math.round(COURSE_PRICE * (1 - DISCOUNT_PCT / 100));
-  const d2price = Math.round(COURSE_PRICE * (1 - DISCOUNT2_PCT / 100));
   return {
     first_name: fn, fn_space: fn ? " " + fn : "", fn_suffix: fn ? ", " + fn : "", fn_prefix: fn ? fn + ", " : "",
     lead_magnet_url: seg === "muzi" ? SITE + "/download/forma-zpet-muzi.pdf" : SITE + "/download/makro-plan-zeny.pdf",
     plan_page_url: seg === "muzi" ? SITE + "/forma-zpet" : SITE + "/makro-plan",
     course_url: COURSE_URL, free_lessons_url: FREE_LESSONS_URL,
-    course_price: String(COURSE_PRICE), discount_pct: String(DISCOUNT_PCT),
-    discount_price: String(dprice), discount_code: DISCOUNT_CODE,
-    discount2_pct: String(DISCOUNT2_PCT), discount2_price: String(d2price), discount2_code: DISCOUNT2_CODE,
+    discount_pct: String(DISCOUNT_PCT), discount_code: DISCOUNT_CODE,
+    discount2_pct: String(DISCOUNT2_PCT), discount2_code: DISCOUNT2_CODE,
     email: email, email_url: encodeURIComponent(email),
     unsubscribe_url: unsub,
+    // `course_price`, `discount_price` a `cena_*` z `_shared/ceny.ts` (zadna konstanta natvrdo).
+    ...cenyVars,
   };
 }
 function renderEmailPreview(tpl: { subject: string; preheader: string; blocks: Block[] }, seg: Seg, v: Record<string, string>, footer: { html: string; text: string }) {
@@ -303,7 +308,7 @@ function renderEmailPreview(tpl: { subject: string; preheader: string; blocks: B
   const html = wrapHtml(fill(tpl.preheader, seg, v), renderHtml(tpl.blocks, seg, v), fill(footer.html, seg, v));
   const sep = NL + NL + "----------------------------------------" + NL;
   const text = renderText(tpl.blocks, seg, v) + sep + fill(footer.text, seg, v);
-  if (hasToken(subject) || hasToken(html) || hasToken(text)) throw new Error("unresolved_token");
+  if (hasToken(subject) || hasToken(html) || hasToken(text)) throw new Error("unresolved_token:" + [...new Set((subject + " " + text).match(/\{\{[^{}]*\}\}|\[\[|\]\]|\[a\]/g) ?? [])].join(",").slice(0, 160));
   return { subject, html, text };
 }
 function extractAttachments(html: string): { name: string; url: string }[] {
@@ -1544,8 +1549,12 @@ Deno.serve(async (req) => {
         if (lead) { name = String(lead.name || ""); seg = normSeg(lead.segment); unsub = SUPABASE_URL + "/functions/v1/unsubscribe?token=" + lead.unsubscribe_token; }
       }
       try {
-        const v = buildVars(name, seg, unsub);
         const tpl = { subject: String(tplRow.subject ?? ""), preheader: String(tplRow.preheader ?? ""), blocks: (tplRow.blocks as Block[]) ?? [] };
+        const ceny = await nactiCeny(admin);
+        const cenyVars = cenyProSablony(ceny);
+        const chybi = chybejiciCeny(tpl, cenyVars);
+        if (chybi.length) return json({ ok: false, error: "ceny_nenacteny: " + chybi.join(",") + " (" + ceny.chyby.join("; ").slice(0, 200) + ")" });
+        const v = buildVars(name, seg, unsub, cenyVars);
         const m = renderEmailPreview(tpl, seg, v, footer);
         const attachments = extractAttachments(m.html);
         return json({ ok: true, subject: m.subject, html: m.html, text: m.text, attachments });
@@ -2008,9 +2017,14 @@ Deno.serve(async (req) => {
       const { data: fRows } = await admin.from("app_config").select("key,value").in("key", ["footer_html", "footer_text"]);
       const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
       const footer = { html: fMap.footer_html ?? "", text: fMap.footer_text ?? "" };
+      // ⛔ Cena, ktera se nenacetla, NENI chyba sablony: vrat 503 (zkus znovu), ne `render_failed`.
+      const cenyS = await nactiCeny(admin);
+      const cenyVarsS = cenyProSablony(cenyS);
+      const chybiS = chybejiciCeny({ subject, preheader, blocks }, cenyVarsS);
+      if (chybiS.length) return json({ error: "ceny_nenacteny", chybi: chybiS, detail: cenyS.chyby.join("; ").slice(0, 200) }, 503);
       try {
         for (const seg of ["zeny", "muzi"] as Seg[]) {
-          const v = buildVars(seg === "zeny" ? "Jana" : "Martin", seg, SUPABASE_URL + "/functions/v1/unsubscribe?token=sample");
+          const v = buildVars(seg === "zeny" ? "Jana" : "Martin", seg, SUPABASE_URL + "/functions/v1/unsubscribe?token=sample", cenyVarsS);
           renderEmailPreview({ subject, preheader, blocks: blocks as Block[] }, seg, v, footer);
         }
       } catch (e) { return json({ error: "render_failed", detail: String(e).slice(0, 200) }, 400); }
@@ -2026,8 +2040,12 @@ Deno.serve(async (req) => {
       const { data: fRows } = await admin.from("app_config").select("key,value").in("key", ["footer_html", "footer_text"]);
       const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
       const footer = { html: fMap.footer_html ?? "", text: fMap.footer_text ?? "" };
+      const cenyP = await nactiCeny(admin);
+      const cenyVarsP = cenyProSablony(cenyP);
+      const chybiP = chybejiciCeny({ subject: body.subject, preheader: body.preheader, blocks }, cenyVarsP);
+      if (chybiP.length) return json({ ok: false, error: "ceny_nenacteny: " + chybiP.join(",") + " (" + cenyP.chyby.join("; ").slice(0, 200) + ")" });
       try {
-        const v = buildVars(seg === "muzi" ? "Martin" : "Jana", seg, SUPABASE_URL + "/functions/v1/unsubscribe?token=sample");
+        const v = buildVars(seg === "muzi" ? "Martin" : "Jana", seg, SUPABASE_URL + "/functions/v1/unsubscribe?token=sample", cenyVarsP);
         const m = renderEmailPreview({ subject: String(body.subject || ""), preheader: String(body.preheader || ""), blocks }, seg, v, footer);
         return json({ ok: true, subject: m.subject, html: m.html, text: m.text });
       } catch (e) { return json({ ok: false, error: String(e).slice(0, 200) }); }
