@@ -78,7 +78,7 @@ rozšířilo v `resend-webhook`, který `px_odeslano` bere do seznamu typů.
 ### Cesty, které stopu s `provider_id` mají (k 16. 9. 2026)
 
 `drip-send`, `admin-api`, `grant-videokurz-z-appky`, `videokurz-onboarding`
-(ty čtyři odjakživa) a nově `client-remind`, `client-report`, `poukaz-vydat`,
+(ty čtyři odjakživa; `videokurz-onboarding` byla 23. 9. 2026 smazána) a nově `client-remind`, `client-report`, `poukaz-vydat`,
 `study-reminder`, `milestones`, `splatky-guard`, `order-rescue`
 a `academy-stripe-webhook` (doklad, opakované doručení balíčku, opakovaná konzultace).
 

@@ -214,10 +214,9 @@ export async function onboardKoucink(admin: any, v: OnboardVstup): Promise<Onboa
   //     nepatří, jinak ho tam Martin uvidí napořád a bude ho obvolávat podruhé.
   //     ⚠️ Maže se JEN značka. Nárok `konzultace` v `entitlements` ani historie plateb
   //     se nedotkne, takže je pořád vidět, že si konzultaci koupil.
-  //  2) RAZÍTKUJE `onboarding_sent_at`. `videokurz-onboarding` bere KAŽDÝ řádek se
-  //     `status='active' AND onboarding_sent_at IS NULL` a pošle mu uvítačku a migrační
-  //     mail k videokurzu. Bez razítka se do té fronty dostane i klient koučinku (živě
-  //     jich tam přes 400 čeká). Cron tu funkci dnes nevolá, ale je to nabitá zbraň.
+  //  2) RAZÍTKUJE `onboarding_sent_at`. Funkce `videokurz-onboarding`, která podle
+  //     něj vybírala frontu uvítacích mailů, byla 23. 9. 2026 SMAZÁNA (nikdy nic
+  //     neodeslala, fronta prázdná). Razítko dnes jen ukazuje admin v CRM; neškodí.
   //  3) DOPLŇUJE `coaching-active` a `coaching` i EXISTUJÍCÍMU kontaktu. Do teď se u něj
   //     měnilo jen jméno, takže člověk převedený z konzultace zůstal v CRM se značkou
   //     konzultace a bez koučinku.

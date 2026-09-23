@@ -13,7 +13,6 @@ const MUST_IMPORT_GUARD = [
   "poukaz-vydat/core.ts",
   "grant-videokurz-z-appky/core.ts",
   "grant-videokurz-z-appky/index.ts",
-  "videokurz-onboarding/index.ts",
   "admin-api/index.ts",
   "_shared/koucink-onboarding.ts",
   // Automat „konec koucinku" (22. 9. 2026): posila zakaznikovi tyz mail jako rucni
@@ -30,7 +29,6 @@ const SCAN_DIRS = [
   "affiliate-mesicni-report",
   "poukaz-vydat",
   "grant-videokurz-z-appky",
-  "videokurz-onboarding",
   "admin-api",
   "koucink-konec",
   "_shared",
@@ -107,7 +105,8 @@ for (const dir of SCAN_DIRS) {
 //    a zůstal jediný, ten v helperu. Kontrola měří RAW volání: každé nové znamená
 //    další cestu, která si musí sama hlídat bránu i `provider_id`.
 // ⛔ Kdo tohle číslo ZVYŠUJE, přidává cestu mimo helper a musí napsat proč.
-check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 && sites.length <= 9, String(sites.length));
+// ⚠️ 23. 9. 2026 KLESLO Z 8 NA 7: smazaná funkce `videokurz-onboarding` měla vlastní fetch.
+check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 7 && sites.length <= 8, String(sites.length));
 
 // ⛔ AUTOMAT NESMI ODESILAT PRIMO. Cely smysl `_shared/resend-odeslat.ts` je, ze
 //    kazde odeslani nechava `provider_id`, podle ktereho se paruje bounce. Kdyby si

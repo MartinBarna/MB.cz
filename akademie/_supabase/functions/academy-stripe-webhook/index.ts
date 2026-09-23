@@ -1710,13 +1710,11 @@ async function posliDoklad(email: string, obj: any, def: JednorazovyProdukt): Pr
 //    koučinku, zmizí z konzultace a přibude v koučinku." Odebrání tagu při pozvánce
 //    do koučinku dělá `_shared/koucink-onboarding.ts`, ne tenhle soubor.
 //
-// ⛔ `onboarding_sent_at` SE MUSÍ ORAZÍTKOVAT. `videokurz-onboarding` bere KAŽDÝ
-//    řádek se `status='active' AND onboarding_sent_at IS NULL` a pošle mu uvítačku
-//    a migrační mail k videokurzu. Ta fronta nesmí růst o lidi, kteří si koupili
-//    konzultaci a uvítací mail už dostali.
-//    ⚠️ 16. 9. 2026 změřeno, že ta fronta je dnes PRÁZDNÁ a funkce nikdy nic
-//    neodeslala (nález B/N3 auditu mailových toků). Razítkovat se ale nepřestává:
-//    fronta je prázdná právě proto, že se razítkuje.
+// ⚠️ `onboarding_sent_at` se razítkuje dál, i když funkce `videokurz-onboarding`,
+//    která podle něj vybírala frontu, byla 23. 9. 2026 SMAZÁNA (nikdy nic neodeslala,
+//    fronta prázdná, nález A/N3 auditu mailových toků; Martin souhlasil). Razítko
+//    dnes jen ukazuje admin v CRM kontaktů. Neškodí, a kdyby se ta funkce někdy
+//    vrátila, fronta nenaroste o lidi, kteří uvítací mail už dostali.
 //
 // ⚠️ U Stripu jméno kupce neznáme, řádek proto vzniká bez `name`. Není to vada,
 //    jen to Martin uvidí v adminu jako kontakt bez jména (doplní se z dotazníku).
@@ -2195,10 +2193,9 @@ Deno.serve(async (req) => {
           //    koučinku, zmizí z konzultace a přibude v koučinku." Odebrání tagu při pozvánce
           //    do koučinku dělá `_shared/koucink-onboarding.ts`, ne tenhle soubor.
           //
-          // ⛔ `onboarding_sent_at` SE MUSÍ ORAZÍTKOVAT. `videokurz-onboarding` bere KAŽDÝ
-          //    řádek se `status='active' AND onboarding_sent_at IS NULL` a pošle mu uvítačku
-          //    a migrační mail k videokurzu. Ta fronta má živě přes 400 řádků a nesmí růst
-          //    o lidi, kteří si koupili konzultaci a uvítací mail už dostali.
+          // ⚠️ `onboarding_sent_at` se razítkuje dál, i když `videokurz-onboarding`, která
+          //    podle něj vybírala frontu, byla 23. 9. 2026 SMAZÁNA (fronta byla prázdná,
+          //    funkce nikdy nic neodeslala). Razítko dnes jen ukazuje admin v CRM.
           //
           // ⚠️ U Stripu jméno kupce neznáme, řádek proto vzniká bez `name`. Není to vada,
           //    jen to Martin uvidí v adminu jako kontakt bez jména (doplní se z dotazníku).

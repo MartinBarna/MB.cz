@@ -181,8 +181,8 @@ Deno.serve(async (req) => {
 
   const odeslano: string[] = [], preskoceno: string[] = [], selhalo: string[] = [];
   // Komu mail odešel, ale razítko se nezapsalo: příští běh by ho poslal ZNOVU.
-  // ⛔ Tenhle seznam existuje kvůli nálezu B/N10: `order-rescue` a `videokurz-onboarding`
-  //    chybu zápisu razítka zahazují, takže se duplicitní mail nedá ani poznat.
+  // ⛔ Tenhle seznam existuje kvůli nálezu B/N10: `order-rescue` a (dnes smazaná)
+  //    `videokurz-onboarding` chybu zápisu razítka zahazovaly, takže se duplicitní mail nedal ani poznat.
   const razitkoNezapsano: string[] = [];
   const proMartina: string[] = [];
   // ⛔ [R1, nález N2] Komu připomínka NEODEŠLA. Jde to Martinovi do mailu, ne jen do

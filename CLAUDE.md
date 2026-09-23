@@ -190,14 +190,15 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
   CHECK výš. Postup a pasti: paměť `feedback-test-vetve-prehranim-zaplacene-udalosti`.
 - Marketingové kontakty = `public.customer_contacts` (oddělené od `leads`). Segmenty přes `tags`:
   `early-customer` (WordPress kupci), `manual-add`, `coaching-active`, `coaching-ex`.
-  Pojistka proti duplicitám mailů: `onboarding_sent_at`.
+  `onboarding_sent_at`: razítko uvítacího mailu. Funkce `videokurz-onboarding`, která podle něj
+  vybírala frontu, byla 23. 9. 2026 smazána (nikdy nic neodeslala); razítko se píše dál a ukazuje ho admin.
   ⛔ **Sem se zapisuje jméno klienta a odsud ho berou pozdější maily** (`client-remind` staví
   oslovení z `name`; bez řádku pošle „Ahoj,"). Do 28. 7. 2026 tu byla tichá díra: `client_invite`
   dělal `update` jen na EXISTUJÍCÍ řádek, takže **u nově pozvaného klienta se jméno zahodilo**,
   přestože admin i uvítací mail ukazovaly správné „Ahoj Milane" (bralo se z formuláře, ne z DB).
   Opraveno v `admin-api` v28. **Kdo sem píše, používá `upsert` nebo doplní `insert` větev**,
   a po zásahu si hodnotu přečte zpátky z DB. Detail: paměť `feedback-podmineny-update-bez-insertu`.
-- Edge funkce: `lead-capture`, `drip-send`, `unsubscribe`, `videokurz-onboarding`, `simpleshop-webhook`,
+- Edge funkce: `lead-capture`, `drip-send`, `unsubscribe`, `simpleshop-webhook`,
   `referral-code`, `referral-click`, `referral-webhook`, `admin-api`, `ai-martin`.
   ⚠️ Nasazená verze může být NOVĚJŠÍ než repo (editovalo se přes MCP), před úpravou funkce vždy
   `get_edge_function` a porovnej s repem; po deployi commitni nasazený stav zpět do repa.

@@ -34,6 +34,10 @@ export const PATH_CLASS = {
   "splatky-guard": "billing_transactional",
   "affiliate-mesicni-report": "partner_report",
   "poukaz-vydat": "purchase_delivery",
+  // ⚠️ Funkce `videokurz-onboarding` byla 23. 9. 2026 SMAZÁNA; klíč tu zůstává ZÁMĚRNĚ.
+  //    Tenhle soubor se přibaluje do čtrnácti funkcí a smazání řádku kódu by u všech
+  //    ukázalo rozdíl „živá != git" v `kontrola:nasazeni`, dokud se každá nepřenasadí.
+  //    Mrtvý klíč nic nedělá. Smaž ho při nejbližší VĚCNÉ změně tohohle souboru.
   "videokurz-onboarding": "purchase_delivery",
   "grant-videokurz-z-appky": "entitlement_delivery",
   "admin-api.client_invite": "client_operational",
