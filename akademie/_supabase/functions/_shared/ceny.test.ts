@@ -3,6 +3,8 @@
 // Hlídá: formát, „nenačtená cena CHYBÍ" (žádná záloha), jiná konfigurace = jiné číslo,
 // a tvar kódu ve čtyřech rendererech (kontrola PŘED odesláním).
 import {
+  alertCeny,
+  APP_CENIK_URL,
   CENOVE_PROMENNE,
   chybejiciCeny,
   chybejiciPromenne,
@@ -160,6 +162,51 @@ console.log("\n== nactiCeny se sítí nahrazenou ==");
   check("vše ok => bez chyb", c3.chyby.length === 0 && c3.hodnoty.cena_vip_rok === "4 990");
 }
 
+console.log("\n== R1/N3: ceník se čte jako veřejný ceník appky ==");
+check("dotaz filtruje active=eq.true", APP_CENIK_URL.includes("&active=eq.true"));
+check("dotaz filtruje public_listing=eq.true (skrytá nabídka nevyrobí druhý řádek)", APP_CENIK_URL.includes("&public_listing=eq.true"));
+
+console.log("\n== R1/N4: značka alertu jen po úspěšném odeslání ==");
+{
+  const vlozeno: unknown[] = [];
+  let znackaExistuje = false;
+  const retez = (vysledek: unknown) => {
+    const r: Record<string, unknown> = {};
+    for (const m of ["select", "eq", "gte", "limit", "in"]) r[m] = () => r;
+    r.maybeSingle = () => Promise.resolve({ data: { value: "martin@example.cz" }, error: null });
+    r.then = (ok: (v: unknown) => unknown) => Promise.resolve(vysledek).then(ok);
+    return r;
+  };
+  const admin = {
+    from: (t: string) => {
+      const q = retez(t === "email_events" ? { data: znackaExistuje ? [{ id: 1 }] : [], error: null } : { data: null, error: null });
+      (q as Record<string, unknown>).insert = (row: unknown) => { vlozeno.push(row); return Promise.resolve({ error: null }); };
+      return q;
+    },
+  };
+  const puvodniFetch = globalThis.fetch;
+  let odeslano = 0;
+  try {
+    // Resend odmítne (429) => žádná značka, příště se alert zkusí znovu.
+    globalThis.fetch = (() => { odeslano++; return Promise.resolve(new Response("rate", { status: 429 })); }) as typeof fetch;
+    const r1 = await alertCeny(admin, "klic", "test:k", "p", "t");
+    check("neodeslaný alert vrací false", r1 === false);
+    check("neodeslaný alert NEZAPÍŠE značku", vlozeno.length === 0, String(vlozeno.length));
+    // Resend přijme => značka s odeslano=true.
+    globalThis.fetch = (() => { odeslano++; return Promise.resolve(new Response(JSON.stringify({ id: "re_1" }), { status: 200 })); }) as typeof fetch;
+    const r2 = await alertCeny(admin, "klic", "test:k", "p", "t");
+    check("odeslaný alert vrací true a zapíše značku", r2 === true && vlozeno.length === 1);
+    check("značka má odeslano=true", JSON.stringify(vlozeno[0]).includes('"odeslano":true'));
+    // Značka existuje => v okně 6 h se neposílá.
+    znackaExistuje = true;
+    const pred = odeslano;
+    const r3 = await alertCeny(admin, "klic", "test:k", "p", "t");
+    check("v okně 6 h se alert znovu neposílá", r3 === false && odeslano === pred);
+  } finally {
+    globalThis.fetch = puvodniFetch;
+  }
+}
+
 console.log("\n== tvar rendererů (kontrola PŘED odesláním) ==");
 {
   const ROOT = new URL("..", import.meta.url);
@@ -182,6 +229,8 @@ console.log("\n== tvar rendererů (kontrola PŘED odesláním) ==");
     /odlozenoCenyKde\.add\(l\.track \+ '\/' \+ krokSend\); continue; \} \}/.test(drip));
   check("drip-send: test režim bez cen vrací 503", drip.includes("mode: 'test', error: 'ceny_nenacteny'"));
   check("drip-send: oneoff bez cen vrací 503", drip.includes("mode: 'oneoff', error: 'ceny_nenacteny'"));
+  predTim("drip-send: oneoff bez cen pošle alert PŘED 503 (R1/N1, volající odpověď nečte)", drip,
+    "await alertCeny(admin, RESEND_KEY, 'drip-send:ceny-oneoff'", "mode: 'oneoff', error: 'ceny_nenacteny'");
   check("drip-send: alert na neznámou proměnnou", drip.includes("'drip-send:nezname'"));
   predTim("milestones: kontrola proměnných PŘED odesláním", mil, "const chybi = chybejiciPromenne(tpl, v);", "const providerId = await send(email");
   predTim("order-rescue: kontrola proměnných PŘED razítkem", res, "const chybi = chybejiciPromenne(tpl, v);", "const { error: razErr } = await admin.from(\"pending_orders\")");

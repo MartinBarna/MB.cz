@@ -40,6 +40,33 @@ function nahrad(s) {
   }
   return s;
 }
+// ⛔ [R2, rozhodnutí šéfa po revizi R1, N1 a N2] V těchto šablonách cena NEBUDE VŮBEC,
+//    ani jako proměnná. Doručovací maily (slíbený plán z kvízu, startovací kit pro trenéra)
+//    a mail opuštěného košíku (volá ho SQL `tc_kosik_zapis`, která odpověď nečte) nesmí
+//    stát na tom, jestli se zrovna načte ceník. Věta se přepíše BEZ částky.
+//    Přesné staré znění: když ho mezitím někdo změní, skript SPADNE (nic se nehádá).
+//    Kontrola neutrality pak porovnává s textem PO téhle úpravě.
+const KVIZ_STARE = "<strong>Basic stojí 249 Kč měsíčně</strong> a k první platbě ti navíc otevřu celý svůj videokurz výživy (182 videí, hodnota {{course_price}} Kč), který ti zůstane";
+const KVIZ_NOVE = "K první platbě za <strong>Basic</strong> ti navíc otevřu celý svůj videokurz výživy (182 videí), který ti zůstane";
+const TEXTY_BEZ_CENY = {
+  "kviz-data/0": [[KVIZ_STARE, KVIZ_NOVE]],
+  "kviz-pohyb/0": [[KVIZ_STARE, KVIZ_NOVE]],
+  "kviz-vecer/0": [[KVIZ_STARE, KVIZ_NOVE]],
+  "kviz-vikend/0": [[KVIZ_STARE, KVIZ_NOVE]],
+  "trener-kit/0": [
+    ["týdenní check-in a přepočet cílů je pak v Basicu za 249 Kč měsíčně:", "týdenní check-in a přepočet cílů je pak v Basicu, nejlevnějším placeném plánu:"],
+    ["(182 videí, hodnota {{course_price}} Kč)", "(182 videí)"],
+  ],
+  "tc-kosik/0": [["<strong>Basic stojí 249 Kč měsíčně</strong> a odemyká", "<strong>Basic je nejlevnější placený plán</strong> a odemyká"]],
+};
+function upravText(klic, s, pouzito) {
+  if (!s || !TEXTY_BEZ_CENY[klic]) return s;
+  for (const [stare, nove] of TEXTY_BEZ_CENY[klic]) {
+    const n = s.split(stare).length - 1;
+    if (n > 0) { s = s.split(stare).join(nove); pouzito.set(stare, (pouzito.get(stare) || 0) + n); }
+  }
+  return s;
+}
 const vypln = (s) => (s || "").replace(/\{\{(cena_[a-z0-9_]+)\}\}/g, (m, k) => (k in DNES ? DNES[k] : m));
 
 const zmeny = [];
@@ -48,17 +75,29 @@ for (const r of rows) {
   const nove = JSON.parse(JSON.stringify(blocks));
   const vety = [];
   const pole = (stare, nove_, kde) => { if (stare !== nove_) vety.push({ kde, pred: stare, po: nove_ }); return nove_; };
-  const subject = pole(r.subject, nahrad(r.subject), "subject");
-  const preheader = pole(r.preheader, nahrad(r.preheader), "preheader");
+  const klic = r.track + "/" + r.step;
+  const pouzito = new Map();
+  const uprav = (s) => upravText(klic, s, pouzito);
+  // Očekávaný text = původní text s vědomými úpravami bez ceny (jen u šablon z TEXTY_BEZ_CENY).
+  const ocek = { subject: uprav(r.subject), preheader: uprav(r.preheader), blocks: JSON.parse(JSON.stringify(blocks)) };
+  const subject = pole(r.subject, nahrad(ocek.subject), "subject");
+  const preheader = pole(r.preheader, nahrad(ocek.preheader), "preheader");
   nove.forEach((b, i) => {
     // ⛔ href a src se NEMĚNÍ: „utm_content=basic-249" je štítek kampaně, ne cena.
-    for (const k of ["html", "text", "alt"]) if (typeof b[k] === "string") b[k] = pole(b[k], nahrad(b[k]), `b${i}.${b.t}.${k}`);
-    if (Array.isArray(b.items)) b.items = b.items.map((it, j) => pole(it, nahrad(it), `b${i}.bullets[${j}]`));
+    const bo = ocek.blocks[i];
+    for (const k of ["html", "text", "alt"]) if (typeof b[k] === "string") { bo[k] = uprav(b[k]); b[k] = pole(b[k], nahrad(bo[k]), `b${i}.${b.t}.${k}`); }
+    if (Array.isArray(b.items)) { bo.items = b.items.map(uprav); b.items = b.items.map((it, j) => pole(it, nahrad(bo.items[j]), `b${i}.bullets[${j}]`)); }
   });
+  if (TEXTY_BEZ_CENY[klic]) {
+    for (const [stare] of TEXTY_BEZ_CENY[klic]) if (!pouzito.get(stare)) throw new Error("TEXT SE ZMENIL, uprava bez ceny nesedi: " + klic + " :: " + stare.slice(0, 60));
+    const vse = subject + preheader + JSON.stringify(nove);
+    if (/\{\{(cena_|course_price|discount)/.test(vse)) throw new Error("Sablona bez ceny ma porad cenovou promennou: " + klic);
+  }
   if (!vety.length) continue;
-  // NEUTRALITA: dosazení dnešních cen musí vrátit PŘESNĚ původní text.
+  // NEUTRALITA: dosazení dnešních cen musí vrátit PŘESNĚ očekávaný text (= původní, u šablon
+  // z TEXTY_BEZ_CENY původní s vědomou úpravou věty).
   const zpet = { subject: vypln(subject), preheader: vypln(preheader), blocks: JSON.parse(vypln(JSON.stringify(nove))) };
-  const neutralni = zpet.subject === r.subject && zpet.preheader === r.preheader && JSON.stringify(zpet.blocks) === JSON.stringify(blocks);
+  const neutralni = zpet.subject === ocek.subject && zpet.preheader === ocek.preheader && JSON.stringify(zpet.blocks) === JSON.stringify(ocek.blocks);
   if (!neutralni) throw new Error("NENI NEUTRALNI: " + r.track + "/" + r.step);
   zmeny.push({ track: r.track, step: r.step, key: r.key, blocks_md5: r.blocks_md5,
     subject_md5: crypto.createHash("md5").update(r.subject, "utf8").digest("hex"),
@@ -91,7 +130,8 @@ function sql(nanecisto) {
   return `-- ============================================================================
 -- CENY V MAILOVÝCH ŠABLONÁCH -> PROMĚNNÉ (23. 9. 2026, větev fix/ceny-v-mailech-0923)
 -- Projekt: Academy uhmrpfsdcujbhbtumqye, tabulka public.email_templates.
--- Vygenerováno skriptem nad SELECTem živé tabulky (23. 9. 2026 ~21:00).
+-- Vygenerováno skriptem nad SELECTem živé tabulky (R2, 23. 9. 2026 večer).
+-- [R2] kviz-*/0, trener-kit/0 a tc-kosik/0: věta s cenou přepsaná BEZ částky (doručení nečeká na ceník).
 -- ============================================================================
 -- ⛔ POŘADÍ NASAZENÍ (BUILD-ceny-v-mailech.md): 1) ceny-app-config-2026-09-23.sql,
 --    2) deploy drip-send, admin-api, milestones, order-rescue, 3) TENHLE soubor.
@@ -101,7 +141,7 @@ function sql(nanecisto) {
 --    ve stavu z generování (md5). Když ho mezitím někdo upravil, počet nesedí a CELÉ se to vrátí.
 -- ⛔ Záloha celé tabulky vzniká ve stejné transakci, s RLS a bez práv pro anon/authenticated.
 -- Ověření neutrality (mimo SQL, skript): dosazení dnešních cen do nových textů vrací
--- PŘESNĚ původní texty u všech ${N} šablon. Mění se jen to, odkud číslo přijde.
+-- PŘESNĚ původní texty (u šesti šablon výše původní s přepsanou větou bez částky).
 -- ============================================================================
 ${nanecisto ? "-- !!! NANEČISTO: na konci vyhodí výjimku, takže se NIC nezapíše (ani záloha).\n" : ""}begin;
 do $mig$
@@ -136,6 +176,14 @@ ${values}
          ~ '(8 900|7 410|5 930|2 970|2 990|2 190|1 140|4 990|2 490) Kč|(^|[^0-9 ]|[^0-9] )(990|499|349|249) Kč';
   if zbyva <> 0 then
     raise exception 'ZBYTKY: % sablon ma porad cenu cislem', zbyva;
+  end if;
+
+  -- [R2] Doručovací maily a košík nesmí nést ŽÁDNOU cenovou proměnnou (nesmí čekat na ceník).
+  select count(*) into bez_ceny from public.email_templates
+   where (track, step) in (('kviz-data',0),('kviz-pohyb',0),('kviz-vecer',0),('kviz-vikend',0),('trener-kit',0),('tc-kosik',0))
+     and (subject || ' ' || preheader || ' ' || blocks::text) ~ '[{][{](cena_|course_price|discount)';
+  if bez_ceny <> 0 then
+    raise exception 'DORUCOVACI: % sablon ma porad cenovou promennou', bez_ceny;
   end if;
 
   select count(*) into bez_ceny from public.zaloha_email_templates_ceny_20260923;

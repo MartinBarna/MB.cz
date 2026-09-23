@@ -34,9 +34,14 @@ import { odesliPresResend } from "./resend-odeslat.ts";
 // deno-lint-ignore no-explicit-any
 type Admin = any;
 
-/** REST ceníku appky. Tentýž dotaz (aktivní plány) dělá prodejní stránka `/tvuj-coach/`. */
+/**
+ * REST ceníku appky. Filtr je STEJNÝ jako veřejný ceník appky (`listActivePlans` v
+ * `src/data/billing.ts`: `active = true` A `public_listing = true`). Revize R1, N3:
+ * bez `public_listing` by skrytá adresná nabídka (migrace 0085, RLS ji anonu ukazuje)
+ * udělala druhý řádek téhož plánu a všechny maily s cenou Basicu nebo VIP by čekaly.
+ */
 export const APP_CENIK_URL =
-  "https://kfkmghvhqwqtsalqjmrp.supabase.co/rest/v1/pricing_plans?select=tier,interval,price_czk,segment&active=eq.true";
+  "https://kfkmghvhqwqtsalqjmrp.supabase.co/rest/v1/pricing_plans?select=tier,interval,price_czk,segment&active=eq.true&public_listing=eq.true";
 /**
  * VEŘEJNÝ anon klíč appky, tentýž, který nese `tvuj-coach/index.html` v prohlížeči.
  * Není to tajemství (RLS politika `plans_select` pouští aktivní plány i nepřihlášeným).
@@ -232,6 +237,7 @@ export const ALERT_CENY_ODSTUP_MS = 6 * 3600 * 1000;
  * každou hodinu a výpadek ceníku by jinak nasypal alert do každého běhu.
  * Značka odstupu je řádek `email_events` typu `alert_ceny` (bez `provider_id`,
  * takže ho `resend-webhook` ani denní strop nevidí; jistič čte jen `error`).
+ * Značka vzniká JEN po úspěšném odeslání: neodeslaný alert se v dalším běhu zkusí znovu.
  * ⛔ Když se značka nedá přečíst, alert se POŠLE: radši dva alerty než žádný.
  * ⛔ Nejde přes `sendIfAllowed`: brána chrání adresu zákazníka, ne Martinovu.
  */
@@ -254,11 +260,16 @@ export async function alertCeny(admin: Admin, resendKey: string, klic: string, p
     subject: predmet,
     html: `<pre style="font-family:inherit;white-space:pre-wrap">${text.split("&").join("&amp;").split("<").join("&lt;")}</pre>`,
   });
+  // ⛔ Značka odstupu JEN po úspěšném odeslání (revize R1, N4). Kdyby se zapsala i při
+  //    selhání Resendu, dalších 6 h by žádný alert nešel a Martin by nevěděl nic.
+  if (!r.ok) {
+    console.error("[ceny] ALERT MARTINOVI NEODESEL, znacka se nezapisuje: " + klic + " " + (r.chyba ?? ""));
+    return false;
+  }
   const { error: zapErr } = await admin.from("email_events").insert({
     lead_id: null, step: 0, type: "alert_ceny",
-    detail: { klic, odeslano: r.ok, status: r.status, predmet: predmet.slice(0, 120) },
+    detail: { klic, odeslano: true, status: r.status, predmet: predmet.slice(0, 120) },
   });
   if (zapErr) console.error("[ceny] zapis alert_ceny selhal: " + zapErr.message);
-  if (!r.ok) console.error("[ceny] ALERT MARTINOVI NEODESEL: " + klic + " " + (r.chyba ?? ""));
-  return r.ok;
+  return true;
 }
