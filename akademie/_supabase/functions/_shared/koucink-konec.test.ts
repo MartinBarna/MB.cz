@@ -15,6 +15,12 @@ import {
   promoPlatnostDo,
   vyberKeUkonceni,
   vygenerujPromoKod,
+  jeNejisteOdeslani,
+  type MailStav,
+  odesliSRazitkem,
+  rozhodniRucniOdchod,
+  zajistiPromoKod,
+  CHYBA_KOD_NEAKTIVNI,
 } from "./koucink-konec.ts";
 
 let selhalo = 0;
@@ -142,6 +148,203 @@ check("form: žádné `customer`", !("customer" in form));
 // ⛔ Procento slevy je v kupónu, ne tady. Dvě místa s jedním číslem se rozejdou.
 check("form: žádné procento slevy",
   !Object.values(form).some((x) => String(x).includes("20")) || form.expires_at.includes("20"));
+
+
+// -----------------------------------------------------------------------------
+console.log("\n== rozhodniRucniOdchod: tabulka nárok × stav práce × stav mailu (revize R5) ==");
+{
+  // ⛔⛔ KAŽDÝ ŘÁDEK TABULKY JE TADY, bez výjimek. Do R5 se u tlačítka rozhodovalo
+  //    jen podle stavu mailu, a u klienta s běžícím přístupem tlačítko poslalo
+  //    „jen mail" a přístup nechalo otevřený.
+  type Radek = [string, boolean, boolean, string, MailStav, boolean, boolean, boolean, string];
+  // popis, narokExistuje, narokAktivni, stav, mailStav, rezervaceCerstva, tiche, potvrzeno, očekávaná akce
+  const T: Radek[] = [
+    ["není nárok", false, false, "", "neposlano", false, false, false, "neni_klient"],
+    ["čerstvá rezervace", true, true, "rezervovano", "neposlano", true, false, false, "automat_pracuje"],
+    ["čerstvá rezervace, nárok vypnutý", true, false, "rezervovano", "posilam", true, false, true, "automat_pracuje"],
+
+    // --- NÁROK BĚŽÍ: vždycky plná cesta, bez ohledu na stav mailu ---
+    ["běží, bez razítka", true, true, "", "neposlano", false, false, false, "plny_pruchod"],
+    ["běží, neposlano", true, true, "opakovat", "neposlano", false, false, false, "plny_pruchod"],
+    ["běží, odmitnuto (z jiného konce)", true, true, "opakovat", "odmitnuto", false, false, false, "plny_pruchod+zahod"],
+    ["běží, posilam (z jiného konce)", true, true, "rezervovano", "posilam", false, false, false, "plny_pruchod+zahod"],
+    ["běží, nejiste (z jiného konce)", true, true, "hotovo", "nejiste", false, false, false, "plny_pruchod+zahod"],
+    ["běží, odeslano (z jiného konce)", true, true, "hotovo", "odeslano", false, false, false, "plny_pruchod+zahod"],
+    ["běží, nejiste, tiše", true, true, "hotovo", "nejiste", false, true, false, "plny_pruchod+zahod"],
+
+    // --- NÁROK ZAVŘENÝ: rozhoduje stav mailu ---
+    ["zavřeno, odeslano", true, false, "hotovo", "odeslano", false, false, false, "uz_ukoncen"],
+    // ⚠️ `odeslano` u rozdělané práce: cron po pádu píše `opakovat` a stav mailu
+    //    nechává. I tady rozhoduje mail, ne stav práce (mutace M67 v R5).
+    ["zavřeno, odeslano, práce opakovat", true, false, "opakovat", "odeslano", false, false, false, "uz_ukoncen"],
+    ["zavřeno, odeslano, opuštěná rezervace", true, false, "rezervovano", "odeslano", false, false, false, "uz_ukoncen"],
+    ["zavřeno, bez razítka", true, false, "", "neposlano", false, false, false, "uz_ukoncen"],
+    ["zavřeno, hotovo + neposlano (vědomě)", true, false, "hotovo", "neposlano", false, false, false, "uz_ukoncen"],
+    ["zavřeno, vzdano + neposlano", true, false, "vzdano", "neposlano", false, false, false, "uz_ukoncen"],
+    ["zavřeno, opakovat + neposlano (mail chybí)", true, false, "opakovat", "neposlano", false, false, false, "jen_mail"],
+    ["zavřeno, opuštěná rezervace + neposlano", true, false, "rezervovano", "neposlano", false, false, false, "jen_mail"],
+    ["zavřeno, odmitnuto", true, false, "opakovat", "odmitnuto", false, false, false, "jen_mail"],
+    ["zavřeno, odmitnuto, tiše", true, false, "opakovat", "odmitnuto", false, true, false, "uz_ukoncen"],
+    ["zavřeno, nejiste bez potvrzení", true, false, "hotovo", "nejiste", false, false, false, "potrebuje_potvrzeni"],
+    ["zavřeno, nejiste s potvrzením", true, false, "hotovo", "nejiste", false, false, true, "jen_mail"],
+    ["zavřeno, posilam bez potvrzení", true, false, "rezervovano", "posilam", false, false, false, "potrebuje_potvrzeni"],
+    ["zavřeno, posilam s potvrzením", true, false, "rezervovano", "posilam", false, false, true, "jen_mail"],
+    ["zavřeno, nejiste, tiše", true, false, "hotovo", "nejiste", false, true, false, "uz_ukoncen"],
+  ];
+  for (const [popis, ex, ak, stav, ms, cerstva, tiche, potvrzeno, cekam] of T) {
+    const r = rozhodniRucniOdchod({
+      narokExistuje: ex, narokAktivni: ak, stav, mailStav: ms, rezervaceCerstva: cerstva, tiche, potvrzeno,
+    });
+    const dostal = r.akce === "plny_pruchod" ? (r.zahodMail ? "plny_pruchod+zahod" : "plny_pruchod") : r.akce;
+    check("ruční: " + popis + " = " + cekam, dostal === cekam, dostal);
+  }
+}
+
+// -----------------------------------------------------------------------------
+console.log("\n== odesliSRazitkem: jediné pořadí pro cron i admin (revize R5) ==");
+{
+  const TED_ISO = () => "2026-09-23T10:00:00.000Z";
+  // Falešný zápis: zapisuje do pole a umí selhat od N-tého pokusu.
+  const mk = (selzeOd = 0) => {
+    const zapisy: Record<string, unknown>[] = [];
+    let posli = 0;
+    return {
+      zapisy,
+      pocetPoslani: () => posli,
+      zapis: (pole: Record<string, unknown>) => {
+        zapisy.push(pole);
+        return Promise.resolve(!(selzeOd && zapisy.length >= selzeOd));
+      },
+      posliS: (r: { ok: boolean; status: number; chyba?: string; providerId?: string }) => () => {
+        posli++;
+        return Promise.resolve(r);
+      },
+    };
+  };
+
+  {
+    // ⛔⛔ JÁDRO: když se nepovede zapsat `posilam`, Resend se NEVOLÁ.
+    const m = mk(1);
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: true, status: 200, providerId: "x" }), tedIso: TED_ISO, duvod: "t" });
+    check("posilam neuložen: Resend se NEVOLÁ", m.pocetPoslani() === 0 && o.vysledek === "posilam_neulozeno");
+  }
+  {
+    const m = mk();
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: true, status: 200, providerId: "re_1" }), tedIso: TED_ISO, duvod: "t" });
+    check("pořadí: nejdřív `posilam`, pak výsledek", m.zapisy[0].mail_stav === "posilam" && m.zapisy[1].mail_stav === "odeslano");
+    check("úspěch s id: `odeslano` a `provider_id`", o.vysledek === "odeslano" && m.zapisy[1].provider_id === "re_1");
+    check("úspěch: `sent_ok` je odvozenina", m.zapisy[1].sent_ok === true && m.zapisy[0].sent_ok === false);
+    check("úspěch: práce `hotovo`", m.zapisy[1].stav === "hotovo");
+    check("`posilam` maže id z minulého pokusu", m.zapisy[0].provider_id === null);
+  }
+  {
+    // ⛔ N6 z R5: 200 bez id se nesmí zapsat jako doložené odeslání.
+    const m = mk();
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: true, status: 200, providerId: "" }), tedIso: TED_ISO, duvod: "t" });
+    check("200 bez id = `bez_id`, zapsáno `nejiste`", o.vysledek === "bez_id" && m.zapisy[1].mail_stav === "nejiste");
+  }
+  {
+    const m = mk();
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: false, status: 503, chyba: "resend_503:" }), tedIso: TED_ISO, duvod: "t" });
+    check("5xx = `nejiste`, práce `hotovo`", o.vysledek === "nejiste" && m.zapisy[1].mail_stav === "nejiste" && m.zapisy[1].stav === "hotovo");
+  }
+  {
+    const m = mk();
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: false, status: 0, chyba: "sit:timeout" }), tedIso: TED_ISO, duvod: "t" });
+    check("pád sítě = `nejiste`", o.vysledek === "nejiste");
+  }
+  {
+    const m = mk();
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: false, status: 422, chyba: "resend_422:x" }), tedIso: TED_ISO, duvod: "t" });
+    check("4xx = `odmitnuto`, práce `opakovat`", o.vysledek === "odmitnuto" && m.zapisy[1].mail_stav === "odmitnuto" && m.zapisy[1].stav === "opakovat");
+  }
+  {
+    const m = mk();
+    const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS({ ok: false, status: 0, chyba: "missing_RESEND_API_KEY" }), tedIso: TED_ISO, duvod: "t" });
+    check("chybějící klíč = `odmitnuto` (jisté neodeslání)", o.vysledek === "odmitnuto");
+  }
+  {
+    // ⛔⛔ NÁVRAT ZÁPISU VÝSLEDKU SE ČTE VŽDY (V2 z R5), i u 4xx.
+    for (const r of [
+      { ok: true, status: 200, providerId: "x" },
+      { ok: false, status: 503, chyba: "resend_503:" },
+      { ok: false, status: 422, chyba: "resend_422:" },
+    ]) {
+      const m = mk(2);
+      const o = await odesliSRazitkem({ zapis: m.zapis, posli: m.posliS(r), tedIso: TED_ISO, duvod: "t" });
+      check("výsledek neuložen je vidět (status " + r.status + ")", o.vysledekUlozen === false && m.pocetPoslani() === 1);
+    }
+  }
+  {
+    const m = mk();
+    await odesliSRazitkem({
+      zapis: m.zapis, posli: m.posliS({ ok: true, status: 200, providerId: "x" }), tedIso: TED_ISO, duvod: "t",
+      spolecne: { ma_academy: true, promo_code: "VIP-X" },
+    });
+    check("společná pole jdou do obou zápisů",
+      m.zapisy.every((z) => z.ma_academy === true && z.promo_code === "VIP-X"));
+  }
+  check("jeNejisteOdeslani: 5xx ano, sit ano, 4xx ne, klíč ne",
+    jeNejisteOdeslani({ status: 500 }) && jeNejisteOdeslani({ status: 0, chyba: "sit:x" }) &&
+      !jeNejisteOdeslani({ status: 422 }) && !jeNejisteOdeslani({ status: 0, chyba: "missing_RESEND_API_KEY" }));
+}
+
+// -----------------------------------------------------------------------------
+console.log("\n== zajistiPromoKod: odpovědi Stripu nanečisto (revize R5, nález S4) ==");
+{
+  // Falešný fetch: vrací odpovědi v pořadí a zapisuje, na co se kód ptal.
+  // Stripe se tu NEVOLÁ; síť nahrazuje fronta připravených odpovědí.
+  const puvodniFetch = globalThis.fetch;
+  const scenar = async (odpovedi: (Response | "pad")[]) => {
+    const dotazy: string[] = [];
+    globalThis.fetch = ((u: string | URL | Request, i?: RequestInit) => {
+      dotazy.push((i?.method ?? "GET") + " " + String(u));
+      const o = odpovedi.shift();
+      if (!o || o === "pad") return Promise.reject(new Error("sit"));
+      return Promise.resolve(o);
+    }) as typeof fetch;
+    try {
+      const r = await zajistiPromoKod("sk_test_x", { couponId: "cpn", email: "a@b.cz", kod: "VIP-ABC", tedMs: 0 });
+      return { r, dotazy };
+    } finally {
+      globalThis.fetch = puvodniFetch;
+    }
+  };
+  const json = (o: unknown, status = 200) => new Response(JSON.stringify(o), { status });
+  const PRAZDNO = () => json({ data: [] });
+  const EXISTUJE = () => json({ error: { message: "An active promotion code with `code: VIP-ABC` already exists." } }, 400);
+
+  {
+    // ⛔⛔ S4: prázdný druhý GET po `already exists` = text obsadil neaktivní kód.
+    const { r, dotazy } = await scenar([PRAZDNO(), EXISTUJE(), PRAZDNO()]);
+    check("already exists + prázdný druhý GET = `kod_neaktivni`",
+      !r.ok && r.chyba === CHYBA_KOD_NEAKTIVNI, JSON.stringify(r));
+    check("GET se ptá jen na aktivní kódy", dotazy[0].startsWith("GET ") && dotazy[0].includes("active=true"), dotazy[0]);
+    check("po `already exists` přijde přesně jeden druhý GET", dotazy.length === 3, dotazy.join(" | "));
+  }
+  {
+    // Druhý GET selhal: nevíme nic, nový text se NElosuje.
+    const { r } = await scenar([PRAZDNO(), EXISTUJE(), json({}, 500)]);
+    check("already exists + nepřečtený druhý GET = obecná chyba, ne `kod_neaktivni`",
+      !r.ok && r.chyba === "stripe_kod_existuje_ale_neprecten", JSON.stringify(r));
+  }
+  {
+    const { r } = await scenar([PRAZDNO(), EXISTUJE(), json({ data: [{ id: "promo_1", active: true }] })]);
+    check("already exists + druhý GET najde aktivní = úspěch", r.ok && r.id === "promo_1", JSON.stringify(r));
+  }
+  {
+    const { r, dotazy } = await scenar([json({ data: [{ id: "promo_2", active: true }] })]);
+    check("existující aktivní kód: žádný POST", r.ok && r.id === "promo_2" && dotazy.length === 1, dotazy.join(" | "));
+  }
+  {
+    const { r, dotazy } = await scenar([PRAZDNO(), json({ id: "promo_3" })]);
+    check("nový kód: POST a id", r.ok && r.id === "promo_3" && dotazy[1].startsWith("POST "), JSON.stringify(r));
+  }
+  {
+    const { r } = await scenar([PRAZDNO(), "pad"]);
+    check("pád sítě u POST = chyba `sit:`", !r.ok && String(r.chyba).startsWith("sit:"), JSON.stringify(r));
+  }
+}
 
 console.log(selhalo === 0 ? "\nVSE ZELENE\n" : `\n${selhalo} SELHANI\n`);
 if (selhalo > 0) throw new Error(String(selhalo) + " selhani");

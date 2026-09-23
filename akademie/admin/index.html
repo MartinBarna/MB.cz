@@ -2529,7 +2529,11 @@
            „mohl odejít"; `posilam` navíc, že předchozí pokus uvízl uprostřed. */
         var mailStav=(KDET.data||{}).konec_mail_stav;
         var potvrzeno=false;
-        if(!tiche && (mailStav==='nejiste' || mailStav==='posilam')){
+        /* ⛔ Ptá se jen tehdy, když se bude JEN DOPOSÍLAT (přístup už je zavřený).
+           Když přístup běží, tlačítko jde plnou cestou a starý stav mailu zahodí
+           (revize R5, V1): server potvrzení nechce a dialog by strašil zbytečně. */
+        var narokBezi=(KDET.data||{}).konec_narok_aktivni===true;
+        if(!tiche && !narokBezi && (mailStav==='nejiste' || mailStav==='posilam')){
           if(!confirm('POZOR: tomuhle klientovi UŽ jednou rozloučení odcházelo a nevíme, jestli došlo.\n\nMail možná už dostal. Poslat ho znovu?\n\nZkontroluj si radši Resend, než to potvrdíš.')) return;
           /* ⛔⛔ Potvrzení je součást POŽADAVKU, ne jen dialogu (nález S5 z R4):
              server ho vyžaduje, takže přímé volání akce brzdu nepřeskočí. */
@@ -2560,10 +2564,16 @@
                bralo cokoli, co není `mail_ok === false`, takže chybějící klíč
                Resendu i mail zastavený bránou hlásily „Mail odešel.".
                `null` = vědomě se neposílal, `false` = měl a nešel, `true` = odešel. */
+            /* ⛔ `mail_ok: null` má DVA významy a rozlišuje je `mail_vysledek`
+               (revize R5): vědomě se neposílal (tichý odchod, brána), nebo MOHL
+               odejít (5xx, síť, 200 bez id). Slitý text by u nejistoty tvrdil
+               „mail se neposílal", a Martin by ho poslal znovu. */
             var mailText;
             if (o.j.mail_ok===true) mailText=' Mail odešel.';
-            else if (o.j.mail_ok===false) mailText=' ⚠️ MAIL NEODEŠEL ('+(o.j.mail_duvod||('Resend '+(o.j.mail_status||'?')))+'). Klikni na tlačítko ještě jednou, pošle se jen mail; jinak ho zkusí automat.';
+            else if (o.j.mail_ok===false) mailText=' ⚠️ MAIL NEODEŠEL ('+(o.j.mail_duvod||o.j.mail_vysledek||('Resend '+(o.j.mail_status||'?')))+'). Klikni na tlačítko ještě jednou, pošle se jen mail; jinak ho zkusí automat.';
+            else if (o.j.mail_vysledek==='nejiste' || o.j.mail_vysledek==='bez_id') mailText=' ⚠️ NEVÍM, JESTLI MAIL ODEŠEL (Resend '+(o.j.mail_status||'?')+'). Zkontroluj Resend, než ho pošleš znovu.';
             else mailText=' Mail se neposílal ('+(o.j.mail_duvod||'bez důvodu')+').';
+            if (o.j.zahozen_stary_mail) mailText+=' (Zahodil jsem starý stav rozloučení „'+o.j.zahozen_stary_mail+'", patřil k dřívějšímu konci.)';
             var varText = o.j.varovani ? ' ⚠️ '+o.j.varovani : '';
             toast('🚪 Koučink ukončen.'+mailText+pozn+varText);
             $('kdet').classList.remove('on'); loadKlienti();

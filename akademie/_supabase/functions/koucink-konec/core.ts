@@ -33,28 +33,14 @@ export const STAVY_K_PREVZETI: StavRazitka[] = ["opakovat"];
 /** Stavy, které znamenají „hotovo, nesahat". */
 export const STAVY_UZAVRENE: StavRazitka[] = ["hotovo", "vzdano"];
 
-/**
- * Stav MAILU: co se stalo s rozloučením. Jediný zdroj pravdy o odeslání.
- *
- * ⛔ `odmitnuto` a `nejiste` se NESMÍ slít. `odmitnuto` znamená, že Resend
- *    zásilku výslovně odmítl (4xx, chybějící klíč), takže se smí poslat znovu.
- *    `nejiste` znamená, že mail MOHL odejít, a tam automat nesahá.
- * ⛔ `posilam` je razítko PŘED voláním Resendu. Když se nepovede zápis VÝSLEDKU,
- *    řádek v něm zůstane a po 30 minutách se čte jako `nejiste`. Druhý mail
- *    z toho nevznikne nikdy, a to je celý smysl toho stavu.
- */
-export type MailStav = "neposlano" | "posilam" | "odmitnuto" | "nejiste" | "odeslano";
+// ⛔ Stav MAILU a jeho čtení žijí v `_shared/koucink-konec.ts`, protože stejné
+//    pořadí zápisů používá i ruční odchod z admina. Dvě definice téhož výčtu by se
+//    rozešly přesně v té hodnotě, na které záleží.
+export { mailStavZRadku, type MailStav } from "../_shared/koucink-konec.ts";
+import { type MailStav, mailStavZRadku, odesliSRazitkem } from "../_shared/koucink-konec.ts";
 
 /** Mail se smí (znovu) poslat jen z těchhle stavů. */
 export const MAIL_STAVY_K_ODESLANI: MailStav[] = ["neposlano", "odmitnuto"];
-
-/** Text ze sloupce na stav mailu. Neznámé i prázdné se čte jako `neposlano`. */
-export function mailStavZRadku(raw: unknown): MailStav {
-  const v = String(raw ?? "").trim();
-  return (["neposlano", "posilam", "odmitnuto", "nejiste", "odeslano"] as string[]).includes(v)
-    ? (v as MailStav)
-    : "neposlano";
-}
 
 /**
  * Kolikrát se automat o jednoho člověka pokusí, než to vzdá.
@@ -104,7 +90,17 @@ export type BranaRozhodnuti = {
   decision: unknown;
 };
 
-export type OdeslaniVysledek = { ok: boolean; status: number; chyba?: string };
+export type OdeslaniVysledek = {
+  ok: boolean;
+  status: number;
+  chyba?: string;
+  /**
+   * ID zásilky u Resendu. ⛔ Bez něj se `odeslano` NEZAPISUJE (revize R5, N6):
+   *    Resend sice mohl vrátit 200, ale bez id to nejde doložit ani spárovat
+   *    s bouncem, takže se to bere jako nejistota a rozhodne člověk.
+   */
+  providerId?: string;
+};
 
 export type PromoVysledekJadro =
   | { ok: true; kod: string }
@@ -200,7 +196,13 @@ export type RozhodnutiOPrevzatem =
    */
   | "nejiste_rozhodne_clovek"
   /** Běžná cesta: zavřít přístup a poslat rozloučení. */
-  | "zavri";
+  | "zavri"
+  /**
+   * Totéž jako `zavri`, ale v řádku visel stav mailu z MINULÉHO pokusu
+   * (`posilam`, `nejiste`, `odmitnuto`, `odeslano`), přestože přístup pořád běží.
+   * ⛔ Ten stav se zahodí (`neposlano`) a jde alert: patří k jinému konci.
+   */
+  | "zavri_zahod_mail";
 
 /**
  * Co se má stát s člověkem, kterého běh převzal z minula?
@@ -223,31 +225,40 @@ export function rozhodniOPrevzatem(
 ): RozhodnutiOPrevzatem {
   if (narok.active === null) return "nevim";
 
-  // ⛔⛔ ROZHODUJE JEN `mailStav`, NE TO, ODKUD ŘÁDEK PŘIŠEL (revize R4).
-  //    Do R4 se stejná informace četla ze stavu práce (`opakovat_mail`) i
-  //    z booleanu `sent_ok`, a když stav práce zmizel (pád běhu, selhaný zápis),
-  //    význam `false` se tiše převrátil z „jistě neodešlo" na „mohl odejít".
-  //    Odsud je to jedna hodnota, která říká přímo to, na co se ptáme.
-
-  // Mail prokazatelně odešel. Pak už nezáleží na ničem jiném: druhý se neposílá.
-  if (opts.mailStav === "odeslano") return narok.active ? "znovu_klient" : "uzavri_bez_mailu";
-
-  // Mail MOHL odejít. ⛔ Automat nesahá, rozhoduje člověk.
-  // ⚠️ `posilam` se sem dostane jen tehdy, když ho běh převzal, a ten ho smí
-  //    převzít jen po ochranné lhůtě. Visící `posilam` je tedy přesně to samé
-  //    jako nejistota: někdo začal posílat a výsledek se nikdy nezapsal.
-  if (opts.mailStav === "nejiste" || opts.mailStav === "posilam") return "nejiste_rozhodne_clovek";
-
-  // Zbývá `neposlano` a `odmitnuto`: mail jistě neodešel, poslat se smí.
+  // ⛔⛔ NEJDŘÍV SE PTÁ, JESTLI PŘÍSTUP BĚŽÍ, TEPRVE PAK NA MAIL (revize R5, nález V1).
+  //    Do R5 se `nejiste` a `posilam` vyhodnotily jako „rozhodne člověk" dřív,
+  //    než se kód podíval na nárok. U člověka, kterému přístup pořád běží, to
+  //    znamenalo zapsat `hotovo` a přístup NEZAVŘÍT, a alert Martinovi slíbil,
+  //    že tlačítko „pošle jen mail". Poslalo by rozloučení aktivnímu klientovi.
+  //
+  //    Stav mailu totiž popisuje KONKRÉTNÍ pokus o rozloučení, a ten má smysl
+  //    jen tehdy, když přístup už je zavřený. Tok je vždycky: zavřít přístup,
+  //    PAK `posilam`, PAK Resend. Běžící nárok s `posilam` nebo `nejiste` proto
+  //    znamená, že ten pokus patří k MINULÉMU konci (člověk se mezitím vrátil)
+  //    nebo že se přístup nikdy nezavřel. V obou případech je starý stav mailu
+  //    k ničemu a rozhoduje nárok.
   if (narok.active) {
     // Aktivní nárok bez konce nebo s koncem v budoucnu = nové období.
     if (!narok.expiresAt) return "znovu_klient";
     const konec = Date.parse(String(narok.expiresAt));
     if (!Number.isFinite(konec)) return "znovu_klient";
     const mez = opts.tedMs - Math.max(0, opts.graceDny) * 86400000;
-    return konec <= mez ? "zavri" : "znovu_klient";
+    if (konec > mez) return "znovu_klient";
+    // Nárok běží a jeho období skončilo. Starý stav mailu se ZAHODÍ a jde se
+    // plnou cestou; pokud v něm něco bylo, jde o tom alert (`zavri_zahod_mail`).
+    return opts.mailStav === "neposlano" ? "zavri" : "zavri_zahod_mail";
   }
-  // Přístup je zavřený a rozloučení chybí.
+
+  // ⛔⛔ PŘÍSTUP JE ZAVŘENÝ. Odsud rozhoduje JEN `mailStav`, ne to, odkud řádek
+  //    přišel (revize R4). Do R4 se stejná informace četla ze stavu práce
+  //    (`opakovat_mail`) i z booleanu `sent_ok`, a když stav práce zmizel, význam
+  //    `false` se tiše převrátil z „jistě neodešlo" na „mohl odejít".
+  if (opts.mailStav === "odeslano") return "uzavri_bez_mailu";
+  // Mail MOHL odejít. ⛔ Automat nesahá, rozhoduje člověk.
+  // ⚠️ `posilam` se sem dostane jen po ochranné lhůtě: někdo začal posílat
+  //    a výsledek se nikdy nezapsal. Je to tatáž nejistota z jiného směru.
+  if (opts.mailStav === "nejiste" || opts.mailStav === "posilam") return "nejiste_rozhodne_clovek";
+  // Zbývá `neposlano` a `odmitnuto`: mail jistě neodešel, poslat se smí.
   return "dokonci_mail";
 }
 
@@ -464,6 +475,29 @@ export async function zpracujJednoho(
       );
       return { email, vysledek: "nejiste", duvod: "nejiste_z_minula" };
     }
+    if (rozhodnuti === "zavri_zahod_mail") {
+      // ⛔ Stav mailu z minulého pokusu se ZAHODÍ a jde se plnou cestou. Přístup
+      //    pořád běží, takže žádné rozloučení k TOMUHLE konci ještě neodešlo.
+      const zahozeno = zabrano.mailStav ?? "neposlano";
+      const ok = await deps.nastavRazitko(email, mail("neposlano", { duvod: "rozdelana_prace_zahozena:" + zahozeno }));
+      if (!ok) {
+        await deps.alert(
+          "🔴 Konec koučinku: starý stav mailu se nepodařilo zahodit",
+          "Klient: " + email + "\nStarý stav mailu: " + zahozeno +
+            "\n\nNárok pořád běží, takže jsem NIC nezavřel a nic neposlal. Zkusím to příště.",
+          email,
+        );
+        return { email, vysledek: "opakovat", duvod: "zahozeni_neulozeno" };
+      }
+      await deps.alert(
+        "⚠️ Konec koučinku: rozdělaná práce zahozena",
+        "Klient: " + email + "\nStarý stav mailu: " + zahozeno +
+          "\n\nPřístup mu pořád běží, a přitom v evidenci visel stav rozloučení z dřívějška.\n" +
+          "Ten patří k jinému konci, takže jsem ho zahodil a jdu plnou cestou:\n" +
+          "zavřu přístup a pošlu rozloučení.",
+        email,
+      );
+    }
     if (rozhodnuti === "dokonci_mail") {
       // ⛔⛔ Přístup je zavřený, rozloučení CHYBÍ (`neposlano` nebo `odmitnuto`).
       //    Pošle se POUZE mail; `ukonciPristup` by vrátil „už je ukončený" a mail
@@ -650,14 +684,19 @@ export async function zpracujJednoho(
   }
   if (sales.action === "skip") await deps.logSkip(sales.decision);
 
-  // ⛔⛔ RAZÍTKO `posilam` PŘED VOLÁNÍM RESENDU (revize R4). Tohle je ta věta,
-  //    na které celý automat stojí: když se TENHLE zápis nepovede, Resend se
-  //    NEVOLÁ. A když se nepovede zápis VÝSLEDKU, řádek v `posilam` zůstane
-  //    a po ochranné lhůtě se čte jako `nejiste`, takže druhý mail z toho
-  //    nevznikne NIKDY. Do R4 se stav zapisoval až po odeslání, takže selhaný
-  //    zápis nechal v řádku starou hodnotu a další běh poslal znovu.
-  const zacatek = await deps.nastavRazitko(email, mail("posilam", { ma_academy: maAcademy }));
-  if (!zacatek) {
+  // ⛔⛔ ODESLÁNÍ JDE PŘES `odesliSRazitkem`, TÉŽ FUNKCE JAKO RUČNÍ ODCHOD
+  //    (revize R5, nález V2). Pořadí `posilam` → Resend → výsledek a čtení
+  //    každého zápisu tak existuje jen jednou; cron ho měl a admin ne, a právě
+  //    tím vznikal druhý mail.
+  const o = await odesliSRazitkem({
+    zapis: (pole) => deps.nastavRazitko(email, pole),
+    posli: () => deps.posliMail(email, { maAcademy, promoKod: promo, includeSales: chceSales && sales.action === "send" }),
+    tedIso: ted,
+    spolecne: { ma_academy: maAcademy, promo_code: promo || null },
+    duvod: "odeslano",
+  });
+
+  if (o.vysledek === "posilam_neulozeno") {
     await deps.alert(
       "🔴 Konec koučinku: nešlo zapsat, že začínám posílat",
       "Klient: " + email + "\n\nResend jsem proto NEVOLAL. Bez toho zápisu by se při selhání\n" +
@@ -668,18 +707,15 @@ export async function zpracujJednoho(
     return { email, vysledek: "opakovat", duvod: "posilam_neulozeno" };
   }
 
-  const r = await deps.posliMail(email, { maAcademy, promoKod: promo, includeSales: chceSales && sales.action === "send" });
+  // ⛔ Věta pro případ, že se nepovedl zápis VÝSLEDKU. Řádek zůstal v `posilam`
+  //    a po ochranné lhůtě se přečte jako `nejiste`: druhý mail z toho nebude,
+  //    ale mail, který Resend JISTĚ odmítl, se pak sám neopakuje.
+  const neulozeno = o.vysledekUlozen ? "" :
+    "\n⚠️ Zápis výsledku SELHAL: řádek zůstal v `posilam` a po půl hodině se přečte jako\n" +
+    "nejistý. Druhý mail z toho nevznikne, ale automat ho ani sám nezopakuje.\n";
 
-  if (r.ok) {
-    const ulozeno = await deps.nastavRazitko(email, mail("odeslano", {
-      stav: "hotovo",
-      duvod: "odeslano",
-      sent_at: ted(),
-    }));
-    if (!ulozeno) {
-      // ⚠️ Řádek zůstane v `posilam`. Druhý mail z toho nevznikne (po lhůtě je to
-      //    `nejiste`), ale člověk se o tom má dozvědět: rozloučení odešlo a
-      //    v evidenci to není.
+  if (o.vysledek === "odeslano") {
+    if (!o.vysledekUlozen) {
       await deps.alert(
         "⚠️ Konec koučinku: mail ODEŠEL, ale razítko se neuložilo",
         "Klient: " + email + "\n\nRozloučení Resend přijal, zápis do `koucink_konec_sent` ne.\n" +
@@ -692,43 +728,49 @@ export async function zpracujJednoho(
     return { email, vysledek: "hotovo", duvod: "odeslano" };
   }
 
-  // ⛔⛔ ROZHODUJE, JESTLI TĚLO MAILU MOHLO DOJÍT NA RESEND.
-  const teloMohloDojit = r.status >= 500 || String(r.chyba ?? "").startsWith("sit:");
-  if (teloMohloDojit) {
-    const ulozeno = await deps.nastavRazitko(email, mail("nejiste", {
-      stav: "hotovo",
-      duvod: "resend:" + (r.chyba ?? r.status),
-      sent_at: ted(),
-    }));
+  if (o.vysledek === "bez_id") {
+    // ⛔ `odeslano` jen s `provider_id` (N6 z R5): bez něj to nejde doložit.
+    await deps.alert(
+      "⚠️ Konec koučinku: Resend přijal mail, ale nevrátil jeho id",
+      "Klient: " + email + "\n\nZásilka nejspíš odešla, ale bez id ji nejde doložit ani spárovat\n" +
+        "s bouncem. Automat ji proto vede jako NEJISTOU a neopakuje ji.\n" +
+        "Zkontroluj ji v Resendu podle adresy a času." + neulozeno,
+      email,
+    );
+    return { email, vysledek: "nejiste", duvod: "resend_200_bez_id" };
+  }
+
+  if (o.vysledek === "nejiste") {
     await deps.alert(
       "⚠️ Konec koučinku: NEVÍM, jestli rozlučkový mail odešel",
-      "Klient: " + email + "\nStav Resendu: " + r.status + "\nChyba: " + (r.chyba ?? "") +
-        "\n\nPřístup je zavřený. Mail MOHL odejít, proto ho automat NEZOPAKUJE." +
-        (ulozeno
-          ? "\nV evidenci je `mail_stav='nejiste'`.\n"
-          : "\n⚠️ Zápis stavu navíc selhal, takže řádek zůstal v `posilam`; po půl hodině\nse přečte jako `nejiste`, což vyjde nastejno.\n") +
+      "Klient: " + email + "\nStav Resendu: " + o.status + "\nChyba: " + (o.chyba ?? "") +
+        "\n\nPřístup je zavřený. Mail MOHL odejít, proto ho automat NEZOPAKUJE.\n" +
+        (o.vysledekUlozen
+          ? "V evidenci je `mail_stav='nejiste'`.\n"
+          : "⚠️ Zápis stavu navíc selhal, takže řádek zůstal v `posilam`; po půl hodině\nse přečte jako `nejiste`, což vyjde nastejno.\n") +
         "Zkontroluj Resend a rozhodni sám. Když má jít znovu, pošli rozloučení\n" +
         "z admina: u tohohle stavu tlačítko pošle POUZE mail a zeptá se na potvrzení.",
       email,
     );
-    return { email, vysledek: "nejiste", duvod: "resend:" + r.status };
+    return { email, vysledek: "nejiste", duvod: "resend:" + o.status };
   }
 
   // ⛔⛔ JISTÉ NEODESLÁNÍ (Resend 4xx, chybějící klíč). Mail se smí poslat znovu,
   //    ale na nárok se už nesahá: přístup je zavřený z tohohle běhu.
-  await deps.nastavRazitko(email, mail("odmitnuto", {
-    stav: "opakovat",
-    duvod: "resend:" + (r.chyba ?? r.status),
-    promo_code: promo || null,
-  }));
+  // ⛔ NÁVRAT ZÁPISU SE ČTE (revize R5, nález S3). Když se `odmitnuto` neuloží,
+  //    alert NESMÍ slibovat opakování, které nepřijde.
   await deps.alert(
     "🔴 Konec koučinku: přístup zavřený, rozloučení NEODESLO",
-    "Klient: " + email + "\nStav Resendu: " + r.status + "\nChyba: " + (r.chyba ?? "") +
+    "Klient: " + email + "\nStav Resendu: " + o.status + "\nChyba: " + (o.chyba ?? "") +
       "\n\nPřístup do appky i klientské sekce je UŽ ZAVŘENÝ, ale mail jistě neodešel.\n" +
-      "Automat ho zkusí poslat znovu při dalším běhu a na nárok už nesáhne.\n" +
-      "Když to spěchá, pošli rozloučení z admina (tlačítko Ukončit koučink u tohohle\n" +
-      "klienta pošle POUZE mail).",
+      (o.vysledekUlozen
+        ? "Automat ho zkusí poslat znovu při dalším běhu a na nárok už nesáhne.\n" +
+          "Když to spěchá, pošli rozloučení z admina (tlačítko Ukončit koučink u tohohle\n" +
+          "klienta pošle POUZE mail)."
+        : "⚠️ Zápis stavu navíc SELHAL: řádek zůstal v `posilam` a po půl hodině se přečte\n" +
+          "jako nejistý. Automat ho proto SÁM NEZOPAKUJE. Pošli rozloučení z admina\n" +
+          "(zeptá se tě na potvrzení), nebo nastav `mail_stav='odmitnuto'` ručně."),
     email,
   );
-  return { email, vysledek: "odmitnuto", duvod: "resend:" + r.status };
+  return { email, vysledek: "odmitnuto", duvod: "resend:" + o.status };
 }

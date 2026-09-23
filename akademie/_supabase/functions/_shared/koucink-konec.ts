@@ -364,8 +364,14 @@ export async function zajistiPromoKod(
     //    navíc rozhodne.
     const znovu = await najdiPromoKod(stripeKey, kod, timeoutMs);
     if (znovu && znovu.active) return { ok: true, kod, id: znovu.id };
-    if (znovu && !znovu.active) return { ok: false, chyba: CHYBA_KOD_NEAKTIVNI };
-    return { ok: false, chyba: "stripe_kod_existuje_ale_neprecten" };
+    // ⛔⛔ PRÁZDNÝ DRUHÝ GET JE TAKY „NEAKTIVNÍ" (revize R5, nález S4). GET má
+    //    filtr `active=true`, takže archivovaný kód v něm NIKDY nebude: prázdný
+    //    seznam po `already exists` znamená přesně „text je obsazený kódem, který
+    //    není aktivní". Do R5 se z toho stala obecná chyba, na kterou jádro nový
+    //    text NELOSUJE, a nový člověk se kvůli tomu zasekl na `opakovat` navždy.
+    // ⚠️ Jen `undefined` (GET se nepodařil) zůstává obecnou chybou: tam nevíme nic.
+    if (znovu === undefined) return { ok: false, chyba: "stripe_kod_existuje_ale_neprecten" };
+    return { ok: false, chyba: CHYBA_KOD_NEAKTIVNI };
   }
   return { ok: false, chyba: "stripe_" + res.status + ":" + telo.slice(0, 160) };
 }
@@ -511,4 +517,199 @@ export async function ukonciPristup(
   } catch { /* značka je bonus, odchod z koučinku to neshodí */ }
 
   return { stav: "ok", maAcademy, tvujcoach: app.result };
+}
+
+// -----------------------------------------------------------------------------
+// 5) ODESLÁNÍ ROZLOUČENÍ S RAZÍTKEM (jediná kopie, kterou volá cron i admin)
+// -----------------------------------------------------------------------------
+
+/**
+ * Stav MAILU: co se stalo s rozloučením. Jediný zdroj pravdy o odeslání.
+ * Popis a důvody jsou v `koucink-konec-2026-09-22.sql`.
+ *
+ * ⛔ `odmitnuto` a `nejiste` se NESMÍ slít. `odmitnuto` znamená, že Resend
+ *    zásilku výslovně odmítl (4xx, chybějící klíč), takže se smí poslat znovu.
+ *    `nejiste` znamená, že mail MOHL odejít, a tam automat nesahá.
+ * ⛔ `posilam` je razítko PŘED voláním Resendu. Když se nepovede zápis VÝSLEDKU,
+ *    řádek v něm zůstane a po 30 minutách se čte jako `nejiste`. Druhý mail
+ *    z toho nevznikne nikdy, a to je celý smysl toho stavu.
+ */
+export type MailStav = "neposlano" | "posilam" | "odmitnuto" | "nejiste" | "odeslano";
+
+/** Text ze sloupce na stav mailu. Neznámé i prázdné se čte jako `neposlano`. */
+export function mailStavZRadku(raw: unknown): MailStav {
+  const v = String(raw ?? "").trim();
+  return (["neposlano", "posilam", "odmitnuto", "nejiste", "odeslano"] as string[]).includes(v)
+    ? (v as MailStav)
+    : "neposlano";
+}
+
+/**
+ * Mohlo tělo mailu dojít na Resend? `true` = NEJISTOTA, opakovat se nesmí.
+ * ⛔ 5xx i pád sítě (`sit:…`) znamenají, že Resend zásilku MOHL přijmout.
+ *    Jen výslovné odmítnutí (4xx) a chybějící klíč jsou jisté neodeslání.
+ */
+export function jeNejisteOdeslani(r: { status: number; chyba?: string }): boolean {
+  return r.status >= 500 || String(r.chyba ?? "").startsWith("sit:");
+}
+
+export type VysledekRozlouceni =
+  /** Zápis `posilam` selhal, Resend se NEVOLAL. Nic neodešlo. */
+  | "posilam_neulozeno"
+  /** Odešlo a máme `provider_id`. */
+  | "odeslano"
+  /** Resend vrátil 200 bez id: nejspíš odešlo, ale nejde to doložit. */
+  | "bez_id"
+  /** 5xx nebo síť: mohlo odejít. */
+  | "nejiste"
+  /** 4xx nebo chybějící klíč: jistě neodešlo, smí se znovu. */
+  | "odmitnuto";
+
+/**
+ * Pošle rozloučení a ZAPÍŠE, co se stalo, v jediném pořadí pro obě cesty.
+ *
+ * ⛔⛔ PROČ JE TO JEDNA FUNKCE (revize R5, nález V2). Cron zapisoval `posilam`
+ *    PŘED Resendem a výsledek četl; ruční odchod z admina ne. Po přijatém mailu
+ *    a selhaném zápisu tak v řádku zůstal starý stav (`odmitnuto`, `neposlano`)
+ *    a cron o půl hodiny později poslal rozloučení ZNOVU. Dvě kopie téhož pořadí
+ *    se rozejdou vždycky; tahle jedna se rozejít nemůže.
+ *
+ * Pořadí:
+ *   1. zapsat `posilam`   ⛔ selže => Resend se NEVOLÁ
+ *   2. zavolat Resend
+ *   3. zapsat výsledek    ⛔ návrat se čte VŽDY, i u 4xx a u chybějícího klíče
+ *
+ * Když selže krok 3, řádek zůstane v `posilam` a po ochranné lhůtě se přečte
+ * jako `nejiste`. Druhý mail z toho nevznikne. Volající se to dozví z
+ * `vysledekUlozen: false` a řekne to člověku (alert, `varovani`).
+ *
+ * ⚠️ Alerty a texty pro člověka tu NEJSOU: cron píše Martinovi mail, admin vrací
+ *    `varovani` v odpovědi. Funkce jen dělá a hlásí, co se stalo.
+ */
+export async function odesliSRazitkem(opts: {
+  /** Zapíše pole razítka. `false` = zápis se nepovedl. */
+  zapis: (pole: Record<string, unknown>) => Promise<boolean>;
+  /** Pošle mail. Nesmí házet výjimku kvůli síti (`odesliPresResend` nehází). */
+  posli: () => Promise<{ ok: boolean; status: number; chyba?: string; providerId?: string }>;
+  tedIso: () => string;
+  /** Pole navíc do každého zápisu (`ma_academy`, `promo_code`…). */
+  spolecne?: Record<string, unknown>;
+  /** Důvod, pod kterým se zapisuje (`odeslano`, `rucne_z_adminu`…). */
+  duvod: string;
+}): Promise<{
+  vysledek: VysledekRozlouceni;
+  status: number;
+  chyba?: string;
+  providerId: string;
+  /** Uložil se zápis VÝSLEDKU? `false` = řádek zůstal v `posilam`. */
+  vysledekUlozen: boolean;
+}> {
+  const spol = opts.spolecne ?? {};
+  const zacatek = await opts.zapis({
+    ...spol,
+    mail_stav: "posilam",
+    sent_ok: false,
+    // ⚠️ Id z minulého pokusu (nebo z minulého konce) se maže HNED: jinak by po
+    //    nejistém výsledku v řádku zůstalo cizí id a vypadalo by jako doklad.
+    provider_id: null,
+    updated_at: opts.tedIso(),
+  });
+  if (!zacatek) {
+    return { vysledek: "posilam_neulozeno", status: 0, providerId: "", vysledekUlozen: false };
+  }
+
+  const r = await opts.posli();
+  const providerId = String(r.providerId ?? "").trim();
+
+  let vysledek: VysledekRozlouceni;
+  let pole: Record<string, unknown>;
+  if (r.ok && providerId) {
+    vysledek = "odeslano";
+    pole = { stav: "hotovo", mail_stav: "odeslano", sent_ok: true, provider_id: providerId, duvod: opts.duvod };
+  } else if (r.ok) {
+    // ⛔ 200 bez id: odeslání nejde doložit ani spárovat s bouncem (N6 z R5).
+    vysledek = "bez_id";
+    pole = { stav: "hotovo", mail_stav: "nejiste", sent_ok: false, duvod: opts.duvod + ":resend_200_bez_id" };
+  } else if (jeNejisteOdeslani(r)) {
+    vysledek = "nejiste";
+    pole = { stav: "hotovo", mail_stav: "nejiste", sent_ok: false, duvod: opts.duvod + ":resend:" + (r.chyba ?? r.status) };
+  } else {
+    vysledek = "odmitnuto";
+    pole = { stav: "opakovat", mail_stav: "odmitnuto", sent_ok: false, duvod: opts.duvod + ":resend:" + (r.chyba ?? r.status) };
+  }
+  const vysledekUlozen = await opts.zapis({ ...spol, ...pole, sent_at: opts.tedIso(), updated_at: opts.tedIso() });
+  return { vysledek, status: r.status, chyba: r.chyba, providerId, vysledekUlozen };
+}
+
+// -----------------------------------------------------------------------------
+// 6) ROZHODNUTÍ RUČNÍHO ODCHODU Z ADMINA (čistá funkce, aby šla otestovat)
+// -----------------------------------------------------------------------------
+
+export type RucniRozhodnuti =
+  /** Klient v DB vůbec není. */
+  | { akce: "neni_klient" }
+  /** Čerstvou rezervaci drží automat. */
+  | { akce: "automat_pracuje" }
+  /** Mail mohl odejít a chybí výslovné potvrzení v požadavku. */
+  | { akce: "potrebuje_potvrzeni" }
+  /** Není co dělat: přístup je zavřený a rozloučení buď odešlo, nebo vědomě nešlo. */
+  | { akce: "uz_ukoncen" }
+  /** Zavřít přístup a poslat rozloučení. `zahodMail` = starý stav mailu se zahodí. */
+  | { akce: "plny_pruchod"; zahodMail: boolean }
+  /** Přístup je zavřený, rozloučení chybí. Poslat POUZE mail. */
+  | { akce: "jen_mail" };
+
+/**
+ * Co má tlačítko „Ukončit koučink" udělat.
+ *
+ * ⛔⛔ NEJDŘÍV SE PTÁ, JESTLI PŘÍSTUP BĚŽÍ (revize R5, nález V1). Do R5 stačil stav
+ *    mailu `odmitnuto`, `nejiste` nebo `posilam`, aby tlačítko přeskočilo zavření
+ *    přístupu a poslalo „jen mail". U člověka, který se mezitím vrátil (nebo
+ *    kterému se přístup nikdy nezavřel), to znamenalo rozloučení AKTIVNÍMU
+ *    klientovi a přístup, který mu dál běží. A toast přitom hlásil „koučink
+ *    ukončen".
+ *    ⇒ Běžící nárok = vždycky plná cesta. Starý stav mailu patří k jinému
+ *      konci a zahodí se (`zahodMail`).
+ *
+ * Tabulka pro ZAVŘENÝ přístup:
+ *   stav mailu            stav práce         akce
+ *   odeslano              cokoli             uz_ukoncen
+ *   neposlano             hotovo / vzdano    uz_ukoncen   (vědomě bez mailu)
+ *   neposlano             opakovat / rez.    jen_mail     (zavřeno, mail chybí)
+ *   odmitnuto             cokoli             jen_mail
+ *   nejiste / posilam     cokoli             jen_mail + potvrzeno, jinak 409
+ */
+export function rozhodniRucniOdchod(v: {
+  /** Existuje koučinkový nárok vůbec? */
+  narokExistuje: boolean;
+  narokAktivni: boolean;
+  /** Stav práce z razítka; prázdno = razítko není. */
+  stav: string;
+  mailStav: MailStav;
+  /** Je rezervace čerstvá (mladší než ochranná lhůta)? */
+  rezervaceCerstva: boolean;
+  tiche: boolean;
+  potvrzeno: boolean;
+}): RucniRozhodnuti {
+  if (!v.narokExistuje) return { akce: "neni_klient" };
+  if (v.stav === "rezervovano" && v.rezervaceCerstva) return { akce: "automat_pracuje" };
+
+  if (v.narokAktivni) {
+    // ⛔ Přístup běží: plná cesta. Stav mailu je z jiného konce.
+    return { akce: "plny_pruchod", zahodMail: v.mailStav !== "neposlano" };
+  }
+
+  // Přístup je zavřený. Rozhoduje stav mailu.
+  if (v.mailStav === "odeslano") return { akce: "uz_ukoncen" };
+  if (v.mailStav === "nejiste" || v.mailStav === "posilam") {
+    // ⛔ Tichý odchod mail neposílá, takže potvrzení nepotřebuje; ale taky nic
+    //    nedoposílá a stav mailu nechá, jak je (`uz_ukoncen`).
+    if (v.tiche) return { akce: "uz_ukoncen" };
+    return v.potvrzeno ? { akce: "jen_mail" } : { akce: "potrebuje_potvrzeni" };
+  }
+  if (v.mailStav === "odmitnuto") return v.tiche ? { akce: "uz_ukoncen" } : { akce: "jen_mail" };
+  // `neposlano`: rozhoduje, jestli je práce uzavřená.
+  if (v.stav === "hotovo" || v.stav === "vzdano" || v.stav === "") return { akce: "uz_ukoncen" };
+  // `opakovat` nebo opuštěné `rezervovano`: přístup zavřený, mail nikdy neodešel.
+  return v.tiche ? { akce: "uz_ukoncen" } : { akce: "jen_mail" };
 }

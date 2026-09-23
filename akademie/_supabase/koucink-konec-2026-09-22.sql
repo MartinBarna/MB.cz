@@ -51,7 +51,8 @@
 --   nejiste    5xx, `sit:`, nebo `posilam` starší než 30 minut bez výsledku.
 --              Mail MOHL odejít. ⛔ Automat NEPOSÍLÁ, rozhoduje člověk
 --              (Martin 17. 9. 2026: „raději nikdy mail navíc").
---   odeslano   Resend zásilku přijal a máme `provider_id`.
+--   odeslano   Resend zásilku přijal a máme `provider_id`. ⛔ Bez id se tenhle
+--              stav NEZAPISUJE: odeslání, které nejde doložit, je `nejiste`.
 --
 -- ⛔ `pokusy` a `vzdano` (nález S4): fronta `opakovat` neměla strop. Trvale špatný
 --    kupón nebo mrtvý Resend by znamenal donekonečna opakovaný pokus a u promo kódu
@@ -90,7 +91,11 @@ create table if not exists public.koucink_konec_sent (
   -- a rovná se `mail_stav = 'odeslano'`. NIC se podle ní nerozhoduje.
   sent_ok boolean,
   -- Co se stalo s rozloučením. Zdroj pravdy, viz hlavička souboru.
-  mail_stav text not null default 'neposlano'
+  mail_stav text not null default 'neposlano',
+  -- ID zásilky u Resendu. ⛔ Bez něj se `mail_stav = 'odeslano'` nezapisuje
+  -- (revize R5, N6): odeslání, které nejde doložit ani spárovat s bouncem,
+  -- je nejistota, ne úspěch.
+  provider_id text
 );
 
 -- ⛔ ÚPLNÝ unikátní index NAD SLOUPCEM, ne partial a ne nad výrazem. Dva důvody:
@@ -134,6 +139,8 @@ alter table public.koucink_konec_sent
   add column if not exists sent_ok boolean;
 alter table public.koucink_konec_sent
   add column if not exists mail_stav text not null default 'neposlano';
+alter table public.koucink_konec_sent
+  add column if not exists provider_id text;
 
 comment on table public.koucink_konec_sent is
   'Razitko automatu konec koucinku. Radek vznika PRED prvnim nevratnym krokem; stav opakovat = fronta na dalsi beh.';
@@ -176,16 +183,29 @@ on conflict (key) do nothing;
 -- ⛔ DOČIŠTĚNÍ PO STARŠÍ VERZI (kdyby tabulka z doby před R4 už v DB ležela).
 --    Převede starý přetížený zápis na nové sloupce. Na čerstvé tabulce je to no-op.
 --    ⚠️ `opakovat_mail` a `chyba_nejiste` jako hodnoty `stav` od R4 neexistují.
+-- ⛔⛔ PŘEVOD JE ÚZKÝ A DRUHÉ SPUŠTĚNÍ JE NO-OP (revize R5, nález S5).
+--    Předchozí verze měla větev `sent_ok is false then 'nejiste'`. Jenže
+--    `sent_ok: false` psal starý kód i u vědomého neposlání (tichý odchod,
+--    brána, `zavren_jinde`, `znovu_klient`), a z těch by se stala NEJISTOTA,
+--    tedy stav, který admin chce potvrzovat a na kterém tlačítko jde „jen
+--    doposlat". Nový kód navíc píše `hotovo` + `neposlano` + `sent_ok: false`
+--    sám, takže druhé spuštění by překlopilo i čerstvé řádky.
+--    ⇒ Převádí se JEN to, co nese starý význam JEDNOZNAČNĚ:
+--      `sent_ok is true`      → `odeslano` (prokázané odeslání),
+--      `stav = opakovat_mail` → `odmitnuto` (jisté neodeslání),
+--      `stav = chyba_nejiste` → `nejiste` (mohl odejít).
+--    Všechno ostatní zůstává `neposlano`. Po převodu už žádný řádek nesplní
+--    WHERE (buď má jiný `mail_stav`, nebo už nemá starý `stav`), takže druhý
+--    běh nezmění nic.
 update public.koucink_konec_sent
    set mail_stav = case
          when sent_ok is true then 'odeslano'
          when stav = 'opakovat_mail' then 'odmitnuto'
          when stav = 'chyba_nejiste' then 'nejiste'
-         when sent_ok is false then 'nejiste'
-         else 'neposlano'
+         else mail_stav
        end
  where mail_stav = 'neposlano'
-   and (sent_ok is not null or stav in ('opakovat_mail', 'chyba_nejiste'));
+   and (sent_ok is true or stav in ('opakovat_mail', 'chyba_nejiste'));
 
 update public.koucink_konec_sent
    set stav = case when stav = 'opakovat_mail' then 'opakovat' else 'hotovo' end

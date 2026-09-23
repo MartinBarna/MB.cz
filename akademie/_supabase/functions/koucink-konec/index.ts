@@ -333,7 +333,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
         { from: FROM, to: [email], subject, html, reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"] },
         { admin, via: "koucink-konec", email, detail: { track: "koucink-konec", ma_academy: opts.maAcademy } },
       );
-      return { ok: r.ok, status: r.status, chyba: r.chyba };
+      // ⛔ `providerId` se předává dál: bez něj jádro `odeslano` nezapíše (N6 z R5).
+      return { ok: r.ok, status: r.status, chyba: r.chyba, providerId: r.providerId };
     },
     alert,
   };

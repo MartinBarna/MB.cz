@@ -161,17 +161,28 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   // ⛔⛔ RAZITKO `posilam` PRED VOLANIM RESENDU. Kdyz se ten zapis nepovede,
   //    Resend se NEVOLA; kdyz se nepovede zapis vysledku, radek v nem zustane
   //    a po lhute se cte jako `nejiste`. Druhy mail z toho nevznikne nikdy.
-  predTim("core: `posilam` se zapisuje PRED odeslanim", kkCore, 'mail("posilam"', "deps.posliMail(email,");
-  check("core: bez zapisu `posilam` se Resend nevola",
-    kkCore.includes("const zacatek = await deps.nastavRazitko(email, mail(\"posilam\"") &&
-      kkCore.includes('duvod: "posilam_neulozeno"'));
+  // ⛔⛔ [revize R5, nalez V2] Poradi `posilam` -> Resend -> vysledek zije v JEDNE
+  //    funkci `odesliSRazitkem` v `_shared`, kterou vola cron i admin. Kotvy proto
+  //    miri tam; chovani hlidaji behavioralni testy v `koucink-konec.test.ts`.
+  predTim("sdilena funkce: `posilam` se zapisuje PRED odeslanim", sdilene,
+    'mail_stav: "posilam"', "const r = await opts.posli();");
+  check("cron posila pres sdilenou funkci", kkCore.includes("await odesliSRazitkem({"));
+  check("cron uz nevola `posliMail` mimo sdilenou funkci",
+    (kkCore.match(/deps\.posliMail\(/g) ?? []).length === 1 &&
+      kkCore.indexOf("deps.posliMail(") > kkCore.indexOf("await odesliSRazitkem({"));
+  check("sdilena funkce: bez zapisu `posilam` se Resend nevola",
+    sdilene.includes('if (!zacatek) {') &&
+      sdilene.includes('return { vysledek: "posilam_neulozeno", status: 0, providerId: "", vysledekUlozen: false };'));
   check("`sent_ok` je jen odvozenina", kkCore.includes("sent_ok: stav === \"odeslano\""));
   // ⛔ [revize R4, nalez S5] Potvrzeni je soucast POZADAVKU, ne jen dialogu.
-  check("admin vyzaduje serverove potvrzeni u nejisteho mailu",
-    adm.includes('body.potvrzeno !== true') && adm.includes('error: "potrebuje_potvrzeni"'));
+  check("admin predava serverove potvrzeni do rozhodnuti",
+    adm.includes("potvrzeno: body.potvrzeno === true,") && adm.includes('error: "potrebuje_potvrzeni"'));
+  check("rozhodnuti bez potvrzeni vraci `potrebuje_potvrzeni`",
+    sdilene.includes('return v.potvrzeno ? { akce: "jen_mail" } : { akce: "potrebuje_potvrzeni" };'));
   // ⛔ [revize R4, nalez S3] Zapis razitka v adminu cte chybu; supabase-js nehazi.
   check("admin cte chybu zapisu razitka",
-    adm.includes("const { error: zapErr } = await admin.from(\"koucink_konec_sent\").upsert("));
+    adm.includes("const { error: zapErr } = await admin.from(\"koucink_konec_sent\").update(pole).eq(\"email\", email);"));
+  check("admin posila pres sdilenou funkci", adm.includes("const o = await odesliSRazitkem({"));
   // ⛔ [revize R4, nalez N6] Bez `updated_at` ve selectu se stari rezervace nepozna.
   check("admin cte `updated_at` razitka",
     adm.includes('.select("stav,promo_code,ma_academy,pokusy,updated_at,mail_stav")'));
@@ -198,16 +209,27 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   //    Bez teto vetve by admin prosel i tehdy, kdyz cron toho cloveka prave
   //    zpracovava, a klient by dostal rozlouceni dvakrat.
   check("admin odmita cerstvou rezervaci 409",
-    adm.includes('if (razitkoStav === "rezervovano" && !rezervaceZaseknuta) {') &&
-      adm.includes('error: "prave_zpracovava_automat"'));
-  check("admin pozna zaseknutou rezervaci podle stari",
-    adm.includes("const rezervaceZaseknuta = razitkoStav ===") && adm.includes("ZASEKNUTO_PO_MS"));
+    adm.includes('if (r.akce === "automat_pracuje") {') && adm.includes('error: "prave_zpracovava_automat"'));
+  check("admin pozna cerstvou rezervaci podle stari",
+    adm.includes("const rezervaceCerstva = razitkoStav ===") && adm.includes("razitkoStari <= ZASEKNUTO_PO_MS"));
   // ⛔⛔ [revize R3, nalez S5] Doposlat jde i z `chyba_nejiste`, protoze prave
   //    tam alert Martina posila. Do R3 ta cesta v kodu nebyla.
   // ⛔ [revize R4] Doposlat jde podle STAVU MAILU, ne podle stavu prace.
-  check("admin umi doposlat podle stavu mailu",
-    adm.includes('const doposlatelne = ["odmitnuto", "nejiste", "posilam"];') &&
-      adm.includes("doposlatelne.includes(razitkoMail)"));
+  // ⛔⛔ [revize R5, nalez V1] Rozhoduje cista funkce a NEJDRIV se pta na narok.
+  check("admin rozhoduje pres `rozhodniRucniOdchod`", adm.includes("const r = rozhodniRucniOdchod({"));
+  check("admin predava do rozhodnuti skutecny stav naroku",
+    adm.includes("narokExistuje: !!narokRow,") && adm.includes("narokAktivni: narokRow?.active === true,"));
+  check("admin pri vraceni zamku vraci i stav mailu",
+    adm.includes("mail_stav: razitkoMail,") && adm.includes('sent_ok: razitkoMail === "odeslano",'));
+  check("admin cte narok PRED rozhodnutim",
+    adm.indexOf('.select("active").eq("email", email).eq("product", "coaching")') > 0 &&
+      adm.indexOf('.select("active").eq("email", email).eq("product", "coaching")') < adm.indexOf("const r = rozhodniRucniOdchod({"));
+  check("rozhodnuti: bezici narok = plna cesta, pred stavem mailu",
+    sdilene.indexOf("if (v.narokAktivni) {") > 0 &&
+      sdilene.indexOf("if (v.narokAktivni) {") < sdilene.indexOf('if (v.mailStav === "odeslano") return { akce: "uz_ukoncen" };'));
+  // ⛔⛔ [revize R5, nalez V2] Radek razitka EXISTUJE driv, nez se zavre pristup.
+  predTim("admin zaklada razitko PRED zavrenim pristupu", adm,
+    'email, stav: "rezervovano", mail_stav: "neposlano", pokusy: 0,', "u = await ukonciPristup(admin,");
 
   // ⛔⛔ [revize R3, nalez S6] PROMO KOD SE OVERUJE NA `active`.
   //    Stripe archivuje kody, kdyz prestane platit jejich kupon; archivovany kod
@@ -234,10 +256,17 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   // ⛔⛔ [revize R1 nalez V1, prepsano v R4] Jiste neodeslani (Resend 4xx,
   //    chybejici klic) MUSI zustat rozeznatelne od nejistoty, jinak se rozlouceni
   //    bud ztrati, nebo odejde podruhe.
-  check("core: jiste neodeslani konci na `odmitnuto`",
-    kkCore.includes('mail("odmitnuto"'));
+  check("sdilena funkce: jiste neodeslani konci na `odmitnuto`",
+    sdilene.includes('pole = { stav: "opakovat", mail_stav: "odmitnuto", sent_ok: false,'));
   check("core: nejistota konci na `nejiste`", kkCore.includes('mail("nejiste"'));
-  check("core: uspech konci na `odeslano`", kkCore.includes('mail("odeslano"'));
+  // ⛔ [revize R5, N6] `odeslano` jen s `provider_id`.
+  check("sdilena funkce: `odeslano` jen s provider_id",
+    sdilene.includes("if (r.ok && providerId) {") &&
+      sdilene.includes('pole = { stav: "hotovo", mail_stav: "odeslano", sent_ok: true, provider_id: providerId,'));
+  // ⛔ [revize R5, S4] Prazdny druhy GET po `already exists` je `kod_neaktivni`.
+  check("prazdny druhy GET je `kod_neaktivni`",
+    sdilene.includes('if (znovu === undefined) return { ok: false, chyba: "stripe_kod_existuje_ale_neprecten" };') &&
+      sdilene.includes("return { ok: false, chyba: CHYBA_KOD_NEAKTIVNI };"));
   // ⛔ `jenMail` se od R2 zapina i u prevzate zaseknute rezervace s vypnutym
   //    narokem (rozhodnuti `dokonci_mail`), proto `let`, ne `const`.
   check("core: doposlani mailu preskakuje zavirani pristupu",
