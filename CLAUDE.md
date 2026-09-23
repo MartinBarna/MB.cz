@@ -451,22 +451,30 @@ Vložení je inertní, slouží k náhledu a k připravenosti na spuštění rek
 nepamatuje a výslovně o tu připomínku požádal. Texty jdou ven pod jeho jménem,
 takže případné úpravy nedeleguj.
 
-## ⛔ CENY APPKY JSOU NATVRDO V MAILECH (zapsáno 25. 7. 2026 na Martinovo zadání)
-Engine `drip-send` má merge proměnné jen pro **videokurz** (`{{course_price}}`,
-`{{discount_price}}`, `{{discount2_price}}`). Pro **appku Tvůj Coach žádné nejsou**, takže
-Basic 249 Kč a VIP 499 Kč jsou v šablonách napsané číslem (`tc-free` kroky 3 a 4,
-`tc-magnet` krok 4; Academy 8 900 Kč v `trener-kit` krocích 3 a 4).
-🔴 **Ceník appky žije jinde:** tabulka `pricing_plans` v projektu appky
-(`kfkmghvhqwqtsalqjmrp`), ne tady. **Změna ceny tam maily NEOPRAVÍ a nikde to nekřikne.**
-Lidem by chodila stará cena a přišlo by se na to od naštvaného zákazníka.
-**Kdo mění ceník, musí projít i maily.** Najdi je takhle:
+## ⛔ CENY V MAILECH JEN PROMĚNNOU (23. 9. 2026, větev `fix/ceny-v-mailech-0923`)
+Do 23. 9. byly ceny v `email_templates` napsané číslem (Basic 249, VIP 499, Academy 8 900...)
+a změna ceníku maily neopravila. Od nasazení té větve je **cena v šabloně jen proměnná**:
+`{{cena_basic_mesic}}`, `{{cena_basic_rok}}`, `{{cena_vip_mesic}}`, `{{cena_vip_rok}}`
+(čte se živě z `pricing_plans` appky `kfkmghvhqwqtsalqjmrp`, stejně jako `/tvuj-coach/`),
+`{{course_price}}` = `{{cena_videokurz}}`, `{{cena_academy}}`, `{{cena_academy_mesic}}`,
+`{{cena_academy_upgrade}}`, `{{cena_academy_po_odectu}}`, `{{cena_academy_3_mesice}}`,
+`{{cena_konzultace}}`, `{{cena_konzultace_sleva}}`, `{{cena_balicek}}`, `{{cena_doplatek_videokurz}}`
+(Academy `app_config`, klíče `cena_*`, celé číslo v Kč). Šablona píše `{{cena_academy}} Kč`.
+Jedno místo v kódu: `akademie/_supabase/functions/_shared/ceny.ts`; čtou ho `drip-send`,
+`admin-api` (náhled a uložení), `milestones`, `order-rescue`.
+⛔ **Nenačtená cena není cena:** mail s cenovou proměnnou se neodešle, počká na další běh
+a Martinovi přijde alert (nejvýš jeden za 6 h). Neznámá proměnná = neodeslat + alert.
+⛔ **Kdo mění cenu produktu Academy ve Stripu, mění i `app_config.cena_*`.** Ceník appky
+stačí změnit v `pricing_plans`. Web, JSON-LD a obchodní podmínky se dál mění ručně
+(checklist `tvujcoach-cenik-zmena-checklist` ve společné paměti).
+⚠️ Čísla, která cenou produktu NEJSOU, zůstávají v textu: kredit za doporučení 150/300 Kč,
+HeroHero 150 Kč, příklad výdělku trenéra, kroky a kcal. Věty „dva měsíce zdarma" u ročních
+plánů jsou dopočet napsaný slovy: při změně ceníku je zkontroluj ručně.
+Kontrola, že nikde nezůstala cena číslem:
 ```sql
 select track, step, key from email_templates
-where blocks::text ~ '[0-9][0-9 ]*Kč' order by track, step;
+where subject || coalesce(preheader,'') || blocks::text ~ '[0-9][0-9 ]*Kč' order by track, step;
 ```
-Postup a zbytek checklistu: `tvujcoach-cenik-zmena-checklist` ve společné paměti.
-Trvalá oprava (až bude čas): přidat `{{tc_basic_price}}` a `{{tc_vip_price}}` do `buildVars`
-v `drip-send`, čtené z `app_config`.
 
 ## 🎯 KLIENTSKÁ SEKCE: cíle od Martina (zadáno 25. 7. 2026, větev `klient-sekce-cile`)
 
