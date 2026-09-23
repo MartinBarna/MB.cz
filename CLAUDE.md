@@ -465,6 +465,9 @@ Jedno místo v kódu: `akademie/_supabase/functions/_shared/ceny.ts`; čtou ho `
 `admin-api` (náhled a uložení), `milestones`, `order-rescue`.
 ⛔ **Nenačtená cena není cena:** mail s cenovou proměnnou se neodešle, počká na další běh
 a Martinovi přijde alert (nejvýš jeden za 6 h). Neznámá proměnná = neodeslat + alert.
+⛔ **Doručovací maily cenu NENESOU vůbec, ani proměnnou** (revize R1): `kviz-*/0` (slíbený plán),
+`trener-kit/0` (kit) a `tc-kosik/0` (volá ho SQL `tc_kosik_zapis`, která odpověď nečte).
+Doručení nesmí čekat na ceník. Kdo do nich cenu vrací, vrací i tuhle past.
 ⛔ **Kdo mění cenu produktu Academy ve Stripu, mění i `app_config.cena_*`.** Ceník appky
 stačí změnit v `pricing_plans`. Web, JSON-LD a obchodní podmínky se dál mění ručně
 (checklist `tvujcoach-cenik-zmena-checklist` ve společné paměti).
