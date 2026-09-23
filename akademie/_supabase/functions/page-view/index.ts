@@ -1,7 +1,8 @@
 // page-view: cookieless ping návštěvy z martinbarna.cz a z tvujcoach.cz.
 // verify_jwt=false (veřejný web, žádný uživatel). CORS jen povolené weby.
 // POST tělo s path → vloží řádek, vrací 204.
-// POST {action:'summary', days:7|30} + admin JWT → souhrn pro admin panel.
+// POST {action:'summary', days:7|30, site?:'tvujcoach.cz'} + admin JWT → souhrn pro admin panel
+// (bez `site` martinbarna.cz jako dřív, s `site:'tvujcoach.cz'` trychtýř appky).
 //
 // ⛔ Sloupec `site` říká, ZE KTERÉHO webu ping přišel, a odvozuje se ze SERVERU
 // (Origin, jinak Referer), nikdy z těla požadavku. Kdyby ho posílal klient, mohl by
@@ -152,9 +153,15 @@ Deno.serve(async (req: Request) => {
       .filter(Boolean);
     if (!me || !adminList.includes(me)) return json({ error: "forbidden" }, 403);
     const days = Number(body.days) === 30 ? 30 : 7;
-    const { data, error } = await admin.rpc("admin_page_views_summary", { p_days: days });
-    if (error) return json({ ok: false, error: "db" }, 500);
-    return json({ ok: true, days, ...(data && typeof data === "object" ? data as Record<string, unknown> : {}) });
+    // Který web chce admin vidět. Cokoli jiného než tvujcoach.cz = martinbarna.cz, ať starší
+    // verze adminu (posílá jen `days`) dostane přesně to, co dostávala dosud.
+    // ⚠️ tvujcoach.cz má VLASTNÍ funkci s trychtýřem (akademie/_supabase/page-views-tc-trychtyr.sql),
+    //    ne parametr u admin_page_views_summary: jiná signatura by vyrobila druhou funkci.
+    const site = String(body.site || "") === "tvujcoach.cz" ? "tvujcoach.cz" : "martinbarna.cz";
+    const rpc = site === "tvujcoach.cz" ? "admin_tc_trychtyr" : "admin_page_views_summary";
+    const { data, error } = await admin.rpc(rpc, { p_days: days });
+    if (error) return json({ ok: false, error: "db", site }, 500);
+    return json({ ok: true, days, site, ...(data && typeof data === "object" ? data as Record<string, unknown> : {}) });
   }
 
   if (!originOk(req)) return empty204(cors);

@@ -229,12 +229,18 @@
       </details>
 
       <details class="sek" id="sek-navstevnost" open>
-        <summary>👀 Návštěvnost <span class="sekpop">vlastní měření webu, 7 nebo 30 dní</span><span class="sekinfo" id="info-navstevnost"></span></summary>
+        <summary>👀 Návštěvnost <span class="sekpop">martinbarna.cz i tvujcoach.cz, 7 nebo 30 dní</span><span class="sekinfo" id="info-navstevnost"></span></summary>
         <div class="sek-in">
       <div class="traf" id="navst">
         <h3>👀 Návštěvnost webu</h3>
         <div class="sub" id="navstSub">Vlastní měření martinbarna.cz. Počítá se až po souhlasu s cookies.</div>
+        <!-- Přepínač webu (23. 9. 2026, Martin: kolik lidí přijde na tvujcoach.cz a kolik
+             dojde k platbě). tvujcoach.cz ukazuje trychtýř, martinbarna.cz zůstává jako dřív. -->
         <div class="nv-toggle" style="margin:.7rem 0 .2rem;">
+          <button type="button" class="kdrod on" id="nvSiteMb" data-nv-site="martinbarna.cz">martinbarna.cz</button>
+          <button type="button" class="kdrod" id="nvSiteTc" data-nv-site="tvujcoach.cz">tvujcoach.cz (appka)</button>
+        </div>
+        <div class="nv-toggle" style="margin:.4rem 0 .2rem;">
           <button type="button" class="kdrod on" id="nv7" data-nv-days="7">7 dní</button>
           <button type="button" class="kdrod" id="nv30" data-nv-days="30">30 dní</button>
         </div>
@@ -3484,9 +3490,9 @@
 
     // Vlastní návštěvnost webu (page_views přes edge funkci page-view).
     // GA4 karta dál žije v sekci Progres. Tady jsou jen naše čísla.
-    var nvDays = 7;
+    var nvDays = 7, nvSite = 'martinbarna.cz', nvGen = 0;
     function loadNavstevnost(){
-      var b7 = $('nv7'), b30 = $('nv30');
+      var b7 = $('nv7'), b30 = $('nv30'), bMb = $('nvSiteMb'), bTc = $('nvSiteTc');
       function wire(btn){
         if(!btn || btn.getAttribute('data-nv-wired')) return;
         btn.setAttribute('data-nv-wired','1');
@@ -3497,17 +3503,49 @@
           fetchNavstevnost();
         });
       }
-      wire(b7); wire(b30);
+      function wireSite(btn){
+        if(!btn || btn.getAttribute('data-nv-wired')) return;
+        btn.setAttribute('data-nv-wired','1');
+        btn.addEventListener('click', function(){
+          nvSite = btn.getAttribute('data-nv-site') === 'tvujcoach.cz' ? 'tvujcoach.cz' : 'martinbarna.cz';
+          if(bMb) bMb.classList.toggle('on', nvSite==='martinbarna.cz');
+          if(bTc) bTc.classList.toggle('on', nvSite==='tvujcoach.cz');
+          fetchNavstevnost();
+        });
+      }
+      wire(b7); wire(b30); wireSite(bMb); wireSite(bTc);
       fetchNavstevnost();
     }
     function fetchNavstevnost(){
       var NV_FN = FN.replace('admin-api','page-view');
       var body = $('navstBody');
+      // Generace: pozdní odpověď po přepnutí webu nebo období nesmí přepsat novější pohled
+      // (jinak by pod přepínačem „tvujcoach.cz" mohla zůstat čísla martinbarna.cz).
+      var gen = ++nvGen, site = nvSite;
       if(body) body.innerHTML = '<p class="muted" style="padding:.8rem 0;">Načítám…</p>';
-      api({action:'summary', days:nvDays}, NV_FN).then(function(o){
-        if(!o || !o.j || !o.j.ok){ cardFail('navst','navstBody'); sekInfo('navstevnost','nenačetlo se'); return; }
+      api({action:'summary', days:nvDays, site:site}, NV_FN).then(function(o){
+        if(gen!==nvGen) return;
+        if(!o || !o.j || !o.j.ok){
+          cardFail('navst','navstBody'); sekInfo('navstevnost','nenačetlo se');
+          // Nová edge funkce bez nasazené SQL funkce vrací `error:'db'` se `site` appky.
+          if(site==='tvujcoach.cz' && o && o.j && o.j.site==='tvujcoach.cz' && o.j.error==='db'){
+            $('navstBody').insertAdjacentHTML('beforeend','<p class="traf-note">Databáze přehled nevrátila. Nejčastější důvod: ještě není spuštěná <code>akademie/_supabase/page-views-tc-trychtyr.sql</code>.</p>');
+          }
+          return;
+        }
+        if(site==='tvujcoach.cz'){
+          // ⛔ Starší nasazená edge funkce `site` nezná a vrátí čísla martinbarna.cz. Ta se
+          //    NESMÍ vykreslit pod nadpisem appky, to by byla tichá lež. Pozná se podle `site`.
+          if(o.j.site!=='tvujcoach.cz'){
+            $('navstBody').innerHTML='<p class="traf-note">⚠️ Edge funkce <code>page-view</code> ještě neumí přehled tvujcoach.cz (čeká na nasazení). Čísla schválně nezobrazuju, byla by to čísla martinbarna.cz.</p>';
+            sekInfo('navstevnost','tvujcoach.cz čeká na nasazení');
+            return;
+          }
+          renderTcTrychtyr(o.j);
+          return;
+        }
         renderNavstevnost(o.j);
-      }).catch(function(){ cardFail('navst','navstBody'); sekInfo('navstevnost','nenačetlo se'); });
+      }).catch(function(){ if(gen!==nvGen) return; cardFail('navst','navstBody'); sekInfo('navstevnost','nenačetlo se'); });
     }
     function nvNum(n){ return (n==null?0:Number(n)).toLocaleString('cs-CZ'); }
     function nvDevLabel(k){
@@ -3566,6 +3604,61 @@
           nvBars('Odkud lidi chodí', d.sources)+
           nvBars('Mobil vs. počítač', d.devices, nvDevLabel)+
         '</div>';
+    }
+    // 🔻 Trychtýř tvujcoach.cz (SQL `admin_tc_trychtyr`). ⛔ Appka neposílá session_hash,
+    // takže tu NEJSOU lidé, jen zobrazení obrazovek. Procento mezi kroky proto není
+    // „kolik z nich pokračovalo", ale poměr zobrazení; může přesáhnout 100 %, když lidé
+    // na krok přicházejí napřímo. Věty pod trychtýřem to říkají nahlas, nemazat je.
+    // „0 %" u jednoho zobrazení z 241 by tvrdilo, že nedošel nikdo; proto „pod 1 %".
+    function nvPct(a,b){ if(!(b>0)) return '–'; var p=a/b*100; return (a>0 && p<1) ? 'pod 1 %' : Math.round(p)+' %'; }
+    function renderTcTrychtyr(d){
+      d = d||{};
+      var views = Number(d.views)||0, entries = Number(d.entries)||0, testy = Number(d.tests_excluded)||0;
+      var f = d.funnel||[], side = d.side||[];
+      var koupit = 0, zapl = 0;
+      f.forEach(function(k){ if(k.key==='pokladna') koupit=Number(k.n)||0; if(k.key==='zaplaceno') zapl=Number(k.n)||0; });
+      sekInfo('navstevnost', 'tvujcoach.cz: '+nvNum(entries)+' vstupů · pokladna '+nvNum(koupit)+'×');
+      var sub = $('navstSub');
+      if(sub) sub.textContent = 'Vlastní měření tvujcoach.cz za posledních '+nvDays+' dní (bez cookies, jen nepřihlášená část appky). Testovací návštěvy jsou vyřazené.';
+      var max = 0; f.forEach(function(k){ if((Number(k.n)||0)>max) max=Number(k.n)||0; }); if(max<1) max=1;
+      var radky = f.map(function(k,i){
+        var n = Number(k.n)||0, w = Math.max(n?2:0, Math.round(n/max*100));
+        var prev = i>0 ? (Number(f[i-1].n)||0) : null;
+        var pct = prev==null ? '' : '<span class="v" style="min-width:74px;text-align:right;">'+nvPct(n,prev)+'</span>';
+        return '<div style="margin:.45rem 0;">'
+          +'<div class="tbar"><span>'+esc(k.label)+' <span class="muted" style="font-size:.74rem;">'+esc(k.path)+'</span></span>'
+          +'<span style="display:flex;gap:12px;"><b style="color:#F6CD63;font-variant-numeric:tabular-nums;">'+nvNum(n)+'</b>'+pct+'</span></div>'
+          +'<div style="height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden;"><div style="width:'+w+'%;height:100%;background:linear-gradient(90deg,#EBB12C,#F6CD63);"></div></div>'
+          +'</div>';
+      }).join('');
+      var vedle = side.map(function(k){
+        return '<div class="tbar"><span>'+esc(k.label)+' <span class="muted" style="font-size:.74rem;">'+esc(k.path)+'</span></span><span class="v">'+nvNum(k.n)+'</span></div>';
+      }).join('');
+      var od = d.measured_since ? czDatum(String(d.measured_since)) : '';
+      $('navstBody').innerHTML =
+        '<div class="tgrid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">'+
+          '<div class="s"><b>'+nvNum(entries)+'</b><span>vstupů na web</span></div>'+
+          '<div class="s"><b>'+nvNum(views)+'</b><span>zobrazení obrazovek</span></div>'+
+          '<div class="s"><b>'+nvNum(koupit)+'</b><span>zobrazení pokladny</span></div>'+
+          '<div class="s"><b>'+nvNum(zapl)+'</b><span>děkovačka po platbě bez účtu</span></div>'+
+        '</div>'+
+        '<h4 style="margin:1rem 0 .2rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em">Trychtýř (zobrazení · procento z předchozího kroku)</h4>'+
+        radky+
+        (vedle ? '<div class="tbox" style="margin-top:.7rem;"><h4>Vedlejší cesty (mimo placenou trasu)</h4>'+vedle+'</div>' : '')+
+        '<p class="traf-note">⚠️ Appka neposílá identifikátor návštěvy, takže tu nejsou <b>lidé</b>, jen <b>zobrazení</b>. Procento mezi kroky není „kolik stejných lidí pokračovalo": na kalkulačku a pokladnu se dá přijít i napřímo (reklama, martinbarna.cz), proto může přesáhnout 100 %. '+
+        'Úvodní stránka zahrnuje i ty, koho reklama hned přesměruje na kalkulačku. '+
+        '<b>Děkovačka /koupeno</b> se ukáže jen při nákupu bez účtu; přihlášený kupec se vrací do appky a ta se neměří. <b>Kolik lidí opravdu zaplatilo, je ve Stripu</b> a v kartě „Tvůj Coach: registrace a předplatná". '+
+        'Vyřazeno jako test: '+nvNum(testy)+' zobrazení (UTM se slovem test, smoke nebo sonda, kontroly šéfa a vymyšlené adresy). Vlastní návštěvy a automatické hlídky bez UTM vyřadit nejde.'+
+        (od ? ' Měří se od '+esc(od)+', kroky kalkulačky a pokladna od 5. 9. 2026.' : '')+'</p>'+
+        '<h4 style="margin:1rem 0 .2rem;color:#cbbfae;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em">Vstupy na web po dnech</h4>'+
+        nvChart(d.daily)+
+        '<div class="twrap">'+
+          nvBars('Odkud lidi chodí (vstupy)', d.sources)+
+          nvBars('Kampaně (vstupy s utm_campaign)', d.campaigns)+
+          nvBars('10 nejzobrazovanějších obrazovek', d.pages, function(p){ return p; })+
+          nvBars('Mobil vs. počítač (vstupy)', d.devices, nvDevLabel)+
+        '</div>'+
+        '<p class="traf-note">Vstup = první načtení webu zvenku. Kroky kalkulačky a přihlášení stávajících uživatelů (/sign-in) se do vstupů nepočítají.</p>';
     }
 
     // Statistiky návštěvnosti z GA4 (přes admin-api action 'ga_stats' → GA4 Data API).
