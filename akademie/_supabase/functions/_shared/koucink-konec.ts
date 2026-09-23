@@ -546,7 +546,7 @@ export function mailStavZRadku(raw: unknown): MailStav {
 
 /**
  * Mohlo tělo mailu dojít na Resend? `true` = NEJISTOTA, opakovat se nesmí.
- * ⛔ 5xx i pád sítě (`sit:…`) znamenají, že Resend zásilku MOHL přijmout.
+ * ⛔ 5xx i pád sítě (`sit:` a cokoli za tím) znamenají, že Resend zásilku MOHL přijmout.
  *    Jen výslovné odmítnutí (4xx) a chybějící klíč jsou jisté neodeslání.
  */
 export function jeNejisteOdeslani(r: { status: number; chyba?: string }): boolean {
@@ -592,9 +592,9 @@ export async function odesliSRazitkem(opts: {
   /** Pošle mail. Nesmí házet výjimku kvůli síti (`odesliPresResend` nehází). */
   posli: () => Promise<{ ok: boolean; status: number; chyba?: string; providerId?: string }>;
   tedIso: () => string;
-  /** Pole navíc do každého zápisu (`ma_academy`, `promo_code`…). */
+  /** Pole navíc do každého zápisu (`ma_academy`, `promo_code` a podobně). */
   spolecne?: Record<string, unknown>;
-  /** Důvod, pod kterým se zapisuje (`odeslano`, `rucne_z_adminu`…). */
+  /** Důvod, pod kterým se zapisuje (`odeslano`, `rucne_z_adminu` a podobně). */
   duvod: string;
 }): Promise<{
   vysledek: VysledekRozlouceni;
