@@ -175,7 +175,7 @@ console.log("\n== rozhodniRucniOdchod: tabulka nárok × stav práce × stav mai
     // --- NÁROK ZAVŘENÝ: rozhoduje stav mailu ---
     ["zavřeno, odeslano", true, false, "hotovo", "odeslano", false, false, false, "uz_ukoncen"],
     // ⚠️ `odeslano` u rozdělané práce: cron po pádu píše `opakovat` a stav mailu
-    //    nechává. I tady rozhoduje mail, ne stav práce (mutace M67 v R5).
+    //    nechává. I tady rozhoduje mail, ne stav práce (mutace M69 v R5).
     ["zavřeno, odeslano, práce opakovat", true, false, "opakovat", "odeslano", false, false, false, "uz_ukoncen"],
     ["zavřeno, odeslano, opuštěná rezervace", true, false, "rezervovano", "odeslano", false, false, false, "uz_ukoncen"],
     ["zavřeno, bez razítka", true, false, "", "neposlano", false, false, false, "uz_ukoncen"],

@@ -664,7 +664,7 @@ console.log("\n== V1 z R5: běžící nárok se starým stavem mailu jde plnou c
     razitko: { stav: "opakovat", mail_stav: "posilam" },
     narok: { active: true, expiresAt: new Date(TED - 30 * 86400000).toISOString() },
     // ⚠️ Selže JEN zápis zahození. S `zapisSelze: true` by selhalo všechno
-    //    a test by prošel i bez kontroly zahození (mutace M50 v R5 přežila).
+    //    a test by prošel i bez kontroly zahození (mutace M52 v R5 přežila).
     zapisSelzeJen: (pole) => String(pole.duvod ?? "").startsWith("rozdelana_prace_zahozena"),
   });
   const v = await zpracujJednoho(EMAIL, { predchozi: "opakovat", promo: "", mailStav: "posilam" }, deps);
