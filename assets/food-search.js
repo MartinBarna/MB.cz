@@ -209,11 +209,18 @@
   }
 
   // makra porce: gramáž × (hodnota/100 g)
+  // ⛔ VLÁKNINA JE VÝJIMKA: `null` znamená „zdroj ji neuvádí", ne nulu. `|| 0`
+  // obojí slilo do „0 g" a návštěvník to četl jako změřenou nulu. Od migrace
+  // 20260922120000 chodí v exportu u ~2 600 položek `null`, a ten musí projít až
+  // do zobrazení. Pravá nula (maso, ryba, olej) zůstává číslem 0 a ukáže se
+  // jako 0 g. Stejné pravidlo drží appka v `src/lib/vlaknina.ts`.
   function macrosFor(item, grams) {
     var f = grams / 100;
+    var fib = item.fiber_100g;
     return {
       kcal: (item.kcal_100g || 0) * f, protein: (item.protein_100g || 0) * f,
-      carb: (item.carb_100g || 0) * f, fat: (item.fat_100g || 0) * f, fiber: (item.fiber_100g || 0) * f,
+      carb: (item.carb_100g || 0) * f, fat: (item.fat_100g || 0) * f,
+      fiber: (fib === null || fib === undefined || !isFinite(Number(fib))) ? null : Number(fib) * f,
     };
   }
 

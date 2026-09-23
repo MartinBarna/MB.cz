@@ -133,7 +133,7 @@ async function visionReply(image: string, userText: string, userId?: string | nu
     ] });
   if (!res.ok) { console.error('xai_vision_error', res.status, (await res.text()).slice(0, 300)); throw new Error('vision'); }
   const data = await res.json();
-  logUsage(userId ?? null, 'ai_vision_web', (data as { usage?: unknown }).usage);
+  await logUsage(userId ?? null, 'ai_vision_web', (data as { usage?: unknown }).usage);
   let txt = String((data as { choices?: { message?: { content?: string } }[] }).choices?.[0]?.message?.content ?? '').trim();
   txt = txt.replace(/^```(?:json)?/i, '').replace(/```$/,'').trim();
   let v: { is_food?: boolean; items?: { label?: string; qty_g?: number }[]; estimate?: { kcal?: number; protein_g?: number; fat_g?: number; carb_g?: number; fiber_g?: number } | null; message?: string | null };
@@ -384,6 +384,8 @@ const PRICE_PER_M: Record<string, { in: number; out: number; cached?: number }> 
   'grok-4.3': { in: 1.25, out: 2.5, cached: 0.2 }, 'grok-4': { in: 5, out: 15 }, 'grok-4.5': { in: 2, out: 6, cached: 0.5 },
   // grok-4.6: ceny overene 13. 8. 2026 v docs.x.ai/docs/models (pasmo pod 200k tokenu).
   'grok-4.6': { in: 2, out: 6, cached: 0.5 },
+  // grok-4.7: ceny overene 22. 9. 2026 v docs.x.ai/docs/models (pasmo pod 200k tokenu), stejne jako 4.6.
+  'grok-4.7': { in: 2, out: 6, cached: 0.5 },
 };
 // tcached = cast vstupu trefena z cache (xAI: usage.prompt_tokens_details.cached_tokens,
 // Anthropic: cache_read_input_tokens). Bez toho bychom ucetli plnou sazbu i za levny vstup.
@@ -434,8 +436,10 @@ async function logFlag(userId: string | null, email: string | null, primary: str
     });
   } catch (e) { console.error('ai_flags insert selhal (flag muze chybet!):', String(e).slice(0, 200)); }
 }
-// best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď (fire-and-forget).
-function logUsage(userId: string | null, feature: string, usage: unknown): void {
+// best-effort zápis do ai_usage (service_role); NIKDY nesmí shodit odpověď.
+// ⛔ 22. 9. 2026: fire-and-forget fetch se ve streamu ztrácel (isolate skončil dřív), řádek ai_chat_web
+// nevznikl od 12. 8. Proto se AWAITUJE (uvnitř try/catch) a stav odpovědi se loguje.
+async function logUsage(userId: string | null, feature: string, usage: unknown): Promise<void> {
   if (!userId || !SUPABASE_URL || !SERVICE_ROLE) return;
   const { tin, tout, tcached, treasoning, ticks } = parseUsage(usage);
   const p = PRICE_PER_M[MODEL] ?? { in: 3, out: 15 };
@@ -451,11 +455,16 @@ function logUsage(userId: string | null, feature: string, usage: unknown): void 
   const ticksOk = fromTicks > 0 && (fromTable <= 0 || (fromTicks >= fromTable * 0.2 && fromTicks <= fromTable * 5));
   if (ticks > 0 && !ticksOk) console.error(`ai-martin: cost_in_usd_ticks mimo rozsah (${fromTicks} vs ${fromTable})`);
   const cost = Number((ticksOk ? fromTicks : fromTable).toFixed(6));
-  fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
-    method: 'POST',
-    headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
-    body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: billedOut, tokens_cached: tcached, est_cost_usd: cost }),
-  }).catch(() => {});
+  try {
+    const r = await fetch(`${SUPABASE_URL}/rest/v1/ai_usage`, {
+      method: 'POST',
+      headers: { apikey: SERVICE_ROLE, Authorization: `Bearer ${SERVICE_ROLE}`, 'content-type': 'application/json', Prefer: 'return=minimal' },
+      body: JSON.stringify({ user_id: userId, feature, provider: PROVIDER, model: MODEL, tokens_in: tin, tokens_out: billedOut, tokens_cached: tcached, est_cost_usd: cost }),
+    });
+    if (!r.ok) console.error('ai_usage_zapis_failed', feature, r.status, (await r.text()).slice(0, 200));
+  } catch (e) {
+    console.error('ai_usage_zapis_failed', feature, String(e).slice(0, 200));
+  }
 }
 // --- P2: denní strop na člena (anti-abuse). Best-effort; při chybě pustí dál. ---
 const DAILY_CAP = Number(Deno.env.get('AI_MARTIN_DAILY_CAP') ?? '60') || 60;
@@ -656,7 +665,7 @@ async function streamGrokReply(
 ): Promise<Response> {
   const upstream = await postWithRetry('https://api.x.ai/v1/chat/completions',
     { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-    { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, stream: true,
+    { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, stream: true, reasoning_effort: 'low',
       stream_options: { include_usage: true }, messages: grokMsgs });
   // Selhání PŘED prvním bajtem řešíme ještě klasickým JSONem: klient tak dostane stejnou
   // chybovou hlášku jako doteď a nemusí řešit poloprázdný stream.
@@ -702,7 +711,7 @@ async function streamGrokReply(
         console.error('ai-martin stream exception', String(e).slice(0, 300));
         if (!reply) send({ type: 'error', reply: 'Spojení selhalo, zkus to prosím znovu.' });
       }
-      logUsage(userId, 'ai_chat_web', usage ?? estimateUsage(promptChars, reply.length));
+      await logUsage(userId, 'ai_chat_web', usage ?? estimateUsage(promptChars, reply.length));
       // Zdroje až na konci: citedSources porovnává CELOU odpověď proti RAG trefám.
       if (reply) send({ type: 'sources', sources: await addPeekLinks(citedSources(reply, ragHits), via, email) });
       controller.enqueue(enc.encode(`data: [DONE]${NL}${NL}`));
@@ -829,13 +838,13 @@ Deno.serve(async (req: Request) => {
       if (wantStream) return await streamGrokReply(grokMsgs, convId, CORS, userId, ragHits, via, email);
       const res = await postWithRetry('https://api.x.ai/v1/chat/completions',
         { authorization: `Bearer ${API_KEY}`, 'content-type': 'application/json', 'x-grok-conv-id': convId },
-        { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, messages: grokMsgs });
+        { model: MODEL, max_tokens: 2000, prompt_cache_key: convId, reasoning_effort: 'low', messages: grokMsgs });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         console.error('xai_error', res.status, JSON.stringify(data).slice(0, 300));
         return json({ reply: 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli, nebo mi napiš na WhatsApp.' }, CORS, 200);
       }
-      logUsage(userId, 'ai_chat_web', (data as { usage?: unknown }).usage);
+      await logUsage(userId, 'ai_chat_web', (data as { usage?: unknown }).usage);
       reply = ((data as { choices?: { message?: { content?: string } }[] }).choices?.[0]?.message?.content ?? '').trim();
     } else {
       // Anthropic Messages API + retry
@@ -850,7 +859,7 @@ Deno.serve(async (req: Request) => {
         console.error('anthropic_error', res.status, JSON.stringify(data).slice(0, 300));
         return json({ reply: 'Promiň, teď se mi nepodařilo odpovědět. Zkus to za chvíli, nebo mi napiš na WhatsApp.' }, CORS, 200);
       }
-      logUsage(userId, 'ai_chat_web', (data as { usage?: unknown }).usage);
+      await logUsage(userId, 'ai_chat_web', (data as { usage?: unknown }).usage);
       const parts = (data as { content?: { type: string; text?: string }[] }).content ?? [];
       reply = parts.filter((p) => p.type === 'text').map((p) => p.text ?? '').join(NL).trim();
     }
