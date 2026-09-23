@@ -217,6 +217,24 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 8 &&
   // ⛔ [revize R4] Doposlat jde podle STAVU MAILU, ne podle stavu prace.
   // ⛔⛔ [revize R5, nalez V1] Rozhoduje cista funkce a NEJDRIV se pta na narok.
   check("admin rozhoduje pres `rozhodniRucniOdchod`", adm.includes("const r = rozhodniRucniOdchod({"));
+  // ⛔ [revize R6, N3] Chybejici klic Resendu nema vlastni vetev: jde pres
+  //    `odesliSRazitkem` jako v cronu. Admin `odmitnuto` sam nezapisuje.
+  check("admin nema vlastni vetev pro chybejici klic Resendu",
+    !adm.includes('mail: "no_resend"') && !adm.includes("if (!RESEND_KEY) {"));
+  check("admin sam nezapisuje `odmitnuto` (jen sdilena funkce)", !adm.includes('mail_stav: "odmitnuto"'));
+  // ⛔ [revize R6, N1] Neznamy stav mailu je `nejiste` a v DB ho nepusti CHECK.
+  check("admin hlasi neznamy stav mailu", adm.includes("jeNeznamyMailStav(razitkoRow?.mail_stav)"));
+  check("karta dostava stav mailu normalizovany", adm.includes("konec_mail_stav: razKonec.error ? null : mailStavZRadku("));
+  {
+    const sql = await Deno.readTextFile(new URL("../koucink-konec-2026-09-22.sql", ROOT));
+    check("migrace ma CHECK na hodnoty `mail_stav` (idempotentne)",
+      sql.includes("add constraint koucink_konec_sent_mail_stav_hodnoty") &&
+        sql.includes("check (mail_stav in ('neposlano', 'posilam', 'odmitnuto', 'nejiste', 'odeslano'))") &&
+        sql.includes("where conname = 'koucink_konec_sent_mail_stav_hodnoty'"));
+    check("CHECK jde az po prevodu starych dat",
+      sql.indexOf("where stav in ('opakovat_mail', 'chyba_nejiste');") > 0 &&
+        sql.indexOf("where stav in ('opakovat_mail', 'chyba_nejiste');") < sql.indexOf("add constraint koucink_konec_sent_mail_stav_hodnoty"));
+  }
   check("admin predava do rozhodnuti skutecny stav naroku",
     adm.includes("narokExistuje: !!narokRow,") && adm.includes("narokAktivni: narokRow?.active === true,"));
   check("admin pri vraceni zamku vraci i stav mailu",

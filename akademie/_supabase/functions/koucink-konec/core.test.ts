@@ -188,12 +188,31 @@ console.log("\n== zaber: kdo se smí vzít ==");
   check("zabraný řádek nese stav mailu", z.stav === "ok" && z.mailStav === "odmitnuto", JSON.stringify(z));
 }
 {
-  const { deps } = mockDeps({ razitko: { stav: "opakovat", mail_stav: "nesmysl" } });
+  // ⛔⛔ REVIZE R6, NÁLEZ N1: neznámá hodnota je `nejiste`, ne `neposlano`.
+  //    Do R6 tenhle test ZAKOTVIL opak: překlep v DB = „smí se poslat".
+  const { deps, stopa } = mockDeps({
+    razitko: { stav: "opakovat", mail_stav: "nesmysl" },
+    narok: { active: false, expiresAt: null },
+  });
   const z = await zaber(EMAIL, deps);
-  check("neznámý stav mailu se čte jako `neposlano`", z.stav === "ok" && z.mailStav === "neposlano");
-  check("mailStavZRadku: prázdno i nesmysl jsou `neposlano`",
-    mailStavZRadku(null) === "neposlano" && mailStavZRadku("xxx") === "neposlano" &&
-      mailStavZRadku("odeslano") === "odeslano");
+  check("neznámý stav mailu se čte jako `nejiste`", z.stav === "ok" && z.mailStav === "nejiste", JSON.stringify(z));
+  check("a jde o tom alert", stopa.alerty.some((a) => a.includes("neznámý stav mailu")), JSON.stringify(stopa.alerty));
+  if (z.stav === "ok") {
+    const v = await zpracujJednoho(EMAIL, { predchozi: z.predchozi, promo: z.promo, mailStav: z.mailStav }, deps);
+    check("neznámý stav + zavřený přístup: mail NEJDE", !stopa.volano.some((x) => x.startsWith("posliMail")) &&
+      v.vysledek === "nejiste", stopa.volano.join(",") + " / " + JSON.stringify(v));
+  }
+  check("mailStavZRadku: chybějící řádek je `neposlano`",
+    mailStavZRadku(null) === "neposlano" && mailStavZRadku(undefined) === "neposlano");
+  check("mailStavZRadku: nesmysl i prázdný text v řádku jsou `nejiste`",
+    mailStavZRadku("xxx") === "nejiste" && mailStavZRadku("") === "nejiste" && mailStavZRadku("Odeslano") === "nejiste");
+  check("mailStavZRadku: platné hodnoty projdou (i s mezerami)",
+    mailStavZRadku("odeslano") === "odeslano" && mailStavZRadku(" odmitnuto ") === "odmitnuto");
+}
+{
+  const { deps, stopa } = mockDeps({ razitko: { stav: "opakovat", mail_stav: "odmitnuto" } });
+  await zaber(EMAIL, deps);
+  check("známý stav mailu alert NEPOSÍLÁ", !stopa.alerty.some((a) => a.includes("neznámý stav mailu")));
 }
 
 // =============================================================================

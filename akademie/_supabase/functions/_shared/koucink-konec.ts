@@ -536,12 +536,29 @@ export async function ukonciPristup(
  */
 export type MailStav = "neposlano" | "posilam" | "odmitnuto" | "nejiste" | "odeslano";
 
-/** Text ze sloupce na stav mailu. Neznámé i prázdné se čte jako `neposlano`. */
+export const MAIL_STAVY: readonly MailStav[] = ["neposlano", "posilam", "odmitnuto", "nejiste", "odeslano"];
+
+/**
+ * Je v řádku hodnota, kterou neznáme (překlep, ruční zásah, starší verze)?
+ * `null`/`undefined` = řádek neexistuje, to neznámé NENÍ.
+ */
+export function jeNeznamyMailStav(raw: unknown): boolean {
+  if (raw === null || raw === undefined) return false;
+  return !(MAIL_STAVY as readonly string[]).includes(String(raw).trim());
+}
+
+/**
+ * Text ze sloupce na stav mailu.
+ * ⛔ NEZNÁMÁ HODNOTA JE `nejiste`, NE `neposlano` (revize R6, nález N1). Do R6
+ *    se překlep v DB četl jako „ještě neodesláno" a mail se směl poslat znovu.
+ *    Fail-closed: co neznáme, to neposíláme, a volající o tom pošle alert
+ *    (`jeNeznamyMailStav`). Jen chybějící řádek (`null`/`undefined`) je
+ *    `neposlano`. Prázdný text v existujícím řádku je taky neznámý.
+ */
 export function mailStavZRadku(raw: unknown): MailStav {
-  const v = String(raw ?? "").trim();
-  return (["neposlano", "posilam", "odmitnuto", "nejiste", "odeslano"] as string[]).includes(v)
-    ? (v as MailStav)
-    : "neposlano";
+  if (raw === null || raw === undefined) return "neposlano";
+  const v = String(raw).trim();
+  return (MAIL_STAVY as readonly string[]).includes(v) ? (v as MailStav) : "nejiste";
 }
 
 /**

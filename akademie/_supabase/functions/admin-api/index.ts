@@ -25,6 +25,7 @@ import {
   overKonecKoucinku,
   ukonciPristup,
   CHYBA_KOD_NEAKTIVNI,
+  jeNeznamyMailStav,
   mailStavZRadku,
   odesliSRazitkem,
   rozhodniRucniOdchod,
@@ -2501,7 +2502,10 @@ Deno.serve(async (req) => {
         //    (revize R3, nález S5).
         konec_stav: razKonec.error ? null : String(razKonec.data?.stav ?? ""),
         // ⛔ Podle TOHOHLE se karta ptá, než pošle rozloučení znovu (revize R4).
-        konec_mail_stav: razKonec.error ? null : String(razKonec.data?.mail_stav ?? "neposlano"),
+        // ⛔ Normalizuje se TOUŽ funkcí jako server (R6, N1): neznámá hodnota je
+        //    `nejiste`, takže karta se zeptá, místo aby poslala naslepo.
+        konec_mail_stav: razKonec.error ? null : mailStavZRadku(razKonec.data?.mail_stav),
+        konec_mail_stav_neznamy: razKonec.error ? null : jeNeznamyMailStav(razKonec.data?.mail_stav),
         // ⭐ Běží koučinkový nárok? Karta podle toho pozná, jestli tlačítko jde
         //    plnou cestou (zavře přístup), nebo jen doposílá mail (revize R5, V1).
         //    `null` = nepodařilo se přečíst.
@@ -3901,6 +3905,12 @@ Deno.serve(async (req) => {
 
       const razitkoStav = String(razitkoRow?.stav ?? "");
       const razitkoMail = mailStavZRadku(razitkoRow?.mail_stav);
+      // ⛔ Neznámá hodnota je `nejiste` (fail-closed, R6 N1). Admin nemá kanál
+      //    na alert mailem; hlásí to přímo v odpovědi, kterou Martin vidí.
+      const mailNeznamy = jeNeznamyMailStav(razitkoRow?.mail_stav)
+        ? "mail_stav_neznamy: v razitku je " + JSON.stringify(razitkoRow?.mail_stav) + ", ctu ho jako nejiste"
+        : null;
+      if (mailNeznamy) console.error("client_offboard: " + mailNeznamy);
       const razitkoUpdatedAt = razitkoRow?.updated_at ?? null;
       const razitkoStari = Date.now() - Date.parse(String(razitkoUpdatedAt ?? ""));
       const rezervaceCerstva = razitkoStav === "rezervovano" &&
@@ -3928,13 +3938,16 @@ Deno.serve(async (req) => {
         return json({
           error: "potrebuje_potvrzeni",
           mail_stav: razitkoMail,
+          varovani: mailNeznamy,
           hint: "rozlouceni uz jednou odchazelo a nevime, jestli doslo; posli znovu s potvrzeno=true",
         }, 409);
       }
       // ⛔ Bývalí klienti jsou v seznamu vidět a jdou proklikat, takže na nich jde
       //    tlačítko zmáčknout znovu. Bez téhle větve by se jim rozloučení poslalo
       //    PODRUHÉ.
-      if (r.akce === "uz_ukoncen") return json({ ok: true, uz_ukoncen: true, mail: "preskocen", mail_ok: null });
+      if (r.akce === "uz_ukoncen") {
+        return json({ ok: true, uz_ukoncen: true, mail: "preskocen", mail_ok: null, varovani: mailNeznamy });
+      }
       const jenMail = r.akce === "jen_mail";
 
       // --- ZÁMEK --------------------------------------------------------------
@@ -4169,22 +4182,11 @@ Deno.serve(async (req) => {
       }
       if (salesDecision && salesDecision.action === "skip") await logMailSkip(admin, salesDecision);
 
+      // ⛔ Chybějící klíč NEMÁ vlastní větev (revize R6, nález N3). Jde přes
+      //    `odesliSRazitkem` stejně jako v cronu: `odesliPresResend` bez klíče
+      //    Resend nevolá a vrátí `missing_RESEND_API_KEY`, sdílená funkce z toho
+      //    udělá `odmitnuto` + `opakovat`. Jedna cesta zápisu pro týž stav.
       const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-      if (!RESEND_KEY) {
-        // ⛔ Přístup je zavřený a mail JISTĚ neodešel. Návrat zápisu se čte (R5, V2).
-        const ok = await zapisRazitko({
-          stav: "opakovat", duvod: "rucne_z_adminu:no_resend", mail_stav: "odmitnuto", sent_ok: false, updated_at: nyni(),
-        });
-        return json({
-          ok: true,
-          mail: "no_resend",
-          mail_ok: false,
-          mail_duvod: "chybi_RESEND_API_KEY",
-          varovani: ok ? null : "razitko_se_neulozilo: radek zustal rezervovany, automat ho po lhute dokonci",
-          tvujcoach: u.tvujcoach,
-          mel_academy: u.maAcademy,
-        });
-      }
 
       // ⚠️ Zamerne tu NENI zadna cena (spec §9): sleva jen v procentech.
       const includeSales = salesDecision?.action === "send" && !!promoKod;
@@ -4222,6 +4224,7 @@ Deno.serve(async (req) => {
       });
 
       const varovani: string[] = [];
+      if (mailNeznamy) varovani.push(mailNeznamy);
       if (promoVarovani) varovani.push(promoVarovani);
       if (o.vysledek === "posilam_neulozeno") {
         varovani.push("posilam_neulozeno: Resend jsem NEVOLAL; radek zustal rezervovany a automat ho po lhute dokonci");
@@ -4237,6 +4240,8 @@ Deno.serve(async (req) => {
         //    se nezačalo, `null` mohlo odejít (nejistota).
         mail_ok: o.vysledek === "odeslano" ? true : (o.vysledek === "nejiste" || o.vysledek === "bez_id") ? null : false,
         mail_vysledek: o.vysledek,
+        // Proč mail nešel (`missing_RESEND_API_KEY`, `resend_422:...`); u úspěchu nic.
+        mail_duvod: o.vysledek === "odeslano" ? null : (o.chyba ?? null),
         sales: salesDecision?.action ?? "skip",
         promo: promoKod || null,
         varovani: varovani.length ? varovani.join(" | ") : null,

@@ -37,7 +37,7 @@ export const STAVY_UZAVRENE: StavRazitka[] = ["hotovo", "vzdano"];
 //    pořadí zápisů používá i ruční odchod z admina. Dvě definice téhož výčtu by se
 //    rozešly přesně v té hodnotě, na které záleží.
 export { mailStavZRadku, type MailStav } from "../_shared/koucink-konec.ts";
-import { type MailStav, mailStavZRadku, odesliSRazitkem } from "../_shared/koucink-konec.ts";
+import { jeNeznamyMailStav, type MailStav, mailStavZRadku, odesliSRazitkem } from "../_shared/koucink-konec.ts";
 
 /** Mail se smí (znovu) poslat jen z těchhle stavů. */
 export const MAIL_STAVY_K_ODESLANI: MailStav[] = ["neposlano", "odmitnuto"];
@@ -357,6 +357,18 @@ export async function zaber(email: string, deps: BehDeps): Promise<ZaberVysledek
         "Nejspíš předchozí běh zabil timeout cronu (120 s) nebo strop běhu.\n" +
         "Stav klienta může být rozpracovaný: zkontroluj `entitlements` a `tvujcoach_grants`.\n" +
         "Automat se ji teď pokusí převzít a dokončit.",
+      email,
+    );
+  }
+
+  // ⛔ Neznámý stav mailu se čte jako `nejiste` (fail-closed, revize R6 N1)
+  //    a Martin se to dozví. Stejně jako u opuštěné rezervace: alert PŘED zámkem.
+  if (jeNeznamyMailStav(radek.mail_stav)) {
+    await deps.alert(
+      "⚠️ Konec koučinku: neznámý stav mailu v razítku",
+      "Klient: " + email + "\nHodnota `mail_stav`: " + JSON.stringify(radek.mail_stav) +
+        "\n\nTakovou hodnotu kód nezná. Čtu ji jako `nejiste`: když je přístup zavřený,\n" +
+        "rozloučení NEPOŠLU. Oprav hodnotu v `koucink_konec_sent` ručně.",
       email,
     );
   }

@@ -2547,7 +2547,7 @@
               // Byvali klienti jsou od 27. 7. v seznamu videt a jdou otevrit, takze na uz
               // ukoncenem klientovi jde tohle tlacitko zmacknout znovu. Server to zastavi
               // a nic neposle; tady se to jen srozumitelne rekne.
-              toast('Tenhle klient už ukončený je, nic se neposlalo.');
+              toast('Tenhle klient už ukončený je, nic se neposlalo.'+(o.j.varovani?' ⚠️ '+o.j.varovani:''));
               $('kdet').classList.remove('on'); loadKlienti(); return;
             }
             // ⛔ Text musí sedět s tím, co dostal KLIENT. Do 22. 9. 2026 tvrdil toast
@@ -2597,7 +2597,7 @@
           /* ⛔ Souběh s automatem (nález S6): jeden zámek, kdo prohraje, neodesílá. */
           /* ⛔ Server chce potvrzení u mailu, který mohl odejít (nález S5 z R4). */
           else if(o.j&&o.j.error==='potrebuje_potvrzeni'){
-            toast('Tomuhle klientovi rozloučení už jednou odcházelo a nevíme, jestli došlo. Otevři kartu znovu, ať se můžu zeptat, než ho pošlu podruhé.');
+            toast('Tomuhle klientovi rozloučení už jednou odcházelo a nevíme, jestli došlo. Otevři kartu znovu, ať se můžu zeptat, než ho pošlu podruhé.'+(o.j.varovani?' ⚠️ '+o.j.varovani:''));
             b.disabled=false; b.textContent='Ukončit koučink';
           }
           else if(o.j&&o.j.error==='prave_zpracovava_automat'){

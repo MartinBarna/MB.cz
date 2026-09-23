@@ -211,6 +211,27 @@ update public.koucink_konec_sent
    set stav = case when stav = 'opakovat_mail' then 'opakovat' else 'hotovo' end
  where stav in ('opakovat_mail', 'chyba_nejiste');
 
+-- ⛔ CHECK NA HODNOTY `mail_stav` (revize R6, nález N1). Bez něj by překlep
+--    nebo ruční zásah v DB prošel a kód by ho musel hádat. Kód neznámou
+--    hodnotu čte jako `nejiste` (neposílá), ale DB ji rovnou nepustí.
+--    Jde AŽ PO převodu výš, aby staré řádky měly platné hodnoty.
+--    Idempotentní: druhé spuštění constraint najde a nic nedělá.
+--    ⛔ Bez `not valid`: když v tabulce leží neplatná hodnota, migrace MÁ
+--    spadnout nahlas, ne constraint tiše přeskočit starý obsah.
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+     where conname = 'koucink_konec_sent_mail_stav_hodnoty'
+       and conrelid = 'public.koucink_konec_sent'::regclass
+  ) then
+    alter table public.koucink_konec_sent
+      add constraint koucink_konec_sent_mail_stav_hodnoty
+      check (mail_stav in ('neposlano', 'posilam', 'odmitnuto', 'nejiste', 'odeslano'));
+  end if;
+end
+$$;
+
 -- Kontrola po zásahu (čekám tabulku, unikátní index, RLS a 4 řádky konfigurace):
 --   select indexname, indexdef from pg_indexes where tablename = 'koucink_konec_sent';
 --   select relrowsecurity from pg_class where relname = 'koucink_konec_sent';
@@ -218,6 +239,9 @@ update public.koucink_konec_sent
 --   select column_name from information_schema.columns
 --    where table_schema='public' and table_name='koucink_konec_sent' order by ordinal_position;
 --   (cekam mimo jine `pokusy` a `updated_at`)
+--   select conname, pg_get_constraintdef(oid) from pg_constraint
+--    where conrelid = 'public.koucink_konec_sent'::regclass and contype = 'c';
+--   (cekam `koucink_konec_sent_mail_stav_hodnoty` s peti hodnotami)
 --
 -- Návrat:
 --   drop table if exists public.koucink_konec_sent;
