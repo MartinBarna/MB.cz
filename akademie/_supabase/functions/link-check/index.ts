@@ -160,6 +160,18 @@ function json(obj: unknown, status = 200): Response {
   return new Response(JSON.stringify(obj), { status, headers: { "content-type": "application/json" } });
 }
 
+// Informační zápis bez mailu: rotace při překročení stropu je normální stav (od 23. 9. 2026
+// je unikátních stránek trvale víc než MAX_URL), ne porucha. Typ "info", ať ho ranní přehled
+// nepočítá mezi chyby odesílání.
+async function infoAdmin(predmet: string, detail: Record<string, unknown>) {
+  try {
+    await admin.from("email_events").insert({
+      lead_id: null, step: 0, type: "info",
+      detail: { track: "link-check", info: predmet + " " + JSON.stringify(detail).slice(0, 300) },
+    });
+  } catch { /* best-effort */ }
+}
+
 async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
   try {
     await admin.from("email_events").insert({
@@ -463,7 +475,7 @@ Deno.serve(async (req) => {
     const denUtc = Math.floor(Date.parse(runAt.slice(0, 10) + "T00:00:00.000Z") / MS_NA_DEN);
     const { davka, offset } = rotujOkno(zbytek, kapacita, denUtc);
     rotaceOffset = offset;
-    await alertAdmin("Link-check: podezřele moc odkazů, kontrola rotuje", {
+    await infoAdmin("Link-check: víc odkazů než strop, kontrola rotuje", {
       nalezeno, strop: MAX_URL, slouceno_duplicit: sloucenoDuplicit,
       prednost: prednost.length, sablony_celkem: zbytek.length,
       sablony_dnes: davka.length, rotace_offset: offset,
