@@ -68,6 +68,11 @@ function typo(text) {
     if (cast.startsWith('<')) return cast;
     return cast
       // skupiny číslic: 1 457, 1 720 108
+      // rozsahy „55 a 60", „10 až 15": číslo, spojka i číslo drží na jednom řádku
+      // (R2 24. 9.: citát se lámal „mezi 55 / a 60")
+      .replace(/(?<=\d) (a|až)[ \u00a0](?=\d)/g, NB + '$1' + NB)
+      // „et al." se nesmí rozdělit na dva řádky (R2: „Koemel et / al.")
+      .replace(/(?<![\p{L}])et al\./gu, 'et' + NB + 'al.')
       .replace(/(?<=\d) (?=\d{3}(?!\d))/g, NB)
       // číslo a jednotka nebo procento: 2 %, 30 g, 188 kcal, 1,6 g/kg
       .replace(new RegExp(`(?<=\\d) (?=${JEDNOTKA}(?![\\p{L}\\p{N}]))`, 'gu'), NB)
@@ -83,6 +88,9 @@ function typoVse(v) {
   if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, typoVse(x)]));
   return v;
 }
+
+/* [zmena 24. 9. 2026, R2] Sipka na obalce („Posun dal") a pred radky CTA slidu byla
+   dlouhy vodorovny tah, stejne jako byvala zlata carka. Nahrazena znakem „›". */
 
 /** Odrážky se číslují samy (kroužky 1 až 5). Když položka ve scénáři začíná vlastním
  *  číslem („<b>1.</b> Kalorický deficit"), na obrázku stálo „① 1. Kalorický deficit".
@@ -211,7 +219,7 @@ const KINDS_RAW = {
         <h1 style="font-size:92px">${s.title}</h1>
         ${s.sub ? `<div class="body" style="margin-top:44px;font-size:40px;color:#ece8f0">${s.sub}</div>` : ''}
       </div>
-      <div style="display:flex;align-items:center;gap:16px;font-weight:700;font-size:30px;color:${GOLD_SOFT}">Posuň dál <span style="font-size:40px">→</span></div>
+      <div style="display:flex;align-items:center;gap:16px;font-weight:700;font-size:30px;color:${GOLD_SOFT}">Posuň dál <span style="font-size:40px">›</span></div>
     </div>`;
   },
   point(s, i, n) {
@@ -314,7 +322,7 @@ const KINDS_RAW = {
   },
   cta(s, i, n) {
     const lines = (s.lines || []).map((l) =>
-      `<div style="font-size:34px;line-height:1.45;color:#ded9e4;margin-bottom:20px;padding-left:44px;position:relative"><span style="position:absolute;left:0;color:${GOLD};font-weight:800">→</span>${l}</div>`).join('');
+      `<div style="font-size:34px;line-height:1.45;color:#ded9e4;margin-bottom:20px;padding-left:44px;position:relative"><span style="position:absolute;left:0;color:${GOLD};font-weight:800">›</span>${l}</div>`).join('');
     return `<div class="wrap">${BRAND}${dots(i, n)}
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:60px">
         <h1 style="font-size:64px;margin-bottom:48px">${s.title}</h1>
