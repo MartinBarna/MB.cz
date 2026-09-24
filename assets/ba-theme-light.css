@@ -54,18 +54,18 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] .ba h1 .hl,
 [data-theme="light"] .ba .hl{
   background:none !important;
-  -webkit-text-fill-color:var(--gold-soft,#6B4E08);
-  color:var(--gold-soft,#6B4E08) !important;
+  -webkit-text-fill-color:var(--gold-soft,#866008);
+  color:var(--gold-soft,#866008) !important;
 }
 [data-theme="light"] .ba .lead{color:var(--muted,#5C564C) !important;}
-[data-theme="light"] .ba .kick{color:var(--gold-soft,#6B4E08) !important;}
-[data-theme="light"] .ba .crumb{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .ba .kick{color:var(--gold-soft,#866008) !important;}
+[data-theme="light"] .ba .crumb{color:var(--gold-soft,#866008) !important;}
 [data-theme="light"] .ba a.back,
 [data-theme="light"] .ba .top a.back{color:var(--muted,#5C564C) !important;}
 [data-theme="light"] .ba .top a.back:hover{color:var(--ink,#161310) !important;}
 [data-theme="light"] .ba [style*="color:#a89e94"]{color:var(--muted,#5C564C) !important;}
 [data-theme="light"] .ba [style*="color:#fff"]{color:var(--ink,#161310) !important;}
-[data-theme="light"] .ba [style*="color:#F6CD63"]{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .ba [style*="color:#F6CD63"]{color:var(--gold-soft,#866008) !important;}
 
 /* karty / panely: z průhledné bílé na krémovou plochu */
 [data-theme="light"] .ba .card,
@@ -142,8 +142,8 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] .ba .muted{color:var(--muted,#5C564C) !important;}
 [data-theme="light"] .ba .fld>label{color:var(--ink,#161310) !important;}
 [data-theme="light"] .ba .credit{color:var(--ink,#161310) !important;background:rgba(235,177,44,.10) !important;}
-[data-theme="light"] .ba .credit b{color:var(--gold-soft,#6B4E08) !important;}
-[data-theme="light"] .wrap a{color:var(--gold-soft,#6B4E08);}
+[data-theme="light"] .ba .credit b{color:var(--gold-soft,#866008) !important;}
+[data-theme="light"] .wrap a{color:var(--gold-soft,#866008);}
 
 /* nastroje index karty */
 [data-theme="light"] .ba .card p,
@@ -181,8 +181,8 @@ html[data-theme="light"] body.ba{
   background:linear-gradient(150deg,rgba(235,177,44,.14),rgba(235,177,44,.04)) !important;
   border-color:rgba(235,177,44,.45) !important;
 }
-[data-theme="light"] .ksec{color:var(--gold-soft,#6B4E08) !important;}
-[data-theme="light"] .kbtn2{color:var(--gold-soft,#6B4E08) !important;border-color:rgba(107,78,8,.45) !important;}
+[data-theme="light"] .ksec{color:var(--gold-soft,#866008) !important;}
+[data-theme="light"] .kbtn2{color:var(--gold-soft,#866008) !important;border-color:rgba(134,96,8,.45) !important;}
 [data-theme="light"] table.hist th{color:var(--muted,#5C564C) !important;border-bottom-color:var(--line) !important;}
 [data-theme="light"] table.hist td{color:var(--ink,#161310) !important;border-bottom-color:var(--line) !important;}
 [data-theme="light"] #wiz{background:#F7F3EB !important;}
@@ -202,7 +202,7 @@ html[data-theme="light"] body.ba{
 }
 [data-theme="light"] .sumg .kv span:first-child{color:var(--muted,#5C564C) !important;}
 [data-theme="light"] .sumg .kv span:last-child{color:var(--ink,#161310) !important;}
-[data-theme="light"] .sumg h4{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .sumg h4{color:var(--gold-soft,#866008) !important;}
 [data-theme="light"] .toast{
   background:#fff !important;
   color:#161310 !important;
@@ -285,7 +285,7 @@ html[data-theme="light"] body.ba{
   border-color:rgba(235,177,44,.45) !important;
 }
 [data-theme="light"] body.ba .praxe b{
-  color:var(--gold-soft,#6B4E08) !important;
+  color:var(--gold-soft,#866008) !important;
 }
 [data-theme="light"] body.ba .upsell b,
 [data-theme="light"] body.ba [data-upsell] b,
@@ -408,7 +408,7 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] .faq-item .a{color:#5a5650 !important;}
 [data-theme="light"] .mod .num{
   background:#fff4e8 !important;
-  color:#6B4E08 !important;
+  color:#866008 !important;
 }
 
 /* hero + cena + patička: nech tmavé (původní světlý návrh je tak měl) */
@@ -465,7 +465,7 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] .card .pl,
 [data-theme="light"] body.ba .pl{color:var(--muted,#5C564C) !important;}
 [data-theme="light"] .bdg,
-[data-theme="light"] body.ba .bdg{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] body.ba .bdg{color:var(--gold-soft,#866008) !important;}
 [data-theme="light"] h5,
 [data-theme="light"] h6,
 [data-theme="light"] .card h5,
@@ -486,7 +486,7 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] a.plain,
 [data-theme="light"] #brandWeb,
 [data-theme="light"] .stats b,
-[data-theme="light"] .stat b{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .stat b{color:var(--gold-soft,#866008) !important;}
 [data-theme="light"] .uk-head p,
 [data-theme="light"] .uk-cert p,
 [data-theme="light"] figcaption,
@@ -533,7 +533,7 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] [style*="color:#ebb12c"],
 [data-theme="light"] [style*="color:#F6CD63"],
 [data-theme="light"] [style*="color:#f6cd63"],
-[data-theme="light"] [style*="color:#ffd166"]{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] [style*="color:#ffd166"]{color:var(--gold-soft,#866008) !important;}
 [data-theme="light"] .hero [style*="color:#ffd166"],
 [data-theme="light"] .hero [style*="color:#F6CD63"],
 [data-theme="light"] .ac-hero [style*="color:#ffd166"],
@@ -619,7 +619,7 @@ html[data-theme="light"] body.ba{
 [data-theme="light"] .tcta,
 [data-theme="light"] .badge-s,
 [data-theme="light"] span.gold,
-[data-theme="light"] .gold{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .gold{color:var(--gold-soft,#866008) !important;}
 
 [data-theme="light"] [style*="linear-gradient(180deg,rgba(235,177,44,.09"],
 [data-theme="light"] [style*="linear-gradient(180deg, rgba(235,177,44,.09"]{
@@ -662,8 +662,9 @@ html[data-theme="light"]{
   --ink:#161310;
   --muted:#5C564C;
   --muted-2:#3F3A34;
-  --gold-soft:#6B4E08;
-  --brand:#6B4E08;
+  --gold-soft:#866008;
+  --gold-big:#AC7900;
+  --brand:#866008;
   --paper:#ffffff;
   --soft:#F3EEE4;
   --line:rgba(22,19,16,.12);
@@ -677,7 +678,7 @@ html[data-theme="light"]{
    ============================================================ */
 
 /* Tmavé ostrovy: zlatý TEXT tam musí zůstat světle zlatý. Token se dědí,
-   takže všechna `color:var(--gold-soft,#6B4E08)` uvnitř dostanou #F6CD63. */
+   takže všechna `color:var(--gold-soft,#866008)` uvnitř dostanou #F6CD63. */
 [data-theme="light"] footer,
 [data-theme="light"] .hero,
 [data-theme="light"] .ac-hero,
@@ -722,7 +723,7 @@ html[data-theme="light"]{
 [data-theme="light"] .rules p,
 [data-theme="light"] .lockbox,
 [data-theme="light"] .lockbox span{color:var(--muted,#5C564C) !important;}
-[data-theme="light"] .rules b{color:var(--gold-soft,#6B4E08) !important;}
+[data-theme="light"] .rules b{color:var(--gold-soft,#866008) !important;}
 [data-theme="light"] .badge-free{color:#1d6b34 !important;}
 
 @media print{.mb-theme-toggle{display:none !important;}}
@@ -751,14 +752,14 @@ html[data-theme="light"]{
 }
 [data-theme="light"] .nav-more summary{color:var(--ink,#161310)!important;}
 [data-theme="light"] .nav-more summary:hover,
-[data-theme="light"] .nav-more[open] summary{color:var(--brand,#6B4E08)!important;}
+[data-theme="light"] .nav-more[open] summary{color:var(--brand,#866008)!important;}
 [data-theme="light"] .nav-more>div{
   background:var(--paper,#ffffff)!important;
   border-color:var(--line,rgba(22,19,16,.12))!important;
   box-shadow:0 12px 26px rgba(0,0,0,.12)!important;
 }
 [data-theme="light"] .nav-more>div a{color:var(--ink,#161310)!important;}
-[data-theme="light"] .nav-more>div a:hover{background:var(--soft,#F3EEE4)!important;color:var(--brand,#6B4E08)!important;}
+[data-theme="light"] .nav-more>div a:hover{background:var(--soft,#F3EEE4)!important;color:var(--brand,#866008)!important;}
 @media (max-width:1259px){
   [data-theme="light"] .nav-more>div a{border-bottom-color:var(--line,rgba(22,19,16,.12))!important;}
 }
@@ -810,3 +811,138 @@ html:not([data-theme="light"]) .kbtn:hover:not(:disabled){
   background:#F6CD63!important;
   color:#1A1222!important;
 }
+
+/* ============================================================
+   VLNA 3 (24. 9. 2026): zlatá ve světlém režimu Academy podle brand systému
+   (stejný jako appka tvujcoach.cz, src/theme/colors.ts). Report:
+   _Claude-dokumenty/2026-09-24_sef78/academy-svetla/BUILD-academy-svetla-0924.md
+   Zlatá PLOCHA = #EBB12C + text #1A1222. Zlatý TEXT na světlém = --gold-soft #866008
+   (malý) nebo --gold-big #AC7900 (velký text, ikony). Nic bílé na bílém.
+   Tmavý režim se tu nemění: vše je pod [data-theme="light"].
+   ============================================================ */
+
+/* Tmavé ostrovy dědí světle zlatou i pro velký text a ikony. */
+[data-theme="light"] footer,
+[data-theme="light"] .hero,
+[data-theme="light"] .ac-hero,
+[data-theme="light"] .pricebox,
+[data-theme="light"] .colv,
+[data-theme="light"] [style*="linear-gradient(135deg,#262626"],
+[data-theme="light"] [style*="linear-gradient(135deg, #262626"],
+[data-theme="light"] [style*="background:#100e14"],
+[data-theme="light"] [style*="background:#101114"],
+[data-theme="light"] [style*="background:#0C0B10"],
+[data-theme="light"] [style*="background:#0c0b10"]{--gold-big:#F6CD63;}
+/* V členské sekci (body.ba) .hero ostrov NENÍ: videokurz má .hero bez pozadí na krémové
+   ploše a zlatý text tam vycházel #F6CD63 na krému (1,3:1) a na tlačítku 1,27:1. */
+[data-theme="light"] body.ba .hero{--gold-soft:#866008;--bd-gold-soft:#866008;--gold-big:#AC7900;}
+
+/* Zlatá tlačítka členské sekce: plná brandová zlatá, tmavý text. Dřív je
+   `.wrap a{color:gold-soft}` (0,2,1) přebarvovalo na hnědý text na zlaté (3,6:1). */
+[data-theme="light"] body.ba .contbtn,
+[data-theme="light"] body.ba .bonus:not(.islite) .bbtn,
+[data-theme="light"] body.ba .fb-cta,
+[data-theme="light"] body.ba .go:not(.ghost),
+[data-theme="light"] body.ba a.cta{
+  background:#EBB12C !important;
+  color:#1A1222 !important;
+}
+[data-theme="light"] body.ba .card.locked .go{
+  background:#F3EEE4 !important;
+  color:var(--muted-2,#3F3A34) !important;
+}
+[data-theme="light"] body.ba .contbtn:hover,
+[data-theme="light"] body.ba .bonus:not(.islite):hover .bbtn,
+[data-theme="light"] body.ba .fb-cta:hover,
+[data-theme="light"] body.ba a.cta:hover{
+  background:#F6CD63 !important;
+  color:#1A1222 !important;
+}
+/* Materiály: tlačítko tisku mělo pozadí var(--brand) = tmavá zlatá pod tmavým textem. */
+[data-theme="light"] .toolbar button{background:#EBB12C !important;color:#1A1222 !important;}
+/* /akademie/ štítek „SROVNÁNÍ“ ve fialovém ostrově: pravidlo ostrova (0,3,2) mu dávalo bílou na zlaté. */
+[data-theme="light"] body:not(.ba) [style*="background:#100e14"] .ac-tag,
+[data-theme="light"] body:not(.ba) [style*="background:#101114"] .ac-tag{color:#1A1222 !important;}
+
+/* Velký zlatý text a ikony: #AC7900 (blíž brandu než hnědá, ≥3:1). */
+[data-theme="light"] .ba h1 .hl,
+[data-theme="light"] .ba h2 .hl{
+  -webkit-text-fill-color:var(--gold-big,#AC7900);
+  color:var(--gold-big,#AC7900) !important;
+}
+[data-theme="light"] .ba .ico svg{stroke:var(--gold-big,#AC7900);}
+
+/* Pruhy pokroku: brandová zlatá do #AC7900 (dřív do hnědé #6B4E08). */
+[data-theme="light"] body.ba .bar span,
+[data-theme="light"] .ba .bar i,
+[data-theme="light"] body.ba .prog span,
+[data-theme="light"] body.ba .modcard .mbar span,
+[data-theme="light"] body.ba .bigbar span,
+[data-theme="light"] body.ba .ranktier .rt-bar span,
+[data-theme="light"] body.ba .habit .hbar span{
+  background:linear-gradient(90deg,#EBB12C,#AC7900) !important;
+}
+
+/* /akademie/studium/: návyky „Tento týden: 0 / 3 lekce“ a „1 týden v řadě“ byly bílé na bílé. */
+[data-theme="light"] body.ba .habit .hpill .ht{color:var(--ink,#161310) !important;}
+[data-theme="light"] body.ba .habit .hpill{background:#fff !important;}
+[data-theme="light"] body.ba .habit .hpill.streak{background:rgba(235,177,44,.12) !important;}
+[data-theme="light"] body.ba .habit .hpill.goal.done{background:rgba(47,174,87,.10) !important;}
+
+/* /akademie/moje/doporuc/: dlaždice dealu a podmínky. */
+[data-theme="light"] body.ba .ref-deal .d .big{color:var(--gold-big,#AC7900) !important;}
+[data-theme="light"] body.ba .ref-deal .d .tit,
+[data-theme="light"] body.ba .ref-terms{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] body.ba .ref-terms b{color:var(--ink,#161310) !important;}
+
+/* /akademie/moje/check-in/: věrnostní box byl tmavý ostrov s tmavým textem (1,06:1). */
+[data-theme="light"] body.ba .ci-loyal{
+  background:linear-gradient(150deg,rgba(235,177,44,.14),rgba(235,177,44,.04)) !important;
+}
+
+/* Šedé popisky pod AA na světlém podkladu. */
+[data-theme="light"] body.ba .doc .hint,
+[data-theme="light"] body.ba .trust,
+[data-theme="light"] .src,
+[data-theme="light"] [style*="color:#9a948c"],
+[data-theme="light"] [style*="color:#8F8A99"],
+[data-theme="light"] [style*="color:#8f8a99"]{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] body.ba .seg:not(.active){color:var(--muted-2,#3F3A34) !important;}
+/* Zdroj recenze „· Google“ a drobný text s inline průhledností na bílé kartě. */
+[data-theme="light"] .card-ac span[style*="opacity:.55"],
+[data-theme="light"] body.ba span[style*="opacity:.55"]{opacity:.8 !important;}
+[data-theme="light"] body:not(.ba) p[style*="opacity:.72"]{opacity:1 !important;}
+[data-theme="light"] body:not(.ba) p[style*="opacity:.72"]:not(.pricebox p):not(.ac-hero p){color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .vk-guarantee svg{stroke:#1d6b34;}
+[data-theme="light"] .pricebox .vk-guarantee svg{stroke:#34a853;}
+
+/* SVG diagramy lekcí (ba-diagrams.js) jsou kreslené pro tmavé pozadí: bílé nadpisy
+   a popisky na bílé kartě zmizely (1:1). CSS přebíjí prezentační atributy fill/stroke. */
+[data-theme="light"] .ba-fig svg [fill="#ffffff" i]{fill:var(--ink,#161310);}
+[data-theme="light"] .ba-fig svg [fill="#a89e94" i]{fill:var(--muted,#5C564C);}
+[data-theme="light"] .ba-fig svg text[fill="#F6CD63" i],
+[data-theme="light"] .ba-fig svg text[fill="#EBB12C" i]{fill:#866008;}
+[data-theme="light"] .ba-fig svg text[fill="#2fae57" i]{fill:#1B7A4B;}
+[data-theme="light"] .ba-fig svg text[fill="#5aa9e6" i]{fill:#1868B0;}
+[data-theme="light"] .ba-fig svg [stroke="#a89e94" i]{stroke:#8A8276;}
+[data-theme="light"] .ba-fig svg [fill="rgba(255,255,255,.05)"],
+[data-theme="light"] .ba-fig svg [fill="rgba(255,255,255,.06)"]{fill:rgba(22,19,16,.05);}
+[data-theme="light"] .ba-fig svg [stroke="rgba(255,255,255,.16)"],
+[data-theme="light"] .ba-fig svg [stroke="rgba(255,255,255,.22)"]{stroke:rgba(22,19,16,.28);}
+[data-theme="light"] .ba-fig svg [stroke="rgba(255,255,255,.14)"],
+[data-theme="light"] .ba-fig svg [stroke="rgba(255,255,255,.08)"]{stroke:rgba(22,19,16,.14);}
+/* talíř (plate-method) je tmavý kruh s bílými zlomky: ve světlém světlý talíř */
+[data-theme="light"] .ba-fig svg circle[fill="#0c0c0c" i]{fill:#FBF8F2;}
+
+/* Vlastní graf v lekci (figure.chart, obsah z DB, kreslený pro tmavé): tmavý ostrov. */
+[data-theme="light"] body.ba figure.chart{background:#161310 !important;border-color:#2a2731 !important;}
+[data-theme="light"] body.ba figure.chart figcaption{color:rgba(255,255,255,.72) !important;}
+
+/* Klientská sekce: grafy (SVG z JS) měly šedé popisky a bílou mřížku pro tmavé. */
+[data-theme="light"] #graphs svg text[fill="#8F8A99" i]{fill:var(--muted,#5C564C);}
+[data-theme="light"] #graphs svg text[fill="#F6CD63" i]{fill:#866008;}
+[data-theme="light"] #graphs svg line[stroke="#F6CD63" i]{stroke:#AC7900;}
+[data-theme="light"] #graphs svg [stroke="rgba(255,255,255,.08)"]{stroke:rgba(22,19,16,.12);}
+/* /akademie/studium/ „Kudy začít →“: #866008 na husté zlaté tónině vycházelo 4,44:1,
+   proto plné zlaté tlačítko jako ostatní CTA. */
+[data-theme="light"] body.ba .zacatek .zc{background:#EBB12C !important;border-color:transparent !important;color:#1A1222 !important;}

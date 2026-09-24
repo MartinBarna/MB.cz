@@ -23,13 +23,17 @@
 
 /* Světlý režim členské sekce. Default zůstává tmavý. Volba: localStorage mb-theme. */
 [data-theme="light"]{
-  --gold:#EBB12C; --gold-2:#E0A820; --gold-soft:#6B4E08;
+  /* Zlatá ve světlém (24. 9. 2026, stejný systém jako appka tvujcoach.cz):
+     PLOCHY brandová #EBB12C (i druhý konec přechodů, proto --gold-2 = --gold),
+     text NA zlaté #1A1222. Zlatý TEXT na světlém: --gold-soft #866008 malý text (AA 4,5:1),
+     --gold-big #AC7900 velký text ≥24 px / tučný ≥19 px a ikony (≥3:1). */
+  --gold:#EBB12C; --gold-2:#EBB12C; --gold-soft:#866008; --gold-big:#AC7900;
   --bg:#F7F3EB; --ink:#161310; --muted:#5C564C; --muted-2:#3F3A34;
   --line:rgba(22,19,16,.12); --line-2:rgba(22,19,16,.20);
   --card:#ffffff;
   --top-bg:rgba(247,243,235,.94);
   --foot:#6B645C;
-  --foot-link:#6B4E08;
+  --foot-link:#866008;
   --brand-ink:#161310;
   --hover-ink:#161310;
   --ba-bg:linear-gradient(180deg,#F7F3EB 0%, #F0EBE0 100%);
@@ -37,7 +41,7 @@
   --ar-panel:#ffffff; --ar-line:#E6DDD0; --ar-line2:#D4C9B8; --ar-ink:#161310;
   --bd-ink:#161310; --bd-muted:#5C564C; --bd-muted2:#3F3A34;
   --bd-line:rgba(22,19,16,.12);
-  --bd-gold:#EBB12C; --bd-gold2:#E0A820; --bd-gold-soft:#6B4E08;
+  --bd-gold:#EBB12C; --bd-gold2:#EBB12C; --bd-gold-soft:#866008;
   color-scheme:light;
 }
 
