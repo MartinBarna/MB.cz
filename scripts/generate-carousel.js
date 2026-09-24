@@ -53,6 +53,44 @@ try {
 
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
 
+/** Nezlomitelné mezery (U+00A0), aby prohlížeč nezalomil řádek tam, kde se to čte špatně.
+ *  Zavedeno 24. 9. 2026 po revizi 30 karuselů: „1 457 lidí" se na slidu rozpadlo na „1"
+ *  na konci řádku a „457 lidí" na dalším, „139 195 příhod" vypadalo jako dvě čísla,
+ *  „29 %" mělo procento na dalším řádku a jednopísmenné předložky visely na konci řádků.
+ *  Dělá se to TADY, pro všechna textová pole, ne ručně v JSON: ruční &nbsp; se zapomene.
+ *  ⛔ Hranice slova se testuje přes \p{L}, ne přes \b. V JS je \b jen ASCII, takže
+ *  „m\b" by sedělo i na začátek slova „mužů" (ů je pro \b nepísmeno).
+ *  Upravuje se jen text MIMO značky, atributy jako class="hl" zůstávají nedotčené. */
+const NB = '\u00a0';
+const JEDNOTKA = '(?:%|‰|°C|kg|g|mg|µg|kcal|kJ|km|cm|mm|m|ml|dl|l|h|min|mmol|let|roku|roky|rok|týdnů|týdny|týden|dní|dny|den|měsíců|lidí)';
+function typo(text) {
+  return String(text).split(/(<[^>]*>)/).map((cast) => {
+    if (cast.startsWith('<')) return cast;
+    return cast
+      // skupiny číslic: 1 457, 1 720 108
+      .replace(/(?<=\d) (?=\d{3}(?!\d))/g, NB)
+      // číslo a jednotka nebo procento: 2 %, 30 g, 188 kcal, 1,6 g/kg
+      .replace(new RegExp(`(?<=\\d) (?=${JEDNOTKA}(?![\\p{L}\\p{N}]))`, 'gu'), NB)
+      // pořadové číslo a slovo: „2. typu", „24. 11. 2025"
+      .replace(/(?<=\d\.) (?=[\p{L}\p{N}])/gu, NB)
+      // jednopísmenné předložky a spojky: v, k, s, z, o, u, a, i
+      .replace(/(?<=(?:^|[\s\u00a0(„"])[vkszouaiVKSZOUAI]) /gu, NB);
+  }).join('');
+}
+function typoVse(v) {
+  if (typeof v === 'string') return typo(v);
+  if (Array.isArray(v)) return v.map(typoVse);
+  if (v && typeof v === 'object') return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, typoVse(x)]));
+  return v;
+}
+
+/** Odrážky se číslují samy (kroužky 1 až 5). Když položka ve scénáři začíná vlastním
+ *  číslem („<b>1.</b> Kalorický deficit"), na obrázku stálo „① 1. Kalorický deficit".
+ *  Ruční číslo se proto odstraní (revize 24. 9. 2026, spanek slide 7). */
+function bezRucnihoCisla(it) {
+  return String(it).replace(/^\s*(?:<b>\s*)?\d+\.(?:\s*<\/b>)?[\s\u00a0]*/, '');
+}
+
 /** Velikost hlavní hodnoty na slidu `stat`.
  *  ⛔ Dřív tu bylo natvrdo 210px. To sedí na čísla („609", „0"), ale slide se dá naplnit
  *  i SLOVEM, a to se do šířky nevejde. Odhalila to kontrola přetečení 27. 7. 2026:
@@ -89,8 +127,10 @@ body{width:${W}px;height:${H}px;overflow:hidden;font-family:'Poppins',Arial,sans
 .brand{font-weight:800;font-size:26px;line-height:1.15;color:#fff;}
 .brand span{display:block;color:${GOLD_SOFT};font-weight:600;font-size:17px;letter-spacing:3px;text-transform:uppercase;}
 .kick{font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;color:${GOLD_SOFT};letter-spacing:.2em;
- font-weight:600;font-size:30px;text-transform:uppercase;padding-left:52px;position:relative;margin-bottom:26px;white-space:nowrap;}
-.kick::before{content:"";position:absolute;left:0;top:50%;width:36px;height:4px;background:${GOLD};}
+ font-weight:600;font-size:30px;text-transform:uppercase;padding-left:28px;position:relative;margin-bottom:26px;white-space:nowrap;}
+/* [zmena 24. 9. 2026] Pred kickerem byl vodorovny prouzek 36x4 px. Na obrazku vypadal
+   presne jako dlouha pomlcka a Martin ji nechce doslova nikde. Proto maly ctverecek. */
+.kick::before{content:"";position:absolute;left:0;top:50%;width:10px;height:10px;margin-top:-5px;background:${GOLD};}
 /* [zmena 27. 7. 2026] Titulky zpatky na Poppins normalnim pismem, jako maji PUVODNI
    oranzove infografiky. Barlow Condensed s vynucenymi verzalkami dava jiny charakter:
    sevrenejsi a lacinejsi. Martin: „chci to uplne stejne, jen v novem kabate barev",
@@ -163,7 +203,7 @@ function patka(s, auto = true, kompakt = false) {
   return `<div${auto ? ' style="margin-top:auto"' : ''}>${callout}${zdroj}${pozn}</div>`;
 }
 
-const KINDS = {
+const KINDS_RAW = {
   cover(s) {
     return `<div class="wrap">${BRAND}
       <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:120px">
@@ -186,7 +226,7 @@ const KINDS = {
     const items = (s.items || []).slice(0, 5).map((it, k) =>
       `<div style="display:flex;gap:26px;margin-bottom:34px;align-items:flex-start">
         <div style="flex:none;width:58px;height:58px;border-radius:50%;background:${GOLD};color:${INK};font-weight:800;font-size:30px;display:flex;align-items:center;justify-content:center">${k + 1}</div>
-        <div class="body" style="padding-top:6px">${it}</div>
+        <div class="body" style="padding-top:6px">${bezRucnihoCisla(it)}</div>
       </div>`).join('');
     return `<div class="wrap">${BRAND}${dots(i, n)}
       ${s.kicker ? `<div class="kick">${esc(s.kicker)}</div>` : ''}
@@ -265,8 +305,8 @@ const KINDS = {
         <div style="font-family:Georgia,serif;font-size:190px;line-height:.5;color:${GOLD};opacity:.5;margin-bottom:30px">“</div>
         <div style="font-weight:800;font-size:64px;line-height:1.25;color:#fff">${s.text}</div>
         ${s.note ? `<div class="body" style="margin-top:40px;font-size:34px">${s.note}</div>` : ''}
-        <div style="margin-top:52px;display:flex;align-items:center;gap:22px">
-          <span style="width:54px;height:6px;background:${GOLD};border-radius:3px"></span>
+        <div style="margin-top:52px;display:flex;align-items:center;gap:18px">
+          <span style="flex:none;width:10px;height:10px;background:${GOLD}"></span>
           <span style="font-weight:700;font-size:32px;color:${GOLD_SOFT}">Martin Barna</span>
         </div>
       </div>
@@ -288,6 +328,11 @@ const KINDS = {
   },
 };
 
+// Každý typ slidu dostane texty už s nezlomitelnými mezerami (viz `typo`). Obaluje se
+// tady, aby totéž viděla i `kontrola-preteceni-infografik.mjs`, která bere KINDS odsud.
+const KINDS = Object.fromEntries(Object.entries(KINDS_RAW)
+  .map(([druh, fn]) => [druh, (s, i, n) => fn(typoVse(s), i, n)]));
+
 async function render(html, outPng) {
   const tmpHtml = path.join(TMP, path.basename(outPng) + '.html');
   const tmpPng = path.join(TMP, path.basename(outPng) + '.raw.png');
@@ -301,7 +346,7 @@ async function render(html, outPng) {
 // Vystaveno pro `scripts/kontrola-preteceni-infografik.mjs`, aby kontrola stavela
 // HTML TOUTEZ funkci jako generator. Druha kopie sablony by se casem rozesla a
 // kontrola by hlidala neco jineho, nez se doopravdy vyrenderuje.
-module.exports = { page, KINDS, W, H, CHROME, TMP };
+module.exports = { page, KINDS, W, H, CHROME, TMP, typo };
 
 if (require.main !== module) return;
 
