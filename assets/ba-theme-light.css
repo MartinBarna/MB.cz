@@ -847,6 +847,11 @@ html:not([data-theme="light"]) .kbtn:hover:not(:disabled){
   background:#EBB12C !important;
   color:#1A1222 !important;
 }
+/* Seznam lekcí videokurzu: .go je tam textový odkaz, ne tlačítko (revize 24. 9.). */
+[data-theme="light"] body.ba .lesson .go{
+  background:none !important;
+  color:#866008 !important;
+}
 [data-theme="light"] body.ba .card.locked .go{
   background:#F3EEE4 !important;
   color:var(--muted-2,#3F3A34) !important;

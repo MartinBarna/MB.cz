@@ -76,7 +76,7 @@ function page(L) {
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23161616'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23EBB12C' text-anchor='middle'>MB</text></svg>">
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-<link rel="stylesheet" href="/assets/ba-ui.css?v=20260628b">
+<link rel="stylesheet" href="/assets/ba-ui.css?v=r7">
 <style>
 ${STYLE}
 </style>
