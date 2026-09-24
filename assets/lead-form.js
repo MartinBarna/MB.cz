@@ -2,7 +2,8 @@
    Anon klíč je veřejný (Supabase design). Po odeslání: uloží lead, odpálí Meta Lead + GA4
    generate_lead a ukáže poděkování s přímým stažením plánu. Drip e-maily řeší Resend.
    DŮLEŽITÉ: potvrzení + stažení PDF je oddělené od odeslání mailu — návštěvník vždy dostane
-   plán na obrazovku, i kdyby drip/Resend zaváhal (lead se ukládá hned, mail řeší pozadí). */
+   plán na obrazovku, i kdyby drip/Resend zaváhal (lead se ukládá hned, mail řeší pozadí).
+   Potvrzení ale přijde JEN po potvrzeném uložení leadu (viz poslatSOpakovanim níž). */
 (function () {
   var SUPA = 'https://uhmrpfsdcujbhbtumqye.supabase.co';
   var ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
@@ -89,6 +90,45 @@
   window.MBLead = window.MBLead || {};
   window.MBLead.utm = utmParams;
 
+  // [24. 9. 2026, příprava na ČT1 1. 10.] Odeslání má TŘI výsledky a chyba není úspěch:
+  //   'ok'        = lead uložen, nebo e-mail už v seznamu byl (lead-capture vrací duplicate),
+  //   'odmitnuto' = server odmítl e-mail (invalid_email), opakovat nemá smysl,
+  //   'chyba'     = 5xx, 504 z brány Supabase (přijde za 5,0 až 5,8 s), výpadek sítě, timeout.
+  // Chyba se JEDNOU zopakuje. Opakování je bezpečné: `leads` má unikátní lower(email),
+  // druhý pokus po uloženém prvním vrátí duplicate a uvítací mail se podruhé nespustí
+  // (lead-capture ho pouští jen u nového leadu). Dřív síťová chyba i 6s pojistka ukázaly
+  // „Díky“ a stažení PDF, i když se nic neuložilo, takže lead zmizel bez stopy.
+  var POKUS_MS = 8000, PAUZA_MS = 1500;
+  function poslatJednou(data) {
+    return new Promise(function (resolve) {
+      var ctrl = window.AbortController ? new AbortController() : null;
+      var hotovo = false, t = null;
+      function konec(v) { if (hotovo) return; hotovo = true; clearTimeout(t); resolve(v); }
+      t = setTimeout(function () { if (ctrl) ctrl.abort(); konec({ stav: 'chyba' }); }, POKUS_MS);
+      fetch(FN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON, 'apikey': ANON },
+        body: JSON.stringify(data),
+        signal: ctrl ? ctrl.signal : undefined
+      }).then(function (r) {
+        return r.json().catch(function () { return null; }).then(function (res) {
+          if (r.ok && res && res.ok) konec({ stav: 'ok', dup: !!res.duplicate });
+          else if (res && res.error === 'invalid_email') konec({ stav: 'odmitnuto' });
+          else konec({ stav: 'chyba' });
+        });
+      }).catch(function () { konec({ stav: 'chyba' }); });
+    });
+  }
+  function poslatSOpakovanim(data, priOpakovani) {
+    return poslatJednou(data).then(function (v) {
+      if (v.stav !== 'chyba') return v;
+      if (priOpakovani) priOpakovani();
+      return new Promise(function (r) { setTimeout(r, PAUZA_MS); })
+        .then(function () { return poslatJednou(data); })
+        .then(function (v2) { v2.poOpakovani = true; return v2; });
+    });
+  }
+
   ready(function () {
     var forms = document.querySelectorAll('form[data-lead-form]');
     Array.prototype.forEach.call(forms, function (form) {
@@ -118,18 +158,23 @@
         var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Odesílám…';
         if (msg) { msg.textContent = ''; }
 
-        var done = false, timer = null;
+        var done = false;
         function track() {
           try {
             if (window.mbTrackLead) window.mbTrackLead('lead_magnet', { segment: seg, lead_source: src });
             else { if (window.fbq) fbq('track', 'Lead', { content_name: 'Lead magnet' }); if (window.gtag) gtag('event', 'generate_lead', { method: 'lead_magnet' }); }
           } catch (e) {}
         }
-        function showSuccess(dup) {
-          if (done) return; done = true; if (timer) clearTimeout(timer); track();
+        function showSuccess(dup, nejiste) {
+          if (done) return; done = true; track();
           var dl = pdf ? '<a class="btn" href="' + pdf + '" target="_blank" rel="noopener" style="margin-top:12px;display:inline-block">Stáhnout (PDF) →</a>' : '';
-          // dup = e-mail už v seznamu je → uvítací mail se znovu neposílá, tak to řekneme na rovinu
-          var info = dup
+          // dup = e-mail už v seznamu je → uvítací mail se znovu neposílá, tak to řekneme na rovinu.
+          // nejiste = „už v seznamu“ přišlo až z DRUHÉHO pokusu: nejspíš ho uložil první pokus,
+          // jehož odpověď se ztratila, a uvítací mail pak běží. Nevíme, tak nic neslibujeme ani nerušíme.
+          if (nejiste) dup = false;
+          var info = nejiste
+            ? 'Máš to uložené. ' + (pdf ? noun + ' si stáhni rovnou tady:' : '')
+            : dup
             ? 'Tenhle e-mail už v seznamu mám, mail ti znovu posílat nebudu. ' + (pdf ? noun + ' si stáhni rovnou tady:' : '')
             : noun + ' ti posíláme na e-mail. ' + (pdf ? 'Nebo si ho stáhni rovnou:' : '');
           form.innerHTML =
@@ -142,29 +187,17 @@
             '</div>';
         }
         function showError(text) {
-          if (done) return; done = true; if (timer) clearTimeout(timer);
+          if (done) return; done = true;
           btn.disabled = false; btn.textContent = orig;
           if (msg) { msg.style.color = '#F6CD63'; msg.textContent = text; }
         }
 
-        // Bezpečnostní síť: lead se ukládá hned a uvítací mail řeší pozadí, takže pokud
-        // by odpověď nedorazila do 6 s (pomalá funkce apod.), ukážeme plán i tak —
-        // ať návštěvník nikdy nezůstane u prázdného formuláře.
-        timer = setTimeout(showSuccess, 6000);
-
-        fetch(FN, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ANON, 'apikey': ANON },
-          body: JSON.stringify(data)
-        }).then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
-          .then(function (res) {
-            if (res && res.ok) showSuccess(!!res.duplicate);
-            else if (res && res.error === 'invalid_email') showError('Zkontroluj prosím e-mail.');
-            else showError('Něco se nepovedlo, zkus to prosím znovu nebo napiš na martin@martinbarna.cz.');
-          })
-          .catch(function () {
-            // tvrdé selhání sítě — radši dej plán než mrtvý formulář (lead se mohl uložit)
-            showSuccess();
+        // Nejdéle 8 s + 1,5 s + 8 s. Formulář zůstává vyplněný, takže „zkusit znovu“ je jeden klik.
+        poslatSOpakovanim(data, function () { btn.textContent = 'Ještě chvilku…'; })
+          .then(function (v) {
+            if (v.stav === 'ok') showSuccess(v.dup, v.poOpakovani && v.dup);
+            else if (v.stav === 'odmitnuto') showError('Zkontroluj prosím e-mail.');
+            else showError('Teď se to nepovedlo odeslat. Zkus to prosím znovu, nebo napiš na martin@martinbarna.cz.');
           });
       });
     });

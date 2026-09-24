@@ -585,7 +585,7 @@
     </script>
   <script src="/assets/scroll-top.js?v=g13" defer></script>
 
-    <!-- Brána na free lekce: e-mail → OKAMŽITÝ vstup (fire-and-forget capture, žádné čekání) -->
+    <!-- Brána na free lekce: e-mail → vstup po potvrzeném uložení leadu (1 opakování, pak poctivá chyba) -->
     <div id="vkGate" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.74);" role="dialog" aria-modal="true" aria-label="11 lekcí zdarma">
       <div style="max-width:430px;margin:13vh auto 0;background:#181520;border:1px solid rgba(235,177,44,.4);border-radius:18px;padding:26px 24px;color:#F0EADF;position:relative;box-shadow:0 30px 70px rgba(0,0,0,.6);">
         <button type="button" id="vkGateX" aria-label="Zavřít" style="position:absolute;top:8px;right:14px;background:none;border:none;color:#8F8A99;font-size:24px;cursor:pointer;line-height:1;">×</button>
@@ -606,17 +606,48 @@
       }
       document.getElementById('vkGateX').addEventListener('click',function(){gate.style.display='none';});
       gate.addEventListener('click',function(e){if(e.target===gate)gate.style.display='none';});
+      // [24. 9. 2026, ČT1] Dřív se lead posílal naslepo a za 350 ms se přesměrovalo, takže chyba
+      // (504 z brány, výpadek sítě) se nikdy nezjistila a lead zmizel. Teď: počkat na odpověď,
+      // při chybě JEDNOU zopakovat (bezpečné: unikátní e-mail v `leads`, duplicita = úspěch bez
+      // druhého uvítacího mailu), a když to nevyjde, říct to a nechat člověka zkusit znovu nebo
+      // pustit lekce i tak. Tři stavy: 'ok', 'email' (odmítnutý e-mail), 'chyba'.
+      var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
+      var FN='https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture';
+      var msgEl=document.getElementById('vkGateMsg'), msgPuvodni=msgEl.innerHTML, busy=false;
+      function pokus(em){
+        return new Promise(function(resolve){
+          var c=window.AbortController?new AbortController():null, h=false, t=null;
+          function k(v){if(h)return;h=true;clearTimeout(t);resolve(v);}
+          t=setTimeout(function(){if(c)c.abort();k('chyba');},8000);
+          fetch(FN,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},body:JSON.stringify({email:em,segment:'other',source:'videokurz-free'}),signal:c?c.signal:undefined})
+            .then(function(r){return r.json().catch(function(){return null;}).then(function(d){
+              if(r.ok&&d&&d.ok)k('ok');else if(d&&d.error==='invalid_email')k('email');else k('chyba');
+            });})
+            .catch(function(){k('chyba');});
+        });
+      }
       function go(){
+        if(busy)return;
         var em=(document.getElementById('vkGateEmail').value||'').trim();
-        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){document.getElementById('vkGateMsg').textContent='⚠️ Zadej prosím platný e-mail.';return;}
-        var btn=document.getElementById('vkGateGo');btn.disabled=true;btn.textContent='Otevírám lekce…';
-        try{
-          var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
-          fetch('https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/lead-capture',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+ANON,'apikey':ANON},body:JSON.stringify({email:em,segment:'other',source:'videokurz-free'})}).catch(function(){});
-          if(window.gtag)gtag('event','generate_lead',{zdroj:'videokurz-free'});
-          if(window.fbq)fbq('track','Lead');
-        }catch(e){}
-        setTimeout(function(){location.href=DEST;},350);
+        if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){msgEl.textContent='⚠️ Zadej prosím platný e-mail.';return;}
+        var btn=document.getElementById('vkGateGo');busy=true;btn.disabled=true;btn.textContent='Otevírám lekce…';msgEl.innerHTML=msgPuvodni;
+        pokus(em).then(function(v){
+          if(v!=='chyba')return v;
+          btn.textContent='Ještě chvilku…';
+          return new Promise(function(r){setTimeout(r,1500);}).then(function(){return pokus(em);});
+        }).then(function(v){
+          if(v==='ok'){
+            try{
+              if(window.gtag)gtag('event','generate_lead',{zdroj:'videokurz-free'});
+              if(window.fbq)fbq('track','Lead');
+            }catch(e){}
+            setTimeout(function(){location.href=DEST;},350);
+            return;
+          }
+          busy=false;btn.disabled=false;btn.textContent='Pustit lekce zdarma →';
+          if(v==='email'){msgEl.textContent='⚠️ Zkontroluj prosím e-mail.';return;}
+          msgEl.innerHTML='E-mail se mi teď nepovedlo uložit. Zkus to prosím znovu, nebo si <a href="'+DEST+'" style="color:#EBB12C;text-decoration:underline;">pusť lekce i tak</a>.';
+        });
       }
       document.getElementById('vkGateGo').addEventListener('click',go);
       document.getElementById('vkGateEmail').addEventListener('keydown',function(e){if(e.key==='Enter')go();});
