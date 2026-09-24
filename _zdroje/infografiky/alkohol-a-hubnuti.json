@@ -9,7 +9,7 @@
     { "kind": "point", "kicker": "Háček č. 3", "title": "Spánek to<br>schytá vždycky", "body": "Alkohol <b>láme druhou půlku noci</b>, a to u každé dávky. REM fázi ubírá už sklenka nebo dvě a s každou další je to horší.<br><br>Horší spánek = větší hlad, horší regenerace, slabší trénink. Kruh se zavírá.", "zdroj": { "kdo": "Chaput (2026), přehled", "kde": "Nutrients", "doi": "10.3390/nu18040585" } },
     { "kind": "point", "kicker": "A jedna věc navíc", "title": "Zdraví ≠ váha", "body": "WHO řekla v roce 2023 natvrdo: <b>žádná dávka alkoholu není pro zdraví bezpečná</b>. Je to karcinogen nejvyšší kategorie.<br><br>To se deficitem přebít nedá, i když hubneš.", "callout": "Nepíšu to, abych strašil. Ber to jako informaci k rozhodnutí <b>s rozmyslem</b>.", "zdroj": { "kdo": "WHO / Anderson et al. (2023)", "kde": "Lancet Public Health", "doi": "10.1016/S2468-2667(22)00317-6" } },
     { "kind": "vs", "kicker": "Prakticky", "title": "Jak s tím naložit", "yes": { "h": "Vejde se do plánu", "items": ["Pár sklenek za týden, <b>započítaných do dne</b>", "K jídlu, ne na lačno", "Týdenní průměr kalorií drží"] }, "no": { "h": "Brzdí tě", "items": ["Pravidelné páteční pařby", "Alkohol + kebab „mimo evidenci“", "Pití místo spánku"] } },
-    { "kind": "quote", "text": "Pivo se do plánu vejde. Drama kolem něj ne.", "note": "Ulož si to a příště se rozhodni s rozmyslem." },
+    { "kind": "quote", "text": "Pivo se do plánu vejde. Drama kolem něj ne.", "note": "Ulož si to a příště si to sečti dopředu." },
     { "kind": "cta", "title": "Chceš jít <span class=\"hl\">dál?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Cíle, jídelníček i trénink na každý den: <b>appka Tvůj Coach</b>"] }
   ]
 }
