@@ -138,7 +138,18 @@ check("platnost je 14 dní a v sekundách",
   platnost === Math.floor((TED + PROMO_PLATNOST_DNI * DEN) / 1000) && String(platnost).length === 10);
 
 const form = promoForm({ couponId: "coupon_X", kod: "VIP-ABCDEF", expiresAt: platnost, email: "a@b.cz" });
-check("form: kupón a kód", form.coupon === "coupon_X" && form.code === "VIP-ABCDEF");
+check("form: kupón a kód",
+  form["promotion[coupon]"] === "coupon_X" && form["promotion[type]"] === "coupon" && form.code === "VIP-ABCDEF");
+// ⛔⛔ TVAR PRO STRIPE (24. 9. 2026). Stripe API 2025-09-30.clover odstranil
+//    top-level `coupon` z PromotionCode#create; účet jede novější verzí, takže
+//    `coupon=` vracel 400 `parameter_unknown` a promo kód nevznikl. Test hlídá
+//    PŘESNOU sadu klíčů: nový klíč navíc (nebo návrat `coupon`) musí projít revizí.
+check("form: tvar pro Stripe (přesná sada klíčů, žádné top-level `coupon`)",
+  JSON.stringify(Object.keys(form).sort()) === JSON.stringify([
+    "code", "expires_at", "max_redemptions", "metadata[duvod]", "metadata[email]",
+    "promotion[coupon]", "promotion[type]",
+  ]) && !("coupon" in form),
+  JSON.stringify(Object.keys(form).sort()));
 // ⛔ KONTRAST: bez `max_redemptions` by přeposlaný kód platil komukoli.
 check("form: jen jedno uplatnění", form.max_redemptions === "1");
 check("form: platnost se posílá", form.expires_at === String(platnost));
@@ -297,15 +308,17 @@ console.log("\n== zajistiPromoKod: odpovědi Stripu nanečisto (revize R5, nále
   const puvodniFetch = globalThis.fetch;
   const scenar = async (odpovedi: (Response | "pad")[]) => {
     const dotazy: string[] = [];
+    const tela: string[] = [];
     globalThis.fetch = ((u: string | URL | Request, i?: RequestInit) => {
       dotazy.push((i?.method ?? "GET") + " " + String(u));
+      tela.push(String(i?.body ?? ""));
       const o = odpovedi.shift();
       if (!o || o === "pad") return Promise.reject(new Error("sit"));
       return Promise.resolve(o);
     }) as typeof fetch;
     try {
       const r = await zajistiPromoKod("sk_test_x", { couponId: "cpn", email: "a@b.cz", kod: "VIP-ABC", tedMs: 0 });
-      return { r, dotazy };
+      return { r, dotazy, tela };
     } finally {
       globalThis.fetch = puvodniFetch;
     }
@@ -337,8 +350,15 @@ console.log("\n== zajistiPromoKod: odpovědi Stripu nanečisto (revize R5, nále
     check("existující aktivní kód: žádný POST", r.ok && r.id === "promo_2" && dotazy.length === 1, dotazy.join(" | "));
   }
   {
-    const { r, dotazy } = await scenar([PRAZDNO(), json({ id: "promo_3" })]);
+    const { r, dotazy, tela } = await scenar([PRAZDNO(), json({ id: "promo_3" })]);
     check("nový kód: POST a id", r.ok && r.id === "promo_3" && dotazy[1].startsWith("POST "), JSON.stringify(r));
+    // ⛔⛔ Co SKUTEČNĚ odejde do Stripu (ne jen co vrací `promoForm`): kupón
+    //    v `promotion[...]`, žádné top-level `coupon=` (24. 9. 2026, 400 parameter_unknown).
+    const telo = new URLSearchParams(tela[1] ?? "");
+    check("POST tělo: promotion[type]=coupon a promotion[coupon]=id kupónu, bez `coupon`",
+      telo.get("promotion[type]") === "coupon" && telo.get("promotion[coupon]") === "cpn" &&
+        !telo.has("coupon") && telo.get("code") === "VIP-ABC",
+      tela[1] ?? "");
   }
   {
     const { r } = await scenar([PRAZDNO(), "pad"]);

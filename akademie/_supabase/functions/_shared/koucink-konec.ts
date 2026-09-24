@@ -218,12 +218,22 @@ export function promoPlatnostDo(tedMs: number = Date.now()): number {
  *    `max_redemptions` a 14denní platnost.
  * ⚠️ Sleva samotná (20 %) je v KUPÓNU, který zakládá Martin ve Stripu ručně.
  *    Tady se procento nikde neopakuje: dvě místa s jedním číslem se rozejdou.
+ * ⛔⛔ KUPÓN SE POSÍLÁ JAKO `promotion[type]=coupon` + `promotion[coupon]=<id>`,
+ *    NE jako `coupon` (24. 9. 2026). Stripe API 2025-09-30.clover parametr
+ *    `coupon` z PromotionCode#create odstranil (changelog „Promotion Codes now
+ *    reference Coupons using a polymorphic field for promotions") a účet jede na
+ *    clover nebo novější (webhooky počítají s 2026-06-24.dahlia), takže starý tvar vracel 400
+ *    `parameter_unknown` a žádný kód nevznikl. Hlavička `Stripe-Version` se
+ *    schválně NEPOSÍLÁ: nikde jinde v Academy ani v appce se verze nepřipíná,
+ *    všechno jede na výchozí verzi účtu a jedna připnutá výjimka by tu vyrobila
+ *    druhý svět tvarů odpovědí. Tvar hlídá test „form: tvar pro Stripe".
  */
 export function promoForm(
   opts: { couponId: string; kod: string; expiresAt: number; email: string },
 ): Record<string, string> {
   return {
-    coupon: opts.couponId,
+    "promotion[type]": "coupon",
+    "promotion[coupon]": opts.couponId,
     code: opts.kod,
     max_redemptions: "1",
     expires_at: String(opts.expiresAt),
