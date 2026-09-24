@@ -1,7 +1,7 @@
 {
   "slug": "alkohol-a-hubnuti",
   "slides": [
-    { "kind": "cover", "kicker": "Věda & výživa", "title": "Zhubneš i<br>s <span class=\"hl\">alkoholem?</span>", "sub": "Pivo, víno, panák. A přesto kila dolů. Co na to věda a kde je rozumná hranice." },
+    { "kind": "cover", "kicker": "Věda & výživa", "title": "Zhubneš<br>i s <span class=\"hl\">alkoholem?</span>", "sub": "Pivo, víno, panák. A přesto kila dolů. Co na to věda a kde je rozumná hranice." },
     { "kind": "point", "kicker": "Kontext", "title": "Dva tábory,<br>oba vedle", "body": "Jedni tvrdí, že tě <b>jedna sklenka potopí</b>. Druzí, že „když makra sedí, je to jedno“.<br><br>Pravda je míň dramatická. A užitečnější.", "callout": "Na hubnutí rozhoduje <b>kalorický deficit</b>, ne pivo samo o sobě." },
     { "kind": "point", "kicker": "Co říkají studie", "title": "Lehká konzumace ≠ přibírání", "body": "Přehledové práce se kloní k tomu, že <b>lehká až střední konzumace</b> se s přibýváním tuku nepojí. Silné pití ano. Důkazy ale nejsou jednoznačné a u někoho rizikový faktor být může.<br><br>Sklenka k večeři párkrát za týden je něco jiného než šest piv v pátek.", "zdroj": { "kdo": "Traversy & Chaput (2015) Current Obesity Reports", "doi": "10.1007/s13679-014-0129-4" } },
     { "kind": "stat", "kicker": "Háček č. 1", "big": "+82", "unit": "kcal navíc v jídle po alkoholu (průměrný rozdíl, metaanalýza 12 studií, Kwok 2019)", "body": "Alkohol <b>zvedne chuť a sníží zábrany</b>. Sníš víc a tělo si kalorie z piva nijak neodečte. Kebab cestou domů nadělá víc škody než drink samotný.", "zdroj": { "kdo": "Kwok et al. (2019)", "kde": "British Journal of Nutrition", "doi": "10.1017/S0007114518003677" } },

@@ -73,6 +73,8 @@ function typo(text) {
       .replace(/(?<=\d) (a|až)[ \u00a0](?=\d)/g, NB + '$1' + NB)
       // „et al." se nesmí rozdělit na dva řádky (R2: „Koemel et / al.")
       .replace(/(?<![\p{L}])et al\./gu, 'et' + NB + 'al.')
+      // a jméno autora před ním taky (R3: „Koemel / et al.“)
+      .replace(/(?<=\p{L}) et(?=\u00a0al\.)/gu, NB + 'et')
       .replace(/(?<=\d) (?=\d{3}(?!\d))/g, NB)
       // číslo a jednotka nebo procento: 2 %, 30 g, 188 kcal, 1,6 g/kg
       .replace(new RegExp(`(?<=\\d) (?=${JEDNOTKA}(?![\\p{L}\\p{N}]))`, 'gu'), NB)
