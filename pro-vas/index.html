@@ -201,7 +201,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         /* Kontrast 27. 8. 2026: zlatá jako TEXT (--gold, --gold2) je na krému
            1,4-1,9:1. Stránka nenačítá theme-light.css, tak se to řeší tady.
            Token nepřepisuju: --gold2 je i výplň CTA v hlavičce. */
-        html[data-theme="light"] a:not(.btn):not(.cta),
+        html[data-theme="light"] a:not(.btn):not(.cta):not(.fab-wa),
         html[data-theme="light"] footer a,
         html[data-theme="light"] .tool .tcta,
         html[data-theme="light"] .tool .inacad,
@@ -209,8 +209,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         html[data-theme="light"] .ar-kick,
         html[data-theme="light"] .nums .num b,
         html[data-theme="light"] blockquote span,
-        html[data-theme="light"] #cena p span{color:#6B4E08!important;}
-        html[data-theme="light"] .ar-kick::before{background:#6B4E08;}
+        html[data-theme="light"] #cena p span:not([style*="background"]){color:#866008!important;}
+        html[data-theme="light"] .ar-kick::before{background:#866008;}
+        /* 24. 9. 2026: „· Google“ u recenzí má inline opacity .55 (2,65:1), ve světlém plná šedá. */
+        html[data-theme="light"] blockquote span span[style*="opacity:.55"]{opacity:1!important;color:#5C564C!important;}
         html[data-theme="light"] .tool .free{color:#2F6B22!important;}
 
         @media (max-width: 860px) {

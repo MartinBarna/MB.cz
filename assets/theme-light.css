@@ -11,7 +11,8 @@ html[data-theme="light"]{
   color-scheme:light;
   --bd-gold:#EBB12C;
   --bd-gold2:#F6CD63;
-  --bd-gold-soft:#6B4E08;
+  --bd-gold-soft:#866008; /* malý zlatý text na světlé (brand, jako Academy a appka) */
+  --gold-big:#AC7900; /* velký zlatý text a ikony (práh 3:1) */
   --bd-ink:#161310;
   --bd-muted:#5C564C;
   --bd-muted2:#3F3A34;
@@ -32,10 +33,10 @@ html[data-theme="light"]{
   --soft:#F3EEE4;
   --paper:#ffffff;
   --line:rgba(22,19,16,.12);
-  --gold-soft:#6B4E08;
+  --gold-soft:#866008;
   /* Materiály a lead-magnety barví TEXT přes --brand (callout b, td.sets).
      Výplň tlačítek drží --gold/--mb-gold. Logo-kostičky níž vrátí zlatou. */
-  --brand:#6B4E08;
+  --brand:#866008;
   --mb-text:#161310;
   --mb-gold:#EBB12C;
   --mb-gold-light:#F6CD63;
@@ -54,6 +55,10 @@ html[data-theme="light"]{
   --green-light:#fff4e8;
   --on-dark:#ffffff;
   --on-dark-muted:rgba(255,255,255,.7);
+  /* Landingy (tvuj-coach, koucing, konzultace, poukaz) barví --acc-l TEXT
+     (b, strong, odkazy). Výplň z něj je jen v přechodech tlačítek a stužky,
+     ty níž (VLNA 4) drží plnou #EBB12C. */
+  --acc-l:#866008;
 }
 
 html[data-theme="light"]{background:var(--mb-bg);}
@@ -94,7 +99,7 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .brand,
 [data-theme="light"] .brand span{color:var(--mb-text)!important;}
 [data-theme="light"] .nav a:hover,
-[data-theme="light"] .navlinks a:hover{color:var(--mb-gold)!important;}
+[data-theme="light"] .navlinks a:hover{color:var(--bd-gold-soft)!important;}
 [data-theme="light"] .nav a.cta,
 [data-theme="light"] .navlinks a.cta{
   background:var(--bd-gold)!important;
@@ -136,14 +141,14 @@ html[data-theme="light"]{background:var(--mb-bg);}
 }
 [data-theme="light"] .nav-more summary{color:var(--mb-text)!important;}
 [data-theme="light"] .nav-more summary:hover,
-[data-theme="light"] .nav-more[open] summary{color:var(--mb-gold)!important;}
+[data-theme="light"] .nav-more[open] summary{color:var(--bd-gold-soft)!important;}
 [data-theme="light"] .nav-more>div{
   background:var(--mb-surface)!important;
   border-color:var(--bd-line)!important;
   box-shadow:0 12px 26px rgba(0,0,0,.12)!important;
 }
 [data-theme="light"] .nav-more>div a{color:var(--mb-text)!important;}
-[data-theme="light"] .nav-more>div a:hover{background:var(--mb-bg)!important;color:var(--mb-gold)!important;}
+[data-theme="light"] .nav-more>div a:hover{background:var(--mb-bg)!important;color:var(--bd-gold-soft)!important;}
 @media (max-width:1259px){
   [data-theme="light"] .nav-more>div a{border-bottom-color:var(--bd-line)!important;}
 }
@@ -156,7 +161,7 @@ html[data-theme="light"]{background:var(--mb-bg);}
   box-shadow:0 26px 54px -14px rgba(22,19,16,.18)!important;
 }
 [data-theme="light"] .mb-drawer a{color:var(--mb-text)!important;border-bottom-color:var(--bd-line)!important;}
-[data-theme="light"] .mb-drawer a:hover{background:rgba(235,177,44,.10)!important;color:var(--mb-gold)!important;}
+[data-theme="light"] .mb-drawer a:hover{background:rgba(235,177,44,.10)!important;color:var(--bd-gold-soft)!important;}
 [data-theme="light"] .mb-drawer a.cta{
   color:var(--mb-on-gold)!important;
   background:var(--mb-gold)!important;
@@ -284,10 +289,10 @@ html[data-theme="light"]{background:var(--mb-bg);}
    ============================================================ */
 
 [data-theme="light"] article a:not(.btn):not(.cta){color:var(--bd-gold-soft)!important;}
-[data-theme="light"] article a:not(.btn):not(.cta):hover{color:var(--mb-gold)!important;}
+[data-theme="light"] article a:not(.btn):not(.cta):hover{color:var(--mb-text)!important;}
 [data-theme="light"] .crumbs,
 [data-theme="light"] .crumbs a{color:var(--bd-muted)!important;}
-[data-theme="light"] .crumbs a:hover{color:var(--mb-gold)!important;}
+[data-theme="light"] .crumbs a:hover{color:var(--bd-gold-soft)!important;}
 [data-theme="light"] .crumbs span{color:var(--mb-text)!important;}
 [data-theme="light"] .disclaimer{color:var(--bd-muted)!important;border-top-color:var(--bd-line)!important;}
 [data-theme="light"] .faq-q{color:var(--mb-text)!important;}
@@ -537,9 +542,9 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .navbar-brand span,
 [data-theme="light"] .nav-link{color:var(--mb-text)!important;}
 [data-theme="light"] .nav-link:hover,
-[data-theme="light"] .nav-link.active{color:var(--mb-gold)!important;}
+[data-theme="light"] .nav-link.active{color:var(--bd-gold-soft)!important;}
 
-/* Logo-kostičky a čísla kroků: --brand je teď textová hnědá, výplň vrať na zlato. */
+/* Logo-kostičky a čísla kroků: --brand je teď tmavší zlatá pro TEXT (#866008), výplň vrať na zlato. */
 [data-theme="light"] .logo-fallback,
 [data-theme="light"] .brand .mk,
 [data-theme="light"] .brand .mark,
@@ -660,8 +665,8 @@ html[data-theme="light"]{background:var(--mb-bg);}
    ============================================================ */
 
 /* --- 1) TMAVÉ OSTROVY: zlatý TEXT tam musí zůstat SVĚTLE zlatý -----------
-   Bloky výše barví zlatý text hnědou --bd-gold-soft (#6B4E08). Na krému je
-   to správně (7:1), na tmavém ostrovu je to 2,4:1. Token se DĚDÍ, takže
+   Bloky výše barví zlatý text tmavší zlatou --bd-gold-soft (#866008). Na krému je
+   to správně (5,1 až 5,7:1), na tmavém ostrovu je to 3,3:1. Token se DĚDÍ, takže
    stačí ho uvnitř ostrova přemapovat: všechna `color:var(--bd-gold-soft)`
    pravidla dostanou #F6CD63 bez souboje o specificitu.
    Tohle jedno pravidlo řeší patičku na 164 stránkách (815 výskytů).
@@ -669,9 +674,13 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] footer,
 [data-theme="light"] .ac-hero,
 [data-theme="light"] section.contact,
-[data-theme="light"] .play-card{
+[data-theme="light"] .play-card,
+[data-theme="light"] .story-body,
+[data-theme="light"] .bcard.plum{
   --bd-gold-soft:#F6CD63;
   --gold-soft:#F6CD63;
+  --gold-big:#F6CD63;
+  --acc-l:#F6CD63;
 }
 
 /* --- 4) Kontaktní sekce homepage: fialový ostrov, ne krém --------------- */
@@ -684,7 +693,7 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] section.contact h2,
 [data-theme="light"] section.contact h3{color:var(--on-dark)!important;}
 /* Formulářová karta uvnitř té sekce je naopak BÍLÁ, tam musí platit opak. */
-[data-theme="light"] section.contact .cform{--bd-gold-soft:#6B4E08;--gold-soft:#6B4E08;}
+[data-theme="light"] section.contact .cform{--bd-gold-soft:#866008;--gold-soft:#866008;--gold-big:#AC7900;}
 [data-theme="light"] section.contact .cform,
 [data-theme="light"] section.contact .cform :is(h1,h2,h3,h4,b,strong,li,label,td){color:var(--mb-text)!important;}
 [data-theme="light"] section.contact .cform :is(p,span,small,.note,.sub){color:var(--bd-muted)!important;}
@@ -697,7 +706,7 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .hero.hero-svetly :is(h1,h2,h3,h4,b,strong,li,label,td),
 [data-theme="light"] .hero.hero-svetly .ticks li{color:var(--mb-text)!important;}
 [data-theme="light"] .hero.hero-svetly :is(p,span,small,.sub,.lead,.micro,.hero-meta){color:var(--bd-muted)!important;}
-[data-theme="light"] .hero.hero-svetly{--bd-gold-soft:#6B4E08;--gold-soft:#6B4E08;}
+[data-theme="light"] .hero.hero-svetly{--bd-gold-soft:#866008;--gold-soft:#866008;--gold-big:#AC7900;}
 [data-theme="light"] .hero.hero-svetly .hl,
 [data-theme="light"] .hero.hero-svetly .kick,
 [data-theme="light"] .hero.hero-svetly .eyebrow,
@@ -729,10 +738,11 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .legal-note{color:var(--bd-muted)!important;}
 [data-theme="light"] .legal-note p,
 [data-theme="light"] .legal-note li{color:var(--bd-muted)!important;}
-/* /poukaz/: štítky nabídek, bledě zlatá na bledě zlaté pilulce (1,26). */
+/* /poukaz/: štítky nabídek. Tmavší zlatá na zlatém tónu vycházela 4,2 až 4,4,
+   proto zlatá PLOCHA s tmavým textem (brand, 9,4:1). */
 [data-theme="light"] .offer .tag{
-  background:rgba(107,78,8,.12)!important;
-  color:var(--bd-gold-soft)!important;
+  background:var(--bd-gold)!important;
+  color:var(--mb-on-gold)!important;
 }
 /* /myty/: popisky karet, vybledlé #b4a99a na krému (2,10). */
 [data-theme="light"] .mcard p{color:var(--bd-muted)!important;}
@@ -893,3 +903,117 @@ html[data-theme="light"]{background:var(--mb-bg);}
 [data-theme="light"] .play-card,
 [data-theme="light"] .play-card :is(h5,p,span,div){color:var(--on-dark)!important;}
 
+/* ============================================================
+   VLNA 4 (24. 9. 2026): audit světlého režimu celého webu mimo Academy
+   (_Claude-dokumenty/2026-09-24_sef78/svetly-web/BUILD-svetly-web-0924.md).
+   Brand systém jako Academy a appka: zlatá PLOCHA #EBB12C s textem #1A1222,
+   malý zlatý text na světlé #866008 (--bd-gold-soft), velký text a ikony
+   #AC7900 (--gold-big). Vše pod [data-theme=light], tmavý motiv to nevidí.
+   ============================================================ */
+
+/* Stužka a tlačítka landingů mají přechod z --acc-l; ten je teď textová
+   zlatá, výplň proto natvrdo plná zlatá. Nezvýrazněnou stužku řeší VLNA 2. */
+[data-theme="light"] .ribbon{background:var(--bd-gold)!important;color:var(--mb-on-gold)!important;}
+[data-theme="light"] .btn-acc{background:var(--bd-gold)!important;color:var(--mb-on-gold)!important;}
+
+/* Ikony a velká čísla: zlatá pro velké (3:1). */
+[data-theme="light"] .ic,
+[data-theme="light"] .ico,
+[data-theme="light"] .feature-ac .ic,
+[data-theme="light"] .stats b,
+[data-theme="light"] .stats-grid b,
+[data-theme="light"] .stat b{color:var(--gold-big)!important;}
+
+/* Homepage (vlastní systém: --gold a --gold-light jako TEXT). */
+[data-theme="light"] .step .num,
+[data-theme="light"] .pcard.cta-card .in b,
+[data-theme="light"] .rev-sum .big{color:var(--gold-big)!important;}
+[data-theme="light"] .steps-cta .or a,
+[data-theme="light"] .bcard:not(.plum) .links a,
+[data-theme="light"] .bento .bcard:not(.plum) .tag,
+[data-theme="light"] .bento .wide .tag{color:var(--bd-gold-soft)!important;}
+
+/* Lead pop-up: nadpis a podpisy tlačítek zůstaly světle zlaté. */
+[data-theme="light"] .ba-lp h3 b{color:var(--gold-big)!important;}
+[data-theme="light"] .ba-lp-btns a small{color:var(--bd-gold-soft)!important;}
+
+/* Videokurz prodej: sticky lišta nesmí být ultra tmavá, ikony záruky
+   neonově zelené, bílý štítek v ceníku na krému. */
+[data-theme="light"] .vk-buybar{
+  background:rgba(255,255,255,.96)!important;
+  border-top:1px solid var(--bd-line)!important;
+  box-shadow:0 -8px 30px rgba(22,19,16,.10)!important;
+}
+[data-theme="light"] .vk-bb-text,
+[data-theme="light"] .vk-bb-price{color:var(--mb-text)!important;}
+[data-theme="light"] .vk-bb-text strong{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .vk-hero-guar svg,
+[data-theme="light"] .vk-guarantee svg{color:#1d7a3c!important;}
+[data-theme="light"] .pricebox [style*="color:#fff"]{color:var(--mb-text)!important;}
+
+/* Blog: tmavý box s přechodem #241026 → #0C0B10 je ve světlém bílý (výš),
+   jeho texty musí jít na inkoust taky. */
+[data-theme="light"] [style*="linear-gradient(135deg,#241026,#0C0B10)"] :is(h1,h2,h3,h4,h5,h6,p,span,li,b,strong,div,small){
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] [style*="linear-gradient(135deg,#241026,#0C0B10)"] p{color:var(--bd-muted)!important;}
+
+/* Články: tlačítko v inline-magnetu (bez .btn) = zlatá plocha, tmavý text. */
+[data-theme="light"] article .inline-magnet a:not(.btn),
+[data-theme="light"] .inline-magnet a:not(.btn){
+  background:var(--bd-gold)!important;
+  color:var(--mb-on-gold)!important;
+}
+[data-theme="light"] .keybox strong,
+[data-theme="light"] .vs-cols .vc.yes h4{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .vs-cols .vc.no h4{color:#A33A3A!important;}
+[data-theme="light"] .fig svg [fill="#1f8f47" i]{fill:#1B7A4B!important;}
+
+/* Kalkulačka: výsledek byl zlatý přechod do černé s bílým textem a zlatými
+   tlačítky. Ve světlém bílá karta se zlatým rámem, tlačítka zůstávají zlatá. */
+[data-theme="light"] .result{
+  background:var(--mb-surface)!important;
+  color:var(--mb-text)!important;
+  border:1.5px solid rgba(235,177,44,.55)!important;
+  box-shadow:0 12px 32px rgba(22,19,16,.08)!important;
+}
+[data-theme="light"] .result :is(p,div,span,b,strong){color:var(--mb-text)!important;}
+[data-theme="light"] .result p.small{color:var(--bd-muted)!important;opacity:1!important;}
+[data-theme="light"] .result .macro{background:var(--mb-bg)!important;}
+[data-theme="light"] .fp-kick{color:#8a4b00!important;}
+
+/* Tréninky: závěrečný pás (přechod zlatá → černá) jako krém. */
+[data-theme="light"] section[style*="linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%)"]{
+  background:var(--mb-bg2)!important;
+  color:var(--mb-text)!important;
+}
+[data-theme="light"] section[style*="linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%)"] :is(h2,p){color:var(--mb-text)!important;}
+[data-theme="light"] .price-card .per{color:var(--bd-muted)!important;}
+
+/* Lead magnety a jejich plány (/makro-plan/, /forma-zpet/, /plan/…). */
+[data-theme="light"] .meal .lab,
+[data-theme="light"] .mock .mtag,
+[data-theme="light"] .mock .chip{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .proof figcaption .src,
+[data-theme="light"] [style*="color:#8a8073"]{color:var(--bd-muted)!important;}
+[data-theme="light"] .toolbar button,
+[data-theme="light"] .cta-calc a{background:var(--bd-gold)!important;color:var(--mb-on-gold)!important;}
+[data-theme="light"] .toolbar a{color:var(--bd-muted)!important;}
+[data-theme="light"] .cta-calc .ct span,
+[data-theme="light"] .disc{color:var(--bd-muted)!important;}
+[data-theme="light"] .chip.s{background:#1868B0!important;}
+
+/* Právní stránky, děkovací stránky a drobnosti. */
+[data-theme="light"] .upd,
+[data-theme="light"] form .hint,
+[data-theme="light"] div.cta > p,
+[data-theme="light"] .promeny-note{color:var(--bd-muted)!important;}
+[data-theme="light"] .wrap ul li a:not(.btn):not(.cta){color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .wrapc .intro{color:var(--bd-muted)!important;}
+[data-theme="light"] .wrapc .intro a{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] .sub strong,
+[data-theme="light"] .beff,
+[data-theme="light"] .znacka{color:var(--bd-gold-soft)!important;}
+[data-theme="light"] main.card > .mark{background:var(--bd-gold)!important;}
+[data-theme="light"] main.card > .mark svg{stroke:var(--mb-on-gold)!important;}
+[data-theme="light"] .vid-facade .play{color:var(--mb-on-gold)!important;}
