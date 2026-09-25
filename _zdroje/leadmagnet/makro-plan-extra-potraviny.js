@@ -24,10 +24,11 @@
 //   medián 266 kcal, B 11,2, S 28,2 bez vlákniny, T 10,7. Americká sýrová pizza je tučnější než margherita.
 // - Pivo 12° (světlý ležák): USDA FDC 168746 (Beer, regular), 43 kcal, B 0,5, S 3,6, T 0 na 100 g.
 //   Kalorie piva jsou hlavně z alkoholu, proto makra nedají součet kcal.
+//
+// ⭐ [25. 9. 2026, generátor +101 potravin] `proteinova-tycinka` odsud ODEŠLA do assets/food-db.json
+// se STEJNÝMI hodnotami (400/26/34/17/6, available, curated_foods 2ddd5ca7…). Kontrola duplicity
+// v makro-plan-core.js by jinak build shodila. Přepočet obou PDF po přesunu: 0 rozdílů.
 module.exports = [
-  { id: 'proteinova-tycinka', name: 'Proteinová tyčinka',
-    per100: { kcal: 400, p: 26, c: 34, f: 17, fib: 6, carbBasis: 'available' },
-    zdroj: 'curated_foods id 2ddd5ca7-3de6-4dbb-804d-c08845de7f6c „Proteinová tyčinka", opraveno 25. 9. 2026 na medián 162 tyčinek s EAN (OFF CZ), porce 50 g' },
   { id: 'pizza-margherita', name: 'Pizza margherita',
     per100: { kcal: 240, p: 9, c: 34, f: 7, fib: 2, carbBasis: 'available' },
     zdroj: 'curated_foods id 97cd02cb-eda4-4c36-b1e6-3aa887a38908 „Pizza Margherita", opraveno 25. 9. 2026 na medián margherit prodávaných v ČR se zdrojem u výrobce' },

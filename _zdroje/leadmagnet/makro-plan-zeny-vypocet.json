@@ -31,18 +31,6 @@
   },
   "extra": [
     {
-      "id": "proteinova-tycinka",
-      "per100": {
-        "kcal": 400,
-        "p": 26,
-        "c": 34,
-        "f": 17,
-        "fib": 6,
-        "carbBasis": "available"
-      },
-      "zdroj": "curated_foods id 2ddd5ca7-3de6-4dbb-804d-c08845de7f6c „Proteinová tyčinka\", opraveno 25. 9. 2026 na medián 162 tyčinek s EAN (OFF CZ), porce 50 g"
-    },
-    {
       "id": "pizza-margherita",
       "per100": {
         "kcal": 240,
