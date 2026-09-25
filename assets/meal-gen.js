@@ -157,6 +157,15 @@
     var targetKcal = tdee;
     var pozadovanyDeficit = 0;
     var jeHubnuti = g.kind === 'cut';
+    // ⛔ [R1 S2, 25. 9. 2026] Brzda deficitu, zrcadlo appky `brzdaDeficitu` v goals.ts: pod
+    // VSTUP_MIN_VEK let a pod BMI_PODVAHA se hubnutí počítá jako udržení. Formuláře mají navíc
+    // kontrolaVstupu; tohle chrání cesty mimo ně (admin průvodce, PDF build, volání odjinud).
+    var deficitZablokovan = null;
+    if (jeHubnuti) {
+      if (age > 0 && age < VSTUP_MIN_VEK) deficitZablokovan = 'nezletily';
+      else if (w > 0 && h > 0 && w / ((h / 100) * (h / 100)) < BMI_PODVAHA) deficitZablokovan = 'podvaha';
+      if (deficitZablokovan) jeHubnuti = false;
+    }
     // „Vybrané" tempo přesně tak, jak by ho appka ukázala na kartě v onboardingu:
     // NEoříznuté absolutním stropem, ten je jen interní pojistka pro výpočet deficitu.
     var vybraneTempoKg = 0;
@@ -232,13 +241,15 @@
     // v tomhle souboru a appka je má stejné).
     var fiber = Math.min(FIBER_CAP_G, Math.max(FIBER_FLOOR_G, Math.round(kcal / 1000 * 14)));
     return { kcal: kcal, protein: makra.protein, carbs: makra.carbs, fat: makra.fat, fiber: fiber,
-             bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: g.label,
+             bmr: Math.round(bmr), tdee: Math.round(tdee), goalLabel: deficitZablokovan ? GOAL.udrzeni.label : g.label,
              // příznaky podlahy pro UI, beze změny od revize R5
              kcalFloor: kcalFloor, rateCapped: podlahaZvedla,
              floorAboveTdee: nadVydejem, floorNote: poznamkaPodlahy,
              // ⭐ [2026-09-05] nové: tempo hubnutí/nabírání a věta pro případ, kdy ho
              // appka (a teď stejně i web) musela kvůli stropu zpomalit.
-             tempoKgTyden: tempoKgTyden, tempoNote: tempoNote };
+             tempoKgTyden: tempoKgTyden, tempoNote: tempoNote,
+             // [R1 S2] 'nezletily' / 'podvaha', když brzda hubnutí změnila na udržení; jinak null.
+             deficitZablokovan: deficitZablokovan };
   }
 
   // ---------------------------------------------------------------------------
@@ -2135,11 +2146,14 @@
     // hlavní jídlo 5 g oleje. ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`).
     if (!lowCarb && targets.kcal > 0) {
       var limitKcalP = targets.kcal * 1.05;
+      // ⛔ [R1 V1] Podlaha dne = min(25 %, % CÍLE), zrcadlo stropu: cíl pod 25 % (ruční cíl,
+      // staré cíle) se nesmí tiše tlačit k 25 % (den přelezl kalorie o +4,6 %). ⛔ Totéž v appce.
+      var podlahaPctP = Math.min(TUK_MIN_PCT_KCAL, (targets.fat * 900) / targets.kcal);
       var pridanTuk = false;
       for (var krokP = 0; krokP < 300; krokP++) {
         var fDneP = 0, kcalDneP = 0;
         out.forEach(function (m) { m.items.forEach(function (it) { var mm = macrosFor(it.food, it.grams); fDneP += mm.f; kcalDneP += mm.kcal; }); });
-        if (kcalDneP <= 0 || (fDneP * 900) / kcalDneP >= TUK_MIN_PCT_KCAL) break;
+        if (kcalDneP <= 0 || (fDneP * 900) / kcalDneP >= podlahaPctP) break;
         var kand = null;
         out.forEach(function (m) { m.items.forEach(function (it) {
           if (it.food.cat !== 'fat') return;
@@ -2157,6 +2171,8 @@
           }
           if (cilJ < 0) break;
           var tf = pick(db, 'fat', seed + cilJ + 7, SLANY_TUK);
+          // [R1 N4] Táž potravina dvakrát v jednom jídle ne.
+          if (tf && out[cilJ].items.some(function (x) { return x.food.id === tf.id; })) break;
           if (!tf || !tf.per100.f || kcalDneP + (tf.per100.kcal * 5) / 100 > limitKcalP) break;
           out[cilJ].items.push({ food: tf, grams: 5 });
           pridanTuk = true;

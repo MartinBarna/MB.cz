@@ -22,7 +22,8 @@
     "floorAboveTdee": false,
     "floorNote": null,
     "tempoKgTyden": 0.45,
-    "tempoNote": null
+    "tempoNote": null,
+    "deficitZablokovan": null
   },
   "cil": {
     "kcal": 2000,
