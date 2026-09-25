@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<!-- ŠABLONA. Hotové HTML (makro-plan-zeny.html) i čísla v něm generuje build-makro-plan-zeny.js, rukou needitovat výstup. -->
+<!-- ŠABLONA. Hotové HTML (makro-plan-zeny.html) i čísla v něm generuje build-makro-plan-zeny.js (výpočet v makro-plan-core.js), rukou needitovat výstup. -->
 <title>7denní makro plán pro ženy 30+</title>
 <link rel="stylesheet" href="../../assets/vendor/fonts/poppins.css">
 <style>
@@ -97,7 +97,7 @@ a { color:#EBB12C; text-decoration:none; }
         <h2>Tvoje makra: vodítka pro ženy 30+</h2>
         <ul>
             <li><b>Bílkoviny:</b> 1,6–2,2 g na kg tělesné hmotnosti (vyšší při hubnutí a při tréninku).</li>
-            <li><b>Tuky:</b> minimálně 0,8–1 g na kg (důležité pro hormony, zvláště po 30. roce).</li>
+            <li><b>Tuky:</b> drž je zhruba na 25 až 35 % kalorií a dlouhodobě nechoď pod 20 % (důležité pro hormony, zvláště po 30. roce). V tomhle plánu je to asi {{T_PRUMER}} g denně ({{T_PROCENT}} %).</li>
             <li><b>Sacharidy:</b> zbytek do celkového kalorického příjmu (energie pro mozek, trénink a hormony).</li>
             <li><b>Flexibilita:</b> 80 % jídel by mělo být kvalitních, 20 % může být volnějších (pizza, víno, sladké).</li>
         </ul>
@@ -174,7 +174,7 @@ a { color:#EBB12C; text-decoration:none; }
 
     <div class="box">
         <h2>Nákupní seznam na celý týden</h2>
-        <p class="note" style="margin-bottom:1mm">Přesně podle gramáží v plánu, pro 1 ženu na 7 dní. Bez sobotní volnější večeře.</p>
+        <p class="note" style="margin-bottom:1mm">Přesně podle gramáží v plánu, pro 1 ženu na 7 dní.</p>
 {{NAKUP}}
     </div>
 

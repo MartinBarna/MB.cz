@@ -100,8 +100,8 @@ function brandDefault() {
   </div>`);
 }
 
-function planCard(sub, kcal, rows) {
-  const rowHtml = rows.map(([d, meals]) => `
+function planCard(sub, rows) {
+  const rowHtml = rows.map(([d, meals, kcal]) => `
     <div style="display:flex;align-items:center;gap:22px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.09)">
       <div style="width:58px;height:52px;border-radius:12px;background:linear-gradient(145deg,${GOLD_SOFT},${GOLD});color:#161616;font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center">${d}</div>
       <div style="font-size:28px;color:#e7e0d5;flex:1">${meals}</div>
@@ -169,16 +169,19 @@ async function render(html, outJpg) {
   const jobs = [];
 
   if (!only || only === 'og-default') jobs.push(['assets/og-default.jpg', brandDefault()]);
-  if (!only || only === 'og-makro-plan') jobs.push(['assets/og-makro-plan.jpg', planCard('pro ženy 30+', '1 500 kcal', [
-    ['Po', 'Tvarohová kaše · kuřecí s rýží · omeleta'], ['Út', 'Vajíčka · losos s bramborem · skyr'],
-    ['St', 'Ovesná · těstoviny s masem · tvaroh'], ['Čt', 'Jogurt · hovězí s rýží · zelenina'],
-    ['Pá', 'Toast s vejci · kuřecí wrap · tvaroh'],
-  ])]);
-  if (!only || only === 'og-forma-zpet') jobs.push(['assets/og-forma-zpet.jpg', planCard('pro muže 35+', '2 000 kcal', [
-    ['Po', 'Vejce s avokádem · kuřecí s rýží · losos'], ['Út', 'Ovesná · hovězí s bramborem · tvaroh'],
-    ['St', 'Skyr · krabička z práce · krůtí'], ['Čt', 'Omeleta · těstoviny s masem · ryba'],
-    ['Pá', 'Toast s vejci · fit burger · kuře'],
-  ])]);
+  // Náhled týdne na kartách makro-plánů bere jídla a kcal z výpočtu PDF (Po-Pá), ať karta
+  // neukazuje jídla, která v PDF nejsou. Výpočet: _zdroje/leadmagnet/build-makro-plan-zeny.js
+  // a build-forma-zpet-muzi.js (nejdřív pusť ty, pak tenhle skript).
+  const planRows = (json) => {
+    const v = JSON.parse(fs.readFileSync(path.join(ROOT, '_zdroje/leadmagnet', json), 'utf8'));
+    const cz = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return v.plan.slice(0, 5).map((d) => {
+      const jidla = d.meals.filter((m) => m.og && ['Snídaně', 'Oběd', 'Večeře'].includes(m.lbl)).map((m, i) => (i ? m.og.charAt(0).toLowerCase() + m.og.slice(1) : m.og));
+      return [d.zkratka, jidla.join(' · '), cz(d.tot.kcal) + ' kcal'];
+    });
+  };
+  if (!only || only === 'og-makro-plan') jobs.push(['assets/og-makro-plan.jpg', planCard('pro ženy 30+', planRows('makro-plan-zeny-vypocet.json'))]);
+  if (!only || only === 'og-forma-zpet') jobs.push(['assets/og-forma-zpet.jpg', planCard('pro muže 35+', planRows('forma-zpet-muzi-vypocet.json'))]);
 
   // strankove OG karty v assets/og/ (title z og:title dane stranky)
   const PAGES = [
