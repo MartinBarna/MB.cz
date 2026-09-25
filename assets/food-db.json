@@ -100,6 +100,25 @@
     "nejiste": []
   },
   {
+    "id": "aljasska-treska-pecena",
+    "name": "Aljašská treska pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 111,
+      "p": 23.5,
+      "c": 0,
+      "f": 1.2,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173681 (Fish, pollock, Alaska, cooked, dry heat (may contain additives to retain moisture)); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "amarant",
     "name": "Amarant",
     "cat": "carb",
@@ -689,6 +708,26 @@
     "nejiste": []
   },
   {
+    "id": "bageta-vicezrnna",
+    "name": "Bageta vícezrnná",
+    "cat": "carb",
+    "per100": {
+      "kcal": 298,
+      "p": 10.5,
+      "c": 47,
+      "f": 6.5,
+      "fib": 4.4,
+      "carbBasis": "available"
+    },
+    "portion": 70,
+    "portionLabel": "1/2 bagety ~70 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Vícezrnná bageta se záparou a kváskem 140 g), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "baked-beans-v-rajcatove-omacce",
     "name": "Baked beans v rajčatové omáčce (konzerva)",
     "cat": "legume",
@@ -920,6 +959,23 @@
     "nejiste": []
   },
   {
+    "id": "bataty-varene",
+    "name": "Batáty vařené",
+    "cat": "carb",
+    "per100": {
+      "kcal": 76,
+      "p": 1.4,
+      "c": 17.7,
+      "f": 0.1,
+      "fib": 2.5,
+      "carbBasis": "total"
+    },
+    "portion": 200,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168484 (Sweet potato, cooked, boiled, without skin); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "batoleci-mleko",
     "name": "Batolecí mléko (prášek)",
     "cat": "dairy",
@@ -1094,6 +1150,24 @@
     "portion": 75,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "bezlepkove-testoviny-kukuricne-varene",
+    "name": "Bezlepkové těstoviny kukuřičné (vařené)",
+    "cat": "carb",
+    "per100": {
+      "kcal": 126,
+      "p": 2.6,
+      "c": 27.9,
+      "f": 0.7,
+      "fib": 4.8,
+      "carbBasis": "total"
+    },
+    "portion": 200,
+    "portionLabel": "200 g vařené",
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168900 (Pasta, gluten-free, corn, cooked); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "bezlepkove-testoviny-kukuricno-ryzove",
@@ -1310,6 +1384,25 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "bily-jogurt-bez-laktozy",
+    "name": "Bílý jogurt bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 67,
+      "p": 3.9,
+      "c": 4.4,
+      "f": 3.7,
+      "fib": 0
+    },
+    "portion": 150,
+    "portionLabel": "1 kelímek ~150 g",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Hollandia Jogurt bez laktózy bílý, EAN 8594001177448), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "bily-jogurt-nizkotucny",
@@ -1629,6 +1722,27 @@
     "nejiste": []
   },
   {
+    "id": "bramburky-solene",
+    "name": "Brambůrky solené",
+    "cat": "snack",
+    "per100": {
+      "kcal": 532,
+      "p": 6.4,
+      "c": 53.8,
+      "f": 34,
+      "fib": 3.1,
+      "carbBasis": "total"
+    },
+    "portion": 30,
+    "portionLabel": "hrst ~30 g",
+    "obsahuje": [],
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Sladkosti a pochutiny se vyrábějí na linkách, kde se zpracovává i pšenice, a část výrobců přidává křupinky, sušenky nebo sladový výtažek. Za bezlepkovost generické položky ručit nejde.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169677 (Snacks, potato chips, plain, salted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "brezel",
     "name": "Brezel (preclík)",
     "cat": "carb",
@@ -1698,6 +1812,40 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "brokolice-mrazena-varena",
+    "name": "Brokolice mražená vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 28,
+      "p": 3.1,
+      "c": 5.4,
+      "f": 0.1,
+      "fib": 3,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169969 (Broccoli, frozen, chopped, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "brokolice-varena",
+    "name": "Brokolice vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 35,
+      "p": 2.4,
+      "c": 7.2,
+      "f": 0.4,
+      "fib": 3.3,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169967 (Broccoli, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "brokolicove-klicky",
@@ -2160,6 +2308,23 @@
     "nejiste": []
   },
   {
+    "id": "celer-vareny",
+    "name": "Celer bulvový vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 27,
+      "p": 1,
+      "c": 5.9,
+      "f": 0.2,
+      "fib": 1.2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169987 (Celeriac, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "celozrnne-krekry",
     "name": "Celozrnné krekry",
     "cat": "carb",
@@ -2309,6 +2474,23 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "cervena-repa-varena",
+    "name": "Červená řepa vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 44,
+      "p": 1.7,
+      "c": 10,
+      "f": 0.2,
+      "fib": 2,
+      "carbBasis": "total"
+    },
+    "portion": 100,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169146 (Beets, cooked, boiled, drained); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "cesnek",
@@ -2803,6 +2985,24 @@
     "nejiste": []
   },
   {
+    "id": "cottage-bez-laktozy",
+    "name": "Cottage bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 119,
+      "p": 11,
+      "c": 3,
+      "f": 7,
+      "fib": 0
+    },
+    "portion": 150,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Rohlik.cz, produkt 1422332 (Madeta Jihočeský natur cottage bez laktózy 7 %), 22. 8. 2026, převzato z curated_foods"
+  },
+  {
     "id": "cottage-syr",
     "name": "Cottage sýr",
     "cat": "dairy",
@@ -2946,6 +3146,23 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "cuketa-varena",
+    "name": "Cuketa vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 15,
+      "p": 1.1,
+      "c": 2.7,
+      "f": 0.4,
+      "fib": 1,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169292 (Squash, summer, zucchini, includes skin, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "cuketa-zluta",
@@ -3522,6 +3739,23 @@
     "nejiste": []
   },
   {
+    "id": "dyne-maslova-pecena",
+    "name": "Dýně máslová pečená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 40,
+      "p": 0.9,
+      "c": 10.5,
+      "f": 0.1,
+      "fib": 3.2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169296 (Squash, winter, butternut, cooked, baked, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "dyne-spagetova",
     "name": "Dýně špagetová (spaghetti squash)",
     "cat": "veg",
@@ -3582,6 +3816,24 @@
     "portion": 10,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "dzem-merunkovy",
+    "name": "Džem meruňkový",
+    "cat": "snack",
+    "per100": {
+      "kcal": 242,
+      "p": 0.7,
+      "c": 64.4,
+      "f": 0.2,
+      "fib": 0.3,
+      "carbBasis": "total"
+    },
+    "portion": 20,
+    "portionLabel": "1 lžíce ~20 g",
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170645 (Jams and preserves, apricot); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "edamame",
@@ -4130,6 +4382,40 @@
     "nejiste": []
   },
   {
+    "id": "fazolove-lusky-mrazene-varene",
+    "name": "Fazolové lusky mražené vařené",
+    "cat": "veg",
+    "per100": {
+      "kcal": 28,
+      "p": 1.5,
+      "c": 6.5,
+      "f": 0.2,
+      "fib": 3,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169963 (Beans, snap, green, frozen, cooked, boiled, drained without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "fazolove-lusky-varene",
+    "name": "Fazolové lusky vařené",
+    "cat": "veg",
+    "per100": {
+      "kcal": 35,
+      "p": 1.9,
+      "c": 7.9,
+      "f": 0.3,
+      "fib": 3.2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169141 (Beans, snap, green, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "fazolove-lusky-zelene",
     "name": "Fazolové lusky zelené (zelené fazolky)",
     "cat": "veg",
@@ -4255,6 +4541,24 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "feta-bez-laktozy",
+    "name": "Feta bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 275,
+      "p": 16,
+      "c": 1,
+      "f": 23,
+      "fib": 0
+    },
+    "portion": 40,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Kolios Feta sýr bez laktózy 150 g, EAN 5201704054763), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "feta-syr",
@@ -4661,6 +4965,24 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "gouda-bez-laktozy",
+    "name": "Gouda bez laktózy 48 %",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 352,
+      "p": 25,
+      "c": 0,
+      "f": 28,
+      "fib": 0
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Hochland Gouda bez laktózy 48 % plátky 135 g, EAN 5902899144931), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "gouda-zrala",
@@ -5238,6 +5560,25 @@
     "nejiste": []
   },
   {
+    "id": "hovezi-mlete-10-restovane",
+    "name": "Hovězí mleté 10 % tuku restované",
+    "cat": "protein",
+    "per100": {
+      "kcal": 204,
+      "p": 25.2,
+      "c": 0,
+      "f": 10.7,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171793 (Beef, ground, 90% lean meat / 10% fat, patty, cooked, pan-broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "hovezi-mlete-10-tuku",
     "name": "Hovězí mleté 10% tuku",
     "cat": "protein",
@@ -5255,6 +5596,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "hovezi-mlete-15-restovane",
+    "name": "Hovězí mleté 15 % tuku restované",
+    "cat": "protein",
+    "per100": {
+      "kcal": 232,
+      "p": 24.6,
+      "c": 0,
+      "f": 14,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 174033 (Beef, ground, 85% lean meat / 15% fat, patty, cooked, pan-broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "hovezi-mlete-20",
@@ -5275,6 +5635,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "hovezi-mlete-20-restovane",
+    "name": "Hovězí mleté 20 % tuku restované",
+    "cat": "protein",
+    "per100": {
+      "kcal": 246,
+      "p": 24,
+      "c": 0,
+      "f": 15.9,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171798 (Beef, ground, 80% lean meat / 20% fat, patty, cooked, pan-broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "hovezi-mlete-20-tuku",
@@ -5315,6 +5694,44 @@
     "nejiste": []
   },
   {
+    "id": "hovezi-mlete-5-restovane",
+    "name": "Hovězí mleté 5 % tuku restované",
+    "cat": "protein",
+    "per100": {
+      "kcal": 164,
+      "p": 25.8,
+      "c": 0,
+      "f": 5.9,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171792 (Beef, ground, 95% lean meat / 5% fat, patty, cooked, pan-broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "hovezi-plec-dusena",
+    "name": "Hovězí plec dušená (libová)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 253,
+      "p": 31.1,
+      "c": 0,
+      "f": 13.3,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170215 (Beef, chuck, blade roast, separable lean only, trimmed to 0\" fat, all grades, cooked, braised); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "hovezi-rostena",
     "name": "Hovězí roštěná",
     "cat": "protein",
@@ -5332,6 +5749,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "hovezi-steak-grilovany",
+    "name": "Hovězí steak grilovaný (libový)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 183,
+      "p": 30.6,
+      "c": 0,
+      "f": 5.8,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168634 (Beef, top sirloin, steak, separable lean only, trimmed to 0\" fat, all grades, cooked, broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "hovezi-steak-libovy",
@@ -5371,6 +5807,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "hovezi-svickova-pecena",
+    "name": "Hovězí svíčková pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 177,
+      "p": 27.5,
+      "c": 0,
+      "f": 7.5,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 174004 (Beef, loin, tenderloin roast, boneless, separable lean only, trimmed to 0\" fat, all grades, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "hovezi-zebro",
@@ -5980,6 +6435,26 @@
     "nejiste": []
   },
   {
+    "id": "chleb-slunecnicovy",
+    "name": "Chléb slunečnicový",
+    "cat": "carb",
+    "per100": {
+      "kcal": 254,
+      "p": 6.5,
+      "c": 37,
+      "f": 7.2,
+      "fib": 7.4,
+      "carbBasis": "available"
+    },
+    "portion": 50,
+    "portionLabel": "1 krajíc ~50 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Chléb slunečnicový tmavý 440 g), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "chleb-spaldovy",
     "name": "Chléb špaldový",
     "cat": "carb",
@@ -6142,6 +6617,23 @@
     "portion": 125,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "chrest-vareny",
+    "name": "Chřest vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 22,
+      "p": 2.4,
+      "c": 4.1,
+      "f": 0.2,
+      "fib": 2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168390 (Asparagus, cooked, boiled, drained); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "chrest-zeleny",
@@ -6545,6 +7037,44 @@
     "nejiste": []
   },
   {
+    "id": "jehneci-kyta",
+    "name": "Jehněčí kýta libová (syrová)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 128,
+      "p": 20.6,
+      "c": 0,
+      "f": 4.5,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 174313 (Lamb, leg, whole (shank and sirloin), separable lean only, trimmed to 1/4\" fat, choice, raw); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "jehneci-kyta-pecena",
+    "name": "Jehněčí kýta pečená (libová)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 191,
+      "p": 28.3,
+      "c": 0,
+      "f": 7.7,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 174314 (Lamb, leg, whole (shank and sirloin), separable lean only, trimmed to 1/4\" fat, choice, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "jerk-chicken",
     "name": "Jerk chicken (kořeněné karibské pečené kuře)",
     "cat": "protein",
@@ -6756,6 +7286,42 @@
     "nejiste": []
   },
   {
+    "id": "kaderavek-vareny",
+    "name": "Kadeřávek vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 36,
+      "p": 2.9,
+      "c": 5.3,
+      "f": 1.2,
+      "fib": 4,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169238 (Kale, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "kachni-maso-pecene",
+    "name": "Kachní maso pečené (bez kůže)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 201,
+      "p": 23.5,
+      "c": 0,
+      "f": 11.2,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172411 (Duck, domesticated, meat only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kachni-prsa",
     "name": "Kachní prsa",
     "cat": "protein",
@@ -6809,6 +7375,26 @@
       "lepek"
     ],
     "nejiste": []
+  },
+  {
+    "id": "kaiserka-cerealni",
+    "name": "Kaiserka cereální",
+    "cat": "carb",
+    "per100": {
+      "kcal": 306,
+      "p": 11,
+      "c": 49,
+      "f": 6.1,
+      "fib": 5.4,
+      "carbBasis": "available"
+    },
+    "portion": 60,
+    "portionLabel": "1 ks ~60 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Výrobní list La Lorraine (Kaiserka cereální, 1288 kJ, 1 ks 60 g), převzato z curated_foods"
   },
   {
     "id": "kaki",
@@ -6936,6 +7522,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "kapr-peceny",
+    "name": "Kapr pečený",
+    "cat": "protein",
+    "per100": {
+      "kcal": 162,
+      "p": 22.9,
+      "c": 0,
+      "f": 7.2,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 174185 (Fish, carp, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "kapr-smazeny-v-trojobalu",
@@ -7176,6 +7781,23 @@
     "nejiste": []
   },
   {
+    "id": "kedluben-vareny",
+    "name": "Kedluben vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 29,
+      "p": 1.8,
+      "c": 6.7,
+      "f": 0.1,
+      "fib": 1.1,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168425 (Kohlrabi, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kefir",
     "name": "Kefír",
     "cat": "dairy",
@@ -7194,6 +7816,25 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "kefir-bez-laktozy",
+    "name": "Kefír bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 41,
+      "p": 3.2,
+      "c": 4.2,
+      "f": 1.3,
+      "fib": 0
+    },
+    "portion": 250,
+    "portionLabel": "250 ml",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Rohlik.cz (Babička Kefír 1,1 % bezlaktózový), převzato z curated_foods"
   },
   {
     "id": "kelewele",
@@ -8172,6 +8813,25 @@
     "nejiste": []
   },
   {
+    "id": "krevety-varene",
+    "name": "Krevety vařené",
+    "cat": "protein",
+    "per100": {
+      "kcal": 119,
+      "p": 22.8,
+      "c": 1.5,
+      "f": 1.7,
+      "fib": 0
+    },
+    "portion": 100,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171971 (Crustaceans, shrimp, mixed species, cooked, moist heat (may contain additives to retain moisture)); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kroupy-jecne",
     "name": "Kroupy ječné",
     "cat": "carb",
@@ -8263,6 +8923,25 @@
     "nejiste": []
   },
   {
+    "id": "kruti-mlete-restovane",
+    "name": "Krůtí mleté restované",
+    "cat": "protein",
+    "per100": {
+      "kcal": 203,
+      "p": 27.4,
+      "c": 0,
+      "f": 10.4,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171506 (Turkey, Ground, cooked); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kruti-prsa",
     "name": "Krůtí prsa",
     "cat": "protein",
@@ -8283,6 +8962,25 @@
     "nejiste": []
   },
   {
+    "id": "kruti-prsa-pecena",
+    "name": "Krůtí prsa pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 147,
+      "p": 30.1,
+      "c": 0,
+      "f": 2.1,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171496 (Turkey, whole, breast, meat only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kruti-stehno",
     "name": "Krůtí stehno (syrové)",
     "cat": "protein",
@@ -8300,6 +8998,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "kruti-stehno-pecene-bez-kuze",
+    "name": "Krůtí stehno pečené bez kůže",
+    "cat": "protein",
+    "per100": {
+      "kcal": 159,
+      "p": 25.1,
+      "c": 0.5,
+      "f": 6.3,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172877 (Turkey, retail parts, thigh, meat only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "kruti-sunka",
@@ -8573,6 +9290,25 @@
     "nejiste": []
   },
   {
+    "id": "kureci-kridla-pecena",
+    "name": "Kuřecí křídla pečená (s kůží)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 254,
+      "p": 23.8,
+      "c": 0,
+      "f": 16.9,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173630 (Chicken, broilers or fryers, wing, meat and skin, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kureci-kridla-pecena-ostra",
     "name": "Kuřecí křídla pečená ostrá",
     "cat": "protein",
@@ -8615,6 +9351,44 @@
     "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
+    "id": "kureci-palicky-pecene",
+    "name": "Kuřecí paličky pečené (s kůží)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 191,
+      "p": 23.4,
+      "c": 0,
+      "f": 10.2,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173612 (Chicken, broilers or fryers, drumstick, meat and skin, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "kureci-palicky-pecene-bez-kuze",
+    "name": "Kuřecí paličky pečené bez kůže",
+    "cat": "protein",
+    "per100": {
+      "kcal": 155,
+      "p": 24.2,
+      "c": 0,
+      "f": 5.7,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172376 (Chicken, broilers or fryers, dark meat, drumstick, meat only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kureci-prsa",
     "name": "Kuřecí prsa",
     "cat": "protein",
@@ -8653,6 +9427,44 @@
     "nejiste": []
   },
   {
+    "id": "kureci-prsa-pecena-s-kuzi",
+    "name": "Kuřecí prsa pečená s kůží",
+    "cat": "protein",
+    "per100": {
+      "kcal": 197,
+      "p": 29.8,
+      "c": 0,
+      "f": 7.8,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171075 (Chicken, broilers or fryers, breast, meat and skin, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "kureci-prsa-varena",
+    "name": "Kuřecí prsa vařená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 151,
+      "p": 29,
+      "c": 0,
+      "f": 3,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171478 (Chicken, broilers or fryers, breast, meat only, cooked, stewed); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "kureci-stehno-bez-kuze",
     "name": "Kuřecí stehno bez kůže",
     "cat": "protein",
@@ -8670,6 +9482,44 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "kureci-stehno-pecene-bez-kuze",
+    "name": "Kuřecí stehno pečené bez kůže",
+    "cat": "protein",
+    "per100": {
+      "kcal": 179,
+      "p": 24.8,
+      "c": 0,
+      "f": 8.2,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172388 (Chicken, broilers or fryers, thigh, meat only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "kureci-stehno-pecene-s-kuzi",
+    "name": "Kuřecí stehno pečené s kůží",
+    "cat": "protein",
+    "per100": {
+      "kcal": 232,
+      "p": 23.3,
+      "c": 0,
+      "f": 14.7,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173625 (Chicken, broilers or fryers, thigh, meat and skin, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "kureci-stehno-s-kuzi",
@@ -8814,6 +9664,40 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "kvetak-mrazeny-vareny",
+    "name": "Květák mražený vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 19,
+      "p": 1.6,
+      "c": 3.8,
+      "f": 0.2,
+      "fib": 2.7,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170399 (Cauliflower, frozen, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "kvetak-vareny",
+    "name": "Květák vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 23,
+      "p": 1.8,
+      "c": 4.1,
+      "f": 0.5,
+      "fib": 2.3,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170397 (Cauliflower, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "kvetakova-ryze",
@@ -9177,6 +10061,23 @@
     "nejiste": []
   },
   {
+    "id": "lilek-vareny",
+    "name": "Lilek vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 35,
+      "p": 0.8,
+      "c": 8.7,
+      "f": 0.2,
+      "fib": 2.5,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169229 (Eggplant, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "limeta",
     "name": "Limeta (šťáva i dužina, čerstvá)",
     "cat": "fruit",
@@ -9259,6 +10160,29 @@
     "portion": 80,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "liskooriskova-pomazanka-s-kakaem",
+    "name": "Lískooříšková pomazánka s kakaem",
+    "cat": "snack",
+    "per100": {
+      "kcal": 539,
+      "p": 6.3,
+      "c": 57.5,
+      "f": 30.9,
+      "fib": 0
+    },
+    "portion": 15,
+    "portionLabel": "1 lžíce ~15 g",
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Sladkosti a pochutiny se vyrábějí na linkách, kde se zpracovává i pšenice, a část výrobců přidává křupinky, sušenky nebo sladový výtažek. Za bezlepkovost generické položky ručit nejde.",
+    "zdroj": "Etiketa Globus e-shop (Ferrero Nutella 350 g, EAN 80177173), srpen 2026, převzato z curated_foods; vlákninu etiketa neuvádí"
   },
   {
     "id": "liskooriskove-maslo",
@@ -9430,6 +10354,44 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "losos-divoky-peceny",
+    "name": "Losos divoký pečený",
+    "cat": "protein",
+    "per100": {
+      "kcal": 182,
+      "p": 25.4,
+      "c": 0,
+      "f": 8.1,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171998 (Fish, salmon, Atlantic, wild, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "losos-peceny",
+    "name": "Losos pečený",
+    "cat": "protein",
+    "per100": {
+      "kcal": 206,
+      "p": 22.1,
+      "c": 0,
+      "f": 12.4,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 175168 (Fish, salmon, Atlantic, farmed, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "losos-uzeny",
@@ -9639,6 +10601,24 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "lucina-bez-laktozy",
+    "name": "Lučina bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 243,
+      "p": 6,
+      "c": 3.1,
+      "f": 23,
+      "fib": 0
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Savencia (Lučina Nadýchaná bez laktózy), tabulka na 100 g, převzato z curated_foods"
   },
   {
     "id": "lupinova-mouka",
@@ -10541,6 +11521,28 @@
     "duvod": "U tohohle druhu rozhoduje receptura konkrétního výrobce, ne druh potraviny. Sádlo, vývar, máslo nebo rybí omáčka v něm být můžou a nemusí."
   },
   {
+    "id": "michana-vejce",
+    "name": "Míchaná vejce",
+    "cat": "protein",
+    "per100": {
+      "kcal": 149,
+      "p": 10,
+      "c": 1.6,
+      "f": 11,
+      "fib": 0
+    },
+    "portion": 120,
+    "portionLabel": "ze 2 vajec ~120 g",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [
+      "laktoza"
+    ],
+    "duvod": "Míchaná vejce, omeleta i sázené vejce se často dělají s mlékem nebo na másle. Záleží na přípravě, takže laktózu u generické položky vyloučit nejde.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172187 (Egg, whole, cooked, scrambled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "mikrobylinky-mix",
     "name": "Mikrobylinky mix (microgreens, čerstvé)",
     "cat": "veg",
@@ -10614,6 +11616,30 @@
     "portion": 40,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "mlecna-cokolada",
+    "name": "Mléčná čokoláda",
+    "cat": "snack",
+    "per100": {
+      "kcal": 535,
+      "p": 7.7,
+      "c": 59.4,
+      "f": 29.7,
+      "fib": 3.4,
+      "carbBasis": "total"
+    },
+    "portion": 25,
+    "portionLabel": "4 kostičky ~25 g",
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Sladkosti a pochutiny se vyrábějí na linkách, kde se zpracovává i pšenice, a část výrobců přidává křupinky, sušenky nebo sladový výtažek. Za bezlepkovost generické položky ručit nejde.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 167587 (Candies, milk chocolate); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "mlecna-kase-krupicova-vanilkova",
@@ -10712,6 +11738,25 @@
     "nejiste": []
   },
   {
+    "id": "mleko-plnotucne-bez-laktozy",
+    "name": "Mléko plnotučné bez laktózy 3,5 %",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 64,
+      "p": 3.3,
+      "c": 4.8,
+      "f": 3.5,
+      "fib": 0
+    },
+    "portion": 250,
+    "portionLabel": "1 sklenice ~250 ml",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Jeden Tag Mléko bez laktózy trvanlivé 3,5 %, EAN 4306188038771), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "mleko-polotucne",
     "name": "Mléko polotučné 1, 5 %",
     "cat": "dairy",
@@ -10748,6 +11793,25 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "mleko-polotucne-bez-laktozy",
+    "name": "Mléko polotučné bez laktózy 1,5 %",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 48,
+      "p": 3.4,
+      "c": 4.9,
+      "f": 1.5,
+      "fib": 0
+    },
+    "portion": 250,
+    "portionLabel": "1 sklenice ~250 ml",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Meggle Bezlaktózové mléko 1,5 %, EAN 8585002505163), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "mlete-hovezi",
@@ -11266,6 +12330,57 @@
     "nejiste": []
   },
   {
+    "id": "mrkev-mrazena-varena",
+    "name": "Mrkev mražená vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 37,
+      "p": 0.6,
+      "c": 7.7,
+      "f": 0.7,
+      "fib": 3.3,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169984 (Carrots, frozen, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "mrkev-s-hraskem-varena",
+    "name": "Mrkev s hráškem vařená (mražená směs)",
+    "cat": "veg",
+    "per100": {
+      "kcal": 48,
+      "p": 3.1,
+      "c": 10.1,
+      "f": 0.4,
+      "fib": 3.1,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170018 (Peas and carrots, frozen, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "mrkev-varena",
+    "name": "Mrkev vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 35,
+      "p": 0.8,
+      "c": 8.2,
+      "f": 0.2,
+      "fib": 3,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170394 (Carrots, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "msemen",
     "name": "Msemen (marocká vrstvená placka)",
     "cat": "carb",
@@ -11770,6 +12885,24 @@
     "nejiste": []
   },
   {
+    "id": "niva-bez-laktozy",
+    "name": "Niva bez laktózy 45 %",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 332,
+      "p": 24,
+      "c": 0.5,
+      "f": 26,
+      "fib": 0
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Madeta Jihočeská niva bez laktózy 45 % 100 g, EAN 8593803337227), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "nivova-pomazanka",
     "name": "Nivová pomazánka (s modrým sýrem)",
     "cat": "dairy",
@@ -12066,6 +13199,28 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "omeleta",
+    "name": "Omeleta (z celých vajec)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 154,
+      "p": 10.6,
+      "c": 0.6,
+      "f": 11.7,
+      "fib": 0
+    },
+    "portion": 120,
+    "portionLabel": "ze 2 vajec ~120 g",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [
+      "laktoza"
+    ],
+    "duvod": "Míchaná vejce, omeleta i sázené vejce se často dělají s mlékem nebo na másle. Záleží na přípravě, takže laktózu u generické položky vyloučit nejde.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172185 (Egg, whole, cooked, omelet); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "onion-rings",
@@ -12813,6 +13968,23 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "paprika-cervena-varena",
+    "name": "Paprika červená vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 28,
+      "p": 0.9,
+      "c": 6.7,
+      "f": 0.2,
+      "fib": 1.2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170110 (Peppers, sweet, red, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "paprika-zelena",
@@ -13882,6 +15054,30 @@
     "duvod": "Uzeniny a masné výrobky mívají pšeničný škrob nebo mouku jako plnivo. Rozhoduje výrobce, ne druh potraviny, takže u generické položky to tvrdit nejde."
   },
   {
+    "id": "proteinova-tycinka",
+    "name": "Proteinová tyčinka (30 % bílkovin)",
+    "cat": "snack",
+    "per100": {
+      "kcal": 371,
+      "p": 30,
+      "c": 28,
+      "f": 18,
+      "fib": 7.5,
+      "carbBasis": "available"
+    },
+    "portion": 50,
+    "portionLabel": "1 ks ~50 g",
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Sladkosti a pochutiny se vyrábějí na linkách, kde se zpracovává i pšenice, a část výrobců přidává křupinky, sušenky nebo sladový výtažek. Za bezlepkovost generické položky ručit nejde.",
+    "zdroj": "Etiketa Tesco e-shop (Corny proteinová tyčinka 30 % slaný karamel 50 g, EAN 8592084420390), srpen 2026, převzato z curated_foods; reprezentant běžné supermarketové tyčinky"
+  },
+  {
     "id": "proteinove-pecivo-low-carb",
     "name": "Proteinové pečivo low-carb (žemle)",
     "cat": "carb",
@@ -13916,6 +15112,26 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "proteinovy-jogurtovy-napoj",
+    "name": "Proteinový jogurtový nápoj",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 60,
+      "p": 8.3,
+      "c": 5.4,
+      "f": 0.5,
+      "fib": 0
+    },
+    "portion": 250,
+    "portionLabel": "1 lahvička ~250 g",
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "nejiste": [],
+    "zdroj": "Rohlik.cz, produkt 1463164 (Danone YoPRO proteinový jogurtový nápoj jahoda a malina), 26. 8. 2026, převzato z curated_foods; vlákninu zdroj neuvádí, mléčný nápoj ji nemá"
   },
   {
     "id": "proteinovy-pudink",
@@ -14098,6 +15314,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "pstruh-peceny",
+    "name": "Pstruh pečený",
+    "cat": "protein",
+    "per100": {
+      "kcal": 168,
+      "p": 23.8,
+      "c": 0,
+      "f": 7.4,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173718 (Fish, trout, rainbow, farmed, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "pstruh-uzeny",
@@ -14782,6 +16017,49 @@
       "lepek"
     ],
     "nejiste": []
+  },
+  {
+    "id": "rohlik-proteinovy",
+    "name": "Rohlík proteinový",
+    "cat": "carb",
+    "per100": {
+      "kcal": 272,
+      "p": 13,
+      "c": 36,
+      "f": 7,
+      "fib": 4.8,
+      "carbBasis": "available"
+    },
+    "portion": 60,
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "duvod": "Proteinové pečivo mívá kromě pšeničné bílkoviny i mléčnou (syrovátku nebo mléko v prášku). Liší se to podle výrobce.",
+    "zdroj": "Rohlik.cz, produkt 1473917 (Rohlík proteinový), 22. 8. 2026, převzato z curated_foods"
+  },
+  {
+    "id": "rohlik-vicezrnny",
+    "name": "Rohlík vícezrnný",
+    "cat": "carb",
+    "per100": {
+      "kcal": 321,
+      "p": 11,
+      "c": 43,
+      "f": 9.8,
+      "fib": 7.5,
+      "carbBasis": "available"
+    },
+    "portion": 60,
+    "portionLabel": "1 ks ~60 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Rohlík vícezrnný 60 g), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "romadur",
@@ -15494,6 +16772,23 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "ruzickova-kapusta-varena",
+    "name": "Růžičková kapusta vařená",
+    "cat": "veg",
+    "per100": {
+      "kcal": 36,
+      "p": 2.6,
+      "c": 7.1,
+      "f": 0.5,
+      "fib": 2.6,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169971 (Brussels sprouts, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "ryba-maslova",
@@ -16766,6 +18061,25 @@
     "nejiste": []
   },
   {
+    "id": "sled-peceny",
+    "name": "Sleď pečený",
+    "cat": "protein",
+    "per100": {
+      "kcal": 203,
+      "p": 23,
+      "c": 0,
+      "f": 11.6,
+      "fib": 0
+    },
+    "portion": 100,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 175117 (Fish, herring, Atlantic, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "sled-v-oleji",
     "name": "Sleď v oleji (naložený sleď, filety)",
     "cat": "protein",
@@ -16907,6 +18221,24 @@
     "nejiste": []
   },
   {
+    "id": "smetana-na-vareni-bez-laktozy",
+    "name": "Smetana na vaření 10 % bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 119,
+      "p": 3.2,
+      "c": 4.3,
+      "f": 10,
+      "fib": 0
+    },
+    "portion": 50,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Meggle Bezlaktózová smetana na vaření 10 % 200 ml, EAN 8585002505415), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "smetana-zakysana",
     "name": "Smetana zakysaná (smetana, ruská kuchyně)",
     "cat": "dairy",
@@ -16941,6 +18273,24 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "smetanovy-syr-bez-laktozy",
+    "name": "Smetanový sýr bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 190,
+      "p": 7.8,
+      "c": 3.3,
+      "f": 16,
+      "fib": 0
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Arla smetanový sýr natur bez laktózy 200 g, EAN 5711953160226), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "smetanovy-syr-typu-lucina",
@@ -17060,6 +18410,24 @@
     "portion": 250,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "sojove-mleko-proteinove",
+    "name": "Sójové mléko proteinové (nápoj)",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 57,
+      "p": 5,
+      "c": 2.5,
+      "f": 2.8,
+      "fib": 0.9,
+      "carbBasis": "available"
+    },
+    "portion": 250,
+    "portionLabel": "1 sklenice ~250 ml",
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "Výrobce Alpro, alpro.com (Alpro High Protein sójový nápoj 1 l), hodnoty na 100 ml, převzato z curated_foods"
   },
   {
     "id": "sojovy-jogurt-bily",
@@ -17397,6 +18765,40 @@
     "portion": 150,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "spenat-mrazeny-vareny",
+    "name": "Špenát mražený vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 34,
+      "p": 4,
+      "c": 4.8,
+      "f": 0.9,
+      "fib": 3.7,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169288 (Spinach, frozen, chopped or leaf, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "spenat-vareny",
+    "name": "Špenát vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 23,
+      "p": 3,
+      "c": 3.8,
+      "f": 0.3,
+      "fib": 2.4,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168463 (Spinach, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "sproty-v-oleji",
@@ -17915,6 +19317,50 @@
     "nejiste": []
   },
   {
+    "id": "susenky-maslove",
+    "name": "Sušenky máslové",
+    "cat": "snack",
+    "per100": {
+      "kcal": 467,
+      "p": 6.1,
+      "c": 68.9,
+      "f": 18.8,
+      "fib": 0.8,
+      "carbBasis": "total"
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne",
+      "laktoza",
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172819 (Cookies, butter, commercially prepared, unenriched); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "susenky-ovesne",
+    "name": "Sušenky ovesné",
+    "cat": "snack",
+    "per100": {
+      "kcal": 450,
+      "p": 6.2,
+      "c": 68.7,
+      "f": 18.1,
+      "fib": 2.8,
+      "carbBasis": "total"
+    },
+    "portion": 30,
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "duvod": "Sušenky mívají vejce, máslo nebo mléko podle receptury výrobce. Lepek mají jistě (pšeničná mouka), nejisté je jen to živočišné.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 172725 (Cookies, oatmeal, commercially prepared, regular); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "suseny-ananas",
     "name": "Sušený ananas (bez přidaného cukru)",
     "cat": "fruit",
@@ -17980,6 +19426,25 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "syr-tylzsky",
+    "name": "Sýr tylžský 45 %",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 343,
+      "p": 26,
+      "c": 1.2,
+      "f": 26,
+      "fib": 0
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Madeta Tylžský sýr 45 % plátky 100 g, EAN 8593803328362), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "syrova-pomazanka",
@@ -18543,6 +20008,25 @@
     "nejiste": []
   },
   {
+    "id": "tilapie-pecena",
+    "name": "Tilapie pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 128,
+      "p": 26.2,
+      "c": 0,
+      "f": 2.7,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 175177 (Fish, tilapia, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "tlacenka",
     "name": "Tlačenka",
     "cat": "protein",
@@ -18809,6 +20293,26 @@
     "nejiste": []
   },
   {
+    "id": "tortilla-celozrnna",
+    "name": "Tortilla celozrnná",
+    "cat": "carb",
+    "per100": {
+      "kcal": 287,
+      "p": 9,
+      "c": 45,
+      "f": 7.5,
+      "fib": 6.7,
+      "carbBasis": "available"
+    },
+    "portion": 60,
+    "portionLabel": "1 ks ~60 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Rohlik.cz, produkt 1469428 (El Grito Tortilla celozrnná 25 cm), 22. 8. 2026, převzato z curated_foods"
+  },
+  {
     "id": "tortilla-kukuricna",
     "name": "Tortilla kukuřičná",
     "cat": "carb",
@@ -18900,6 +20404,50 @@
     "nejiste": []
   },
   {
+    "id": "toustovy-chleb-proteinovy",
+    "name": "Toustový chléb proteinový",
+    "cat": "carb",
+    "per100": {
+      "kcal": 286,
+      "p": 29,
+      "c": 26,
+      "f": 5.4,
+      "fib": 8.7,
+      "carbBasis": "available"
+    },
+    "portion": 30,
+    "portionLabel": "1 plátek ~30 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "duvod": "Proteinové pečivo mívá kromě pšeničné bílkoviny i mléčnou (syrovátku nebo mléko v prášku). Liší se to podle výrobce.",
+    "zdroj": "Penam Proteinový toust krájený, oficiální zdroj výrobce/řetězce ověřený 21. 8. 2026, převzato z curated_foods"
+  },
+  {
+    "id": "toustovy-chleb-vicezrnny",
+    "name": "Toustový chléb vícezrnný tmavý",
+    "cat": "carb",
+    "per100": {
+      "kcal": 278,
+      "p": 9.5,
+      "c": 49,
+      "f": 3.9,
+      "fib": 4.3,
+      "carbBasis": "available"
+    },
+    "portion": 28,
+    "portionLabel": "1 plátek ~28 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Penam Chléb toustový tmavý vícezrnný 500 g, EAN 8590077310093), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "treska",
     "name": "Treska",
     "cat": "protein",
@@ -18918,6 +20466,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "treska-pecena",
+    "name": "Treska pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 105,
+      "p": 22.8,
+      "c": 0,
+      "f": 0.9,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 171956 (Fish, cod, Atlantic, cooked, dry heat); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "treska-tmava",
@@ -19258,6 +20825,25 @@
       "laktoza"
     ],
     "nejiste": []
+  },
+  {
+    "id": "tvaroh-polotucny-bez-laktozy",
+    "name": "Tvaroh polotučný bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 94,
+      "p": 10,
+      "c": 3.6,
+      "f": 4.4,
+      "fib": 0
+    },
+    "portion": 125,
+    "portionLabel": "125 g",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Globus e-shop (Madeta Jihočeský tvaroh polotučný bez laktózy 250 g, EAN 8593803614137), srpen 2026, převzato z curated_foods"
   },
   {
     "id": "tvaroh-tucny",
@@ -19716,6 +21302,47 @@
     "nejiste": []
   },
   {
+    "id": "vejce-sazene",
+    "name": "Vejce sázené",
+    "cat": "protein",
+    "per100": {
+      "kcal": 196,
+      "p": 13.6,
+      "c": 0.8,
+      "f": 14.8,
+      "fib": 0
+    },
+    "portion": 60,
+    "portionLabel": "1 ks ~60 g",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [
+      "laktoza"
+    ],
+    "duvod": "Míchaná vejce, omeleta i sázené vejce se často dělají s mlékem nebo na másle. Záleží na přípravě, takže laktózu u generické položky vyloučit nejde.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173423 (Egg, whole, cooked, fried); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "vejce-varene",
+    "name": "Vejce vařené (natvrdo)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 155,
+      "p": 12.6,
+      "c": 1.1,
+      "f": 10.6,
+      "fib": 0
+    },
+    "portion": 60,
+    "portionLabel": "1 ks ~60 g",
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 173424 (Egg, whole, cooked, hard-boiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "veprova-jatra",
     "name": "Vepřová játra (syrová)",
     "cat": "protein",
@@ -19732,6 +21359,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "veprova-kotleta-grilovana",
+    "name": "Vepřová kotleta grilovaná (libová)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 173,
+      "p": 27.6,
+      "c": 0,
+      "f": 6.1,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168253 (Pork, fresh, loin, top loin (chops), boneless, separable lean only, cooked, broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "veprova-krkovice",
@@ -19753,6 +21399,25 @@
     "nejiste": []
   },
   {
+    "id": "veprova-krkovice-pecena",
+    "name": "Vepřová krkovice pečená (libová část)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 232,
+      "p": 24.2,
+      "c": 0,
+      "f": 14.3,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 167852 (Pork, fresh, shoulder, blade, boston (roasts), separable lean only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "veprova-kyta-libova",
     "name": "Vepřová kýta libová",
     "cat": "protein",
@@ -19770,6 +21435,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "veprova-kyta-pecena",
+    "name": "Vepřová kýta pečená (libová)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 211,
+      "p": 29.4,
+      "c": 0,
+      "f": 9.4,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168225 (Pork, fresh, leg (ham), whole, separable lean only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "veprova-kytka",
@@ -19811,6 +21495,25 @@
     "nejiste": []
   },
   {
+    "id": "veprova-panenka-pecena",
+    "name": "Vepřová panenka pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 143,
+      "p": 26.2,
+      "c": 0,
+      "f": 3.5,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168250 (Pork, fresh, loin, tenderloin, separable lean only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "veprova-plec",
     "name": "Vepřová plec",
     "cat": "protein",
@@ -19830,6 +21533,25 @@
     "nejiste": []
   },
   {
+    "id": "veprova-plec-pecena",
+    "name": "Vepřová plec pečená (libová)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 228,
+      "p": 26.7,
+      "c": 0,
+      "f": 12.6,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 167848 (Pork, fresh, shoulder, arm picnic, separable lean only, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "veprova-zebra",
     "name": "Vepřová žebra (syrová)",
     "cat": "protein",
@@ -19846,6 +21568,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "veprova-zebra-pecena",
+    "name": "Vepřová žebra pečená",
+    "cat": "protein",
+    "per100": {
+      "kcal": 292,
+      "p": 23,
+      "c": 0,
+      "f": 21.5,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168300 (Pork, fresh, backribs, separable lean and fat, cooked, roasted); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "veprove-koleno",
@@ -19883,6 +21624,25 @@
       "zivocisne"
     ],
     "nejiste": []
+  },
+  {
+    "id": "veprove-mlete-restovane",
+    "name": "Vepřové mleté restované (16 % tuku)",
+    "cat": "protein",
+    "per100": {
+      "kcal": 301,
+      "p": 27.1,
+      "c": 0,
+      "f": 21.4,
+      "fib": 0
+    },
+    "portion": 150,
+    "nonveg": true,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 168374 (Pork, ground, 84% lean / 16% fat, cooked, pan-broiled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "veprovy-bucek",
@@ -20138,6 +21898,24 @@
     "nejiste": []
   },
   {
+    "id": "zakysana-smetana-bez-laktozy",
+    "name": "Zakysaná smetana 15 % bez laktózy",
+    "cat": "dairy",
+    "per100": {
+      "kcal": 161,
+      "p": 3.4,
+      "c": 3.2,
+      "f": 15,
+      "fib": 0
+    },
+    "portion": 30,
+    "obsahuje": [
+      "zivocisne"
+    ],
+    "nejiste": [],
+    "zdroj": "Rohlik.cz, produkt 1324173 (Madeta Jihočeská zakysaná smetana 15 % bezlaktózová), 22. 8. 2026, převzato z curated_foods"
+  },
+  {
     "id": "zampion-bily",
     "name": "Žampion bílý (čerstvý)",
     "cat": "veg",
@@ -20198,6 +21976,57 @@
     "portion": 100,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "zampiony-portobello-grilovane",
+    "name": "Žampiony portobello grilované",
+    "cat": "veg",
+    "per100": {
+      "kcal": 29,
+      "p": 3.3,
+      "c": 4.4,
+      "f": 0.6,
+      "fib": 2.2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169243 (Mushrooms, portabella, grilled); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "zampiony-restovane",
+    "name": "Žampiony restované (bez tuku)",
+    "cat": "veg",
+    "per100": {
+      "kcal": 26,
+      "p": 3.6,
+      "c": 4,
+      "f": 0.3,
+      "fib": 1.8,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169253 (Mushrooms, white, stir-fried); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "zampiony-varene",
+    "name": "Žampiony vařené",
+    "cat": "veg",
+    "per100": {
+      "kcal": 28,
+      "p": 2.2,
+      "c": 5.3,
+      "f": 0.5,
+      "fib": 2.2,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169252 (Mushrooms, white, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "zavarene-broskve-v-nalevu",
@@ -20356,6 +22185,40 @@
     "nejiste": []
   },
   {
+    "id": "zeleny-hrasek-mrazeny-vareny",
+    "name": "Zelený hrášek mražený vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 78,
+      "p": 5.2,
+      "c": 14.3,
+      "f": 0.3,
+      "fib": 4.5,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170017 (Peas, green, frozen, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
+    "id": "zeleny-hrasek-vareny",
+    "name": "Zelený hrášek vařený",
+    "cat": "veg",
+    "per100": {
+      "kcal": 84,
+      "p": 5.4,
+      "c": 15.6,
+      "f": 0.2,
+      "fib": 5.5,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 170420 (Peas, green, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
+  },
+  {
     "id": "zeli-bile",
     "name": "Zelí bílé",
     "cat": "veg",
@@ -20371,6 +22234,23 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "zeli-bile-varene",
+    "name": "Zelí bílé vařené",
+    "cat": "veg",
+    "per100": {
+      "kcal": 23,
+      "p": 1.3,
+      "c": 5.5,
+      "f": 0.1,
+      "fib": 1.9,
+      "carbBasis": "total"
+    },
+    "portion": 150,
+    "obsahuje": [],
+    "nejiste": [],
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 169976 (Cabbage, cooked, boiled, drained, without salt); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "zeli-cervene",
@@ -20479,6 +22359,26 @@
     "nejiste": []
   },
   {
+    "id": "zitny-rohlik",
+    "name": "Žitný rohlík",
+    "cat": "carb",
+    "per100": {
+      "kcal": 311,
+      "p": 14.1,
+      "c": 43.5,
+      "f": 7.5,
+      "fib": 6.8,
+      "carbBasis": "available"
+    },
+    "portion": 60,
+    "portionLabel": "1 ks ~60 g",
+    "obsahuje": [
+      "lepek"
+    ],
+    "nejiste": [],
+    "zdroj": "Etiketa Tesco e-shop (Rohlík žitný 60 g), srpen 2026, převzato z curated_foods"
+  },
+  {
     "id": "zluty-meloun",
     "name": "Žlutý meloun",
     "cat": "fruit",
@@ -20493,6 +22393,30 @@
     "bezny": true,
     "obsahuje": [],
     "nejiste": []
+  },
+  {
+    "id": "zmrzlina-vanilkova",
+    "name": "Zmrzlina vanilková",
+    "cat": "snack",
+    "per100": {
+      "kcal": 207,
+      "p": 3.5,
+      "c": 23.6,
+      "f": 11,
+      "fib": 0.7,
+      "carbBasis": "total"
+    },
+    "portion": 100,
+    "portionLabel": "2 kopečky ~100 g",
+    "obsahuje": [
+      "zivocisne",
+      "laktoza"
+    ],
+    "nejiste": [
+      "lepek"
+    ],
+    "duvod": "Sladkosti a pochutiny se vyrábějí na linkách, kde se zpracovává i pšenice, a část výrobců přidává křupinky, sušenky nebo sladový výtažek. Za bezlepkovost generické položky ručit nejde.",
+    "zdroj": "USDA FoodData Central SR Legacy, FDC 167575 (Ice creams, vanilla); ověřeno přes api.nal.usda.gov 25. 9. 2026"
   },
   {
     "id": "zverinova-pecene",

@@ -14,14 +14,14 @@
 //
 // Závislosti (načítá si je sám, líně, až když Martin sekci otevře):
 //   /assets/meal-gen.js   window.MealGen
-//   /assets/food-db.json  1192 potravin s dietními tagy
+//   /assets/food-db.json  1294 potravin s dietními tagy (od 25. 9. 2026)
 //   ./pruvodce-sablona.js window.PruvodceSablona
 (function (global) {
   'use strict';
 
   var FOOD = null;          // pole potravin, načte se jednou za život stránky
   var MG_URL = '/assets/meal-gen.js?v=20260906b';
-  var DB_URL = '/assets/food-db.json?v=20260902c';
+  var DB_URL = '/assets/food-db.json?v=20260925a';
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
