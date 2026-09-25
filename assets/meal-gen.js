@@ -18,8 +18,8 @@
   // ⭐⭐ [2026-09-05, sjednocení s appkou po revizi B] GOAL už neříká „kolik % TDEE",
   // ale jen TEMPO: % váhy za týden u hubnutí, kg za týden u nabírání. Přesně tak to
   // dělá appka (`src/engine/goals.ts`, `computeStartingGoals`). Bílkoviny a tuk appka
-  // podle cíle nemění (vždy 1,8 g/kg a 0,8 g/kg), proto zmizely odsud a jsou to
-  // konstanty BILKOVINY_G_PER_KG a TUK_G_PER_KG níž.
+  // podle cíle nemění (bílkoviny 1,8 g/kg, tuk od 25. 9. 2026 30 % kcal), proto zmizely
+  // odsud a jsou to konstanty BILKOVINY_G_PER_KG a TUK_CIL_PCT_KCAL níž.
   // ⛔ Mapování nálepky na tempo je NAPEVNO, appka ho na webu jako volbu nemá:
   // hubnutí 1,0 %/týden a mírné hubnutí 0,5 %/týden jsou appkové karty „Svižné" a
   // „Pomalé" (CUT_TEMPO, src/app/onboarding/index.tsx), mírný nárůst +0,25 kg/týden
@@ -51,10 +51,13 @@
   var CUT_TEMPO_STROP_KG = 1.0;       // appka ENGINE_CONFIG.MAX_RATE_KG_PER_WEEK
   var BULK_TEMPO_STROP_KG = 0.5;      // appka BULK_RATE_MAX_KG
   var BILKOVINY_G_PER_KG = 1.8;       // appka PROTEIN_G_PER_KG_DEFAULT
-  var TUK_G_PER_KG = 0.8;             // appka FAT_G_PER_KG_DEFAULT
-  var BILKOVINY_ABS_MIN_G_PER_KG = 1.2; // appka PROTEIN_G_PER_KG_ABS_MIN
-  var TUK_MIN_PCT_KCAL = 22;          // appka FAT_MIN_PCT_KCAL, podlaha tuku
-  var TUK_OBEZITA_PCT_KCAL = 25;      // appka FAT_OBESE_PCT_KCAL, od BMI 30
+  // ⭐⭐ [2026-09-25] TUK podle Martinovy pozice: 25 až 35 % kalorií, nikdy pod 20 %.
+  // Dřív 0,8 g/kg s podlahou 22 % a bez stropu: 64 % profilů mělo CÍL pod 25 % a 8 %
+  // vygenerovaných dnů tuk pod 20 % (ověření kola 1, 25. 9. 2026). Teď cíl 30 % kcal pro
+  // všechny, podlaha 25 % zaokrouhlená nahoru, strop 35 % zaokrouhlený dolů.
+  var TUK_CIL_PCT_KCAL = 30;          // appka FAT_TARGET_PCT_KCAL
+  var TUK_MIN_PCT_KCAL = 25;          // appka FAT_MIN_PCT_KCAL, podlaha tuku
+  var TUK_MAX_PCT_KCAL = 35;          // appka FAT_MAX_PCT_KCAL, strop tuku
   var OBEZITA_BMI = 30;               // appka OBESITY_BMI
   var ADJ_PODIL_NADVAHY = 0.25;       // appka ADJ_EXCESS_FRACTION
   var SACHARIDY_PODLAHA_G = 100;      // appka CARB_FLOOR_G (dřív tu bylo jen 40)
@@ -77,13 +80,6 @@
     var idealKg = 25 * m * m;
     return idealKg + ADJ_PODIL_NADVAHY * (w - idealKg);
   }
-  /** Appka `isObeseBmi`. Neznámá výška se chová jako „ne", stejně jako appka. */
-  function jeObezitaBmi(w, h) {
-    if (!h || h <= 0) return false;
-    var m = h / 100;
-    var bmiVal = w / (m * m);
-    return isFinite(bmiVal) && bmiVal >= OBEZITA_BMI;
-  }
   /** Appka `capDeficitKcal`: deficit smí být max STROP_DEFICITU_PCT_TDEE % z TDEE. */
   function stropDeficituKcal(tdee, deficitKcal) {
     if (!isFinite(tdee) || tdee <= 0) return deficitKcal;
@@ -103,25 +99,34 @@
   function oriznoutTempoNarustu(pozadovaneKgTyden) {
     return clampNum(Math.abs(pozadovaneKgTyden), 0, BULK_TEMPO_STROP_KG);
   }
-  /** Appka `fatFloorG`: podlaha tuku, TUK_MIN_PCT_KCAL procent kalorií. */
-  function tukPodlahaG(kcal) { return Math.round((TUK_MIN_PCT_KCAL / 100) * kcal / 9); }
-  /** Appka `fatTargetG`: od BMI 30 procento kalorií, jinak g/kg referenční váhy. */
-  function tukCilG(kcal, w, h) {
-    if (jeObezitaBmi(w, h)) return Math.round((TUK_OBEZITA_PCT_KCAL / 100) * kcal / 9);
-    return Math.round(referencniVahaKg(w, h) * TUK_G_PER_KG);
+  /** Appka `fatGForPct`: gramy tuku pro `pct` % kcal; podlaha nahoru, strop dolů
+   *  (epsilon chrání před 450.00000001 / 9), cíl na nejbližší gram. */
+  function tukGProPct(kcal, pct, smer) {
+    var g = (pct / 100) * kcal / 9;
+    if (smer === 'nahoru') return Math.ceil(g - 1e-9);
+    if (smer === 'dolu') return Math.floor(g + 1e-9);
+    return Math.round(g);
   }
+  /** Appka `fatFloorG`: podlaha tuku, TUK_MIN_PCT_KCAL procent kalorií, nahoru. */
+  function tukPodlahaG(kcal) { return tukGProPct(kcal, TUK_MIN_PCT_KCAL, 'nahoru'); }
+  /** Appka `fatCeilG`: strop tuku, TUK_MAX_PCT_KCAL procent kalorií, dolů. */
+  function tukStropG(kcal) { return tukGProPct(kcal, TUK_MAX_PCT_KCAL, 'dolu'); }
+  /** Appka `fatTargetG`: TUK_CIL_PCT_KCAL procent kalorií pro všechny. */
+  function tukCilG(kcal) { return tukGProPct(kcal, TUK_CIL_PCT_KCAL, 'nejbliz'); }
   /**
-   * Appka `macroSplit`: bílkoviny mají přednost (dané dopředu), tuk smí klesnout
-   * až k podlaze TUK_MIN_PCT_KCAL % kcal, sacharidy jsou zbytek s podlahou
-   * SACHARIDY_PODLAHA_G g. Když sacharidy pod podlahu spadnou, ustupuje nejdřív
-   * tuk (k jeho podlaze), pak bílkoviny (k proteinFloorG), a teprve když ani to
-   * nestačí, zůstanou sacharidy pod podlahou. Celkové kcal se přitom nemění.
+   * Appka `macroSplit`: bílkoviny mají přednost (dané dopředu), tuk je cíl oříznutý do
+   * pásma TUK_MIN_PCT_KCAL až TUK_MAX_PCT_KCAL % kcal a smí klesnout až k podlaze,
+   * sacharidy jsou zbytek s podlahou SACHARIDY_PODLAHA_G g. Když sacharidy pod podlahu
+   * spadnou, ustoupí tuk (k jeho podlaze), a když ani to nestačí, zůstanou sacharidy
+   * pod podlahou. ⭐ [2026-09-25, Martin] Priorita bílkoviny > tuk v pásmu > sacharidy:
+   * bílkoviny se kvůli podlaze sacharidů NESNIŽUJÍ (dřív k 1,2 g/kg). Kcal se nemění.
    */
-  function rozdelMakra(kcal, bilkovinyG, cilTukG, proteinFloorG) {
+  function rozdelMakra(kcal, bilkovinyG, cilTukG) {
     var floor = tukPodlahaG(kcal);
+    var strop = tukStropG(kcal);
     var maxTukCoSeVejde = Math.floor((kcal - bilkovinyG * 4) / 9);
     var bilk = Math.round(bilkovinyG);
-    var tuk = Math.max(floor, Math.min(Math.round(cilTukG), maxTukCoSeVejde));
+    var tuk = Math.max(floor, Math.min(Math.round(cilTukG), strop, maxTukCoSeVejde));
     function sacharidy() { return Math.max(0, Math.round((kcal - bilk * 4 - tuk * 9) / 4)); }
     var sach = sacharidy();
 
@@ -130,14 +135,6 @@
       if (mistoVTuku > 0) {
         var potrebaKcal = (SACHARIDY_PODLAHA_G - sach) * 4;
         tuk -= Math.min(mistoVTuku, Math.ceil(potrebaKcal / 9));
-        sach = sacharidy();
-      }
-    }
-    if (sach < SACHARIDY_PODLAHA_G && proteinFloorG != null) {
-      var mistoVBilk = bilk - Math.round(proteinFloorG);
-      if (mistoVBilk > 0) {
-        var potrebaKcal2 = (SACHARIDY_PODLAHA_G - sach) * 4;
-        bilk -= Math.min(mistoVBilk, Math.ceil(potrebaKcal2 / 4));
         sach = sacharidy();
       }
     }
@@ -216,15 +213,14 @@
       }
     }
 
-    // [fix 2026-07-14, přepsáno 2026-09-05 na appkovou definici] Bílkoviny (a od
-    // BMI 30 i tuk) se počítají z REFERENČNÍ váhy, ne rovnou z aktuální, viz
+    // [fix 2026-07-14, přepsáno 2026-09-05 na appkovou definici] Bílkoviny se počítají
+    // z REFERENČNÍ váhy, ne rovnou z aktuální (tuk je od 25. 9. 2026 % kcal), viz
     // `referencniVahaKg` výš. Appka referenční váhu mění až od BMI 30 (klinická
     // „adjusted body weight"), ne od hranice „výška minus 100", takže se běžná
     // nadváha (BMI 25 až 30) už nedotkne.
     var refKg = referencniVahaKg(w, h);
     var bilkovinyCilG = Math.round(refKg * BILKOVINY_G_PER_KG);
-    var bilkovinyPodlahaG = Math.round(refKg * BILKOVINY_ABS_MIN_G_PER_KG);
-    var makra = rozdelMakra(kcal, bilkovinyCilG, tukCilG(kcal, w, h), bilkovinyPodlahaG);
+    var makra = rozdelMakra(kcal, bilkovinyCilG, tukCilG(kcal));
     // ⛔ appka NEDOROVNÁVÁ kcal zpátky ze součtu maker (goals.ts, komentář u
     // `macroSplit`): kcal cíl zůstává pevný, makra se kolem něj jen poskládají.
     // Dřív web kcal přepočítal (protein*4 + carbs*4 + fat*9), takže součet sedřel
@@ -243,6 +239,78 @@
              // ⭐ [2026-09-05] nové: tempo hubnutí/nabírání a věta pro případ, kdy ho
              // appka (a teď stejně i web) musela kvůli stropu zpomalit.
              tempoKgTyden: tempoKgTyden, tempoNote: tempoNote };
+  }
+
+  // ---------------------------------------------------------------------------
+  // ⛔⛔ [2026-09-25] KONTROLA VSTUPŮ PŘED VÝPOČTEM (ověření kola 1, nález H4).
+  // JEDNA funkce pro všechny formuláře webu: veřejná kalkulačka, generátor zdarma, obě
+  // kalkulačky a generátor v Academy, kalkulačka videokurzu. Zrcadlo appky
+  // `kontrolaVstupu` v `src/engine/goals.ts` (onboarding); výsledky i texty hlídá
+  // `scripts/parita-cile.mjs` v repu appky. Do 25. 9. dostala 14letá dívka s BMI 16,5
+  // plán na hubnutí a prázdný formulář v Academy vytiskl „BMR -161 kcal".
+  // ⛔ Při `ok: false` se nic nepočítá, nic neukazuje a nic nejde do tisku/PDF.
+  // Hranice jsou konstanty tady a v appce, mění se na obou stranách naráz.
+  // ---------------------------------------------------------------------------
+  var VSTUP_MIN_VEK = 18;          // appka VSTUP_MIN_VEK (přepínač)
+  var VSTUP_MAX_VEK = 100;
+  var VSTUP_MIN_VYSKA_CM = 100;
+  var VSTUP_MAX_VYSKA_CM = 250;
+  var VSTUP_MIN_VAHA_KG = 30;
+  var VSTUP_MAX_VAHA_KG = 400;
+  var BMI_PODVAHA = 18.5;
+  var BMI_CIL_VAROVANI = 20;
+  var KONTROLA_VSTUPU_TEXTY = {
+    chybi: 'Vyplň věk, výšku a váhu čísly.',
+    vek_mimo: 'Věk zadej v letech, nejvýš ' + VSTUP_MAX_VEK + '.',
+    nezletily: 'Výpočet je pro dospělé od ' + VSTUP_MIN_VEK + ' let. Tělo, které ještě roste, potřebuje jiná '
+      + 'čísla a ta má nastavit lékař, u dětí a dospívajících pediatr.',
+    vyska_mimo: 'Výšku zadej v centimetrech, v rozmezí ' + VSTUP_MIN_VYSKA_CM + ' až ' + VSTUP_MAX_VYSKA_CM + ' cm.',
+    vaha_mimo: 'Váhu zadej v kilogramech, v rozmezí ' + VSTUP_MIN_VAHA_KG + ' až ' + VSTUP_MAX_VAHA_KG + ' kg.',
+    podvaha_hubnuti: 'BMI ti vychází pod 18,5, to je podváha. Hubnutí ti proto nespočítám. Vyber udržení '
+      + 'nebo nabírání a o dalším postupu se poraď s lékařem.',
+    podvaha: 'BMI ti vychází pod 18,5, to je podváha. Čísla ti spočítám, ale ukaž je i lékaři.',
+    cil_podvaha: 'Cílová váha by znamenala BMI pod 18,5, tedy podváhu. Na takový cíl plán nestavím. '
+      + 'Zvol vyšší cílovou váhu a poraď se s lékařem.',
+    cil_nizky: 'Cílová váha vychází na BMI pod 20, to je spodní okraj normy. Zvaž, jestli je to '
+      + 'opravdu tvůj cíl, a klidně to prober s lékařem.'
+  };
+  /** Appka `cisloZVstupu`: number beze změny, text s čárkou i tečkou, prázdné = NaN. */
+  function cisloZVstupu(x) {
+    if (typeof x === 'number') return x;
+    if (typeof x !== 'string') return NaN;
+    var t = x.trim().replace(',', '.');
+    return t === '' ? NaN : Number(t);
+  }
+  /**
+   * Appka `kontrolaVstupu`. Vstup: { age, height, weight, goal, targetWeight? } ve tvaru,
+   * jaký dostává `computeTargets` (goal = klíč z GOAL). Hubnutí = GOAL[goal].kind 'cut'.
+   * Vrací { ok, kod, text, varovani: [{kod, text}] }.
+   */
+  function kontrolaVstupu(inp) {
+    inp = inp || {};
+    var T = KONTROLA_VSTUPU_TEXTY;
+    function stop(kod) { return { ok: false, kod: kod, text: T[kod], varovani: [] }; }
+    var vek = cisloZVstupu(inp.age), vyska = cisloZVstupu(inp.height), vaha = cisloZVstupu(inp.weight);
+    var vse = [vek, vyska, vaha].every(function (n) { return isFinite(n) && n > 0; });
+    if (!vse) return stop('chybi');
+    if (vek > VSTUP_MAX_VEK) return stop('vek_mimo');
+    if (vek < VSTUP_MIN_VEK) return stop('nezletily');
+    if (vyska < VSTUP_MIN_VYSKA_CM || vyska > VSTUP_MAX_VYSKA_CM) return stop('vyska_mimo');
+    if (vaha < VSTUP_MIN_VAHA_KG || vaha > VSTUP_MAX_VAHA_KG) return stop('vaha_mimo');
+    var m2 = (vyska / 100) * (vyska / 100);
+    var varovani = [];
+    var g = GOAL[inp.goal];
+    var hubnuti = !!(g && g.kind === 'cut');
+    if (vaha / m2 < BMI_PODVAHA) {
+      if (hubnuti) return stop('podvaha_hubnuti');
+      varovani.push({ kod: 'podvaha', text: T.podvaha });
+    }
+    var cil = cisloZVstupu(inp.targetWeight);
+    if (isFinite(cil) && cil > 0) {
+      if (cil / m2 < BMI_PODVAHA) return stop('cil_podvaha');
+      if (cil / m2 < BMI_CIL_VAROVANI) varovani.push({ kod: 'cil_nizky', text: T.cil_nizky });
+    }
+    return { ok: true, kod: null, text: null, varovani: varovani };
   }
 
   /**
@@ -1034,6 +1102,34 @@
       out.push({ name: names[i], kind: kind, targetKcal: Math.round(mKcal), items: items });
     }
 
+    // ⭐ [2026-09-25] DOSYPÁNÍ TUKU ZA CELÝ DEN (tuk 25 až 35 % kcal, nikdy pod 20 %).
+    // Práh 4 g výš platí pro JEDNO jídlo; u šesti jídel s libovou šunkou tak tuk nedostalo
+    // žádné jídlo a den skončil na 18 % tuku. Schodky jídel bez tukové položky se sečtou
+    // a nad 4 g dostane tuk slané hlavní jídlo s největším schodkem.
+    // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+    (function () {
+      var dluhTuku = 0, cilJidla = -1, nejvetsiSchodek = -Infinity;
+      out.forEach(function (m, ix) {
+        if (m.items.some(function (it) { return it.food.cat === 'fat'; })) return;
+        var used = m.items.reduce(function (s, it) { return s + macrosFor(it.food, it.grams).f; }, 0);
+        var schodek = targets.fat * dist[ix] - used;
+        if (schodek > 0) dluhTuku += schodek;
+        var slane = m.items.some(function (it) { return it.food.cat === 'veg'; });
+        if ((m.kind === 'lunch' || m.kind === 'dinner') && slane && schodek > nejvetsiSchodek) {
+          nejvetsiSchodek = schodek;
+          cilJidla = ix;
+        }
+      });
+      if (dluhTuku > 4 && cilJidla >= 0) {
+        var fat = pick(db, 'fat', seed + cilJidla + 1, SLANY_TUK);
+        if (fat && fat.per100.f) {
+          var stropF = stropTuku(fat);
+          var fg = Math.min(Math.max(round((dluhTuku / fat.per100.f) * 100, 1), 5), stropF != null ? stropF : 30);
+          out[cilJidla].items.push({ food: fat, grams: fg });
+        }
+      }
+    })();
+
     // ---- normalizační pass: doraz makra na denní cíl škálováním hlavních zdrojů ----
     var all = [];
     out.forEach(function (m) { m.items.forEach(function (it) { all.push(it); }); });
@@ -1433,6 +1529,9 @@
     all.forEach(function (it) {
       var step = (it.food.cat === 'fat' && it.grams < 40) ? 1 : 5;
       it.grams = Math.max(step, Math.round(it.grams / step) * step);
+      // ⭐ [2026-09-25] Tuk 3 až 7 g = lžička 5 g, UŽ TADY před mikro-ořezem sacharidů,
+      // ať kalorie navíc dorovná ořez přílohy. ⛔ Táž změna je v appce.
+      if (it.food.cat === 'fat' && it.grams >= 3 && it.grams < 8) it.grams = 5;
       // [fix 2026-08-19] Po finálním kcal trimu podlahu přílohy NEOBNOVIT natvrdo.
       // Trim už trefil cíl (+1,9 %); 10 g → 25-40 g vracelo přestřel (+13 %).
       // Zvedni přílohu jen dokud se den vejde do +5 %, a na viditelných 15 g
@@ -1487,8 +1586,11 @@
     // [fix 2026-07-14] minigramáže („přidej 1 g oleje") v klientském plánu nemají co dělat —
     // nebílkovinné položky pod 8 g vyhodíme (pár kalorií totály poctivě ukážou);
     // bílkovinné zdroje drží podlahu 30 g z runScale, ty nemažeme.
+    // ⭐ [2026-09-25] Tuk 3 až 7 g se NEVYHAZUJE: zaokrouhlení výš z něj udělalo lžičku (5 g),
+    // tuk se tu drží od 5 g. Vyhozením dvou lžiček oleje spadl vegan den na 1 200 kcal
+    // z 31 na 18 % tuku. ⛔ Táž změna v appce.
     out.forEach(function (m) {
-      m.items = m.items.filter(function (it) { return it.food.cat === 'protein' || it.grams >= 8; });
+      m.items = m.items.filter(function (it) { return it.food.cat === 'protein' || it.grams >= (it.food.cat === 'fat' ? 5 : 8); });
     });
     // (Průchod minimálních porcí podle R5 běží až za vlákninou, viz níž: optimalizace
     //  vlákniny umí gramáž ještě snížit, tak nemá smysl řešit ji dvakrát.)
@@ -2026,6 +2128,70 @@
       if (!presunuto) neresitelne[zdroj] = 1;
     }
 
+    // ⭐ [2026-09-25] PODLAHA TUKU DNE: pod TUK_MIN_PCT_KCAL (25 %) kcal skutečného dne se tuk
+    // dosype, dokud to kalorie snesou (do +5 % cíle). Pojistka na skrytý tuk výš umí u malých
+    // dnů s vysokým cílem bílkovin srazit tuk až na 16,7 % a nic ho nevrátilo. Po 1 g do tukové
+    // položky s nejméně bílkovinou, nejvýš do jejího stropu; bez tukové položky dostane slané
+    // hlavní jídlo 5 g oleje. ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`).
+    if (!lowCarb && targets.kcal > 0) {
+      var limitKcalP = targets.kcal * 1.05;
+      var pridanTuk = false;
+      for (var krokP = 0; krokP < 300; krokP++) {
+        var fDneP = 0, kcalDneP = 0;
+        out.forEach(function (m) { m.items.forEach(function (it) { var mm = macrosFor(it.food, it.grams); fDneP += mm.f; kcalDneP += mm.kcal; }); });
+        if (kcalDneP <= 0 || (fDneP * 900) / kcalDneP >= TUK_MIN_PCT_KCAL) break;
+        var kand = null;
+        out.forEach(function (m) { m.items.forEach(function (it) {
+          if (it.food.cat !== 'fat') return;
+          var stT = stropTuku(it.food);
+          if (it.grams + 1 > (stT != null ? stT : CAP.fat)) return;
+          var bT = it.food.per100.p || 0, bK = kand ? (kand.food.per100.p || 0) : 0;
+          if (!kand || bT < bK || (bT === bK && it.grams > kand.grams)) kand = it;
+        }); });
+        if (!kand) {
+          if (pridanTuk) break;
+          var cilJ = -1;
+          for (var ij = 0; ij < out.length; ij++) {
+            var mj = out[ij];
+            if ((mj.kind === 'lunch' || mj.kind === 'dinner') && mj.items.some(function (it) { return it.food.cat === 'veg'; })) { cilJ = ij; break; }
+          }
+          if (cilJ < 0) break;
+          var tf = pick(db, 'fat', seed + cilJ + 7, SLANY_TUK);
+          if (!tf || !tf.per100.f || kcalDneP + (tf.per100.kcal * 5) / 100 > limitKcalP) break;
+          out[cilJ].items.push({ food: tf, grams: 5 });
+          pridanTuk = true;
+          continue;
+        }
+        if (kcalDneP + kand.food.per100.kcal / 100 > limitKcalP) break;
+        kand.grams += 1;
+      }
+    }
+
+    // ⭐ [2026-09-25] STROP TUKU DNE: nad TUK_MAX_PCT_KCAL (35 %) kcal SKUTEČNÉHO dne ne.
+    // Když den mine kalorie dolů (vysoké cíle ve třech až čtyřech jídlech), stejné gramy
+    // tuku jsou větší podíl menšího dne; u sportovců nad 2 800 kcal to bylo 19 % dnů nad
+    // 35 %. Ubírá se PŘIDANÝ tuk (kategorie `fat`, po 1 g, nejdřív položka s nejméně
+    // bílkovinou, pak největší, nejníž 5 g).
+    // Strop je vyšší, když ho má vyšší už cíl (ruční cíl), keto se netýká.
+    // ⛔ Táž logika je v appce (`src/engine/meal-gen-core.ts`), hlídá parita-jidelnicku.mjs.
+    if (!lowCarb && targets.kcal > 0) {
+      var stropPctTuku = Math.max(TUK_MAX_PCT_KCAL, (targets.fat * 900) / targets.kcal);
+      for (var krokT = 0; krokT < 400; krokT++) {
+        var fDne = 0, kcalDneT = 0;
+        out.forEach(function (m) { m.items.forEach(function (it) { var mm = macrosFor(it.food, it.grams); fDne += mm.f; kcalDneT += mm.kcal; }); });
+        if (kcalDneT <= 0 || (fDne * 900) / kcalDneT <= stropPctTuku) break;
+        var nejvetsiT = null;
+        out.forEach(function (m) { m.items.forEach(function (it) {
+          if (it.food.cat !== 'fat' || it.grams <= 5) return;
+          // Nejdřív čistý tuk (olej, máslo): ořechy a semínka nesou bílkovinu a ta má přednost.
+          var bT = it.food.per100.p || 0, bN = nejvetsiT ? (nejvetsiT.food.per100.p || 0) : 0;
+          if (!nejvetsiT || bT < bN || (bT === bN && it.grams > nejvetsiT.grams)) nejvetsiT = it;
+        }); });
+        if (!nejvetsiT) break;
+        nejvetsiT.grams -= 1;
+      }
+    }
+
     // přepočítej totály po normalizaci
     out.forEach(function (m) {
       m.totals = m.items.reduce(function (s, it) {
@@ -2461,7 +2627,8 @@
     return varovani.length ? varovani : undefined;
   }
 
-  global.MealGen = { computeTargets: computeTargets, ketoTargets: ketoTargets, assembleDay: assembleDay,
+  global.MealGen = { computeTargets: computeTargets, kontrolaVstupu: kontrolaVstupu,
+    TUK_CIL_PCT_KCAL: TUK_CIL_PCT_KCAL, ketoTargets: ketoTargets, assembleDay: assembleDay,
     assembleWeek: assembleWeek, shoppingListFromDays: shoppingListFromDays, swapItem: swapItem,
     macrosFor: macrosFor, cileTreninkVolno: cileTreninkVolno, nouzovyDen: nouzovyDen,
     typyJidel: typyJidel, BEZ_VARENI_ID: BEZ_VARENI_ID,

@@ -20,7 +20,7 @@
   'use strict';
 
   var FOOD = null;          // pole potravin, načte se jednou za život stránky
-  var MG_URL = '/assets/meal-gen.js?v=20260906b';
+  var MG_URL = '/assets/meal-gen.js?v=20260925a';
   var DB_URL = '/assets/food-db.json?v=20260925a';
 
   function esc(s) {
@@ -111,9 +111,11 @@
       }
     }
     // Sacharidy a tuky jsou v `client_targets` nepovinné, generátor je ale potřebuje.
-    // Dopočet drží stejnou logiku jako `computeTargets`: tuk 28 % kalorií, zbytek sacharidy.
+    // Dopočet drží stejnou logiku jako `computeTargets`: tuk MealGen.TUK_CIL_PCT_KCAL (30 % kalorií
+    // od 25. 9. 2026, dřív natvrdo 28 %), zbytek sacharidy. `|| 30` je pojistka proti staré
+    // meal-gen.js z cache (stejný důvod jako u vlákniny níž).
     if (c.kcal && c.protein) {
-      if (c.fat == null) c.fat = Math.round(c.kcal * 0.28 / 9);
+      if (c.fat == null) c.fat = Math.round(c.kcal * ((Number(global.MealGen && global.MealGen.TUK_CIL_PCT_KCAL) || 30) / 100) / 9);
       if (c.carbs == null) c.carbs = Math.max(40, Math.round((c.kcal - c.protein * 4 - c.fat * 9) / 4));
       // ⛔ [2026-09-02] Podlaha vlákniny se sem UŽ NEPÍŠE číslem. Do té doby tu stálo 25,
       // zatímco appka i onboarding počítaly s 20, takže admin viděl u téhož klienta jiné

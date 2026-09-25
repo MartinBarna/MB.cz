@@ -151,6 +151,8 @@
         <button class="btn" id="gen">Spočítat a vygenerovat den →</button>
         <span class="brandline" id="dbstate">Načítám databázi potravin…</span>
       </div>
+      <!-- [2026-09-25] Hláška sdílené kontroly vstupů (MealGen.kontrolaVstupu). -->
+      <p class="note" id="vstupChyba" role="alert" style="color:#F6CD63;font-size:.95rem;" hidden></p>
     </div>
 
     <div id="result" class="hidden">
@@ -162,7 +164,11 @@
         <div class="targets" id="targets"></div>
         <div id="meals"></div>
         <div class="mt" style="border-radius:12px;border:1px solid var(--line);margin-top:6px;"><b style="color:#fff;">Den celkem</b><span id="daytot"></span></div>
-        <p class="note">Hodnoty jsou orientační (běžné potravinové tabulky). Tohle je výchozí den. Uprav porce podle sebe, chutí a reality. Cílové makro vychází z tvých údajů, sestava ±10 %.</p>
+        <!-- [2026-09-25] Varování dne (den mimo ±5 % kalorií) jako v Academy generátoru. Dřív
+             se tu nezobrazovalo nic a věta níž slibovala „sestava ±10 %", i když den uměl minout
+             cíl o 20 i víc procent (ověření kola 1, H3). -->
+        <p class="note" id="dayWarnNote" role="status" style="color:#F6CD63;" hidden></p>
+        <p class="note">Hodnoty jsou orientační (běžné potravinové tabulky). Tohle je výchozí den. Uprav porce podle sebe, chutí a reality. Cílové makro vychází z tvých údajů. Den skládám do ±5 % kalorií cíle; když to z běžných porcí nejde, napíšu to přímo pod den.</p>
         <div class="actions no-print">
           <button class="btn ghost" id="regen">↻ Vygenerovat jiný den</button>
           <a class="btn ghost" href="/nastroje-zdarma/trenink/">🏋️ Vyzkoušet i generátor tréninku →</a>
@@ -225,7 +231,7 @@
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260906b"></script>
+  <script src="/assets/meal-gen.js?v=20260925a"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null;
@@ -265,8 +271,25 @@
       if($('bezLepku').checked) p.bezLepku=true;
       return p;
     }
+    // [2026-09-25] Tatáž věta jako v Academy generátoru (`akademie/nastroje/jidelnicek`,
+    // dayWarnText) a v appce: den, který mine kalorie o víc než 5 %, to řekne.
+    function dayWarnText(plan){
+      if(!plan.warnings || !plan.warnings.length) return null;
+      if(!(plan.targets.kcal>0)) return null;
+      var pct=Math.abs(plan.totals.kcal-plan.targets.kcal)/plan.targets.kcal*100;
+      var pctStr=pct.toFixed(1).replace('.', ',');
+      var smer=(plan.totals.kcal<plan.targets.kcal)?'pod':'nad';
+      var text='Den vyšel o '+pctStr+' % '+smer+' cílem. U téhle kombinace diety a počtu jídel to '+
+        'z běžných potravin líp nesložím, přidej si tuk nebo bílkovinu podle chuti.';
+      if($('keto').checked && ($('vegan').checked || $('vegetarian').checked)){
+        text+=' Keto bez živočišných zdrojů se skládá špatně, zvaž víc jídel denně.';
+      }
+      return text;
+    }
     function render(plan){
       var t=plan.targets;
+      var wt=dayWarnText(plan), wn=$('dayWarnNote');
+      if(wn){ wn.hidden=!wt; wn.textContent=wt||''; }
       $('targets').innerHTML=
         '<div class="tcard"><b>'+t.kcal+'</b><span>kcal</span></div>'+
         '<div class="tcard"><b>'+t.protein+' g</b><span>Bílkoviny</span></div>'+
@@ -291,6 +314,14 @@
     function generate(newSeed){
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
+      // ⛔⛔ [2026-09-25] Sdílená kontrola vstupů enginu (zrcadlo appky). Dřív tu nebylo NIC:
+      // prázdný formulář vyrobil den a 14 let s BMI 16,5 dostalo „cíl: Hubnutí".
+      if(!window.MealGen.kontrolaVstupu){ alert('Stránka se načetla ze starší verze, obnov ji prosím (Ctrl+F5).'); return; }
+      var kontrola=window.MealGen.kontrolaVstupu(inputs());
+      var vch=$('vstupChyba');
+      if(!kontrola.ok){ $('result').classList.add('hidden'); vch.textContent=kontrola.text; vch.hidden=false; return; }
+      vch.textContent=kontrola.varovani.map(function(v){ return v.text; }).join(' ');
+      vch.hidden=!kontrola.varovani.length;
       lastTargets=window.MealGen.computeTargets(inputs());
       if($("keto").checked) lastTargets=window.MealGen.ketoTargets(lastTargets); // kolo 3: keto předvolba, matematika v enginu
       var plan=window.MealGen.assembleDay(lastTargets,{ meals:+$('mealsCount').value, prefs:prefs(), db:DB, seed:seed });

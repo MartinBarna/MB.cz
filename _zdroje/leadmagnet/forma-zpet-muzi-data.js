@@ -39,8 +39,21 @@ module.exports = {
   REF: { sex: 'muz', age: 40, height: 180, weight: 90, activity: 'lehka', goal: 'mirne_hubnuti' },
   // Stránka forma-zpet i OG obrázek slibují 2 000 kcal.
   KCAL_CIL: 2000,
-  // Tuk na kg referenční váhy (Martin 25. 9. 2026: 0,7, stejně jako ženský plán).
-  TUK_G_NA_KG: 0.7,
+  // Tuk dne v % kcal cíle. ⭐ [25. 9. 2026 večer] Martinova pozice: tuk 25 až 35 % kcal v KAŽDÉM
+  // dni KAŽDÉ varianty (základ, „míň", „víc"), nikdy pod 20 %. Dřív 0,7 g/kg (63 g, 28,4 %):
+  // „víc" dny měly 25,1 až 27,2 %, ale sobota 21,1 až 21,8 %. Změřeno 25. 9.: všemi variantami
+  // projde 29 až 31, 28 ne („víc" pod 25 %). 30 = totéž jako engine appky i webu. Build hlídá.
+  TUK_PCT_KCAL: 30,
+  // „Potřebuješ víc" (text PDF): porce sacharidu (50 g rýže, 200 g brambor nebo 2 krajíce chleba)
+  // + kus ovoce (jablko nebo banán). Build z každé kombinace počítá tuk v % kcal i {{PLUS_MIN/MAX}}.
+  PLUS_VARIANTY: [
+    ['50 g rýže + jablko', [{ id: 'ryze-bila', g: 50 }, { id: 'jablko', g: 150 }]],
+    ['50 g rýže + banán', [{ id: 'ryze-bila', g: 50 }, { id: 'banan', g: 120 }]],
+    ['200 g brambor + jablko', [{ id: 'brambory', g: 200 }, { id: 'jablko', g: 150 }]],
+    ['200 g brambor + banán', [{ id: 'brambory', g: 200 }, { id: 'banan', g: 120 }]],
+    ['80 g chleba + jablko', [{ id: 'chleb-celozrnny', g: 80 }, { id: 'jablko', g: 150 }]],
+    ['80 g chleba + banán', [{ id: 'chleb-celozrnny', g: 80 }, { id: 'banan', g: 120 }]],
+  ],
 
   DAYS: [
     { name: 'Pondělí', tag: 'tréninkový den', meals: [
@@ -165,7 +178,9 @@ module.exports = {
       ]},
     ]},
     // Flex den: pizza a pivo jsou pevné, dorovnávají se jen kcal přes vločky (bílkoviny drží
-    // tvaroh, kuřecí a shake, tuk je ten den volný).
+    // tvaroh, kuřecí a shake, tuk je ten den volný, build hlídá 25 až 35 % kcal).
+    // ⭐ [25. 9. 2026 večer] Olej na salát 20 → 30 g: sobota měla 23,6 % tuku, pod pozicí.
+    // Varianta „víc" se na flex sobotu nevztahuje (text PDF: „Flex sobotu nech, jak je.").
     { name: 'Sobota', tag: 'flex den', flex: true, volnyTuk: true, jenKcal: 'C', meals: [
       { lbl: 'Snídaně', title: 'Tvaroh s ovesnými vločkami, ovocem a medem', og: 'Tvaroh s vločkami', items: [
         ['tvaroh-mekky-nizkotucny', 250, 'F', 'nízkotučného tvarohu'],
@@ -176,7 +191,7 @@ module.exports = {
       { lbl: 'Oběd', title: 'Velký kuřecí salát s pečivem', og: 'Kuřecí salát', items: [
         ['kureci-prsa', 200, 'F', 'kuřecích prsou'],
         ...SALAT,
-        ['olivovy-olej', 20, 'F', 'olivového oleje'],
+        ['olivovy-olej', 30, 'F', 'olivového oleje'],
         ['grahamovy-rohlik', 60, 'F', 'grahamového rohlíku', null, [60, 'grahamový rohlík', 'grahamové rohlíky', 'grahamových rohlíků']],
       ]},
       { lbl: 'Večeře', title: 'Volnější večeře, pizza a pivo', og: 'Pizza a pivo', pozn: 'Užij si to bez výčitek a drž bílkoviny.', items: [
@@ -228,14 +243,12 @@ module.exports = {
   MINUS_TUK: null,
   NAHRADY: ({ mac, ekv, median, porceC, porceP }) => {
     const RYZE_TYP = median(porceC['ryze-bila']);
-    // „Potřebuješ víc": 50 g rýže, 200 g brambor nebo 2 krajíce chleba (80 g) a jablko.
-    const pr = [mac('ryze-bila', 50).kcal, mac('brambory', 200).kcal, mac('chleb-celozrnny', 80).kcal];
-    // Kus ovoce: jablko nebo banán, rozpětí přes obě.
-    const ovoce = [mac('jablko', 150).kcal, mac('banan', 120).kcal];
+    // „Potřebuješ víc": kombinace z PLUS_VARIANTY (sacharid + kus ovoce), rozpětí přes všechny.
+    const plus = module.exports.PLUS_VARIANTY.map(([, pr]) => pr.reduce((s, x) => s + mac(x.id, x.g).kcal, 0));
     return {
       '{{RYZE_TYP}}': String(RYZE_TYP),
-      '{{PLUS_MIN}}': String(Math.round((Math.min(...pr) + Math.min(...ovoce)) / 10) * 10),
-      '{{PLUS_MAX}}': String(Math.round((Math.max(...pr) + Math.max(...ovoce)) / 10) * 10),
+      '{{PLUS_MIN}}': String(Math.round(Math.min(...plus) / 10) * 10),
+      '{{PLUS_MAX}}': String(Math.round(Math.max(...plus) / 10) * 10),
       // Tvaroh/skyr za maso: gramy skyru se stejnými bílkovinami jako typická porce kuřecích prsou (na 50 g).
       '{{EKV_SKYR}}': String(Math.round((mac('kureci-prsa', median(porceP)).p / mac('skyr', 100).p * 100) / 50) * 50),
       '{{EKV_BRAMBORY}}': String(ekv('ryze-bila', RYZE_TYP, 'brambory', 10)), '{{EKV_BATATY}}': String(ekv('ryze-bila', RYZE_TYP, 'bataty', 10)),

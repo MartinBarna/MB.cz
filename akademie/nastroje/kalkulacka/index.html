@@ -108,6 +108,9 @@
       <div class="actions">
         <button class="btn" id="calc">Spočítat</button>
       </div>
+      <!-- [2026-09-25] Hláška sdílené kontroly vstupů (MealGen.kontrolaVstupu). Když výpočet
+           zastaví, výsledek i tlačítko tisku se schovají: do PDF nesmí jít „BMR -161 kcal". -->
+      <p class="note" id="vstupChyba" role="alert" style="color:#F6CD63;font-size:.95rem;" hidden></p>
     </div>
 
     <div id="result" class="hidden">
@@ -128,7 +131,7 @@
     </div>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260906b"></script>
+  <script src="/assets/meal-gen.js?v=20260925a"></script>
   <script>
   (function(){
     var $=function(id){return document.getElementById(id);};
@@ -165,6 +168,13 @@
     }catch(e){}
 
     function calc(){
+      // ⛔⛔ [2026-09-25] Sdílená kontrola vstupů enginu (zrcadlo appky). Dřív tu nebylo NIC:
+      // prázdný formulář ukázal „BMR -161 kcal" a šel vytisknout do PDF.
+      if(!window.MealGen.kontrolaVstupu){ alert('Stránka se načetla ze starší verze, obnov ji prosím (Ctrl+F5).'); return; }
+      var kontrola=window.MealGen.kontrolaVstupu({ age:$('age').value, height:$('height').value, weight:$('weight').value, goal:$('goal').value });
+      var vch=$('vstupChyba');
+      if(!kontrola.ok){ $('result').classList.add('hidden'); vch.textContent=kontrola.text; vch.hidden=false; return; }
+      vch.hidden=true; vch.textContent='';
       var t=window.MealGen.computeTargets({ sex:$('sex').value, age:$('age').value, weight:$('weight').value, height:$('height').value, activity:$('activity').value, goal:$('goal').value });
       $('targets').innerHTML=
         '<div class="tcard kcal"><b>'+t.kcal+'</b><span>kcal / den</span></div>'+
@@ -177,6 +187,7 @@
       if(t.floorNote) $('meta').innerHTML+='<span>'+esc(t.floorNote)+'</span>';
       // [2026-09-05] Sjednoceno s appkou: zpomalené tempo (strop 25 % TDEE, podlaha) nesmí být tiché.
       if(t.tempoNote) $('meta').innerHTML+='<span>'+esc(t.tempoNote)+'</span>';
+      kontrola.varovani.forEach(function(v){ $('meta').innerHTML+='<span>'+esc(v.text)+'</span>'; });
       // branding (trenér) - sdílený ba_trainer_brand
       var c=$('client').value.trim(), tn=$('trainer').value.trim(), ac=$('accent').value, lg=(logoData||$('logo').value.trim()), ct=$('contact').value.trim();
       saveBrand();

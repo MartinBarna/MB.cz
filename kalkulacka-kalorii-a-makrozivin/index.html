@@ -219,22 +219,37 @@
     <script defer src="/assets/ui.js?v=20260628b"></script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
     <script defer src="/assets/lead-popup.js?v=r3"></script>
-    <script src="/assets/meal-gen.js?v=20260906b"></script>
+    <script src="/assets/meal-gen.js?v=20260925a"></script>
     <script>
         // Výpočet jede na sdíleném enginu MealGen (assets/meal-gen.js) - stejný jako
         // kalkulačka a generátor jídelníčku v Academy i ve videokurzu, čísla všude sedí.
+        // ⛔ [2026-09-25] Když kontrola vstupů výpočet zastaví, nesmí na stránce zůstat
+        // čísla z minulého výpočtu ani odkaz do generátoru s těmi údaji.
+        function zastav(text) {
+            ['r-kcal', 'r-bil', 'r-tuk', 'r-sach', 'r-vlak'].forEach(function (id) { document.getElementById(id).textContent = '-'; });
+            document.getElementById('r-meta').textContent = '';
+            var podlaha = document.getElementById('r-podlaha');
+            podlaha.textContent = text;
+            podlaha.style.display = '';
+            document.getElementById('r-tempo').style.display = 'none';
+            document.getElementById('gen-link').href = '/nastroje-zdarma/jidelnicek/';
+            var fp = document.getElementById('freeplan-cta');
+            if (fp) fp.classList.add('d-none');
+        }
         function spocitej() {
             var pohlavi = document.getElementById('pohlavi').value;
             var vek = parseFloat(document.getElementById('vek').value);
             var vyska = parseFloat(document.getElementById('vyska').value);
             var vaha = parseFloat(document.getElementById('vaha').value);
-            if (!vek || !vyska || !vaha) { alert('Vyplň prosím věk, výšku a váhu.'); return; }
-            // Stejné meze jako appka (validateCurrent v onboardingu): min/max v HTML tu nic
+            if (!window.MealGen || !window.MealGen.kontrolaVstupu) { alert('Kalkulačka se nenačetla celá, zkus obnovit stránku.'); return; }
+            // ⛔⛔ [2026-09-25] Kontrola vstupů je JEDNA sdílená funkce enginu (MealGen.kontrolaVstupu,
+            // zrcadlo appky): prázdná pole, věk pod 18, podváha u hubnutí. Min/max v HTML tu nic
             // nevynucuje, protože vstupy nejsou ve <form> a váha je textové pole kvůli čárce.
-            if (vek < 12 || vek > 100) { alert('Věk zadej v rozmezí 12 až 100 let.'); return; }
-            if (vyska < 100 || vyska > 250) { alert('Výšku zadej v centimetrech, v rozmezí 100 až 250 cm.'); return; }
-            if (vaha < 30 || vaha > 400) { alert('Váhu zadej v kilogramech, v rozmezí 30 až 400 kg.'); return; }
-            if (!window.MealGen) { alert('Kalkulačka se nenačetla celá, zkus obnovit stránku.'); return; }
+            var kontrola = window.MealGen.kontrolaVstupu({
+                age: document.getElementById('vek').value, height: document.getElementById('vyska').value,
+                weight: document.getElementById('vaha').value, goal: document.getElementById('cil').value
+            });
+            if (!kontrola.ok) { zastav(kontrola.text); return; }
             var t = window.MealGen.computeTargets({
                 sex: pohlavi, age: vek, height: vyska, weight: vaha,
                 activity: document.getElementById('aktivita').value,
@@ -248,10 +263,12 @@
             var meta = document.getElementById('r-meta');
             if (meta) meta.textContent = 'Bazální metabolismus ' + t.bmr.toLocaleString('cs-CZ') + ' kcal · celkový denní výdej ' + t.tdee.toLocaleString('cs-CZ') + ' kcal';
             // [revize R5] Bezpečnostní podlaha nesmí být tichá: když zvedla cíl, řekni to.
+            // [2026-09-25] Sem patří i varování kontroly vstupů (podváha u udržení, nízká cílová váha).
             var podlaha = document.getElementById('r-podlaha');
             if (podlaha) {
-                podlaha.textContent = t.floorNote || '';
-                podlaha.style.display = t.floorNote ? '' : 'none';
+                var poznamky = [t.floorNote].concat(kontrola.varovani.map(function (v) { return v.text; })).filter(Boolean);
+                podlaha.textContent = poznamky.join(' ');
+                podlaha.style.display = poznamky.length ? '' : 'none';
             }
             // [2026-09-05, sjednocení s appkou] Appka počítá deficit/přebytek z tempa
             // (% váhy za týden u hubnutí, kg za týden u nabírání) se stropem 25 % TDEE.

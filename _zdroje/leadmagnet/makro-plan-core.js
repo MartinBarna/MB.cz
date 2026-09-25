@@ -3,7 +3,7 @@
 // ⛔ Žádné číslo o jídle se nepíše rukou. Kcal a makra = MealGen.macrosFor nad assets/food-db.json
 // (tatáž funkce a tatáž DB jako webový generátor jídelníčků) + pár položek z databáze appky
 // v makro-plan-extra-potraviny.js. Cíl dne = MealGen.computeTargets pro referenční postavu
-// z datového souboru; kcal drží číslo slíbené na stránce, tuk = TUK_G_NA_KG × referenční váha.
+// z datového souboru; kcal drží číslo slíbené na stránce, tuk = TUK_PCT_KCAL % z kcal (od 25. 9. 2026).
 // Gramáže rolí P/C/T se dorovnají na cíl dne (soustava rovnic: kcal, bílkoviny, tuk) a zaokrouhlí;
 // zobrazená čísla jsou pak spočítaná z těch zaokrouhlených gramáží, ne z cíle.
 'use strict';
@@ -72,7 +72,10 @@ const NB = ' '; // nezlomitelná mezera: „80 g“ se nesmí rozdělit na dva 
 function build(D) {
   const varovani = [];
   const REF_T = M.computeTargets(D.REF);
-  const CIL = { kcal: D.KCAL_CIL, p: REF_T.protein, f: Math.round(D.TUK_G_NA_KG * D.REF.weight) };
+  // ⭐ [25. 9. 2026 večer] Tuk dne = TUK_PCT_KCAL % z kcal cíle (Martinova pozice: 25 až 35 % kcal
+  // v KAŽDÉM dni KAŽDÉ varianty, nikdy pod 20 %). Dřív TUK_G_NA_KG × referenční váha (0,6 / 0,7):
+  // ženská „víc" varianta pak měla 6 ze 7 dnů pod 25 % a sobotu 19,95 %.
+  const CIL = { kcal: D.KCAL_CIL, p: REF_T.protein, f: Math.round((D.TUK_PCT_KCAL / 100) * D.KCAL_CIL / 9) };
 
   function dorovnejDen(day) {
     const items = [];
@@ -233,7 +236,7 @@ function build(D) {
   const ekv = (zId, zG, naId, s) => Math.round((mac(zId, zG).kcal / kcal100(naId) * 100) / s) * s;
   // „Potřebuješ míň": polovina přílohy u oběda i večeře (dorovnávaná příloha i pevná: tortilla,
   // houska, rohlík) + položky D.MINUS_TUK celé. Flex den se nemění (text: „Flex sobotu nech, jak je.“).
-  // Návod nesmí žádný den dostat pod kalorickou podlahu enginu ani tuk pod 20 % kcal; hlídá to build.
+  // Návod nesmí žádný den dostat pod kalorickou podlahu enginu ani tuk mimo 25 až 35 % kcal; hlídá to build.
   const PRILOHA_PEVNA = /tortilla|houska|rohlik/;
   const minusDen = (d) => {
     const po = { kcal: 0, f: 0 };
@@ -247,13 +250,34 @@ function build(D) {
     }));
     return po;
   };
+  // „Potřebuješ víc": každá kombinace z D.PLUS_VARIANTY (tytéž potraviny a gramy, které PDF
+  // radí přidat) se přičte k celému dni. Flex den ne: text PDF říká „Flex sobotu nech, jak je."
+  // u „víc" i „míň" (od 25. 9. 2026 večer; flex sobota s pizzou je už sama o sobě den „víc").
+  const plusDen = (d, pridavek) => {
+    const t = soucet(d.meals.flatMap((m) => m.items.map((it) => ({ id: it.id, g: it.g }))).concat(pridavek));
+    return { kcal: t.kcal, f: t.f };
+  };
+  // ⛔⛔ [25. 9. 2026 večer, Martinova pozice] TUK 25 AŽ 35 % KCAL V KAŽDÉM DNI KAŽDÉ VARIANTY:
+  // základ, „míň" i každá kombinace „víc". Dřív se hlídal jen základ (20 %, flex 22 %) a „míň"
+  // (20 %); „víc" nehlídal nikdo a ženská sobota v něm spadla na 19,95 %, proti větě v tomtéž PDF.
+  // Build radši spadne, než aby vyrobil PDF, které pozici porušuje.
+  const TUK_MIN = 0.25, TUK_MAX = 0.35;
+  const kontrolaTuku = (nazev, x) => {
+    const pct = x.f * 9 / x.kcal;
+    if (pct < TUK_MIN - 1e-9 || pct > TUK_MAX + 1e-9) {
+      throw new Error(nazev + ': tuk ' + (100 * pct).toFixed(1) + ' % kcal, mimo 25 až 35 %');
+    }
+    return pct;
+  };
+  const tukVariant = [];
   for (const d of plan) {
     const po = minusDen(d);
     if (po.kcal < REF_T.kcalFloor) throw new Error(d.name + ': návod „míň" dá ' + r0(po.kcal) + ' kcal, pod podlahou ' + REF_T.kcalFloor);
-    if (po.f * 9 / po.kcal < 0.2) throw new Error(d.name + ': návod „míň" dá tuk ' + (100 * po.f * 9 / po.kcal).toFixed(1) + ' % kcal, pod 20 %');
-    // Tuk dne: nikdy pod 20 % kcal, flex den aspoň 22 % (Martin 25. 9.).
-    const tukPct = d.tot.f * 9 / d.tot.kcal;
-    if (tukPct < (d.flex ? 0.22 : 0.2)) throw new Error(d.name + ': tuk ' + (100 * tukPct).toFixed(1) + ' % kcal, pod mezí ' + (d.flex ? 22 : 20) + ' %');
+    const radek = { den: d.name, zaklad: kontrolaTuku(d.name + ' (základ)', d.tot), min: kontrolaTuku(d.name + ' (varianta „míň")', po), vic: [] };
+    for (const [popis, pridavek] of d.flex ? [] : D.PLUS_VARIANTY) {
+      radek.vic.push(kontrolaTuku(d.name + ' (varianta „víc": ' + popis + ')', plusDen(d, pridavek)));
+    }
+    tukVariant.push(radek);
   }
   const minusDny = plan.filter((d) => !d.flex).map((d) => d.tot.kcal - minusDen(d).kcal);
   const prumer = (k) => plan.reduce((s, d) => s + d.tot[k], 0) / plan.length;
@@ -303,6 +327,9 @@ function build(D) {
       })),
     })),
     nakup,
+    // Tuk v % kcal pro základ, „míň" a každou kombinaci „víc" (kontrola 25 až 35 % výš).
+    tukVariant: tukVariant.map((r) => ({ den: r.den, zaklad: +(100 * r.zaklad).toFixed(1), min: +(100 * r.min).toFixed(1),
+      vic: r.vic.map((x) => +(100 * x).toFixed(1)) })),
     varovani,
   };
   fs.writeFileSync(path.join(__dirname, D.VYSTUP + '-vypocet.json'), JSON.stringify(vypocet, null, 2) + '\n');
@@ -339,6 +366,10 @@ function build(D) {
     for (const m of d.meals) console.log('   ', m.lbl.padEnd(8), macText(m.t).padEnd(34), '|', jidloText(m));
   }
   console.log('cíl', JSON.stringify(CIL), 'ref engine', REF_T.kcal, 'kcal, B', REF_T.protein, 'T', REF_T.fat);
+  for (const r of tukVariant) {
+    console.log('tuk % kcal', r.den.padEnd(8), 'základ', (100 * r.zaklad).toFixed(1), '| míň', (100 * r.min).toFixed(1),
+      '| víc', r.vic.map((x) => (100 * x).toFixed(1)).join(' / '));
+  }
   const nahradyVypis = {};
   for (const [k, v] of Object.entries(nahrady)) if (!/DNY|DEN_|NAKUP/.test(k)) nahradyVypis[k] = v;
   console.log(JSON.stringify(nahradyVypis));

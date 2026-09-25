@@ -11,9 +11,9 @@
 //    ať klient koučinku a klient appky nedostanou dvě různá čísla:
 //      • Mifflin St Jeor,
 //      • referenční hmotnost při BMI >= 30 (ideál při BMI 25 + 25 % nadváhy),
-//      • bílkoviny 1,8 až 2,2 g/kg referenční váhy, absolutní minimum 1,2 g/kg,
-//      • tuk 25 % kalorií, podlaha 22 % kalorií a zároveň 0,6 g/kg referenční váhy,
-//      • sacharidy zbytek, podlaha 100 g (bere se z tuku, teprve pak z bílkovin),
+//      • bílkoviny 1,8 až 2,2 g/kg referenční váhy (kvůli sacharidům se nesnižují),
+//      • tuk 30 % kalorií, pásmo 25 až 35 % (Martin 25. 9. 2026),
+//      • sacharidy zbytek, podlaha 100 g (bere se jen z tuku, k jeho podlaze 25 %),
 //      • kalorická podlaha 1200 žena / 1500 muž,
 //      • strop deficitu 25 % TDEE,
 //      • vláknina 14 g na 1000 kcal, minimum 25 g, strop 60 g.
@@ -47,7 +47,6 @@
     ADJ_PODIL_NADVAHY: 0.25,
     BILKOVINY_MIN: 1.8,
     BILKOVINY_MAX: 2.2,
-    BILKOVINY_ABS_MIN: 1.2,      // g/kg referenční váhy, pod tohle se nejde nikdy
     // ⭐ TUK A VLÁKNINA JSOU OD 2. 9. 2026 PŘEVZATÉ Z APPKY 1:1 (`src/engine/goals.ts`).
     // Revize změřila, že se dřív rozcházely: tuk až o 25 % (tady 25 % kcal, appka 0,8 g/kg
     // referenční váhy) a vláknina až o 39 % (tady podlaha 25 g, appka žádnou nemá).
@@ -56,9 +55,12 @@
     // má přednost, aby klient koučinku a klient appky neviděli dvě různá čísla.
     // ⭐ [2. 9. 2026] Podlaha se z části vrací: `VLAKNINA_MIN` = 20 g, stejně jako
     // `FIBER_FLOOR_G` v appce. Ta žena na 1300 kcal dostane 20 g, ne 18.
-    TUK_G_PER_KG: 0.8,           // BMI < 30: cílový tuk = referenční váha × tohle (appka FAT_G_PER_KG_DEFAULT)
-    TUK_OBEZITA_PCT_KCAL: 25,    // BMI >= 30: cílový tuk = % kalorií (appka FAT_OBESE_PCT_KCAL)
-    TUK_MIN_PCT_KCAL: 22,        // podlaha, appka fatFloorG
+    // ⭐⭐ [25. 9. 2026] TUK PODLE MARTINOVY POZICE: 25 až 35 % kalorií, nikdy pod 20 %.
+    // 1:1 s appkou (`src/engine/goals.ts`) a webem (`assets/meal-gen.js`): cíl 30 % kcal pro
+    // všechny, podlaha 25 % (nahoru), strop 35 % (dolů). Dřív 0,8 g/kg a podlaha 22 %.
+    TUK_CIL_PCT_KCAL: 30,        // appka FAT_TARGET_PCT_KCAL
+    TUK_MIN_PCT_KCAL: 25,        // podlaha, appka FAT_MIN_PCT_KCAL / fatFloorG
+    TUK_MAX_PCT_KCAL: 35,        // strop, appka FAT_MAX_PCT_KCAL / fatCeilG
     SACHARIDY_PODLAHA_G: 100,
     VLAKNINA_NA_1000: 14,
     VLAKNINA_MAX: 60,
@@ -277,21 +279,19 @@
   // ---------------------------------------------------------------------------
   /**
    * Rozdělí kalorie do maker. Pořadí ústupků je závazné (stejné jako v appce):
-   *   1) tuk dolů, ale nikdy pod 22 % kalorií,
-   *   2) teprve pak bílkoviny dolů, ale nikdy pod 1,2 g/kg referenční váhy,
-   *   3) když ani to nestačí, sacharidy zůstanou pod podlahou a je z toho varování.
+   *   1) tuk dolů, ale nikdy pod 25 % kalorií,
+   *   2) když to nestačí, sacharidy zůstanou pod podlahou a je z toho varování.
+   * ⭐ [25. 9. 2026, Martin] Priorita bílkoviny > tuk v pásmu 25 až 35 % > sacharidy:
+   *    bílkoviny se kvůli podlaze sacharidů NESNIŽUJÍ (dřív k 1,2 g/kg).
    */
-  function makra(kcal, bilkovinyG, refKg, obezita) {
-    // ⭐ 1:1 s appkou: podlaha je JEN 22 % kalorií (`fatFloorG`), ne navíc 0,6 g/kg.
-    // V appce je 0,6 minimum vstupního parametru `fatPerKg`, ne podlaha výsledku.
-    var tukPodlahaG = Math.round((K.TUK_MIN_PCT_KCAL / 100) * kcal / 9);
-    // ⭐ 1:1 s appkou `fatTargetG`: BMI >= 30 → 25 % kalorií, jinak 0,8 g/kg referenční váhy.
-    var tukCilG = obezita
-      ? Math.round((K.TUK_OBEZITA_PCT_KCAL / 100) * kcal / 9)
-      : Math.round(refKg * K.TUK_G_PER_KG);
+  function makra(kcal, bilkovinyG) {
+    // ⭐ 1:1 s appkou `fatFloorG` / `fatCeilG` / `fatTargetG` (epsilon proti 450.00000001 / 9).
+    var tukPodlahaG = Math.ceil((K.TUK_MIN_PCT_KCAL / 100) * kcal / 9 - 1e-9);
+    var tukStropG = Math.floor((K.TUK_MAX_PCT_KCAL / 100) * kcal / 9 + 1e-9);
+    var tukCilG = Math.round((K.TUK_CIL_PCT_KCAL / 100) * kcal / 9);
     var bilk = Math.round(bilkovinyG);
     var maxTuk = Math.floor((kcal - bilk * 4) / 9);
-    var tuk = Math.max(tukPodlahaG, Math.min(tukCilG, maxTuk));
+    var tuk = Math.max(tukPodlahaG, Math.min(tukCilG, tukStropG, maxTuk));
     function sach() { return Math.max(0, Math.round((kcal - bilk * 4 - tuk * 9) / 4)); }
     var s = sach();
 
@@ -299,14 +299,6 @@
       var mistoVTuku = tuk - tukPodlahaG;
       if (mistoVTuku > 0) {
         tuk -= Math.min(mistoVTuku, Math.ceil((K.SACHARIDY_PODLAHA_G - s) * 4 / 9));
-        s = sach();
-      }
-    }
-    if (s < K.SACHARIDY_PODLAHA_G) {
-      var bilkPodlaha = Math.round(refKg * K.BILKOVINY_ABS_MIN);
-      var mistoVBilk = bilk - bilkPodlaha;
-      if (mistoVBilk > 0) {
-        bilk -= Math.min(mistoVBilk, Math.ceil((K.SACHARIDY_PODLAHA_G - s) * 4 / 4));
         s = sach();
       }
     }
@@ -509,7 +501,7 @@
       }
 
       var bilkPerKg = clamp(v.bilkoviny_g_kg == null ? s.bilkoviny : v.bilkoviny_g_kg, K.BILKOVINY_MIN, K.BILKOVINY_MAX);
-      var m = makra(kcal, refKg * bilkPerKg, refKg, b != null && b >= K.OBEZITA_BMI);
+      var m = makra(kcal, refKg * bilkPerKg);
       if (m.na_podlaze) {
         kartaVar.push('Sacharidy zůstaly pod 100 g. Na tomhle příjmu se bílkoviny, tuk i sacharidy nevejdou naráz, hlídej energii v tréninku.');
       }

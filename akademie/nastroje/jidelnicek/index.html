@@ -142,6 +142,9 @@
         <button class="btn" id="gen">Vygenerovat jídelníček</button>
         <span class="brandline" id="dbstate">Načítám databázi potravin…</span>
       </div>
+      <!-- [2026-09-25] Hláška sdílené kontroly vstupů (MealGen.kontrolaVstupu). Když výpočet
+           zastaví, výsledek i tlačítko tisku (PDF) se schovají. -->
+      <p class="note" id="vstupChyba" role="alert" style="color:#F6CD63;font-size:.95rem;" hidden></p>
     </div>
 
     <div id="result" class="hidden">
@@ -155,7 +158,7 @@
         <div id="meals"></div>
         <div class="mt" id="daytotwrap" style="border-radius:12px;border:1px solid var(--line);margin-top:6px;"><b style="color:#fff;">Den celkem</b><span id="daytot"></span></div>
         <p class="note" id="dayWarnNote" hidden></p>
-        <p class="note" id="genNote">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů, sestava ±10 %. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).</p>
+        <p class="note" id="genNote">Hodnoty jsou orientační (běžné potravinové tabulky). Generátor je výchozí bod, uprav porce podle klienta, chutí a reality. Cílové makro = ze vstupních údajů. Den skládám do ±5 % kalorií cíle; když to z běžných porcí nejde, napíšu to přímo pod den. Tlačítkem ⇄ u položky ji vyměníš za jinou ze stejné kategorie (gramáž se dopočítá na stejné kalorie).</p>
         <div class="actions no-print">
           <button class="btn" id="regen">↻ Přegenerovat</button>
           <button class="btn ghost" id="print">🖨️ Uložit / tisk (PDF)</button>
@@ -166,7 +169,7 @@
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
-  <script src="/assets/meal-gen.js?v=20260906b"></script>
+  <script src="/assets/meal-gen.js?v=20260925a"></script>
   <script>
   (function(){
     var DB=null, seed=0, lastTargets=null, lastPlan=null, lastWeek=null, swapSeed=0;
@@ -191,8 +194,9 @@
     // Režim klienta koučinku (?klient=1, volitelně &kcal=&protein=&fiber=&carbs=&fat= z klientské
     // sekce): stránka mluví ke klientovi, ne k trenérovi, pole „Jméno klienta" a „Moje značka"
     // se schovají a cíl se bere z čísel od Martina místo přepočtu z tabulek. Co v adrese chybí,
-    // dopočítá se stejně jako v computeTargets (tuk 28 % kcal, vláknina 14 g na 1000 kcal,
-    // podlaha 20 g a strop 60 g). Engine se nemění, jen odkud bere cíl.
+    // dopočítá se stejně jako v computeTargets (tuk MealGen.TUK_CIL_PCT_KCAL = 30 % kcal od
+    // 25. 9. 2026, dřív natvrdo 28 %; vláknina 14 g na 1000 kcal, podlaha 20 g a strop 60 g).
+    // Engine se nemění, jen odkud bere cíl.
     var fixedTargets=null;
     try{
       var qp=new URLSearchParams(location.search);
@@ -211,7 +215,7 @@
         var ld=document.querySelector('.lead');
         if(kc>0){
           var pr=+qp.get('protein')||0, fa=+qp.get('fat')||0, ca=+qp.get('carbs')||0, fi=+qp.get('fiber')||0;
-          if(!(fa>0)) fa=Math.round(kc*0.28/9);
+          if(!(fa>0)) fa=Math.round(kc*((Number(window.MealGen.TUK_CIL_PCT_KCAL)||30)/100)/9);
           if(!(ca>0)) ca=Math.max(40, Math.round((kc-pr*4-fa*9)/4));
           if(!(fi>0)) fi=Math.min(60, Math.max(20, Math.round(kc/1000*14)));
           if(!(pr>0)) pr=Math.max(40, Math.round((kc-fa*9-ca*4)/4));
@@ -343,6 +347,16 @@
     function generate(newSeed){
       if(!DB){ $('dbstate').textContent='Databáze ještě nenačtena, zkus to za chvíli.'; return; }
       if(newSeed) seed++;
+      // ⛔⛔ [2026-09-25] Sdílená kontrola vstupů enginu (zrcadlo appky): prázdná pole, věk pod 18,
+      // podváha u hubnutí. Čísla od Martina (režim klienta, fixedTargets) se nekontrolují, jsou jeho.
+      var vch=$('vstupChyba');
+      if(!window.MealGen.kontrolaVstupu){ alert('Stránka se načetla ze starší verze, obnov ji prosím (Ctrl+F5).'); return; }
+      if(!fixedTargets){
+        var kontrola=window.MealGen.kontrolaVstupu(inputs());
+        if(!kontrola.ok){ $('result').classList.add('hidden'); lastPlan=null; lastWeek=null; vch.textContent=kontrola.text; vch.hidden=false; return; }
+        vch.textContent=kontrola.varovani.map(function(v){ return v.text; }).join(' ');
+        vch.hidden=!kontrola.varovani.length;
+      }
       lastTargets=fixedTargets ? JSON.parse(JSON.stringify(fixedTargets)) : window.MealGen.computeTargets(inputs());
       if($("keto").checked) lastTargets=window.MealGen.ketoTargets(lastTargets); // kolo 3: keto předvolba, matematika v enginu
       if($('range').value==='tyden'){

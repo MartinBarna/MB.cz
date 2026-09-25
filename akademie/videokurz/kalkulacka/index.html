@@ -121,17 +121,32 @@
     <p class="tip">Jak s čísly pracovat naplno (sacharidové vlny, úpravy, kalorické tabulky) najdeš v <a href="/akademie/videokurz/">modulech videokurzu</a>.</p>
   </div>
 
-  <script src="/assets/meal-gen.js?v=20260906b"></script>
+  <script src="/assets/meal-gen.js?v=20260925a"></script>
   <script>
     // Výpočet jede na sdíleném enginu MealGen (assets/meal-gen.js) - stejný jako veřejná
     // kalkulačka i nástroje v Academy, čísla všude sedí.
+    // ⛔ [2026-09-25] Když kontrola vstupů výpočet zastaví, nesmí zůstat čísla z minula.
+    function zastav(text) {
+      ['r-kcal', 'r-bil', 'r-tuk', 'r-sach', 'r-vlak'].forEach(function (id) { document.getElementById(id).textContent = '-'; });
+      document.getElementById('r-meta').textContent = '';
+      var podlaha = document.getElementById('r-podlaha');
+      podlaha.textContent = text;
+      podlaha.style.display = '';
+      document.getElementById('r-tempo').style.display = 'none';
+    }
     function spocitej() {
       var pohlavi = document.getElementById('pohlavi').value;
       var vek = parseFloat(document.getElementById('vek').value);
       var vyska = parseFloat(document.getElementById('vyska').value);
       var vaha = parseFloat(document.getElementById('vaha').value);
-      if (!vek || !vyska || !vaha) { alert('Vyplň prosím věk, výšku a váhu.'); return; }
-      if (!window.MealGen) { alert('Kalkulačka se nenačetla celá, zkus obnovit stránku.'); return; }
+      if (!window.MealGen || !window.MealGen.kontrolaVstupu) { alert('Kalkulačka se nenačetla celá, zkus obnovit stránku.'); return; }
+      // ⛔⛔ [2026-09-25] Sdílená kontrola vstupů enginu (MealGen.kontrolaVstupu, zrcadlo appky):
+      // prázdná pole, věk pod 18, podváha u hubnutí. Dřív tu byla jen kontrola prázdných polí.
+      var kontrola = window.MealGen.kontrolaVstupu({
+        age: document.getElementById('vek').value, height: document.getElementById('vyska').value,
+        weight: document.getElementById('vaha').value, goal: document.getElementById('cil').value
+      });
+      if (!kontrola.ok) { zastav(kontrola.text); return; }
       var t = window.MealGen.computeTargets({
         sex: pohlavi, age: vek, height: vyska, weight: vaha,
         activity: document.getElementById('aktivita').value,
@@ -146,7 +161,9 @@
       if (meta) meta.textContent = 'Bazální metabolismus ' + t.bmr.toLocaleString('cs-CZ') + ' kcal · celkový denní výdej ' + t.tdee.toLocaleString('cs-CZ') + ' kcal';
       // [revize R5] Bezpečnostní podlaha nesmí být tichá: když zvedla cíl, řekni to.
       var podlaha = document.getElementById('r-podlaha');
-      if (podlaha) { podlaha.textContent = t.floorNote || ''; podlaha.style.display = t.floorNote ? '' : 'none'; }
+      // [2026-09-25] Sem patří i varování kontroly vstupů (podváha u udržení, nízká cílová váha).
+      var poznamky = [t.floorNote].concat(kontrola.varovani.map(function (v) { return v.text; })).filter(Boolean);
+      if (podlaha) { podlaha.textContent = poznamky.join(' '); podlaha.style.display = poznamky.length ? '' : 'none'; }
       // [2026-09-05] Sjednoceno s appkou: když strop 25 % TDEE nebo podlaha zpomalí tempo, řekne to tempoNote.
       var tempo = document.getElementById('r-tempo');
       if (tempo) { tempo.textContent = t.tempoNote || ''; tempo.style.display = t.tempoNote ? '' : 'none'; }

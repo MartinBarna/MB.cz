@@ -11,8 +11,8 @@
   "refTargets": {
     "kcal": 2021,
     "protein": 162,
-    "carbs": 181,
-    "fat": 72,
+    "carbs": 193,
+    "fat": 67,
     "fiber": 28,
     "bmr": 1830,
     "tdee": 2516,
@@ -27,7 +27,7 @@
   "cil": {
     "kcal": 2000,
     "p": 162,
-    "f": 63
+    "f": 67
   },
   "extra": [
     {
@@ -67,24 +67,24 @@
         "T": 0.5
       },
       "tot": {
-        "kcal": 1997.1,
+        "kcal": 2005.4,
         "p": 160.9,
-        "c": 181.8,
-        "f": 66.1,
-        "fib": 25.4
+        "c": 180.3,
+        "f": 67.6,
+        "fib": 25.8
       },
       "meals": [
         {
           "lbl": "Snídaně",
           "title": "Míchaná vejce s chlebem a avokádem",
           "og": "Vejce s avokádem",
-          "text": "Míchaná vejce s chlebem a avokádem: 3 vejce + 70 g celozrnného chleba + 30 g avokáda.",
-          "mac": "B 30 · S 31 · T 24 · ~473 kcal",
+          "text": "Míchaná vejce s chlebem a avokádem: 3 vejce + 70 g celozrnného chleba + 40 g avokáda.",
+          "mac": "B 30 · S 31 · T 26 · ~489 kcal",
           "t": {
-            "kcal": 473.4,
-            "p": 29.6,
-            "c": 30.6,
-            "f": 24.1
+            "kcal": 489.4,
+            "p": 29.8,
+            "c": 30.8,
+            "f": 25.6
           },
           "items": [
             {
@@ -101,7 +101,7 @@
             },
             {
               "id": "avokado",
-              "g": 30,
+              "g": 40,
               "vychozi": 70,
               "role": "T"
             }
@@ -183,12 +183,12 @@
           "lbl": "Večeře",
           "title": "Losos s bramborem a velkým salátem",
           "og": "Losos s bramborem",
-          "text": "Losos s bramborem a velkým salátem: 150 g lososa + 210 g brambor + 100 g ledového salátu + 100 g okurky + 100 g rajčat.",
-          "mac": "B 37 · S 45 · T 20 · ~509 kcal",
+          "text": "Losos s bramborem a velkým salátem: 150 g lososa + 200 g brambor + 100 g ledového salátu + 100 g okurky + 100 g rajčat.",
+          "mac": "B 37 · S 43 · T 20 · ~501 kcal",
           "t": {
-            "kcal": 508.7,
-            "p": 36.7,
-            "c": 44.6,
+            "kcal": 501,
+            "p": 36.5,
+            "c": 42.9,
             "f": 20.1
           },
           "items": [
@@ -200,7 +200,7 @@
             },
             {
               "id": "brambory",
-              "g": 210,
+              "g": 200,
               "vychozi": 250,
               "role": "C"
             },
@@ -232,16 +232,16 @@
       "tag": "",
       "flex": false,
       "faktory": {
-        "P": 1.0807045702278695,
-        "C": 0.8161240937237093,
-        "T": 1.4989052706271722
+        "P": 1.0991060750097434,
+        "C": 0.7524496119755294,
+        "T": 1.6699258966326869
       },
       "tot": {
-        "kcal": 1998.9,
-        "p": 160.7,
-        "c": 198.7,
-        "f": 63.7,
-        "fib": 33.8
+        "kcal": 1999.2,
+        "p": 160.4,
+        "c": 192.4,
+        "f": 66.8,
+        "fib": 33.3
       },
       "meals": [
         {
@@ -287,13 +287,13 @@
           "lbl": "Svačina",
           "title": "Tvaroh s ovocem a ořechy",
           "og": null,
-          "text": "Tvaroh s ovocem a ořechy: 200 g nízkotučného tvarohu + 100 g jahod + 20 g vlašských ořechů.",
-          "mac": "B 28 · S 17 · T 14 · ~297 kcal",
+          "text": "Tvaroh s ovocem a ořechy: 200 g nízkotučného tvarohu + 100 g jahod + 25 g vlašských ořechů.",
+          "mac": "B 28 · S 17 · T 17 · ~330 kcal",
           "t": {
-            "kcal": 296.8,
-            "p": 27.7,
-            "c": 17.1,
-            "f": 13.9
+            "kcal": 329.5,
+            "p": 28.4,
+            "c": 17.4,
+            "f": 17.1
           },
           "items": [
             {
@@ -310,7 +310,7 @@
             },
             {
               "id": "vlasske-orechy",
-              "g": 20,
+              "g": 25,
               "vychozi": 15,
               "role": "T"
             }
@@ -320,13 +320,13 @@
           "lbl": "Oběd",
           "title": "Libové hovězí s bramborem a zeleninou",
           "og": "Hovězí s bramborem",
-          "text": "Libové hovězí s bramborem a zeleninou: 160 g libového hovězího + 240 g brambor + 200 g zeleninové směsi + 20 g oleje na pánev.",
-          "mac": "B 44 · S 57 · T 29 · ~654 kcal",
+          "text": "Libové hovězí s bramborem a zeleninou: 160 g libového hovězího + 220 g brambor + 200 g zeleninové směsi + 15 g oleje na pánev.",
+          "mac": "B 43 · S 53 · T 24 · ~594 kcal",
           "t": {
-            "kcal": 653.6,
-            "p": 43.6,
-            "c": 56.6,
-            "f": 28.8
+            "kcal": 594,
+            "p": 43.2,
+            "c": 53.2,
+            "f": 23.8
           },
           "items": [
             {
@@ -337,7 +337,7 @@
             },
             {
               "id": "brambory",
-              "g": 240,
+              "g": 220,
               "vychozi": 300,
               "role": "C"
             },
@@ -349,7 +349,7 @@
             },
             {
               "id": "repkovy-olej",
-              "g": 20,
+              "g": 15,
               "vychozi": 10,
               "role": "T"
             }
@@ -359,13 +359,13 @@
           "lbl": "Večeře",
           "title": "Kuřecí s celozrnnými těstovinami a zeleninou",
           "og": "Kuřecí s těstovinami",
-          "text": "Kuřecí s celozrnnými těstovinami a zeleninou: 160 g kuřecích prsou + 60 g celozrnných těstovin + 200 g brokolice + 5 g olivového oleje.",
-          "mac": "B 50 · S 52 · T 11 · ~508 kcal",
+          "text": "Kuřecí s celozrnnými těstovinami a zeleninou: 160 g kuřecích prsou + 55 g celozrnných těstovin + 200 g brokolice + 10 g olivového oleje.",
+          "mac": "B 49 · S 49 · T 16 · ~535 kcal",
           "t": {
-            "kcal": 508.2,
-            "p": 50,
-            "c": 52.4,
-            "f": 11.5
+            "kcal": 535.4,
+            "p": 49.3,
+            "c": 49.2,
+            "f": 16.3
           },
           "items": [
             {
@@ -376,7 +376,7 @@
             },
             {
               "id": "testoviny-celozrnne",
-              "g": 60,
+              "g": 55,
               "vychozi": 70,
               "role": "C"
             },
@@ -388,7 +388,7 @@
             },
             {
               "id": "olivovy-olej",
-              "g": 5,
+              "g": 10,
               "vychozi": 5,
               "role": "T"
             }
@@ -402,29 +402,29 @@
       "tag": "den s krabičkou",
       "flex": false,
       "faktory": {
-        "P": 1.14307844129677,
-        "C": 0.8719533248103728,
-        "T": 1.9140658391568557
+        "P": 1.1491912737897605,
+        "C": 0.8051137656131154,
+        "T": 2.1150522209074185
       },
       "tot": {
-        "kcal": 1996.1,
-        "p": 161.1,
-        "c": 195.8,
-        "f": 64.3,
-        "fib": 28.7
+        "kcal": 1998.6,
+        "p": 161.2,
+        "c": 189.3,
+        "f": 67.5,
+        "fib": 28.4
       },
       "meals": [
         {
           "lbl": "Snídaně",
           "title": "Řecký jogurt s granolou, ovocem a ořechy",
           "og": "Jogurt s granolou",
-          "text": "Řecký jogurt s granolou, ovocem a ořechy: 250 g řeckého jogurtu 0 % + 40 g granoly bez přidaného cukru + 100 g borůvek + 40 g vlašských ořechů.",
-          "mac": "B 37 · S 47 · T 34 · ~633 kcal",
+          "text": "Řecký jogurt s granolou, ovocem a ořechy: 250 g řeckého jogurtu 0 % + 40 g granoly bez přidaného cukru + 100 g borůvek + 45 g vlašských ořechů.",
+          "mac": "B 37 · S 47 · T 37 · ~666 kcal",
           "t": {
-            "kcal": 633.1,
-            "p": 36.5,
-            "c": 46.8,
-            "f": 33.5
+            "kcal": 665.8,
+            "p": 37.3,
+            "c": 47.1,
+            "f": 36.8
           },
           "items": [
             {
@@ -447,7 +447,7 @@
             },
             {
               "id": "vlasske-orechy",
-              "g": 40,
+              "g": 45,
               "vychozi": 20,
               "role": "T"
             }
@@ -484,12 +484,12 @@
           "lbl": "Oběd",
           "title": "Krabička z práce",
           "og": "Krabička z práce",
-          "text": "Krabička z práce: 170 g kuřecích prsou + 170 g vařené rýže + 150 g zeleniny + 20 g oleje na přípravu. Když vybíráš v jídelně: maso + příloha + zelenina, vyber rozumně.",
-          "mac": "B 47 · S 60 · T 25 · ~665 kcal",
+          "text": "Krabička z práce: 170 g kuřecích prsou + 160 g vařené rýže + 150 g zeleniny + 20 g oleje na přípravu. Když vybíráš v jídelně: maso + příloha + zelenina, vyber rozumně.",
+          "mac": "B 46 · S 57 · T 25 · ~652 kcal",
           "t": {
-            "kcal": 664.8,
-            "p": 46.7,
-            "c": 59.8,
+            "kcal": 651.8,
+            "p": 46.5,
+            "c": 57,
             "f": 25.3
           },
           "items": [
@@ -501,7 +501,7 @@
             },
             {
               "id": "ryze-bila-varena",
-              "g": 170,
+              "g": 160,
               "vychozi": 200,
               "role": "C"
             },
@@ -523,12 +523,12 @@
           "lbl": "Večeře",
           "title": "Krůtí s batáty a brokolicí",
           "og": "Krůtí s batáty",
-          "text": "Krůtí s batáty a brokolicí: 170 g krůtích prsou + 220 g batátů + 200 g brokolice.",
-          "mac": "B 50 · S 58 · T 3 · ~436 kcal",
+          "text": "Krůtí s batáty a brokolicí: 170 g krůtích prsou + 200 g batátů + 200 g brokolice.",
+          "mac": "B 50 · S 54 · T 3 · ~419 kcal",
           "t": {
-            "kcal": 435.7,
-            "p": 49.9,
-            "c": 58,
+            "kcal": 418.5,
+            "p": 49.6,
+            "c": 54,
             "f": 2.7
           },
           "items": [
@@ -540,7 +540,7 @@
             },
             {
               "id": "bataty",
-              "g": 220,
+              "g": 200,
               "vychozi": 250,
               "role": "C"
             },
@@ -560,15 +560,15 @@
       "tag": "tréninkový den",
       "flex": false,
       "faktory": {
-        "P": 1.0163438651789587,
-        "C": 0.8586295912657598,
-        "T": 0.9232358276311428
+        "P": 1.0357396480100118,
+        "C": 0.809534015974657,
+        "T": 1.2022079062676856
       },
       "tot": {
-        "kcal": 2003,
-        "p": 160.9,
-        "c": 188.5,
-        "f": 63.9,
+        "kcal": 1998,
+        "p": 162.6,
+        "c": 184.6,
+        "f": 64.4,
         "fib": 25.1
       },
       "meals": [
@@ -648,18 +648,18 @@
           "lbl": "Oběd",
           "title": "Hovězí steak s bramborem a zeleninou",
           "og": "Hovězí steak",
-          "text": "Hovězí steak s bramborem a zeleninou: 180 g libového hovězího steaku + 210 g brambor + 200 g zeleninové směsi.",
-          "mac": "B 47 · S 52 · T 10 · ~480 kcal",
+          "text": "Hovězí steak s bramborem a zeleninou: 190 g libového hovězího steaku + 210 g brambor + 200 g zeleninové směsi.",
+          "mac": "B 49 · S 52 · T 10 · ~493 kcal",
           "t": {
-            "kcal": 479.7,
-            "p": 47.2,
+            "kcal": 492.7,
+            "p": 49.3,
             "c": 51.5,
-            "f": 9.8
+            "f": 10.3
           },
           "items": [
             {
               "id": "hovezi-steak-libovy",
-              "g": 180,
+              "g": 190,
               "vychozi": 180,
               "role": "P"
             },
@@ -681,13 +681,13 @@
           "lbl": "Večeře",
           "title": "Ryba s rýží a salátem",
           "og": "Ryba s rýží",
-          "text": "Ryba s rýží a salátem: 150 g tresky + 70 g rýže + 10 g oleje + 100 g ledového salátu + 100 g okurky.",
-          "mac": "B 34 · S 60 · T 12 · ~492 kcal",
+          "text": "Ryba s rýží a salátem: 150 g tresky + 65 g rýže + 10 g oleje + 100 g ledového salátu + 100 g okurky.",
+          "mac": "B 33 · S 56 · T 12 · ~474 kcal",
           "t": {
-            "kcal": 492.4,
-            "p": 33.5,
-            "c": 60.3,
-            "f": 11.7
+            "kcal": 474.4,
+            "p": 33.2,
+            "c": 56.4,
+            "f": 11.6
           },
           "items": [
             {
@@ -698,7 +698,7 @@
             },
             {
               "id": "ryze-bila",
-              "g": 70,
+              "g": 65,
               "vychozi": 80,
               "role": "C"
             },
@@ -731,14 +731,14 @@
       "flex": false,
       "faktory": {
         "P": 1.6,
-        "C": 1.536895766483801,
-        "T": 0.6182848566400994
+        "C": 1.3798209295104027,
+        "T": 0.8265966256081151
       },
       "tot": {
-        "kcal": 1999.5,
+        "kcal": 1999.9,
         "p": 161.3,
-        "c": 194.9,
-        "f": 62.5,
+        "c": 186.4,
+        "f": 66.4,
         "fib": 29.8
       },
       "meals": [
@@ -746,13 +746,13 @@
           "lbl": "Snídaně",
           "title": "Toasty s vejci, avokádem a rajčetem",
           "og": "Toasty s vejci",
-          "text": "Toasty s vejci, avokádem a rajčetem: 2 toasty (50 g) + 2 vejce + 50 g avokáda + 100 g rajčete.",
-          "mac": "B 22 · S 30 · T 21 · ~401 kcal",
+          "text": "Toasty s vejci, avokádem a rajčetem: 2 toasty (50 g) + 2 vejce + 60 g avokáda + 100 g rajčete.",
+          "mac": "B 22 · S 30 · T 23 · ~417 kcal",
           "t": {
-            "kcal": 400.6,
-            "p": 21.5,
-            "c": 30.2,
-            "f": 21.1
+            "kcal": 416.6,
+            "p": 21.7,
+            "c": 30.4,
+            "f": 22.6
           },
           "items": [
             {
@@ -769,7 +769,7 @@
             },
             {
               "id": "avokado",
-              "g": 50,
+              "g": 60,
               "vychozi": 70,
               "role": "T"
             },
@@ -785,13 +785,13 @@
           "lbl": "Svačina",
           "title": "Cottage s ovocem a ořechy",
           "og": null,
-          "text": "Cottage s ovocem a ořechy: 320 g cottage light + 100 g borůvek + 10 g vlašských ořechů.",
-          "mac": "B 42 · S 26 · T 9 · ~353 kcal",
+          "text": "Cottage s ovocem a ořechy: 320 g cottage light + 100 g borůvek + 15 g vlašských ořechů.",
+          "mac": "B 43 · S 26 · T 13 · ~386 kcal",
           "t": {
-            "kcal": 352.8,
-            "p": 42.2,
-            "c": 25.9,
-            "f": 9.4
+            "kcal": 385.5,
+            "p": 43,
+            "c": 26.3,
+            "f": 12.6
           },
           "items": [
             {
@@ -808,7 +808,7 @@
             },
             {
               "id": "vlasske-orechy",
-              "g": 10,
+              "g": 15,
               "vychozi": 20,
               "role": "T"
             }
@@ -818,13 +818,13 @@
           "lbl": "Oběd",
           "title": "„Fit burger\" s hranolky z trouby",
           "og": "Fit burger",
-          "text": "„Fit burger\" s hranolky z trouby: 150 g mletého hovězího (10 % tuku) + 1 celozrnná houska (60 g) + 50 g ledového salátu + 50 g rajčete + 155 g upečených hranolek z trouby.",
-          "mac": "B 41 · S 72 · T 26 · ~699 kcal",
+          "text": "„Fit burger\" s hranolky z trouby: 150 g mletého hovězího (10 % tuku) + 1 celozrnná houska (60 g) + 50 g ledového salátu + 50 g rajčete + 140 g upečených hranolek z trouby.",
+          "mac": "B 40 · S 68 · T 25 · ~674 kcal",
           "t": {
-            "kcal": 699.4,
-            "p": 40.8,
-            "c": 72,
-            "f": 25.8
+            "kcal": 674.2,
+            "p": 40.4,
+            "c": 68.1,
+            "f": 25
           },
           "items": [
             {
@@ -853,7 +853,7 @@
             },
             {
               "id": "mrazene-hranolky",
-              "g": 155,
+              "g": 140,
               "vychozi": 100,
               "role": "C"
             }
@@ -863,12 +863,12 @@
           "lbl": "Večeře",
           "title": "Kuřecí s bramborem a brokolicí",
           "og": "Kuřecí s bramborem",
-          "text": "Kuřecí s bramborem a brokolicí: 200 g kuřecích prsou + 310 g brambor + 200 g brokolice.",
-          "mac": "B 57 · S 67 · T 6 · ~547 kcal",
+          "text": "Kuřecí s bramborem a brokolicí: 200 g kuřecích prsou + 280 g brambor + 200 g brokolice.",
+          "mac": "B 56 · S 62 · T 6 · ~524 kcal",
           "t": {
-            "kcal": 546.7,
-            "p": 56.8,
-            "c": 66.7,
+            "kcal": 523.6,
+            "p": 56.2,
+            "c": 61.6,
             "f": 6.3
           },
           "items": [
@@ -880,7 +880,7 @@
             },
             {
               "id": "brambory",
-              "g": 310,
+              "g": 280,
               "vychozi": 200,
               "role": "C"
             },
@@ -905,24 +905,24 @@
         "T": 1
       },
       "tot": {
-        "kcal": 2002.2,
-        "p": 139.5,
-        "c": 204,
-        "f": 52.5,
-        "fib": 16.9
+        "kcal": 2072.1,
+        "p": 138.9,
+        "c": 201,
+        "f": 62.1,
+        "fib": 16.4
       },
       "meals": [
         {
           "lbl": "Snídaně",
           "title": "Tvaroh s ovesnými vločkami, ovocem a medem",
           "og": "Tvaroh s vločkami",
-          "text": "Tvaroh s ovesnými vločkami, ovocem a medem: 250 g nízkotučného tvarohu + 30 g ovesných vloček + 100 g jahod + 10 g medu.",
-          "mac": "B 35 · S 44 · T 3 · ~341 kcal",
+          "text": "Tvaroh s ovesnými vločkami, ovocem a medem: 250 g nízkotučného tvarohu + 25 g ovesných vloček + 100 g jahod + 10 g medu.",
+          "mac": "B 34 · S 41 · T 3 · ~322 kcal",
           "t": {
-            "kcal": 340.9,
-            "p": 34.6,
-            "c": 43.9,
-            "f": 3.1
+            "kcal": 322.4,
+            "p": 34,
+            "c": 40.9,
+            "f": 2.8
           },
           "items": [
             {
@@ -933,7 +933,7 @@
             },
             {
               "id": "ovesne-vlocky",
-              "g": 30,
+              "g": 25,
               "vychozi": 50,
               "role": "C"
             },
@@ -955,13 +955,13 @@
           "lbl": "Oběd",
           "title": "Velký kuřecí salát s pečivem",
           "og": "Kuřecí salát",
-          "text": "Velký kuřecí salát s pečivem: 200 g kuřecích prsou + 100 g ledového salátu + 100 g okurky + 100 g rajčat + 20 g olivového oleje + 1 grahamový rohlík (60 g).",
-          "mac": "B 53 · S 38 · T 27 · ~614 kcal",
+          "text": "Velký kuřecí salát s pečivem: 200 g kuřecích prsou + 100 g ledového salátu + 100 g okurky + 100 g rajčat + 30 g olivového oleje + 1 grahamový rohlík (60 g).",
+          "mac": "B 53 · S 38 · T 37 · ~702 kcal",
           "t": {
-            "kcal": 613.8,
+            "kcal": 702.2,
             "p": 52.9,
             "c": 37.7,
-            "f": 26.8
+            "f": 36.8
           },
           "items": [
             {
@@ -990,8 +990,8 @@
             },
             {
               "id": "olivovy-olej",
-              "g": 20,
-              "vychozi": 20,
+              "g": 30,
+              "vychozi": 30,
               "role": "F"
             },
             {
@@ -1058,29 +1058,29 @@
       "tag": "",
       "flex": false,
       "faktory": {
-        "P": 1.0737825105539434,
-        "C": 0.9997449089253414,
-        "T": 1.7956606167203792
+        "P": 1.08856881686728,
+        "C": 0.9335956438393628,
+        "T": 2.071537855175841
       },
       "tot": {
-        "kcal": 1998.2,
-        "p": 160.1,
-        "c": 186.5,
-        "f": 65.6,
-        "fib": 25.4
+        "kcal": 2000.8,
+        "p": 162.5,
+        "c": 183.2,
+        "f": 66.2,
+        "fib": 25.6
       },
       "meals": [
         {
           "lbl": "Snídaně",
           "title": "Omeleta ze 4 vajec se zeleninou a chlebem",
           "og": "Omeleta",
-          "text": "Omeleta ze 4 vajec se zeleninou a chlebem: 4 vejce + 100 g papriky + 10 g oleje na pánev + 70 g celozrnného chleba.",
-          "mac": "B 38 · S 36 · T 36 · ~631 kcal",
+          "text": "Omeleta ze 4 vajec se zeleninou a chlebem: 4 vejce + 100 g papriky + 10 g oleje na pánev + 80 g celozrnného chleba.",
+          "mac": "B 38 · S 40 · T 36 · ~655 kcal",
           "t": {
-            "kcal": 630.6,
-            "p": 37.5,
-            "c": 36.4,
-            "f": 35.6
+            "kcal": 654.6,
+            "p": 38.4,
+            "c": 40.5,
+            "f": 35.9
           },
           "items": [
             {
@@ -1103,7 +1103,7 @@
             },
             {
               "id": "chleb-celozrnny",
-              "g": 70,
+              "g": 80,
               "vychozi": 80,
               "role": "C"
             }
@@ -1140,24 +1140,24 @@
           "lbl": "Oběd",
           "title": "Pečené kuře s bramborem a zeleninou",
           "og": "Pečené kuře",
-          "text": "Pečené kuře s bramborem a zeleninou: 190 g kuřecích prsou + 250 g brambor + 20 g oleje na pečení + 200 g zeleninové směsi.",
-          "mac": "B 53 · S 58 · T 26 · ~681 kcal",
+          "text": "Pečené kuře s bramborem a zeleninou: 200 g kuřecích prsou + 230 g brambor + 20 g oleje na pečení + 200 g zeleninové směsi.",
+          "mac": "B 55 · S 55 · T 26 · ~678 kcal",
           "t": {
-            "kcal": 681.3,
-            "p": 53,
-            "c": 58.3,
-            "f": 25.8
+            "kcal": 677.9,
+            "p": 54.8,
+            "c": 54.9,
+            "f": 26
           },
           "items": [
             {
               "id": "kureci-prsa",
-              "g": 190,
+              "g": 200,
               "vychozi": 180,
               "role": "P"
             },
             {
               "id": "brambory",
-              "g": 250,
+              "g": 230,
               "vychozi": 250,
               "role": "C"
             },
@@ -1179,12 +1179,12 @@
           "lbl": "Večeře",
           "title": "Krůtí s rýží a velkým salátem",
           "og": "Krůtí s rýží",
-          "text": "Krůtí s rýží a velkým salátem: 160 g krůtích prsou + 70 g rýže + 100 g ledového salátu + 100 g okurky + 100 g rajčat.",
-          "mac": "B 46 · S 64 · T 2 · ~467 kcal",
+          "text": "Krůtí s rýží a velkým salátem: 160 g krůtích prsou + 65 g rýže + 100 g ledového salátu + 100 g okurky + 100 g rajčat.",
+          "mac": "B 45 · S 60 · T 2 · ~449 kcal",
           "t": {
-            "kcal": 467,
-            "p": 45.8,
-            "c": 64.2,
+            "kcal": 449,
+            "p": 45.5,
+            "c": 60.3,
             "f": 2.4
           },
           "items": [
@@ -1196,7 +1196,7 @@
             },
             {
               "id": "ryze-bila",
-              "g": 70,
+              "g": 65,
               "vychozi": 70,
               "role": "C"
             },
@@ -1225,54 +1225,140 @@
   ],
   "nakup": {
     "vejce": 780,
-    "chleb-celozrnny": 210,
-    "avokado": 80,
+    "chleb-celozrnny": 220,
+    "avokado": 100,
     "skyr": 530,
     "banan": 360,
-    "vlasske-orechy": 85,
-    "kureci-prsa": 1120,
-    "ryze-bila": 205,
+    "vlasske-orechy": 100,
+    "kureci-prsa": 1130,
+    "ryze-bila": 195,
     "mrazena-zeleninova-smes": 950,
-    "repkovy-olej": 90,
+    "repkovy-olej": 85,
     "losos": 150,
-    "brambory": 1220,
+    "brambory": 1140,
     "ledovy-salat": 450,
     "okurka": 400,
     "rajce": 450,
-    "ovesne-vlocky": 135,
+    "ovesne-vlocky": 130,
     "syrovatkovy-protein": 120,
     "mleko-polotucne": 250,
     "tvaroh-mekky-nizkotucny": 450,
     "jahody": 300,
-    "hovezi-steak-libovy": 340,
-    "testoviny-celozrnne": 60,
+    "hovezi-steak-libovy": 350,
+    "testoviny-celozrnne": 55,
     "brokolice": 600,
-    "olivovy-olej": 25,
+    "olivovy-olej": 40,
     "recky-jogurt-0": 250,
     "granola-bez-pridaneho-cukru": 40,
     "boruvky": 200,
     "grahamovy-rohlik": 120,
-    "ryze-bila-varena": 170,
+    "ryze-bila-varena": 160,
     "kruti-prsa": 330,
-    "bataty": 220,
+    "bataty": 200,
     "eidam-30": 50,
     "treska": 150,
     "toastovy-chleb-bily": 50,
     "cottage-syr-light": 320,
     "hovezi-mlete-10-tuku": 150,
     "houska-celozrnna": 60,
-    "mrazene-hranolky": 155,
+    "mrazene-hranolky": 140,
     "med": 10,
     "pizza-margherita": 300,
     "pivo-12": 500,
     "paprika-cervena": 100
   },
+  "tukVariant": [
+    {
+      "den": "Pondělí",
+      "zaklad": 30.3,
+      "min": 33.4,
+      "vic": [
+        27.1,
+        26.8,
+        27.4,
+        27.1,
+        28,
+        27.6
+      ]
+    },
+    {
+      "den": "Úterý",
+      "zaklad": 30.1,
+      "min": 32.6,
+      "vic": [
+        26.9,
+        26.5,
+        27.1,
+        26.8,
+        27.7,
+        27.4
+      ]
+    },
+    {
+      "den": "Středa",
+      "zaklad": 30.4,
+      "min": 33.4,
+      "vic": [
+        27.1,
+        26.8,
+        27.4,
+        27.1,
+        28,
+        27.7
+      ]
+    },
+    {
+      "den": "Čtvrtek",
+      "zaklad": 29,
+      "min": 32,
+      "vic": [
+        25.9,
+        25.6,
+        26.2,
+        25.9,
+        26.8,
+        26.5
+      ]
+    },
+    {
+      "den": "Pátek",
+      "zaklad": 29.9,
+      "min": 32.6,
+      "vic": [
+        26.7,
+        26.4,
+        27,
+        26.7,
+        27.6,
+        27.3
+      ]
+    },
+    {
+      "den": "Sobota",
+      "zaklad": 27,
+      "min": 27,
+      "vic": []
+    },
+    {
+      "den": "Neděle",
+      "zaklad": 29.8,
+      "min": 33,
+      "vic": [
+        26.6,
+        26.3,
+        26.9,
+        26.6,
+        27.5,
+        27.1
+      ]
+    }
+  ],
   "varovani": [
-    "Pondělí: faktor T = 0.39 mimo 0.5-2.5, oříznuto",
+    "Pondělí: faktor T = 0.49 mimo 0.5-2.5, oříznuto",
     "Pondělí: kureci-prsa na stropu 200 g",
     "Pondělí: faktor P = 1.72 mimo 0.6-1.6, oříznuto",
     "Pátek: kureci-prsa na stropu 200 g",
     "Pátek: faktor P = 1.63 mimo 0.6-1.6, oříznuto",
-    "Sobota: faktor C = 0.59 mimo 0.6-1.8, oříznuto"
+    "Sobota: faktor C = 0.11 mimo 0.6-1.8, oříznuto"
   ]
 }

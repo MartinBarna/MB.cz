@@ -10,6 +10,9 @@
 //   co bylo v PDF od 9. 7. 2026 (commit 1336dfd70), jen bez porcí.
 // - Výchozí gramáže = Martinem potvrzený plán z června 2026 (plan/build_plans.py, commit 8320551e0).
 //   Kde tam gramáž chyběla („+ zelenina", „velký salát"), bere se výchozí porce potraviny z food-db.
+// - 25. 9. 2026 večer: tuk v % kcal (TUK_PCT_KCAL), pozice 25 až 35 % v každém dni každé varianty;
+//   sobotní olej na salát 10 → 20 g (sobota měla 22,6 % tuku) a varianta „víc" se na flex sobotu
+//   nevztahuje (text PDF). Předtím:
 // - Martin 25. 9. 2026: tuk 0,6 g/kg (kolo 3; kolo 2 mělo 0,7, kolo 1 0,8), ať jsou větší přílohy; čtvrteční proteinová tyčinka
 //   a sobotní pizza zpět (obě jsou v databázi appky, hodnoty a jejich ověření v extra souboru).
 // - Odchylky od Martinova menu a od června (25. 9. 2026, agent 78. šéfa): sobotní flex den má
@@ -32,8 +35,19 @@ module.exports = {
   REF: { sex: 'zena', age: 38, height: 166, weight: 72, activity: 'lehka', goal: 'mirne_hubnuti' },
   // Stránka makro-plan i OG obrázek slibují 1 500 kcal. Engine dá referenční ženě 1 538 kcal.
   KCAL_CIL: 1500,
-  // Tuk na kg referenční váhy (Martin 25. 9. 2026: 0,6 ≈ 43 g, ať jsou větší přílohy).
-  TUK_G_NA_KG: 0.6,
+  // Tuk dne v % kcal cíle. ⭐ [25. 9. 2026 večer] Martinova pozice: tuk 25 až 35 % kcal v KAŽDÉM
+  // dni KAŽDÉ varianty (základ, „míň", „víc"), nikdy pod 20 %. Dřív 0,6 g/kg (≈ 43 g, 25,8 %, Martin
+  // 25. 9. ráno, „ať jsou větší přílohy"): základ stál na spodní hraně a „víc" (+ rýže/vločky
+  // a jablko) spadlo pod 25 %, sobota na 19,95 %. Změřeno 25. 9.: všemi variantami projde 29 i 30,
+  // 28 ne („víc" pod 25 %), 31 ne (neděle „míň" 35,3 %). 30 = totéž jako engine appky i webu
+  // a víc rezervy pro „víc" (nejnižší 26,1 % proti 25,1 % při 29). Build hlídá a jinak spadne.
+  TUK_PCT_KCAL: 30,
+  // „Potřebuješ víc" (text PDF): +40 g rýže nebo ovesných vloček a jedno jablko.
+  // Build z těchhle kombinací počítá tuk v % kcal každého dne i text {{PLUS_MIN}}.
+  PLUS_VARIANTY: [
+    ['40 g rýže + jablko', [{ id: 'ryze-bila', g: 40 }, { id: 'jablko', g: 150 }]],
+    ['40 g vloček + jablko', [{ id: 'ovesne-vlocky', g: 40 }, { id: 'jablko', g: 150 }]],
+  ],
 
   DAYS: [
     { name: 'Pondělí', tag: 'tréninkový den', meals: [
@@ -156,7 +170,9 @@ module.exports = {
         ['okurka', 100, 'F', 'okurky'],
       ]},
     ]},
-    // Flex den: pizza je pevná, kcal dorovnávají vločky (tuk je ten den volný, build hlídá aspoň 22 % kcal).
+    // Flex den: pizza je pevná, kcal dorovnávají vločky (tuk je ten den volný, build hlídá 25 až 35 % kcal).
+    // ⭐ [25. 9. 2026 večer] Olej na salát 10 → 20 g: sobota měla 22,6 % tuku, pod pozicí 25 až 35 %.
+    // Varianta „víc" se na flex sobotu nevztahuje (text PDF: „Flex sobotu nech, jak je.").
     { name: 'Sobota', tag: 'flex den', flex: true, volnyTuk: true, jenKcal: 'C', meals: [
       { lbl: 'Snídaně', title: 'Tvaroh s ovesnými vločkami a jahodami', og: 'Tvaroh s vločkami', items: [
         ['tvaroh-mekky-nizkotucny', 250, 'F', 'nízkotučného tvarohu'],
@@ -169,7 +185,7 @@ module.exports = {
         ['ledovy-salat', 80, 'F', 'ledového salátu'],
         ['cherry-rajcata', 100, 'F', 'cherry rajčat'],
         ['okurka', 100, 'F', 'okurky'],
-        ['olivovy-olej', 10, 'F', 'olivového oleje'],
+        ['olivovy-olej', 20, 'F', 'olivového oleje'],
       ]},
       { lbl: 'Svačina', title: 'Proteinový shake', items: [
         ['syrovatkovy-protein', 30, 'F', 'proteinu (s vodou)'],
@@ -226,12 +242,12 @@ module.exports = {
     // Tofu má na 100 g asi polovinu bílkovin kuřecích prsou: gramy tofu pro stejné bílkoviny jako typická porce masa.
     const P_TYP = median(porceP);
     const TOFU = Math.round((mac('kureci-prsa', P_TYP).p / mac('tofu', 100).p * 100) / 10) * 10;
-    // „Potřebuješ víc": +40 g rýže nebo vloček a 1 jablko. Kolik to je, spočítá DB.
-    const PR = mac('ryze-bila', 40).kcal, PV = mac('ovesne-vlocky', 40).kcal, PJ = mac('jablko', 150).kcal;
+    // „Potřebuješ víc": kombinace z PLUS_VARIANTY (+40 g rýže nebo vloček a 1 jablko). Kolik to je, spočítá DB.
+    const plus = module.exports.PLUS_VARIANTY.map(([, pr]) => pr.reduce((s, x) => s + mac(x.id, x.g).kcal, 0));
     return {
       '{{RYZE_TYP}}': String(RYZE_TYP),
-      '{{PLUS_MIN}}': String(Math.round((Math.min(PR, PV) + PJ) / 10) * 10),
-      '{{PLUS_MAX}}': String(Math.round((Math.max(PR, PV) + PJ) / 10) * 10),
+      '{{PLUS_MIN}}': String(Math.round(Math.min(...plus) / 10) * 10),
+      '{{PLUS_MAX}}': String(Math.round(Math.max(...plus) / 10) * 10),
       '{{EKV_BRAMBORY}}': String(ekv('ryze-bila', RYZE_TYP, 'brambory', 10)), '{{EKV_BATATY}}': String(ekv('ryze-bila', RYZE_TYP, 'bataty', 10)),
       '{{EKV_CHLEB}}': String(ekv('ryze-bila', RYZE_TYP, 'chleb-celozrnny', 10)), '{{EKV_KUSKUS}}': String(ekv('ryze-bila', RYZE_TYP, 'kuskus', 5)),
       '{{EKV_OLEJ}}': String(ekv('mandle', 15, 'olivovy-olej', 5)), '{{EKV_AVOKADO}}': String(ekv('mandle', 15, 'avokado', 10)),

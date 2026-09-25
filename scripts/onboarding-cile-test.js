@@ -19,15 +19,12 @@ function pct(a, b) { return Math.round((a - b) / b * 1000) / 10; }
 
 // Vzorec tuku PREPSANY Z APPKY (`src/engine/goals.ts`: fatTargetG + macroSplit).
 // Slouzi jako nezavisla kontrola parity, ktera se pri zmene enginu rozsviti.
-//   BMI >= 30  -> 25 % kalorii
-//   jinak      -> referencni vaha * 0,8 g/kg
-//   podlaha    -> 22 % kalorii (fatFloorG), strop -> co se vejde vedle bilkovin
-function appkaTuk(kcal, refKg, bmiHodnota) {
-  const podlaha = Math.round((22 / 100) * kcal / 9);
-  const cil = (bmiHodnota != null && bmiHodnota >= 30)
-    ? Math.round((25 / 100) * kcal / 9)
-    : Math.round(refKg * 0.8);
-  return Math.max(podlaha, cil);
+// [25. 9. 2026] Martinova pozice: cil 30 % kalorii pro vsechny, pasmo 25 az 35 %
+//   (podlaha nahoru, strop dolu). Dnes to nezavisi na vaze ani BMI.
+function appkaTuk(kcal) {
+  const podlaha = Math.ceil((25 / 100) * kcal / 9 - 1e-9);
+  const strop = Math.floor((35 / 100) * kcal / 9 + 1e-9);
+  return Math.max(podlaha, Math.min(Math.round((30 / 100) * kcal / 9), strop));
 }
 
 const PROFILY = [
@@ -91,12 +88,12 @@ PROFILY.forEach(function (p) {
       + (k.varovani.length ? ' · ⚠️ ' + k.varovani.length : ''));
     ok(k.kcal >= (p.pohlavi === 'z' ? 1200 : 1500), '   ' + k.nazev + ': kalorie nad podlahou');
     ok(k.bilkoviny_g_kg >= 1.19 && k.bilkoviny_g_kg <= 2.21, '   ' + k.nazev + ': bílkoviny 1,2 až 2,2 g/kg referenční váhy');
-    ok(k.fat * 9 >= k.kcal * 0.215, '   ' + k.nazev + ': tuk nad podlahou 22 % kalorií');
+    ok(k.fat * 9 >= k.kcal * 0.25 && k.fat * 9 <= k.kcal * 0.35, '   ' + k.nazev + ': tuk v pásmu 25 až 35 % kalorií');
     ok(k.fiber === Math.min(60, Math.max(20, Math.round(k.kcal / 1000 * 14))),
       '   ' + k.nazev + ': vláknina 1:1 s appkou (14 g/1000 kcal, strop 60, podlaha 20)');
     ok(k.fiber >= 20, '   ' + k.nazev + ': vláknina nikdy pod podlahou 20 g');
-    ok(k.fat === appkaTuk(k.kcal, r.ref_kg, r.bmi),
-      '   ' + k.nazev + ': tuk 1:1 s appkou (' + k.fat + ' vs ' + appkaTuk(k.kcal, r.ref_kg, r.bmi) + ' g)');
+    ok(k.fat === appkaTuk(k.kcal),
+      '   ' + k.nazev + ': tuk 1:1 s appkou (' + k.fat + ' vs ' + appkaTuk(k.kcal) + ' g)');
     ok(Math.abs(soucet - k.kcal) / k.kcal <= 0.05, '   ' + k.nazev + ': součet maker sedí na kalorie (' + soucet + ' vs ' + k.kcal + ')');
     // deficit nikdy nad 25 % výdeje
     ok(k.kcal >= r.vydej.tdee * 0.75 - 1 || k.kcal === (p.pohlavi === 'z' ? 1200 : 1500),
