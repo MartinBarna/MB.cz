@@ -231,15 +231,18 @@ function build(D) {
   const median = (a) => { const s = a.slice().sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
   const kcal100 = (id) => mac(id, 100).kcal;
   const ekv = (zId, zG, naId, s) => Math.round((mac(zId, zG).kcal / kcal100(naId) * 100) / s) * s;
-  // „Potřebuješ míň": polovina přílohy u oběda i večeře (+ položky D.MINUS_TUK celé). Návod nesmí
-  // žádný den (ani flex) dostat pod kalorickou podlahu enginu ani tuk pod 20 % kcal; hlídá to build.
-  // Rozpětí v textu je přes běžné dny (flex den nemá u oběda a večeře přílohu, ubral by 0).
+  // „Potřebuješ míň": polovina přílohy u oběda i večeře (dorovnávaná příloha i pevná: tortilla,
+  // houska, rohlík) + položky D.MINUS_TUK celé. Flex den se nemění (text: „Flex sobotu nech, jak je.“).
+  // Návod nesmí žádný den dostat pod kalorickou podlahu enginu ani tuk pod 20 % kcal; hlídá to build.
+  const PRILOHA_PEVNA = /tortilla|houska|rohlik/;
   const minusDen = (d) => {
     const po = { kcal: 0, f: 0 };
     d.meals.forEach((m) => m.items.forEach((it) => {
       let g = it.g;
-      if (it.role === 'C' && (m.lbl === 'Oběd' || m.lbl === 'Večeře')) g /= 2;
-      if (D.MINUS_TUK && D.MINUS_TUK.test(it.id)) g = 0;
+      if (!d.flex) {
+        if ((it.role === 'C' || PRILOHA_PEVNA.test(it.id)) && (m.lbl === 'Oběd' || m.lbl === 'Večeře')) g /= 2;
+        if (D.MINUS_TUK && D.MINUS_TUK.test(it.id)) g = 0;
+      }
       const x = mac(it.id, g); po.kcal += x.kcal; po.f += x.f;
     }));
     return po;

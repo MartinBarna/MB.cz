@@ -156,7 +156,7 @@ module.exports = {
         ['houska-celozrnna', 60, 'F', 'celozrnné housky', null, [60, 'celozrnná houska', 'celozrnné housky', 'celozrnných housek']],
         ['ledovy-salat', 50, 'F', 'ledového salátu'],
         ['rajce', 50, 'F', 'rajčete'],
-        ['mrazene-hranolky', 100, 'C', 'hranolek z trouby'],
+        ['mrazene-hranolky', 100, 'C', 'upečených hranolek z trouby'],
       ]},
       { lbl: 'Večeře', title: 'Kuřecí s bramborem a brokolicí', og: 'Kuřecí s bramborem', items: [
         ['kureci-prsa', 150, 'P', 'kuřecích prsou'],
