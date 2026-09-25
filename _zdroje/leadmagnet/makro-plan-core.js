@@ -59,6 +59,8 @@ function krok(id, role, g0) {
   if (g0 >= 150) return 10;
   return 5;
 }
+const MASO = /kureci|kruti|hovezi|losos|treska|tunak/;
+const MAX_MASO_G = 200;
 // O kolik smí dorovnání porci změnit proti výchozí (tuky jsou malé gramáže, proto širší).
 const MEZE = { P: [0.6, 1.6], C: [0.6, 1.8], T: [0.5, 2.5] };
 
@@ -77,8 +79,13 @@ function build(D) {
     day.meals.forEach((m, mi) => m.items.forEach((row) => items.push({
       mi, id: row[0], g0: row[1], role: row[2], txt: row[3], jed: row[4] || 'g', kus: row[5] || null, g: row[1],
     })));
-    const role = (r) => soucet(items.filter((i) => i.role === r).map((i) => ({ id: i.id, g: i.g0 })));
-    const R = { P: role('P'), C: role('C'), T: role('T') };
+    // Strop porce: maso a ryba nad ~200 g syrové váhy nejsou praktická porce. Když ho dorovnání
+    // přeleze, porce zůstane na stropu a bílkoviny dorovnají ostatní položky role P.
+    for (const it of items) it.strop = MASO.test(it.id) ? MAX_MASO_G : Infinity;
+    // Ořechy pod 10 g vypadají jako překlep (dvě půlky vlašáku), proto spodní mez.
+    for (const it of items) it.min = /mandle|orech/.test(it.id) ? 10 : 0;
+    const role = (r) => soucet(items.filter((i) => i.role === r && !i.fix).map((i) => ({ id: i.id, g: i.g0 })));
+    let R = { P: role('P'), C: role('C'), T: role('T') };
     // Neznámé: role, které den má. Tuk se dorovnává jen tam, kde den má přidaný tuk (role T)
     // a tuk nemá volný (flex den s pizzou). Jinak se řeší jen kcal a bílkoviny.
     // Den s `jenKcal: 'C'` (nebo 'P') dorovnává jen kcal touhle rolí (flex den s pevnou pizzou).
@@ -89,29 +96,42 @@ function build(D) {
     // bez její rovnice (P ↔ bílkoviny, C ↔ kcal, T ↔ tuk). Den pak drží aspoň kcal.
     const fak = { P: 1, C: 1, T: 1 };
     const EQ = { P: 'p', C: 'kcal', T: 'f' };
+    const gramy = (i) => (i.fix ? i.strop : i.g0 * (fak[i.role] || 1));
     let volne = nezname.slice(), rov = rovnice.slice();
+    const vyrad = (k) => {
+      volne = volne.filter((x) => x !== k);
+      const q = rov.includes(EQ[k]) && EQ[k] !== 'kcal' ? EQ[k] : rov.filter((x) => x !== 'kcal').pop() || 'kcal';
+      rov = rov.filter((x) => x !== q);
+    };
     while (volne.length) {
-      const pevneR = soucet(items.filter((i) => !volne.includes(i.role)).map((i) => ({ id: i.id, g: i.g0 * (fak[i.role] || 1) })));
+      R = { P: role('P'), C: role('C'), T: role('T') };
+      const pevneR = soucet(items.filter((i) => !volne.includes(i.role) || i.fix).map((i) => ({ id: i.id, g: gramy(i) })));
       const r = res(rov.map((q) => volne.map((k) => R[k][q])), rov.map((q) => CIL[q] - pevneR[q]));
       if (!r) { varovani.push(day.name + ': soustava nemá řešení, porce beze změny'); break; }
       volne.forEach((k, i) => { fak[k] = r[i]; });
       const mimo = volne.find((k) => fak[k] < MEZE[k][0] || fak[k] > MEZE[k][1]);
-      if (!mimo) break;
-      const [lo, hi] = MEZE[mimo];
-      varovani.push(day.name + ': faktor ' + mimo + ' = ' + fak[mimo].toFixed(2) + ' mimo ' + lo + '-' + hi + ', oříznuto');
-      fak[mimo] = Math.min(hi, Math.max(lo, fak[mimo]));
-      volne = volne.filter((k) => k !== mimo);
-      const q = rov.includes(EQ[mimo]) && EQ[mimo] !== 'kcal' ? EQ[mimo] : rov.filter((x) => x !== 'kcal').pop() || 'kcal';
-      rov = rov.filter((x) => x !== q);
+      if (mimo) {
+        const [lo, hi] = MEZE[mimo];
+        varovani.push(day.name + ': faktor ' + mimo + ' = ' + fak[mimo].toFixed(2) + ' mimo ' + lo + '-' + hi + ', oříznuto');
+        fak[mimo] = Math.min(hi, Math.max(lo, fak[mimo]));
+        vyrad(mimo);
+        continue;
+      }
+      const nadStrop = items.find((i) => volne.includes(i.role) && !i.fix && i.g0 * fak[i.role] > i.strop + 1e-9);
+      if (!nadStrop) break;
+      nadStrop.fix = true;
+      varovani.push(day.name + ': ' + nadStrop.id + ' na stropu ' + nadStrop.strop + ' g');
+      if (!items.some((i) => i.role === nadStrop.role && !i.fix)) vyrad(nadStrop.role);
     }
     for (const it of items) {
       if (!nezname.includes(it.role)) continue;
       const s = krok(it.id, it.role, it.g0);
-      it.g = Math.max(s, Math.round((it.g0 * fak[it.role]) / s) * s);
+      it.g = it.fix ? it.strop : Math.max(s, it.min, Math.round((it.g0 * fak[it.role]) / s) * s);
       it.gr = it.g;
     }
     // Zaokrouhlení na kuchyňské kroky den posune (malé porce o 5 g jsou i 5 %). Doladění: každá
-    // dorovnávaná položka smí o jeden krok nahoru nebo dolů, dokud se tím zmenšuje odchylka od cíle.
+    // dorovnávaná položka smí o jeden krok nahoru nebo dolů (ne přes strop), dokud se tím zmenšuje
+    // odchylka od cíle.
     const chyba = () => {
       const t = soucet(items);
       return rovnice.reduce((e, q) => e + ((t[q] - CIL[q]) / (q === 'kcal' ? 15 : 3)) ** 2, 0);
@@ -123,7 +143,7 @@ function build(D) {
         const s = krok(it.id, it.role, it.g0);
         for (const d of [s, -s]) {
           const g = it.g + d;
-          if (g < s || Math.abs(g - it.gr) > s) continue;
+          if (g < s || g < it.min || g > it.strop || Math.abs(g - it.gr) > s) continue;
           it.g = g; const e = chyba(); it.g -= d;
           if (e < nej - 1e-9) { nej = e; tah = [it, d]; }
         }
@@ -162,7 +182,7 @@ function build(D) {
   const macText = (t) => 'B ' + r0(t.p) + ' · S ' + r0(t.c) + ' · T ' + r0(t.f) + ' · ~' + cz(r0(t.kcal)) + ' kcal';
   function sumText(d) {
     const tag = d.tag ? d.tag + ' · ' : '';
-    return tag + 'Σ ~' + cz(r0(d.tot.kcal)) + ' kcal · B ' + r0(d.tot.p) + ' · S ' + r0(d.tot.c) + ' · T ' + r0(d.tot.f);
+    return tag + 'celkem ~' + cz(r0(d.tot.kcal)) + ' kcal · B ' + r0(d.tot.p) + ' · S ' + r0(d.tot.c) + ' · T ' + r0(d.tot.f);
   }
   function dayHtml(d, i) {
     const rows = d.meals.map((m) => '            <tr><td class="lbl">' + esc(m.lbl) + '</td><td>' + esc(jidloText(m))
@@ -182,8 +202,13 @@ function build(D) {
     if (D.NAKUP_KUS[id]) {
       const [gk, u] = D.NAKUP_KUS[id];
       const ks = g / gk;
-      const txt = Number.isInteger(ks) ? String(ks) : String(Math.ceil(ks * 2) / 2).replace('.', ',');
-      return txt + ' ' + u;
+      // Kus se kupuje celý: půl avokáda nebo 250 g pizzy v obchodě nekoupíš.
+      return Number.isInteger(ks) ? ks + ' ' + u : Math.ceil(ks) + ' ' + u + ' (v plánu ' + g + ' g)';
+    }
+    // Vařená příloha se kupuje syrová: přepočet podle kcal syrové a vařené verze v DB.
+    if (D.NAKUP_SYROVE && D.NAKUP_SYROVE[id]) {
+      const syr = Math.round((g * mac(id, 100).kcal / mac(D.NAKUP_SYROVE[id], 100).kcal) / 5) * 5;
+      return syr + ' g syrové (' + g + ' g vařené)';
     }
     const ml = D.NAKUP_ML && D.NAKUP_ML.includes(id);
     if (g >= 1000) return (Math.round(g / 50) * 50 / 1000).toString().replace('.', ',') + (ml ? ' l' : ' kg');
@@ -218,7 +243,6 @@ function build(D) {
   // Tuk v plánu pro větu o tucích: průměr dní bez flex dne, g na 5, podíl z kcal na celé procento.
   const bezFlex = plan.filter((d) => !d.flex);
   const tukG = bezFlex.reduce((s, d) => s + d.tot.f, 0) / bezFlex.length;
-  const tukKcal = bezFlex.reduce((s, d) => s + d.tot.kcal, 0) / bezFlex.length;
 
   const ctx = { D, REF_T, CIL, plan, mac, kcal100, ekv, median, porceP, porceC, minusDny, prumer, cz, r0, esc };
   const nahrady = Object.assign({
@@ -231,7 +255,8 @@ function build(D) {
     '{{P_TYP}}': String(median(porceP)),
     '{{B_PRUMER}}': String(r0(prumer('p'))),
     '{{T_PRUMER}}': String(Math.round(tukG / 5) * 5),
-    '{{T_PROCENT}}': String(r0((tukG * 9) / tukKcal * 100)),
+    // Procento ze ZAOKROUHLENÝCH gramů a kcal z cíle, ať si to čtenář přepočítá (50 × 9 / 1 500 = 30 %).
+    '{{T_PROCENT}}': String(r0((Math.round(tukG / 5) * 5 * 9) / D.KCAL_CIL * 100)),
     '{{MINUS_MIN}}': String(Math.round(Math.min(...minusDny) / 10) * 10),
     '{{MINUS_MAX}}': String(Math.round(Math.max(...minusDny) / 10) * 10),
     '{{LOSOS_KCAL}}': String(r0(kcal100('losos'))), '{{KURE_KCAL}}': String(r0(kcal100('kureci-prsa'))),
@@ -281,7 +306,7 @@ function build(D) {
   const nahled = plan.slice(0, 5).map((d) => {
     const hlavni = d.meals.filter((m) => m.lbl === 'Oběd' || m.lbl === 'Večeře').map((m) => m.og);
     return '                    <div class="day"><span class="meal-txt"><b>' + zkr[d.name] + '</b> ' + esc(hlavni.join(' · ')) + '</span><span class="kc">'
-      + cz(r0(d.tot.kcal)) + ' kcal</span></div>'; // jen kcal: s bílkovinami se řádek v kartě na mobilu láme k okraji
+      + '~' + cz(Math.round(d.tot.kcal / 50) * 50) + ' kcal</span></div>'; // jen kcal, zaokrouhleno; přesná čísla jsou v PDF
   }).join('\n');
   st = nahradBlok(st, D.ZNACKA + '-NAHLED', nahled + '\n                    ');
   if (D.ZNACKA_POZNAMKA) st = nahradBlok(st, D.ZNACKA + '-POZNAMKA', D.ZNACKA_POZNAMKA(ctx) + '\n        ');

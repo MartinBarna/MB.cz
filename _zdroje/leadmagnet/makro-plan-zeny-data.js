@@ -10,11 +10,12 @@
 //   co bylo v PDF od 9. 7. 2026 (commit 1336dfd70), jen bez porcí.
 // - Výchozí gramáže = Martinem potvrzený plán z června 2026 (plan/build_plans.py, commit 8320551e0).
 //   Kde tam gramáž chyběla („+ zelenina", „velký salát"), bere se výchozí porce potraviny z food-db.
-// - Martin 25. 9. 2026: tuk 0,7 g/kg místo 0,8 (větší přílohy), čtvrteční proteinová tyčinka
+// - Martin 25. 9. 2026: tuk 0,6 g/kg (kolo 3; kolo 2 mělo 0,7, kolo 1 0,8), ať jsou větší přílohy; čtvrteční proteinová tyčinka
 //   a sobotní pizza zpět (obě jsou v databázi appky, hodnoty a jejich ověření v extra souboru).
 // - Odchylky od Martinova menu a od června (25. 9. 2026, agent 78. šéfa): sobotní flex den má
 //   konkrétní snídani a oběd jako pánský flex den (tvaroh + vločky, kuřecí salát);
 //   páteční jogurt → proteinový (200 g) a mleté hovězí 10 % → 5 % (den měl moc tuku a málo bílkovin);
+//   kolo 3: v pátek 2 vejce, losos pevně 120 g a bílkoviny dorovná i proteinový jogurt (tuk dne);
 //   losos v pondělí a čtvrtek pevně 120 g (tučná ryba; bílkoviny dorovná libové maso, zbyde víc na přílohu);
 //   olej na pánev/na pečení (Út, St, Ne) a mandle do středeční snídaně (bez nich den nedosáhl
 //   tuku z cíle); řecký jogurt 0 % místo „do 5 %" (DB má pro 5 % dvě rozporné položky).
@@ -31,8 +32,8 @@ module.exports = {
   REF: { sex: 'zena', age: 38, height: 166, weight: 72, activity: 'lehka', goal: 'mirne_hubnuti' },
   // Stránka makro-plan i OG obrázek slibují 1 500 kcal. Engine dá referenční ženě 1 538 kcal.
   KCAL_CIL: 1500,
-  // Tuk na kg referenční váhy (Martin 25. 9. 2026: 0,7 místo 0,8, ať jsou větší přílohy).
-  TUK_G_NA_KG: 0.7,
+  // Tuk na kg referenční váhy (Martin 25. 9. 2026: 0,6 ≈ 43 g, ať jsou větší přílohy).
+  TUK_G_NA_KG: 0.6,
 
   DAYS: [
     { name: 'Pondělí', tag: 'tréninkový den', meals: [
@@ -134,12 +135,12 @@ module.exports = {
     ]},
     { name: 'Pátek', tag: '', meals: [
       { lbl: 'Snídaně', title: 'Vaječná míchanice s avokádem a chlebem', og: 'Míchaná vejce', items: [
-        ['vejce', 180, 'F', 'vajec', null, [60, 'vejce', 'vejce', 'vajec', false]],
+        ['vejce', 120, 'F', 'vajec', null, [60, 'vejce', 'vejce', 'vajec', false]],
         ['avokado', 70, 'T', 'avokáda'],
         ['chleb-celozrnny', 40, 'C', 'celozrnného chleba'],
       ]},
       { lbl: 'Svačina', title: 'Proteinový jogurt s jablkem', items: [
-        ['proteinovy-jogurt', 200, 'F', 'proteinového jogurtu'],
+        ['proteinovy-jogurt', 200, 'P', 'proteinového jogurtu'],
         ['jablko', 150, 'F', 'jablka', null, [150, 'jablko', 'jablka', 'jablek']],
       ]},
       { lbl: 'Oběd', title: 'Celozrnné těstoviny s mletým masem a rajčatovou omáčkou', og: 'Těstoviny s masem', items: [
@@ -149,7 +150,7 @@ module.exports = {
         ['paprika-cervena', 100, 'F', 'papriky'],
       ]},
       { lbl: 'Večeře', title: 'Grilovaný losos s batáty a salátem', og: 'Grilovaný losos', items: [
-        ['losos', 120, 'P', 'lososa'],
+        ['losos', 120, 'F', 'lososa'],
         ['bataty', 150, 'C', 'batátů'],
         ['ledovy-salat', 80, 'F', 'ledového salátu'],
         ['okurka', 100, 'F', 'okurky'],
@@ -174,8 +175,8 @@ module.exports = {
       { lbl: 'Svačina', title: 'Proteinový shake', items: [
         ['syrovatkovy-protein', 30, 'F', 'proteinu (s vodou)'],
       ]},
-      { lbl: 'Večeře', title: 'Pizza margherita a salát', og: 'Pizza', pozn: '250 g je zhruba polovina pizzy z pizzerie. Užij si ji bez výčitek.', items: [
-        ['pizza-margherita', 250, 'F', 'pizzy margherita'],
+      { lbl: 'Večeře', title: 'Pizza margherita a salát', og: 'Pizza', pozn: 'To je zhruba půlka pizzy z pizzerie. Užij si ji bez výčitek.', items: [
+        ['pizza-margherita', 250, 'F', 'pizzy'],
         ['ledovy-salat', 80, 'F', 'ledového salátu'],
         ['cherry-rajcata', 100, 'F', 'cherry rajčat'],
       ]},
@@ -220,8 +221,11 @@ module.exports = {
   }),
   // „Potřebuješ míň": vynech přidaný tuk (olej, mandle).
   MINUS_TUK: /olej|mandle/,
-  NAHRADY: ({ mac, kcal100, ekv, median, porceC }) => {
+  NAHRADY: ({ mac, kcal100, ekv, median, porceC, porceP }) => {
     const RYZE_TYP = median(porceC['ryze-bila']);
+    // Tofu má na 100 g asi polovinu bílkovin kuřecích prsou: gramy tofu pro stejné bílkoviny jako typická porce masa.
+    const P_TYP = median(porceP);
+    const TOFU = Math.round((mac('kureci-prsa', P_TYP).p / mac('tofu', 100).p * 100) / 10) * 10;
     // „Potřebuješ víc": +40 g rýže nebo vloček a 1 jablko. Kolik to je, spočítá DB.
     const PR = mac('ryze-bila', 40).kcal, PV = mac('ovesne-vlocky', 40).kcal, PJ = mac('jablko', 150).kcal;
     return {
@@ -233,6 +237,7 @@ module.exports = {
       '{{EKV_OLEJ}}': String(ekv('mandle', 15, 'olivovy-olej', 5)), '{{EKV_AVOKADO}}': String(ekv('mandle', 15, 'avokado', 10)),
       '{{EKV_ARASID}}': String(ekv('mandle', 15, 'araside-maslo', 5)),
       '{{PIZZA_KCAL}}': String(Math.round(kcal100('pizza-margherita'))),
+      '{{EKV_TOFU}}': String(TOFU),
     };
   },
 
@@ -257,6 +262,6 @@ module.exports = {
     okurka: 'Okurka', 'cherry-rajcata': 'Cherry rajčata', 'paprika-cervena': 'Paprika červená', mrkev: 'Mrkev', passata: 'Passata',
     boruvky: 'Borůvky', maliny: 'Maliny', jahody: 'Jahody', banan: 'Banán', jablko: 'Jablko',
   },
-  NAKUP_KUS: { vejce: [60, 'ks'], banan: [120, 'ks'], jablko: [150, 'ks'], 'grahamovy-rohlik': [60, 'ks'], 'tortilla-psenicna': [60, 'ks'], avokado: [140, 'ks'], 'proteinova-tycinka': [50, 'ks'] },
+  NAKUP_KUS: { vejce: [60, 'ks'], banan: [120, 'ks'], jablko: [150, 'ks'], 'grahamovy-rohlik': [60, 'ks'], 'tortilla-psenicna': [60, 'ks'], avokado: [140, 'ks'], 'proteinova-tycinka': [50, 'ks'], 'pizza-margherita': [300, 'ks'] },
   NAKUP_ML: ['mleko-polotucne'],
 };

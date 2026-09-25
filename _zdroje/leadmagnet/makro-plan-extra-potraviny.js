@@ -4,6 +4,9 @@
 // ⛔ Do assets/food-db.json je NEPŘIDÁVEJ: generátor jídelníčku existuje dvakrát (appka + web)
 // a hlídá to pre-commit hook. Tady je to jen lokální doplněk výpočtu PDF.
 //
+// ⭐ Kolo 3 (25. 9. 2026): šéf opravil generické řádky v curated_foods na mediány skutečných výrobků;
+// tady jsou PŘESNĚ ty hodnoty (id v poli zdroj), ať PDF i appka říkají totéž. Níž původní ověření.
+//
 // Ověření podle pravidla 7b (agent 79. šéfa, 25. 9. 2026, dotaz do curated_foods projektu
 // kfkmghvhqwqtsalqjmrp). Generické položky „Proteinová tyčinka" a „Pizza Margherita" nemají
 // v poznámce zdroj, proto jsou porovnané se skutečnými výrobky:
@@ -22,11 +25,11 @@
 //   Kalorie piva jsou hlavně z alkoholu, proto makra nedají součet kcal.
 module.exports = [
   { id: 'proteinova-tycinka', name: 'Proteinová tyčinka',
-    per100: { kcal: 400, p: 26.6, c: 34.5, f: 17, fib: 5.6, carbBasis: 'available' },
-    zdroj: 'medián 70 proteinových tyčinek s EAN z Open Food Facts CZ v curated_foods (25. 9. 2026)' },
+    per100: { kcal: 400, p: 26, c: 34, f: 17, fib: 6, carbBasis: 'available' },
+    zdroj: 'curated_foods id 2ddd5ca7-3de6-4dbb-804d-c08845de7f6c „Proteinová tyčinka", opraveno 25. 9. 2026 na medián 162 tyčinek s EAN (OFF CZ), porce 50 g' },
   { id: 'pizza-margherita', name: 'Pizza margherita',
-    per100: { kcal: 237, p: 9.2, c: 34, f: 6.4, fib: 2, carbBasis: 'available' },
-    zdroj: 'medián 7 margherit prodávaných v ČR (etiketa/e-shop výrobce) v curated_foods (25. 9. 2026)' },
+    per100: { kcal: 240, p: 9, c: 34, f: 7, fib: 2, carbBasis: 'available' },
+    zdroj: 'curated_foods id 97cd02cb-eda4-4c36-b1e6-3aa887a38908 „Pizza Margherita", opraveno 25. 9. 2026 na medián margherit prodávaných v ČR se zdrojem u výrobce' },
   { id: 'pivo-12', name: 'Pivo 12° světlý ležák',
     per100: { kcal: 43, p: 0.5, c: 3.6, f: 0, fib: 0, carbBasis: 'available' },
     zdroj: 'USDA FDC 168746 (Alcoholic beverage, beer, regular, all), v curated_foods „Pivo světlé"' },

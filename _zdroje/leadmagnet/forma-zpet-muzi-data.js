@@ -18,6 +18,8 @@
 //   Přidaný tuk tam, kde den bez něj nedosáhl tuku z cíle: úterý olej na hovězí a ořechy ke svačině,
 //   čtvrtek a neděle olej na pánev, středa olej v krabičce.
 //   Sobotní volnější večeře je konkrétní (pizza a pivo), ať jde spočítat.
+// - Kolo 3 (Martin 25. 9.): maso max ~200 g (strop v jádru), bílkoviny proto dorovnává i skyr (Po)
+//   a cottage (Pá) v roli P; v pátek 2 vejce a cottage light, ať den nepřetahuje tuk.
 //
 // role: 'P' = hlavní bílkovina, 'C' = hlavní příloha, 'T' = přidaný tuk; tyhle tři se dorovnávají.
 //       'F' = pevná položka (nemění se).
@@ -48,7 +50,7 @@ module.exports = {
         ['avokado', 70, 'T', 'avokáda'],
       ]},
       { lbl: 'Svačina', title: 'Skyr, banán a ořechy', items: [
-        ['skyr', 250, 'F', 'skyru'],
+        ['skyr', 200, 'P', 'skyru'],
         ['banan', 120, 'F', 'banánu', null, BANAN],
         ['vlasske-orechy', 30, 'T', 'vlašských ořechů'],
       ]},
@@ -76,7 +78,7 @@ module.exports = {
         ['jahody', 100, 'F', 'jahod'],
         ['vlasske-orechy', 15, 'T', 'vlašských ořechů'],
       ]},
-      { lbl: 'Oběd', title: 'Libové hovězí s bramborem a zeleninou', og: 'Hovězí', items: [
+      { lbl: 'Oběd', title: 'Libové hovězí s bramborem a zeleninou', og: 'Hovězí s bramborem', items: [
         ['hovezi-steak-libovy', 150, 'P', 'libového hovězího'],
         ['brambory', 300, 'C', 'brambor'],
         ['mrazena-zeleninova-smes', 200, 'F', 'zeleninové směsi'],
@@ -104,7 +106,7 @@ module.exports = {
         ['kureci-prsa', 150, 'P', 'kuřecích prsou'],
         ['ryze-bila-varena', 200, 'C', 'vařené rýže'],
         ['mrazena-zeleninova-smes', 150, 'F', 'zeleniny'],
-        ['repkovy-olej', 10, 'T', 'oleje z vaření'],
+        ['repkovy-olej', 10, 'T', 'oleje na přípravu'],
       ]},
       { lbl: 'Večeře', title: 'Krůtí s batáty a brokolicí', og: 'Krůtí s batáty', items: [
         ['kruti-prsa', 150, 'P', 'krůtích prsou'],
@@ -140,12 +142,12 @@ module.exports = {
     { name: 'Pátek', tag: '', meals: [
       { lbl: 'Snídaně', title: 'Toasty s vejci, avokádem a rajčetem', og: 'Toasty s vejci', items: [
         ['toastovy-chleb-bily', 50, 'F', 'toastového chleba', null, [25, 'toast', 'toasty', 'toastů']],
-        ['vejce', 180, 'F', 'vajec', null, VEJCE],
+        ['vejce', 120, 'F', 'vajec', null, VEJCE],
         ['avokado', 70, 'T', 'avokáda'],
         ['rajce', 100, 'F', 'rajčete'],
       ]},
       { lbl: 'Svačina', title: 'Cottage s ovocem a ořechy', items: [
-        ['cottage-syr', 250, 'F', 'cottage'],
+        ['cottage-syr-light', 200, 'P', 'cottage light'],
         ['boruvky', 100, 'F', 'borůvek'],
         ['vlasske-orechy', 20, 'T', 'vlašských ořechů'],
       ]},
@@ -246,7 +248,7 @@ module.exports = {
   // ---- nákupní seznam ---------------------------------------------------------------------------
   NAKUP_SKUPINY: [
     ['Bílkoviny', ['kureci-prsa', 'kruti-prsa', 'hovezi-steak-libovy', 'hovezi-mlete-10-tuku', 'losos', 'treska', 'vejce', 'syrovatkovy-protein']],
-    ['Mléčné', ['skyr', 'tvaroh-mekky-nizkotucny', 'recky-jogurt-0', 'cottage-syr', 'mleko-polotucne', 'eidam-30']],
+    ['Mléčné', ['skyr', 'tvaroh-mekky-nizkotucny', 'recky-jogurt-0', 'cottage-syr', 'cottage-syr-light', 'mleko-polotucne', 'eidam-30']],
     ['Sacharidy', ['ovesne-vlocky', 'granola-bez-pridaneho-cukru', 'ryze-bila', 'ryze-bila-varena', 'brambory', 'bataty', 'testoviny-celozrnne', 'chleb-celozrnny', 'toastovy-chleb-bily', 'grahamovy-rohlik', 'houska-celozrnna', 'mrazene-hranolky', 'pizza-margherita']],
     ['Tuky · zelenina · ovoce · pití', ['vlasske-orechy', 'avokado', 'repkovy-olej', 'olivovy-olej', 'med', 'mrazena-zeleninova-smes', 'brokolice', 'ledovy-salat', 'okurka', 'rajce', 'paprika-cervena', 'boruvky', 'jahody', 'banan', 'pivo-12']],
   ],
@@ -256,13 +258,14 @@ module.exports = {
     skyr: 'Skyr bílý', 'tvaroh-mekky-nizkotucny': 'Tvaroh nízkotučný', 'recky-jogurt-0': 'Řecký jogurt 0 %', 'cottage-syr': 'Cottage',
     'mleko-polotucne': 'Polotučné mléko', 'eidam-30': 'Eidam 30 %',
     'ovesne-vlocky': 'Ovesné vločky', 'granola-bez-pridaneho-cukru': 'Granola bez přidaného cukru', 'ryze-bila': 'Rýže',
-    'ryze-bila-varena': 'Rýže do krabičky (vařená)', brambory: 'Brambory', bataty: 'Batáty', 'testoviny-celozrnne': 'Celozrnné těstoviny',
+    'ryze-bila-varena': 'Rýže do krabičky', brambory: 'Brambory', bataty: 'Batáty', 'testoviny-celozrnne': 'Celozrnné těstoviny',
     'chleb-celozrnny': 'Celozrnný chléb', 'toastovy-chleb-bily': 'Toastový chléb', 'grahamovy-rohlik': 'Grahamový rohlík',
-    'houska-celozrnna': 'Celozrnná houska', 'mrazene-hranolky': 'Mražené hranolky do trouby', 'pizza-margherita': 'Pizza margherita',
+    'houska-celozrnna': 'Celozrnná houska', 'mrazene-hranolky': 'Mražené hranolky do trouby', 'cottage-syr-light': 'Cottage light', 'pizza-margherita': 'Pizza margherita',
     'vlasske-orechy': 'Vlašské ořechy', avokado: 'Avokádo', 'repkovy-olej': 'Řepkový olej', 'olivovy-olej': 'Olivový olej', med: 'Med',
     'mrazena-zeleninova-smes': 'Mražená zeleninová směs', brokolice: 'Brokolice', 'ledovy-salat': 'Ledový salát', okurka: 'Okurka',
     rajce: 'Rajčata', 'paprika-cervena': 'Paprika červená', boruvky: 'Borůvky', jahody: 'Jahody', banan: 'Banán', 'pivo-12': 'Pivo 12°',
   },
   NAKUP_KUS: { vejce: [60, 'ks'], banan: [120, 'ks'], 'grahamovy-rohlik': [60, 'ks'], 'houska-celozrnna': [60, 'ks'], avokado: [140, 'ks'], 'pizza-margherita': [300, 'ks'] },
   NAKUP_ML: ['mleko-polotucne', 'pivo-12'],
+  NAKUP_SYROVE: { 'ryze-bila-varena': 'ryze-bila' },
 };

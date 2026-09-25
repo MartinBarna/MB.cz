@@ -176,8 +176,9 @@ async function render(html, outJpg) {
     const v = JSON.parse(fs.readFileSync(path.join(ROOT, '_zdroje/leadmagnet', json), 'utf8'));
     const cz = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     return v.plan.slice(0, 5).map((d) => {
-      const jidla = d.meals.filter((m) => m.og && ['Snídaně', 'Oběd', 'Večeře'].includes(m.lbl)).map((m, i) => (i ? m.og.charAt(0).toLowerCase() + m.og.slice(1) : m.og));
-      return [d.zkratka, jidla.join(' · '), cz(d.tot.kcal) + ' kcal'];
+      // Oběd a večeře jako náhled týdne na landingu; kcal zaokrouhlené, přesná čísla jsou v PDF.
+      const jidla = d.meals.filter((m) => m.og && ['Oběd', 'Večeře'].includes(m.lbl)).map((m, i) => (i ? m.og.charAt(0).toLowerCase() + m.og.slice(1) : m.og));
+      return [d.zkratka, jidla.join(' · '), '~' + cz(Math.round(d.tot.kcal / 50) * 50) + ' kcal'];
     });
   };
   if (!only || only === 'og-makro-plan') jobs.push(['assets/og-makro-plan.jpg', planCard('pro ženy 30+', planRows('makro-plan-zeny-vypocet.json'))]);
