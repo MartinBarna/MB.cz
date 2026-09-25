@@ -176,7 +176,7 @@ module.exports = {
       { lbl: 'Oběd', title: 'Velký kuřecí salát s pečivem', og: 'Kuřecí salát', items: [
         ['kureci-prsa', 200, 'F', 'kuřecích prsou'],
         ...SALAT,
-        ['olivovy-olej', 10, 'F', 'olivového oleje'],
+        ['olivovy-olej', 20, 'F', 'olivového oleje'],
         ['grahamovy-rohlik', 60, 'F', 'grahamového rohlíku', null, [60, 'grahamový rohlík', 'grahamové rohlíky', 'grahamových rohlíků']],
       ]},
       { lbl: 'Večeře', title: 'Volnější večeře, pizza a pivo', og: 'Pizza a pivo', pozn: 'Užij si to bez výčitek a drž bílkoviny.', items: [
@@ -223,17 +223,21 @@ module.exports = {
     '{{DNY_4_6}}': plan.slice(3, 6).map((d, i) => dayHtml(d, i + 3)).join('\n'),
     '{{DEN_7}}': dayHtml(plan[6], 6),
   }),
-  // „Potřebuješ míň": vynech přidané tuky (olej, ořechy, avokádo).
-  MINUS_TUK: /olej|orech|avokado/,
-  NAHRADY: ({ mac, ekv, median, porceC }) => {
+  // „Potřebuješ míň": jen polovina sacharidu u oběda i večeře. Vynechání tuků srazilo tuk dne až na 12 % kcal
+  // a středu pod podlahu 1 500 kcal (revize R1, 25. 9.), proto tuky zůstávají.
+  MINUS_TUK: null,
+  NAHRADY: ({ mac, ekv, median, porceC, porceP }) => {
     const RYZE_TYP = median(porceC['ryze-bila']);
     // „Potřebuješ víc": 50 g rýže, 200 g brambor nebo 2 krajíce chleba (80 g) a jablko.
     const pr = [mac('ryze-bila', 50).kcal, mac('brambory', 200).kcal, mac('chleb-celozrnny', 80).kcal];
-    const PJ = mac('jablko', 150).kcal;
+    // Kus ovoce: jablko nebo banán, rozpětí přes obě.
+    const ovoce = [mac('jablko', 150).kcal, mac('banan', 120).kcal];
     return {
       '{{RYZE_TYP}}': String(RYZE_TYP),
-      '{{PLUS_MIN}}': String(Math.round((Math.min(...pr) + PJ) / 10) * 10),
-      '{{PLUS_MAX}}': String(Math.round((Math.max(...pr) + PJ) / 10) * 10),
+      '{{PLUS_MIN}}': String(Math.round((Math.min(...pr) + Math.min(...ovoce)) / 10) * 10),
+      '{{PLUS_MAX}}': String(Math.round((Math.max(...pr) + Math.max(...ovoce)) / 10) * 10),
+      // Tvaroh/skyr za maso: gramy skyru se stejnými bílkovinami jako typická porce kuřecích prsou (na 50 g).
+      '{{EKV_SKYR}}': String(Math.round((mac('kureci-prsa', median(porceP)).p / mac('skyr', 100).p * 100) / 50) * 50),
       '{{EKV_BRAMBORY}}': String(ekv('ryze-bila', RYZE_TYP, 'brambory', 10)), '{{EKV_BATATY}}': String(ekv('ryze-bila', RYZE_TYP, 'bataty', 10)),
       '{{EKV_TESTOVINY}}': String(ekv('ryze-bila', RYZE_TYP, 'testoviny-celozrnne', 5)), '{{EKV_KUSKUS}}': String(ekv('ryze-bila', RYZE_TYP, 'kuskus', 5)),
       '{{EKV_CHLEB}}': String(ekv('ryze-bila', RYZE_TYP, 'chleb-celozrnny', 10)),
@@ -260,7 +264,7 @@ module.exports = {
     'ovesne-vlocky': 'Ovesné vločky', 'granola-bez-pridaneho-cukru': 'Granola bez přidaného cukru', 'ryze-bila': 'Rýže',
     'ryze-bila-varena': 'Rýže do krabičky', brambory: 'Brambory', bataty: 'Batáty', 'testoviny-celozrnne': 'Celozrnné těstoviny',
     'chleb-celozrnny': 'Celozrnný chléb', 'toastovy-chleb-bily': 'Toastový chléb', 'grahamovy-rohlik': 'Grahamový rohlík',
-    'houska-celozrnna': 'Celozrnná houska', 'mrazene-hranolky': 'Mražené hranolky do trouby', 'cottage-syr-light': 'Cottage light', 'pizza-margherita': 'Pizza margherita',
+    'houska-celozrnna': 'Celozrnná houska', 'mrazene-hranolky': 'Hranolky z trouby (upečená váha)', 'cottage-syr-light': 'Cottage light', 'pizza-margherita': 'Pizza margherita',
     'vlasske-orechy': 'Vlašské ořechy', avokado: 'Avokádo', 'repkovy-olej': 'Řepkový olej', 'olivovy-olej': 'Olivový olej', med: 'Med',
     'mrazena-zeleninova-smes': 'Mražená zeleninová směs', brokolice: 'Brokolice', 'ledovy-salat': 'Ledový salát', okurka: 'Okurka',
     rajce: 'Rajčata', 'paprika-cervena': 'Paprika červená', boruvky: 'Borůvky', jahody: 'Jahody', banan: 'Banán', 'pivo-12': 'Pivo 12°',

@@ -901,28 +901,28 @@
       "flex": true,
       "faktory": {
         "P": 1,
-        "C": 1.0659459459459462,
+        "C": 0.6,
         "T": 1
       },
       "tot": {
-        "kcal": 2006.3,
-        "p": 142.8,
-        "c": 219,
-        "f": 44.2,
-        "fib": 19.4
+        "kcal": 2002.2,
+        "p": 139.5,
+        "c": 204,
+        "f": 52.5,
+        "fib": 16.9
       },
       "meals": [
         {
           "lbl": "Snídaně",
           "title": "Tvaroh s ovesnými vločkami, ovocem a medem",
           "og": "Tvaroh s vločkami",
-          "text": "Tvaroh s ovesnými vločkami, ovocem a medem: 250 g nízkotučného tvarohu + 55 g ovesných vloček + 100 g jahod + 10 g medu.",
-          "mac": "B 38 · S 59 · T 5 · ~433 kcal",
+          "text": "Tvaroh s ovesnými vločkami, ovocem a medem: 250 g nízkotučného tvarohu + 30 g ovesných vloček + 100 g jahod + 10 g medu.",
+          "mac": "B 35 · S 44 · T 3 · ~341 kcal",
           "t": {
-            "kcal": 433.4,
-            "p": 37.9,
-            "c": 58.9,
-            "f": 4.9
+            "kcal": 340.9,
+            "p": 34.6,
+            "c": 43.9,
+            "f": 3.1
           },
           "items": [
             {
@@ -933,7 +933,7 @@
             },
             {
               "id": "ovesne-vlocky",
-              "g": 55,
+              "g": 30,
               "vychozi": 50,
               "role": "C"
             },
@@ -955,13 +955,13 @@
           "lbl": "Oběd",
           "title": "Velký kuřecí salát s pečivem",
           "og": "Kuřecí salát",
-          "text": "Velký kuřecí salát s pečivem: 200 g kuřecích prsou + 100 g ledového salátu + 100 g okurky + 100 g rajčat + 10 g olivového oleje + 1 grahamový rohlík (60 g).",
-          "mac": "B 53 · S 38 · T 17 · ~525 kcal",
+          "text": "Velký kuřecí salát s pečivem: 200 g kuřecích prsou + 100 g ledového salátu + 100 g okurky + 100 g rajčat + 20 g olivového oleje + 1 grahamový rohlík (60 g).",
+          "mac": "B 53 · S 38 · T 27 · ~614 kcal",
           "t": {
-            "kcal": 525.4,
+            "kcal": 613.8,
             "p": 52.9,
             "c": 37.7,
-            "f": 16.8
+            "f": 26.8
           },
           "items": [
             {
@@ -990,8 +990,8 @@
             },
             {
               "id": "olivovy-olej",
-              "g": 10,
-              "vychozi": 10,
+              "g": 20,
+              "vychozi": 20,
               "role": "F"
             },
             {
@@ -1239,7 +1239,7 @@
     "ledovy-salat": 450,
     "okurka": 400,
     "rajce": 450,
-    "ovesne-vlocky": 160,
+    "ovesne-vlocky": 135,
     "syrovatkovy-protein": 120,
     "mleko-polotucne": 250,
     "tvaroh-mekky-nizkotucny": 450,
@@ -1247,7 +1247,7 @@
     "hovezi-steak-libovy": 340,
     "testoviny-celozrnne": 60,
     "brokolice": 600,
-    "olivovy-olej": 15,
+    "olivovy-olej": 25,
     "recky-jogurt-0": 250,
     "granola-bez-pridaneho-cukru": 40,
     "boruvky": 200,
@@ -1272,6 +1272,7 @@
     "Pondělí: kureci-prsa na stropu 200 g",
     "Pondělí: faktor P = 1.72 mimo 0.6-1.6, oříznuto",
     "Pátek: kureci-prsa na stropu 200 g",
-    "Pátek: faktor P = 1.63 mimo 0.6-1.6, oříznuto"
+    "Pátek: faktor P = 1.63 mimo 0.6-1.6, oříznuto",
+    "Sobota: faktor C = 0.59 mimo 0.6-1.8, oříznuto"
   ]
 }

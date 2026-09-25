@@ -82,8 +82,8 @@ function build(D) {
     // Strop porce: maso a ryba nad ~200 g syrové váhy nejsou praktická porce. Když ho dorovnání
     // přeleze, porce zůstane na stropu a bílkoviny dorovnají ostatní položky role P.
     for (const it of items) it.strop = MASO.test(it.id) ? MAX_MASO_G : Infinity;
-    // Ořechy pod 10 g vypadají jako překlep (dvě půlky vlašáku), proto spodní mez.
-    for (const it of items) it.min = /mandle|orech/.test(it.id) ? 10 : 0;
+    // Ořechy pod 10 g vypadají jako překlep (dvě půlky vlašáku), vločky pod 25 g nejsou porce: spodní mez.
+    for (const it of items) it.min = /mandle|orech/.test(it.id) ? 10 : /ovesne-vlocky/.test(it.id) ? 25 : 0;
     const role = (r) => soucet(items.filter((i) => i.role === r && !i.fix).map((i) => ({ id: i.id, g: i.g0 })));
     let R = { P: role('P'), C: role('C'), T: role('T') };
     // Neznámé: role, které den má. Tuk se dorovnává jen tam, kde den má přidaný tuk (role T)
@@ -231,14 +231,28 @@ function build(D) {
   const median = (a) => { const s = a.slice().sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
   const kcal100 = (id) => mac(id, 100).kcal;
   const ekv = (zId, zG, naId, s) => Math.round((mac(zId, zG).kcal / kcal100(naId) * 100) / s) * s;
-  const minusDny = plan.filter((d) => !d.flex).map((d) => {
-    let k = 0;
+  // „Potřebuješ míň": polovina přílohy u oběda i večeře (+ položky D.MINUS_TUK celé). Návod nesmí
+  // žádný den (ani flex) dostat pod kalorickou podlahu enginu ani tuk pod 20 % kcal; hlídá to build.
+  // Rozpětí v textu je přes běžné dny (flex den nemá u oběda a večeře přílohu, ubral by 0).
+  const minusDen = (d) => {
+    const po = { kcal: 0, f: 0 };
     d.meals.forEach((m) => m.items.forEach((it) => {
-      if (it.role === 'C' && (m.lbl === 'Oběd' || m.lbl === 'Večeře')) k += mac(it.id, it.g).kcal / 2;
-      if (D.MINUS_TUK.test(it.id)) k += mac(it.id, it.g).kcal;
+      let g = it.g;
+      if (it.role === 'C' && (m.lbl === 'Oběd' || m.lbl === 'Večeře')) g /= 2;
+      if (D.MINUS_TUK && D.MINUS_TUK.test(it.id)) g = 0;
+      const x = mac(it.id, g); po.kcal += x.kcal; po.f += x.f;
     }));
-    return k;
-  });
+    return po;
+  };
+  for (const d of plan) {
+    const po = minusDen(d);
+    if (po.kcal < REF_T.kcalFloor) throw new Error(d.name + ': návod „míň" dá ' + r0(po.kcal) + ' kcal, pod podlahou ' + REF_T.kcalFloor);
+    if (po.f * 9 / po.kcal < 0.2) throw new Error(d.name + ': návod „míň" dá tuk ' + (100 * po.f * 9 / po.kcal).toFixed(1) + ' % kcal, pod 20 %');
+    // Tuk dne: nikdy pod 20 % kcal, flex den aspoň 22 % (Martin 25. 9.).
+    const tukPct = d.tot.f * 9 / d.tot.kcal;
+    if (tukPct < (d.flex ? 0.22 : 0.2)) throw new Error(d.name + ': tuk ' + (100 * tukPct).toFixed(1) + ' % kcal, pod mezí ' + (d.flex ? 22 : 20) + ' %');
+  }
+  const minusDny = plan.filter((d) => !d.flex).map((d) => d.tot.kcal - minusDen(d).kcal);
   const prumer = (k) => plan.reduce((s, d) => s + d.tot[k], 0) / plan.length;
   // Tuk v plánu pro větu o tucích: průměr dní bez flex dne, g na 5, podíl z kcal na celé procento.
   const bezFlex = plan.filter((d) => !d.flex);
@@ -254,6 +268,7 @@ function build(D) {
     '{{REF_VEK}}': String(D.REF.age),
     '{{P_TYP}}': String(median(porceP)),
     '{{B_PRUMER}}': String(r0(prumer('p'))),
+    '{{B_CIL}}': String(CIL.p),
     '{{T_PRUMER}}': String(Math.round(tukG / 5) * 5),
     // Procento ze ZAOKROUHLENÝCH gramů a kcal z cíle, ať si to čtenář přepočítá (50 × 9 / 1 500 = 30 %).
     '{{T_PROCENT}}': String(r0((Math.round(tukG / 5) * 5 * 9) / D.KCAL_CIL * 100)),

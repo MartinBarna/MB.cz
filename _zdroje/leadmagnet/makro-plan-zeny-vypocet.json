@@ -882,29 +882,29 @@
       "tag": "flex den",
       "flex": true,
       "faktory": {
-        "P": 0.9944444444444445,
-        "C": 1,
+        "P": 1,
+        "C": 0.7585585585585589,
         "T": 1
       },
       "tot": {
-        "kcal": 1501,
-        "p": 122.7,
-        "c": 174.1,
-        "f": 32.9,
-        "fib": 17.8
+        "kcal": 1508.3,
+        "p": 124.3,
+        "c": 162.9,
+        "f": 37.8,
+        "fib": 17.3
       },
       "meals": [
         {
           "lbl": "Snídaně",
-          "title": "Tvaroh s ovesnými vločkami, jahodami a medem",
+          "title": "Tvaroh s ovesnými vločkami a jahodami",
           "og": "Tvaroh s vločkami",
-          "text": "Tvaroh s ovesnými vločkami, jahodami a medem: 250 g nízkotučného tvarohu + 30 g ovesných vloček + 100 g jahod + 10 g medu.",
-          "mac": "B 35 · S 44 · T 3 · ~341 kcal",
+          "text": "Tvaroh s ovesnými vločkami a jahodami: 250 g nízkotučného tvarohu + 25 g ovesných vloček + 100 g jahod.",
+          "mac": "B 34 · S 33 · T 3 · ~292 kcal",
           "t": {
-            "kcal": 340.9,
-            "p": 34.6,
-            "c": 43.9,
-            "f": 3.1
+            "kcal": 292,
+            "p": 33.9,
+            "c": 32.7,
+            "f": 2.8
           },
           "items": [
             {
@@ -915,20 +915,14 @@
             },
             {
               "id": "ovesne-vlocky",
-              "g": 30,
+              "g": 25,
               "vychozi": 30,
-              "role": "F"
+              "role": "C"
             },
             {
               "id": "jahody",
               "g": 100,
               "vychozi": 100,
-              "role": "F"
-            },
-            {
-              "id": "med",
-              "g": 10,
-              "vychozi": 10,
               "role": "F"
             }
           ]
@@ -937,20 +931,20 @@
           "lbl": "Oběd",
           "title": "Velký kuřecí salát s rohlíkem",
           "og": "Kuřecí salát",
-          "text": "Velký kuřecí salát s rohlíkem: 150 g kuřecích prsou + 1 grahamový rohlík (60 g) + 80 g ledového salátu + 100 g cherry rajčat + 100 g okurky + 5 g olivového oleje.",
-          "mac": "B 41 · S 37 · T 10 · ~418 kcal",
+          "text": "Velký kuřecí salát s rohlíkem: 160 g kuřecích prsou + 1 grahamový rohlík (60 g) + 80 g ledového salátu + 100 g cherry rajčat + 100 g okurky + 10 g olivového oleje.",
+          "mac": "B 44 · S 37 · T 16 · ~475 kcal",
           "t": {
-            "kcal": 418.4,
-            "p": 41.5,
+            "kcal": 474.6,
+            "p": 43.7,
             "c": 37.3,
-            "f": 10.5
+            "f": 15.7
           },
           "items": [
             {
               "id": "kureci-prsa",
-              "g": 150,
-              "vychozi": 150,
-              "role": "P"
+              "g": 160,
+              "vychozi": 160,
+              "role": "F"
             },
             {
               "id": "grahamovy-rohlik",
@@ -978,8 +972,8 @@
             },
             {
               "id": "olivovy-olej",
-              "g": 5,
-              "vychozi": 5,
+              "g": 10,
+              "vychozi": 10,
               "role": "F"
             }
           ]
@@ -1212,13 +1206,13 @@
     }
   ],
   "nakup": {
-    "ovesne-vlocky": 75,
+    "ovesne-vlocky": 70,
     "syrovatkovy-protein": 115,
     "mleko-polotucne": 150,
     "boruvky": 100,
     "recky-jogurt-0": 350,
     "mandle": 35,
-    "kureci-prsa": 840,
+    "kureci-prsa": 850,
     "ryze-bila": 100,
     "mrazena-zeleninova-smes": 500,
     "repkovy-olej": 25,
@@ -1247,7 +1241,7 @@
     "maliny": 100,
     "proteinova-tycinka": 50,
     "cherry-rajcata": 300,
-    "olivovy-olej": 10,
+    "olivovy-olej": 15,
     "kruti-prsa": 170,
     "proteinovy-jogurt": 300,
     "hovezi-mlete-5": 180,
@@ -1255,7 +1249,6 @@
     "passata": 100,
     "paprika-cervena": 200,
     "tvaroh-mekky-nizkotucny": 250,
-    "med": 10,
     "grahamovy-rohlik": 60,
     "pizza-margherita": 250,
     "proteinovy-pudink": 200,

@@ -156,21 +156,20 @@ module.exports = {
         ['okurka', 100, 'F', 'okurky'],
       ]},
     ]},
-    // Flex den: pizza je pevná, kcal dorovnává kuřecí na obědě (tuk je ten den volný).
-    { name: 'Sobota', tag: 'flex den', flex: true, volnyTuk: true, jenKcal: 'P', meals: [
-      { lbl: 'Snídaně', title: 'Tvaroh s ovesnými vločkami, jahodami a medem', og: 'Tvaroh s vločkami', items: [
+    // Flex den: pizza je pevná, kcal dorovnávají vločky (tuk je ten den volný, build hlídá aspoň 22 % kcal).
+    { name: 'Sobota', tag: 'flex den', flex: true, volnyTuk: true, jenKcal: 'C', meals: [
+      { lbl: 'Snídaně', title: 'Tvaroh s ovesnými vločkami a jahodami', og: 'Tvaroh s vločkami', items: [
         ['tvaroh-mekky-nizkotucny', 250, 'F', 'nízkotučného tvarohu'],
-        ['ovesne-vlocky', 30, 'F', 'ovesných vloček'],
+        ['ovesne-vlocky', 30, 'C', 'ovesných vloček'],
         ['jahody', 100, 'F', 'jahod'],
-        ['med', 10, 'F', 'medu'],
       ]},
       { lbl: 'Oběd', title: 'Velký kuřecí salát s rohlíkem', og: 'Kuřecí salát', items: [
-        ['kureci-prsa', 150, 'P', 'kuřecích prsou'],
+        ['kureci-prsa', 160, 'F', 'kuřecích prsou'],
         ['grahamovy-rohlik', 60, 'F', 'grahamového rohlíku', null, [60, 'grahamový rohlík', 'grahamové rohlíky', 'grahamových rohlíků']],
         ['ledovy-salat', 80, 'F', 'ledového salátu'],
         ['cherry-rajcata', 100, 'F', 'cherry rajčat'],
         ['okurka', 100, 'F', 'okurky'],
-        ['olivovy-olej', 5, 'F', 'olivového oleje'],
+        ['olivovy-olej', 10, 'F', 'olivového oleje'],
       ]},
       { lbl: 'Svačina', title: 'Proteinový shake', items: [
         ['syrovatkovy-protein', 30, 'F', 'proteinu (s vodou)'],
@@ -215,12 +214,13 @@ module.exports = {
   STRANKA: 'makro-plan/index.html',
   ZNACKA: 'PLAN-ZENY',
   DNY_BLOKY: (plan, dayHtml) => ({
-    '{{DNY_1_3}}': plan.slice(0, 3).map((d, i) => dayHtml(d, i)).join('\n'),
-    '{{DNY_4_6}}': plan.slice(3, 6).map((d, i) => dayHtml(d, i + 3)).join('\n'),
+    '{{DNY_1_2}}': plan.slice(0, 2).map((d, i) => dayHtml(d, i)).join('\n'),
+    '{{DNY_3_5}}': plan.slice(2, 5).map((d, i) => dayHtml(d, i + 2)).join('\n'),
+    '{{DEN_6}}': dayHtml(plan[5], 5),
     '{{DEN_7}}': dayHtml(plan[6], 6),
   }),
-  // „Potřebuješ míň": vynech přidaný tuk (olej, mandle).
-  MINUS_TUK: /olej|mandle/,
+  // „Potřebuješ míň": vynech mandle (olej zůstává, ať tuk nespadne pod 20 % kcal).
+  MINUS_TUK: /mandle/,
   NAHRADY: ({ mac, kcal100, ekv, median, porceC, porceP }) => {
     const RYZE_TYP = median(porceC['ryze-bila']);
     // Tofu má na 100 g asi polovinu bílkovin kuřecích prsou: gramy tofu pro stejné bílkoviny jako typická porce masa.
@@ -238,6 +238,7 @@ module.exports = {
       '{{EKV_ARASID}}': String(ekv('mandle', 15, 'araside-maslo', 5)),
       '{{PIZZA_KCAL}}': String(Math.round(kcal100('pizza-margherita'))),
       '{{EKV_TOFU}}': String(TOFU),
+      '{{TOFU_NAVIC}}': String(Math.round((mac('tofu', TOFU).kcal - mac('kureci-prsa', P_TYP).kcal) / 10) * 10),
     };
   },
 

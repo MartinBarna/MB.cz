@@ -11,7 +11,8 @@
 // kfkmghvhqwqtsalqjmrp). Generické položky „Proteinová tyčinka" a „Pizza Margherita" nemají
 // v poznámce zdroj, proto jsou porovnané se skutečnými výrobky:
 //
-// - Proteinová tyčinka: generická 350 kcal, B 30, S 35, T 10, vl. 4 na 100 g. Medián 70 skutečných
+// - Proteinová tyčinka (kolo 2, můj dotaz; šéf pak v kole 3 spočítal medián 162 tyčinek, viz pole zdroj):
+//   generická 350 kcal, B 30, S 35, T 10, vl. 4 na 100 g. Medián 70 skutečných
 //   proteinových tyčinek s EAN z Open Food Facts CZ (bílkoviny aspoň 20 g/100 g): 400 kcal,
 //   B 26,6, S 34,5, T 17, vl. 5,6. Tuk generické položky je o 41 % nižší (limit 15 %) ⇒ bereme medián.
 //   Sacharidy z evropských etiket jsou bez vlákniny (carbBasis 'available').
