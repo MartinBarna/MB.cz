@@ -9,7 +9,7 @@
     { "kind": "point", "kicker": "Proč bílkoviny zůstávají", "title": "Sval,<br>nebo jen váha?", "body": "Leidy: ženy s vyšší bílkovinou zhubly stejně, ale ztratily skoro <b>o polovinu méně</b> beztukové hmoty než ty s nižší (1,5 vs. 2,8 kg za 12 týdnů).<br><br>Číslo na váze půjde dolů tak i tak. Rozdíl je v tom, co po tobě zbude.", "callout": "Leidy (46 žen, 12 týdnů). Proto bílkoviny z počítání nevyhazuj." },
     { "kind": "point", "kicker": "Háček", "title": "Kde to má<br>hranice", "body": "Tuky drž zhruba na <b>25 až 35 % kalorií</b> a dlouhodobě nechoď pod 20 %, kvůli hormonům a vstřebávání vitaminů. Sacharidy táhnou tvrdý trénink a sytost má každý jinou.<br><br>Vypustit z počítání neznamená ignorovat." },
     { "kind": "vs", "kicker": "Prakticky", "title": "Co hlídat,<br>co pustit", "yes": { "h": "Sleduj", "items": ["<b>Kalorie</b>, ať deficit sedí", "<b>Bílkoviny</b>, ať zůstane sval", "<b>Vlákninu</b>, kvůli sytosti a zdraví"] }, "no": { "h": "Neřeš do gramu", "items": ["Přesný poměr sacharidů a tuků", "Hledání „nejlepší“ diety podle poměru", "Vyhýbání se sacharidům večer"] } },
-    { "kind": "quote", "text": "Kalorie rozhodnou, jestli zhubneš. Bílkoviny o tom, kolik svalů ti zbude.", "note": "Sacharidy a tuky si rozděl podle chuti a tréninku. Vydržíš to pak dýl." },
+    { "kind": "quote", "text": "Kalorie rozhodnou, jestli zhubneš. Bílkoviny o tom, kolik svalů ti zbude.", "note": "Sacharidy a tuky si rozděl podle chuti a tréninku. Vydržíš to pak déle." },
     { "kind": "cta", "title": "Chceš to mít <span class=\"hl\">poskládané?</span>", "lines": ["Celý rozbor se zdroji: <b>martinbarna.cz</b>", "Systém na míru: <b>online koučink</b>", "Flexibilní jídelníček: <b>videokurz (153 videí, 1 490 Kč)</b>"] }
   ]
 }
