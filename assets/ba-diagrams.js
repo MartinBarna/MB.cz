@@ -265,7 +265,7 @@
       '<g transform="translate(60,104)" style="'+F+'">' +
       '<rect x="0" y="0" width="14" height="14" rx="3" fill="'+GR+'"/><text x="22" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Bílkoviny</text><text x="22" y="28" fill="'+M+'" font-size="10.5">~1,6–2,2 g/kg — drž napevno</text>' +
       '<rect x="190" y="0" width="14" height="14" rx="3" fill="'+GS+'"/><text x="212" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Sacharidy</text><text x="212" y="28" fill="'+M+'" font-size="10.5">palivo pro výkon, flexibilní</text>' +
-      '<rect x="380" y="0" width="14" height="14" rx="3" fill="'+G+'"/><text x="402" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Tuky</text><text x="402" y="28" fill="'+M+'" font-size="10.5">min. ~0,8 g/kg</text>' +
+      '<rect x="380" y="0" width="14" height="14" rx="3" fill="'+G+'"/><text x="402" y="12" fill="'+W+'" font-size="12.5" font-weight="700">Tuky</text><text x="402" y="28" fill="'+M+'" font-size="10.5">25–35 % kcal, ne pod 20 %</text>' +
       '</g>' +
       '<text x="300" y="170" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:11px">Nejdřív kalorie, pak bílkovina. Zbytek (sacharidy/tuky) podle chuti a typu tréninku.</text>' +
       '<text x="300" y="190" text-anchor="middle" fill="'+M+'" style="'+F+';font-size:10px">Orientační rozmezí — vždy uprav podle cíle a jednotlivce.</text>' +
