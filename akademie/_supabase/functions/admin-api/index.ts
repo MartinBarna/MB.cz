@@ -6,7 +6,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // `index.ts`. Když se nahraje jen index, funkce spadne na chybějícím importu.
 // Past: paměť `mb-deploy-kopiruje-jen-index-past`.
 import { pripravFakta } from "./report-engine.mjs";
-import { applySyncPlan, type TcReport } from "./tc-report-sync.ts";
+import { applySyncPlan, existingDateWindow, extractTcReports, type ExistingClientReport } from "./tc-report-sync.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s nákupem přes Stripe (`academy-stripe-webhook`).
 // Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
 import { onboardKoucink, posliUvitaciMail } from "../_shared/koucink-onboarding.ts";
@@ -2897,24 +2897,39 @@ Deno.serve(async (req) => {
       const data = out.data ?? {};
       const empty = {
         ok: true, found: false, registered: false, active: false,
-        synced: 0, skipped_web: 0, skipped_empty: 0, report_dates: [] as string[],
+        synced: 0, created: 0, filled: 0,
+        skipped_web: 0, skipped_protected: 0, skipped_empty: 0, skipped_unchanged: 0,
+        skipped_grace: 0, kolize_tydnu: 0,
+        report_dates: [] as string[], duvody: [] as { tyden: string; akce: string; duvod: string }[],
       };
       if (data.found === false) return json(empty);
-      const reports = Array.isArray(data.reports) ? data.reports as TcReport[] : [];
-      const dates = reports.map((x) => String(x.report_date ?? x.week_start ?? "").slice(0, 10)).filter(Boolean);
-      const existingByDate = new Map<string, string | null>();
-      if (dates.length) {
+      const reports = extractTcReports(data);
+      const win = existingDateWindow(reports);
+      const existing: ExistingClientReport[] = [];
+      if (win) {
         const { data: exist } = await admin.from("client_reports")
-          .select("report_date,source").eq("email", email).in("report_date", dates);
+          .select("report_date,source,weight,nutrition")
+          .eq("email", email).gte("report_date", win.from).lte("report_date", win.to);
         for (const row of exist ?? []) {
-          existingByDate.set(String(row.report_date), row.source == null ? null : String(row.source));
+          existing.push({
+            report_date: String(row.report_date),
+            source: row.source == null ? null : String(row.source),
+            weight: row.weight == null ? null : Number(row.weight),
+            nutrition: (row.nutrition ?? null) as Record<string, unknown> | null,
+          });
         }
       }
       const { data: tgRow } = await admin.from("client_targets")
         .select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle();
-      const plan = applySyncPlan(email, reports, existingByDate, tgRow ?? null);
-      if (plan.toUpsert.length) {
-        const { error } = await admin.from("client_reports").upsert(plan.toUpsert, { onConflict: "email,report_date" });
+      const plan = applySyncPlan(email, reports, existing, tgRow ?? null);
+      if (plan.toInsert.length) {
+        const { error } = await admin.from("client_reports").upsert(plan.toInsert, { onConflict: "email,report_date" });
+        if (error) return json({ ok: false, duvod: "db", detail: String(error.message).slice(0, 200) }, 500);
+      }
+      for (const u of plan.toUpdate) {
+        const { error } = await admin.from("client_reports")
+          .update({ weight: u.weight, nutrition: u.nutrition })
+          .eq("email", email).eq("report_date", u.report_date);
         if (error) return json({ ok: false, duvod: "db", detail: String(error.message).slice(0, 200) }, 500);
       }
       return json({
@@ -2923,9 +2938,16 @@ Deno.serve(async (req) => {
         registered: data.registered !== false,
         active: data.active === true,
         synced: plan.synced,
+        created: plan.created,
+        filled: plan.filled,
         skipped_web: plan.skipped_web,
+        skipped_protected: plan.skipped_protected,
         skipped_empty: plan.skipped_empty,
+        skipped_unchanged: plan.skipped_unchanged,
+        skipped_grace: plan.skipped_grace,
+        kolize_tydnu: plan.kolize_tydnu,
         report_dates: plan.report_dates,
+        duvody: plan.duvody,
       });
     }
 

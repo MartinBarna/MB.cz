@@ -209,7 +209,7 @@
       <div id="histWrap" style="display:none;">
         <div class="ksec">Historie reportů</div>
         <div class="gwrap"><table class="hist"><thead><tr>
-          <th>Datum</th><th class="r">Váha</th><th class="r">Pas</th><th class="r">kcal Ø</th><th class="r">Bílk. Ø</th><th class="r">Kroky Ø</th><th class="r">Fitko</th><th class="r">Sport (min)</th><th class="r">Dodržení</th>
+          <th>Datum</th><th class="r">Váha</th><th class="r">Pas</th><th class="r">kcal Ø</th><th class="r">Bílk. Ø</th><th class="r">Sach. Ø</th><th class="r">Tuky Ø</th><th class="r">Vlák. Ø</th><th class="r">Dny</th><th class="r">Kroky Ø</th><th class="r">Fitko</th><th class="r">Sport (min)</th><th class="r">Dodržení</th>
         </tr></thead><tbody id="histBody"></tbody></table></div>
       </div>
 
@@ -328,6 +328,13 @@
     else s = s.replace(",", ".");
     var n = Number(s);
     return isFinite(n) ? n : null;
+  }
+  function znackaAppky(n, key, source){
+    if(source === "intake-baseline") return "";
+    if(source === "tvuj-coach" || source === "app") return ' <span title="z appky" aria-label="z appky">📱</span>';
+    var z = n && Array.isArray(n.z_appky) ? n.z_appky : [];
+    if(z.indexOf(key) < 0) return "";
+    return ' <span title="z appky" aria-label="z appky">📱</span>';
   }
   // Cesky 5. pad, prenesene 1:1 z edge funkce client-remind (tam uz overene v ostrych mailech).
   // Bez toho stranka zdravila "Ahoj, Hana!" misto "Ahoj, Hano!".
@@ -764,9 +771,13 @@
       // Odchylka se počítá proti cíli, který platil V TÝDNU TOHO REPORTU (snímek `r.targets`).
       // Když ho report nemá, delta() vrátí prázdno a sloupec vypadá přesně jako dřív.
       var tgR = r.targets || null;
-      var out = "<tr><td style='white-space:nowrap;'>" + datum + "</td><td class='r'>" + czk(toNum(r.weight)) + "</td><td class='r'>" + czk(toNum(m.pas))
-        + "</td><td class='r'>" + czk(toNum(nu.kcal)) + delta("kcal", nu.kcal, false, tgR)
-        + "</td><td class='r'>" + czk(toNum(nu.protein)) + delta("protein", nu.protein, true, tgR)
+      var out = "<tr><td style='white-space:nowrap;'>" + datum + "</td><td class='r'>" + czk(toNum(r.weight)) + znackaAppky(nu, "vaha", r.source) + "</td><td class='r'>" + czk(toNum(m.pas))
+        + "</td><td class='r'>" + czk(toNum(nu.kcal)) + znackaAppky(nu, "kcal", r.source) + delta("kcal", nu.kcal, false, tgR)
+        + "</td><td class='r'>" + czk(toNum(nu.protein)) + znackaAppky(nu, "protein", r.source) + delta("protein", nu.protein, true, tgR)
+        + "</td><td class='r'>" + czk(toNum(nu.carbs)) + znackaAppky(nu, "carbs", r.source)
+        + "</td><td class='r'>" + czk(toNum(nu.fat)) + znackaAppky(nu, "fat", r.source)
+        + "</td><td class='r'>" + czk(toNum(nu.fiber)) + znackaAppky(nu, "fiber", r.source)
+        + "</td><td class='r'>" + czk(toNum(nu.dny_zapsano)) + znackaAppky(nu, "dny_zapsano", r.source)
         + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "-") + delta("kroky", ac.kroky, true, tgR)
         + "</td><td class='r'>" + czk(toNum(ac.fitko)) + delta("treninky", ac.fitko, true, tgR)
         + "</td><td class='r'>" + czk(sportMin) + delta("sport_min", sportMin, true, tgR)
@@ -774,11 +785,11 @@
       if(dnyArr.length){
         var dt = "<table class='hist' style='font-size:.82rem;'><tr><th>Den</th><th class='r'>kcal</th><th class='r'>B</th><th class='r'>S</th><th class='r'>T</th><th class='r'>Vl</th></tr>"
           + (nu.dny || []).map(function(d){ if(!d) return ""; return "<tr><td>" + escH(d.den || "") + "</td><td class='r'>" + czk(toNum(d.kcal)) + "</td><td class='r'>" + czk(toNum(d.p)) + "</td><td class='r'>" + czk(toNum(d.c)) + "</td><td class='r'>" + czk(toNum(d.f)) + "</td><td class='r'>" + czk(toNum(d.fib)) + "</td></tr>"; }).join("") + "</table>";
-        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="9" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis, tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
+        out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="13" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis, tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
       }
       return out;
     }).join("");
-    el("histBody").innerHTML = rows || '<tr><td colspan="9" style="color:#8F8A99;">V tomhle období nemáš žádný report.</td></tr>';
+    el("histBody").innerHTML = rows || '<tr><td colspan="13" style="color:#8F8A99;">V tomhle období nemáš žádný report.</td></tr>';
     el("histBody").querySelectorAll("[data-hdny]").forEach(function(a2){
       a2.addEventListener("click", function(e){ e.preventDefault(); var row = document.getElementById("hdnyrow" + a2.getAttribute("data-hdny")); if(row) row.style.display = (row.style.display === "none" ? "" : "none"); });
     });
@@ -1478,7 +1489,7 @@
     // v DB zrovna jsou. `ilike` kvůli velikosti písmen, e-mail nemá zástupné znaky.
     var jaFiltr = "email=ilike." + encodeURIComponent(myEmail);
     Promise.all([
-      api("client_reports?select=report_date,weight,measurements,nutrition,activity,scales,targets&" + jaFiltr + "&order=report_date.asc&limit=200"),
+      api("client_reports?select=report_date,source,weight,measurements,nutrition,activity,scales,targets&" + jaFiltr + "&order=report_date.asc&limit=200"),
       api("client_intake?select=id,created_at,data&" + jaFiltr + "&limit=1"),
       // `limit=1` bez řazení vrací libovolný řádek. S filtrem je řádek stejně jen
       // jeden, ale řazení tu drží jako pojistka, ať to nikdy nezávisí na náhodě.

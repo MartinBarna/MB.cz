@@ -1,16 +1,17 @@
-// Barna Academy — týdenní sync reportů z appky Tvůj Coach do `client_reports`.
+// Barna Academy: týdenní sync reportů z appky Tvůj Coach do `client_reports`.
 //
 // Auth: hlavička x-drip-secret == app_config.drip_invoke_secret (vzor splatky-guard).
 // Most do appky: academy-grant + academy_grant_secret. ŽÁDNÁ druhá auth cesta.
 //
 // Koho: aktivní koučinkové entitlements (product=coaching, active, neexpirované).
 // Co: poslední 4 týdny z TC, upsert email+report_date, source=tvuj-coach.
-// ⛔ Nepřepisuje source=web / import-sheet. Žádný mail. Žádné mazání.
-// ⛔ Odpověď jen agregované counts — žádné e-maily v logu ani v JSON.
+// ⛔ source=web se nepřepisuje celý: do prázdných polí se doplní appka.
+// ⛔ import-sheet a test-kopie se nesahají. Žádný mail. Žádné mazání.
+// ⛔ Odpověď jen agregované counts, žádné e-maily v logu ani v JSON.
 //
 // Deploy: supabase functions deploy tc-client-reports-sync --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { applySyncPlan, type TcReport } from "../admin-api/tc-report-sync.ts";
+import { applySyncPlan, existingDateWindow, extractTcReports, type ExistingClientReport } from "../admin-api/tc-report-sync.ts";
 // 14. 9. 2026: chyba čtení není odpověď (guard secretu i čtení s opakováním, při trvalé chybě 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
@@ -69,8 +70,14 @@ Deno.serve(async (req) => {
   const clients = [...new Set(ents.map((e) => low(e.email)).filter((e) => e.includes("@")))];
 
   let synced = 0;
+  let created = 0;
+  let filled = 0;
   let skipped_web = 0;
+  let skipped_protected = 0;
   let skipped_empty = 0;
+  let skipped_unchanged = 0;
+  let skipped_grace = 0;
+  let kolize_tydnu = 0;
   let skipped_clients = 0;
   let clients_touched = 0;
   let clients_failed = 0;
@@ -97,25 +104,35 @@ Deno.serve(async (req) => {
         skipped_clients++;
         continue;
       }
-      const reports = Array.isArray(jj.reports) ? jj.reports as TcReport[] : [];
+      const reports = extractTcReports(jj);
       if (!reports.length) {
         skipped_clients++;
         continue;
       }
 
-      const dates = reports.map((x) => String(x.report_date ?? x.week_start ?? "").slice(0, 10)).filter(Boolean);
-      const existingByDate = new Map<string, string | null>();
-      if (dates.length) {
-        // ⛔ Nepřečtené existující řádky NEJSOU „žádné řádky": prázdná mapa by pustila upsert
-        //    i přes chráněný zdroj (web, import-sheet). Při chybě se klient přeskočí.
-        const exist = await ctiSOpakovanim<{ data: { report_date?: unknown; source?: unknown }[] | null; error: unknown }>(() =>
-          admin.from("client_reports").select("report_date,source").eq("email", email).in("report_date", dates));
+      const win = existingDateWindow(reports);
+      const existing: ExistingClientReport[] = [];
+      if (win) {
+        // ⛔ Nepřečtené existující řádky NEJSOU „žádné řádky": prázdný seznam by pustil
+        //    insert i přes chráněný zdroj. Okno sahá 3 dny za neděli: web poslaný
+        //    v pondělí až ve středu patří předchozímu týdnu.
+        const exist = await ctiSOpakovanim<{
+          data: { report_date?: unknown; source?: unknown; weight?: unknown; nutrition?: unknown }[] | null;
+          error: unknown;
+        }>(() =>
+          admin.from("client_reports").select("report_date,source,weight,nutrition")
+            .eq("email", email).gte("report_date", win.from).lte("report_date", win.to));
         if (exist.error) {
           clients_failed++;
           continue;
         }
         for (const row of exist.data ?? []) {
-          existingByDate.set(String(row.report_date), row.source == null ? null : String(row.source));
+          existing.push({
+            report_date: String(row.report_date),
+            source: row.source == null ? null : String(row.source),
+            weight: row.weight == null ? null : Number(row.weight),
+            nutrition: (row.nutrition ?? null) as Record<string, unknown> | null,
+          });
         }
       }
       // Snímek zadání je doplněk řádku: při trvalé chybě jde null, upsert se kvůli tomu nezastaví.
@@ -123,20 +140,36 @@ Deno.serve(async (req) => {
         admin.from("client_targets").select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle());
       const tgRow = tg.error ? null : tg.data;
 
-      const plan = applySyncPlan(email, reports, existingByDate, tgRow ?? null);
-      if (plan.toUpsert.length) {
-        const { error } = await admin.from("client_reports").upsert(plan.toUpsert, { onConflict: "email,report_date" });
+      const plan = applySyncPlan(email, reports, existing, tgRow ?? null);
+      if (plan.toInsert.length) {
+        const { error } = await admin.from("client_reports").upsert(plan.toInsert, { onConflict: "email,report_date" });
         if (error) {
           clients_failed++;
           continue;
         }
-        clients_touched++;
-      } else {
-        skipped_clients++;
       }
+      let updateFail = false;
+      for (const u of plan.toUpdate) {
+        const { error } = await admin.from("client_reports")
+          .update({ weight: u.weight, nutrition: u.nutrition })
+          .eq("email", email).eq("report_date", u.report_date);
+        if (error) { updateFail = true; break; }
+      }
+      if (updateFail) {
+        clients_failed++;
+        continue;
+      }
+      if (plan.toInsert.length || plan.toUpdate.length) clients_touched++;
+      else skipped_clients++;
       synced += plan.synced;
+      created += plan.created;
+      filled += plan.filled;
       skipped_web += plan.skipped_web;
+      skipped_protected += plan.skipped_protected;
       skipped_empty += plan.skipped_empty;
+      skipped_unchanged += plan.skipped_unchanged;
+      skipped_grace += plan.skipped_grace;
+      kolize_tydnu += plan.kolize_tydnu;
     } catch {
       clients_failed++;
     }
@@ -149,7 +182,13 @@ Deno.serve(async (req) => {
     clients_skipped: skipped_clients,
     clients_failed,
     synced,
+    created,
+    filled,
     skipped_web,
+    skipped_protected,
     skipped_empty,
+    skipped_unchanged,
+    skipped_grace,
+    kolize_tydnu,
   });
 });

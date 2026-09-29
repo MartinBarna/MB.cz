@@ -981,6 +981,12 @@
     // vracely null správně už dřív, mění se jen ty dva případy.
     function kliNum(v){ if(v==null) return null; var s=String(v).trim(); if(s==='') return null; var n=Number(s.replace(',','.')); return isFinite(n)?n:null; }
     function kliCz(v){ var n=kliNum(v); return n==null?'–':String(n).replace('.',','); }
+    function kliZAppky(n,key,source){
+      if(source==='tvuj-coach'||source==='app') return ' <span title="z appky" aria-label="z appky">📱</span>';
+      var z=n&&Array.isArray(n.z_appky)?n.z_appky:[];
+      if(z.indexOf(key)<0) return '';
+      return ' <span title="z appky" aria-label="z appky">📱</span>';
+    }
     // jednoduchý odhad 5. pádu, Martin ho v poli vidí a může opravit
     // výjimky + ženská jména na souhlásku: 1:1 s drip-send/client-remind (Pavel→Pavle, ne „Paveli")
     var KLI_VOK_EXC={'jan':'Jene','pavel':'Pavle','karel':'Karle','havel':'Havle','pavol':'Pavle','zdenek':'Zdenku','zdeněk':'Zdeňku','zbynek':'Zbynku','zbyněk':'Zbyňku','josef':'Josefe','luboš':'Luboši','lubos':'Luboši','bartoloměj':'Bartoloměji','vavřinec':'Vavřinče','vavrinec':'Vavrinče','němec':'Němče'};
@@ -1745,6 +1751,7 @@
     });
     // ---- detail klienta ----
     var KDET={email:'',name:'',data:null};
+    var KD_APP_SYNC_MSG='';
     function openKlient(email,name){
       KDET.email=email; KDET.name=name||''; KDET.data=null;
       $('kdet').classList.add('on'); $('kdetBody').innerHTML='<p class="muted">Načítám…</p>';
@@ -2293,7 +2300,7 @@
       h+=kdVyvoj(d.reports||[], tg, d.intake||null);
       // reporty
       if(reps.length){
-        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Kroky</th><th>Fitko</th><th>Sport min</th><th>Plán příští t.</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
+        h+='<div style="overflow-x:auto;max-height:38vh;overflow-y:auto;"><table style="font-size:.8rem;"><thead><tr><th>Datum</th><th>Váha</th><th>Hruď</th><th>Pas</th><th>Boky</th><th>Zadek</th><th>P steh.</th><th>L steh.</th><th>kcal</th><th>Bílk.</th><th>Sach.</th><th>Tuky</th><th>Vlák.</th><th>Dny</th><th>Kroky</th><th>Fitko</th><th>Sport min</th><th>Plán příští t.</th><th>Únava</th><th>Hlad</th><th>Síla</th><th>Spánek</th><th>Dodrž.</th><th>📷</th><th>Slovně</th></tr></thead><tbody>';
         reps.forEach(function(r,ri){
           var m=r.measurements||{},n=r.nutrition||{},a=r.activity||{},s=r.scales||{},t=r.notes||{};
           var txt=[t.povedlo?'✓ '+t.povedlo:'',t.drhlo?'✗ '+t.drhlo:'',t.otazky?'? '+t.otazky:'',t.dalsi?'💬 '+t.dalsi:''].filter(Boolean).join(' · ');
@@ -2306,11 +2313,11 @@
           if(sportMin==null&&(kliNum(a.fitko_min)!=null||kliNum(a.kardio_min)!=null)) sportMin=(kliNum(a.fitko_min)||0)+(kliNum(a.kardio_min)||0);
           var pn=a.plan_next||{};
           var plan=(kliNum(pn.kroky)!=null||kliNum(pn.sport_min)!=null)?(kliCz(pn.kroky)+' kr / '+kliCz(pn.sport_min)+' min'+(pn.stejne?' (=)':'')):'–';
-          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b></td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+'</td><td>'+kliCz(n.protein)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'–')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'–')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'–')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
+          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b>'+kliZAppky(n,'vaha',r.source)+'</td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+kliZAppky(n,'kcal',r.source)+'</td><td>'+kliCz(n.protein)+kliZAppky(n,'protein',r.source)+'</td><td>'+kliCz(n.carbs)+kliZAppky(n,'carbs',r.source)+'</td><td>'+kliCz(n.fat)+kliZAppky(n,'fat',r.source)+'</td><td>'+kliCz(n.fiber)+kliZAppky(n,'fiber',r.source)+'</td><td>'+kliCz(n.dny_zapsano)+kliZAppky(n,'dny_zapsano',r.source)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'–')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'–')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'–')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
           if(dnyArr.length){
             var dt='<table style="font-size:.76rem;border-collapse:collapse;"><tr><th style="padding:2px 8px;color:#8F8A99;">Den</th><th style="padding:2px 8px;color:#8F8A99;">kcal</th><th style="padding:2px 8px;color:#8F8A99;">B</th><th style="padding:2px 8px;color:#8F8A99;">S</th><th style="padding:2px 8px;color:#8F8A99;">T</th><th style="padding:2px 8px;color:#8F8A99;">Vl</th></tr>'
               +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;">'+esc(d.den||'')+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table>';
-            h+='<tr id="kdnyrow'+ri+'" style="display:none;"><td colspan="21" style="background:rgba(235,177,44,.05);padding:6px 12px;">🍽️ Denní rozpis (z Kalorických tabulek / ručně):<br>'+dt+'</td></tr>';
+            h+='<tr id="kdnyrow'+ri+'" style="display:none;"><td colspan="25" style="background:rgba(235,177,44,.05);padding:6px 12px;">🍽️ Denní rozpis (z Kalorických tabulek / ručně):<br>'+dt+'</td></tr>';
           }
         });
         h+='</tbody></table></div>';
@@ -2411,7 +2418,8 @@
         +'<div id="tpWrap"><button class="mlogbtn" id="kdTpOpen">Otevřít editor tréninku</button> <span class="muted" style="font-size:.8rem;">Zadání odhadne z dotazníku, plán poskládá generátor, texty napíše AI a Ty je přepíšeš.</span></div></section>';
       // data z appky Tvůj Coach (bonus vedle reportů)
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach: reálný zápis jídla</h4>'
-        +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <span class="muted" style="font-size:.8rem;">Pokud klient zapisuje v naší appce, uvidíš tady jeho reálná data automaticky.</span></div>';
+        +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <button class="mlogbtn" id="kdAppSyncBtn">Uložit data z appky do reportů</button> <span class="muted" style="font-size:.8rem;">Náhled ukáže denní zápis. Uložení doplní prázdná pole v týdenních reportech, čísla, která klient sám napsal, se nepřepíšou.</span><div id="kdAppOut" style="margin-top:.5rem;">'+(KD_APP_SYNC_MSG||'')+'</div></div>';
+      KD_APP_SYNC_MSG='';
       // 🧾 KONTROLA OD MARTINA: posledni rozbor tohohle klienta.
       // ⛔ Tady se schvalne NEODESILA. Odesila se v karte „Kontrola od Martina" vys,
       //    kde je videt cely text a dvoukrokove potvrzeni.
@@ -2915,7 +2923,7 @@
         a.addEventListener('click',function(e){ e.preventDefault(); var row=document.getElementById('kdnyrow'+a.getAttribute('data-kdny')); if(row) row.style.display=(row.style.display==='none'?'':'none'); });
       });
       $('kdAppBtn').addEventListener('click',function(){
-        var host=$('kdApp'); host.innerHTML='<p class="muted" style="font-size:.85rem;">Načítám z appky…</p>';
+        var host=$('kdAppOut'); host.innerHTML='<p class="muted" style="font-size:.85rem;">Načítám z appky…</p>';
         api({action:'client_app_data',email:email,days:14}).then(function(o){
           var j=o.j||{};
           if(!j.ok){
@@ -2925,7 +2933,7 @@
               :rs==='no-secret'?'chybí propojovací klíč'
               :(rs==='http-404'||rs==='app-neumi')?'appka vrátila neočekávanou odpověď'
               :'klient v appce nejspíš není ('+esc(rs||'?')+')';
-            host.innerHTML='<p class="muted" style="font-size:.85rem;">📱 Data nedostupná – '+why+'.</p>'; return;
+            host.innerHTML='<p class="muted" style="font-size:.85rem;">📱 Data nedostupná - '+why+'.</p>'; return;
           }
           var d=j.data||{};
           if(d.found===false){ host.innerHTML='<p class="muted" style="font-size:.85rem;">Klient se v appce zatím neregistroval (nebo nic nezapsal).</p>'; return; }
@@ -2939,8 +2947,42 @@
               +d.dny.map(function(x){ return '<tr><td>'+esc(x.datum||'')+'</td><td>'+kliCz(x.kcal)+'</td><td>'+kliCz(x.protein!=null?x.protein:x.p)+'</td><td>'+kliCz(x.carbs!=null?x.carbs:x.c)+'</td><td>'+kliCz(x.fat!=null?x.fat:x.f)+'</td><td>'+kliCz(x.fiber!=null?x.fiber:x.fib)+'</td><td>'+kliCz(x.vaha)+'</td></tr>'; }).join('')
               +'</tbody></table></div>';
           }
-          $('kdApp').innerHTML=hh||'<p class="muted" style="font-size:.85rem;">Appka vrátila prázdná data.</p>';
-        }).catch(function(){ $('kdApp').innerHTML='<p class="muted" style="font-size:.85rem;">Chyba spojení.</p>'; });
+          host.innerHTML=hh||'<p class="muted" style="font-size:.85rem;">Appka vrátila prázdná data.</p>';
+        }).catch(function(){ $('kdAppOut').innerHTML='<p class="muted" style="font-size:.85rem;">Chyba spojení.</p>'; });
+      });
+      $('kdAppSyncBtn').addEventListener('click',function(){
+        var host=$('kdAppOut');
+        var btn=$('kdAppSyncBtn');
+        btn.disabled=true;
+        host.innerHTML='<p class="muted" style="font-size:.85rem;">Ukládám data z appky do reportů…</p>';
+        api({action:'client_app_sync',email:email,tydnu:12}).then(function(o){
+          btn.disabled=false;
+          var j=o.j||{};
+          if(!j.ok){
+            var duv=String(j.duvod||j.error||'');
+            var why=duv==='chybi_secret'?'chybí propojovací klíč'
+              :duv==='appka_neodpovida'?'appka teď neodpovídá, zkus to za chvíli'
+              :duv==='appka_akci_neumi'?'appka tuhle akci ještě neumí'
+              :duv?'nepovedlo se ('+esc(duv.slice(0,80))+')'
+              :'nepovedlo se';
+            host.innerHTML='<p class="muted" style="font-size:.85rem;">📱 Uložení selhalo: '+why+'.</p>';
+            return;
+          }
+          if(j.found===false){
+            host.innerHTML='<p class="muted" style="font-size:.85rem;">Klient se v appce zatím neregistroval (nebo nic nezapsal).</p>';
+            return;
+          }
+          var radky=(j.duvody||[]).map(function(d){
+            return '<li>'+esc(d.tyden)+': '+esc(d.akce)+' ('+esc(d.duvod)+')</li>';
+          }).join('');
+          KD_APP_SYNC_MSG='<p style="margin:.2rem 0;font-size:.88rem;">Doplněno <b>'+(j.filled||0)+'</b> týdnů, založeno <b>'+(j.created||0)+'</b>, kolize týdnů <b>'+(j.kolize_tydnu||0)+'</b>, čeká na web <b>'+(j.skipped_grace||0)+'</b>, přeskočeno web/komplet <b>'+(j.skipped_web||0)+'</b>, chráněný zdroj <b>'+(j.skipped_protected||0)+'</b>, prázdné <b>'+(j.skipped_empty||0)+'</b>, beze změny <b>'+(j.skipped_unchanged||0)+'</b>.</p>'
+            +(radky?'<ul style="margin:.3rem 0 0;padding-left:1.2rem;font-size:.8rem;color:#B9B3C4;">'+radky+'</ul>':'');
+          toast('📱 Reporty z appky uloženy');
+          openKlient(email);
+        }).catch(function(){
+          btn.disabled=false;
+          $('kdAppOut').innerHTML='<p class="muted" style="font-size:.85rem;">Chyba spojení.</p>';
+        });
       });
     }
     function exportKlientCsv(){
