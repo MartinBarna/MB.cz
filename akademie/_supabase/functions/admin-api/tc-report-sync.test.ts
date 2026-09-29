@@ -4,14 +4,27 @@
 // ⛔ Neznámá hodnota není nula. ⛔ Žádný e-mail v assert zprávách.
 import {
   applySyncPlan,
+  canCreateTvujCoach,
+  commitSyncPlan,
+  cronResultBody,
   existingDateWindow,
   extractTcReports,
   isoWeekStart,
   isEmptyReport,
+  isTcActive,
   mapTcReportToRow,
   num,
+  reportMatchFilters,
+  reportWriter,
+  shouldUpsertExisting,
+  syncReadError,
+  TC_REPORT_SELECT,
   webReportWeek,
+  type ClientReportRow,
   type ExistingClientReport,
+  type MatchFilter,
+  type SyncPlan,
+  type SyncUpdate,
   type TcReport,
 } from "./tc-report-sync.ts";
 
@@ -307,4 +320,463 @@ Deno.test("cron i admin-api importují tentýž applySyncPlan (zdroj)", async ()
   const odeslani = await Deno.readTextFile(new URL("../client-report/index.ts", import.meta.url));
   tvrd(!odeslani.includes("planWebSubmit"), "client-report planWebSubmit nevolá");
   tvrd(!odeslani.includes("tc-report-sync"), "client-report sync modul neimportuje");
+});
+
+const WEB_ID = "6f1e2d3c-4b5a-6789-aaaa-bbbbccccdddd";
+const JINY_ID = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+
+type MemRow = {
+  id: string;
+  email: string;
+  report_date: string;
+  source: string;
+  weight: number | string | null;
+  nutrition: Record<string, unknown> | null;
+  measurements: Record<string, unknown>;
+  activity: Record<string, unknown>;
+  scales: Record<string, unknown>;
+  notes: Record<string, unknown>;
+  targets: Record<string, unknown> | null;
+};
+
+function scenarioWeb(): MemRow {
+  return {
+    id: WEB_ID,
+    email: EMAIL,
+    report_date: "2026-09-28",
+    source: "web",
+    weight: 80,
+    nutrition: {
+      kcal: 1750,
+      protein: 130,
+      carbs: null,
+      fat: null,
+      fiber: null,
+      dny_zapsano: 5,
+      dny: [{ den: "Po", kcal: 1700 }],
+    },
+    measurements: { pas: 90 },
+    activity: { kroky: 8000, plan_next: "pokracovat" },
+    scales: { unava: 3 },
+    notes: { povedlo: "chodil" },
+    targets: { kcal: 1700 },
+  };
+}
+
+function tyden21(): TcReport {
+  return appReport("2026-09-21", {
+    kcal: 2000, protein: 160, carbs: 210, fat: 62, fiber: 30, dny_zapsano: 7,
+  }, { weight: 79 });
+}
+
+function tyden28(): TcReport {
+  return appReport("2026-09-28", {
+    kcal: 2100, protein: 170, carbs: 220, fat: 70, fiber: 32, dny_zapsano: 2,
+  }, { weight: 78.4 });
+}
+
+function rowMatches(row: MemRow, f: MatchFilter): boolean {
+  let v: unknown;
+  if (f.column.startsWith("nutrition->>")) {
+    const k = f.column.slice("nutrition->>".length);
+    v = row.nutrition == null ? null : row.nutrition[k];
+    if (v === undefined) v = null;
+  } else {
+    v = (row as unknown as Record<string, unknown>)[f.column];
+  }
+  if (f.op === "is") return v == null;
+  return v != null && String(v) === f.value;
+}
+
+function fakeAdmin(table: MemRow[]) {
+  const api = {
+    inserts: 0,
+    updates: 0,
+    from(tableName: string) {
+      tvrd(tableName === "client_reports", "zápis jen do client_reports");
+      return {
+        insert(rows: ClientReportRow[]) {
+          api.inserts++;
+          for (const r of rows) {
+            if (table.some((x) => x.email === r.email && x.report_date === r.report_date)) {
+              return Promise.resolve({ error: { message: "duplicate" }, data: null });
+            }
+            table.push({
+              id: "new-" + r.report_date,
+              email: r.email,
+              report_date: r.report_date,
+              source: r.source,
+              weight: r.weight,
+              nutrition: r.nutrition,
+              measurements: r.measurements,
+              activity: r.activity,
+              scales: r.scales,
+              notes: r.notes,
+              targets: r.targets,
+            });
+          }
+          return Promise.resolve({ error: null, data: null });
+        },
+        update(values: { weight: number | null; nutrition: Record<string, unknown> | null }) {
+          api.updates++;
+          const keys = Object.keys(values).sort().join(",");
+          tvrd(keys === "nutrition,weight", "update nese jen váhu a nutrition");
+          const filters: MatchFilter[] = [];
+          const q = {
+            eq(c: string, v: string) {
+              filters.push({ column: c, op: "eq" as const, value: v });
+              return q;
+            },
+            is(c: string, v: null) {
+              filters.push({ column: c, op: "is" as const, value: v });
+              return q;
+            },
+            select(_cols: string) {
+              const hit = table.filter((row) => filters.every((f) => rowMatches(row, f)));
+              for (const row of hit) {
+                row.weight = values.weight;
+                row.nutrition = values.nutrition;
+              }
+              return Promise.resolve({ data: hit.map((r) => ({ id: r.id })), error: null });
+            },
+          };
+          return q;
+        },
+      };
+    },
+  };
+  return api;
+}
+
+function prazdnyPlan(over: Partial<SyncPlan> = {}): SyncPlan {
+  return {
+    toInsert: [],
+    toUpdate: [],
+    toUpsert: [],
+    synced: 0,
+    created: 0,
+    filled: 0,
+    skipped_web: 0,
+    skipped_protected: 0,
+    skipped_empty: 0,
+    skipped_unchanged: 0,
+    skipped_grace: 0,
+    kolize_tydnu: 0,
+    obsazene_datum: 0,
+    report_dates: [],
+    duvody: [],
+    ...over,
+  };
+}
+
+Deno.test("nález 1: pondělní web po lhůtě zůstane web a na 28. 9. se nezaloží", async () => {
+  tvrd(canCreateTvujCoach("2026-09-28", "2026-10-12") === true, "lhůta už prošla, grace to nesmí schovat");
+  tvrd(webReportWeek("2026-09-28") === "2026-09-21", "pondělní web patří týdnu od 21. 9.");
+  const okno = existingDateWindow([tyden21(), tyden28()]);
+  tvrd(!!okno && okno.from === "2026-09-21" && okno.to === "2026-10-07", "okno od prvního pondělí plus 9 dní");
+  tvrd(!!okno && okno.from <= "2026-09-28" && okno.to >= "2026-09-28", "pondělí insertu je v okně");
+  tvrd(TC_REPORT_SELECT.includes("id") && TC_REPORT_SELECT.includes("source"), "select čte id a source");
+
+  const web = scenarioWeb();
+  const p = plan([tyden21(), tyden28()], [web], { asOf: "2026-10-12" });
+  tvrd(p.toInsert.length === 0, "žádný insert, ani na 28. 9. ani na 21. 9.");
+  tvrd(p.created === 0, "created 0");
+  tvrd(p.obsazene_datum === 1, "obsazene_datum");
+  tvrd(p.duvody.some((d) => d.duvod.startsWith("obsazene_datum")), "důvod obsazené datum");
+  tvrd(p.toUpdate.length === 1 && p.toUpdate[0].report_date === "2026-09-28", "jediný zápis je doplnění webu");
+  tvrd(p.toUpdate[0].source === "web", "source ve filtru zůstane web");
+  for (const k of ["measurements", "activity", "scales", "notes", "targets"]) {
+    tvrd(!(k in p.toUpdate[0]), "update nemá " + k);
+  }
+  const n = p.toUpdate[0].nutrition as Record<string, unknown>;
+  tvrd(n.kcal === 1750, "kcal klienta");
+  tvrd(n.protein === 130, "protein klienta");
+  tvrd(n.dny_zapsano === 5, "dny_zapsano klienta");
+  tvrd(n.carbs === 210 && n.fat === 62 && n.fiber === 30, "prázdná makra z týdne 21. 9., ne z 28. 9.");
+  tvrd((n.appka as { kcal: number }).kcal === 2000, "snímek je týden 21. 9.");
+  const dny = n.dny as { den: string; kcal: number }[];
+  tvrd(dny.length === 1 && dny[0].den === "Po" && dny[0].kcal === 1700, "denní rozpis zůstal");
+  tvrd(p.toUpdate[0].weight === 80, "váha klienta");
+
+  const filtry = reportMatchFilters(p.toUpdate[0]);
+  tvrd(!!filtry, "filtr se postaví, řádek má id");
+  const filtr = (c: string) => filtry!.find((f) => f.column === c);
+  tvrd(filtr("id")?.op === "eq" && filtr("id")?.value === WEB_ID, "filtr id");
+  tvrd(filtr("source")?.value === "web", "filtr source");
+  tvrd(filtr("nutrition->>kcal")?.op === "eq" && filtr("nutrition->>kcal")?.value === "1750", "filtr kcal");
+  tvrd(filtr("nutrition->>protein")?.value === "130", "filtr protein");
+  tvrd(filtr("nutrition->>carbs")?.op === "is", "carbs bylo null");
+  tvrd(filtr("nutrition->>fat")?.op === "is" && filtr("nutrition->>fiber")?.op === "is", "fat a fiber null");
+  tvrd(filtr("nutrition->>dny_zapsano")?.value === "5", "filtr dny_zapsano");
+  tvrd(filtr("weight")?.op === "eq" && filtr("weight")?.value === "80", "filtr váhy");
+
+  const decoy: MemRow = {
+    ...web,
+    id: JINY_ID,
+    measurements: { pas: 1 },
+    nutrition: { ...web.nutrition },
+    activity: { ...web.activity },
+    notes: { ...web.notes },
+    scales: { ...web.scales },
+    targets: { kcal: 1700 },
+  };
+  const table = [web, decoy];
+  const admin = fakeAdmin(table);
+  const committed = await commitSyncPlan(p, reportWriter(admin));
+  tvrd(committed.error === null, "zápis prošel");
+  tvrd(admin.inserts === 0, "insert se nevolal");
+  tvrd(committed.filled === 1 && committed.zmeneno_mezitim === 0, "doplnění trefilo jeden řádek");
+  tvrd(table.length === 2, "druhý řádek nevznikl");
+  tvrd(web.source === "web", "source webu");
+  tvrd(web.weight === 80, "váha po zápisu");
+  tvrd((web.nutrition as { kcal: number }).kcal === 1750, "kcal po zápisu");
+  tvrd((web.nutrition as { carbs: number }).carbs === 210, "carbs po zápisu");
+  tvrd(web.measurements.pas === 90, "míry");
+  tvrd(web.activity.plan_next === "pokracovat", "aktivita");
+  tvrd(web.scales.unava === 3, "škály");
+  tvrd(web.notes.povedlo === "chodil", "poznámky");
+  tvrd(web.targets?.kcal === 1700, "targets snímku");
+  tvrd((decoy.nutrition as { carbs: unknown }).carbs == null, "druhý řádek se stejným datem se nepsal");
+  tvrd(decoy.measurements.pas === 1, "druhý řádek má svoje míry");
+
+  const ulozeno = scenarioWeb();
+  ulozeno.nutrition = { ...(web.nutrition as Record<string, unknown>) };
+  ulozeno.nutrition.carbs = String(ulozeno.nutrition.carbs);
+  ulozeno.nutrition.fat = String(ulozeno.nutrition.fat);
+  ulozeno.nutrition.fiber = String(ulozeno.nutrition.fiber);
+  ulozeno.weight = "80";
+  const druhe = plan([tyden21(), tyden28()], [ulozeno], { asOf: "2026-10-19" });
+  tvrd(druhe.toInsert.length === 0, "druhý běh nezaloží 21. 9. ani 28. 9.");
+  tvrd(druhe.toUpdate.length === 0, "řetězec 210 je totéž co 210, nic se nezapíše");
+  tvrd(druhe.skipped_unchanged === 1, "týden 21. 9. beze změny");
+  tvrd(druhe.obsazene_datum === 1, "28. 9. pořád obsazené");
+  tvrd(ulozeno.source === "web", "source je pořád web");
+});
+
+Deno.test("nález 1: jen novější týden po lhůtě web na pondělí nepřepíše", () => {
+  tvrd(canCreateTvujCoach("2026-09-28", "2026-10-12") === true, "lhůta prošla");
+  const p = plan([tyden28()], [scenarioWeb()], { asOf: "2026-10-12" });
+  tvrd(p.toInsert.length === 0 && p.toUpdate.length === 0, "žádný zápis");
+  tvrd(p.obsazene_datum === 1, "datum drží web");
+  tvrd(p.skipped_grace === 0, "není to ochranná lhůta");
+});
+
+Deno.test("nález 3: update po změně kcal neprojde a započte se zmeneno_mezitim", async () => {
+  const web = scenarioWeb();
+  const p = plan([tyden21()], [web], { asOf: "2026-10-12" });
+  tvrd(p.toUpdate.length === 1, "plán doplnění");
+  web.nutrition = {
+    ...(web.nutrition as Record<string, unknown>),
+    kcal: 1800,
+    dny: [{ den: "Ut", kcal: 1 }],
+  };
+  web.measurements = { pas: 77 };
+  const table = [web];
+  const committed = await commitSyncPlan(p, reportWriter(fakeAdmin(table)));
+  tvrd(committed.error === null, "není to chyba databáze");
+  tvrd(committed.zmeneno_mezitim === 1 && committed.filled === 0, "0 řádků");
+  tvrd(committed.zmeneno_datum[0] === "2026-09-28", "datum, které se netrefilo");
+  tvrd((web.nutrition as { kcal: number }).kcal === 1800, "nová kcal zůstala");
+  tvrd(((web.nutrition as { dny: { den: string }[] }).dny)[0].den === "Ut", "nový rozpis zůstal");
+  tvrd(web.measurements.pas === 77, "nové míry zůstaly");
+  tvrd(web.source === "web" && web.targets?.kcal === 1700, "source a targets");
+});
+
+Deno.test("nález 3: bez id se update neodešle", async () => {
+  const p = plan([tyden21()], [scenarioWeb()], { asOf: "2026-10-12" });
+  p.toUpdate[0].id = null;
+  let volano = 0;
+  const r = await commitSyncPlan(p, {
+    insert: async () => ({ error: null }),
+    update: async () => {
+      volano++;
+      return { error: null, rows: [{ id: WEB_ID }] };
+    },
+  });
+  tvrd(r.error === "bez_id", "bez id je chyba, ne zápis");
+  tvrd(volano === 0, "update se nevolal");
+  tvrd(reportMatchFilters(p.toUpdate[0]) === null, "filtr bez id není");
+});
+
+Deno.test("nález 4: existující tvuj-coach i app se updatují jen ve váze a nutrition", async () => {
+  const hit: MemRow = {
+    id: WEB_ID,
+    email: EMAIL,
+    report_date: "2026-09-21",
+    source: "tvuj-coach",
+    weight: 79,
+    nutrition: { kcal: 1900, protein: 150, carbs: 200, fat: 60, fiber: 25, dny_zapsano: 6 },
+    measurements: { pas: 88 },
+    activity: { fitko: 3 },
+    scales: { sila: 4 },
+    notes: { povedlo: "chodil" },
+    targets: { kcal: 1700 },
+  };
+  const stejne = appReport("2026-09-21", {
+    kcal: "1900", protein: "150", carbs: "200", fat: "60", fiber: "25", dny_zapsano: "6",
+  }, { weight: 79 });
+  const bezeZmeny = applySyncPlan(EMAIL, [stejne], [hit], { kcal: 1800 }, { syncedAt: NOW, asOf: "2026-10-08" });
+  tvrd(bezeZmeny.toInsert.length === 0 && bezeZmeny.toUpdate.length === 0, "řetězec 1900 = 1900, nic se nezapíše");
+
+  const jine = appReport("2026-09-21", {
+    kcal: 2000, protein: 160, carbs: 210, fat: 62, fiber: 30, dny_zapsano: 7,
+  }, { weight: 78 });
+  const p = applySyncPlan(EMAIL, [jine], [hit], { kcal: 1800 }, { syncedAt: NOW, asOf: "2026-10-08" });
+  tvrd(p.toInsert.length === 0, "žádný upsert celého řádku");
+  tvrd(p.toUpdate.length === 1, "update");
+  tvrd(!JSON.stringify(p.toUpdate).includes("1800"), "dnešní targets v payloadu nejsou");
+  for (const k of ["measurements", "activity", "scales", "notes", "targets"]) {
+    tvrd(!(k in p.toUpdate[0]), k);
+  }
+  const table = [hit];
+  const committed = await commitSyncPlan(p, reportWriter(fakeAdmin(table)));
+  tvrd(committed.error === null && committed.updated === 1 && committed.filled === 0, "app řádek není webové doplnění");
+  tvrd(hit.measurements.pas === 88, "míry");
+  tvrd(hit.notes.povedlo === "chodil", "poznámky");
+  tvrd(hit.activity.fitko === 3, "aktivita");
+  tvrd(hit.scales.sila === 4, "škály");
+  tvrd(hit.targets?.kcal === 1700, "starý snímek targets");
+  tvrd(hit.weight === 78, "nová váha");
+  tvrd((hit.nutrition as { kcal: number }).kcal === 2000, "nová výživa");
+  tvrd(hit.source === "tvuj-coach", "source");
+
+  const appHit: MemRow = { ...hit, id: JINY_ID, source: "app", nutrition: { kcal: 1 }, weight: 70, targets: { kcal: 1700 } };
+  const pApp = applySyncPlan(EMAIL, [jine], [appHit], { kcal: 1800 }, { syncedAt: NOW, asOf: "2026-10-08" });
+  tvrd(pApp.toInsert.length === 0 && pApp.toUpdate.length === 1 && pApp.toUpdate[0].source === "app", "source app je update");
+});
+
+Deno.test("nález 6: neznámý source týden přeskočí a nic nezaloží", () => {
+  for (const source of ["neznamy", "intake-baseline"]) {
+    const existing: ExistingClientReport[] = [{
+      report_date: "2026-09-27",
+      source,
+      weight: 90,
+      nutrition: { kcal: 1 },
+    }];
+    const p = plan([tyden21()], existing);
+    tvrd(p.toInsert.length === 0 && p.toUpdate.length === 0, source + " žádný zápis");
+    tvrd(p.skipped_protected === 1, source + " se počítá jako přeskočený týden");
+    tvrd(p.duvody.some((d) => d.duvod.startsWith("neznamy_zdroj_")), source + " má důvod");
+  }
+});
+
+Deno.test("nález 8: druhý běh s řetězcem 210 nezapíše znovu", () => {
+  const web = webRow("2026-09-28", { kcal: 1750, protein: 130, carbs: null, fat: null, fiber: null, dny_zapsano: 5 });
+  const app = tyden21();
+  const p1 = plan([app], [web]);
+  tvrd(p1.toUpdate.length === 1, "první běh doplní");
+  const nutr = { ...(p1.toUpdate[0].nutrition as Record<string, unknown>) };
+  nutr.carbs = "210";
+  nutr.fat = "62";
+  nutr.fiber = "30";
+  const p2 = plan([app], [{ ...web, nutrition: nutr, weight: "80" }]);
+  tvrd(p2.toInsert.length === 0 && p2.toUpdate.length === 0, "druhý běh je idempotentní");
+  tvrd(p2.skipped_unchanged === 1, "beze změny");
+});
+
+Deno.test("nula není prázdná a null nutrition se z appky nedoplní", () => {
+  const existing = [webRow("2026-09-27", { kcal: 0, protein: 130, carbs: "", fat: null, fiber: null, dny_zapsano: 5 }, { weight: 0 })];
+  const app = appReport("2026-09-21", { kcal: 2000, protein: 160, carbs: 180, fat: 50, fiber: 22, dny_zapsano: 6 }, { weight: 70 });
+  const p = plan([app], existing);
+  tvrd(p.toUpdate.length === 1, "doplní se prázdné sacharidy");
+  tvrd(p.toUpdate[0].weight === 0, "váha 0");
+  const n = p.toUpdate[0].nutrition as Record<string, unknown>;
+  tvrd(n.kcal === 0, "kcal 0");
+  tvrd(n.carbs === 180, "prázdný řetězec se doplnil");
+
+  const row = webRow("2026-09-27", { kcal: 1 });
+  row.nutrition = null;
+  row.weight = null;
+  const p2 = plan([app], [row]);
+  tvrd(p2.toUpdate.length === 1, "váha se doplní");
+  tvrd(p2.toUpdate[0].weight === 70, "váha z appky");
+  tvrd(p2.toUpdate[0].nutrition === null, "nutrition zůstane null");
+});
+
+Deno.test("upsert existujícího řádku je zakázaný a chyba insertu zastaví update", async () => {
+  tvrd(shouldUpsertExisting("web") === false, "web");
+  tvrd(shouldUpsertExisting("tvuj-coach") === false, "tvuj-coach");
+  tvrd(shouldUpsertExisting("neznamy") === false, "neznámý");
+  tvrd(shouldUpsertExisting(null) === false, "prázdný source");
+  tvrd(shouldUpsertExisting(undefined) === false, "chybějící source");
+
+  const novy = plan([tyden21()], []);
+  tvrd(novy.toInsert.length === 1 && novy.toInsert[0].source === "tvuj-coach", "volný týden se založí");
+  let updaty = 0;
+  const pad = await commitSyncPlan(novy, {
+    insert: async () => ({ error: { message: "duplicate" } }),
+    update: async () => {
+      updaty++;
+      return { error: null, rows: [] };
+    },
+  });
+  tvrd(pad.error === "insert" && updaty === 0, "po chybě insertu se neupdatuje");
+
+  const zakaz: SyncUpdate = {
+    id: WEB_ID,
+    email: EMAIL,
+    report_date: "2026-09-21",
+    source: "import-sheet",
+    weight: 1,
+    nutrition: { kcal: 1 },
+    match: { weight: 1, nutrition: { kcal: 1 } },
+  };
+  let sahlo = 0;
+  const ne = await commitSyncPlan(prazdnyPlan({ toUpdate: [zakaz] }), {
+    insert: async () => ({ error: null }),
+    update: async () => {
+      sahlo++;
+      return { error: null, rows: [{ id: WEB_ID }] };
+    },
+  });
+  tvrd(ne.error === "zakazany_zdroj" && sahlo === 0, "import-sheet se neupdatuje");
+});
+
+Deno.test("nález 2, 5 a 7: čtení, active a status cronu", async () => {
+  tvrd(syncReadError(null, null) === null, "obě čtení v pořádku");
+  tvrd(syncReadError(undefined, undefined) === null, "undefined není chyba");
+  tvrd(syncReadError({ message: "timeout" }, null) === "reporty", "reporty");
+  tvrd(syncReadError(null, { message: "timeout" }) === "targets", "targets");
+  tvrd(syncReadError({ message: "a" }, { message: "b" }) === "reporty", "reporty mají přednost");
+
+  tvrd(isTcActive(true) === true, "true");
+  tvrd(isTcActive(false) === false, "false");
+  tvrd(isTcActive("true") === false, "řetězec true");
+  tvrd(isTcActive(1) === false, "jednička");
+  tvrd(isTcActive(undefined) === false, "chybí");
+
+  const pocty = {
+    clients: 3, clients_touched: 1, clients_skipped: 2, clients_failed: 0,
+    synced: 1, created: 0, filled: 1,
+    skipped_web: 0, skipped_protected: 0, skipped_empty: 0, skipped_unchanged: 0,
+    skipped_grace: 0, kolize_tydnu: 0, obsazene_datum: 0, zmeneno_mezitim: 0,
+  };
+  const ok = cronResultBody(pocty);
+  tvrd(ok.status === 200 && ok.body.ok === true, "bez selhání 200");
+  const fail = cronResultBody({ ...pocty, clients_failed: 2 });
+  tvrd(fail.status === 500 && fail.body.ok === false && fail.body.clients_failed === 2, "clients_failed je 500");
+  tvrd(!("email" in fail.body), "v těle není email");
+  tvrd(!JSON.stringify(fail.body).includes("@"), "v těle není adresa");
+
+  const cron = await Deno.readTextFile(new URL("../tc-client-reports-sync/index.ts", import.meta.url));
+  const admin = await Deno.readTextFile(new URL("./index.ts", import.meta.url));
+  tvrd(cron.includes("cronResultBody("), "cron vrací status z cronResultBody");
+  tvrd(cron.includes("isTcActive("), "cron kontroluje active");
+  tvrd(cron.includes("syncReadError("), "cron řeší chybu čtení targets");
+  tvrd(cron.includes("TC_REPORT_SELECT"), "cron čte id a source");
+  tvrd(!cron.includes(".upsert("), "cron upsert nevolá");
+  tvrd(!cron.includes("onConflict"), "cron nemá onConflict");
+
+  const start = admin.indexOf('action === "client_app_sync"');
+  const end = admin.indexOf('action === "tc_goals_push"');
+  const block = admin.slice(start, end);
+  const activePos = block.indexOf("isTcActive(");
+  const selectPos = block.indexOf("TC_REPORT_SELECT");
+  const readPos = block.indexOf("syncReadError(");
+  const writePos = block.indexOf("commitSyncPlan(");
+  tvrd(activePos >= 0 && selectPos > activePos, "active dřív než čtení reportů");
+  tvrd(readPos >= 0 && writePos > readPos, "chyba čtení dřív než zápis");
+  tvrd(!block.includes(".upsert("), "tlačítko upsert nevolá");
+  tvrd(!block.includes("onConflict"), "tlačítko nemá onConflict");
+  tvrd(block.includes('duvod: readErr === "targets" ? "targets" : "db"'), "chyba targets není tichý null");
 });

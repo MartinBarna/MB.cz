@@ -2975,7 +2975,7 @@
           var radky=(j.duvody||[]).map(function(d){
             return '<li>'+esc(d.tyden)+': '+esc(d.akce)+' ('+esc(d.duvod)+')</li>';
           }).join('');
-          KD_APP_SYNC_MSG='<p style="margin:.2rem 0;font-size:.88rem;">Doplněno <b>'+(j.filled||0)+'</b> týdnů, založeno <b>'+(j.created||0)+'</b>, kolize týdnů <b>'+(j.kolize_tydnu||0)+'</b>, čeká na web <b>'+(j.skipped_grace||0)+'</b>, přeskočeno web/komplet <b>'+(j.skipped_web||0)+'</b>, chráněný zdroj <b>'+(j.skipped_protected||0)+'</b>, prázdné <b>'+(j.skipped_empty||0)+'</b>, beze změny <b>'+(j.skipped_unchanged||0)+'</b>.</p>'
+          KD_APP_SYNC_MSG='<p style="margin:.2rem 0;font-size:.88rem;">Doplněno <b>'+(j.filled||0)+'</b> týdnů, založeno <b>'+(j.created||0)+'</b>, kolize týdnů <b>'+(j.kolize_tydnu||0)+'</b>, obsazené datum <b>'+(j.obsazene_datum||0)+'</b>, mezitím změněno <b>'+(j.zmeneno_mezitim||0)+'</b>, čeká na web <b>'+(j.skipped_grace||0)+'</b>, přeskočeno web/komplet <b>'+(j.skipped_web||0)+'</b>, chráněný zdroj <b>'+(j.skipped_protected||0)+'</b>, prázdné <b>'+(j.skipped_empty||0)+'</b>, beze změny <b>'+(j.skipped_unchanged||0)+'</b>.</p>'
             +(radky?'<ul style="margin:.3rem 0 0;padding-left:1.2rem;font-size:.8rem;color:#B9B3C4;">'+radky+'</ul>':'');
           toast('📱 Reporty z appky uloženy');
           openKlient(email);

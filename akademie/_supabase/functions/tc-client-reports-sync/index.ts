@@ -4,14 +4,28 @@
 // Most do appky: academy-grant + academy_grant_secret. ŽÁDNÁ druhá auth cesta.
 //
 // Koho: aktivní koučinkové entitlements (product=coaching, active, neexpirované).
-// Co: poslední 4 týdny z TC, upsert email+report_date, source=tvuj-coach.
+// Co: poslední 4 týdny z TC. Nový řádek je insert (source=tvuj-coach), nikdy upsert.
 // ⛔ source=web se nepřepisuje celý: do prázdných polí se doplní appka.
-// ⛔ import-sheet a test-kopie se nesahají. Žádný mail. Žádné mazání.
+// ⛔ Existující tvuj-coach / app: update jen váha a nutrition.
+// ⛔ Jiný source se nesahá a týden se nezaloží. Žádný mail. Žádné mazání.
 // ⛔ Odpověď jen agregované counts, žádné e-maily v logu ani v JSON.
+// ⛔ Když nějaký klient selže, status je 500, ať pg_cron běh nebere jako úspěch.
 //
 // Deploy: supabase functions deploy tc-client-reports-sync --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
-import { applySyncPlan, existingDateWindow, extractTcReports, type ExistingClientReport } from "../admin-api/tc-report-sync.ts";
+import {
+  applySyncPlan,
+  commitSyncPlan,
+  cronResultBody,
+  existingDateWindow,
+  extractTcReports,
+  isTcActive,
+  reportWriter,
+  syncReadError,
+  TC_REPORT_SELECT,
+  toExistingReport,
+  type ExistingClientReport,
+} from "../admin-api/tc-report-sync.ts";
 // 14. 9. 2026: chyba čtení není odpověď (guard secretu i čtení s opakováním, při trvalé chybě 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 
@@ -78,6 +92,8 @@ Deno.serve(async (req) => {
   let skipped_unchanged = 0;
   let skipped_grace = 0;
   let kolize_tydnu = 0;
+  let obsazene_datum = 0;
+  let zmeneno_mezitim = 0;
   let skipped_clients = 0;
   let clients_touched = 0;
   let clients_failed = 0;
@@ -100,7 +116,7 @@ Deno.serve(async (req) => {
         continue;
       }
       // Prefer jen aktivní TC. Registrovaný bez přístupu se nenačítá automaticky.
-      if (jj.active !== true) {
+      if (!isTcActive(jj.active)) {
         skipped_clients++;
         continue;
       }
@@ -117,66 +133,50 @@ Deno.serve(async (req) => {
         //    insert i přes chráněný zdroj. Okno sahá 3 dny za neděli: web poslaný
         //    v pondělí až ve středu patří předchozímu týdnu.
         const exist = await ctiSOpakovanim<{
-          data: { report_date?: unknown; source?: unknown; weight?: unknown; nutrition?: unknown }[] | null;
+          data: { id?: unknown; report_date?: unknown; source?: unknown; weight?: unknown; nutrition?: unknown }[] | null;
           error: unknown;
         }>(() =>
-          admin.from("client_reports").select("report_date,source,weight,nutrition")
+          admin.from("client_reports").select(TC_REPORT_SELECT)
             .eq("email", email).gte("report_date", win.from).lte("report_date", win.to));
         if (exist.error) {
           clients_failed++;
           continue;
         }
-        for (const row of exist.data ?? []) {
-          existing.push({
-            report_date: String(row.report_date),
-            source: row.source == null ? null : String(row.source),
-            weight: row.weight == null ? null : Number(row.weight),
-            nutrition: (row.nutrition ?? null) as Record<string, unknown> | null,
-          });
-        }
+        for (const row of exist.data ?? []) existing.push(toExistingReport(row));
       }
-      // Snímek zadání je doplněk řádku: při trvalé chybě jde null, upsert se kvůli tomu nezastaví.
       const tg = await ctiSOpakovanim<{ data: Record<string, unknown> | null; error: unknown }>(() =>
         admin.from("client_targets").select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle());
-      const tgRow = tg.error ? null : tg.data;
-
-      const plan = applySyncPlan(email, reports, existing, tgRow ?? null);
-      if (plan.toInsert.length) {
-        const { error } = await admin.from("client_reports").upsert(plan.toInsert, { onConflict: "email,report_date" });
-        if (error) {
-          clients_failed++;
-          continue;
-        }
-      }
-      let updateFail = false;
-      for (const u of plan.toUpdate) {
-        const { error } = await admin.from("client_reports")
-          .update({ weight: u.weight, nutrition: u.nutrition })
-          .eq("email", email).eq("report_date", u.report_date);
-        if (error) { updateFail = true; break; }
-      }
-      if (updateFail) {
+      // Chyba čtení targets není „klient zadání nemá“. Null by se zapsal do nového řádku.
+      if (syncReadError(null, tg.error)) {
         clients_failed++;
         continue;
       }
-      if (plan.toInsert.length || plan.toUpdate.length) clients_touched++;
+
+      const plan = applySyncPlan(email, reports, existing, tg.data ?? null);
+      const committed = await commitSyncPlan(plan, reportWriter(admin));
+      if (committed.error) {
+        clients_failed++;
+        continue;
+      }
+      zmeneno_mezitim += committed.zmeneno_mezitim;
+      if (committed.inserted || committed.updated) clients_touched++;
       else skipped_clients++;
-      synced += plan.synced;
-      created += plan.created;
-      filled += plan.filled;
+      synced += committed.inserted + committed.updated;
+      created += committed.inserted;
+      filled += committed.filled;
       skipped_web += plan.skipped_web;
       skipped_protected += plan.skipped_protected;
       skipped_empty += plan.skipped_empty;
       skipped_unchanged += plan.skipped_unchanged;
       skipped_grace += plan.skipped_grace;
       kolize_tydnu += plan.kolize_tydnu;
+      obsazene_datum += plan.obsazene_datum;
     } catch {
       clients_failed++;
     }
   }
 
-  return json({
-    ok: true,
+  const result = cronResultBody({
     clients: clients.length,
     clients_touched,
     clients_skipped: skipped_clients,
@@ -190,5 +190,8 @@ Deno.serve(async (req) => {
     skipped_unchanged,
     skipped_grace,
     kolize_tydnu,
+    obsazene_datum,
+    zmeneno_mezitim,
   });
+  return json(result.body, result.status);
 });
