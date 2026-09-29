@@ -26,7 +26,25 @@
   #toast { position:fixed; bottom:16px; left:50%; transform:translateX(-50%);
            background:#2a2530; border:1px solid rgba(235,177,44,.4); color:#F6CD63;
            padding:8px 16px; border-radius:10px; font-size:.85rem; display:none; }
+  [data-theme="light"] body{background:#F7F3EB;color:#161310;}
+  [data-theme="light"] .muted{color:#5C564C;}
+  [data-theme="light"] .mlogbtn{color:#866008;}
+  [data-theme="light"] #toast{background:#fff;color:#161310;border-color:rgba(235,177,44,.5);}
+  [data-theme="light"] [style*="color:#6d6879"],
+  [data-theme="light"] [style*="color:#6D6879"],
+  [data-theme="light"] [style*="color:#8F8A99"]{color:#5C564C !important;}
+  [data-theme="light"] [style*="color:#F6CD63"]{color:#866008 !important;}
+  [data-theme="light"] [style*="color:#7bd88f"],
+  [data-theme="light"] [style*="color:#7BD88F"]{color:#146038 !important;}
+  [data-theme="light"] [style*="color:#cbbfae"],
+  [data-theme="light"] [style*="color:#CBBFAE"],
+  [data-theme="light"] label{color:#5C564C !important;}
+  [data-theme="light"] [style*="color:#fff"]{color:#161310 !important;}
+  [data-theme="light"] input,
+  [data-theme="light"] textarea,
+  [data-theme="light"] select{background:#fff !important;color:#161310 !important;border-color:rgba(22,19,16,.20) !important;}
 </style>
+<script>(function(){try{if(localStorage.getItem('mb-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
 <h1>🍽️ Průvodce na míru: testovací stránka</h1>

@@ -161,9 +161,24 @@
   .nv-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;height:100%}
   .nv-bar{width:100%;max-width:26px;background:linear-gradient(180deg,#F6CD63,#EBB12C);border-radius:3px 3px 0 0;min-height:2px}
   .nv-lbl{font-size:.62rem;color:#8a7e6d;margin-top:4px;white-space:nowrap}
+  /* Tmavý přepínač nechat jak ho kreslí scroll-top.js. ba-theme-light.css
+     má nescopované .mb-theme-toggle a v tmavém by změnil pixel. */
+  html:not([data-theme="light"]) .ba .mb-theme-toggle{
+    border:1px solid rgba(240,234,223,.22)!important;
+    background:rgba(255,255,255,.08)!important;
+    color:inherit!important;
+  }
+  html:not([data-theme="light"]) .ba .mb-theme-toggle:hover{
+    border-color:rgba(235,177,44,.45)!important;
+  }
+  html:not([data-theme="light"]) .ba .mb-theme-toggle:focus-visible{
+    outline:2px solid #EBB12C!important;
+    outline-offset:2px!important;
+  }
 </style>
+<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
 </head>
-<body class="ba">
+<body class="ba ba-admin">
   <div class="top"><div class="in">
     <a class="brand" href="/akademie/moje/"><span class="mark">MB</span><span><b>Barna Academy</b><span class="tag">Admin</span></span></a>
     <div class="topr"><a href="/akademie/admin/poznatky/">Poznatky o firmě</a><a href="/akademie/moje/">Zpět na Academy</a><a id="logout">Odhlásit</a></div>
