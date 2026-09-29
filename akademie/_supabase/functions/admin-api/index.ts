@@ -6,7 +6,19 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // `index.ts`. Když se nahraje jen index, funkce spadne na chybějícím importu.
 // Past: paměť `mb-deploy-kopiruje-jen-index-past`.
 import { pripravFakta } from "./report-engine.mjs";
-import { applySyncPlan, type TcReport } from "./tc-report-sync.ts";
+import {
+  applySyncPlan,
+  commitSyncPlan,
+  duvodyProTlacitko,
+  existingDateWindow,
+  extractTcReports,
+  isTcActive,
+  reportWriter,
+  syncReadError,
+  TC_REPORT_SELECT,
+  toExistingReport,
+  type ExistingClientReport,
+} from "./tc-report-sync.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s nákupem přes Stripe (`academy-stripe-webhook`).
 // Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
 import { onboardKoucink, posliUvitaciMail } from "../_shared/koucink-onboarding.ts";
@@ -2897,35 +2909,60 @@ Deno.serve(async (req) => {
       const data = out.data ?? {};
       const empty = {
         ok: true, found: false, registered: false, active: false,
-        synced: 0, skipped_web: 0, skipped_empty: 0, report_dates: [] as string[],
+        synced: 0, created: 0, filled: 0,
+        skipped_web: 0, skipped_protected: 0, skipped_empty: 0, skipped_unchanged: 0,
+        skipped_grace: 0, kolize_tydnu: 0, obsazene_datum: 0, zmeneno_mezitim: 0,
+        report_dates: [] as string[], duvody: [] as { tyden: string; akce: string; duvod: string }[],
       };
       if (data.found === false) return json(empty);
-      const reports = Array.isArray(data.reports) ? data.reports as TcReport[] : [];
-      const dates = reports.map((x) => String(x.report_date ?? x.week_start ?? "").slice(0, 10)).filter(Boolean);
-      const existingByDate = new Map<string, string | null>();
-      if (dates.length) {
-        const { data: exist } = await admin.from("client_reports")
-          .select("report_date,source").eq("email", email).in("report_date", dates);
-        for (const row of exist ?? []) {
-          existingByDate.set(String(row.report_date), row.source == null ? null : String(row.source));
-        }
+      // Stejná podmínka jako cron, ještě před čtením client_reports. Neaktivní účet se nezapisuje.
+      if (!isTcActive(data.active)) {
+        return json({
+          ...empty,
+          found: true,
+          registered: data.registered !== false,
+          active: false,
+          duvody: [{ tyden: "-", akce: "preskoceno", duvod: "ucet_neni_aktivni" }],
+        });
       }
-      const { data: tgRow } = await admin.from("client_targets")
+      const reports = extractTcReports(data);
+      const win = existingDateWindow(reports);
+      const existing: ExistingClientReport[] = [];
+      let reportReadError: unknown = null;
+      if (win) {
+        const exist = await admin.from("client_reports")
+          .select(TC_REPORT_SELECT)
+          .eq("email", email).gte("report_date", win.from).lte("report_date", win.to);
+        if (exist.error) reportReadError = exist.error;
+        else for (const row of exist.data ?? []) existing.push(toExistingReport(row));
+      }
+      const tg = await admin.from("client_targets")
         .select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle();
-      const plan = applySyncPlan(email, reports, existingByDate, tgRow ?? null);
-      if (plan.toUpsert.length) {
-        const { error } = await admin.from("client_reports").upsert(plan.toUpsert, { onConflict: "email,report_date" });
-        if (error) return json({ ok: false, duvod: "db", detail: String(error.message).slice(0, 200) }, 500);
-      }
+      const readErr = syncReadError(reportReadError, tg.error);
+      if (readErr) return json({ ok: false, duvod: readErr === "targets" ? "targets" : "db" }, 500);
+      const plan = applySyncPlan(email, reports, existing, tg.data ?? null);
+      const committed = await commitSyncPlan(plan, reportWriter(admin));
+      if (committed.error) return json({ ok: false, duvod: committed.error }, 500);
+      // doplneno je v plánu dřív, než update doběhne. V seznamu zůstane jen zapsaný týden.
+      const duvody = duvodyProTlacitko(plan.duvody, committed.zmeneno_datum);
       return json({
         ok: true,
         found: true,
         registered: data.registered !== false,
-        active: data.active === true,
-        synced: plan.synced,
+        active: true,
+        synced: committed.inserted + committed.updated,
+        created: committed.inserted,
+        filled: committed.filled,
         skipped_web: plan.skipped_web,
+        skipped_protected: plan.skipped_protected,
         skipped_empty: plan.skipped_empty,
+        skipped_unchanged: plan.skipped_unchanged,
+        skipped_grace: plan.skipped_grace,
+        kolize_tydnu: plan.kolize_tydnu,
+        obsazene_datum: plan.obsazene_datum,
+        zmeneno_mezitim: committed.zmeneno_mezitim,
         report_dates: plan.report_dates,
+        duvody,
       });
     }
 
