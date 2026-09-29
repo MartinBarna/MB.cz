@@ -1130,23 +1130,23 @@ html:not([data-theme="light"]) .kbtn:hover:not(:disabled){
   border-color:var(--line-2,rgba(22,19,16,.20)) !important;
 }
 
-/* Inline zbytky z admin JS (barvy v řetězcích, ne v CSS). */
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#cbbfae"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#CBBFAE"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#b7ab9b"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#B7AB9B"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#8a7e6d"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#8A7E6D"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#6d6879"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#6D6879"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#cbbfae"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#CBBFAE"]{color:var(--muted,#5C564C) !important;}
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#7BD88F"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#7bd88f"]{color:#146038 !important;}
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#ece4d9"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#ECE4D9"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#e7e0d5"],
-[data-theme="light"] :is(.ba-admin, .ba-crm) [style*="color:#E7E0D5"]{color:var(--ink,#161310) !important;}
+/* Inline šedé a béžové barvy z JS (admin, doporučení, tréninkový plán, klient): na světlém podkladu muted/ink. Platí pro celou Academy (.ba), jen světlý režim. */
+[data-theme="light"] .ba [style*="color:#cbbfae"],
+[data-theme="light"] .ba [style*="color:#CBBFAE"],
+[data-theme="light"] .ba [style*="color:#b7ab9b"],
+[data-theme="light"] .ba [style*="color:#B7AB9B"],
+[data-theme="light"] .ba [style*="color:#8a7e6d"],
+[data-theme="light"] .ba [style*="color:#8A7E6D"],
+[data-theme="light"] .ba [style*="color:#6d6879"],
+[data-theme="light"] .ba [style*="color:#6D6879"],
+[data-theme="light"] .ba [style*="color:#cbbfae"],
+[data-theme="light"] .ba [style*="color:#CBBFAE"]{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba [style*="color:#7BD88F"],
+[data-theme="light"] .ba [style*="color:#7bd88f"]{color:#146038 !important;}
+[data-theme="light"] .ba [style*="color:#ece4d9"],
+[data-theme="light"] .ba [style*="color:#ECE4D9"],
+[data-theme="light"] .ba [style*="color:#e7e0d5"],
+[data-theme="light"] .ba [style*="color:#E7E0D5"]{color:var(--ink,#161310) !important;}
 
 /* Přihlášení: .note a bylo natvrdo bílé (1,16:1 na krému). */
 [data-theme="light"] .ba-login .note a{color:var(--gold-soft,#866008) !important;}
