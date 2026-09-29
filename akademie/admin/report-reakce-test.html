@@ -25,7 +25,16 @@
   textarea{min-height:360px;line-height:1.55}
   button{background:#EBB12C;color:#1A1222;border:0;border-radius:6px;padding:10px 18px;font-weight:700;cursor:pointer;margin-right:8px}
   code{color:#F6CD63}
+  [data-theme="light"] body{background:#F7F3EB;color:#161310;}
+  [data-theme="light"] h1{color:#866008;}
+  [data-theme="light"] p.m,
+  [data-theme="light"] label{color:#5C564C;}
+  [data-theme="light"] .box{background:#fff;border-color:rgba(22,19,16,.12);color:#161310;}
+  [data-theme="light"] input,
+  [data-theme="light"] textarea{background:#fff;color:#161310;border-color:rgba(22,19,16,.20);}
+  [data-theme="light"] code{color:#866008;}
 </style>
+<script>(function(){try{if(localStorage.getItem('mb-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();</script>
 </head>
 <body>
 <h1>Test: reakce na report</h1>

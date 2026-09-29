@@ -877,8 +877,10 @@ html:not([data-theme="light"]) .kbtn:hover:not(:disabled){
 }
 [data-theme="light"] .ba .ico svg{stroke:var(--gold-big,#AC7900);}
 
-/* Pruhy pokroku: brandová zlatá do #AC7900 (dřív do hnědé #6B4E08). */
-[data-theme="light"] body.ba .bar span,
+/* Pruhy pokroku: brandová zlatá do #AC7900 (dřív do hnědé #6B4E08).
+   Jen vyplň pruhu (přímé span[id], např. #rbar). Obecné `.bar span` barvilo
+   i popisek „Živý náhled“ v /materialy/rebrand/ (text na zlaté 1,9:1). */
+[data-theme="light"] body.ba .bar > span[id],
 [data-theme="light"] .ba .bar i,
 [data-theme="light"] body.ba .prog span,
 [data-theme="light"] body.ba .modcard .mbar span,
@@ -951,3 +953,249 @@ html:not([data-theme="light"]) .kbtn:hover:not(:disabled){
 /* /akademie/studium/ „Kudy začít →“: #866008 na husté zlaté tónině vycházelo 4,44:1,
    proto plné zlaté tlačítko jako ostatní CTA. */
 [data-theme="light"] body.ba .zacatek .zc{background:#EBB12C !important;border-color:transparent !important;color:#1A1222 !important;}
+
+/* ============================================================
+   VLNA 5 (29. 9. 2026): Academy admin + zbytky mimo audit 24. 9.
+   Admin nenačítal tenhle soubor, page <style> drží tmavé barvy
+   (#F6CD63, #fff, #b7ab9b, průhledné karty) i po přepnutí na světlý.
+   Tmavý režim se tu nemění: vše je pod [data-theme="light"].
+   ============================================================ */
+
+/* Karty a sekce adminu: z průhledné bílé na bílou plochu. */
+[data-theme="light"] .stats .s,
+[data-theme="light"] .tgrid .s,
+[data-theme="light"] .traf,
+[data-theme="light"] .tbox,
+[data-theme="light"] .sek,
+[data-theme="light"] .kdtile,
+[data-theme="light"] .mlog-sum .sc,
+[data-theme="light"] .mer-t .c,
+[data-theme="light"] .mer-sec,
+[data-theme="light"] .qg{
+  background:#fff !important;
+  border-color:var(--line,rgba(22,19,16,.12)) !important;
+  color:var(--ink,#161310) !important;
+}
+[data-theme="light"] .stats .s.on,
+[data-theme="light"] .mlog-sum .sc.on{
+  background:rgba(235,177,44,.12) !important;
+  border-color:rgba(235,177,44,.45) !important;
+}
+
+/* Velká zlatá čísla (≥ 24 px nebo tučná ≥ 18,7 px): #AC7900, 3,83:1 na bílé. */
+[data-theme="light"] .stats .s b,
+[data-theme="light"] .tgrid .s b,
+[data-theme="light"] .kdt-v,
+[data-theme="light"] .mlog-sum .sc .n,
+[data-theme="light"] .mer-t .c .n,
+[data-theme="light"] .mer-t .c.zluta .n{
+  color:var(--gold-big,#AC7900) !important;
+}
+
+/* Malý zlatý text na světlém: #866008 (5,69:1 na bílé, 4,55:1 na zlatém tónu). */
+[data-theme="light"] .traf-links a,
+[data-theme="light"] .sek > summary,
+[data-theme="light"] .mer-sec > summary,
+[data-theme="light"] .mlogbtn,
+[data-theme="light"] .kdrod.on,
+[data-theme="light"] .att a,
+[data-theme="light"] .mprev-meta a,
+[data-theme="light"] #gate a,
+[data-theme="light"] .seknav a:hover,
+[data-theme="light"] th.on,
+[data-theme="light"] th:hover,
+[data-theme="light"] .b-tag,
+[data-theme="light"] .kdt-c{
+  color:var(--gold-soft,#866008) !important;
+}
+[data-theme="light"] .traf-links a,
+[data-theme="light"] .att a,
+[data-theme="light"] .mprev-meta a{
+  background:rgba(235,177,44,.12) !important;
+  border-color:rgba(134,96,8,.35) !important;
+}
+[data-theme="light"] .mlogbtn{
+  background:rgba(235,177,44,.12) !important;
+  border-color:rgba(134,96,8,.35) !important;
+}
+
+/* Nadpisy karet: inkoust, ne bílá na krému (1,1:1). */
+[data-theme="light"] .traf h3,
+[data-theme="light"] .ovl h2,
+[data-theme="light"] #det h2{
+  color:var(--ink,#161310) !important;
+}
+
+/* Šedé popisky, které na krému padaly pod 4,5:1 (#b7ab9b 1,91, #8a7e6d 2,4). */
+[data-theme="light"] .stats .s span,
+[data-theme="light"] .tgrid .s span,
+[data-theme="light"] .traf .sub,
+[data-theme="light"] .sek > summary .sekpop,
+[data-theme="light"] .sek > summary .sekinfo,
+[data-theme="light"] .tbox h4,
+[data-theme="light"] .tbar .v,
+[data-theme="light"] .kdt-n,
+[data-theme="light"] .kdt-v i,
+[data-theme="light"] .mlog-sum .sc .l,
+[data-theme="light"] .mlog-sum .sc .sub,
+[data-theme="light"] .mer-t .c .l,
+[data-theme="light"] .mer-t .c .s,
+[data-theme="light"] .mer-leg,
+[data-theme="light"] .nv-lbl,
+[data-theme="light"] .traf-note,
+[data-theme="light"] .tcount,
+[data-theme="light"] .tl .ev .t,
+[data-theme="light"] .tl .ev .d,
+[data-theme="light"] #gate,
+[data-theme="light"] #load,
+[data-theme="light"] .ba .foot,
+[data-theme="light"] .dl h3,
+[data-theme="light"] .kv dt{
+  color:var(--muted,#5C564C) !important;
+}
+
+[data-theme="light"] .seknav a{
+  color:var(--muted-2,#3F3A34) !important;
+  background:#F3EEE4 !important;
+  border-color:var(--line-2,rgba(22,19,16,.20)) !important;
+}
+
+[data-theme="light"] th{
+  color:var(--muted,#5C564C) !important;
+  background:#F3EEE4 !important;
+  border-bottom-color:var(--line,rgba(22,19,16,.12)) !important;
+}
+[data-theme="light"] td,
+[data-theme="light"] .kv dd,
+[data-theme="light"] .note,
+[data-theme="light"] .tbar{
+  color:var(--ink,#161310) !important;
+  border-bottom-color:var(--line,rgba(22,19,16,.12));
+}
+
+[data-theme="light"] #det,
+[data-theme="light"] .ovl .box{
+  background:#F7F3EB !important;
+  color:var(--ink,#161310) !important;
+  border-color:var(--line,rgba(22,19,16,.12)) !important;
+}
+[data-theme="light"] #det .close,
+[data-theme="light"] .ovl .x{
+  color:var(--muted,#5C564C) !important;
+}
+
+[data-theme="light"] .det-act button{
+  background:#F3EEE4 !important;
+  color:var(--ink,#161310) !important;
+  border-color:var(--line-2,rgba(22,19,16,.20)) !important;
+}
+[data-theme="light"] .det-act button.on{
+  background:#EBB12C !important;
+  color:#1A1222 !important;
+  border-color:#EBB12C !important;
+}
+[data-theme="light"] .det-act button.danger,
+[data-theme="light"] .qg .lbl,
+[data-theme="light"] .qg .rm{
+  color:#8A3D12 !important;
+}
+
+[data-theme="light"] .kdrod{
+  background:#fff !important;
+  color:var(--muted-2,#3F3A34) !important;
+  border-color:var(--line-2,rgba(22,19,16,.20)) !important;
+}
+[data-theme="light"] .kdrod.on{
+  background:rgba(235,177,44,.14) !important;
+  color:#866008 !important;
+  border-color:rgba(134,96,8,.45) !important;
+}
+
+[data-theme="light"] .b-ok{color:#146038 !important;background:rgba(47,174,87,.12) !important;}
+[data-theme="light"] .b-no{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .b-warn{color:#A33A3A !important;background:rgba(163,58,58,.10) !important;}
+[data-theme="light"] .mer-t .c.zelena .n{color:#1B7A4B !important;}
+[data-theme="light"] .mer-t .c.cervena .n{color:#A33A3A !important;}
+[data-theme="light"] .ev-sent{color:#1B7A4B !important;}
+[data-theme="light"] .ev-error{color:#A33A3A !important;}
+[data-theme="light"] .ev-open{color:#1868B0 !important;}
+[data-theme="light"] .ev-skip{color:var(--muted,#5C564C) !important;}
+
+[data-theme="light"] .toolbar select,
+[data-theme="light"] .qg input,
+[data-theme="light"] .toolbar input{
+  background:#fff !important;
+  color:var(--ink,#161310) !important;
+  border-color:var(--line-2,rgba(22,19,16,.20)) !important;
+}
+
+/* Inline zbytky z admin JS (barvy v řetězcích, ne v CSS). */
+[data-theme="light"] .ba [style*="color:#cbbfae"],
+[data-theme="light"] .ba [style*="color:#CBBFAE"],
+[data-theme="light"] .ba [style*="color:#b7ab9b"],
+[data-theme="light"] .ba [style*="color:#B7AB9B"],
+[data-theme="light"] .ba [style*="color:#8a7e6d"],
+[data-theme="light"] .ba [style*="color:#8A7E6D"],
+[data-theme="light"] .ba [style*="color:#6d6879"],
+[data-theme="light"] .ba [style*="color:#6D6879"],
+[data-theme="light"] .ba [style*="color:#cbbfae"],
+[data-theme="light"] .ba [style*="color:#CBBFAE"]{color:var(--muted,#5C564C) !important;}
+[data-theme="light"] .ba [style*="color:#7BD88F"],
+[data-theme="light"] .ba [style*="color:#7bd88f"]{color:#146038 !important;}
+[data-theme="light"] .ba [style*="color:#ece4d9"],
+[data-theme="light"] .ba [style*="color:#ECE4D9"],
+[data-theme="light"] .ba [style*="color:#e7e0d5"],
+[data-theme="light"] .ba [style*="color:#E7E0D5"]{color:var(--ink,#161310) !important;}
+
+/* Přihlášení: .note a bylo natvrdo bílé (1,16:1 na krému). */
+[data-theme="light"] .ba .note a{color:var(--gold-soft,#866008) !important;}
+
+/* Klientská sekce: oranžová změna váhy na bílé kartě (2,26:1). */
+[data-theme="light"] .kstat .neg{color:#8A3D12 !important;}
+[data-theme="light"] .kstat .pos{color:#1B7A4B !important;}
+
+/* /materialy/rebrand/: lišta náhledu je tmavý ostrov, ne pruh pokroku. */
+[data-theme="light"] .prevwrap{
+  --gold-soft:#F6CD63;
+  --gold-big:#F6CD63;
+  --muted:#CBBFAE;
+  --muted-2:#E7E0D5;
+}
+[data-theme="light"] .prevwrap .bar,
+[data-theme="light"] .prevwrap .bar span,
+[data-theme="light"] .prevwrap .bar > span[id],
+[data-theme="light"] body.ba .prevwrap .bar > span[id]{
+  background:transparent !important;
+  color:#CBBFAE !important;
+}
+
+/* /materialy/vstupni-dotaznik/: varování trenérovi, bledě červená 1,96:1. */
+[data-theme="light"] .warn b{color:#A33A3A !important;}
+
+/* /akademie/videokurz/kalkulacka/: výsledek byl bílý text na zlatém přechodu (1,66 až 1,84).
+   Stejný tah jako veřejná kalkulačka 24. 9.: bílá karta, inkoust, popisky muted. */
+[data-theme="light"] .result{
+  background:#fff !important;
+  color:var(--ink,#161310) !important;
+  border:1px solid rgba(235,177,44,.45) !important;
+}
+[data-theme="light"] .result .lblsm,
+[data-theme="light"] .result .kcal small,
+[data-theme="light"] .result .disc,
+[data-theme="light"] .macro .lbl,
+[data-theme="light"] .crumb{
+  color:var(--muted,#5C564C) !important;
+  opacity:1 !important;
+}
+[data-theme="light"] .result .kcal,
+[data-theme="light"] .macro .num{color:var(--ink,#161310) !important;}
+[data-theme="light"] .macro{background:#F3EEE4 !important;}
+[data-theme="light"] .tip a{color:var(--gold-soft,#866008) !important;}
+
+/* Videokurz kalkulačka: horní lišta je tmavý pás, ne krém. Obecný
+   `body:not(.ba) .brand` z VLNY 2 ji barvil inkoustem (1,02:1). */
+[data-theme="light"] body:not(.ba) .top,
+[data-theme="light"] body:not(.ba) .top .brand,
+[data-theme="light"] body:not(.ba) .top a,
+[data-theme="light"] body:not(.ba) .top a.back{color:#fff !important;}
+[data-theme="light"] body:not(.ba) .top .brand .mark{color:#1A1222 !important;}

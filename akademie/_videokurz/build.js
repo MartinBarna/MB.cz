@@ -117,7 +117,7 @@ function videoPage(v) {
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <link rel="stylesheet" href="/assets/ba-ui.css?v=r7">
 <script src="/assets/ba-theme.js"></script>
-<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l12">
+<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
 <style>
   .wrap { max-width:880px; margin:0 auto; padding:30px 18px 80px; }
   .crumb { color:var(--gold-soft); font-size:.74rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
@@ -293,7 +293,7 @@ function videoPage(v) {
     btn.addEventListener('click', function(){ markDone(!state.done); });
     load();
   </script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l12"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
 </html>`;
 }
 
@@ -326,7 +326,7 @@ function dashboard() {
 <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
 <link rel="stylesheet" href="/assets/ba-ui.css?v=r7">
 <script src="/assets/ba-theme.js"></script>
-<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l12">
+<link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
 <style>
   .wrap { max-width:900px; }
   .hero .kick { margin-bottom:14px; }
@@ -617,7 +617,7 @@ function dashboard() {
     wireMaterials();
     boot();
   </script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l12"></body>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a6"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
 </html>`;
 }
 
