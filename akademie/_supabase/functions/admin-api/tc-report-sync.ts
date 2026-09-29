@@ -17,6 +17,8 @@
 // ⛔ Web patří k ISO týdnu dne (report_date - 3 dny): ne až st předchozí týden,
 //    čt až ne tentýž. Formulář období (od, do) neposílá.
 // ⛔ Řádek tvuj-coach se nezakládá, dokud od neděle toho týdne neuplynuly 4 dny.
+// ⛔ Když pondělí drží cizí řádek, insert jde na neděli téhož týdne, je-li volná.
+//    Obsazené pondělí i neděle: žádný insert, počítá se obsazene_datum.
 
 export const TC_REPORT_SOURCE = "tvuj-coach";
 
@@ -98,7 +100,7 @@ export type MatchFilter = {
   value: string | null;
 };
 
-export type SyncDuvod = { tyden: string; akce: string; duvod: string };
+export type SyncDuvod = { tyden: string; akce: string; duvod: string; report_date?: string };
 
 export type SyncPlan = {
   toInsert: ClientReportRow[];
@@ -116,7 +118,7 @@ export type SyncPlan = {
   skipped_grace: number;
   /** Týden, kde už leží webový report i řádek tvuj-coach. Nic se nemaže. */
   kolize_tydnu: number;
-  /** Pondělí, na které by se zakládalo, už drží jiný řádek. Insert se neudělá. */
+  /** Pondělí i neděle, kam by se zakládalo, už drží řádek. Insert se neudělá. */
   obsazene_datum: number;
   report_dates: string[];
   duvody: SyncDuvod[];
@@ -227,6 +229,24 @@ function calendarDaysBetween(fromIso: string, toIso: string): number | null {
   return Math.round((Date.UTC(y2, m2 - 1, d2) - Date.UTC(y1, m1 - 1, d1)) / 86400000);
 }
 
+/**
+ * Datum nového řádku tvuj-coach. Pondělí, nebo neděle téhož týdne, když pondělí
+ * už drží řádek a neděle ne. null: obě data drží řádek, insert se nedělá.
+ * Na source nesahá. Jestli řádek patří do týdne, řeší weekKeyOfExisting.
+ */
+export function insertDatumTydne(
+  weekMonday: string,
+  existing: { report_date: string }[],
+): string | null {
+  const monday = isoDate(weekMonday);
+  if (!monday) return null;
+  const taken = (day: string) => existing.some((r) => isoDate(r.report_date) === day);
+  if (!taken(monday)) return monday;
+  const sunday = addDays(monday, 6);
+  if (!taken(sunday)) return sunday;
+  return null;
+}
+
 /** Nový řádek tvuj-coach až když od neděle týdne uplynuly aspoň 4 kalendářní dny. */
 export function canCreateTvujCoach(weekMonday: string, asOf: string): boolean {
   const monday = isoDate(weekMonday);
@@ -333,7 +353,7 @@ export function mergeNutritionFromApp(
   return { nutrition, changed, filledKeys };
 }
 
-/** Web podle pravidla -3 dny. Ostatní zdroje podle ISO týdne svého data (appka je na pondělí). */
+/** Web podle pravidla -3 dny. Ostatní, včetně tvuj-coach a app na neděli: ISO pondělí. */
 function weekKeyOfExisting(row: ExistingClientReport): string {
   if (low(row.source) === "web") return webReportWeek(row.report_date);
   return isoWeekStart(row.report_date);
@@ -533,6 +553,30 @@ export async function commitSyncPlan(plan: SyncPlan, writer: ReportWriter): Prom
   return { ...partial, error: null };
 }
 
+/**
+ * Seznam pro tlačítko. `doplneno` v plánu vznikne dřív, než update doběhne.
+ * V seznamu zůstane jen u data, které update opravdu zapsal. Minuté je
+ * `zmeneno_mezitim` a druhá řádka se za to nepřiplácne.
+ */
+export function duvodyProTlacitko(duvody: SyncDuvod[], zmenenoDatum: string[]): SyncDuvod[] {
+  const missed = new Set(zmenenoDatum);
+  const seen = new Set<string>();
+  const out: SyncDuvod[] = [];
+  for (const d of duvody) {
+    const datum = d.report_date ?? "";
+    if (d.akce === "doplneno" && datum && missed.has(datum)) {
+      seen.add(datum);
+      out.push({ tyden: d.tyden, akce: "preskoceno", duvod: "zmeneno_mezitim" });
+      continue;
+    }
+    out.push({ tyden: d.tyden, akce: d.akce, duvod: d.duvod });
+  }
+  for (const datum of zmenenoDatum) {
+    if (!seen.has(datum)) out.push({ tyden: datum, akce: "preskoceno", duvod: "zmeneno_mezitim" });
+  }
+  return out;
+}
+
 // deno-lint-ignore no-explicit-any
 export function reportWriter(admin: any): ReportWriter {
   return {
@@ -614,8 +658,8 @@ export function extractTcReports(payload: unknown): TcReport[] {
 export function existingDateWindow(reports: TcReport[]): { from: string; to: string } | null {
   const weeks = reports.map((r) => isoWeekStart(reportDateOf(r))).filter(Boolean).sort();
   if (!weeks.length) return null;
-  // Web poslaný v pondělí až ve středu leží až 3 dny po neděli týdne, který popisuje.
-  // Od pondělí appky je to +9 dní (neděle + 3).
+  // Od pondělí: +6 je neděle (sem může spadnout insert) a +9 je středa po ní
+  // (web poslaný v pondělí až ve středu patří předchozímu týdnu).
   return { from: weeks[0], to: addDays(weeks[weeks.length - 1], 9) };
 }
 
@@ -730,6 +774,7 @@ export function applySyncPlan(
           tyden: week,
           akce: "doplneno",
           duvod: "prazdna_pole_z_appky:" + (merged.filledKeys.concat(vahaZAppky ? ["vaha"] : []).join(",") || "update"),
+          report_date: hit.report_date,
         });
       }
       continue;
@@ -753,15 +798,25 @@ export function applySyncPlan(
 
     // Web a appka už jsou vyřešené. Cokoli jiného ve týdnu (import-sheet, test-kopie,
     // neznámý source, prázdný source) založení zastaví. Do toho řádku se nezapisuje.
+    // Výjimka: pondělí drží cizí řádek (do tohohle týdne nepatří) a neděle drží
+    // ten jiný source. Pak se nezakládá a po lhůtě se počítá obsazene_datum.
+    const sunday = addDays(week, 6);
+    const mondayRows = existing.filter((r) => isoDate(r.report_date) === week);
+    const sundayRows = existing.filter((r) => isoDate(r.report_date) === sunday);
     const otherHits = inWeek.filter((r) => low(r.source) !== "web" && !isAppSource(r.source));
     if (otherHits.length) {
-      skipped_protected++;
-      const src = low(otherHits[0].source) || "prazdny";
-      const duvod = isProtectedSource(otherHits[0].source)
-        ? "chraneny_zdroj_" + src
-        : "neznamy_zdroj_" + src;
-      duvody.push({ tyden: week, akce: "preskoceno", duvod });
-      continue;
+      const mondayForeign = mondayRows.some((r) => weekKeyOfExisting(r) !== week);
+      const otherOnlyOnSunday = otherHits.every((r) => isoDate(r.report_date) === sunday);
+      const bothDatesTaken = mondayForeign && sundayRows.length > 0 && otherOnlyOnSunday;
+      if (!bothDatesTaken) {
+        skipped_protected++;
+        const src = low(otherHits[0].source) || "prazdny";
+        const duvod = isProtectedSource(otherHits[0].source)
+          ? "chraneny_zdroj_" + src
+          : "neznamy_zdroj_" + src;
+        duvody.push({ tyden: week, akce: "preskoceno", duvod });
+        continue;
+      }
     }
 
     // Do lhůty se nezakládá. Důvod je čekání na web, i když pondělí už drží cizí řádek.
@@ -771,23 +826,29 @@ export function applySyncPlan(
       continue;
     }
 
-    // Insert jde na pondělí. Webové pondělí má klíč týdne o týden dřív, takže ho
-    // `inWeek` nevidí. Obsazené je kalendářní report_date, ne klíč týdne.
-    const dateTaken = existing.filter((r) => isoDate(r.report_date) === week);
-    if (dateTaken.length) {
+    // Insert jde na pondělí. Když to datum drží cizí řádek (web minulého týdne
+    // `inWeek` nevidí), zkusí se neděle. Obsazené je kalendářní report_date.
+    const insertDate = insertDatumTydne(week, existing);
+    if (!insertDate) {
       obsazene_datum++;
+      const blocker = mondayRows[0] ?? sundayRows[0];
       duvody.push({
         tyden: week,
         akce: "preskoceno",
-        duvod: "obsazene_datum:" + (low(dateTaken[0].source) || "prazdny"),
+        duvod: "obsazene_datum:" + (low(blocker?.source) || "prazdny"),
       });
       continue;
     }
 
     const row = mapTcReportToRow(email, report, targets);
+    row.report_date = insertDate;
     toInsert.push(row);
     created++;
-    duvody.push({ tyden: week, akce: "zalozeno", duvod: "tyden_bez_webu" });
+    duvody.push({
+      tyden: week,
+      akce: "zalozeno",
+      duvod: insertDate === week ? "tyden_bez_webu" : "tyden_bez_webu:" + insertDate,
+    });
   }
 
   const report_dates = [

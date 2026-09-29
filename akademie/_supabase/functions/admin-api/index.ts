@@ -9,6 +9,7 @@ import { pripravFakta } from "./report-engine.mjs";
 import {
   applySyncPlan,
   commitSyncPlan,
+  duvodyProTlacitko,
   existingDateWindow,
   extractTcReports,
   isTcActive,
@@ -2942,9 +2943,8 @@ Deno.serve(async (req) => {
       const plan = applySyncPlan(email, reports, existing, tg.data ?? null);
       const committed = await commitSyncPlan(plan, reportWriter(admin));
       if (committed.error) return json({ ok: false, duvod: committed.error }, 500);
-      const duvody = plan.duvody.concat(committed.zmeneno_datum.map((tyden) => ({
-        tyden, akce: "preskoceno", duvod: "zmeneno_mezitim",
-      })));
+      // doplneno je v plánu dřív, než update doběhne. V seznamu zůstane jen zapsaný týden.
+      const duvody = duvodyProTlacitko(plan.duvody, committed.zmeneno_datum);
       return json({
         ok: true,
         found: true,

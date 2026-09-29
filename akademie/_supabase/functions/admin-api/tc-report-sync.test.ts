@@ -7,8 +7,10 @@ import {
   canCreateTvujCoach,
   commitSyncPlan,
   cronResultBody,
+  duvodyProTlacitko,
   existingDateWindow,
   extractTcReports,
+  insertDatumTydne,
   isoWeekStart,
   isEmptyReport,
   isTcActive,
@@ -296,6 +298,9 @@ Deno.test("existingDateWindow pokrývá neděli i pondělí týdne", () => {
   tvrd(!!w, "okno existuje");
   tvrd(w!.from === "2026-09-21", "from pondělí");
   tvrd(w!.to === "2026-09-30", "to středa po neděli, ať se načte web poslaný po až st");
+  tvrd(w!.to >= "2026-09-27", "neděle týdne je uvnitř");
+  const w2 = existingDateWindow([appReport("2026-09-28", { kcal: 1 })]);
+  tvrd(!!w2 && w2.from <= "2026-10-04" && w2.to >= "2026-10-04", "neděle 4. 10. je v okně týdne od 28. 9.");
 });
 
 Deno.test("mapTcReportToRow: prázdné nutrition je null, ne nuly", () => {
@@ -474,16 +479,18 @@ Deno.test("nález 1: pondělní web po lhůtě zůstane web a na 28. 9. se nezal
   tvrd(webReportWeek("2026-09-28") === "2026-09-21", "pondělní web patří týdnu od 21. 9.");
   const okno = existingDateWindow([tyden21(), tyden28()]);
   tvrd(!!okno && okno.from === "2026-09-21" && okno.to === "2026-10-07", "okno od prvního pondělí plus 9 dní");
-  tvrd(!!okno && okno.from <= "2026-09-28" && okno.to >= "2026-09-28", "pondělí insertu je v okně");
+  tvrd(!!okno && okno.from <= "2026-09-28" && okno.to >= "2026-09-28", "pondělí 28. 9. je v okně");
+  tvrd(!!okno && okno.from <= "2026-10-04" && okno.to >= "2026-10-04", "neděle 4. 10. je v okně");
   tvrd(TC_REPORT_SELECT.includes("id") && TC_REPORT_SELECT.includes("source"), "select čte id a source");
 
   const web = scenarioWeb();
   const p = plan([tyden21(), tyden28()], [web], { asOf: "2026-10-12" });
-  tvrd(p.toInsert.length === 0, "žádný insert, ani na 28. 9. ani na 21. 9.");
-  tvrd(p.created === 0, "created 0");
-  tvrd(p.obsazene_datum === 1, "obsazene_datum");
-  tvrd(p.duvody.some((d) => d.duvod.startsWith("obsazene_datum")), "důvod obsazené datum");
-  tvrd(p.toUpdate.length === 1 && p.toUpdate[0].report_date === "2026-09-28", "jediný zápis je doplnění webu");
+  tvrd(p.toInsert.length === 1 && p.toInsert[0].report_date === "2026-10-04", "týden 28. 9. jde na neděli, ne na 28. 9.");
+  tvrd(p.toInsert[0].source === "tvuj-coach", "nový řádek je tvuj-coach");
+  tvrd(!p.toInsert.some((r) => r.report_date === "2026-09-28" || r.report_date === "2026-09-21"), "na pondělí webu ani na 21. 9. se nezakládá");
+  tvrd(p.created === 1, "created 1");
+  tvrd(p.obsazene_datum === 0, "neděle byla volná");
+  tvrd(p.toUpdate.length === 1 && p.toUpdate[0].report_date === "2026-09-28", "druhý zápis je doplnění webu");
   tvrd(p.toUpdate[0].source === "web", "source ve filtru zůstane web");
   for (const k of ["measurements", "activity", "scales", "notes", "targets"]) {
     tvrd(!(k in p.toUpdate[0]), "update nemá " + k);
@@ -524,9 +531,13 @@ Deno.test("nález 1: pondělní web po lhůtě zůstane web a na 28. 9. se nezal
   const admin = fakeAdmin(table);
   const committed = await commitSyncPlan(p, reportWriter(admin));
   tvrd(committed.error === null, "zápis prošel");
-  tvrd(admin.inserts === 0, "insert se nevolal");
+  tvrd(admin.inserts === 1, "insert jen na volnou neděli");
   tvrd(committed.filled === 1 && committed.zmeneno_mezitim === 0, "doplnění trefilo jeden řádek");
-  tvrd(table.length === 2, "druhý řádek nevznikl");
+  tvrd(committed.inserted === 1, "vznikl jeden řádek");
+  tvrd(table.length === 3, "přibyl jen řádek na neděli");
+  tvrd(table.filter((r) => r.report_date === "2026-09-28").length === 2, "na 28. 9. nepřibyl třetí řádek");
+  const novy = table.find((r) => r.report_date === "2026-10-04");
+  tvrd(!!novy && novy.source === "tvuj-coach", "nedělní řádek je tvuj-coach");
   tvrd(web.source === "web", "source webu");
   tvrd(web.weight === 80, "váha po zápisu");
   tvrd((web.nutrition as { kcal: number }).kcal === 1750, "kcal po zápisu");
@@ -545,20 +556,154 @@ Deno.test("nález 1: pondělní web po lhůtě zůstane web a na 28. 9. se nezal
   ulozeno.nutrition.fat = String(ulozeno.nutrition.fat);
   ulozeno.nutrition.fiber = String(ulozeno.nutrition.fiber);
   ulozeno.weight = "80";
-  const druhe = plan([tyden21(), tyden28()], [ulozeno], { asOf: "2026-10-19" });
-  tvrd(druhe.toInsert.length === 0, "druhý běh nezaloží 21. 9. ani 28. 9.");
-  tvrd(druhe.toUpdate.length === 0, "řetězec 210 je totéž co 210, nic se nezapíše");
-  tvrd(druhe.skipped_unchanged === 1, "týden 21. 9. beze změny");
-  tvrd(druhe.obsazene_datum === 1, "28. 9. pořád obsazené");
+  const coachPoPrvnim: ExistingClientReport = {
+    id: "new-2026-10-04",
+    report_date: p.toInsert[0].report_date,
+    source: p.toInsert[0].source,
+    weight: p.toInsert[0].weight,
+    nutrition: p.toInsert[0].nutrition,
+  };
+  const druhe = plan([tyden21(), tyden28()], [ulozeno, coachPoPrvnim], { asOf: "2026-10-19" });
+  tvrd(druhe.toInsert.length === 0, "druhý běh nezaloží další řádek");
+  tvrd(druhe.toUpdate.length === 0, "řetězec 210 je totéž co 210 a nedělní řádek sedí");
+  tvrd(druhe.skipped_unchanged === 2, "oba týdny beze změny");
+  tvrd(druhe.obsazene_datum === 0, "nedělní řádek se našel");
   tvrd(ulozeno.source === "web", "source je pořád web");
 });
 
 Deno.test("nález 1: jen novější týden po lhůtě web na pondělí nepřepíše", () => {
   tvrd(canCreateTvujCoach("2026-09-28", "2026-10-12") === true, "lhůta prošla");
-  const p = plan([tyden28()], [scenarioWeb()], { asOf: "2026-10-12" });
-  tvrd(p.toInsert.length === 0 && p.toUpdate.length === 0, "žádný zápis");
-  tvrd(p.obsazene_datum === 1, "datum drží web");
+  const web = scenarioWeb();
+  const p = plan([tyden28()], [web], { asOf: "2026-10-12" });
+  tvrd(p.toInsert.length === 1 && p.toInsert[0].report_date === "2026-10-04", "insert na neděli");
+  tvrd(p.toInsert[0].source === "tvuj-coach", "zdroj");
+  tvrd(p.toUpdate.length === 0, "pondělní web se nepřepisuje");
+  tvrd(p.obsazene_datum === 0, "neděle byla volná");
   tvrd(p.skipped_grace === 0, "není to ochranná lhůta");
+  tvrd(web.source === "web" && web.report_date === "2026-09-28", "řádek webu zůstal");
+});
+
+Deno.test("R2 nález 3: obsazené pondělí založí týden na neděli a druhý běh ho najde", () => {
+  tvrd(isoWeekStart("2026-10-04") === "2026-09-28", "neděle 4. 10. patří k pondělí 28. 9.");
+  tvrd(webReportWeek("2026-10-04") === "2026-09-28", "web v neděli patří stejnému týdnu");
+  tvrd(insertDatumTydne("2026-09-28", []) === "2026-09-28", "volné pondělí");
+  const monday = webRow("2026-09-28", { kcal: 1750, protein: 130, carbs: 200, fat: 60, fiber: 25, dny_zapsano: 6 });
+  tvrd(insertDatumTydne("2026-09-28", [monday]) === "2026-10-04", "neděle, když je pondělí obsazené");
+  tvrd(webReportWeek(monday.report_date) === "2026-09-21", "pondělní web patří týdnu od 21. 9.");
+
+  const brzy = plan([tyden28()], [monday], { asOf: "2026-10-07" });
+  tvrd(brzy.toInsert.length === 0 && brzy.skipped_grace === 1, "7. 10. je pořád ve lhůtě");
+
+  const prvni = plan([tyden28()], [monday], { asOf: "2026-10-12" });
+  tvrd(prvni.toInsert.length === 1, "jeden insert");
+  tvrd(prvni.toInsert[0].report_date === "2026-10-04", "datum je neděle 4. 10.");
+  tvrd(prvni.toInsert[0].source === "tvuj-coach", "zdroj");
+  tvrd(prvni.toInsert[0].weight === 78.4, "váha týdne 28. 9.");
+  tvrd((prvni.toInsert[0].nutrition as { kcal: number }).kcal === 2100, "kcal týdne 28. 9.");
+  tvrd(prvni.toUpdate.length === 0, "pondělní web se nepřepisuje");
+  tvrd(prvni.obsazene_datum === 0 && prvni.created === 1, "neděle byla volná");
+  tvrd(prvni.duvody.some((d) => d.duvod === "tyden_bez_webu:2026-10-04"), "důvod nese datum neděle");
+  const okno = existingDateWindow([tyden28()]);
+  tvrd(!!okno && okno.from <= "2026-10-04" && okno.to >= "2026-10-04", "načtení neděli pokryje");
+
+  const coach: ExistingClientReport = {
+    id: "coach-nedele",
+    report_date: "2026-10-04",
+    source: "tvuj-coach",
+    weight: prvni.toInsert[0].weight,
+    nutrition: prvni.toInsert[0].nutrition,
+  };
+  const stejne = plan([tyden28()], [monday, coach], { asOf: "2026-10-19" });
+  tvrd(stejne.toInsert.length === 0 && stejne.toUpdate.length === 0, "druhý běh se stejnými čísly nezakládá ani nezapisuje");
+
+  const starsi: ExistingClientReport = {
+    id: "coach-nedele",
+    report_date: "2026-10-04",
+    source: "tvuj-coach",
+    weight: 70,
+    nutrition: { kcal: 1, protein: 1, carbs: 1, fat: 1, fiber: 1, dny_zapsano: 1 },
+  };
+  const jine = plan([tyden28()], [monday, starsi], { asOf: "2026-10-19" });
+  tvrd(jine.toInsert.length === 0, "druhý běh nezaloží další řádek");
+  tvrd(jine.toUpdate.length === 1 && jine.toUpdate[0].report_date === "2026-10-04", "update řádku 4. 10.");
+  tvrd(jine.toUpdate[0].source === "tvuj-coach", "source zůstane tvuj-coach");
+  tvrd(jine.toUpdate[0].weight === 78.4, "nová váha");
+
+  const appRadek: ExistingClientReport = { ...starsi, id: "app-nedele", source: "app" };
+  const appPlan = plan([tyden28()], [monday, appRadek], { asOf: "2026-10-19" });
+  tvrd(appPlan.toInsert.length === 0 && appPlan.toUpdate.length === 1, "app na neděli se aktualizuje");
+  tvrd(appPlan.toUpdate[0].report_date === "2026-10-04" && appPlan.toUpdate[0].source === "app", "datum i source app");
+});
+
+Deno.test("R2 nález 3: pondělí i neděle obsazené, nic a obsazene_datum", () => {
+  const monday = webRow("2026-09-28", { kcal: 1750, protein: 130, carbs: 200, fat: 60, fiber: 25, dny_zapsano: 6 });
+  const sunday: ExistingClientReport = {
+    report_date: "2026-10-04",
+    source: "import-sheet",
+    weight: 90,
+    nutrition: { kcal: 1 },
+  };
+  tvrd(insertDatumTydne("2026-09-28", [monday, sunday]) === null, "obě data drží řádek");
+  const p = plan([tyden28()], [monday, sunday], { asOf: "2026-10-12" });
+  tvrd(p.toInsert.length === 0 && p.toUpdate.length === 0, "nic se nezapíše");
+  tvrd(p.obsazene_datum === 1, "obsazene_datum");
+  tvrd(p.skipped_protected === 0, "není to přeskočení chráněného týdne");
+  tvrd(p.duvody.some((d) => d.duvod === "obsazene_datum:web"), "důvod nese source pondělního řádku");
+  tvrd(monday.source === "web" && sunday.source === "import-sheet", "vstupní řádky se nemění");
+
+  const veLhu = plan([tyden28()], [monday, sunday], { asOf: "2026-10-07" });
+  tvrd(veLhu.toInsert.length === 0 && veLhu.skipped_grace === 1, "před lhůtou se nezakládá");
+  tvrd(veLhu.obsazene_datum === 0, "ve lhůtě ještě není obsazene_datum");
+
+  const jenNedele = plan([tyden28()], [sunday], { asOf: "2026-10-12" });
+  tvrd(jenNedele.toInsert.length === 0 && jenNedele.skipped_protected === 1, "chráněná neděle bez cizího pondělí týden přeskočí");
+  tvrd(jenNedele.obsazene_datum === 0, "volné pondělí není obsazene_datum");
+});
+
+Deno.test("R2 nález 3: web v neděli 4. 10. se doplní a insert nevznikne", () => {
+  const monday = webRow("2026-09-28", { kcal: 1750, protein: 130, carbs: 200, fat: 60, fiber: 25, dny_zapsano: 6 });
+  const sunday = webRow("2026-10-04", { kcal: 1750, protein: 130, carbs: null, fat: null, fiber: null, dny_zapsano: 4 });
+  sunday.id = "nedelni-web";
+  const p = plan([tyden28()], [monday, sunday], { asOf: "2026-10-12" });
+  tvrd(p.toInsert.length === 0, "žádný insert");
+  tvrd(p.obsazene_datum === 0 && p.created === 0, "web má přednost");
+  tvrd(p.toUpdate.length === 1 && p.toUpdate[0].report_date === "2026-10-04", "doplní se nedělní web");
+  tvrd(p.toUpdate[0].source === "web", "source zůstane web");
+  const n = p.toUpdate[0].nutrition as Record<string, unknown>;
+  tvrd(n.kcal === 1750 && n.carbs === 220, "kcal webu, sacharidy z týdne 28. 9.");
+  tvrd(p.duvody.some((d) => d.akce === "doplneno" && d.report_date === "2026-10-04"), "důvod nese datum webu");
+
+  const plny = webRow("2026-10-04", { kcal: 1750, protein: 130, carbs: 200, fat: 60, fiber: 25, dny_zapsano: 4 });
+  const hotovo = plan([tyden28()], [monday, plny], { asOf: "2026-10-12" });
+  tvrd(hotovo.toInsert.length === 0 && hotovo.toUpdate.length === 0, "plný nedělní web se nezakládá znovu");
+});
+
+Deno.test("R2 nález 4: doplneno v seznamu jen když update řádek zapsal", async () => {
+  const a = scenarioWeb();
+  const b = scenarioWeb();
+  b.id = JINY_ID;
+  b.report_date = "2026-10-04";
+  const p = plan([tyden21(), tyden28()], [a, b], { asOf: "2026-10-12" });
+  const doplneno = p.duvody.filter((d) => d.akce === "doplneno");
+  tvrd(doplneno.length === 2, "plán má dvě doplnění");
+  tvrd(p.toInsert.length === 0, "vedle webů se nezakládá");
+  const predZap = duvodyProTlacitko(p.duvody, []);
+  tvrd(predZap.filter((d) => d.akce === "doplneno").length === 2, "když se nic neminulo, obě doplnění zůstanou");
+  tvrd(predZap.every((d) => !("report_date" in d)), "seznam report_date nevrací");
+
+  a.nutrition = { ...(a.nutrition as Record<string, unknown>), kcal: 1800 };
+  const table = [a, b];
+  const committed = await commitSyncPlan(p, reportWriter(fakeAdmin(table)));
+  tvrd(committed.filled === 1 && committed.zmeneno_mezitim === 1, "jedno zapsané, jedno minutí");
+  tvrd(committed.zmeneno_datum[0] === "2026-09-28", "minuté datum je pondělní web, ne týden");
+  const seznam = duvodyProTlacitko(p.duvody, committed.zmeneno_datum);
+  tvrd(seznam.filter((d) => d.akce === "doplneno").length === 1, "doplneno jen u zapsaného");
+  tvrd(seznam.some((d) => d.akce === "doplneno" && d.tyden === "2026-09-28"), "zůstane týden nedělního webu");
+  const miss = seznam.filter((d) => d.duvod === "zmeneno_mezitim");
+  tvrd(miss.length === 1 && miss[0].akce === "preskoceno" && miss[0].tyden === "2026-09-21", "minutý týden je 21. 9.");
+  tvrd(seznam.every((d) => !("report_date" in d)), "ani po minutí se report_date nevrací");
+  tvrd((b.nutrition as { carbs: number }).carbs === 220, "nedělní web se zapsal");
+  tvrd((a.nutrition as { kcal: number }).kcal === 1800, "minutý pondělní web zůstal");
 });
 
 Deno.test("nález 3: update po změně kcal neprojde a započte se zmeneno_mezitim", async () => {
@@ -779,4 +924,6 @@ Deno.test("nález 2, 5 a 7: čtení, active a status cronu", async () => {
   tvrd(!block.includes(".upsert("), "tlačítko upsert nevolá");
   tvrd(!block.includes("onConflict"), "tlačítko nemá onConflict");
   tvrd(block.includes('duvod: readErr === "targets" ? "targets" : "db"'), "chyba targets není tichý null");
+  tvrd(block.includes("duvodyProTlacitko("), "tlačítko skládá důvody až po zápisu");
+  tvrd(!block.includes("plan.duvody.concat"), "plánové doplneno se neslepuje naslepo");
 });
