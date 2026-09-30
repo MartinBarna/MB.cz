@@ -137,6 +137,9 @@
       var pdf = form.getAttribute('data-pdf') || '';
       var noun = form.getAttribute('data-noun') || 'Plán';
       var upsell = form.getAttribute('data-upsell') || 'Chceš se v tom naučit chodit sám/sama? Mrkni na <a href="/videokurz" style="color:#F6CD63;text-decoration:underline;">videokurz výživy</a>.';
+      // Bez data-upsell-template zustava seda veta vyse. Sablona (stranka si ji drzi sama)
+      // se vykresli jako normalni blok, ne drobnym sedym odstavcem.
+      var upsellTpl = form.getAttribute('data-upsell-template') || '';
       var msg = form.querySelector('[data-msg]');
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -168,6 +171,13 @@
         function showSuccess(dup, nejiste) {
           if (done) return; done = true; track();
           var dl = pdf ? '<a class="btn" href="' + pdf + '" target="_blank" rel="noopener" style="margin-top:12px;display:inline-block">Stáhnout (PDF) →</a>' : '';
+          var upsellHtml = '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">' + upsell + '</p>';
+          if (upsellTpl) {
+            var tpl = document.getElementById(upsellTpl);
+            if (tpl && tpl.innerHTML && tpl.innerHTML.replace(/\s/g, '')) {
+              upsellHtml = '<div class="lead-upsell-block" style="margin:18px 0 0;text-align:left;">' + tpl.innerHTML + '</div>';
+            }
+          }
           // dup = e-mail už v seznamu je → uvítací mail se znovu neposílá, tak to řekneme na rovinu.
           // nejiste = „už v seznamu“ přišlo až z DRUHÉHO pokusu: nejspíš ho uložil první pokus,
           // jehož odpověď se ztratila, a uvítací mail pak běží. Nevíme, tak nic neslibujeme ani nerušíme.
@@ -183,7 +193,7 @@
               '<h3 style="color:#fff;margin:.5rem 0 .3rem;">' + (dup ? 'Vítej zpátky' : 'Díky') + (data.name ? ', ' + escName(vokativ(data.name)) : '') + '!</h3>' +
               '<p style="color:#cabfb4;margin:.2rem 0;">' + info + '</p>' +
               dl +
-              '<p style="margin:18px 0 0;font-size:.84rem;color:#8a8073;">' + upsell + '</p>' +
+              upsellHtml +
             '</div>';
         }
         function showError(text) {

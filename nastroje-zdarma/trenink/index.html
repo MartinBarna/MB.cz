@@ -51,6 +51,9 @@
   .day td{padding:10px 16px;border-top:1px solid var(--line);color:var(--ink);font-size:.95rem;vertical-align:top;}
   .day td.sr{color:var(--gold-soft);white-space:nowrap;text-align:right;font-weight:700;}
   .day .tip{display:block;color:var(--muted);font-size:.8rem;margin-top:2px;}
+  body.ba .appka-blok{background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border:1px solid rgba(235,177,44,.4);border-radius:18px;padding:1.5rem 1.6rem;margin:1.4rem 0;}
+  body.ba .appka-blok h2{color:#fff;font-size:1.3rem;margin:0 0 .4rem;letter-spacing:-.01em;}
+  body.ba .appka-blok p{color:#e9e2d8;font-size:.97rem;line-height:1.55;margin:0 0 1.1rem;}
   /* upsell + lead-capture do Academy */
   .upsell{background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.04));border:1px solid rgba(235,177,44,.4);border-radius:18px;padding:1.6rem 1.6rem;margin:1.4rem 0;}
   .upsell h2{color:#fff;font-size:1.35rem;margin:0 0 .4rem;letter-spacing:-.01em;}
@@ -63,7 +66,7 @@
   .seg{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.8rem;margin:1.2rem 0 0;}
   .seg::before,.seg::after{content:"";flex:1;height:1px;background:var(--line);}
   @media print{
-    .top,.actions,.no-print,.upsell,.ticks,.lead{display:none!important;}
+    .top,.actions,.no-print,.upsell,.appka-blok,.ticks,.lead{display:none!important;}
     body{background:#fff!important;color:#161616!important;}
     .panel,.day{border-color:#ddd!important;background:#fff!important;color:#161616!important;}
     .day h3{background:#f3ede4!important;color:#161616!important;} .day td{color:#222!important;} .day .tip{color:#666!important;}
@@ -81,7 +84,10 @@
 <body class="ba">
   <div class="top"><div class="in">
     <a class="brand" href="/"><span class="mark">MB</span><span><b>Martin Barna</b><span class="tag">Generátor tréninku zdarma</span></span></a>
-    <a class="back" href="/nastroje-zdarma/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Nástroje zdarma</a>
+    <span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;">
+      <a href="https://tvujcoach.cz/?utm_source=web&amp;utm_medium=trenink&amp;utm_campaign=trenink" style="color:#a89e94;text-decoration:none;font-size:.85rem;">Appka Tvůj Coach</a>
+      <a class="back" href="/nastroje-zdarma/" style="color:#a89e94;text-decoration:none;font-size:.85rem;">← Nástroje zdarma</a>
+    </span>
   </div></div>
 
   <div class="wrap">
@@ -162,6 +168,13 @@
           <button class="btn ghost" id="regen">↻ Vygenerovat jinak</button>
           <a class="btn ghost" href="/nastroje-zdarma/jidelnicek/">🥗 Vyzkoušet i generátor jídelníčku →</a>
         </div>
+      </div>
+
+      <div class="appka-blok">
+        <h2>Chceš, aby si plán pamatoval, kolik zvedáš?</h2>
+        <p>Tenhle generátor ti dá jeden plán; v appce Tvůj Coach si k němu zapíšeš série, u příští ti poradí váhu, ukáže objem po svalových partiích a vedle tréninku hlídá i jídlo.</p>
+        <p>Zápis sérií a 128 cviků máš zdarma, plán a objem odemyká Basic za 249 Kč měsíčně, AI kouče VIP za 499 Kč.</p>
+        <a class="btn" href="https://tvujcoach.cz/?utm_source=web&amp;utm_medium=trenink&amp;utm_campaign=trenink">Mrknout na appku →</a>
       </div>
 
       <!-- UPSELL + LEAD CAPTURE do Academy -->
@@ -356,7 +369,7 @@
     $('regen').addEventListener('click',function(){ generate(true); });
   })();
   </script>
-  <script src="/assets/lead-form.js?v=g7" defer></script>
+  <script src="/assets/lead-form.js?v=g8" defer></script>
   <script src="/assets/scroll-top.js?v=g13" defer></script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
