@@ -3,9 +3,12 @@
 //
 // Appka Tvůj Coach (projekt kfkmghvhqwqtsalqjmrp) sem po PRVNÍ aktivaci předplatného
 // pošle fakta o nákupu a SHARED SECRET v hlavičce `x-app-purchase-secret`.
-// Odsud se udělá affiliate provize (`referrals`), bonusový videokurz ke KAŽDÉ první
-// platbě a měsíc Academy na zkoušku u ročního VIP (obojí `entitlements`).
+// Odsud se udělá affiliate provize (`referrals`), bonusový videokurz k první platbě
+// VIP a VIP + Kontrola (od 30. 9. 2026, Basic ne; pravidlo `maNarokNaBonus`) a měsíc
+// Academy na zkoušku u ročního VIP (obojí `entitlements`).
 // Rozhodovací logika je v `core.ts`, tady je jen vodovod.
+// ⛔ Nasazuje se CELÁ složka (wipe + `cp -r`), ne jen `index.ts`: pravidlo bonusu je
+//    v `core.ts`. Živou verzi ověříš polem `pravidlo_bonusu` v odpovědi.
 //
 // ⛔ NEPOSLOUCHÁ STRIPE. Vstup je náš vlastní server-to-server hovor, ověřený secretem.
 //    Stripe eventy appky zpracovává webhook APPKY; sem se posílá až výsledek.
@@ -21,7 +24,7 @@
 // =============================================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-import { BridgeError, type BridgeDeps, handleAppPurchase } from "./core.ts";
+import { BridgeError, type BridgeDeps, handleAppPurchase, PRAVIDLO_BONUSU } from "./core.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -203,8 +206,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     const result = await handleAppPurchase(body, deps);
     // Do logu i výsledek: když se něco nepřipíše, tohle je jediné místo, kde se pozná PROČ.
-    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} kind=${String(body.kind ?? "first")} order=${String(body.order_id ?? body.payment_intent ?? "-")} referral=${result.referral} bonus=${result.bonus} academy=${result.academy}`);
-    return json(result);
+    console.log(`[app-purchase-bridge] event=${String(body.event_id ?? "-")} kind=${String(body.kind ?? "first")} order=${String(body.order_id ?? body.payment_intent ?? "-")} referral=${result.referral} bonus=${result.bonus} pravidlo=${PRAVIDLO_BONUSU} academy=${result.academy}`);
+    // `pravidlo_bonusu`: po nasazení podle něj poznáš, který `core.ts` živě běží.
+    // Webhook appky (`posliDoMostu`) čte jen `res.ok`, tělo neparsuje, pole navíc mu nevadí.
+    return json({ ...result, pravidlo_bonusu: PRAVIDLO_BONUSU });
   } catch (e) {
     if (e instanceof BridgeError) return json({ error: e.message }, e.status);
     console.error("[app-purchase-bridge] selhalo:", e);

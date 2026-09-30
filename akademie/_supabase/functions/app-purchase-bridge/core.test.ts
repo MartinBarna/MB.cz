@@ -3,7 +3,7 @@
 // (bez jakychkoli --allow-*: test necte sit, disk ani promenne prostredi)
 //
 // Co se tady hlida (a proc prave to):
-//  - bonus dostane JEN rocni VIP (mesicni ani Basic ne), jinak rozdavame 990 Kc zdarma
+//  - bonusovy videokurz dostane JEN VIP a VIP + Kontrola (od 30. 9. 2026), Basic ne
 //  - kdo videokurz uz ma, tomu se radek NEPREPISE, jinak se rozbije vazba na jeho platbu
 //  - idempotence podle PLATBY, ne podle stavu pristupu
 //  - anti-self a neznamy kod
@@ -106,10 +106,15 @@ async function main(): Promise<void> {
   console.log('\n== app-purchase-bridge: jádro ==');
 
   // --- Nárok na bonus (čistá funkce) ----------------------------------------
+  // Martin 30. 9. 2026: „videokurz jen VIP a tlačíme VIP". Stejné pravidlo drží
+  // `shouldGrantVideokurzOnFirstPayment` ve stripe-webhooku appky.
   check('bonus: roční VIP ano', maNarokNaBonus('ai_basic', 'year'));
-  check('bonus: měsíční VIP NE', !maNarokNaBonus('ai_basic', 'month'));
+  check('bonus: měsíční VIP ano', maNarokNaBonus('ai_basic', 'month'));
+  check('bonus: VIP + Kontrola (čtvrtletí) ano', maNarokNaBonus('ai_kontrola', 'quarter'));
   check('bonus: roční Basic NE', !maNarokNaBonus('basic', 'year'));
-  check('bonus: neznámý interval NE', !maNarokNaBonus('ai_basic', ''));
+  check('bonus: měsíční Basic NE', !maNarokNaBonus('basic', 'month'));
+  check('bonus: neznámý tier NE', !maNarokNaBonus('', 'month') && !maNarokNaBonus('gold', 'month'));
+  check('bonus: VIP s neznámým intervalem ano (peníze přišly)', maNarokNaBonus('ai_basic', ''));
 
   // Sazba: předplatné bere rate_monthly i u ročního (rate_oneoff je pro jednorázovky).
   check('sazba: roční předplatné bere rate_monthly', sazbaProAppku(JIRKA) === 0.3);
@@ -188,12 +193,12 @@ async function main(): Promise<void> {
     check('duplicita: druhý průchod nezapíše referral', r.referral === 'duplicita-order' && stav.referraly.length === 0, r.referral);
   }
 
-  // --- MĚSÍČNÍ VIP: provize ano, bonus NE ------------------------------------
+  // --- MĚSÍČNÍ VIP: provize ano, bonus ANO (od 18. 8. 2026) ------------------
   {
     const { deps, stav } = mock();
     const r = await handleAppPurchase({ ...ROCNI_VIP, interval: 'month', amount: 49900 }, deps);
     check('měsíční VIP: provize 30 % ze 499 = 149,7', stav.referraly[0]?.reward_amount === 149.7, String(stav.referraly[0]?.reward_amount));
-    check('měsíční VIP: BONUS SE NEUDĚLÍ', r.bonus === 'netyka-se' && stav.entitlementy.length === 0, r.bonus);
+    check('měsíční VIP: bonus se udělí', r.bonus === 'udelen' && stav.entitlementy.length === 1, r.bonus);
   }
 
   // --- ROČNÍ BASIC: provize ano, bonus NE ------------------------------------
@@ -304,7 +309,13 @@ async function main(): Promise<void> {
     const { deps, stav } = mock({ grantSpadne: true });
     const r = await handleAppPurchase(ROCNI_VIP, deps);
     check('selhání bonusu: provize se přesto zapíše', r.referral === 'zapsano-metadata' && r.bonus === 'chyba', r.bonus);
-    check('selhání bonusu: přijde HLASITÝ alert', stav.alerty.length === 1 && String(stav.alerty[0].predmet).includes('bonusový videokurz'), JSON.stringify(stav.alerty[0]?.predmet));
+    // ⚠️ Hledá se PODLE PŘEDMĚTU, ne podle počtu: u ročního VIP spadne i měsíc Academy
+    //    (tentýž `udelEntitlement`), takže alerty jsou dva. Test do 30. 9. 2026 chtěl
+    //    přesně jeden a byl proto trvale červený (revize R1, D4).
+    const alertBonus = stav.alerty.filter((a) => String(a.predmet).includes('bonusový videokurz'));
+    check('selhání bonusu: přijde HLASITÝ alert', alertBonus.length === 1, JSON.stringify(stav.alerty.map((a) => a.predmet)));
+    check('selhání bonusu: alert říká, jak kurz udělit ručně (source)',
+      String(alertBonus[0]?.detail?.co_delat ?? '').includes(BONUS_SOURCE), JSON.stringify(alertBonus[0]?.detail));
   }
 
   // --- Vstupní kontroly ------------------------------------------------------

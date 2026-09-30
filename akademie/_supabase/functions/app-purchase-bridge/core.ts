@@ -174,24 +174,42 @@ export function jeRocniVip(tier: string, interval: string): boolean {
 }
 
 /**
- * Má tenhle nákup dostat bonusový videokurz (hodnota 800 Kč)?
+ * Tiery appky, jejichž PRVNÍ platba dostane bonusový videokurz (od 30. 9. 2026).
+ * `ai_basic` = VIP, `ai_kontrola` = VIP + Kontrola od Martina (platí víc než VIP,
+ * nesmí dostat míň). Basic (`basic`) sem nepatří.
+ */
+const TIERY_S_VIDEOKURZEM = ['ai_basic', 'ai_kontrola'];
+/**
+ * Značka pravidla bonusu v odpovědi mostu (`pravidlo_bonusu`). Podle ní jde po nasazení
+ * živě poznat, který `core.ts` běží, bez testovacího nákupu (revize R1, S1).
+ * ⛔ Žije TADY, vedle `TIERY_S_VIDEOKURZEM`, ne v `index.ts`: kdyby se nasadil nový
+ *    `index.ts` se starým `core.ts`, značka v `index.ts` by lhala. Takhle import spadne.
+ *    Kdo mění `TIERY_S_VIDEOKURZEM`, mění i tuhle značku.
+ */
+export const PRAVIDLO_BONUSU = 'vip-2026-09-30';
+
+/**
+ * Má tenhle nákup dostat bonusový videokurz?
  *
- * ⭐ OD 18. 8. 2026 ANO U KAŽDÉ PRVNÍ PLATBY, tedy Basic i VIP, měsíční i roční.
- *    Do té doby ho dostával jen roční VIP. Rozhodl Martin 18. 8. 2026 a důvod je
- *    prodejní, ne technický: cílem je dostat lidi ze 14denní zkušebky rovnou do
- *    placení. I „koupím měsíc za 249 a zruším" je prodej za 249, což je pořád víc
- *    než zkušebka zadarmo.
+ * ⭐ OD 30. 9. 2026 JEN VIP A VIP + KONTROLA (měsíční, čtvrtletní i roční).
+ *    Martin 30. 9. 2026: „videokurz jen VIP a tlačíme VIP". Od 18. 8. do 30. 9.
+ *    ho dostávala každá první platba včetně Basicu, do 18. 8. jen roční VIP.
+ *    Kdo ho už dostal, tomu se nic nebere (tahle funkce jen rozhoduje o NOVÉM udělení).
+ *
+ * ⛔⛔ STEJNÉ PRAVIDLO DRŽÍ APPKA (`shouldGrantVideokurzOnFirstPayment` ve
+ *    `stripe-webhook/videokurz-grant.ts` v repu appky). Kdo mění rozsah, mění OBĚ
+ *    místa: když by tady zůstal Basic, most by mu kurz tiše udělil bez mailu,
+ *    přestože mu ho appka ani prodejní stránky už neslibují.
  *
  * ⛔ „PRVNÍ PLATBA" NEHLÍDÁ TAHLE FUNKCE, ale `handleAppPurchase` podmínkou
  *    `kind !== 'renewal'`. Bez ní by videokurz chodil ke každé faktuře znovu.
  *
- * ⚠️ Funkce vrací true vždycky a je to schválně: je to jediné místo, kde je pravidlo
- *    zapsané, a kdyby se rozsah zase zúžil, mění se tady (a v testech, které na ní visí).
- *    Neznámý tier ani prázdný interval nárok neruší: sem se volá jen z aktivace
- *    PLACENÉHO předplatného, takže peníze přišly, i když se plán nepodařilo pojmenovat.
+ * ⚠️ Interval nárok neruší (i prázdný: peníze přišly, jen se nepodařilo pojmenovat
+ *    období). Neznámý tier nárok NEMÁ: kurz je dárek k VIP a neznámý tier VIP být
+ *    nemusí.
  */
-export function maNarokNaBonus(_tier: string, _interval: string): boolean {
-  return true;
+export function maNarokNaBonus(tier: string, _interval: string): boolean {
+  return TIERY_S_VIDEOKURZEM.includes(tier);
 }
 
 /**
@@ -256,8 +274,8 @@ export async function handleAppPurchase(
   // ⛔ BONUSY JEN U PRVNÍ AKTIVACE, a je to výslovná podmínka, ne náhoda. Bez ní by
   //    o nich rozhodovalo jen „už to má", což je idempotence podle STAVU PŘÍSTUPU:
   //    kdyby si člověk videokurz mezitím sám smazal nebo mu vypršel, dostal by ho
-  //    jako dárek znovu při každé faktuře. Od 18. 8. 2026 to platí dvojnásob: bonus
-  //    dostává KAŽDÝ tier, takže bez téhle podmínky by ho měsíční Basic bral měsíčně.
+  //    jako dárek znovu při každé faktuře. Bonus dostává i MĚSÍČNÍ VIP, takže bez
+  //    téhle podmínky by ho bral měsíčně.
   const bonus = jeObnova ? 'netyka-se-obnova' : await udelBonus(email, tier, interval, body, deps);
   const academy = jeObnova ? 'netyka-se-obnova' : await udelAcademyMesic(email, tier, interval, body, deps);
   return { ok: true, referral, bonus, academy };
@@ -383,7 +401,7 @@ async function atribuuj(
   }
 }
 
-/** Bonusový videokurz ke každé první platbě appky. Best-effort jako atribuce. */
+/** Bonusový videokurz k první platbě VIP a VIP + Kontrola. Best-effort jako atribuce. */
 async function udelBonus(
   email: string,
   tier: string,
@@ -433,7 +451,7 @@ async function udelBonus(
     return 'udelen';
   } catch (e) {
     // ⚠️ Alert je tu POVINNÝ, ne zdvořilost: člověk zaplatil a bonus je součást toho,
-    // co si koupil (od 18. 8. 2026 u každého tieru, ne jen u ročního VIP za 4 990 Kč).
+    // co si koupil (od 30. 9. 2026 u každého VIP a VIP + Kontrola, ne jen u ročního VIP za 4 990 Kč).
     // Když se neudělí, musí to někdo udělat ručně.
     await deps.alert('🔴 Nákup appky: bonusový videokurz se NEUDĚLIL', {
       email, tier, interval, chyba: String(e).slice(0, 200),

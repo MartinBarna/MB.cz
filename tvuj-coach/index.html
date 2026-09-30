@@ -172,7 +172,8 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
            roční tlačítko PRVNÍ, a kdyby si `.6rem` neslo s sebou, přebilo by si `margin-top:auto`
            a dvojice tlačítek by se v kartě rozlepila (jedno nahoře, druhé přilepené dolů). */
         .plan .btn + .btn { margin-top:.6rem; }
-        /* Bonusový řádek v kartě tarifu (videokurz zdarma k první platbě, živé od 18. 8. 2026).
+        /* Bonusový řádek v kartě tarifu (videokurz zdarma k první platbě, živé od 18. 8. 2026;
+           od 30. 9. 2026 jen u VIP, Basic ho nemá).
            ⚠️ SCHVÁLNĚ VLASTNÍ ELEMENT, ne text uvnitř `.plan-year`: cenový skript dole přepisuje
            `.plan-year` celý `textContent` z ceníku, takže by tam vložený bonus po doběhnutí
            dotazu TIŠE ZMIZEL a nikdo by si toho nevšiml.
@@ -304,7 +305,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
              kliknout. Teď jsou tlačítka nahoře a bonus nad nimi by je posunul zpátky
              do pásma cookie lišty, tak je hned POD nimi. Pořád v jednom pohledu
              s tlačítky, ale rozhodnutí už nic neodsouvá. -->
-        <p class="hero-bonus"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>Ke každé první platbě dostaneš videokurz výživy za 1 490 Kč zdarma</b>, a zůstane ti, i když předplatné zrušíš. K ročnímu VIP navíc měsíc Barna Academy.</p>
+        <p class="hero-bonus"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>K první platbě VIP dostaneš videokurz výživy za 1 490 Kč zdarma</b>, a zůstane ti, i když předplatné zrušíš. K ročnímu VIP navíc měsíc Barna Academy.</p>
         <!-- 5. 9. 2026: cesta „nejdřív hodnota, pak cena". Studený návštěvník z reklamy
              nekupoval naslepo (227 návštěv, 0 nákupů), tak dostane veřejný dotazník bez účtu:
              spočítá kalorie a makra a až pod výsledkem nabídne Basic. Tlačítka nad tím zůstávají.
@@ -515,7 +516,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
         <!-- ⛔ [2026-08-21] Tenhle podnadpis sliboval „po registraci máš 14 dní celou VIP
              verzi". Zkušebka byla 20. 8. zrušena, takže to byla nepravda. Zbytek
              (videokurz k první platbě) platí a zůstává, je to nejsilnější argument. -->
-        <p class="sec-sub">VIP je celá appka: výživa, trénink a AI kouč, který tvoje čísla vidí a odpoví, kdykoliv se zeptáš. Basic je totéž bez AI, za 249. Zapisovat můžeš zdarma napořád a kartu k tomu nepotřebuješ. A ke každé první platbě přidávám videokurz výživy za 1 490 Kč zdarma, takže i za jeden měsíc dostaneš víc, než kolik zaplatíš.</p>
+        <p class="sec-sub">VIP je celá appka: výživa, trénink a AI kouč, který tvoje čísla vidí a odpoví, kdykoliv se zeptáš. Basic je totéž bez AI, za 249. Zapisovat můžeš zdarma napořád a kartu k tomu nepotřebuješ. A k první platbě VIP přidávám videokurz výživy za 1 490 Kč zdarma, takže i za jeden měsíc VIP dostaneš víc, než kolik zaplatíš.</p>
         <!-- ⭐ [2026-09-29] POŘADÍ KARET: VIP (featured, stužka Celá appka), Basic (obrysová tlačítka), Free.
              „Nejčastější volba“ nikde. Roční VIP má plné tlačítko a data-year-cta="ai_basic"
              (tier VIP se v kódu jmenuje ai_basic). -->
@@ -542,7 +543,8 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <p class="plan-kicker">Levnější volba bez AI</p>
                 <div class="plan-price" data-price="basic:month">249 Kč <small>/ měsíc</small></div>
                 <p class="plan-year" data-year="basic">nebo 2 490 Kč na rok, ušetříš 498 Kč (dva měsíce zdarma)</p>
-                <p class="bonus"><span class="ic-inline"><svg><use href="#ic-gift"/></svg></span><b>Videokurz výživy zdarma k první platbě.</b> 182 videí v hodnotě 1 490 Kč, doživotní přístup. Dostaneš ho i tehdy, když si vezmeš jediný měsíc.</p>
+                <!-- [2026-09-30] Martin: „videokurz jen VIP a tlačíme VIP". Basic videokurz k první
+                     platbě nedostává, proto tu bonusový řádek není (stál tu od 18. 8.). -->
                 <ul class="feat">
                     <li>Vše z Free bez limitů: <strong>plná historie</strong></li>
                     <li><strong>Cíle, které ti check-in každý týden přepočítá</strong></li>
@@ -641,7 +643,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             <div class="faq-i"><b>Proč 499 a ne 249?</b><p>Basic dělá všechno, co počítá engine: týdenní přepočet cílů, jídelníček, trénink, historii. VIP k tomu přidá kouče, který ty věci umí vysvětlit a udělat za tebe: zeptáš se a odpoví z tvých čísel, jídlo zapíše z fotky nebo z věty nahlas a každý check-in okomentuje. Těch 250 Kč měsíčně navíc je za to, že se nemusíš probírat tabulkami a hledat, co s nimi. Když ti stačí čísla, vezmi si Basic a v číslech ti nic neuteče.</p></div>
             <div class="faq-i"><b>Neplete se AI?</b><p>Může, jako každá AI. Proto čísla v appce dělá pevný výpočet: kalorie, makra i týdenní přepočet cílů. AI ti je vysvětlí a pomůže je naplnit. Odhad z fotky vidíš dřív, než se zapíše, a když je den poskládaný hlavně z fotoodhadů, cíle se podle něj nepřepočítají. AI kouč odpovídá z tvých zápisů a z mé metodiky. Zdravotní věci (léky, těhotenství, diagnózy) neřeší a pošle tě k lékaři nebo za mnou. A když ti odpověď nesedí, napiš mi, čtu to.</p></div>
             <div class="faq-i"><b>Co se děje s fotkou a hlasem?</b><p>Hlas: appka větu rozebere bez AI a ukáže ti, co chce zapsat. Uloží se až to, co potvrdíš. Fotka: vyhodnotí ji AI, odhad ti ukáže a ty ho potvrdíš nebo upravíš. Podrobnosti máš v <a href="/zasady-ochrany-osobnich-udaju/">Zásadách ochrany osobních údajů</a> v patičce.</p></div>
-            <div class="faq-i"><b>Jak dostanu ten videokurz zdarma?</b><p>Sám od sebe a hned. Jakmile projde tvoje první platba za Basic nebo VIP, přiřadím videokurz k e-mailu, kterým platíš. Přihlásíš se s ním do <a href="/akademie/prihlaseni/">členské sekce</a> a kurz tam na tebe čeká, 182 videí a přes 20 hodin. Nemusíš o nic psát ani nic zadávat. Zůstává ti, i když předplatné za měsíc zrušíš, protože je to dárek k nákupu. Odchází jen tehdy, když si necháš vrátit peníze za předplatné. Když si vezmeš VIP na rok, přidám k tomu ještě měsíc <a href="/akademie/">Barna Academy</a> na zkoušku, pokud v ní ještě nejsi. A jestli videokurz už koupený máš, nic ti nepřepisuju, zůstává ti ten tvůj.</p></div>
+            <div class="faq-i"><b>Jak dostanu ten videokurz zdarma?</b><p>Sám od sebe a hned. Jakmile projde tvoje první platba za VIP, přiřadím videokurz k e-mailu, kterým platíš. Stejně to platí u VIP + Kontrola od Martina. Přihlásíš se s tím e-mailem do <a href="/akademie/prihlaseni/">členské sekce</a> a kurz tam na tebe čeká, 182 videí a přes 20 hodin. Nemusíš o nic psát ani nic zadávat. Zůstává ti, i když předplatné za měsíc zrušíš, protože je to dárek k nákupu. Odchází jen tehdy, když si necháš vrátit peníze za předplatné. Basic ho k první platbě nedostává. Když přecházíš z Basicu na VIP, napiš mi po první platbě VIP a kurz ti přidám. Když si vezmeš VIP na rok, přidám k tomu ještě měsíc <a href="/akademie/">Barna Academy</a> na zkoušku, pokud v ní ještě nejsi. A jestli videokurz už koupený máš, nic ti nepřepisuju, zůstává ti ten tvůj.</p></div>
             <!-- ⛔ [2026-09-02] Otázka se jmenovala „Jak VIP zruším?", takže člověk, který
                  zvažuje Basic za 249, se na svoji odpověď nedostal. Ruší se stejně u obou.
                  [2026-09-26] „Basic i VIP" → „všechny placené plány": třetí je VIP + Kontrola
@@ -649,7 +651,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             <div class="faq-i"><b>Jak předplatné zruším?</b><p>Kdykoliv a bez mé pomoci: v appce Profil → Předplatné → Spravovat předplatné, tam se otevře správa platby a zrušení potvrdíš. Nebo mi napiš a zruším ti ho. Platí to stejně pro všechny placené plány. Doběhne zaplacené období a dál nic neplatíš.</p></div>
             <!-- Táž otázka i táž odpověď je na tvujcoach.cz. Znění záruky je doslova
                  to z právního boxu nad ceníkem, ať se dvě čísla neperou. -->
-            <div class="faq-i"><b>Co když mi to za měsíc nesedne?</b><p>Zrušíš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné (otevře se správa platby), nebo mi napiš. Zaplacené období doběhne a dál se nic nestrhne. A když ti to do 14 dnů od začátku předplatného nesedne, napiš mi na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> a vrátím ti celou částku, bez udání důvodu. Když předplatné jen zrušíš, videokurz ti zůstává; při vrácení peněz odchází s ním, je to bonus k placenému členství.</p></div>
+            <div class="faq-i"><b>Co když mi to za měsíc nesedne?</b><p>Zrušíš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné (otevře se správa platby), nebo mi napiš. Zaplacené období doběhne a dál se nic nestrhne. A když ti to do 14 dnů od začátku předplatného nesedne, napiš mi na <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> a vrátím ti celou částku, bez udání důvodu. Když předplatné VIP jen zrušíš, videokurz ti zůstává; při vrácení peněz odchází s ním, je to bonus k placenému členství.</p></div>
             <div class="faq-i"><b>Kolik mi to denně zabere?</b><p>Balené jídlo naskenuješ podle čárového kódu, to je otázka dvou vteřin. Snídani, kterou máš pořád dokola, si uložíš jako šablonu a příště ji zapíšeš jedním ťuknutím. Zbytek najdeš v databázi podle názvu. Check-in je jednou týdně a je na pár minut.</p></div>
             <div class="faq-i"><b>Funguje na mobilu i počítači?</b><p>Ano. Zatím běží jako webová aplikace, otevřeš ji v prohlížeči na mobilu i počítači a data máš všude stejná. Appku pro iPhone a Android chystáme.</p></div>
             <div class="faq-i"><b>Už mám Kalorické tabulky. Proč zkoušet tohle?</b><p>Kalorické tabulky jsou dobrý deník a mají obrovskou databázi. Když ti stačí zapisovat, klidně u nich zůstaň, jsou i levnější. Rozdíl je v tom, co se stane potom. Ve VIP se nad svými zápisy zeptáš kouče, který je vidí: proč ti tento týden klesly sacharidy, co si dát k večeři, když zbývá 400 kcal, jak poskládat trénink na tři dny. Odpoví z tvých čísel a z mé metodiky, jídlo za tebe zapíše i z fotky nebo z věty nahlas a každý check-in ti okomentuje. Kalorie a makra se ti přitom každý týden přepočítají podle váhy a zápisů, jídelníček i trénink ti appka poskládá. Když AI nechceš, Basic za 249 Kč dělá všechno kromě ní. Nemusíš nic rušit, Free si můžeš pustit vedle tabulek a porovnat.</p></div>
