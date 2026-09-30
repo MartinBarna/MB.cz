@@ -404,7 +404,9 @@
   // kterých zrovna scroluje. Přidá dolní odsazení hlavnímu sloupci, ať se s textem nekryje.
   function reserveSpace(bottomPx) {
     if (window.innerWidth > 640) return;
-    var host = document.querySelector('.wrap') || document.querySelector('main');
+    // 30. 9. 2026: dřív první `.wrap` na stránce = kontejner v lepivé hlavičce `.nav`; hlavička pak měla
+    // 241 px a držela 29 % mobilní obrazovky (audit 15b). Rezerva patří na konec stránky, tedy body.
+    var host = document.body;
     if (!host || host.dataset.amReserved) return;
     var need = Math.round(bottomPx) + 60 /* výška bubliny */ + 20 /* rezerva */;
     var cur = parseFloat(window.getComputedStyle(host).paddingBottom) || 0;
