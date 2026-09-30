@@ -216,9 +216,9 @@
       if (skutecnyDeficit < pozadovanyDeficit - 1) {
         var skutecneTempoKg = Math.round((Math.max(0, skutecnyDeficit) * 7 * 100) / KCAL_NA_KG) / 100;
         tempoKgTyden = skutecneTempoKg;
-        tempoNote = 'Vybrané tempo ' + kgTydneText(vybraneTempoKg) + ' kg týdně by u tvé váhy '
-          + 'znamenalo moc velký deficit. Plánuju ' + kgTydneText(skutecneTempoKg)
-          + ' kg týdně, rychleji by to nešlo udržet.';
+        // 1. 10. 2026: stejné znění jako appka (`tempoSrazenoText`), dřív to znělo jako chyba člověka.
+        tempoNote = 'Tempo jsme u tvojí váhy upravili na ' + kgTydneText(skutecneTempoKg)
+          + ' kg týdně, ať je to udržitelné.';
       }
     }
 
