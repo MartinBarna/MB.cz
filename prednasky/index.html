@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="/assets/highend.css?v=r2">
     <link href="/assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
-    <script defer src="/assets/lead-popup.js?v=r3"></script>
+    <script defer src="/assets/lead-popup.js?v=r4"></script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -315,7 +315,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'apikey': _AK, 'Authorization': 'Bearer ' + _AK },
                     body: JSON.stringify({ name: _gv('Jméno'), email: _gv('E-mail'), message: _gv('Zpráva'), website: (_hp ? _hp.value : ''), t: Date.now() - _kfLoad })
-                }).then(function (r) { return r.json(); }).then(function () {
+                }).then(function (r) { if (!r.ok) throw new Error('contact-send ' + r.status); return r.json(); }).then(function () {
                     var d = document.getElementById('formDiky'); if (d) d.style.display = 'block';
                     _kf.style.display = 'none';
                 }).catch(function () {
@@ -349,7 +349,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'apikey': _AK2, 'Authorization': 'Bearer ' + _AK2 },
                     body: JSON.stringify({ name: _gv2('Jméno'), email: _gv2('E-mail'), message: _msg2, website: (_hp2 ? _hp2.value : ''), t: Date.now() - _ffLoad })
-                }).then(function (r) { return r.json(); }).then(function () {
+                }).then(function (r) { if (!r.ok) throw new Error('contact-send ' + r.status); return r.json(); }).then(function () {
                     var d2 = document.getElementById('firmyDiky'); if (d2) d2.style.display = 'block';
                     _ff.style.display = 'none';
                 }).catch(function () {

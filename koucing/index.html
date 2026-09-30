@@ -591,10 +591,15 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'apikey': AK, 'Authorization': 'Bearer ' + AK },
                 body: JSON.stringify({ name: gv('Jméno'), email: gv('E-mail'), message: msg, website: (hp ? hp.value : ''), t: Date.now() - t0 })
-            }).then(function () {
+            }).then(function (r) {
+                // 30. 9. 2026: chyba serveru (502 = Resend neposlal) NENÍ „Díky“, jinak poptávka tiše zmizí.
+                if (!r.ok) throw new Error('contact-send ' + r.status);
                 var d = document.getElementById('formDiky'); if (d) { d.style.display = 'block'; d.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
                 kf.style.display = 'none';
-            }).catch(function () { if (btn) { btn.textContent = orig; btn.disabled = false; } });
+            }).catch(function () {
+                if (btn) { btn.textContent = orig; btn.disabled = false; }
+                alert('Zprávu se nepodařilo odeslat. Zkus to prosím znovu, nebo mi napiš na martin@martinbarna.cz či WhatsApp +420 603 229 831.');
+            });
         });
     })();
     /* ⭐⭐ KOUPIT HNED: koučink přes Stripe (2. 9. 2026).
@@ -709,7 +714,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 })();
 </script>
 <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
-<script defer src="/assets/lead-popup.js?v=r3"></script>
+<script defer src="/assets/lead-popup.js?v=r4"></script>
 <script defer src="/assets/scroll-top.js?v=g13"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/theme-light.css?v=w12"></body>
 </html>

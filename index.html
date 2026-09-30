@@ -534,7 +534,7 @@ footer a{color:var(--gold-light)}
 }
     </style>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
-    <script defer src="/assets/lead-popup.js?v=r3"></script>
+    <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/theme-light.css?v=w12">
 </head>
 <body>
@@ -1165,7 +1165,7 @@ footer a{color:var(--gold-light)}
         method:'POST',
         headers:{'Content-Type':'application/json','apikey':_CS_AK,'Authorization':'Bearer '+_CS_AK},
         body:JSON.stringify({name:_gv('Jméno'),email:_gv('E-mail'),message:_gv('Zpráva'),website:(_hp?_hp.value:''),t:Date.now()-_kfLoad})
-      }).then(function(r){return r.json();}).then(function(){
+      }).then(function(r){if(!r.ok)throw new Error('contact-send '+r.status);return r.json();}).then(function(){
         var d=document.getElementById('formDiky');if(d)d.style.display='block';
         _kf.style.display='none';
         if(d){d.scrollIntoView({behavior:'smooth',block:'center'});}

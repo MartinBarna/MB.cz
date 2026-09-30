@@ -6,7 +6,9 @@
   try {
     var path = location.pathname.toLowerCase();
     // Kde NEukazovat (lead stránky, nákup, přihlášení, členská sekce, materiály)
-    var BLOCK = ['/makro-plan', '/forma-zpet', '/akademie', '/materialy', '/videokurz-studium', '/prihlaseni', '/objednavka', '/dekuji', '/download'];
+    var BLOCK = ['/makro-plan', '/forma-zpet', '/akademie', '/materialy', '/videokurz-studium', '/prihlaseni', '/objednavka', '/dekuji', '/download',
+      // 30. 9. 2026: ne na prodejních stránkách, kde člověk kouká na cenu (audit 15c: vyskakovalo nad ceníkem koučinku).
+      '/koucing', '/konzultace', '/videokurz', '/poukaz', '/reference', '/tvuj-coach'];
     for (var i = 0; i < BLOCK.length; i++) { if (path.indexOf(BLOCK[i]) === 0 || path.indexOf(BLOCK[i] + '/') !== -1) return; }
 
     var KEY = 'ba_leadpop_v1';
