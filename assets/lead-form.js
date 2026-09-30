@@ -143,6 +143,11 @@
       var msg = form.querySelector('[data-msg]');
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+        // [30. 9. 2026] Segment, zdroj a PDF se čtou až při odeslání: kalkulačka je přepíná
+        // podle pohlaví až po výpočtu, dlouho po načtení stránky. Ostatní formuláře je nemění.
+        seg = form.getAttribute('data-segment') || 'other';
+        src = form.getAttribute('data-source') || 'lead_magnet';
+        pdf = form.getAttribute('data-pdf') || '';
         var btn = form.querySelector('button[type=submit]');
         var email = (form.email && form.email.value || '').trim();
         if (!email) return;

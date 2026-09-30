@@ -190,7 +190,10 @@
             *, *::before, *::after { animation-duration:.001ms!important; animation-iteration-count:1!important; transition-duration:.001ms!important; scroll-behavior:auto!important; }
         }
     .brand{display:flex;align-items:center;gap:8px} .brand img{height:30px;width:auto;aspect-ratio:194/96;flex-shrink:0;display:block} @media(max-width:575px){.brand span{display:none}}
-    .mainmenu{display:flex;align-items:center;gap:.85rem;margin-left:auto;margin-right:.9rem;flex-wrap:wrap}.mainmenu a{color:inherit;opacity:.78;text-decoration:none;font-weight:600;font-size:.84rem;white-space:nowrap}.mainmenu a:hover{opacity:1}.mainmenu .nav-more summary{color:inherit;opacity:.78;font-size:.84rem}.mainmenu .nav-more summary:hover,.mainmenu .nav-more[open] summary{opacity:1}.mainmenu .nav-more>div a{opacity:1}.mainmenu a.cta{opacity:1;background:#EBB12C!important;color:#161310!important;padding:7px 13px;border-radius:999px}.mainmenu a.cta:hover{filter:brightness(1.07)}@media(max-width:1150px){.mainmenu{display:none}}
+    /* [30. 9. 2026] Bez .mainmenu by scroll-top.js přepínač režimu přilepil pod hlavičku (osiřelý); na landingu ho neukazujeme. */
+    .nav .mb-theme-toggle{display:none!important}
+    /* Mobil: cookie lišta dole u kraje (stránka nemá spodní CTA lištu, rezerva 92 px je zbytečná a lišta zakrývala tlačítko formuláře). */
+    @media(max-width:991px){html #mb-cookie{bottom:8px!important;left:8px!important;right:8px!important}}
 </style>
     <script type="application/ld+json">
 {
@@ -222,9 +225,10 @@
 </head>
 <body>
     <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+    <!-- [30. 9. 2026] Landing má jediný cíl: e-mail. Bez globálního menu, bez „Zpět na web“ a bez přepínače režimu (audit 15b, bod 6). -->
     <nav class="nav"><div class="wrap"><div class="row">
-        <a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><nav class="mainmenu" aria-label="Hlavní navigace"><a href="/koucing/">Koučink</a><a href="/tvuj-coach/">Appka</a><a href="/videokurz">Videokurz</a><a href="/akademie/">Academy</a><a href="/reference/">Reference</a><a href="/clanky/">Blog</a><details class="nav-more"><summary>Více</summary><div><a href="/konzultace/">Konzultace</a><a href="/recepty-a-odpovedi/">Balíček 349</a><a href="/treninky">Tréninky</a><a href="/prednasky/">Přednášky</a><a href="/poukaz/">Poukazy</a></div></details><a href="/akademie/prihlaseni/">Přihlásit</a><a class="cta" href="/koucing/#balicky">Chci koučink</a></nav>
-        <div class="right"><a class="back" href="/">← Zpět na web</a><a class="btn sm" href="#formular">Chci plán zdarma</a></div>
+        <a class="brand" href="/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a>
+        <div class="right"><a class="btn sm" href="#formular">Chci plán zdarma</a></div>
     </div></div></nav>
 
     <!-- HERO -->
@@ -364,7 +368,7 @@
                 <figcaption>Martin Kazík<span class="src">Facebook</span></figcaption>
             </figure>
         </div>
-        <div class="more"><a class="btn sm dark" href="/reference/">Přečíst 66 vybraných recenzí →</a></div>
+        <div class="more"><a class="btn sm dark" href="#formular">Chci plán zdarma →</a></div>
     </div></section>
 
     <!-- FORMULÁŘ (vlastní → Supabase lead-capture) -->
@@ -407,7 +411,7 @@
     </div></section>
 
     <footer><img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async">
-        &copy; 2026 Martin Barna · Online výživa a fitness · <a href="/">Hlavní web</a> · <a href="https://herohero.co/martinbarna">Členská komunita</a>
+        &copy; 2026 Martin Barna · Online výživa a fitness · <a href="/zasady-ochrany-osobnich-udaju/">Zásady ochrany osobních údajů</a>
     </footer>
 
     <!-- Děkovací blok po odeslání. Oba formuláře ho vykreslí přes data-upsell-template.
@@ -421,7 +425,7 @@
         <p style="margin:.35rem 0 0;font-size:.9rem;"><a href="/videokurz" style="color:#F6CD63;">Appku nechceš? Videokurz je i samostatně za 1 490 Kč.</a></p>
       </div>
     </template>
-    <script src="/assets/lead-form.js?v=g8" defer></script>
+    <script src="/assets/lead-form.js?v=g9" defer></script>
   <script src="/assets/scroll-top.js?v=g13" defer></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/theme-light.css?v=w12"></body>
 </html>

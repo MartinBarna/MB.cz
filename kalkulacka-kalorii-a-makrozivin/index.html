@@ -79,14 +79,16 @@
         .macro { background:rgba(255,255,255,.15); border-radius:14px; padding:1rem .5rem; }
         .macro .num { font-size:1.5rem; font-weight:800; }
         .macro .lbl { font-size:.8rem; opacity:.9; }
-        .freeplan { margin:2.4rem auto 0; max-width:840px; background:var(--green-light); border:1px solid rgba(235,177,44,.32); border-radius:18px; padding:26px 28px; }
-        .freeplan .fp-inner { display:flex; align-items:center; gap:26px; flex-wrap:wrap; justify-content:space-between; }
-        .freeplan .fp-txt { flex:1; min-width:260px; }
-        .freeplan .fp-kick { display:inline-block; background:rgba(235,177,44,.14); border:1px solid rgba(235,177,44,.4); color:#b85600; font-weight:700; font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; padding:4px 12px; border-radius:50px; }
-        .freeplan h3 { font-size:1.32rem; font-weight:800; color:var(--ink); margin:.65rem 0 .4rem; }
-        .freeplan p { color:#444; margin:0; font-size:.96rem; line-height:1.5; }
-        .freeplan .fp-btn { white-space:nowrap; }
-        @media(max-width:560px){ .freeplan .fp-btn { width:100%; text-align:center; } }
+        .calc-lead.d-none { display:none; } /* zdejší bootstrap build d-none nemá (změřeno: formulář byl vidět už před výpočtem) */
+        .calc-lead { margin:1.4rem 0 0; padding:1rem; border-radius:14px; background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.22); text-align:left; }
+        .calc-lead-t { margin:0 0 .7rem; font-size:.95rem; line-height:1.45; }
+        .calc-lead-row { display:flex; gap:8px; flex-wrap:wrap; }
+        .calc-lead-row input { flex:1 1 180px; min-width:0; padding:12px 14px; border-radius:50px; border:1px solid rgba(255,255,255,.35); background:#fff; color:#161616; font-family:inherit; font-size:1rem; }
+        .calc-lead-row .btn { flex:0 0 auto; padding:12px 22px; }
+        .calc-lead [data-msg] { margin-top:.5rem; }
+        .calc-lead-fine { margin-top:.5rem; opacity:.8; }
+        @media(max-width:560px){ .calc-lead-row .btn { flex:1 1 100%; } }
+        html[data-theme="light"] .calc-lead { background:#F7F3EB; border-color:rgba(22,19,16,.14); }
         .crumbs { font-size:.85rem; color:#666; padding:14px 0 0; }
         .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
         footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:28px 0; }
@@ -188,6 +190,22 @@
                         <p class="small mt-2 mb-0" id="r-meta" style="opacity:.85;"></p>
                         <p class="small mt-2 mb-0" id="r-podlaha" style="display:none;opacity:.95;"></p>
                         <p class="small mt-2 mb-0" id="r-tempo" style="display:none;opacity:.95;"></p>
+                        <!-- [30. 9. 2026] E-mail rovnou pod výsledkem (audit 15b, bod 3). Stejný mechanismus
+                             jako /makro-plan/ a /forma-zpet/: lead-form.js → lead-capture → trať lead-magnet,
+                             která posílá 7denní plán podle segmentu. Segment a PDF přepíná spocitej() podle
+                             pohlaví. ⚠️ Spočítaná čísla do mailu NEJDOU (lead-capture ukládá vars jen pro
+                             tc-start), proto je text neslibuje; jdou jen do leads.meta.goal pro Martina. -->
+                        <form id="calc-lead" class="calc-lead d-none" data-lead-form data-segment="muzi" data-source="kalkulacka" data-pdf="/download/forma-zpet-muzi.pdf" data-upsell-template="dekuji-kalk">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;overflow:hidden">
+                            <input type="hidden" name="goal" id="calc-goal" value="">
+                            <p class="calc-lead-t"><b>Pošlu ti 7denní jídelníček zdarma.</b> Konkrétní jídla a porce na celý týden, rovnou na e-mail.</p>
+                            <div class="calc-lead-row">
+                                <input name="email" type="email" required autocomplete="email" placeholder="Tvůj e-mail" aria-label="Tvůj e-mail">
+                                <button type="submit" class="btn btn-white">Poslat plán →</button>
+                            </div>
+                            <p data-msg class="small mb-0"></p>
+                            <p class="small mb-0 calc-lead-fine">Odesláním souhlasíš se zasláním plánu a občasných tipů. Odhlásit se můžeš kdykoli.</p>
+                        </form>
                         <a href="/#kontakt" class="btn btn-white mt-4 w-100">Chci z toho jídelníček na míru</a>
                         <a href="/videokurz" class="btn btn-grn mt-2 w-100">Chci se naučit s kaloriemi pracovat: videokurz za 1 490 Kč →</a>
                         <a id="gen-link" href="/nastroje-zdarma/jidelnicek/" class="btn mt-2 w-100" style="background:transparent;color:#fff;border:2px solid rgba(255,255,255,.7);">Poskládej si z toho hned ukázkový den zdarma →</a>
@@ -197,17 +215,6 @@
                         </div>
                         <p class="small mt-2 mb-0" style="opacity:.8;">Hodnoty jsou orientační startovní bod (Mifflin–St Jeor). Nejsou lékařským doporučením. Při zdravotních potížích se poraď s lékařem.</p>
                     </div>
-                </div>
-            </div>
-            <!-- Kontextová free nabídka - odemkne se po výpočtu -->
-            <div id="freeplan-cta" class="freeplan d-none">
-                <div class="fp-inner">
-                    <div class="fp-txt">
-                        <span class="fp-kick">Zdarma · bez závazku</span>
-                        <h3>Chceš hotový jídelníček přesně na tahle čísla?</h3>
-                        <p>Spočítané makra jsou jen start. Pošlu ti <strong>7denní jídelníček</strong>, který je trefuje: jasné porce, běžné potraviny, žádné vážení. Rovnou na e-mail.</p>
-                    </div>
-                    <a id="freeplan-btn" href="/makro-plan/" class="btn btn-grn fp-btn">Stáhnout plán zdarma →</a>
                 </div>
             </div>
             <p class="text-center text-muted mt-4 mb-0">Chceš se naučit s čísly pracovat naplno? Mrkni na <a href="/videokurz">videokurz</a> nebo si nech sestavit <a href="/#balicky">jídelníček na míru v koučinku</a>.</p>
@@ -222,7 +229,12 @@
 
     <script defer src="/assets/ui.js?v=20260628b"></script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
-    <script defer src="/assets/lead-popup.js?v=r4"></script>
+    <!-- [30. 9. 2026] lead-popup.js tu záměrně není: e-mail se sbírá přímo pod výsledkem
+         a pop-up vyskakoval přes výsledek (audit 15b, bod 3). -->
+    <script defer src="/assets/lead-form.js?v=g9"></script>
+    <template id="dekuji-kalk">
+        <p style="margin:0;font-size:.9rem;line-height:1.5;color:#fff;">Až plán dojedeš, appka Tvůj Coach ti kalorie každý týden přepočítá podle váhy a zápisů.</p>
+    </template>
     <script src="/assets/meal-gen.js?v=20260925b"></script>
     <script>
         // Výpočet jede na sdíleném enginu MealGen (assets/meal-gen.js) - stejný jako
@@ -237,8 +249,8 @@
             podlaha.style.display = '';
             document.getElementById('r-tempo').style.display = 'none';
             document.getElementById('gen-link').href = '/nastroje-zdarma/jidelnicek/';
-            var fp = document.getElementById('freeplan-cta');
-            if (fp) fp.classList.add('d-none');
+            var cl = document.getElementById('calc-lead');
+            if (cl && cl.querySelector('input[name="email"]')) cl.classList.add('d-none');
         }
         function spocitej() {
             var pohlavi = document.getElementById('pohlavi').value;
@@ -292,11 +304,16 @@
                     '&act=' + encodeURIComponent(document.getElementById('aktivita').value) +
                     '&goal=' + encodeURIComponent(document.getElementById('cil').value);
             }
-            // Odemkni kontextovou free nabídku + naroutuj podle pohlaví (žena → makro plán, muž → forma zpět)
-            var fp = document.getElementById('freeplan-cta');
-            if (fp) {
-                fp.classList.remove('d-none');
-                document.getElementById('freeplan-btn').href = (pohlavi === 'zena') ? '/makro-plan/' : '/forma-zpet/';
+            // Odemkni e-mail pod výsledkem a nastav plán podle pohlaví (žena → makro plán, muž → forma zpět).
+            // Segment rozhoduje, které PDF pošle drip (leads.segment), proto musí sedět s data-pdf.
+            var cl = document.getElementById('calc-lead');
+            if (cl && cl.querySelector('input[name="email"]')) {
+                var zena = pohlavi === 'zena';
+                cl.setAttribute('data-segment', zena ? 'zeny' : 'muzi');
+                cl.setAttribute('data-pdf', zena ? '/download/makro-plan-zeny.pdf' : '/download/forma-zpet-muzi.pdf');
+                document.getElementById('calc-goal').value = 'kalkulacka: ' + t.kcal + ' kcal, B ' + t.protein + ' g, T ' + t.fat +
+                    ' g, S ' + t.carbs + ' g, vl ' + t.fiber + ' g, cil ' + document.getElementById('cil').value;
+                cl.classList.remove('d-none');
             }
         }
     </script>

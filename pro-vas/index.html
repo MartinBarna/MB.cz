@@ -191,6 +191,9 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             content:"";position:absolute;left:0;top:50%;width:18px;height:2px;background:var(--gold);
         }
         html[data-theme="light"] .ar-ghost{color:var(--muted);-webkit-text-stroke:0;}
+        /* [30. 9. 2026] V tmavém režimu dělal arena.css z druhého řádku H1 průhledný text s tmavě šedým
+           obrysem (#55505c na černé), skoro neviditelný (audit 15c, bod 6d). Plná zlatá jako akcent. */
+        html:not([data-theme="light"]) .hero h1 .ar-ghost{color:#EBB12C;-webkit-text-stroke:0;}
         html[data-theme="light"] [style*="background:#100e14"]{background:var(--panel-2)!important;}
         html[data-theme="light"] [style*="color:#fff"]{color:var(--on-dark)!important;}
         html[data-theme="light"] [style*="color:#8d8677"]{color:var(--dim)!important;}
@@ -346,7 +349,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     </footer>
 
     <script src="/assets/analytics.js?v=g21" defer></script>
-    <script src="/assets/lead-form.js?v=g8" defer></script>
+    <script src="/assets/lead-form.js?v=g9" defer></script>
     <script src="/assets/scroll-top.js?v=g13" defer></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"></body>
 </html>

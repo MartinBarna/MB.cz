@@ -267,6 +267,10 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 .hero-cta{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin:1.7rem 0 .9rem}
 .hero-cta .quiet{color:#fff;font-weight:600;border-bottom:2px solid rgba(235,177,44,.55);padding-bottom:2px}
 .hero-cta .quiet:hover{color:var(--gold-light)}
+.hero .quiz-line{margin:-.3rem 0 1rem;font-size:.95rem}
+.hero .quiz-line a{color:#fff;font-weight:600;border-bottom:2px solid rgba(235,177,44,.55);padding-bottom:1px}
+.hero .quiz-line a:hover{color:var(--gold-light)}
+html[data-theme="light"] .hero .quiz-line a{color:var(--text)!important}
 .hero .micro{color:var(--muted);font-size:.92rem;max-width:520px}
 .hero .micro b{color:#fff;font-weight:700}
 .trust{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin-top:1.5rem;font-size:.95rem;color:#E7E1EE;font-weight:600}
@@ -570,6 +574,7 @@ footer a{color:var(--gold-light)}
               <a class="btn btn-gold" href="#balicky">Vybrat koučink →</a>
               <a class="btn btn-ghost" href="https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=mb-home-start">Spočítat si kalorie zdarma</a>
             </div>
+            <p class="quiz-line"><a href="/kviz/">Nevíš, co ti brání zhubnout? Kvíz&nbsp;na&nbsp;60&nbsp;vteřin&nbsp;→</a></p>
             <p class="micro">Nechceš vedení? <a href="/tvuj-coach/">Appka Tvůj Coach</a> ti spočítá cíle, sestaví jídelníček i trénink. VIP 499 Kč měsíčně, bez AI 249 Kč. Konzultace na hodinu stojí <b>2 990 Kč</b> a když do 14 dní začneš koučink, <a href="/konzultace/">odečtu ti ji z ceny</a>.</p>
             <div class="trust">
               <span><span class="stars">★★★★★</span> 5,0 · 100+ recenzí</span>
@@ -658,7 +663,7 @@ footer a{color:var(--gold-light)}
           </div>
         </div>
         <label for="vysledkyMore" class="more-toggle-btn">Zobrazit další proměny <span aria-hidden="true">↓</span></label>
-        <a class="more-link" href="/reference/">Všechny proměny a 66 vybraných recenzí →</a>
+        <a class="more-link" href="/reference/">Všechny proměny a 70 vybraných recenzí →</a>
       </div>
     </section>
 
@@ -928,7 +933,7 @@ footer a{color:var(--gold-light)}
           <div class="src">
             <a href="https://www.facebook.com/martinbarnaonlinevyzivaafitness" target="_blank" rel="noopener">Recenze na Facebooku</a>
             <a href="https://search.google.com/local/reviews?placeid=ChIJQ-8yTbnlE0cRJj3EiDujXRY" target="_blank" rel="noopener">Hodnocení na Google</a>
-            <a href="/reference/">66 z nich přepsaných v textu →</a>
+            <a href="/reference/">70 z nich přepsaných v textu →</a>
           </div>
         </div>
       </div>
@@ -1009,7 +1014,9 @@ footer a{color:var(--gold-light)}
 
     <!-- mobilní CTA lišta -->
     <div class="cta-bar" id="ctaBar" aria-label="Rychlé objednání">
-      <a class="cb-quiz" href="#kviz">Nevíš? Kvíz</a>
+      <!-- [30. 9. 2026] Vede na /kviz/ (sbírá e-mail), ne na rozcestník #kviz na této stránce.
+           Záměrně bez UTM: MBAttr by jimi přepsal reklamní atribuci, průchod se měří přes page_views.referrer. -->
+      <a class="cb-quiz" href="/kviz/">Nevíš? Kvíz</a>
       <a class="cb-konz" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=nav&amp;utm_campaign=konzultace-primo&amp;locale=cs">Konzultace →</a>
     </div>
 

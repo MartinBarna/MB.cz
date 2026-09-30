@@ -92,7 +92,7 @@
 </div>
 
 <script src="/assets/analytics.js?v=g21" defer></script><script src="/assets/referral.js?v=g9" defer></script>
-<script src="/assets/lead-form.js?v=g8" defer></script>
+<script src="/assets/lead-form.js?v=g9" defer></script>
 <script>
 (function(){
   var Q=[
@@ -150,6 +150,9 @@
       +'<div class="mailbox" style="margin-top:14px;"><b>💌 K výsledku ti pošlu i 7denní jídelníček zdarma</b><p class="small" style="margin:4px 0 0;">Žádný spam.</p>'
       +'<input type="email" id="kvEmail" placeholder="tvuj@email.cz" autocomplete="email" aria-label="Tvůj e-mail"><button class="cta" id="kvSend" style="margin:0;">Zobrazit můj výsledek</button>'
       +'<p class="small" id="kvMsg" style="margin:8px 0 0;">Odhlásíš se kdykoliv jedním klikem.</p></div></div>';
+    // [30. 9. 2026] Mobil: nevyřešená cookie lišta (analytics.js, dole 92 px nad krajem) zakrývala
+    // přesně pole e-mailu (audit 15b, bod 6). Na tuhle chvíli ji posuneme nahoru, kde nic nezakryje.
+    try{ var ck=document.getElementById('mb-cookie'); if(ck && window.innerWidth<992){ ck.style.setProperty('top','8px','important'); ck.style.setProperty('bottom','auto','important'); } }catch(e){}
     var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts';
     kvTrack('kviz_email_zobrazen',{profil:best});
     var skipShown=false;
