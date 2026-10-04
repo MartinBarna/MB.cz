@@ -433,6 +433,13 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             <p style="margin:0;color:var(--mut);font-size:.9rem;">Platit kartou nechceš? Napiš mi a pošlu ti fakturu na převod. Cena je stejná.</p>
         </div>
         <p class="center" style="color:var(--mut); margin-top:1.6rem;">Nevíš, který balíček je pro tebe ten pravý? <a href="#kontakt" style="font-weight:700;">Napiš mi a poradím ti zdarma.</a></p>
+        <!-- [2026-10-04] QA: na /koucing/ chyběla appka VIP (A všude, Martin 30. 9.). Nenápadná
+             alternativa pod ceníkem, vede na stránku appky (ne do pokladny). ⛔ Bez ceny, ze stejného
+             důvodu jako blok s kontrolou níž: ceny appky žijí v pricing_plans. -->
+        <div style="max-width:660px;margin:1.6rem auto 0;background:rgba(255,255,255,.04);border:1px solid rgba(235,177,44,.3);border-radius:16px;padding:1.2rem 1.5rem;text-align:center;">
+            <p style="margin:0 0 .7rem;color:#d9d2c6;">Nechceš osobní koučink? Vezmi si <strong style="color:#fff;">appku Tvůj Coach VIP</strong>. Hlídá ti kalorie, makra i trénink, každý týden ti přepočítá cíle podle toho, co zapíšeš, a poskládá jídelníček i trénink na míru. AI kouč na mé metodice ti odpoví, kdykoliv se zeptáš.</p>
+            <a class="btn btn-ghost" href="/tvuj-coach/">Mrknout na appku VIP →</a>
+        </div>
         <!-- ⭐ [2026-09-02] MEZISTUPEŇ MEZI APPKOU A KOUČINKEM: appka ve VIP verzi
              plus písemná kontrola ode mě jednou za 14 dní (tier `ai_kontrola`).
              ⛔ ŽÁDNÁ CENA ANI POČET MÍST TADY. Ceny appky žijí v `pricing_plans`
