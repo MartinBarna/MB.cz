@@ -286,6 +286,8 @@
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
+        // Pojistka k Enteru v poli kódu (klávesnice mobilu „Přejít“ nemusí poslat keydown Enter).
+        if (otpCodeEl && document.activeElement === otpCodeEl && otpCodeBtn) { if (!otpCodeBtn.disabled) otpCodeBtn.click(); return; }
         var email = emailEl.value.trim(), pass = passEl.value, fname = fnameEl.value.trim();
         if (!email || email.indexOf('@') < 1) { show('err', 'Zadej prosím platný e-mail.'); return; }
         if (mode !== 'reset' && pass.length < 6) { show('err', 'Vyplň heslo (min. 6 znaků).'); return; }
@@ -347,6 +349,14 @@
         otpCodeEl.addEventListener('input', function () {
           var v = otpCodeEl.value.replace(/\D/g, '');
           if (v !== otpCodeEl.value) otpCodeEl.value = v;
+        });
+        // QA 4. 10.: pole kódu leží uvnitř <form>, takže Enter odeslal formulář HESLA
+        // („Vyplň heslo (min. 6 znaků)“) místo ověření kódu. Enter tady patří kódu.
+        otpCodeEl.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.keyCode === 13) {
+            e.preventDefault();
+            if (otpCodeBtn && !otpCodeBtn.disabled) otpCodeBtn.click();
+          }
         });
       }
       otpBtn.addEventListener('click', function () {
