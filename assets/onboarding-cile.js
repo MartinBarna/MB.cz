@@ -550,9 +550,9 @@
   // ⛔ Žádný nový slib: co tu není, to appka ani koučink neslibuje.
   // ---------------------------------------------------------------------------
   var ODKAZY = {
-    balicek: 'https://martinbarna.cz/materialy/pdf/uvitaci-balicek.pdf',
-    recepty: 'https://martinbarna.cz/materialy/pdf/high-protein-recepty.pdf',
-    flexi: 'https://martinbarna.cz/materialy/pdf/flexibilni-strava.pdf',
+    balicek: 'https://martinbarna.cz/materialy/pdf/uvitaci-balicek-v2.pdf',
+    recepty: 'https://martinbarna.cz/materialy/pdf/high-protein-recepty-v2.pdf',
+    flexi: 'https://martinbarna.cz/materialy/pdf/flexibilni-strava-v2.pdf',
     slozka: 'https://drive.google.com/drive/folders/1l_WkVyNKrv06I1IgQO1ZWBQ6CCmzImj6',
     kucharka: 'https://drive.google.com/drive/folders/1bQSa1kVSlAbiHq95EUz_Hpx2R4gNUecf',
     sekce: 'https://www.martinbarna.cz/akademie/klient/',
