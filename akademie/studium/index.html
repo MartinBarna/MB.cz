@@ -303,7 +303,7 @@
     <div class="cert-card" id="certCard">
       <h3>🏅 Certifikát Barna Academy</h3>
       <p id="certMsg">Dokonči všechny lekce a slož závěrečný test, a odemkneš si prestižní certifikát.</p>
-      <a class="btn dis" id="certBtn" href="#">Závěrečný test (zamčeno)</a>
+      <a class="btn dis" id="certBtn" role="link" aria-disabled="true">🔒 Závěrečný test se odemkne po poslední lekci</a>
     </div>
 
     <!-- Výchozí text jen do doby, než ho JS přepíše podle přihlášení (anonym → ochutnávka,
@@ -859,7 +859,13 @@
       if (ta>0 && co===ta){
         var cc = document.getElementById('certCard'); cc.classList.add('ready');
         document.getElementById('certMsg').textContent = 'Skvělá práce! Máš hotové všechny dostupné lekce. Po spuštění závěrečného testu si odemkneš certifikát.';
-        var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/';
+        var bt = document.getElementById('certBtn'); bt.className='btn'; bt.textContent='Spustit závěrečný test →'; bt.href='/akademie/test/'; bt.removeAttribute('aria-disabled');
+      } else if (ta>0) {
+        // QA 4. 10.: zamčený test vedl na # bez vysvětlení. Teď řekne, kolik lekcí zbývá a co ho odemkne.
+        var zbyva = ta-co, cm = document.getElementById('certMsg');
+        if (cm) cm.textContent = FREEMODE
+          ? 'Závěrečný test a certifikát jsou součástí celé Academy. Odemkne se, až dokončíš všech '+ta+' lekcí.'
+          : 'Závěrečný test se odemkne, až dokončíš všechny lekce. Zbývá ti '+zbyva+' z '+ta+'. Po složení testu dostaneš certifikát.';
       }
     }
     function render(done){ DONE = done || {}; paintProgress(); route(); hashScrollOnce(); loadHabit(); }
