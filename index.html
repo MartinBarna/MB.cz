@@ -569,13 +569,17 @@ footer a{color:var(--gold-light)}
           <div>
             <span class="kick">Online výživa a fitness · od roku 2013</span>
             <h1>Zhubni, naber svaly a&nbsp;zvyš výkon. <span class="gold">Zdravě a&nbsp;natrvalo.</span></h1>
-            <p class="lead">Vědecky podložený přístup, jídelníček upravovaný každý týden a podpora přes WhatsApp. Najíš se dosyta a výsledek ti vydrží.</p>
+            <!-- [2026-10-04] VIP 499 je A i tady (Martin 30. 9.: „primárně 499, levnější jako B“,
+                 koučink nabírat dál). Hlavní tlačítko vede na appku VIP, koučink je hned vedle
+                 a jeho ceník zůstává beze změny níž v #balicky. -->
+            <p class="lead">Vědecky podložený přístup a čísla, která se každý týden upraví podle tebe. V appce Tvůj Coach, nebo osobně se mnou v koučinku. Najíš se dosyta a výsledek ti vydrží.</p>
             <div class="hero-cta">
-              <a class="btn btn-gold" href="#balicky">Vybrat koučink →</a>
-              <a class="btn btn-ghost" href="https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=mb-home-start">Spočítat si kalorie zdarma</a>
+              <a class="btn btn-gold" href="#appka-vip">Appka Tvůj Coach VIP →</a>
+              <a class="btn btn-ghost" href="#balicky">Vybrat koučink</a>
+              <a class="quiet" href="https://tvujcoach.cz/start?utm_source=web&amp;utm_medium=hero&amp;utm_campaign=mb-home-start">Spočítat si kalorie zdarma</a>
             </div>
             <p class="quiz-line"><a href="/kviz/">Nevíš, co ti brání zhubnout? Kvíz&nbsp;na&nbsp;60&nbsp;vteřin&nbsp;→</a></p>
-            <p class="micro">Nechceš vedení? <a href="/tvuj-coach/">Appka Tvůj Coach</a> ti spočítá cíle, sestaví jídelníček i trénink. VIP 499 Kč měsíčně, bez AI 249 Kč. Konzultace na hodinu stojí <b>2 990 Kč</b> a když do 14 dní začneš koučink, <a href="/konzultace/">odečtu ti ji z ceny</a>.</p>
+            <p class="micro">Chceš mě osobně? Konzultace na hodinu stojí <b>2 990 Kč</b> a když do 14 dní začneš koučink, <a href="/konzultace/">odečtu ti ji z ceny</a>.</p>
             <div class="trust">
               <span><span class="stars">★★★★★</span> 5,0 · 100+ recenzí</span>
               <span>Z vysílání České televize</span>
@@ -601,6 +605,28 @@ footer a{color:var(--gold-light)}
         </div>
       </div>
     </div>
+
+    <!-- APPKA VIP: první nabídka stránky (QA 4. 10. 2026). Texty převzaté z /tvuj-coach/
+         a z dlaždice appky níž, žádný nový slib. Ceny tu stojí natvrdo jako všude na homepage
+         (meta, dlaždice v #rozcestnik): kdo mění ceník appky, projde i tohle místo. -->
+    <section id="appka-vip" style="padding-top:56px;padding-bottom:24px">
+      <div class="container">
+        <div class="bento">
+          <div class="wide rv">
+            <div>
+              <span class="tag"><span class="ic"><svg><use href="#ic-app"/></svg></span> Appka Tvůj Coach VIP</span>
+              <h3>Výživa, trénink a AI kouč v jedné appce</h3>
+              <p>Hlídá ti kalorie, makra i trénink, každý týden ti přepočítá cíle podle toho, co zapíšeš, a poskládá jídelníček i trénink na míru. AI kouč na mé metodice ti odpoví, kdykoliv se zeptáš. Na mobilu i na webu.</p>
+            </div>
+            <div>
+              <div class="price">499 Kč <small>· měsíčně</small></div>
+              <a class="btn btn-gold" href="/tvuj-coach/">Chci appku VIP →</a>
+              <p class="free">Levnější volba: Basic bez AI kouče za 249 Kč</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- VÝSLEDKY -->
     <section id="vysledky">
@@ -1017,7 +1043,9 @@ footer a{color:var(--gold-light)}
       <!-- [30. 9. 2026] Vede na /kviz/ (sbírá e-mail), ne na rozcestník #kviz na této stránce.
            Záměrně bez UTM: MBAttr by jimi přepsal reklamní atribuci, průchod se měří přes page_views.referrer. -->
       <a class="cb-quiz" href="/kviz/">Nevíš? Kvíz</a>
-      <a class="cb-konz" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=nav&amp;utm_campaign=konzultace-primo&amp;locale=cs">Konzultace →</a>
+      <!-- [4. 10. 2026] Zlaté tlačítko = VIP (A). Konzultace dřív vedla rovnou do Stripu; zůstává v hero
+           i v #balicky, koučink je v hlavním menu. -->
+      <a class="cb-konz" href="/tvuj-coach/">Appka VIP →</a>
     </div>
 
     <!-- WhatsApp bublina -->
