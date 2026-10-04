@@ -139,6 +139,10 @@ RedirectMatch 301 (?i)^/appka/?$                https://martinbarna.cz/tvuj-coac
 RedirectMatch 301 (?i)^/poukazy/?$              https://martinbarna.cz/poukaz/
 RedirectMatch 301 (?i)^/prihlasit(\.html)?/?$   https://martinbarna.cz/akademie/prihlaseni/
 RedirectMatch 301 (?i)^/prihlaseni/?$           https://martinbarna.cz/akademie/prihlaseni/
+# hádané tvary právních stránek (QA 4. 10. 2026: /podminky a /soukromi vracely 404;
+# krátké tvary, které lidi i testeři zkouší jako první)
+RedirectMatch 301 (?i)^/(podminky|vop|obchodni-podminky\.html)/?$         https://martinbarna.cz/obchodni-podminky/
+RedirectMatch 301 (?i)^/(soukromi|gdpr|zasady-ochrany-osobnich-udaju\.html)/?$ https://martinbarna.cz/zasady-ochrany-osobnich-udaju/
 # staré WP články, které se nemigrovaly (odkazované jen textem) → blog
 RedirectMatch 301 ^/5-mytu-o-cukru/?$                                https://martinbarna.cz/clanky/
 RedirectMatch 301 ^/6-duvodu-proc-glykemicky-index-nehraje-roli/?$   https://martinbarna.cz/clanky/
