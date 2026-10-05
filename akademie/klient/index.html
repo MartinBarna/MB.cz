@@ -75,6 +75,20 @@
   .funit{position:relative;}
   .funit .u{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#8F8A99;font-size:.9rem;pointer-events:none;}
   .ferr{color:#e88;font-size:.82rem;margin:6px 0 0;display:none;}
+  /* Strava „nezapisoval/a" (5. 10. 2026, report Carbol): zamčená pole vypadala stejně jako odemčená,
+     klient nechápal, proč nejde psát. Klikací je jen krátký text (ne tři řádky přes celou šířku nad
+     Kaloriemi), zamčená pole jsou ztlumená a pointer-events:none pustí ťuk na obal, který zámek zruší. */
+  .ntrow{margin:0 0 18px;}
+  .ntlab{display:inline-flex;gap:8px;align-items:flex-start;font-size:.9rem;font-weight:600;color:#E8E3EF;cursor:pointer;}
+  .ntlab input{width:auto;margin:3px 0 0;flex:0 0 auto;}
+  .ntsub{margin:4px 0 0 21px;font-size:.8rem;color:#8F8A99;line-height:1.45;}
+  .ntnote{display:none;margin:10px 0 0;padding:10px 12px;border:1px solid rgba(235,177,44,.45);background:rgba(235,177,44,.08);border-radius:10px;font-size:.85rem;color:#F6CD63;line-height:1.45;}
+  .fin:disabled{opacity:.4;background:rgba(255,255,255,.015);border-style:dashed;cursor:not-allowed;pointer-events:none;}
+  .ntoff .funit{cursor:pointer;}
+  [data-theme="light"] .ntlab{color:#161310 !important;}
+  [data-theme="light"] .ntsub{color:#5C564C !important;}
+  [data-theme="light"] .ntnote{color:#6B4D06 !important;background:rgba(235,177,44,.12) !important;border-color:rgba(134,96,8,.45) !important;}
+  [data-theme="light"] .ba .fin:disabled{background:#EEE9E0 !important;}
   .chips2{display:flex;flex-wrap:wrap;gap:8px;}
   .chips2 button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);color:#E8E3EF;border-radius:999px;padding:10px 16px;font-family:inherit;font-size:.95rem;cursor:pointer;}
   .chips2 button.on{background:linear-gradient(145deg,#EBB12C,#E0762C);color:#1A1222;border-color:transparent;font-weight:700;}
@@ -1144,7 +1158,9 @@
             + '<button type="button" class="kbtn2" id="f_ktBtn" style="width:100%;">📥 Načíst z Kalorických tabulek (XLS export)</button>'
             + '<input type="file" id="f_ktFile" accept=".xls,.xlsx" style="display:none;">'
             + '<p class="help" style="font-size:.8rem;margin:8px 0 0;">Na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden → XLS. Průměry i denní rozpis se doplní samy a export se přiloží pro Martina.</p></div>'
-            + '<label style="display:flex;gap:8px;align-items:flex-start;font-size:.9rem;color:#B9B3C4;margin:0 0 14px;cursor:pointer;"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + ' style="width:auto;margin-top:3px;"> Tenhle týden jsem stravu nezapisoval/a, čísla přeskočit (nic si nevymýšlej, Martin to tak uvidí férově)</label>'
+            + '<div class="ntrow"><label class="ntlab"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + '> Tenhle týden jsem stravu nezapisoval/a</label>'
+            + '<p class="ntsub">Čísla se přeskočí. Nic si nevymýšlej, Martin to tak uvidí férově.</p>'
+            + '<p class="ntnote" id="f_noTrackNote">Pole stravy jsou vypnutá, protože máš zaškrtnuto, že jsi stravu nezapisoval/a. Chceš je vyplnit? Odškrtni políčko, nebo ťukni do pole.</p></div>'
             + fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
             + '<div class="m2">' + fNum("f_prot", "Bílkoviny Ø", "g", "", n.protein) + fNum("f_carb", "Sacharidy Ø", "g", "", n.carbs, true) + fNum("f_fat", "Tuky Ø", "g", "", n.fat, true) + fNum("f_fib", "Vláknina Ø", "g", "", n.fiber, true) + "</div>"
             + fChips("f_dny", "Kolik dní jsi zapisoval/a?", ["0", "1", "2", "3", "4", "5", "6", "7"], n.dny_zapsano != null ? String(n.dny_zapsano) : null)
@@ -1164,11 +1180,30 @@
         mount: function(a){
           mountPick("f_dny");
           var nt = document.getElementById("f_noTrack");
+          var NT_POLE = ["f_kcal", "f_prot", "f_carb", "f_fat", "f_fib"];
+          // Stejné vykreslení po ťuknutí i po obnově konceptu z localStorage (a._noTrack z draftu).
           function applyNoTrack(){
             var dis = !!(nt && nt.checked);
-            ["f_kcal", "f_prot", "f_carb", "f_fat", "f_fib"].forEach(function(id){ var x = document.getElementById(id); if(x) x.disabled = dis; });
+            NT_POLE.forEach(function(id){
+              var x = document.getElementById(id); if(!x) return;
+              x.disabled = dis;
+              var row = x.closest(".frow"); if(row) row.classList.toggle("ntoff", dis);
+            });
+            var note = document.getElementById("f_noTrackNote"); if(note) note.style.display = dis ? "block" : "none";
           }
-          if(nt){ nt.addEventListener("change", function(){ a._noTrack = nt.checked; applyNoTrack(); }); applyNoTrack(); }
+          if(nt){
+            nt.addEventListener("change", function(){ a._noTrack = nt.checked; applyNoTrack(); });
+            // Ťuk do zamčeného pole (dopadne na obal, input má pointer-events:none) = klient chce psát:
+            // zámek zrušíme a dáme fokus do pole, místo aby pole mlčky nereagovalo.
+            NT_POLE.forEach(function(id){
+              var x = document.getElementById(id), row = x && x.closest(".frow");
+              if(row) row.addEventListener("click", function(){
+                if(!nt.checked) return;
+                nt.checked = false; a._noTrack = false; applyNoTrack(); x.focus();
+              });
+            });
+            applyNoTrack();
+          }
           document.getElementById("f_dnyBtn").addEventListener("click", function(){ a._dnyOpen = !a._dnyOpen; document.getElementById("f_dnyBox").style.display = a._dnyOpen ? "block" : "none"; this.textContent = a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)"; });
 
           // Vyplní-li klient denní rozpis, průměry nahoře se dopočítají samy (jeho vlastní žádost).
