@@ -468,7 +468,7 @@
     if(!OBD) return '<div class="obdbox warn">⚠️ Období reportu se teď nepodařilo načíst, takže formulář jede jako dřív: denní rozpis Po až Ne a z exportu posledních 7 dní. Posíláš-li report za delší dobu, zavři ho a zkus to za chvíli znovu.</div>';
     var t = 'Tvoje období: <b>' + popisObd(OBD.od, OBD["do"]) + '</b> (' + slovoDni(OBD.dni) + ').';
     if(OBD.oprava) t += ' Za tohle období už report máš. Když ho pošleš znovu, Martin dostane opravenou verzi.';
-    else if(OBD.zkraceno) t += ' Od minulého reportu uběhly víc než 4 týdny, report proto bere jen poslední 4 týdny.';
+    else if(OBD.zkraceno) t += ' Od minulého reportu uběhlo víc než 4 týdny, report proto bere jen poslední 4 týdny.';
     return '<div class="obdbox">' + t + '</div>';
   }
   // Řádky denního rozpisu: s obdobím jeden na každý den (s datem), bez něj Po až Ne jako dřív.
