@@ -1053,6 +1053,9 @@ Deno.test("cron i tlačítko čtou okno pro období a předávají kadenci", asy
   tvrd(admin.includes("report_kadence: kadenceKlienta(e.report_kadence, seznam14.has(k))"), "seznam klientů: ⚠️ podle účinné kadence");
   // Nález 1: koncept odpovědi bere „minule" bez řádků, které začínají uvnitř období reportu.
   tvrd(admin.includes(".filter((r) => !jeUvnitrObdobi(r as RadekReportu, obdRep)).slice(0, 4)"), "report_draft: minule bez řádků uvnitř období");
+  // Revize R2: oprava téhož období počítá tempo od data původní verze, „start" není verze téhož období.
+  tvrd(admin.includes("posledni: (puvodni ? { ...rep, report_date: String(puvodni.report_date) } : rep)"), "report_draft: tempo opravy od původní verze");
+  tvrd(admin.includes("String(r.report_date) < String(rep.report_date) && !jeUvnitrObdobi(r as RadekReportu, obdRep)"), "report_draft: start mimo období reportu");
 });
 
 Deno.test("kadence: delší lhůta před tvuj-coach a ručně posunutý další report", () => {

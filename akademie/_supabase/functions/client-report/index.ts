@@ -494,7 +494,9 @@ Deno.serve(async (req: Request) => {
     const obdUkladane = row.obdobi_od && row.obdobi_do ? { od: row.obdobi_od, do: row.obdobi_do } : null;
     const histMinule = hist.filter((h) => !jeUvnitrObdobi(h as RadekReportu, obdUkladane));
     const prev = histMinule.length ? histMinule[histMinule.length - 1] : null;
-    const first = hist.length ? hist[0] : null;
+    // „Start" taky ne z verze téhož období (revize Groka R2, nález 2): u opravy úplně prvního
+    // reportu by jinak „celkem" srovnávalo report s jeho dřívější verzí. Bez období jako dřív.
+    const first = obdUkladane ? (histMinule[0] ?? null) : (hist.length ? hist[0] : null);
     // Věty pro Martina nad blokem „Co teď udělat" (klient je v kopii nevidí).
     const poznamky: string[] = [];
     if (kontrola.poznamka) poznamky.push(kontrola.poznamka);

@@ -28,6 +28,7 @@ import {
   jeDatum,
   jeUvnitrObdobi,
   kadenceKlienta,
+  opravovanaVerze,
   nedeleVyzvy,
   obdobiRadku,
   popisObdobi,
@@ -3412,8 +3413,10 @@ Deno.serve(async (req) => {
           .eq("email", email).lte("report_date", String(rep.report_date)),
         // ⛔ „Od startu" se počítá z PRVNÍHO reportu, ne ze čtyř nejbližších. Martin píše
         // obojí (od minule i od startu) a bez tohohle dotazu by druhé číslo chybělo.
-        admin.from("client_reports").select("report_date, weight, measurements")
-          .eq("email", email).order("report_date", { ascending: true }).limit(1).maybeSingle(),
+        // [5. 10. 2026, revize Groka R2, nález 2] Víc řádků i se zdrojem a obdobím: u reportu
+        // s obdobím se „start" vybírá až po vynechání řádků uvnitř jeho období (níž).
+        admin.from("client_reports").select("report_date, weight, measurements, source, obdobi_od, obdobi_do")
+          .eq("email", email).order("report_date", { ascending: true }).limit(10),
       ]);
 
       // Data z appky Tvůj Coach jsou bonus, ne podmínka: má ji jen část koučinkových klientů.
@@ -3460,8 +3463,21 @@ Deno.serve(async (req) => {
       // Starší reporty pro „minule" a klouzavý průměr (nejvýš 4, od nejnovějšího). Report bez
       // uloženého období nevylučuje nic, takže týdenní klient má tytéž čtyři řádky jako dřív.
       const obdRep = jeDatum(rep.obdobi_od) && jeDatum(rep.obdobi_do) ? { od: String(rep.obdobi_od), do: String(rep.obdobi_do) } : null;
-      const drive = ((driveRes.data ?? []) as Record<string, unknown>[])
+      const starsi = (driveRes.data ?? []) as Record<string, unknown>[];
+      const drive = starsi
         .filter((r) => !jeUvnitrObdobi(r as RadekReportu, obdRep)).slice(0, 4);
+      // ⛔ [revize Groka R2, nález 1] OPRAVA TÉHOŽ OBDOBÍ: tempo se počítá od data PŮVODNÍ verze.
+      //    Středeční oprava se stejnou váhou jako v neděli by jinak dělila týdenní změnu
+      //    1,43 týdne a engine mohl navrhnout řez kalorií, který by k původní verzi nenavrhl.
+      //    Blok čísel i FAKTA dál ukazují skutečné datum reportu (`rep`).
+      const puvodni = opravovanaVerze(starsi as RadekReportu[], obdRep);
+      // ⛔ [revize Groka R2, nález 2] „Od startu" nesmí srovnávat s verzí téhož období. U reportu
+      //    s obdobím je start nejstarší STARŠÍ řádek mimo jeho období (žádný = řádek „Od startu"
+      //    se nepíše). Report bez období má start jako dřív: úplně první řádek klienta.
+      const prvniVse = (prvniRes.data ?? []) as Record<string, unknown>[];
+      const prvni = obdRep
+        ? (prvniVse.find((r) => String(r.report_date) < String(rep.report_date) && !jeUvnitrObdobi(r as RadekReportu, obdRep)) ?? null)
+        : (prvniVse[0] ?? null);
       const fakta = rdFakta(
         rep as Record<string, unknown>,
         drive,
@@ -3475,14 +3491,14 @@ Deno.serve(async (req) => {
       // ⛔ ENGINE POČÍTÁ, AI MLUVÍ. Blok čísel do mailu i návrh úpravy zadání vzniká TADY,
       // deterministicky (`report-engine.mjs`). Model je dostane jako hotová fakta.
       const eng = pripravFakta({
-        posledni: rep as Record<string, unknown>,
+        posledni: (puvodni ? { ...rep, report_date: String(puvodni.report_date) } : rep) as Record<string, unknown>,
         // ⛔ `drive` (až 4 starší reporty od nejnovějšího) je tu kvůli KLOUZAVÉMU PRŮMĚRU
         // váhy. Bez něj engine počítal stagnaci z rozdílu dvou vážení a dvě vážení „po
         // sobotě" umí trend zamaskovat i vyrobit. Appka na to má `TRAILING_WEEKS_DEFAULT`.
         drive,
         predchozi: drive[0] ?? null,
         predpredchozi: drive[1] ?? null,
-        prvni: (prvniRes.data ?? null) as Record<string, unknown> | null,
+        prvni,
         cile: cileTydne,
         smer, pohlavi: rod,
       });

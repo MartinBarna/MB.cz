@@ -1671,6 +1671,9 @@
         if(repsUnknown) nedoslo.push('reporty (počty, datum posledního i fronta dotazníků)');
         if(o.j.registered_incomplete) nedoslo.push('účty (sloupec Účet)');
         if(o.j.names_incomplete) nedoslo.push('jména');
+        // [5. 10. 2026, revize Groka R2, nález 5] Starý seznam dvoutýdenní kadence: bez něj má
+        // klient, který je jen v seznamu, ⚠️ už po týdnu.
+        if(o.j.kadence_seznam_chyba) nedoslo.push('starý seznam kadence client_remind_14d (⚠️ u klientů s reportem po 2 týdnech může být zbytečné)');
         if(nedoslo.length){
           html+='<p style="margin:0 0 .6rem;font-size:.88rem;color:#F6CD63;">⚠️ Nenačetlo se: '+nedoslo.join(', ')+'. Co je označené „?", teď neplatí. Obnov stránku.</p>';
         }

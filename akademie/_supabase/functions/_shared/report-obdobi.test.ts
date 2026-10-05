@@ -29,6 +29,7 @@ import {
   vyzvaNaRade,
   zacatekPokryti,
   jeUvnitrObdobi,
+  opravovanaVerze,
   type RadekReportu,
 } from "./report-obdobi.ts";
 
@@ -281,4 +282,18 @@ Deno.test("řádky uvnitř období nejsou minulý report", () => {
   tvrd(jeUvnitrObdobi(web("2026-10-04", { obdobi_od: "2026-09-28", obdobi_do: "2026-10-04" }), { od: "2026-09-28", do: "2026-10-04" }), "opravovaná verze téhož období se vynechá");
   tvrd(!jeUvnitrObdobi(appka("2026-09-28"), null), "report bez období nevylučuje nic (jako dřív)");
   tvrd(!jeUvnitrObdobi({ report_date: "nesmysl", source: "web" }, obdobi), "nečitelný řádek se nevylučuje");
+});
+
+// Revize Groka R2, nález 1: oprava téhož období. Tempo se počítá od data původní verze.
+Deno.test("opravovaná verze: nejstarší web uvnitř období, appka a starší řádky ne", () => {
+  const obdobi = { od: "2026-09-28", do: "2026-10-04" };
+  const radky: RadekReportu[] = [   // jak je vrací dotaz: od nejnovějšího
+    { report_date: "2026-10-06", source: "web", obdobi_od: "2026-09-28", obdobi_do: "2026-10-04" },
+    { report_date: "2026-10-04", source: "web", obdobi_od: "2026-09-28", obdobi_do: "2026-10-04" },
+    { report_date: "2026-09-28", source: "tvuj-coach" },
+    { report_date: "2026-09-27", source: "web" },
+  ];
+  tvrd(opravovanaVerze(radky, obdobi)?.report_date === "2026-10-04", "původní verze je nedělní 4. 10., ne druhá oprava 6. 10.");
+  tvrd(opravovanaVerze(radky.slice(2), obdobi) === null, "bez webu uvnitř období žádná oprava (appka se nepočítá)");
+  tvrd(opravovanaVerze(radky, null) === null, "report bez období nic neopravuje");
 });

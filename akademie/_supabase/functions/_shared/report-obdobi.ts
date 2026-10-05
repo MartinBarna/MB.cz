@@ -200,6 +200,26 @@ export function jeUvnitrObdobi(r: RadekReportu, obd: { od: string; do: string } 
 }
 
 /**
+ * Nejstarší verze téhož období, kterou report opravuje (řádek mimo appku, který začíná uvnitř
+ * období), nebo null. Řádek mimo appku uvnitř období jinak vzniknout nemůže: nový report začíná
+ * až dnem po posledním pokrytém dni (revize Groka R2, nález 1).
+ * K čemu: tempo opravy se počítá od data PŮVODNÍ verze. Oprava ve středu se stejnou váhou jako
+ * v neděli by jinak dělila týdenní změnu 1,43 týdne a engine by mohl navrhnout řez kalorií.
+ * ⚠️ Předpoklad: oprava nese váhu změřenou k původní verzi (oprava překlepu). Kdo se ve středu
+ *    převáží znovu, tomu se tempo nadsadí nejvýš o 3/7.
+ */
+export function opravovanaVerze<T extends RadekReportu>(radky: T[], obd: { od: string; do: string } | null): T | null {
+  let nej: T | null = null;
+  for (const r of radky ?? []) {
+    if (jeAppZdroj(r.source) || !jeUvnitrObdobi(r, obd)) continue;
+    const rd = String(r.report_date ?? "").slice(0, 10);
+    if (!jeDatum(rd)) continue;
+    if (!nej || rd < String(nej.report_date ?? "").slice(0, 10)) nej = r;
+  }
+  return nej;
+}
+
+/**
  * Období, které poslal formulář. Kontroluje se TVAR, ne shoda s výpočtem serveru
  * (tu řeší volající, protože při neshodě se ukládá období, ke kterému patří čísla).
  * null = neplatné (nečitelné datum, obrácené pořadí, víc než 28 dní, dny v budoucnu).
