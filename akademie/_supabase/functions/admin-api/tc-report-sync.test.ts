@@ -1044,6 +1044,15 @@ Deno.test("cron i tlačítko čtou okno pro období a předávají kadenci", asy
   tvrd(cron.includes("tydnuMax: TYDNU") && cron.includes("graceDniProKadenci("), "cron pojistka useknutí a kadence");
   tvrd(admin.includes("tydnuMax: tydnu") && admin.includes("graceDniProKadenci("), "tlačítko pojistka useknutí a kadence");
   tvrd(cron.includes('select("email,report_kadence,dalsi_report")'), "cron čte kadenci týmž dotazem jako e-maily");
+  // Revize Groka 5. 10. 2026, nález 2: kadence jako u připomínek a karty (sloupec, starý seznam 14d,
+  // týden) a chyba čtení seznamu je 500, ne tichá „týdenní" lhůta 4 dny.
+  tvrd(cron.includes("kadenceKlienta(e.report_kadence, seznam14.has(k))"), "cron: kadence i ze starého seznamu 14d");
+  tvrd(cron.includes('chybaCteni("app_config.client_remind_14d"'), "cron: chyba čtení seznamu = 500");
+  tvrd(admin.includes("kadenceKlienta(kp.data?.report_kadence, emailySeznam(k14.data?.value).has(email))"), "tlačítko: kadence i ze starého seznamu 14d");
+  tvrd(admin.includes('if (k14.error) return json({ ok: false, duvod: "app_config" }, 500);'), "tlačítko: chyba čtení seznamu = 500");
+  tvrd(admin.includes("report_kadence: kadenceKlienta(e.report_kadence, seznam14.has(k))"), "seznam klientů: ⚠️ podle účinné kadence");
+  // Nález 1: koncept odpovědi bere „minule" bez řádků, které začínají uvnitř období reportu.
+  tvrd(admin.includes(".filter((r) => !jeUvnitrObdobi(r as RadekReportu, obdRep)).slice(0, 4)"), "report_draft: minule bez řádků uvnitř období");
 });
 
 Deno.test("kadence: delší lhůta před tvuj-coach a ručně posunutý další report", () => {

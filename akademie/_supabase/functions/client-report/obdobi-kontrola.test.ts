@@ -58,7 +58,10 @@ Deno.test("client-report nesahá na sync modul a období bere ze sdíleného mod
   tvrd(src.includes('from "../_shared/report-obdobi.ts"'), "index importuje sdílený modul období");
   tvrd(src.includes('from "./obdobi-kontrola.ts"'), "index importuje kontrolu období");
   tvrd(!src.includes("tc-report-sync"), "sync modul se neimportuje (hlídá i tc-report-sync.test.ts)");
-  // ⛔ Předměty mailů se nemění: pondělní rutina a Coach Bot hledají notifikaci podle nich.
+  // ⛔ Předmět notifikace Martinovi se nemění: pondělní rutina a Coach Bot hledají notifikaci podle něj.
   tvrd(src.includes("const subj = `📊 Týdenní report: ${name}`;"), "předmět notifikace beze změny");
-  tvrd(src.includes('"Tvůj týdenní report ✓ (kopie)"'), "předmět kopie beze změny");
+  // Kopie klientovi: u týdne beze změny, u jiného období bez „týdenní" (revize Groka, nález 3).
+  tvrd(src.includes('tydenni ? "Tvůj týdenní report ✓ (kopie)" : "Tvůj report ✓ (kopie)"'), "předmět kopie: týden beze změny, jiné období bez „týdenní“");
+  // „Minule" vynechává řádky uvnitř období reportu (revize Groka, nález 1).
+  tvrd(src.includes("jeUvnitrObdobi(h as RadekReportu, obdUkladane)"), "předchozí report přeskočí řádky uvnitř období");
 });

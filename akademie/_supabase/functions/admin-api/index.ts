@@ -26,6 +26,7 @@ import {
 import {
   dalsiReport,
   jeDatum,
+  jeUvnitrObdobi,
   kadenceKlienta,
   nedeleVyzvy,
   obdobiRadku,
@@ -34,6 +35,7 @@ import {
   dnesPraha,
   rozdilDni,
   slovoDni,
+  type RadekReportu,
 } from "../_shared/report-obdobi.ts";
 // Seznam e-mailů z `app_config` (starý seznam dvoutýdenní kadence), týž parser jako `client-remind`.
 import { emailySeznam } from "../_shared/mail-seznam.ts";
@@ -2319,7 +2321,7 @@ Deno.serve(async (req) => {
       const usersSafe = listAllUsers(admin)
         .then((u) => ({ users: u, error: null as unknown }))
         .catch((e: unknown) => ({ users: [] as Awaited<ReturnType<typeof listAllUsers>>, error: e }));
-      const [ents, reps, intakes, users, cc, tgs] = await Promise.all([
+      const [ents, reps, intakes, users, cc, tgs, k14] = await Promise.all([
         // ⛔ OPRAVA 27. 7. 2026: sloupec se jmenuje `granted_at`, ne `created_at`.
         // Kvůli tomu tenhle select vracel chybu, `ents.data` bylo null, seznam vyšel prázdný
         // a admin hlásil „zatím žádní klienti", i když jich bylo dvanáct. Kdo přidal klienta,
@@ -2344,6 +2346,9 @@ Deno.serve(async (req) => {
           .then((data) => ({ data, error: null as unknown }))
           .catch((e: unknown) => ({ data: null as typeof cc_typ, error: e })),
         admin.from("client_targets").select("email,updated_at"),
+        // [5. 10. 2026, revize Groka, nález 2] Starý seznam dvoutýdenní kadence: ⚠️ v tabulce
+        // podle stejné kadence jako `client-remind` a karta (`kadenceKlienta`).
+        admin.from("app_config").select("value").eq("key", "client_remind_14d").maybeSingle(),
       ]);
       // ⛔⛔ CHYBA ČTENÍ NÁROKŮ NENÍ „ŽÁDNÍ KLIENTI" (revize R1, nález V1, 15. 9. 2026).
       // `ents` je JEDINÝ zdroj řádků téhle tabulky. Když select spadne, `ents.data` je null,
@@ -2362,6 +2367,9 @@ Deno.serve(async (req) => {
         }, 500);
       }
       const repsUnknown = reps.error != null;
+      // Seznam 14d se nenačetl: kadence jen ze sloupce a v odpovědi `kadence_seznam_chyba`.
+      // Horší případ je ⚠️ navíc u klienta ze seznamu (hlučné, ne tiché), proto ne 500.
+      const seznam14 = k14.error ? new Set<string>() : emailySeznam(k14.data?.value);
       const usersUnknown = users.error != null;
       const nameBy = new Map<string, string>();
       for (const c of cc.data ?? []) if (c.name) nameBy.set(low(c.email), String(c.name));
@@ -2404,7 +2412,8 @@ Deno.serve(async (req) => {
           start_at: e.start_at ?? null,
           // ⭐ Kadence reportů (null = týden) a „další report nejdřív". Tabulka podle nich
           //    nevarují „dlouho bez reportu" u klienta, který má report po dvou týdnech.
-          report_kadence: [1, 2, 3].includes(Number(e.report_kadence)) ? Number(e.report_kadence) : null,
+          // Účinná kadence (1 až 3): sloupec, jinak starý seznam 14d, jinak týden.
+          report_kadence: kadenceKlienta(e.report_kadence, seznam14.has(k)),
           dalsi_report: e.dalsi_report ?? null,
           // "stripe" = koupil si sam z webu, "rucni" = zalozil Martin v adminu.
           zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni",
@@ -2444,7 +2453,7 @@ Deno.serve(async (req) => {
           }
         } catch { /* seznam klientů musí dojít i bez appky */ }
       }
-      return json({ ok: true, rows, reports_incomplete: repsUnknown, names_incomplete: cc.error != null, registered_incomplete: usersUnknown });
+      return json({ ok: true, rows, reports_incomplete: repsUnknown, names_incomplete: cc.error != null, registered_incomplete: usersUnknown, kadence_seznam_chyba: k14.error != null });
     }
 
     // [14. 9. 2026] Stav appky Tvuj Coach zvlast od seznamu koucinku: tyz kanal (academy-grant,
@@ -3047,13 +3056,19 @@ Deno.serve(async (req) => {
       // Kadence a ručně posunutý další report (fáze 2): podle nich se čeká déle, než se pro
       // týden bez webu založí řádek tvuj-coach. ⛔ Chyba čtení NENÍ „týdenní klient": se
       // čtyřdenní lhůtou by tlačítko mohlo založit týden, který pokryje příští report.
-      const kp = await admin.from("entitlements").select("report_kadence,dalsi_report")
-        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      // [revize Groka, nález 2] Kadence stejně jako `client-remind` a karta: sloupec, jinak starý
+      // seznam `client_remind_14d`, jinak týden. Chyba čtení seznamu je taky 500, ne „týden".
+      const [kp, k14] = await Promise.all([
+        admin.from("entitlements").select("report_kadence,dalsi_report")
+          .eq("email", email).eq("product", "coaching").limit(1).maybeSingle(),
+        admin.from("app_config").select("value").eq("key", "client_remind_14d").maybeSingle(),
+      ]);
       if (kp.error) return json({ ok: false, duvod: "entitlements" }, 500);
-      const kadNum = Number(kp.data?.report_kadence);
+      if (k14.error) return json({ ok: false, duvod: "app_config" }, 500);
+      const kadEf = kadenceKlienta(kp.data?.report_kadence, emailySeznam(k14.data?.value).has(email));
       const plan = applySyncPlan(email, reports, existing, tg.data ?? null, {
         tydnuMax: tydnu,
-        graceDni: graceDniProKadenci(kadNum === 2 || kadNum === 3 ? kadNum : 1),
+        graceDni: graceDniProKadenci(kadEf),
         nejdrive: typeof kp.data?.dalsi_report === "string" ? kp.data.dalsi_report : null,
       });
       const committed = await commitSyncPlan(plan, reportWriter(admin));
@@ -3384,10 +3399,13 @@ Deno.serve(async (req) => {
 
       // Kontext: 4 nejbližší starší reporty, zadání, vstupní dotazník. Pořadí reportu
       // (kolikátý je) se počítá zvlášť, protože první report má u Martina vlastní režii.
+      // ⛔ [5. 10. 2026, revize Groka, nález 1] I zdroj a období: „minule" přeskočí řádky, které
+      //    začínají uvnitř období tohohle reportu (týden z appky založený dřív, než přišel report
+      //    za víc týdnů). Proto se čte 8 řádků a čtyři nejbližší se vyberou až po filtru níž.
       const [driveRes, tgRes, intakeRes, poradiRes, prvniRes] = await Promise.all([
-        admin.from("client_reports").select("report_date, weight, measurements, nutrition, activity, scales")
+        admin.from("client_reports").select("report_date, weight, measurements, nutrition, activity, scales, source, obdobi_od, obdobi_do")
           .eq("email", email).lt("report_date", String(rep.report_date))
-          .order("report_date", { ascending: false }).limit(4),
+          .order("report_date", { ascending: false }).limit(8),
         admin.from("client_targets").select("*").eq("email", email).maybeSingle(),
         admin.from("client_intake").select("data").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_reports").select("id", { count: "exact", head: true })
@@ -3439,9 +3457,14 @@ Deno.serve(async (req) => {
       const tydenKcal = cileTydne ? rdNum(cileTydne.kcal) : null;
       const zadaniZmeneno = dnesKcal !== null && tydenKcal !== null && dnesKcal !== tydenKcal;
 
+      // Starší reporty pro „minule" a klouzavý průměr (nejvýš 4, od nejnovějšího). Report bez
+      // uloženého období nevylučuje nic, takže týdenní klient má tytéž čtyři řádky jako dřív.
+      const obdRep = jeDatum(rep.obdobi_od) && jeDatum(rep.obdobi_do) ? { od: String(rep.obdobi_od), do: String(rep.obdobi_do) } : null;
+      const drive = ((driveRes.data ?? []) as Record<string, unknown>[])
+        .filter((r) => !jeUvnitrObdobi(r as RadekReportu, obdRep)).slice(0, 4);
       const fakta = rdFakta(
         rep as Record<string, unknown>,
-        (driveRes.data ?? []) as Record<string, unknown>[],
+        drive,
         cileTydne,
         (intakeRes.data ?? null) as Record<string, unknown> | null,
         appData,
@@ -3451,7 +3474,6 @@ Deno.serve(async (req) => {
       );
       // ⛔ ENGINE POČÍTÁ, AI MLUVÍ. Blok čísel do mailu i návrh úpravy zadání vzniká TADY,
       // deterministicky (`report-engine.mjs`). Model je dostane jako hotová fakta.
-      const drive = (driveRes.data ?? []) as Record<string, unknown>[];
       const eng = pripravFakta({
         posledni: rep as Record<string, unknown>,
         // ⛔ `drive` (až 4 starší reporty od nejnovějšího) je tu kvůli KLOUZAVÉMU PRŮMĚRU

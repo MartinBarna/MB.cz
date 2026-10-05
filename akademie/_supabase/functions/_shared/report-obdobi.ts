@@ -177,6 +177,28 @@ export function jeCeleTydny(o: { od: string; do: string }): boolean {
   return jeDatum(o.od) && jeDatum(o.do) && o.od <= o.do && denTydne(o.od) === 0 && denTydne(o.do) === 6;
 }
 
+/** První den, který řádek pokrývá: u appky pondělí jejího týdne, jinak začátek období řádku. */
+export function zacatekPokryti(r: RadekReportu): string | null {
+  if (jeAppZdroj(r.source)) {
+    const rd = String(r.report_date ?? "").slice(0, 10);
+    return jeDatum(rd) ? pondeli(rd) : null;
+  }
+  return obdobiRadku(r)?.od ?? null;
+}
+
+/**
+ * Začíná starší řádek uvnitř období reportu `obd`? Takový řádek NENÍ „minulý report":
+ * typicky týden z appky, který sync založil dřív, než klient poslal report za víc týdnů
+ * (revize Groka 5. 10. 2026, nález 1), nebo verze téhož období, kterou report opravuje.
+ * Srovnání s ním by porovnávalo report s kusem sebe sama (tempo, šipky „minule").
+ * `obd` null (report bez uloženého období) = nic se nevylučuje, jako dřív.
+ */
+export function jeUvnitrObdobi(r: RadekReportu, obd: { od: string; do: string } | null): boolean {
+  if (!obd || !jeDatum(obd.od) || !jeDatum(obd.do)) return false;
+  const z = zacatekPokryti(r);
+  return !!z && z >= obd.od && z <= obd.do;
+}
+
 /**
  * Období, které poslal formulář. Kontroluje se TVAR, ne shoda s výpočtem serveru
  * (tu řeší volající, protože při neshodě se ukládá období, ke kterému patří čísla).

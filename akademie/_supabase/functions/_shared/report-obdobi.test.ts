@@ -27,6 +27,8 @@ import {
   tydenReportu,
   tydnyObdobi,
   vyzvaNaRade,
+  zacatekPokryti,
+  jeUvnitrObdobi,
   type RadekReportu,
 } from "./report-obdobi.ts";
 
@@ -261,4 +263,22 @@ Deno.test("neděle výzvy pro kartu klienta sedí s vyzvaNaRade", () => {
     const n = nedeleVyzvy(t)!;
     tvrd(vyzvaNaRade(n, t) && !vyzvaNaRade(pridejDny(n, -7), t), "termín " + t + ": výzva právě " + n);
   }
+});
+
+// Revize Groka 5. 10. 2026, nález 1: týden z appky založený dřív, než přišel report za víc týdnů,
+// není „minulý report". Skutečný předchozí report (i poslaný v pondělí) zůstává.
+Deno.test("řádky uvnitř období nejsou minulý report", () => {
+  const obdobi = { od: "2026-09-28", do: "2026-10-11" };
+  const appka = (d: string): RadekReportu => ({ report_date: d, source: "tvuj-coach" });
+  tvrd(zacatekPokryti(appka("2026-09-28")) === "2026-09-28" && zacatekPokryti(appka("2026-10-04")) === "2026-09-28", "appka: pondělí týdne (i vložená na neděli)");
+  tvrd(zacatekPokryti(web("2026-10-05")) === "2026-09-28", "web bez období: týden podle −3 dnů");
+  tvrd(zacatekPokryti(web("2026-10-11", { obdobi_od: "2026-09-28", obdobi_do: "2026-10-11" })) === "2026-09-28", "web s obdobím");
+  tvrd(jeUvnitrObdobi(appka("2026-09-28"), obdobi), "týden appky 28. 9. leží v období 28. 9. až 11. 10.");
+  tvrd(jeUvnitrObdobi(appka("2026-10-05"), obdobi), "i druhý týden appky");
+  tvrd(!jeUvnitrObdobi(appka("2026-09-21"), obdobi), "týden před obdobím zůstává");
+  tvrd(!jeUvnitrObdobi(web("2026-09-27"), obdobi), "nedělní report za předchozí týden zůstává");
+  tvrd(!jeUvnitrObdobi(web("2026-10-05"), { od: "2026-10-05", do: "2026-10-11" }), "pondělní report za minulý týden zůstává, i když jeho datum v období leží");
+  tvrd(jeUvnitrObdobi(web("2026-10-04", { obdobi_od: "2026-09-28", obdobi_do: "2026-10-04" }), { od: "2026-09-28", do: "2026-10-04" }), "opravovaná verze téhož období se vynechá");
+  tvrd(!jeUvnitrObdobi(appka("2026-09-28"), null), "report bez období nevylučuje nic (jako dřív)");
+  tvrd(!jeUvnitrObdobi({ report_date: "nesmysl", source: "web" }, obdobi), "nečitelný řádek se nevylučuje");
 });

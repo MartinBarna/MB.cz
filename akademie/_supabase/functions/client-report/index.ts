@@ -22,6 +22,7 @@ import {
   dnesPraha,
   DNY_TYDNE,
   jeDatum,
+  jeUvnitrObdobi,
   popisObdobi,
   rozdilDni,
   slovoDni,
@@ -486,7 +487,13 @@ Deno.serve(async (req: Request) => {
       obdobi_do: kontrola.obdobi?.do ?? null,
     };
     const hist = (histAll ?? []).filter((h) => String(h.report_date) < row.report_date);
-    const prev = hist.length ? hist[hist.length - 1] : null;
+    // ⛔ [5. 10. 2026, revize Groka, nález 1] „Minule" NENÍ řádek, který začíná uvnitř období
+    //    tohohle reportu: týden z appky, který sync založil dřív, než klient poslal report za víc
+    //    týdnů, ani opravovaná verze téhož období. Šipky by srovnávaly report s kusem sebe sama.
+    //    Report bez období (stará stránka, náhradní režim) nevylučuje nic, jako dřív.
+    const obdUkladane = row.obdobi_od && row.obdobi_do ? { od: row.obdobi_od, do: row.obdobi_do } : null;
+    const histMinule = hist.filter((h) => !jeUvnitrObdobi(h as RadekReportu, obdUkladane));
+    const prev = histMinule.length ? histMinule[histMinule.length - 1] : null;
     const first = hist.length ? hist[0] : null;
     // Věty pro Martina nad blokem „Co teď udělat" (klient je v kopii nevidí).
     const poznamky: string[] = [];
@@ -498,6 +505,10 @@ Deno.serve(async (req: Request) => {
     const subj = `📊 Týdenní report: ${name}`;
     const obd = obdobiZRadku(row);
     const tydenni = !obd || obd.dni === 7;
+    // Předmět kopie klientovi: u týdne beze změny, u jiného období bez „týdenní" (revize Groka,
+    // nález 3). ⛔ Předmět Martinovi (`subj`) se NEMĚNÍ: rutina `koucink-reporty` hledá
+    // v Gmailu „📊 Týdenní report: jméno".
+    const predmetKopie = tydenni ? "Tvůj týdenní report ✓ (kopie)" : "Tvůj report ✓ (kopie)";
     const sloz = () => ({
       coach: wrap(tydenni ? "Martin Barna · týdenní report klienta" : "Martin Barna · report klienta",
         upozorneniHtml(poznamky) + coachTodo(email, row, tgRow ?? null) + html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`),
@@ -509,7 +520,7 @@ Deno.serve(async (req: Request) => {
     //    a bez řádku ve frontě „Reporty ke zpracování".
     if (body.dry_run === true) {
       const m = sloz();
-      return json({ ok: true, dry_run: true, row, obdobi_kontrola: kontrola, predmet: subj, html_coach: m.coach, html_client: m.client }, C);
+      return json({ ok: true, dry_run: true, row, obdobi_kontrola: kontrola, predmet: subj, predmet_kopie: predmetKopie, html_coach: m.coach, html_client: m.client }, C);
     }
 
     let { error } = await admin.from("client_reports").upsert(row, { onConflict: "email,report_date" });
@@ -525,7 +536,7 @@ Deno.serve(async (req: Request) => {
 
     const m = sloz();
     const s1 = await send(admin, COACH, subj, m.coach);
-    const s2 = await send(admin, email, "Tvůj týdenní report ✓ (kopie)", m.client, true);
+    const s2 = await send(admin, email, predmetKopie, m.client, true);
     return json(vysledekMailu(s1, s2), C);
   }
 

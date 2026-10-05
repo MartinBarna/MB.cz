@@ -35,6 +35,10 @@ import {
 } from "../admin-api/tc-report-sync.ts";
 // 14. 9. 2026: chyba čtení není odpověď (guard secretu i čtení s opakováním, při trvalé chybě 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+// [5. 10. 2026, revize Groka, nález 2] Kadence stejně jako `client-remind` a karta klienta:
+// sloupec, jinak starý seznam `app_config.client_remind_14d`, jinak týden.
+import { kadenceKlienta } from "../_shared/report-obdobi.ts";
+import { emailySeznam } from "../_shared/mail-seznam.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -92,14 +96,21 @@ Deno.serve(async (req) => {
     return json({ ok: false, duvod: "entitlements", detail: String((e as Error).message ?? e).slice(0, 120) }, 500);
   }
 
+  // ⛔ Starý seznam dvoutýdenní kadence se čte s opakováním a chyba čtení je 500, ne „týden":
+  //    se čtyřdenní lhůtou by sync založil řádek z appky za týden, který vzápětí pokryje
+  //    report za dva týdny (revize Groka, nález 2). Cron to zkusí znovu.
+  const kad14 = await ctiSOpakovanim<{ data: { value?: unknown } | null; error: unknown }>(() =>
+    admin.from("app_config").select("value").eq("key", "client_remind_14d").maybeSingle());
+  if (kad14.error) return json({ ok: false, ...chybaCteni("app_config.client_remind_14d", kad14.error) }, 500);
+  const seznam14 = emailySeznam(kad14.data?.value);
+
   const clients = [...new Set(ents.map((e) => low(e.email)).filter((e) => e.includes("@")))];
   const planBy = new Map<string, { kadence: number; dalsi: string | null }>();
   for (const e of ents) {
     const k = low(e.email);
     if (!k || planBy.has(k)) continue;
-    const kad = Number(e.report_kadence);
     planBy.set(k, {
-      kadence: kad === 2 || kad === 3 ? kad : 1,
+      kadence: kadenceKlienta(e.report_kadence, seznam14.has(k)),
       dalsi: typeof e.dalsi_report === "string" ? e.dalsi_report.slice(0, 10) : null,
     });
   }
