@@ -15,10 +15,19 @@
 // ⛔ Neznámá hodnota NENÍ nula: prázdné nutrition zůstane null, ne {kcal:0}.
 // ⛔ Žádný mail, žádné mazání, žádná jména v logu. Datum reportu se nepřepisuje.
 // ⛔ Web patří k ISO týdnu dne (report_date - 3 dny): ne až st předchozí týden,
-//    čt až ne tentýž. Formulář období (od, do) neposílá.
-// ⛔ Řádek tvuj-coach se nezakládá, dokud od neděle toho týdne neuplynuly 4 dny.
+//    čt až ne tentýž. Platí pro web BEZ uloženého období (všechny staré řádky).
+// ⭐ [5. 10. 2026] Web s uloženým obdobím (`obdobi_od`, `obdobi_do`, 7 až 28 dní) pokrývá
+//    VŠECHNY týdny období. Žádný z nich nedostane vlastní řádek tvuj-coach. Prázdná pole
+//    vícetýdenního reportu se doplní ze součtu týdnů appky váženého zapsanými dny.
+//    Období, které není z celých týdnů Po až Ne (report ve čtvrtek až sobotu), se nedoplňuje:
+//    týdenní data appky se na kus týdne rozdělit nedají. Pravidlo období je jediné,
+//    v `_shared/report-obdobi.ts`.
+// ⛔ Řádek tvuj-coach se nezakládá, dokud od neděle toho týdne neuplynuly 4 dny
+//    (u řidší kadence reportů víc, viz `graceDniProKadenci`).
 // ⛔ Když pondělí drží cizí řádek, insert jde na neděli téhož týdne, je-li volná.
 //    Obsazené pondělí i neděle: žádný insert, počítá se obsazene_datum.
+
+import { jeCeleTydny, obdobiRadku, tydenReportu, tydnyObdobi } from "../_shared/report-obdobi.ts";
 
 export const TC_REPORT_SOURCE = "tvuj-coach";
 
@@ -74,6 +83,9 @@ export type ExistingClientReport = {
   targets?: Record<string, unknown> | null;
   photos?: unknown;
   id?: string;
+  /** [5. 10. 2026] Období webového reportu. Chybí u všech starých řádků (pak 1 týden podle −3 dní). */
+  obdobi_od?: string | null;
+  obdobi_do?: string | null;
 };
 
 export type SyncUpdate = {
@@ -91,8 +103,10 @@ export type SyncUpdate = {
   };
 };
 
-/** Select existujících řádků. `id` je podmínka update, `source` rozhoduje, jestli se vůbec smí zapisovat. */
-export const TC_REPORT_SELECT = "id,report_date,source,weight,nutrition";
+/** Select existujících řádků. `id` je podmínka update, `source` rozhoduje, jestli se vůbec smí zapisovat.
+ *  `obdobi_od/do` říká, které týdny webový report pokrývá. ⛔ Sloupce musí v DB existovat dřív,
+ *  než se nasadí tahle verze (migrace `report-obdobi-2026-10-05.sql`), jinak čtení spadne. */
+export const TC_REPORT_SELECT = "id,report_date,source,weight,nutrition,obdobi_od,obdobi_do";
 
 export type MatchFilter = {
   column: string;
@@ -206,14 +220,43 @@ export function isoWeekStart(iso: string): string {
 }
 
 /**
- * Týden, za který webový report je. Formulář (`akademie/klient/index.html`)
- * neposílá od/do, `client-report` ukládá jen dnešní datum v Europe/Prague.
+ * Týden, za který je webový report BEZ uloženého období (všechny řádky do 5. 10. 2026
+ * a reporty ze staré stránky nebo z náhradního režimu formuláře).
  * Pravidlo: ISO týden dne o 3 dny dřív (ne až st → předchozí týden, čt až ne → tentýž).
+ * ⭐ Jediná implementace je `tydenReportu` ve sdíleném modulu období; tady jen obal.
  */
 export function webReportWeek(reportDate: string): string {
   const s = String(reportDate ?? "").trim().slice(0, 10);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return "";
-  return isoWeekStart(addDays(s, -3));
+  return tydenReportu(s);
+}
+
+/**
+ * Týdny (pondělí), které webový řádek pokrývá: s uloženým obdobím všechny týdny, kterých se
+ * dotýká, bez něj jeden týden podle −3 dní. Jiné zdroje: ISO týden data řádku.
+ */
+export function tydnyRadku(row: ExistingClientReport): string[] {
+  if (low(row.source) !== "web") {
+    const w = isoWeekStart(row.report_date);
+    return w ? [w] : [];
+  }
+  const ulozene = jeObdobiUlozene(row);
+  if (ulozene) return tydnyObdobi(ulozene.od, ulozene.do);
+  const w = webReportWeek(row.report_date);
+  return w ? [w] : [];
+}
+
+/** Uložené platné období řádku, nebo null (starý řádek). */
+function jeObdobiUlozene(row: ExistingClientReport): { od: string; do: string } | null {
+  if (!row.obdobi_od || !row.obdobi_do) return null;
+  const o = obdobiRadku(row);
+  return o && o.od === String(row.obdobi_od).slice(0, 10) && o.do === String(row.obdobi_do).slice(0, 10) ? o : null;
+}
+
+/** Dá se k webovému řádku přičíst celý týden appky? Starý řádek (1 týden podle −3 dní) ano. */
+function webJeZCelychTydnu(row: ExistingClientReport): boolean {
+  const o = jeObdobiUlozene(row);
+  return !o || jeCeleTydny(o);
 }
 
 function isoDate(iso: string): string {
@@ -232,7 +275,7 @@ function calendarDaysBetween(fromIso: string, toIso: string): number | null {
 /**
  * Datum nového řádku tvuj-coach. Pondělí, nebo neděle téhož týdne, když pondělí
  * už drží řádek a neděle ne. null: obě data drží řádek, insert se nedělá.
- * Na source nesahá. Jestli řádek patří do týdne, řeší weekKeyOfExisting.
+ * Na source nesahá. Jestli řádek patří do týdne, řeší tydnyRadku.
  */
 export function insertDatumTydne(
   weekMonday: string,
@@ -247,14 +290,37 @@ export function insertDatumTydne(
   return null;
 }
 
-/** Nový řádek tvuj-coach až když od neděle týdne uplynuly aspoň 4 kalendářní dny. */
-export function canCreateTvujCoach(weekMonday: string, asOf: string): boolean {
+/**
+ * Nový řádek tvuj-coach až když od neděle týdne uplynuly aspoň 4 kalendářní dny.
+ * [5. 10. 2026, fáze 2] Klient s řidší kadencí reportů pošle report za víc týdnů naráz,
+ * takže se čeká déle (`graceDni`, viz `graceDniProKadenci`), a týdny do ručně posunutého
+ * dalšího reportu (`nejdrive`, dovolená) čekají až 4 dny po něm. Jinak by appka založila
+ * řádek pro týden, který vzápětí pokryje klientův report, a týden by byl v historii dvakrát.
+ */
+export function canCreateTvujCoach(
+  weekMonday: string,
+  asOf: string,
+  opts?: { graceDni?: number; nejdrive?: string | null },
+): boolean {
   const monday = isoDate(weekMonday);
   const day = isoDate(asOf);
   if (!monday || !day) return false;
   const sunday = addDays(monday, 6);
+  const grace = typeof opts?.graceDni === "number" && Number.isFinite(opts.graceDni) && opts.graceDni > 4 ? opts.graceDni : 4;
   const diff = calendarDaysBetween(sunday, day);
-  return diff != null && diff >= 4;
+  if (diff == null || diff < grace) return false;
+  const nejdrive = isoDate(opts?.nejdrive ?? "");
+  if (nejdrive && sunday <= nejdrive) {
+    const poTerminu = calendarDaysBetween(nejdrive, day);
+    if (poTerminu == null || poTerminu < 4) return false;
+  }
+  return true;
+}
+
+/** Lhůta před založením řádku tvuj-coach podle kadence reportů: týden 4 dny, 2 týdny 11, 3 týdny 18. */
+export function graceDniProKadenci(kadence: number): number {
+  const k = kadence === 2 || kadence === 3 ? kadence : 1;
+  return 4 + 7 * (k - 1);
 }
 
 function pragueToday(now: Date): string {
@@ -353,12 +419,6 @@ export function mergeNutritionFromApp(
   return { nutrition, changed, filledKeys };
 }
 
-/** Web podle pravidla -3 dny. Ostatní, včetně tvuj-coach a app na neděli: ISO pondělí. */
-function weekKeyOfExisting(row: ExistingClientReport): string {
-  if (low(row.source) === "web") return webReportWeek(row.report_date);
-  return isoWeekStart(row.report_date);
-}
-
 function collapseAppReports(reports: TcReport[]): TcReport[] {
   const byWeek = new Map<string, TcReport>();
   const sorted = [...reports].sort((a, b) => reportDateOf(a).localeCompare(reportDateOf(b)));
@@ -438,6 +498,8 @@ export function toExistingReport(row: {
   source?: unknown;
   weight?: unknown;
   nutrition?: unknown;
+  obdobi_od?: unknown;
+  obdobi_do?: unknown;
 }): ExistingClientReport {
   const id = row.id == null ? "" : String(row.id).trim();
   return {
@@ -446,6 +508,8 @@ export function toExistingReport(row: {
     source: row.source == null ? null : String(row.source),
     weight: fieldEmpty(row.weight) ? null : row.weight as number | string,
     nutrition: row.nutrition == null ? null : asObj(row.nutrition),
+    obdobi_od: row.obdobi_od == null ? null : String(row.obdobi_od).slice(0, 10),
+    obdobi_do: row.obdobi_do == null ? null : String(row.obdobi_do).slice(0, 10),
   };
 }
 
@@ -655,12 +719,55 @@ export function extractTcReports(payload: unknown): TcReport[] {
   return [];
 }
 
-export function existingDateWindow(reports: TcReport[]): { from: string; to: string } | null {
+/**
+ * [5. 10. 2026] Kolik dní za pondělím posledního týdne appky se čtou existující řádky, když
+ * reporty mají období: týden appky může být PRVNÍ týden čtyřtýdenního období, které končí
+ * o 27 dní později a report přijde až ve středu po něm (+30). Bez delšího okna by se takový
+ * report nenašel a pro jeho první týden by vznikl řádek tvuj-coach. ⛔ Oba produkční
+ * volající (cron i tlačítko v adminu) předávají TUHLE hodnotu (hlídá to test).
+ */
+export const OKNO_OBDOBI_DNI = 37;
+
+export function existingDateWindow(reports: TcReport[], dniZaPoslednim = 9): { from: string; to: string } | null {
   const weeks = reports.map((r) => isoWeekStart(reportDateOf(r))).filter(Boolean).sort();
   if (!weeks.length) return null;
   // Od pondělí: +6 je neděle (sem může spadnout insert) a +9 je středa po ní
-  // (web poslaný v pondělí až ve středu patří předchozímu týdnu).
-  return { from: weeks[0], to: addDays(weeks[weeks.length - 1], 9) };
+  // (web poslaný v pondělí až ve středu patří předchozímu týdnu). Reporty s obdobím
+  // potřebují `OKNO_OBDOBI_DNI` (výš).
+  return { from: weeks[0], to: addDays(weeks[weeks.length - 1], dniZaPoslednim) };
+}
+
+/**
+ * Týdny appky sečtené za období jednoho reportu: průměry vážené zapsanými dny
+ * (Σ průměr × dny / Σ dny), `dny_zapsano` = součet. Týden bez zapsaných dní se do průměru
+ * nepočítá (nevíme, jakou váhu mu dát). Váha z posledního týdne, který ji má.
+ */
+export function agregujTydnyAppky(tydny: TcReport[]): { nutrition: Record<string, unknown> | null; weight: number | null } {
+  const serazene = [...tydny].sort((a, b) => reportDateOf(a).localeCompare(reportDateOf(b)));
+  const KLICE = ["kcal", "protein", "carbs", "fat", "fiber"] as const;
+  const soucet: Record<string, number> = {}, vaha: Record<string, number> = {};
+  let dnySoucet = 0;
+  for (const r of serazene) {
+    const n = nutritionFromReport(r) ?? {};
+    const d = num(n.dny_zapsano);
+    if (d == null || d <= 0) continue;
+    dnySoucet += d;
+    for (const k of KLICE) {
+      const v = num(n[k]);
+      if (v == null) continue;
+      soucet[k] = (soucet[k] ?? 0) + v * d;
+      vaha[k] = (vaha[k] ?? 0) + d;
+    }
+  }
+  const out: Record<string, unknown> = {};
+  for (const k of KLICE) if (vaha[k]) out[k] = Math.round(soucet[k] / vaha[k]);
+  if (dnySoucet > 0) out.dny_zapsano = dnySoucet;
+  let weight: number | null = null;
+  for (const r of serazene) {
+    const w = num(r.weight) ?? num(r.vaha);
+    if (w != null) weight = w;
+  }
+  return { nutrition: Object.keys(out).length ? out : null, weight };
 }
 
 function asExistingList(
@@ -676,7 +783,16 @@ export function applySyncPlan(
   reports: TcReport[],
   existingByDate: ExistingClientReport[] | Map<string, string | null | undefined> | Record<string, string | null | undefined>,
   targets: ClientTargetsSnapshot,
-  opts?: { syncedAt?: string; asOf?: string },
+  opts?: {
+    syncedAt?: string;
+    asOf?: string;
+    /** Kolik týdnů se appky ptal volající (cron 4, tlačítko 12). Pojistka useknuté odpovědi. */
+    tydnuMax?: number;
+    /** Lhůta před založením řádku tvuj-coach podle kadence klienta (`graceDniProKadenci`). */
+    graceDni?: number;
+    /** Ručně posunutý další report klienta (`entitlements.dalsi_report`). */
+    nejdrive?: string | null;
+  },
 ): SyncPlan {
   const existing = asExistingList(existingByDate);
   const syncedAt = opts?.syncedAt ?? new Date().toISOString();
@@ -714,7 +830,87 @@ export function applySyncPlan(
     });
   };
 
+  // Doplnění jednoho webového řádku z dat appky (jeden týden, nebo součet týdnů období).
+  // ⛔ Klientova pole se nepřepisují (`mergeNutritionFromApp`), `dny` se nesahá, strava
+  //    `null` („nezapisoval") zůstane null, váha jen když chybí.
+  const doplnWeb = (
+    hit: ExistingClientReport,
+    appNutr: Record<string, unknown> | null,
+    appVaha: number | null,
+    tyden: string,
+    popis: string,
+    tydnyAppky?: string[],
+  ) => {
+    const merged = mergeNutritionFromApp(hit.nutrition, appNutr, syncedAt);
+    let weight = weightKept(hit.weight);
+    let vahaZAppky = false;
+    if (weight == null && appVaha != null) {
+      weight = appVaha;
+      vahaZAppky = true;
+    }
+    let nutrition = merged.nutrition;
+    if (nutrition && vahaZAppky) {
+      const z = zAppkyOf(nutrition);
+      if (!z.includes("vaha")) nutrition = { ...nutrition, z_appky: [...z, "vaha"] };
+    }
+    // U období se do snímku appky zapíše i to, ze kterých týdnů součet je.
+    if (nutrition && tydnyAppky) nutrition = { ...nutrition, appka: { ...asObj(nutrition.appka), tydny: tydnyAppky } };
+    const weightChanged = !sameScalar(hit.weight ?? null, weight);
+    if (hit.nutrition === null && !weightChanged) {
+      skipped_web++;
+      duvody.push({ tyden, akce: "preskoceno", duvod: "web_strava_preskocena" });
+      return;
+    }
+    if (!merged.changed && !weightChanged) {
+      if (zAppkyOf(hit.nutrition ?? {}).length) {
+        skipped_unchanged++;
+        duvody.push({ tyden, akce: "preskoceno", duvod: "beze_zmeny" });
+      } else {
+        skipped_web++;
+        duvody.push({ tyden, akce: "preskoceno", duvod: "web_kompletni" });
+      }
+      return;
+    }
+    queueUpdate(hit, weight, nutrition);
+    filled++;
+    duvody.push({
+      tyden,
+      akce: "doplneno",
+      duvod: popis + (merged.filledKeys.concat(vahaZAppky ? ["vaha"] : []).join(",") || "update"),
+      report_date: hit.report_date,
+    });
+  };
+
   const collapsed = collapseAppReports(reports ?? []);
+
+  // ⭐ [5. 10. 2026] WEBOVÉ REPORTY ZA VÍC TÝDNŮ (uložené období): doplní se JEDNOU, ze součtu
+  //    týdnů appky v období vážených zapsanými dny. V hlavní smyčce níž pak tyhle týdny jen
+  //    „pokrývají" (žádný řádek tvuj-coach, žádné doplnění z jednoho týdne).
+  const vsechnyTydnyAppky = [...new Set((reports ?? []).map((r) => isoWeekStart(reportDateOf(r))).filter(Boolean))].sort();
+  for (const hit of existing) {
+    if (low(hit.source) !== "web") continue;
+    const tydny = tydnyRadku(hit);
+    if (tydny.length < 2) continue;
+    const tydnyObd = collapsed.filter((r) => !isEmptyReport(r) && tydny.includes(isoWeekStart(reportDateOf(r))));
+    if (!tydnyObd.length) continue;   // appka za tohle období nic nemá
+    // Kus týdne (report ve čtvrtek až sobotu) z týdenních dat appky poctivě spočítat nejde.
+    if (!webJeZCelychTydnu(hit)) {
+      skipped_web++;
+      duvody.push({ tyden: tydny[0], akce: "preskoceno", duvod: "obdobi_neni_cele_tydny" });
+      continue;
+    }
+    // ⛔ POJISTKA USEKNUTÍ: appka vrací posledních N týdnů S JAKÝMIKOLI DATY. Když jich přišlo
+    //    plných N a nejstarší je novější než první týden období, začátek období v odpovědi
+    //    chybí a součet by byl z neúplného období. Radši nedoplnit nic.
+    if (opts?.tydnuMax && vsechnyTydnyAppky.length >= opts.tydnuMax && vsechnyTydnyAppky[0] > tydny[0]) {
+      skipped_web++;
+      duvody.push({ tyden: tydny[0], akce: "preskoceno", duvod: "obdobi_mimo_dosah_appky" });
+      continue;
+    }
+    const agg = agregujTydnyAppky(tydnyObd);
+    doplnWeb(hit, agg.nutrition, agg.weight, tydny[0], "prazdna_pole_z_appky_za_" + tydny.length + "_tydny:",
+      tydnyObd.map((r) => isoWeekStart(reportDateOf(r))).sort());
+  }
 
   for (const report of collapsed) {
     if (isEmptyReport(report)) {
@@ -729,53 +925,21 @@ export function applySyncPlan(
       continue;
     }
     const week = isoWeekStart(date);
-    const inWeek = existing.filter((r) => weekKeyOfExisting(r) === week);
+    const inWeek = existing.filter((r) => tydnyRadku(r).includes(week));
     const webHits = inWeek.filter((r) => low(r.source) === "web");
     const appHits = inWeek.filter((r) => isAppSource(r.source));
     if (webHits.length && appHits.length) kolize_tydnu++;
 
     if (webHits.length) {
       for (const hit of webHits) {
-        const appNutr = nutritionFromReport(report);
-        const merged = mergeNutritionFromApp(hit.nutrition, appNutr, syncedAt);
-        let weight = weightKept(hit.weight);
-        let vahaZAppky = false;
-        if (weight == null) {
-          const w = num(report.weight) ?? num(report.vaha);
-          if (w != null) {
-            weight = w;
-            vahaZAppky = true;
-          }
-        }
-        let nutrition = merged.nutrition;
-        if (nutrition && vahaZAppky) {
-          const z = zAppkyOf(nutrition);
-          if (!z.includes("vaha")) nutrition = { ...nutrition, z_appky: [...z, "vaha"] };
-        }
-        const weightChanged = !sameScalar(hit.weight ?? null, weight);
-        if (hit.nutrition === null && !weightChanged) {
+        // Report za víc týdnů se doplnil výš ze součtu, tady týden jen pokrývá.
+        if (tydnyRadku(hit).length > 1) continue;
+        if (!webJeZCelychTydnu(hit)) {
           skipped_web++;
-          duvody.push({ tyden: week, akce: "preskoceno", duvod: "web_strava_preskocena" });
+          duvody.push({ tyden: week, akce: "preskoceno", duvod: "obdobi_neni_cele_tydny" });
           continue;
         }
-        if (!merged.changed && !weightChanged) {
-          if (zAppkyOf(hit.nutrition ?? {}).length) {
-            skipped_unchanged++;
-            duvody.push({ tyden: week, akce: "preskoceno", duvod: "beze_zmeny" });
-          } else {
-            skipped_web++;
-            duvody.push({ tyden: week, akce: "preskoceno", duvod: "web_kompletni" });
-          }
-          continue;
-        }
-        queueUpdate(hit, weight, nutrition);
-        filled++;
-        duvody.push({
-          tyden: week,
-          akce: "doplneno",
-          duvod: "prazdna_pole_z_appky:" + (merged.filledKeys.concat(vahaZAppky ? ["vaha"] : []).join(",") || "update"),
-          report_date: hit.report_date,
-        });
+        doplnWeb(hit, nutritionFromReport(report), num(report.weight) ?? num(report.vaha), week, "prazdna_pole_z_appky:");
       }
       continue;
     }
@@ -805,7 +969,7 @@ export function applySyncPlan(
     const sundayRows = existing.filter((r) => isoDate(r.report_date) === sunday);
     const otherHits = inWeek.filter((r) => low(r.source) !== "web" && !isAppSource(r.source));
     if (otherHits.length) {
-      const mondayForeign = mondayRows.some((r) => weekKeyOfExisting(r) !== week);
+      const mondayForeign = mondayRows.some((r) => !tydnyRadku(r).includes(week));
       const otherOnlyOnSunday = otherHits.every((r) => isoDate(r.report_date) === sunday);
       const bothDatesTaken = mondayForeign && sundayRows.length > 0 && otherOnlyOnSunday;
       if (!bothDatesTaken) {
@@ -820,7 +984,8 @@ export function applySyncPlan(
     }
 
     // Do lhůty se nezakládá. Důvod je čekání na web, i když pondělí už drží cizí řádek.
-    if (!canCreateTvujCoach(week, asOf)) {
+    // Lhůta je delší u řidší kadence a do ručně posunutého dalšího reportu (fáze 2).
+    if (!canCreateTvujCoach(week, asOf, { graceDni: opts?.graceDni, nejdrive: opts?.nejdrive })) {
       skipped_grace++;
       duvody.push({ tyden: week, akce: "preskoceno", duvod: "ceka_na_webovy_report" });
       continue;

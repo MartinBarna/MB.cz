@@ -7,6 +7,9 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { hlidkaCisla, hlidkaClientRemind } from "./hlidky.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu s opakovanim, pri trvale chybe 500 misto 401).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+// [5. 10. 2026, fáze 2] Kadence reportů klienta: táž pravidla jako `client-remind`.
+import { dnesPraha, kadenceKlienta } from "../_shared/report-obdobi.ts";
+import { emailySeznam } from "../_shared/mail-seznam.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -24,7 +27,7 @@ Deno.serve(async (req) => {
   if (!brana.ok) return json(brana.body, brana.status);
   // Zbytek konfigurace taky s opakovanim: prazdna mapa by poslala prehled s fallbacky (adresa, strop).
   const cfgR = await ctiSOpakovanim<{ data: { key: string; value: string }[] | null; error: unknown }>(() =>
-    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v", "client_remind_hlidka"]));
+    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v", "client_remind_hlidka", "client_remind_14d"]));
   if (cfgR.error) return json(chybaCteni("app_config", cfgR.error), 500);
   const cmap = Object.fromEntries((cfgR.data ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const to = String(cmap.admin_emails || "fitness.barna@gmail.com").split(",")[0].trim();
@@ -465,7 +468,8 @@ Deno.serve(async (req) => {
     const escT = (s: string) => s.replace(/[<>&]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c] as string));
     const jeTest = (e: string) => e.startsWith("fitness.barna") || e.includes("+");
     const [entsC, repsC, tgsC] = await Promise.all([
-      admin.from("entitlements").select("email,active,expires_at").eq("product", "coaching"),
+      // [5. 10. 2026, fáze 2] + kadence reportů a ručně posunutý další report (týž dotaz).
+      admin.from("entitlements").select("email,active,expires_at,report_kadence,dalsi_report").eq("product", "coaching"),
       admin.from("client_reports").select("email,report_date,created_at"),
       admin.from("client_targets").select("email,kcal,protein"),
     ]);
@@ -482,8 +486,8 @@ Deno.serve(async (req) => {
     // ⚠️ `active` samo nestačí: skončený koučink má `active` dál true a jen prošlé
     // `expires_at`. Bez té podmínky by Martin dostával seznam bývalých klientů.
     const klienti = (entsC.data ?? [])
-      .map((r: { email: string; active: boolean | null; expires_at: string | null }) =>
-        ({ email: lowE(r.email), active: r.active === true, exp: r.expires_at }))
+      .map((r: { email: string; active: boolean | null; expires_at: string | null; report_kadence: number | null; dalsi_report: string | null }) =>
+        ({ email: lowE(r.email), active: r.active === true, exp: r.expires_at, kadence: r.report_kadence, dalsi: r.dalsi_report }))
       .filter((r) => r.email && !jeTest(r.email) && r.active &&
         (!r.exp || Date.parse(String(r.exp)) > nowMs));
     const aktivni = new Set(klienti.map((k) => k.email));
@@ -526,12 +530,20 @@ Deno.serve(async (req) => {
         const j = jmeno(e); if (!novaJmena.includes(j)) novaJmena.push(j);
       }
     }
+    // ⭐ [5. 10. 2026, fáze 2] „Bez reportu" podle kadence klienta: týdenní od 7 dní jako dřív,
+    //    dvoutýdenní od 14, třítýdenní od 21. Klient s ručně posunutým dalším reportem
+    //    (dovolená) se do toho data nehlásí. Kadence: karta klienta, jinak starý seznam
+    //    `client_remind_14d` (2 týdny), jinak týden; táž pravidla jako `client-remind`.
+    const seznam14 = emailySeznam(cmap.client_remind_14d);
+    const dnesPrahaD = dnesPraha(now);
     const bezReportu: string[] = [];
     for (const k of klienti) {
+      const kad = kadenceKlienta(k.kadence, seznam14.has(k.email));
+      if (k.dalsi && String(k.dalsi).slice(0, 10) > dnesPrahaD) continue;   // ručně posunutý report ještě nepřišel na řadu
       const den = posledni.get(k.email);
       if (den === undefined) { bezReportu.push(jmeno(k.email) + " (nikdy)"); continue; }
       const dni = Math.floor((nowMs - den) / 86400000);
-      if (dni >= 7) bezReportu.push(jmeno(k.email) + " (" + dni + " d)");
+      if (dni >= 7 * kad) bezReportu.push(jmeno(k.email) + " (" + dni + " d" + (kad > 1 ? ", report jednou za " + kad + " týdny" : "") + ")");
     }
 
     // Zadání se počítá za nastavené, až když má aspoň kalorie nebo bílkoviny.
@@ -575,7 +587,7 @@ Deno.serve(async (req) => {
       `<h3 style="margin:18px 0 6px;font-size:15px">🤝 Koučink</h3>` +
       `<table style="width:100%;border-collapse:collapse;background:#fafafa;border-radius:12px;overflow:hidden">` +
       row("Aktivních klientů", String(klienti.length)) +
-      row("Bez reportu 7 a víc dní", String(bezReportu.length) + vypis(bezReportu)) +
+      row("Bez reportu po termínu (týdenní 7 a víc dní)", String(bezReportu.length) + vypis(bezReportu)) +
       row("Bez zadání", String(bezZadani.length) + vypis(bezZadani)) +
       row("Nové reporty za 24 h k odpovědi", String(novychReportu) + vypis(novaJmena)) +
       row("Čeká na vyzvednutí appky", appkaRadek) +

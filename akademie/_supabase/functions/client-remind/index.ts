@@ -33,6 +33,15 @@
 //    Vyžaduje migraci `client-remind-test-klice-2026-09-17.sql` (rozšířený CHECK na `kind`).
 // ⭐ Dvoutýdenní kadence pro jmenované klienty: app_config.client_remind_14d (CSV e-mailů).
 //    Jejich okno je 12 dní, takže neděli po týdnu vynechají a další termín jim vyjde za 14 dní.
+// ⭐⭐ [5. 10. 2026, fáze 2] KADENCE A DALŠÍ REPORT Z KARTY KLIENTA (Martin, rozhodnutí 2).
+//    `entitlements.report_kadence` (1/2/3 týdny) a `entitlements.dalsi_report` („nejdřív",
+//    dovolená) se čtou TÝMŽ dotazem jako `start_at`. Výzva k reportu jde v neděli, kdy do
+//    dalšího reportu zbývají nejvýš 3 dny (`kadence.ts`, `_shared/report-obdobi.ts`).
+//    Seznam `client_remind_14d` platí dál pro toho, kdo kadenci v kartě nemá (= 2 týdny).
+//    ⛔ Klíč `kadence_14d` v odpovědi MUSÍ zůstat: hlídka `client_remind_hlidka()` podle něj
+//       pozná odpověď téhle funkce v `net._http_response`.
+//    ⛔ Sloupce musí v DB existovat dřív než tahle verze (migrace `report-obdobi-2026-10-05.sql`):
+//       bez nich spadne čtení nároků a funkce vrátí 500 (cron to uvidí), nikdo mail nedostane.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { guardSend, logMailSkip } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
@@ -42,6 +51,8 @@ import { emailySeznam } from "../_shared/mail-seznam.ts";
 // u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { preskocitVyzvuKReportu } from "./cerstvy-klient.ts";
+import { NEJDELSI_OKNO_DNI, planVyzvy, tydnySlovy, uzDostalNedavno as uzDostalNedavnoKadence, type PlanVyzvy } from "./kadence.ts";
+import { dnesPraha, kadenceKlienta, popisObdobi, pridejDny, type RadekReportu } from "../_shared/report-obdobi.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -51,13 +62,11 @@ const CTA_URL = "https://martinbarna.cz/akademie/klient/";
 // ?tab=up otevre rovnou zalozku "Vytvorit ucet" (prihlaseni/index.html startuje jinak na "Prihlasit se",
 // coz je u cloveka bez uctu slepa ulicka). &amp; kvuli platnosti HTML v href.
 const REG_URL = "https://martinbarna.cz/akademie/prihlaseni/?tab=up&amp;next=%2Fakademie%2Fklient%2F";
-// Okno idempotence: výzva jednou za týden, tři běhy v jedné noci jsou od sebe 30 minut.
-const UZ_DOSTAL_DNI = 5;
-// ⭐ 14. 9. 2026 (Martin): JEDEN klient má chodit jednou za 14 dní, ostatní beze změny.
-// Seznam je v app_config.client_remind_14d (CSV e-mailů). Okno je 12 dní, ne 14: kdyby
-// nedělní běh spadl a mail odešel až v pondělí, čtrnáctý den by jinak vyšel o pár hodin
-// dřív a termín by se přeskočil až na další neděli. 12 dní neděli po týdnu nepustí (7 < 12).
-const UZ_DOSTAL_DNI_14D = 12;
+// Okno idempotence: týdenní výzva jednou za týden (tři běhy v jedné noci jsou od sebe
+// 30 minut), řidší kadence 7 × k − 2 dní. Hodnoty i důvod (12 dní, ne 14, ať se termín
+// nepřeskočí, když mail odejde až v pondělí) jsou v `kadence.ts` (`oknoOpakovaniDni`).
+// ⭐ 14. 9. 2026 (Martin): JEDEN klient má chodit jednou za 14 dní; od 5. 10. 2026 se
+// kadence nastavuje v kartě klienta a seznam app_config.client_remind_14d je jen náhrada.
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
@@ -202,7 +211,7 @@ async function alertMartinovi(
   return r.ok;
 }
 
-function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean): string {
+function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: boolean, obd: { tydnu: number; od: string; do: string } | null = null): string {
   const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
   const cta = (href: string, label: string) =>
     `<p style='margin:4px 0 18px'><a class='mb-btn' href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 26px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:15px'>${label}</a></p>`;
@@ -210,6 +219,19 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
   // v client_reports ma source='import-sheet'). Text proto NESMI tvrdit "bez pristupu mi neposles report",
   // to by klientovi lhalo tyden pote, co report poslal. Cil je presun kanalu, ne vycitka.
   // Report varianta chodi v NEDELI (Martin 14. 9. 2026): reporty zpracovava v pondeli, vyplnit se da uz v nedeli.
+  // ⭐ [5. 10. 2026] Report za víc týdnů (kadence 2 a 3 týdny, vynechaný týden, posun na později)
+  //    má vlastní znění: „týden je za tebou" by lhalo. Týdenní znění zůstává slovo od slova.
+  //    ⚠️ NÁVRH TEXTU KE KONTROLE ŠÉFA (Martinův hlas, anti-AI průchod před nasazením).
+  if (kind === "report" && obd && obd.tydnu > 1) {
+    const obdTxt = popisObdobi(obd.od, obd.do);
+    const tydny = tydnySlovy(obd.tydnu);
+    return obalMailu(osloveni,
+      p(tydny + " jsou za tebou 💪 Zvaž se a hoď mi <strong>report za celé období</strong>, tedy " + obdTxt + ". Zabere ~3 minuty a já ti podle něj doladím plán.") +
+      p("Reporty zpracovávám v pondělí. Vyplnit ho můžeš v klidu už v neděli, ať to v pondělí ráno mám.") +
+      cta(CTA_URL, "Vyplnit report (3 min)") +
+      (maPrilohu ? p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Vyber v nich dny " + obdTxt + ", průměry za celé období ti formulář spočítá sám.</span>") : "") +
+      p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Kroky piš jako denní průměr a sport s tréninky jako <strong>průměr na jeden týden</strong> (fitko, kardio i jiný pohyb dohromady). Na konci reportu si naklikáš i plán kroků a minut do dalšího reportu, klidně jedním klikem „bude stejně\".</span>"));
+  }
   const telo = kind === "register"
     ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Budeš v ní mít svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +
       cta(REG_URL, "Vytvořit přístup") +
@@ -220,6 +242,12 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
       cta(CTA_URL, "Vyplnit report (3 min)") +
       (maPrilohu ? p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Nemusíš nic opisovat.</span>") : "") +
       p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Sečti si i <strong>celkové minuty sportu za týden</strong> (fitko, kardio i jiný pohyb dohromady), samotný počet tréninků mi o zátěži neřekne dost. Na konci reportu si naklikáš i plán kroků a minut na další týden, klidně jedním klikem „bude stejně\". Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>");
+  return obalMailu(osloveni, telo);
+}
+
+// Obal mailu (hlavička, oslovení, podpis, patička), společný pro všechna znění výzvy.
+function obalMailu(osloveni: string, telo: string): string {
+  const p = (t: string) => `<p style='margin:0 0 14px'>${t}</p>`;
   // DARK-MODE FIX (drz 1:1 s drip-send): color-scheme 'light dark' + zamky barev pres tridy .mb-*.
   // Gmail app v dark rezimu invertoval kartu na svetlou a zlatou #EBB12C barvil dohneda;
   // [data-ogsc]/[data-ogsb] = Outlook aplikace, @media prefers-color-scheme = Apple Mail.
@@ -281,6 +309,9 @@ Deno.serve(async (req: Request) => {
   //    (`test:report`), aby test nikdy neumlčel ostrý nedělní mail klientovi.
   const testZnovu = body?.test_znovu === true;
   const testKlic = "test:" + testKind;
+  // [5. 10. 2026] Test znění výzvy za víc týdnů: {"test_email":"…","test_tydnu":2|3|4}.
+  // Jen s `test_email` (bez něj je každý klíč v těle 400, viz whitelist níž).
+  const testTydnu = [2, 3, 4].includes(Number(body?.test_tydnu)) ? Number(body.test_tydnu) : 1;
   // OSTRY rezim spousti VYHRADNE cron s prazdnym telem {}. Cokoliv jineho nez prazdne telo
   // nebo platny {"test_email":"...@..."} = chyba, ne tichy ostry rozesil. Whitelist (ne "obsahuje
   // test") schvalne: chyti i {"email":...}, {"to":...}, {"testEmail":...} atd. Presne takhle odesel
@@ -302,8 +333,9 @@ Deno.serve(async (req: Request) => {
   //    verze nasadí (migrace `davka9-start-koucinku-2026-09-15.sql`): bez něj vrátí PostgREST
   //    chybu a mail nedostane NIKDO. Je to aspoň hlučné selhání, cron ho zapíše do
   //    `net._http_response`, ale pořadí nasazení je migrace → funkce.
-  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; granted_at?: unknown; start_at?: unknown }>; error: unknown }>(() =>
-    admin.from("entitlements").select("email,granted_at,start_at")
+  // ⭐ [5. 10. 2026, fáze 2] I kadence reportů a ručně posunutý další report, TÝMŽ dotazem.
+  const ents = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; granted_at?: unknown; start_at?: unknown; report_kadence?: unknown; dalsi_report?: unknown }>; error: unknown }>(() =>
+    admin.from("entitlements").select("email,granted_at,start_at,report_kadence,dalsi_report")
       .eq("product", "coaching").eq("active", true)
       .or("expires_at.is.null,expires_at.gt." + nyni));
   if (ents.error) return json(chybaCteni("entitlements", ents.error), 500);
@@ -341,6 +373,24 @@ Deno.serve(async (req: Request) => {
     const drive = startOd.get(em);
     if (drive === undefined || t < drive) startOd.set(em, t);
   }
+  // ⭐ [5. 10. 2026, fáze 2] Kadence a ruční další report z karty klienta. Klíč `entitlements`
+  //    je case sensitive (viz výš), takže u dvou variant téže adresy se drží ČASTĚJŠÍ kadence
+  //    a DŘÍVĚJŠÍ ruční termín: obojí chybuje směrem „výzva radši odejde".
+  const kadSloupecBy = new Map<string, number>();
+  const dalsiRucneBy = new Map<string, string>();
+  for (const e of ents.data ?? []) {
+    const em = low(e.email);
+    const k = Number(e.report_kadence);
+    if (e.report_kadence != null && (k === 1 || k === 2 || k === 3)) {
+      const drive = kadSloupecBy.get(em);
+      if (drive === undefined || k < drive) kadSloupecBy.set(em, k);
+    }
+    const d = String(e.dalsi_report ?? "").slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      const drive = dalsiRucneBy.get(em);
+      if (drive === undefined || d < drive) dalsiRucneBy.set(em, d);
+    }
+  }
 
   // jen registrovaní (bez účtu nemá report kdo vyplnit, ty řeší pozvánka, ne nedělní mail)
   // listUsers() chybu NEHAZI, vraci ji v error a data zustanou prazdna. Bez tehle kontroly by
@@ -376,10 +426,18 @@ Deno.serve(async (req: Request) => {
   //    není žádná adresa mimo lowercase.
   // ⛔ Chyba čtení = 500 jako u ostatních čtení: prázdno po chybě by znamenalo „nikdo nikdy
   //    nereportoval" a na týden by ztišilo každého nového klienta, tiše a bez stopy.
-  const historieReportu = await ctiSOpakovanim<{ data: Radky<{ email?: unknown }>; error: unknown }>(() =>
-    admin.from("client_reports").select("email").in("email", clients));
+  // ⭐ [5. 10. 2026] Týmž dotazem i datum, zdroj a období reportů: z nich se počítá další
+  //    report podle kadence (`kadence.ts`). Žádné čtení navíc.
+  const historieReportu = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; report_date?: unknown; source?: unknown; obdobi_od?: unknown; obdobi_do?: unknown }>; error: unknown }>(() =>
+    admin.from("client_reports").select("email,report_date,source,obdobi_od,obdobi_do").in("email", clients));
   if (historieReportu.error) return json(chybaCteni("client_reports(historie)", historieReportu.error), 500);
   const nekdyReportoval = new Set((historieReportu.data ?? []).map((r) => low(r.email)));
+  const reportyBy = new Map<string, RadekReportu[]>();
+  for (const r of historieReportu.data ?? []) {
+    const em = low(r.email);
+    const seznam = reportyBy.get(em);
+    if (seznam) seznam.push(r); else reportyBy.set(em, [r]);
+  }
 
   // per-klient opt-out (klient odepsal, že připomínky nechce → admin ho zapíše do CSV)
   // ⛔ Chyba čtení = 500: bez opt-outu by mail přišel i tomu, kdo si ho vypnul.
@@ -396,7 +454,8 @@ Deno.serve(async (req: Request) => {
   const kazdych14 = emailySeznam(kad.data?.value);
 
   // kdo výzvu dostal v posledních dnech (opakovací běhy cronu, ruční doposlání): nedostane znovu
-  const uzCutoff = new Date(Date.now() - Math.max(UZ_DOSTAL_DNI, UZ_DOSTAL_DNI_14D) * 86400000).toISOString();
+  // Čte se nejdelší okno ze všech kadencí (3 týdny), ať má i třítýdenní klient z čeho rozhodnout.
+  const uzCutoff = new Date(Date.now() - NEJDELSI_OKNO_DNI * 86400000).toISOString();
   // Klíč je e-mail + druh mailu (revize 14. 9.): kdo dostal v 03:00 pozvánku k registraci a do
   // 03:30 se zaregistroval, má výzvu k reportu dostat, ne čekat týden.
   const uz = await ctiSOpakovanim<{ data: Radky<{ email?: unknown; kind?: unknown; sent_at?: unknown }>; error: unknown }>(() => admin.from("client_remind_sent").select("email,kind,sent_at").gte("sent_at", uzCutoff));
@@ -420,18 +479,13 @@ Deno.serve(async (req: Request) => {
       if (driveK === undefined || cas > driveK) poslednePoslanoKomukoli.set(email, cas);
     }
   }
-  // ⛔ U dvoutýdenní kadence se okno měří přes OBA druhy mailu dohromady. Kdyby se počítalo
-  //    zvlášť (jako u ostatních), klient by dostal v neděli pozvánku, do týdne se zaregistroval
-  //    a hned další neděli by mu přišla výzva k reportu: dva maily za osm dní místo za čtrnáct.
-  const uzDostalNedavno = (email: string, kind: string): boolean => {
-    if (kazdych14.has(email)) {
-      const casK = poslednePoslanoKomukoli.get(email);
-      return casK !== undefined && Date.now() - casK < UZ_DOSTAL_DNI_14D * 86400000;
-    }
-    const cas = poslednePoslano.get(email + ":" + kind);
-    if (cas === undefined) return false;
-    return Date.now() - cas < UZ_DOSTAL_DNI * 86400000;
-  };
+  // ⛔ U řidší kadence (2 a 3 týdny) se okno měří přes OBA druhy mailu dohromady. Kdyby se
+  //    počítalo zvlášť (jako u týdenních), klient by dostal v neděli pozvánku, do týdne se
+  //    zaregistroval a hned další neděli by mu přišla výzva k reportu: dva maily za osm dní.
+  // ⭐ [5. 10. 2026] Kadence z karty klienta (`report_kadence`), jinak starý seznam 14d, jinak týden.
+  const kadenceBy = (email: string) => kadenceKlienta(kadSloupecBy.get(email), kazdych14.has(email));
+  const uzDostalNedavno = (email: string, kind: string): boolean =>
+    uzDostalNedavnoKadence(kadenceBy(email), poslednePoslano.get(email + ":" + kind), poslednePoslanoKomukoli.get(email), Date.now());
 
   // oslovení z customer_contacts (křestní jméno v 5. pádu; bez jména padne na "Ahoj,")
   const { data: cc } = await admin.from("customer_contacts").select("email,name").in("email", clients);
@@ -466,8 +520,25 @@ Deno.serve(async (req: Request) => {
     console.log("[client-remind] vyzva k reportu preskocena: " + em
       + " (duvod " + rozhodnuti.get(em) + ", " + dni + " dne od naroku, start " + st + ")");
   }
+  // ⭐⭐ [5. 10. 2026, fáze 2] TERMÍN PODLE KADENCE. Výzva k reportu jde, když do dalšího reportu
+  //    klienta (neděle podle kadence z karty, ručně posunutý termín „nejdřív") zbývají nejvýš
+  //    3 dny. Týdennímu klientovi, který poslal report minulý týden, to vychází každou neděli
+  //    jako dřív. ⛔ Týká se JEN druhu "report"; upomínka k registraci jde dál beze změny.
+  // ⭐ Stopa do logu jako u čerstvých klientů: odložená výzva je nová cesta, jak mail nepřijde.
+  const dnesD = dnesPraha();
+  const planBy = new Map<string, PlanVyzvy>();
+  const odlozeno = new Set<string>();
+  for (const e of naReport) {
+    if (cerstviSet.has(e)) continue;
+    const pl = planVyzvy(dnesD, reportyBy.get(e) ?? [], kadSloupecBy.get(e), kazdych14.has(e), dalsiRucneBy.get(e));
+    planBy.set(e, pl);
+    if (!pl.naRade) {
+      odlozeno.add(e);
+      console.log("[client-remind] vyzva k reportu odlozena: " + e + " (kadence " + pl.kadence + ", dalsi report " + pl.dalsi + (pl.posunuto ? ", posunuto rucne" : "") + ")");
+    }
+  }
   const kandidati: { email: string; kind: "report" | "register" }[] = [
-    ...naReport.filter((e) => !cerstviSet.has(e)).map((email) => ({ email, kind: "report" as const })),
+    ...naReport.filter((e) => !cerstviSet.has(e) && !odlozeno.has(e)).map((email) => ({ email, kind: "report" as const })),
     ...pool.filter((e) => !registered.has(e)).map((email) => ({ email, kind: "register" as const })),
   ];
   // Opakovací běhy cronu: kdo tenhle druh mailu dostal v posledních dnech, nedostane ho znovu.
@@ -549,6 +620,11 @@ Deno.serve(async (req: Request) => {
   };
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
+    // Období do znění výzvy: u ostrého běhu z plánu klienta, u testu vymyšlené podle `test_tydnu`.
+    const pl = planBy.get(tgt.email);
+    const obdMail = testEmail
+      ? (testTydnu > 1 ? { tydnu: testTydnu, od: pridejDny(dnesD, -(7 * testTydnu - 1)), do: dnesD } : null)
+      : (pl ? { tydnu: pl.tydnu, od: pl.obdobi.od, do: pl.obdobi.do } : null);
     // ⛔ `rezervovano` je ZÁMĚRNĚ mimo `try`: když spadne cokoli mezi rezervací a
     //    odesláním, řádek v `client_remind_sent` už existuje a mail neodešel. Bez tohohle
     //    by to byla tichá ztráta mailu, přesně ta vada, kterou celá dávka opravuje.
@@ -583,8 +659,10 @@ Deno.serve(async (req: Request) => {
         {
           from: FROM,
           to: [tgt.email],
-          subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)" : "Týdenní report ✍️ (3 minuty)",
-          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!ktNavod && !isReg),
+          // ⚠️ Předmět výzvy za víc týdnů je NÁVRH ke kontrole šéfa; týdenní zůstává beze změny.
+          subject: isReg ? "Tvoje klientská sekce čeká (1 minuta)"
+            : (obdMail && obdMail.tydnu > 1 ? "Report za " + obdMail.tydnu + " týdny ✍️ (3 minuty)" : "Týdenní report ✍️ (3 minuty)"),
+          html: mailHtml(nameBy.get(tgt.email) ?? "", tgt.kind, !!ktNavod && !isReg, obdMail),
           reply_to: "martin@martinbarna.cz",
           // Pri testu je bcc zbytecne (mail uz jde na Martina) a mate: prisel by dvakrat.
           ...(testEmail ? {} : { bcc: ["fitness.barna@gmail.com"] }),
@@ -672,5 +750,7 @@ Deno.serve(async (req: Request) => {
   //    na náhradu z `granted_at`. Počítá se z `naReport`, tedy z lidí, kterých se práh týká.
   const preskocenoPodleStartu = [...rozhodnuti.values()].filter((d) => d === "start").length;
   const bezStartu = naReport.filter((e) => !startOd.has(e)).length;
-  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, preskoceno_podle_startu: preskocenoPodleStartu, bez_startu: bezStartu, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, prohrany_zavod: prohranyZavod, rezervace_selhala: rezervaceSelhala, odeslani_nejiste: odeslaniNejiste, uvolneno_neodeslano: uvolnenoNeodeslano, alerty_selhaly: alertySelhaly, alerty_potlaceno: alertuPotlaceno, errors });
+  // ⭐ `odlozeno_terminem` = kolik výzev k reportu se odložilo podle kadence a dalšího reportu
+  //    (fáze 2). ⛔ `kadence_14d` zůstává: podle něj hlídka pozná odpověď téhle funkce.
+  return json({ ok: true, mode: testEmail ? "test" : "live", clients: clients.length, cerstvi_klienti: cerstviSet.size, preskoceno_podle_startu: preskocenoPodleStartu, bez_startu: bezStartu, odlozeno_terminem: odlozeno.size, uz_dostali: testEmail ? 0 : uzDostali, targets: targets.length, report: pocet("report"), register: pocet("register"), sent, skipped, priloha: !!ktNavod, kadence_14d: kazdych14.size, optout: optout.size, prohrany_zavod: prohranyZavod, rezervace_selhala: rezervaceSelhala, odeslani_nejiste: odeslaniNejiste, uvolneno_neodeslano: uvolnenoNeodeslano, alerty_selhaly: alertySelhaly, alerty_potlaceno: alertuPotlaceno, errors });
 });

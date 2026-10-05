@@ -927,3 +927,164 @@ Deno.test("nález 2, 5 a 7: čtení, active a status cronu", async () => {
   tvrd(block.includes("duvodyProTlacitko("), "tlačítko skládá důvody až po zápisu");
   tvrd(!block.includes("plan.duvody.concat"), "plánové doplneno se neslepuje naslepo");
 });
+
+// =============================================================================
+// [5. 10. 2026] OBDOBÍ REPORTU: web s uloženým obdobím přes víc týdnů (od reportu po report).
+// Stávajících 35 testů výš je beze změny: starý web bez období jde dnešní cestou.
+// ⛔ Data jsou vymyšlená.
+// =============================================================================
+
+import {
+  agregujTydnyAppky,
+  graceDniProKadenci,
+  OKNO_OBDOBI_DNI,
+  toExistingReport,
+  tydnyRadku,
+} from "./tc-report-sync.ts";
+
+/** Web s obdobím. */
+function webObd(date: string, od: string, doDne: string, nutrition: Record<string, unknown> | null, id = "web-" + date): ExistingClientReport {
+  return { ...webRow(date, nutrition), id, obdobi_od: od, obdobi_do: doDne };
+}
+function planOpt(reports: TcReport[], existing: ExistingClientReport[], opts: Record<string, unknown>) {
+  return applySyncPlan(EMAIL, reports, existing, { kcal: 1800 }, { syncedAt: NOW, asOf: "2026-11-05", ...opts });
+}
+const tydenAppky = (date: string, kcal: number, carbs: number, dny: number, weight?: number) =>
+  appReport(date, { kcal, protein: 100, carbs, fat: 60, fiber: 20, dny_zapsano: dny }, weight != null ? { weight } : {});
+
+Deno.test("období: web za 3 týdny pokryje všechny týdny a doplní se součtem vážených dní", () => {
+  const web = webObd("2026-10-25", "2026-10-05", "2026-10-25", { kcal: 2000, protein: 80, carbs: null, fat: null, fiber: null, dny_zapsano: 18 });
+  tvrd(tydnyRadku(web).join(",") === "2026-10-05,2026-10-12,2026-10-19", "web pokrývá tři týdny");
+  const app = [tydenAppky("2026-10-05", 1800, 200, 7, 68.4), tydenAppky("2026-10-12", 2100, 220, 5, 68.1), tydenAppky("2026-10-19", 1900, 210, 6, 67.9)];
+  const p = planOpt(app, [web], {});
+  tvrd(p.toInsert.length === 0 && p.created === 0, "žádný týden období nedostane řádek tvuj-coach");
+  tvrd(p.toUpdate.length === 1 && p.toUpdate[0].report_date === "2026-10-25", "jedno doplnění webu");
+  tvrd(p.filled === 1, "filled 1");
+  const n = p.toUpdate[0].nutrition as Record<string, unknown>;
+  tvrd(n.kcal === 2000 && n.protein === 80, "klientova kcal i bílkoviny zůstaly");
+  tvrd(n.dny_zapsano === 18, "klientův počet dní zůstal");
+  const ocekCarbs = Math.round((200 * 7 + 220 * 5 + 210 * 6) / 18);
+  tvrd(n.carbs === ocekCarbs, "sacharidy jsou vážený průměr " + ocekCarbs + " (jsou " + n.carbs + ")");
+  tvrd(n.fat === 60 && n.fiber === 20, "tuky a vláknina z appky");
+  const snap = n.appka as Record<string, unknown>;
+  tvrd((snap.tydny as string[]).join(",") === "2026-10-05,2026-10-12,2026-10-19", "snímek appky ví, ze kterých týdnů je");
+  tvrd(snap.dny_zapsano === 18 && snap.kcal === Math.round((1800 * 7 + 2100 * 5 + 1900 * 6) / 18), "snímek appky je součet období");
+  tvrd(p.toUpdate[0].weight === 80, "váha klienta se nepřepisuje");
+  tvrd(p.duvody.some((d) => d.akce === "doplneno" && d.duvod.startsWith("prazdna_pole_z_appky_za_3_tydny:")), "důvod říká období");
+
+  // druhý běh: nic
+  const po: ExistingClientReport = { ...web, nutrition: p.toUpdate[0].nutrition, weight: p.toUpdate[0].weight };
+  const p2 = planOpt(app, [po], {});
+  tvrd(p2.toInsert.length === 0 && p2.toUpdate.length === 0, "druhý běh nic nezapíše");
+  tvrd(p2.skipped_unchanged === 1, "beze změny");
+});
+
+Deno.test("období: klient vyplnil všechno, appka nic nepřepíše; strava „nezapisoval“ zůstane null", () => {
+  const plny = webObd("2026-10-25", "2026-10-05", "2026-10-25", { kcal: 2000, protein: 80, carbs: 210, fat: 65, fiber: 25, dny_zapsano: 18, dny: [{ datum: "2026-10-05", den: "Po", kcal: 1900 }] });
+  const app = [tydenAppky("2026-10-05", 1800, 200, 7), tydenAppky("2026-10-12", 2100, 220, 5)];
+  const p = planOpt(app, [plny], {});
+  tvrd(p.toUpdate.length === 0 && p.toInsert.length === 0, "nic se nezapíše");
+  tvrd(p.skipped_web === 1, "web je kompletní");
+  const bezStravy = webObd("2026-10-25", "2026-10-05", "2026-10-25", null);
+  bezStravy.weight = 70;
+  const p2 = planOpt(app, [bezStravy], {});
+  tvrd(p2.toUpdate.length === 0 && p2.toInsert.length === 0, "strava null se nedoplní");
+  // rozpis dnů se při doplnění nemění
+  const sRozpisem = webObd("2026-10-25", "2026-10-05", "2026-10-25", { kcal: 2000, protein: 80, carbs: null, dny_zapsano: 18, dny: [{ datum: "2026-10-05", den: "Po", kcal: 1900 }] });
+  const p3 = planOpt(app, [sRozpisem], {});
+  const dny = (p3.toUpdate[0].nutrition as { dny: { datum: string }[] }).dny;
+  tvrd(dny.length === 1 && dny[0].datum === "2026-10-05", "rozpis s daty zůstal");
+});
+
+Deno.test("období: useknutá odpověď appky (4 týdny, nejstarší až uvnitř období) nic nedoplní", () => {
+  const web = webObd("2026-10-25", "2026-10-05", "2026-10-25", { kcal: 2000, protein: 80, carbs: null, fat: null, fiber: null, dny_zapsano: 18 });
+  const app = [tydenAppky("2026-10-12", 2100, 220, 5), tydenAppky("2026-10-19", 1900, 210, 6), tydenAppky("2026-10-26", 1950, 200, 7), tydenAppky("2026-11-02", 2000, 205, 7)];
+  const p = planOpt(app, [web], { tydnuMax: 4, asOf: "2026-11-12" });
+  tvrd(!p.toUpdate.some((u) => u.report_date === "2026-10-25"), "web se z neúplného období nedoplní");
+  tvrd(p.duvody.some((d) => d.duvod === "obdobi_mimo_dosah_appky"), "důvod");
+  tvrd(!p.toInsert.some((r) => r.report_date === "2026-10-12" || r.report_date === "2026-10-19"), "týdny období nedostanou tvuj-coach");
+  // kontrast: ve stejné situaci, kdy appka vrátila méně týdnů, než se ptal (neměla víc dat), se doplní
+  const p2 = planOpt(app.slice(0, 2), [web], { tydnuMax: 4, asOf: "2026-11-12" });
+  tvrd(p2.toUpdate.some((u) => u.report_date === "2026-10-25"), "méně týdnů, než se ptal = appka víc nemá, doplní se");
+  // tlačítko v adminu se ptá na 12 týdnů: 4 týdny odpovědi pojistku nespustí
+  const p3 = planOpt(app, [web], { tydnuMax: 12, asOf: "2026-11-12" });
+  tvrd(p3.toUpdate.some((u) => u.report_date === "2026-10-25"), "12 týdnů: doplní se");
+});
+
+Deno.test("období: report z kusu týdne (čtvrtek) se nedoplní, ale týdny pokryje", () => {
+  const ct = webObd("2026-10-15", "2026-10-05", "2026-10-15", { kcal: 2000, protein: 80, carbs: null, dny_zapsano: 10 });
+  tvrd(tydnyRadku(ct).join(",") === "2026-10-05,2026-10-12", "čtvrteční report sahá do dvou týdnů");
+  const p = planOpt([tydenAppky("2026-10-05", 1800, 200, 7), tydenAppky("2026-10-12", 2100, 220, 5)], [ct], {});
+  tvrd(p.toUpdate.length === 0, "kus týdne se z týdenních dat nedopočítává");
+  tvrd(p.toInsert.length === 0, "a týdny nedostanou tvuj-coach");
+  tvrd(p.duvody.some((d) => d.duvod === "obdobi_neni_cele_tydny"), "důvod");
+  // jednotýdenní kus (navazující neděle 16. až 18. 10.)
+  const ne = webObd("2026-10-18", "2026-10-16", "2026-10-18", { kcal: 1900, protein: 90, carbs: null, dny_zapsano: 3 });
+  const p2 = planOpt([tydenAppky("2026-10-12", 2100, 220, 5)], [ct, ne], {});
+  tvrd(p2.toUpdate.length === 0 && p2.toInsert.length === 0, "ani třídenní kus se nedoplní a týden se nezakládá");
+});
+
+Deno.test("analýza 4: web 25. 10. s obdobím od 5. 10., appka jen týden 5. 10. → žádný insert", () => {
+  const web = webObd("2026-10-25", "2026-10-05", "2026-10-25", { kcal: 2000, protein: 80, carbs: 200, fat: 60, fiber: 20, dny_zapsano: 18 });
+  const p = planOpt([tydenAppky("2026-10-05", 1800, 190, 7)], [web], { asOf: "2026-10-26" });
+  tvrd(p.toInsert.length === 0, "žádný řádek tvuj-coach na 5. 10.");
+  // okno čtení: týden appky 5. 10. musí najít report z 25. 10. i 28. 10. (středa po období)
+  const okno = existingDateWindow([tydenAppky("2026-10-05", 1800, 190, 7)], OKNO_OBDOBI_DNI);
+  tvrd(!!okno && okno.from === "2026-10-05" && okno.to >= "2026-10-28", "okno sahá za konec třítýdenního období");
+  tvrd(OKNO_OBDOBI_DNI === 37, "okno 37 dní (4 týdny + středa po nich + rezerva)");
+  const kratke = existingDateWindow([tydenAppky("2026-10-05", 1800, 190, 7)]);
+  tvrd(!!kratke && kratke.to === "2026-10-14", "kontrast: staré okno (+9) by report z 25. 10. nenašlo");
+});
+
+Deno.test("cron i tlačítko čtou okno pro období a předávají kadenci", async () => {
+  const cron = await Deno.readTextFile(new URL("../tc-client-reports-sync/index.ts", import.meta.url));
+  const admin = await Deno.readTextFile(new URL("./index.ts", import.meta.url));
+  tvrd(cron.includes("existingDateWindow(reports, OKNO_OBDOBI_DNI)"), "cron okno 37 dní");
+  tvrd(admin.includes("existingDateWindow(reports, OKNO_OBDOBI_DNI)"), "tlačítko okno 37 dní");
+  tvrd(cron.includes("tydnuMax: TYDNU") && cron.includes("graceDniProKadenci("), "cron pojistka useknutí a kadence");
+  tvrd(admin.includes("tydnuMax: tydnu") && admin.includes("graceDniProKadenci("), "tlačítko pojistka useknutí a kadence");
+  tvrd(cron.includes('select("email,report_kadence,dalsi_report")'), "cron čte kadenci týmž dotazem jako e-maily");
+});
+
+Deno.test("kadence: delší lhůta před tvuj-coach a ručně posunutý další report", () => {
+  tvrd(graceDniProKadenci(1) === 4 && graceDniProKadenci(2) === 11 && graceDniProKadenci(3) === 18 && graceDniProKadenci(7) === 4, "lhůty");
+  // týden 5. 10. (neděle 11. 10.)
+  tvrd(canCreateTvujCoach("2026-10-05", "2026-10-15") === true, "týdenní: 4 dny po neděli");
+  tvrd(canCreateTvujCoach("2026-10-05", "2026-10-15", { graceDni: 11 }) === false, "dvoutýdenní: ještě ne");
+  tvrd(canCreateTvujCoach("2026-10-05", "2026-10-22", { graceDni: 11 }) === true, "dvoutýdenní: 11 dní po neděli");
+  tvrd(canCreateTvujCoach("2026-10-05", "2026-10-15", { graceDni: 2 }) === true, "lhůta pod 4 dny se nebere (zůstanou 4)");
+  // Hana z analýzy: další report ručně 25. 10.
+  tvrd(canCreateTvujCoach("2026-10-12", "2026-10-28", { nejdrive: "2026-10-25" }) === false, "3 dny po posunutém reportu ještě ne");
+  tvrd(canCreateTvujCoach("2026-10-12", "2026-10-29", { nejdrive: "2026-10-25" }) === true, "4 dny po něm ano");
+  tvrd(canCreateTvujCoach("2026-10-26", "2026-11-05", { nejdrive: "2026-10-25" }) === true, "týden po posunutém reportu jede normálně");
+  // celý plán: dvoutýdenní klient, týden bez webu
+  const app = [tydenAppky("2026-10-05", 1800, 190, 7)];
+  const p = planOpt(app, [], { asOf: "2026-10-16", graceDni: 11 });
+  tvrd(p.toInsert.length === 0 && p.skipped_grace === 1, "dvoutýdenní klient: týden, který pokryje příští report, se nezakládá");
+  const pTyd = planOpt(app, [], { asOf: "2026-10-16" });
+  tvrd(pTyd.toInsert.length === 1, "kontrast: týdenní klient by ho založil");
+});
+
+Deno.test("výběr a převod řádku: období se čte a přenese", () => {
+  tvrd(TC_REPORT_SELECT.includes("obdobi_od") && TC_REPORT_SELECT.includes("obdobi_do"), "select čte období");
+  const r = toExistingReport({ id: "x", report_date: "2026-10-25", source: "web", weight: 70, nutrition: null, obdobi_od: "2026-10-05", obdobi_do: "2026-10-25" });
+  tvrd(r.obdobi_od === "2026-10-05" && r.obdobi_do === "2026-10-25", "období přeneseno");
+  tvrd(tydnyRadku(r).length === 3, "tři týdny");
+  const stary = toExistingReport({ id: "y", report_date: "2026-10-05", source: "web" });
+  tvrd(stary.obdobi_od === null && tydnyRadku(stary).join(",") === "2026-09-28", "starý web = týden podle −3 dní");
+  tvrd(tydnyRadku({ report_date: "2026-10-04", source: "tvuj-coach" }).join(",") === "2026-09-28", "tvuj-coach = ISO týden");
+  tvrd(webReportWeek("2026-10-05") === "2026-09-28", "webReportWeek jede přes sdílený modul");
+});
+
+Deno.test("agregace týdnů appky: vážený průměr, týden bez zapsaných dní se nepočítá", () => {
+  const a = agregujTydnyAppky([
+    tydenAppky("2026-10-12", 2100, 220, 5, 68.1),
+    tydenAppky("2026-10-05", 1800, 200, 7, 68.4),
+    appReport("2026-10-19", { kcal: 3000, protein: 1, dny_zapsano: 0 }),
+  ]);
+  const n = a.nutrition as Record<string, number>;
+  tvrd(n.kcal === Math.round((2100 * 5 + 1800 * 7) / 12), "kcal vážený průměr");
+  tvrd(n.dny_zapsano === 12, "dny sečtené, týden s nulou nepřispěl");
+  tvrd(a.weight === 68.1, "váha z posledního týdne, který ji má (12. 10.)");
+  tvrd(agregujTydnyAppky([appReport("2026-10-05", { kcal: 1800 })]).nutrition === null, "bez zapsaných dní nic");
+});

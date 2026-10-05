@@ -11,6 +11,7 @@ import {
   REZ_PCT, PRIDANI_PCT, DNY_ZAPISU_MIN,
   PASMO_KCAL_POD_PCT, NEVEROHODNY_KCAL_STROP, UNAVA_HLAD_STOP, MIRA_POKLES_CM,
   RYCHLE_MAX_KG_TYDEN, PODLAHA,
+  dniObdobi, zapisStaci, zapisText,
 } from "../akademie/_supabase/functions/admin-api/report-engine.mjs";
 
 let chyb = 0, ok = 0;
@@ -301,6 +302,82 @@ scenar("11) První report: žádná díra ve větě ani řádek 'od startu 0 kg'
     cile: { kcal: 1990, protein: 160, kroky: 10000 }, smer: "hubnuti", pohlavi: "m",
   });
   tvrd(prumer.cisla.tempoZdroj === "prumer3", "se čtyřmi váženími se počítá klouzavý průměr (je " + prumer.cisla.tempoZdroj + ")");
+});
+
+// ---------------------------------------------------------------------------
+// SCÉNÁŘE 12 AŽ 14 PŘIBYLY 5. 10. 2026: report za delší období (od reportu po report).
+// Práh zápisu je poměr 6/7 (Martin 5. 10., rozhodnutí 1), týdenní report beze změny.
+/** Report s uloženým obdobím. */
+function repObd(datum, vaha, od, doDne, o = {}) {
+  return Object.assign(rep(datum, vaha, o), { obdobi_od: od, obdobi_do: doDne });
+}
+
+scenar("12) Práh zápisu poměrem 6/7: 12/14, 18/21, 24/28; starý report jako dřív", () => {
+  const pripady = [[6, 7, true], [5, 7, false], [12, 14, true], [11, 14, false], [18, 21, true], [17, 21, false],
+    [24, 28, true], [23, 28, false], [5, 5, true], [4, 5, false]];
+  for (const [dny, obd, ceka] of pripady) {
+    tvrd(zapisStaci(dny, obd) === ceka, dny + "/" + obd + " má být " + (ceka ? "dost" : "málo"));
+  }
+  tvrd(zapisStaci(null, 21) === false, "nevyplněný zápis není dost");
+  tvrd(dniObdobi({}) === 7 && dniObdobi({ obdobi_od: "2026-10-05", obdobi_do: "2026-10-25" }) === 21, "délka období z řádku");
+  tvrd(dniObdobi({ obdobi_od: "2026-10-25", obdobi_do: "2026-10-05" }) === 7, "obrácené období = týden");
+  tvrd(DNY_ZAPISU_MIN === 6 && zapisStaci(DNY_ZAPISU_MIN, 7) && !zapisStaci(DNY_ZAPISU_MIN - 1, 7), "týden: hranice zůstává 6");
+
+  // Kontrast nad celým enginem: 6 zapsaných dní z 21 už NENÍ čitelný zápis (dřív by prošlo).
+  const malo = spocitejBlok({
+    posledni: repObd("2026-10-25", 94.0, "2026-10-05", "2026-10-25", { nutrition: { kcal: 1900, protein: 150, dny_zapsano: 6 }, activity: { kroky: 11000 } }),
+    predchozi: rep("2026-10-04", 94.0), cile: CILE,
+  });
+  const n = navrhni({ cisla: malo.cisla, predchoziCisla: { tempoPct: 0 }, smer: "hubnuti", pohlavi: "m" });
+  tvrd(n.paka === "zadna" && n.novyKcal === null, "6/21 dní: cíle se nemění (je " + n.paka + ")");
+  tvrd(n.duvod.indexOf("6/21 dní") !== -1, "důvod říká 6/21 dní");
+  tvrd(n.duvod.indexOf("týdenní průměr") === -1 && n.duvod.indexOf("průměr za období") !== -1, "u delšího období se nepíše týdenní průměr");
+  // Starý report bez období se 6 dny je pořád dost (beze změny proti dnešku).
+  const stary = spocitejBlok({
+    posledni: rep("2026-10-04", 94.0, { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 6 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-09-27", 94.0), cile: CILE,
+  });
+  tvrd(stary.cisla.obdobiDni === 7, "report bez období je týden");
+  tvrd(zapisStaci(stary.cisla.dnyZapsano, stary.cisla.obdobiDni), "starý report se 6 dny prošel jako dřív");
+});
+
+scenar("13) Blok čísel: „Zápis 18/21 dní“, u týdne beze změny „6 ze 7 dní“", () => {
+  const dlouhy = spocitejBlok({
+    posledni: repObd("2026-10-25", 68.0, "2026-10-05", "2026-10-25", { nutrition: { kcal: 2000, protein: 80, dny_zapsano: 18 } }),
+    predchozi: rep("2026-10-04", 68.4), cile: CILE,
+  });
+  tvrd(dlouhy.text.indexOf("Zápis 18/21 dní") !== -1, "zápis lomítkem u 21 dní");
+  tvrd(dlouhy.text.indexOf("ze 7 dní") === -1, "u 21 dní žádné „ze 7 dní“");
+  tvrd(dlouhy.cisla.tydnuOdMinule === 3, "tempo dělí třemi týdny mezi reporty (je " + dlouhy.cisla.tydnuOdMinule + ")");
+  const tyden = spocitejBlok({
+    posledni: repObd("2026-10-04", 68.0, "2026-09-28", "2026-10-04", { nutrition: { kcal: 2000, protein: 80, dny_zapsano: 6 } }),
+    predchozi: rep("2026-09-27", 68.4), cile: CILE,
+  });
+  tvrd(tyden.text.indexOf("Zápis 6 ze 7 dní") !== -1, "týden s uloženým obdobím píše jako dřív");
+  tvrd(zapisText(6, 7) === "6 ze 7 dní" && zapisText(12, 14) === "12/14 dní", "text zápisu");
+  tvrd(dlouhy.text.indexOf("\u2014") === -1, "bez dlouhé pomlčky");
+});
+
+scenar("14) Návrh enginu u delšího období: „druhý report v řadě“, ne „druhý týden“", () => {
+  const f = pripravFakta({
+    posledni: repObd("2026-10-25", 94.0, "2026-10-12", "2026-10-25", { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 13 }, activity: { kroky: 10500 } }),
+    predchozi: repObd("2026-10-11", 94.0, "2026-09-28", "2026-10-11", { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 13 } }),
+    predpredchozi: repObd("2026-09-27", 94.0, "2026-09-14", "2026-09-27"),
+    prvni: rep("2026-06-08", 96.7),
+    cile: CILE, smer: "hubnuti", pohlavi: "m",
+  });
+  tvrd(f.navrh.paka === "kcal_dolu", "stagnace dva reporty v řadě při zápisu 13/14 řeže (je " + f.navrh.paka + ")");
+  tvrd(f.navrh.duvod.indexOf("druhý report v řadě") !== -1, "věta mluví o reportech");
+  tvrd(f.navrh.duvod.indexOf("13/14 dní") !== -1, "zápis lomítkem");
+  tvrd(f.navrh.duvod.indexOf("druhý týden") === -1, "žádný „druhý týden“");
+  tvrd(f.navrh.duvod.indexOf("\u2014") === -1, "bez dlouhé pomlčky");
+  // Týdenní varianta téhož: věta slovo od slova jako dřív.
+  const t = pripravFakta({
+    posledni: rep("2026-09-01", 94.0, { nutrition: { kcal: 1990, protein: 160, dny_zapsano: 7 }, activity: { kroky: 10500 } }),
+    predchozi: rep("2026-08-25", 94.0), predpredchozi: rep("2026-08-18", 94.0), prvni: rep("2026-06-08", 96.7),
+    cile: CILE, smer: "hubnuti", pohlavi: "m",
+  });
+  tvrd(t.navrh.duvod.indexOf("Váha stojí druhý týden v řadě a přitom je zapsáno 7 ze 7 dní") === 0, "týdenní věta beze změny");
 });
 
 // ---------------------------------------------------------------------------

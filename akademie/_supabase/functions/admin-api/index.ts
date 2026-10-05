@@ -12,13 +12,31 @@ import {
   duvodyProTlacitko,
   existingDateWindow,
   extractTcReports,
+  graceDniProKadenci,
   isTcActive,
+  OKNO_OBDOBI_DNI,
   reportWriter,
   syncReadError,
   TC_REPORT_SELECT,
   toExistingReport,
   type ExistingClientReport,
 } from "./tc-report-sync.ts";
+// [5. 10. 2026] Období reportu a další report podle kadence: jedno místo pravdy pro web,
+// připomínky i sync (`_shared/report-obdobi.ts`). ⛔ Deploy admin-api veze i tenhle soubor.
+import {
+  dalsiReport,
+  jeDatum,
+  kadenceKlienta,
+  nedeleVyzvy,
+  obdobiRadku,
+  popisObdobi,
+  posledniPokrytyDen,
+  dnesPraha,
+  rozdilDni,
+  slovoDni,
+} from "../_shared/report-obdobi.ts";
+// Seznam e-mailů z `app_config` (starý seznam dvoutýdenní kadence), týž parser jako `client-remind`.
+import { emailySeznam } from "../_shared/mail-seznam.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s nákupem přes Stripe (`academy-stripe-webhook`).
 // Deploy admin-api proto veze i `_shared/koucink-onboarding.ts`.
 import { onboardKoucink, posliUvitaciMail } from "../_shared/koucink-onboarding.ts";
@@ -611,13 +629,22 @@ function rdProtiCili(v: number | null, cil: number | null, jed: string): string 
 type RdRow = Record<string, unknown>;
 const rdJ = (r: RdRow, k: string): Record<string, unknown> => (r[k] ?? {}) as Record<string, unknown>;
 
-/** Deterministický blok FAKTA. Model dostane hotová čísla a smí je jen okomentovat. */
-function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | null, app: RdRow | null, poradi: number, tema: string): string {
+/** Deterministický blok FAKTA. Model dostane hotová čísla a smí je jen okomentovat.
+ *  `appDni` = za kolik dní se ptal náhled appky (u reportu za delší období víc než 14). */
+function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | null, app: RdRow | null, poradi: number, tema: string, appDni = 14): string {
   const m = rdJ(rep, "measurements"), n = rdJ(rep, "nutrition"), a = rdJ(rep, "activity"), s = rdJ(rep, "scales"), t = rdJ(rep, "notes");
   const prev = drive[0] ?? null;                       // nejbližší starší report
+  // ⭐ [5. 10. 2026] Report za jiné období než týden (od reportu po report). Týdenní report
+  //    (i starý bez období) má blok FAKTA slovo od slova jako dřív.
+  const obdUl = jeDatum(rep.obdobi_od) && jeDatum(rep.obdobi_do) ? obdobiRadku(rep) : null;
+  const jinyNezTyden = !!obdUl && obdUl.dni !== 7;
   const L: string[] = [];
   L.push("KLIENT: " + String(rep.email) + " · tohle je jeho " + poradi + ". report · kanál " + String(rep.source ?? "?"));
   L.push("DATUM REPORTU: " + String(rep.report_date));
+  if (jinyNezTyden && obdUl) {
+    L.push("OBDOBÍ REPORTU: " + popisObdobi(obdUl.od, obdUl.do) + " (" + slovoDni(obdUl.dni) + "). Čísla jsou za celé období, ne za jeden týden: " +
+      "nepiš „tento týden“, piš „za tohle období“ nebo „od minulého reportu“. Kroky jsou denní průměr, sport a tréninky průměr na týden.");
+  }
   L.push("TÉMA TÝDNE OD MARTINA: " + (tema ? tema : "nezadané, o příloze ani tématu nepiš"));
 
   const cil = (k: string) => (tg ? rdNum(tg[k]) : null);
@@ -646,18 +673,19 @@ function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | n
     }).filter(Boolean);
   L.push("MÍRY: " + (miry.length ? miry.join(", ") : "neuvedeny"));
 
-  L.push("JÍDLO (průměr týdne): kcal " + rdProtiCili(rdNum(n.kcal), cil("kcal"), "kcal") +
+  L.push((jinyNezTyden && obdUl ? "JÍDLO (průměr za " + slovoDni(obdUl.dni) + ", " + popisObdobi(obdUl.od, obdUl.do) + "): kcal " : "JÍDLO (průměr týdne): kcal ") +
+    rdProtiCili(rdNum(n.kcal), cil("kcal"), "kcal") +
     " · bílkoviny " + rdProtiCili(rdNum(n.protein), cil("protein"), "g") +
     " · vláknina " + rdProtiCili(rdNum(n.fiber), cil("fiber"), "g") +
     " · sacharidy " + rdFmt(rdNum(n.carbs), "g") + " · tuky " + rdFmt(rdNum(n.fat), "g") +
-    " · zapsaných dní " + rdFmt(rdNum(n.dny_zapsano)));
+    " · zapsaných dní " + rdFmt(rdNum(n.dny_zapsano)) + (jinyNezTyden && obdUl ? " z " + obdUl.dni : ""));
 
   // Starý import z Excelu nemá `sport_min`, ale má `fitko_min` + `kardio_min` (táž jednotka).
   let sportMin = rdNum(a.sport_min);
   if (sportMin === null && (rdNum(a.fitko_min) !== null || rdNum(a.kardio_min) !== null)) {
     sportMin = (rdNum(a.fitko_min) ?? 0) + (rdNum(a.kardio_min) ?? 0);
   }
-  L.push("POHYB: kroky " + rdProtiCili(rdNum(a.kroky), cil("kroky"), "kroků/den") +
+  L.push("POHYB" + (jinyNezTyden ? " (sport a tréninky průměrně za týden)" : "") + ": kroky " + rdProtiCili(rdNum(a.kroky), cil("kroky"), "kroků/den") +
     " · sport " + rdProtiCili(sportMin, cil("sport_min"), "min") +
     " · tréninků " + rdProtiCili(rdNum(a.fitko), cil("treninky"), "×"));
 
@@ -673,11 +701,13 @@ function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | n
 
   const pnPrev = prev ? ((rdJ(prev, "activity").plan_next ?? {}) as Record<string, unknown>) : {};
   if (rdNum(pnPrev.kroky) !== null || rdNum(pnPrev.sport_min) !== null) {
-    L.push("CO SI KLIENT SÁM SLÍBIL MINULÝ TÝDEN: " + rdFmt(rdNum(pnPrev.kroky), "kroků/den") + " a " + rdFmt(rdNum(pnPrev.sport_min), "min sportu"));
+    L.push((jinyNezTyden ? "CO SI KLIENT SÁM SLÍBIL MINULE (na týden): " : "CO SI KLIENT SÁM SLÍBIL MINULÝ TÝDEN: ") +
+      rdFmt(rdNum(pnPrev.kroky), "kroků/den") + " a " + rdFmt(rdNum(pnPrev.sport_min), "min sportu"));
   }
   const pn = (a.plan_next ?? {}) as Record<string, unknown>;
   if (rdNum(pn.kroky) !== null || rdNum(pn.sport_min) !== null) {
-    L.push("CO SI SLIBUJE NA PŘÍŠTÍ TÝDEN: " + rdFmt(rdNum(pn.kroky), "kroků/den") + " a " + rdFmt(rdNum(pn.sport_min), "min sportu"));
+    L.push((jinyNezTyden ? "CO SI SLIBUJE DO DALŠÍHO REPORTU (na týden): " : "CO SI SLIBUJE NA PŘÍŠTÍ TÝDEN: ") +
+      rdFmt(rdNum(pn.kroky), "kroků/den") + " a " + rdFmt(rdNum(pn.sport_min), "min sportu"));
   }
 
   // ⛔ Odsud dál jde text, který píše klient sám. Do promptu smí jen jako ohraničená citace.
@@ -697,7 +727,7 @@ function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | n
   if (app && app.found !== false) {
     const avg = (app.avg ?? null) as Record<string, unknown> | null;
     if (avg) {
-      L.push("APPKA TVŮJ COACH, posledních 14 dní (zapsáno " + rdFmt(rdNum(app.dny_zapsano)) + " dní): " +
+      L.push("APPKA TVŮJ COACH, posledních " + appDni + " dní (zapsáno " + rdFmt(rdNum(app.dny_zapsano)) + " dní): " +
         rdFmt(rdNum(avg.kcal), "kcal") + ", bílkoviny " + rdFmt(rdNum(avg.protein), "g") + ", vláknina " + rdFmt(rdNum(avg.fiber), "g"));
     }
   }
@@ -2297,7 +2327,8 @@ Deno.serve(async (req) => {
         // ⭐ 2. 9. 2026: i `plan`, `months`, `expires_at` a `source`. Od te doby jde koucink
         // koupit pres Stripe, takze Martin musi na seznamu poznat, KTERY balicek clovek ma,
         // do kdy ma zaplaceno a jestli si to koupil sam, nebo mu to zalozil rucne.
-        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m,start_at").eq("product", "coaching"),
+        // [5. 10. 2026, fáze 2] + kadence reportů a ručně posunutý další report (týž select).
+        admin.from("entitlements").select("email,active,granted_at,plan,months,expires_at,source,academy_po_3m,start_at,report_kadence,dalsi_report").eq("product", "coaching"),
         // [14. 9. 2026] Strankovane: PostgREST vraci max 1000 radku a tydenni reporty ten strop casem
         // prelezou; bez strankovani by „Reportu" a „Posledni report" tise lhaly (Grok audit).
         // ⛔ Chyba cteni reportu NENI „nula reportu" (CLAUDE.md 13): seznam z naroku dojde, sloupce
@@ -2371,6 +2402,10 @@ Deno.serve(async (req) => {
           // ⭐ Start koučinku (dávka 9). Nula dotazů navíc, je to týž select. Martin díky
           //    tomu v tabulce vidí, komu start chybí, a nemusí otevírat kartu po kartě.
           start_at: e.start_at ?? null,
+          // ⭐ Kadence reportů (null = týden) a „další report nejdřív". Tabulka podle nich
+          //    nevarují „dlouho bez reportu" u klienta, který má report po dvou týdnech.
+          report_kadence: [1, 2, 3].includes(Number(e.report_kadence)) ? Number(e.report_kadence) : null,
+          dalsi_report: e.dalsi_report ?? null,
           // "stripe" = koupil si sam z webu, "rucni" = zalozil Martin v adminu.
           zdroj: String(e.source ?? "").startsWith("stripe-") ? "stripe" : "rucni",
           // null = reporty se nenacetly (repsUnknown), UI ukaze „?", ne nulu
@@ -2445,7 +2480,7 @@ Deno.serve(async (req) => {
 
     if (action === "client_detail") {
       const email = low(body.email); if (!email) return json({ error: "no_email" }, 400);
-      const [reps, intake, notes, docsOwn, remindCfg, targets, contact, ent, konz, acad, razKonec] = await Promise.all([
+      const [reps, intake, notes, docsOwn, remindCfg, targets, contact, ent, konz, acad, razKonec, kad14] = await Promise.all([
         admin.from("client_reports").select("*").eq("email", email).order("report_date", { ascending: true }),
         admin.from("client_intake").select("*").eq("email", email).order("created_at", { ascending: false }).limit(1).maybeSingle(),
         admin.from("client_notes").select("id,note,created_at").eq("email", email).order("created_at", { ascending: false }),
@@ -2459,7 +2494,8 @@ Deno.serve(async (req) => {
         // ⭐ Start koučinku (dávka 9). Karta ho musí UKAZOVAT, ne jen umět uložit: vracející
         //    se klient po offboardu a nové pozvánce má v řádku start klidně rok starý
         //    a jediný, kdo to pozná, je ten, kdo ho vidí napsaný.
-        admin.from("entitlements").select("start_at,granted_at,expires_at,active")
+        // ⭐ [5. 10. 2026, fáze 2] i kadence reportů a ručně posunutý další report.
+        admin.from("entitlements").select("start_at,granted_at,expires_at,active,report_kadence,dalsi_report")
           .eq("email", email).eq("product", "coaching").limit(1).maybeSingle(),
         // ⭐ Dotazník PŘED KONZULTACÍ (dávka 9, bod 2). Čte se service-rolí, klientovi se
         //    nic nezpřístupňuje: `consultation_intake` má zapnuté RLS a ŽÁDNOU politiku,
@@ -2481,6 +2517,8 @@ Deno.serve(async (req) => {
           .eq("email", email).eq("product", "academy").limit(1).maybeSingle(),
         // Stav razítka odchodu (kvůli doposlání po nejistotě).
         admin.from("koucink_konec_sent").select("stav,mail_stav").eq("email", email).maybeSingle(),
+        // Starý seznam dvoutýdenní kadence (`client-remind` ho bere, když karta kadenci nemá).
+        admin.from("app_config").select("value").eq("key", "client_remind_14d").maybeSingle(),
       ]);
       const docs = (docsOwn.data ?? []).filter((o) => o.id)
         .map((o) => ({ path: email + "/" + o.name, name: o.name, size: (o.metadata as { size?: number } | null)?.size ?? null, at: o.created_at }));
@@ -2502,10 +2540,34 @@ Deno.serve(async (req) => {
       const reportsChyba = reps.error
         ? String((reps.error as { message?: string }).message ?? reps.error).slice(0, 120)
         : null;
+      // ⭐ [5. 10. 2026, fáze 2] PLÁN REPORTŮ: kadence a další report spočítané TOUŽ funkcí,
+      // jakou bere `client-remind` (`_shared/report-obdobi.ts`). Karta jen ukazuje, nic nepočítá.
+      // ⛔ Tři stavy: chyba čtení nároku = `report_plan: null` (karta uložení zamkne jako
+      //    u startu), chyba čtení reportů = bez termínu (karta řekne proč), jinak spočítané.
+      const kadSloupec = startChyba ? null : (ent.data?.report_kadence ?? null);
+      const zKarty = kadSloupec != null && [1, 2, 3].includes(Number(kadSloupec));
+      const vSeznamu14d = kad14.error ? null : emailySeznam(kad14.data?.value).has(email);
+      const kadenceEf = kadenceKlienta(kadSloupec, vSeznamu14d === true);
+      const posledniDen = reportsChyba ? null : posledniPokrytyDen((reps.data ?? []) as Record<string, unknown>[], dnesPraha());
+      const dr = dalsiReport(posledniDen, kadenceEf, startChyba ? null : ent.data?.dalsi_report);
+      const reportPlan = startChyba ? null : {
+        kadence: kadenceEf,
+        // „karta" = Martin ji uložil, „seznam_14d" = starý seznam v app_config, „vychozi" = týden.
+        kadence_zdroj: zKarty ? "karta" : (vSeznamu14d ? "seznam_14d" : "vychozi"),
+        seznam_14d_chyba: kad14.error ? String((kad14.error as { message?: string }).message ?? kad14.error).slice(0, 120) : null,
+        dalsi_rucne: dr.rucne,
+        posledni_den: posledniDen,
+        dalsi: reportsChyba ? null : dr.datum,
+        podle_kadence: reportsChyba ? null : dr.podleKadence,
+        posunuto: !reportsChyba && dr.posunuto,
+        // Neděle, kdy k termínu odejde výzva (táž podmínka jako nedělní běh `client-remind`).
+        vyzva: reportsChyba ? null : nedeleVyzvy(dr.datum),
+      };
       return json({
         ok: true,
         reports: reps.data ?? [],
         reports_chyba: reportsChyba,
+        report_plan: reportPlan,
         intake: intake.data ?? null,
         notes: notes.data ?? [],
         docs,
@@ -2771,13 +2833,54 @@ Deno.serve(async (req) => {
       return json({ ok: true, konec_at: prevod.konec, konec_den: konecDoPole(prevod.konec) });
     }
 
+    // 📅 PLÁN REPORTŮ KLIENTA (5. 10. 2026, Martin, rozhodnutí 2: „report každý 1/2/3 týden").
+    // Kadence řídí JEN připomínky a hlídání (`client-remind`, denní přehled, sync z appky),
+    // období reportu se počítá samo od reportu po report. `dalsi_report` je „NEJDŘÍV":
+    // termín jen posouvá dál (dovolená), dřív než kadence ho nestáhne a po dalším reportu
+    // přestane platit sám (`_shared/report-obdobi.ts`, `dalsiReport`).
+    // ⛔ Tři stavy jako u startu: chyba čtení = 500, není klient = 404, ukončený = 409.
+    // ⛔ Prázdné datum = smazat ruční posun (karta ukazuje, co v poli je).
+    // ⚠️ Zápis do `entitlements` spustí trigger `trg_enroll_manual_grant`, ten ale koučinkový
+    //    řádek hned propustí (bere jen academy a videokurz), ověřeno v DB 5. 10. 2026.
+    if (action === "client_report_plan_save") {
+      const email = low(body.email);
+      if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json({ error: "no_email" }, 400);
+      const kad = Number(body.kadence);
+      if (kad !== 1 && kad !== 2 && kad !== 3) return json({ error: "kadence" }, 400);
+      const raw = String(body.dalsi_report ?? "").trim();
+      let dalsi: string | null = null;
+      if (raw) {
+        if (!jeDatum(raw)) return json({ error: "dalsi_report", duvod: "tvar_RRRR-MM-DD" }, 400);
+        const za = rozdilDni(dnesPraha(), raw);
+        // Datum v minulosti by nic neposunulo (termín se jen posouvá dál), tak ať to Martin ví hned.
+        if (za < 0) return json({ error: "dalsi_report", duvod: "v_minulosti" }, 400);
+        if (za > 90) return json({ error: "dalsi_report", duvod: "prilis_daleko_v_budoucnu" }, 400);
+        dalsi = raw;
+      }
+      const { data: entRow, error: entChyba } = await admin.from("entitlements").select("active")
+        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (entChyba) return json({ error: "db", detail: String(entChyba.message ?? entChyba).slice(0, 160) }, 500);
+      if (!entRow) return json({ error: "neni_klient" }, 404);
+      if (entRow.active !== true) return json({ error: "ukonceny_klient" }, 409);
+      const { error, count } = await admin.from("entitlements")
+        .update({ report_kadence: kad, dalsi_report: dalsi }, { count: "exact" })
+        .eq("email", email).eq("product", "coaching");
+      if (error) return json({ error: "db", detail: String(error.message ?? error).slice(0, 160) }, 500);
+      // ⛔ Nula změněných řádků NENÍ úspěch: řádek mezi čtením a zápisem zmizel.
+      if (!count) return json({ error: "neni_klient" }, 404);
+      return json({ ok: true, kadence: kad, dalsi_report: dalsi });
+    }
+
     if (action === "client_remind_toggle") {
       // Per-klient vypnuti pondelni pripominky reportu ("stop pripominky"). Zapis CSV e-mailu
       // do app_config.client_remind_optout — client-remind fn seznam cte a tyhle klienty preskoci.
       const email = low(body.email);
       const on = !!body.on; // true = pripominky ZAPNOUT (vyndat z optout seznamu)
       if (!email) return json({ error: "no_email" }, 400);
-      const { data: cur } = await admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle();
+      const { data: cur, error: curErr } = await admin.from("app_config").select("value").eq("key", "client_remind_optout").maybeSingle();
+      // ⛔ [5. 10. 2026, fáze 2] Chyba čtení NENÍ prázdný seznam: zápis by seznam vypnutých
+      //    přepsal jen tímhle klientem a ostatním by se připomínky tiše zapnuly.
+      if (curErr) return json({ error: "db", detail: String(curErr.message ?? curErr).slice(0, 160) }, 500);
       const optout = new Set(String(cur?.value ?? "").split(",").map((s) => low(s)).filter(Boolean));
       if (on) optout.delete(email); else optout.add(email);
       const { error } = await admin.from("app_config")
@@ -2926,7 +3029,8 @@ Deno.serve(async (req) => {
         });
       }
       const reports = extractTcReports(data);
-      const win = existingDateWindow(reports);
+      // [5. 10. 2026] Okno 37 dní: report za víc týdnů přijde až po konci svého období.
+      const win = existingDateWindow(reports, OKNO_OBDOBI_DNI);
       const existing: ExistingClientReport[] = [];
       let reportReadError: unknown = null;
       if (win) {
@@ -2940,7 +3044,18 @@ Deno.serve(async (req) => {
         .select("kcal,protein,carbs,fat,fiber,kroky,sport_min,treninky").eq("email", email).maybeSingle();
       const readErr = syncReadError(reportReadError, tg.error);
       if (readErr) return json({ ok: false, duvod: readErr === "targets" ? "targets" : "db" }, 500);
-      const plan = applySyncPlan(email, reports, existing, tg.data ?? null);
+      // Kadence a ručně posunutý další report (fáze 2): podle nich se čeká déle, než se pro
+      // týden bez webu založí řádek tvuj-coach. ⛔ Chyba čtení NENÍ „týdenní klient": se
+      // čtyřdenní lhůtou by tlačítko mohlo založit týden, který pokryje příští report.
+      const kp = await admin.from("entitlements").select("report_kadence,dalsi_report")
+        .eq("email", email).eq("product", "coaching").limit(1).maybeSingle();
+      if (kp.error) return json({ ok: false, duvod: "entitlements" }, 500);
+      const kadNum = Number(kp.data?.report_kadence);
+      const plan = applySyncPlan(email, reports, existing, tg.data ?? null, {
+        tydnuMax: tydnu,
+        graceDni: graceDniProKadenci(kadNum === 2 || kadNum === 3 ? kadNum : 1),
+        nejdrive: typeof kp.data?.dalsi_report === "string" ? kp.data.dalsi_report : null,
+      });
       const committed = await commitSyncPlan(plan, reportWriter(admin));
       if (committed.error) return json({ ok: false, duvod: committed.error }, 500);
       // doplneno je v plánu dřív, než update doběhne. V seznamu zůstane jen zapsaný týden.
@@ -3285,6 +3400,8 @@ Deno.serve(async (req) => {
 
       // Data z appky Tvůj Coach jsou bonus, ne podmínka: má ji jen část koučinkových klientů.
       // Když appka nevrátí nic, koncept se napíše bez ní a nikde se to nehlásí jako chyba.
+      // [5. 10. 2026] U reportu za delší období se appky ptáme na celé období (nejmíň 14 dní).
+      const appDni = Math.max(14, jeDatum(rep.obdobi_od) && jeDatum(rep.obdobi_do) ? (obdobiRadku(rep)?.dni ?? 7) : 7);
       let appData: Record<string, unknown> | null = null;
       try {
         const { data: gs } = await admin.from("app_config").select("value").eq("key", "academy_grant_secret").maybeSingle();
@@ -3292,7 +3409,7 @@ Deno.serve(async (req) => {
         if (gsec) {
           const ar = await fetch("https://kfkmghvhqwqtsalqjmrp.functions.supabase.co/academy-grant", {
             method: "POST", headers: { "Content-Type": "application/json", "x-academy-secret": gsec },
-            body: JSON.stringify({ email, action: "weekly-summary", days: 14 }),
+            body: JSON.stringify({ email, action: "weekly-summary", days: appDni }),
             signal: AbortSignal.timeout(8_000),
           });
           if (ar.ok) {
@@ -3330,6 +3447,7 @@ Deno.serve(async (req) => {
         appData,
         Number(poradiRes.count ?? 1) || 1,
         tema,
+        appDni,
       );
       // ⛔ ENGINE POČÍTÁ, AI MLUVÍ. Blok čísel do mailu i návrh úpravy zadání vzniká TADY,
       // deterministicky (`report-engine.mjs`). Model je dostane jako hotová fakta.

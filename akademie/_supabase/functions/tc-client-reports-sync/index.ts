@@ -10,8 +10,13 @@
 // ⛔ Jiný source se nesahá a týden se nezaloží. Žádný mail. Žádné mazání.
 // ⛔ Odpověď jen agregované counts, žádné e-maily v logu ani v JSON.
 // ⛔ Když nějaký klient selže, status je 500, ať pg_cron běh nebere jako úspěch.
+// ⭐ [5. 10. 2026] Web s obdobím přes víc týdnů pokrývá všechny své týdny (žádný tvuj-coach),
+//    doplní se ze součtu týdnů; lhůta před založením tvuj-coach podle kadence klienta.
 //
-// Deploy: supabase functions deploy tc-client-reports-sync --no-verify-jwt
+// Deploy: importuje `../admin-api/tc-report-sync.ts` a ten `../_shared/report-obdobi.ts`,
+// takže do staging složky patří i ty (celé složky, paměť `mb-deploy-kopiruje-jen-index-past`).
+// ⛔ Až PO migraci `akademie/_supabase/report-obdobi-2026-10-05.sql`.
+// supabase functions deploy tc-client-reports-sync --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import {
   applySyncPlan,
@@ -19,7 +24,9 @@ import {
   cronResultBody,
   existingDateWindow,
   extractTcReports,
+  graceDniProKadenci,
   isTcActive,
+  OKNO_OBDOBI_DNI,
   reportWriter,
   syncReadError,
   TC_REPORT_SELECT,
@@ -69,19 +76,33 @@ Deno.serve(async (req) => {
   if (!gsec) return json({ ok: false, duvod: "chybi_secret" }, 500);
 
   const nyni = new Date().toISOString();
-  let ents: { email?: string }[] = [];
+  type Ent = { email?: string; report_kadence?: unknown; dalsi_report?: unknown };
+  let ents: Ent[] = [];
   try {
+    // [5. 10. 2026] I kadence reportů a ručně posunutý další report (fáze 2): podle nich se
+    // čeká déle, než se pro týden bez webového reportu založí řádek tvuj-coach.
+    // ⛔ Sloupce musí existovat dřív než tahle verze (migrace `report-obdobi-2026-10-05.sql`).
     ents = await fetchAllRows((f, t) =>
-      admin.from("entitlements").select("email")
+      admin.from("entitlements").select("email,report_kadence,dalsi_report")
         .eq("product", "coaching").eq("active", true)
         .or("expires_at.is.null,expires_at.gt." + nyni)
         .order("email").range(f, t)
-    ) as { email?: string }[];
+    ) as Ent[];
   } catch (e) {
     return json({ ok: false, duvod: "entitlements", detail: String((e as Error).message ?? e).slice(0, 120) }, 500);
   }
 
   const clients = [...new Set(ents.map((e) => low(e.email)).filter((e) => e.includes("@")))];
+  const planBy = new Map<string, { kadence: number; dalsi: string | null }>();
+  for (const e of ents) {
+    const k = low(e.email);
+    if (!k || planBy.has(k)) continue;
+    const kad = Number(e.report_kadence);
+    planBy.set(k, {
+      kadence: kad === 2 || kad === 3 ? kad : 1,
+      dalsi: typeof e.dalsi_report === "string" ? e.dalsi_report.slice(0, 10) : null,
+    });
+  }
 
   let synced = 0;
   let created = 0;
@@ -126,12 +147,12 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const win = existingDateWindow(reports);
+      const win = existingDateWindow(reports, OKNO_OBDOBI_DNI);
       const existing: ExistingClientReport[] = [];
       if (win) {
         // ⛔ Nepřečtené existující řádky NEJSOU „žádné řádky": prázdný seznam by pustil
-        //    insert i přes chráněný zdroj. Okno sahá 3 dny za neděli: web poslaný
-        //    v pondělí až ve středu patří předchozímu týdnu.
+        //    insert i přes chráněný zdroj. Okno sahá 37 dní za pondělí posledního týdne:
+        //    report za víc týdnů přijde až po konci svého období (`OKNO_OBDOBI_DNI`).
         const exist = await ctiSOpakovanim<{
           data: { id?: unknown; report_date?: unknown; source?: unknown; weight?: unknown; nutrition?: unknown }[] | null;
           error: unknown;
@@ -152,7 +173,12 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      const plan = applySyncPlan(email, reports, existing, tg.data ?? null);
+      const kp = planBy.get(email) ?? { kadence: 1, dalsi: null };
+      const plan = applySyncPlan(email, reports, existing, tg.data ?? null, {
+        tydnuMax: TYDNU,
+        graceDni: graceDniProKadenci(kp.kadence),
+        nejdrive: kp.dalsi,
+      });
       const committed = await commitSyncPlan(plan, reportWriter(admin));
       if (committed.error) {
         clients_failed++;

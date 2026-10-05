@@ -35,6 +35,28 @@ export const PASMO_KCAL_PCT = 5;
 export const KROKY_PROPAD_PCT = 20;
 /** Kolik dní ze sedmi musí být zapsáno, aby se čísla o jídle daly brát vážně. */
 export const DNY_ZAPISU_MIN = 6;
+// ⭐ [5. 10. 2026] REPORT ZA DELŠÍ OBDOBÍ (od reportu po report, 7 až 28 dní).
+// Práh zápisu je POMĚR 6/7 (Martin 5. 10., rozhodnutí 1: „12/14, 18/21, 24/28"), ne pevná šestka:
+// jinak by 6 zapsaných dní z 21 prošlo jako čitelný zápis. Počítá se v celých číslech
+// (`dny × 7 ≥ období × 6`), což je přesně ceil(období × 6/7): u celých týdnů 6, 12, 18, 24,
+// u zkráceného období přísněji (5 dní = všech 5), protože tam chybějící den váží víc.
+// Report bez uloženého období je týden a pro něj platí `DNY_ZAPISU_MIN` jako dřív.
+
+/** Kolik dní pokrývá report: uložené období (`obdobi_od`, `obdobi_do`), jinak týden. */
+export function dniObdobi(r) {
+  const od = String((r && r.obdobi_od) || ""), d = String((r && r.obdobi_do) || "");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(od) || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return 7;
+  const n = Math.round((Date.parse(d + "T12:00:00Z") - Date.parse(od + "T12:00:00Z")) / 86400000) + 1;
+  return Number.isFinite(n) && n >= 1 && n <= 28 ? n : 7;
+}
+/** Dá se zápis brát vážně? Nejvýš jeden chybějící den na týden: poměr 6/7 v celých číslech. */
+export function zapisStaci(dny, obdobiDni) {
+  return dny !== null && dny !== undefined && dny * 7 >= (obdobiDni || 7) * 6;
+}
+/** „6 ze 7 dní" u týdne (slovo od slova jako dřív), jinak „18/21 dní" (bez předložky z/ze). */
+export function zapisText(dny, obdobiDni) {
+  return (obdobiDni || 7) === 7 ? fmt(dny) + " ze 7 dní" : fmt(dny) + "/" + obdobiDni + " dní";
+}
 /** Změna váhy pod tímhle tempem (% váhy za týden) je stagnace, ne pohyb. */
 export const STAGNACE_PCT_TYDEN = 0.3;
 /** Nad tímhle tempem (% váhy za týden) se hubne moc rychle a příjem se ZVEDÁ.
@@ -176,6 +198,8 @@ export function spocitejBlok(v) {
   }
 
   const dny = cislo(n.dny_zapsano);
+  // Kolik dní report pokrývá (7 u týdenního i u starého reportu bez období).
+  const obdobiDni = dniObdobi(r);
   const kcal = cislo(n.kcal), protein = cislo(n.protein), fiber = cislo(n.fiber);
   // Starý import z Excelu nemá `sport_min`, ale má `fitko_min` + `kardio_min` (táž jednotka).
   let sportMin = cislo(a.sport_min);
@@ -190,7 +214,7 @@ export function spocitejBlok(v) {
     vaha, vahaPrev, vahaPrvni, zmenaOdMinule, zmenaOdStartu, tempoPct, tempoZdroj,
     tydnuOdMinule: tydnu,
     miry,
-    dnyZapsano: dny, kcal, protein, fiber,
+    dnyZapsano: dny, obdobiDni, kcal, protein, fiber,
     kcalCil: c("kcal"), proteinCil: c("protein"), fiberCil: c("fiber"),
     kroky, krokyCil: c("kroky"), krokyPodezrele,
     sportMin, sportCil: c("sport_min"),
@@ -225,7 +249,7 @@ export function spocitejBlok(v) {
     if (cast.length) t += " (" + cast.join("; ") + ")";
     radky.push(t);
   }
-  if (dny !== null) radky.push("Zápis " + fmt(dny) + " ze 7 dní");
+  if (dny !== null) radky.push("Zápis " + zapisText(dny, obdobiDni));
   if (kcal !== null) {
     radky.push("Průměr " + fmt(kcal, "kcal") +
       (cisla.kcalCil ? " (cíl " + fmt(cisla.kcalCil, "kcal") + ", " + delta(kcal - cisla.kcalCil, "kcal") + ")" : ""));
@@ -289,7 +313,11 @@ export function navrhni(v) {
 
   const stagnuje = c.tempoPct !== null && c.tempoPct !== undefined && Math.abs(c.tempoPct) < STAGNACE_PCT_TYDEN;
   const stagnovalMinule = pc && pc.tempoPct !== null && pc.tempoPct !== undefined && Math.abs(pc.tempoPct) < STAGNACE_PCT_TYDEN;
-  const zapisOk = c.dnyZapsano !== null && c.dnyZapsano >= DNY_ZAPISU_MIN;
+  // [5. 10. 2026] Report za delší období: práh zápisu poměrem a slova „období/report" místo „týden".
+  // U týdenního reportu (obdobiDni 7) jsou věty slovo od slova jako dřív.
+  const N = c.obdobiDni || 7;
+  const tyden = N === 7;
+  const zapisOk = zapisStaci(c.dnyZapsano, N);
   const nadCil = c.kcalOdchylkaPct !== null && c.kcalOdchylkaPct > PASMO_KCAL_PCT;
   const krokyPropad = c.krokyRozdil !== null && c.krokyCil
     ? (-c.krokyRozdil / c.krokyCil) * 100 > KROKY_PROPAD_PCT
@@ -333,7 +361,7 @@ export function navrhni(v) {
       return nic("Zapsaný průměr je " + fmt(c.kcal, "kcal") +
         (c.kcalOdchylkaPct !== null ? " (o " + fmt(Math.abs(c.kcalOdchylkaPct)) + " % pod cílem " + fmt(cil, "kcal") + ")" : "") +
         " a tělo se přitom nehýbe. Takový zápis neberu jako přesný, takže cíl NEŘEŽU: " +
-        "snížené číslo by rozdíl mezi papírem a talířem jen zvětšilo. Úkol na tenhle týden " +
+        "snížené číslo by rozdíl mezi papírem a talířem jen zvětšilo. " + (tyden ? "Úkol na tenhle týden " : "Úkol do dalšího reportu ") +
         "je vážit porce a dopsat i to, co do zápisu obvykle nespadne." + dovetekVazeni,
         "neverohodny_zapis");
     }
@@ -374,19 +402,21 @@ export function navrhni(v) {
         "neprohlubuju a zadání nechávám, takhle to nikdo dlouho neutáhne. ";
       return nic(
         drziDruhyTyden
-          ? zaklad + "Drží to " + GUARDRAIL_ESKALACE_TYDNU + " týdny v řadě, takže bych rovnou " +
+          ? zaklad + "Drží to " + (tyden ? GUARDRAIL_ESKALACE_TYDNU + " týdny v řadě" : "dva reporty v řadě") + ", takže bych rovnou " +
             "nabídl diet break: zhruba dva týdny na udržovačce a pak zpátky do deficitu. " +
             "(Appka to po " + GUARDRAIL_ESKALACE_TYDNU + " týdnech navrhuje sama.)"
           : zaklad + "Nejdřív probereme spánek, zátěž a rozložení jídel. Kdyby to drželo " +
-            "i příští týden, na řadě je diet break, ne hlubší řez.",
+            (tyden ? "i příští týden" : "i v dalším reportu") + ", na řadě je diet break, ne hlubší řez.",
         drziDruhyTyden ? "diet_break" : "guardrail");
     }
   }
 
   // --- 5. PŘESNOST. Sem patří i „zapsal málo dní": z pěti dnů se týdenní průměr nedá poskládat.
   if (!zapisOk) {
-    return nic("Zapsáno " + (c.dnyZapsano === null ? "nic" : fmt(c.dnyZapsano) + " ze 7 dní") +
-      ", takže týdenní průměr není z čeho počítat. Cíle nechávám a úkol na tenhle týden je zápis, ne jiná čísla.");
+    return nic("Zapsáno " + (c.dnyZapsano === null ? "nic" : zapisText(c.dnyZapsano, N)) +
+      (tyden
+        ? ", takže týdenní průměr není z čeho počítat. Cíle nechávám a úkol na tenhle týden je zápis, ne jiná čísla."
+        : ", takže průměr za období není z čeho počítat. Cíle nechávám a úkol do dalšího reportu je zápis, ne jiná čísla."));
   }
   if (nadCil) {
     return nic("Průměr je o " + fmt(c.kcalOdchylkaPct) + " % nad cílem (" + fmt(c.kcal, "kcal") + " proti " + fmt(cil, "kcal") + "). " +
@@ -402,12 +432,12 @@ export function navrhni(v) {
   // --- 7. KALORIE.
   if (smer === "hubnuti" && stagnuje) {
     if (!stagnovalMinule && pc) {
-      return nic("Váha stojí (" + delta(c.zmenaOdMinule, "kg") + "), ale jen tenhle týden. " +
-        "Zápis i příjem sedí, takže bych ještě týden počkal a pak řezal. Kdyby to stálo i příště, jdeme dolů." +
-        dovetekVazeni, "malo_dat");
+      return nic("Váha stojí (" + delta(c.zmenaOdMinule, "kg") + "), " + (tyden ? "ale jen tenhle týden. " : "ale jen v tomhle reportu. ") +
+        (tyden ? "Zápis i příjem sedí, takže bych ještě týden počkal a pak řezal." : "Zápis i příjem sedí, takže bych počkal na další report a pak řezal.") +
+        " Kdyby to stálo i příště, jdeme dolů." + dovetekVazeni, "malo_dat");
     }
     if (!pc) {
-      return nic("Váha stojí (" + delta(c.zmenaOdMinule, "kg") + "), ale nemám předchozí týden na porovnání. " +
+      return nic("Váha stojí (" + delta(c.zmenaOdMinule, "kg") + "), ale nemám " + (tyden ? "předchozí týden" : "předchozí report") + " na porovnání. " +
         "Nechávám a potvrdíme to příštím reportem.", "malo_dat");
     }
     let novy = Math.round((cil * (1 - REZ_PCT / 100)) / 10) * 10;
@@ -418,7 +448,7 @@ export function navrhni(v) {
     }
     return {
       paka: "kcal_dolu", novyKcal: novy, jistota: "jista",
-      duvod: "Váha stojí druhý týden v řadě a přitom je zapsáno " + fmt(c.dnyZapsano) + " ze 7 dní a příjem je " +
+      duvod: "Váha stojí " + (tyden ? "druhý týden" : "druhý report") + " v řadě a přitom je zapsáno " + zapisText(c.dnyZapsano, N) + " a příjem je " +
         "v pásmu " + PASMO_KCAL_PCT + " % kolem cíle. Tady už se to nesvede na přesnost, takže navrhuju " +
         fmt(cil, "kcal") + " na " + fmt(novy, "kcal") + " (-" + REZ_PCT + " %). Podlaha " + fmt(dno, "kcal") +
         " je pořád nad námi." + dovetekVazeni,
@@ -428,8 +458,8 @@ export function navrhni(v) {
     const novy = Math.round((cil * (1 + PRIDANI_PCT / 100)) / 10) * 10;
     return {
       paka: "kcal_nahoru", novyKcal: novy, jistota: "jista",
-      duvod: "Nabíráme a váha stojí (" + delta(c.zmenaOdMinule, "kg") + ") při zápisu " + fmt(c.dnyZapsano) +
-        " ze 7 dní. Navrhuju " + fmt(cil, "kcal") + " na " + fmt(novy, "kcal") + " (+" + PRIDANI_PCT + " %)." +
+      duvod: "Nabíráme a váha stojí (" + delta(c.zmenaOdMinule, "kg") + ") při zápisu " + zapisText(c.dnyZapsano, N) +
+        ". Navrhuju " + fmt(cil, "kcal") + " na " + fmt(novy, "kcal") + " (+" + PRIDANI_PCT + " %)." +
         dovetekVazeni,
     };
   }
@@ -442,7 +472,7 @@ export function navrhni(v) {
   // „Čísla jdou tam, kam mají ( od minule)" s dírou uprostřed. Vidí to Martin i model.
   return nic("Čísla jdou tam, kam mají" +
     (c.zmenaOdMinule === null ? "" : " (" + delta(c.zmenaOdMinule, "kg") + " od minule)") +
-    ", zápis i příjem sedí. Nic bych neměnil, tohle je týden na potvrzení kurzu." + dovetekVazeni);
+    ", zápis i příjem sedí. Nic bych neměnil, tohle je " + (tyden ? "týden" : "období") + " na potvrzení kurzu." + dovetekVazeni);
 }
 
 /** Obojí naráz. Vrací i hotový text bloku k vložení do mailu. */

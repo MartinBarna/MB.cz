@@ -830,6 +830,56 @@
       if(d&&d.start_at) return kdStartDusledek(d,d.start_at);
       return 'prázdné = systém bere datum pozvánky'+((d&&d.granted_at)?(' ('+fmtDay(d.granted_at)+')'):'');
     }
+    // ================= 📅 OBDOBÍ A PLÁN REPORTŮ (5. 10. 2026) =================
+    // ⛔ Tady se NIC nepočítá: období reportu ukládá `client-report`, další report a neděli výzvy
+    //    spočítá server (`client_detail` → `report_plan`, sdílený `_shared/report-obdobi.ts`).
+    //    Karta jen ukazuje a ukládá kadenci. Dvě kopie pravidla by se rozešly.
+    var KD_DNY=['Po','Út','St','Čt','Pá','So','Ne'];
+    function kdIso(s){ return /^\d{4}-\d{2}-\d{2}$/.test(String(s==null?'':s)); }
+    // Období uložené u reportu ({od, do, dni}), nebo null u starého reportu bez období.
+    function kdObdobi(r){
+      if(!r||!kdIso(r.obdobi_od)||!kdIso(r.obdobi_do)) return null;
+      var dni=Math.round((Date.parse(r.obdobi_do+'T12:00:00Z')-Date.parse(r.obdobi_od+'T12:00:00Z'))/86400000)+1;
+      return {od:r.obdobi_od,'do':r.obdobi_do,dni:dni};
+    }
+    function kdKratce(iso){ var p=String(iso).split('-'); return (+p[2])+'. '+(+p[1])+'.'; }
+    function kdDenCesky(iso){ var d=new Date(Date.parse(iso+'T12:00:00Z')); return KD_DNY[(d.getUTCDay()+6)%7].toLowerCase()+' '+czDatum(iso); }
+    // Den v rozpisu: nový tvar má datum („Po 5. 10."), starý jen zkratku dne.
+    function kdDenRozpisu(d){
+      if(d&&kdIso(d.datum)){ var t=new Date(Date.parse(d.datum+'T12:00:00Z')); return KD_DNY[(t.getUTCDay()+6)%7]+' '+t.getUTCDate()+'. '+(t.getUTCMonth()+1)+'.'; }
+      return String((d&&d.den)||'');
+    }
+    // Za kolik dní se ptát appky v náhledu: aspoň 14, u reportu za delší období celé období.
+    function kdAppDni(d){
+      var reps=(d&&d.reports)||[], posl=reps.length?reps[reps.length-1]:null, o=kdObdobi(posl);
+      return Math.max(14,o?o.dni:7);
+    }
+    function kdKadSlovy(k){ return Number(k)===2?'každé 2 týdny':Number(k)===3?'každé 3 týdny':'každý týden'; }
+    function kdDalsiDuvod(d){
+      return d==='tvar_RRRR-MM-DD' ? 'zadej datum v kalendáři, ne ručně (čekám tvar 2026-10-25).'
+           : d==='v_minulosti' ? 'datum je v minulosti. Termín jde jen posunout dál, starší datum by nic nezměnilo.'
+           : d==='prilis_daleko_v_budoucnu' ? 'je víc než 90 dní dopředu, zkontroluj měsíc a rok.'
+           : 'nepodařilo se ho přečíst.';
+    }
+    // Věta pod plánem reportů: kdy má přijít další report a kdy mu odejde výzva.
+    function kdPlanText(d){
+      var p=d&&d.report_plan;
+      if(!p) return '⚠️ Kadenci a další report se teď nepodařilo načíst. Neznamená to, že nejsou zadané, a proto se teď ukládat nedá.';
+      var t;
+      if(d.reports_chyba) t='Kolik reportů klient poslal, se teď nepodařilo načíst, takže další report teď nespočítám.';
+      else if(!p.dalsi) t='Klient zatím žádný report neposlal, termín se spočítá od prvního reportu.';
+      else {
+        t='Další report: '+kdDenCesky(p.dalsi)
+          +(p.posunuto?' (posunuto ručně, podle kadence by byl '+czDatum(p.podle_kadence)+')':'');
+        // Neděle výzvy už minula (klient je s reportem pozadu): netvrdit, že výzva „odejde".
+        var dnesK=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Prague'}).format(new Date());
+        if(p.vyzva&&p.vyzva<dnesK) t+='. Výzva k tomuhle termínu měla jít v neděli '+czDatum(p.vyzva)+'; dokud report nepošle, chodí znovu podle kadence'+(d.remind_on===false?', jenže připomínky má vypnuté.':'.');
+        else t+='. Výzva mu odejde v neděli '+czDatum(p.vyzva)+(d.remind_on===false?', jenže připomínky má vypnuté.':', když do té doby report nepošle.');
+      }
+      if(p.kadence_zdroj==='seznam_14d') t+=' Kadence je zatím ze starého seznamu client_remind_14d, ulož ji tady.';
+      if(p.seznam_14d_chyba) t+=' ⚠️ Starý seznam kadence se nenačetl.';
+      return t;
+    }
     // 🏁 Konec zaplaceného období. Věta říká DŮSLEDEK, ne jen stav: prázdné pole
     // nevypadá jako chyba, takže by si nikdo nevšiml, že se klientovi appka sama
     // nezavře. Ochranná lhůta žije v `app_config.koucink_konec_grace_dny`, tady se
@@ -1570,11 +1620,19 @@
           var academy = r.academy_po_3m ? '<br><span style="color:#F6CD63;font-size:.8rem;" title="Po 3 zaplacených měsících mu Academy zůstává napořád. Přiděl ručně.">🎓 Academy po 3 měs.</span>' : '';
           return jmeno+delka+zdroj+doKdy+academy;
         }
+        // [5. 10. 2026, fáze 2] Dnešek v Praze (Martin bývá v jiném pásmu, termíny jsou pražské).
+        var dnesPrahaKli=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Prague'}).format(new Date());
         function radek(r, jeByvaly){
           var lastMs=r.last_report?new Date(r.last_report+'T12:00:00').getTime():0;
           var days=lastMs?Math.floor((now-lastMs)/86400000):null;
+          // ⭐ [5. 10. 2026, fáze 2] Práh podle kadence z karty (týden 8 dní jako dřív, 2 týdny 15,
+          // 3 týdny 22) a do ručně posunutého dalšího reportu (dovolená) se nevaruje vůbec.
+          var kad=r.report_kadence||1;
+          var odlozenoDo=(r.dalsi_report&&String(r.dalsi_report).slice(0,10)>=dnesPrahaKli)?String(r.dalsi_report).slice(0,10):'';
           // U byvaleho klienta varovani „dlouho neposlal report" nedava smysl, uz ho posilat nema.
-          var warn=(!jeByvaly&&!repsUnknown&&(days==null||days>8))?' <b style="color:#F6CD63">⚠️</b>':'';
+          var warn=(!jeByvaly&&!repsUnknown&&!odlozenoDo&&(days==null||days>7*kad+1))?' <b style="color:#F6CD63">⚠️</b>':'';
+          var kadTxt=(kad>1?' <span class="muted" style="font-size:.78rem;">· report po '+kad+' týdnech</span>':'')
+            +(odlozenoDo?' <span class="muted" style="font-size:.78rem;" title="Další report ručně posunutý v kartě klienta">· další '+esc(czDatum(odlozenoDo))+'</span>':'');
           return '<tr><td><a href="#" data-kli="'+esc(r.email)+'" data-kliname="'+esc(r.name||'')+'" style="color:#F6CD63;">'+esc(r.email)+'</a></td>'
             +'<td>'+esc(r.name||'–')+'</td>'
             +'<td>'+(r.registered==null?'<span class="muted" title="Účty se teď nenačetly">?</span>':(r.registered?'✅':'<span class="muted">čeká na registraci</span>'))+'</td>'
@@ -1586,7 +1644,7 @@
                `client-remind` pořád jede na náhradu z data pozvánky. */
             +'<td style="white-space:nowrap;">'+kliStart(r.start_at)+'</td>'
             +'<td class="tcount">'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':r.reports)+'</td>'
-            +'<td>'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>'))+warn+'</td></tr>';
+            +'<td>'+(repsUnknown?'<span class="muted" title="Reporty se teď nenačetly">?</span>':(r.last_report?fmtDay(r.last_report)+(days!=null?' <span class="muted">('+days+' d)</span>':''):'<span class="muted">zatím žádný</span>'))+warn+kadTxt+'</td></tr>';
         }
         var HLAVICKA='<thead><tr><th>E-mail</th><th>Jméno</th><th>Účet</th><th>Dotazník</th><th>Appka</th><th>Balíček</th><th>Start</th><th>Reportů</th><th>Poslední report</th></tr></thead>';
         // 🚀 FRONTA: kdo vyplnil dotazník a ještě nemá z něj postavené zadání. Data vrací
@@ -2279,6 +2337,28 @@
         +'<span id="kdKonecStat" class="'+(d.start_chyba?'':'muted')+'" style="font-size:.78rem;'+(d.start_chyba?'color:#F6CD63;':'')+'">'
         +esc(kdKonecStatText(d))
         +'</span></div>';
+      // 📅 PLÁN REPORTŮ (5. 10. 2026, Martin, rozhodnutí 2: „report každý 1/2/3 týden" a „další
+      // report dne"). Řídí JEN nedělní připomínky a hlídání, období reportu se počítá samo.
+      // „Další nejdřív" termín jen posouvá dál (dovolená) a po dalším reportu přestane platit sám.
+      // ⛔ Při chybě čtení (`report_plan: null`) se pole zamknou jako u startu: prázdné pole
+      //    po chybě není „nic zadané" a uložení by kadenci přepsalo na týden.
+      var kdPlan=d.report_plan||null, kdZamek=!kdPlan;
+      // Ruční termín, který už minul, se do pole nevrací: posunout jde jen dopředu a uložení
+      // kadence by jinak spadlo na „datum je v minulosti". Uložením se smaže, což prakticky nic
+      // nemění, protože minulé datum termín už nikam neposouvá.
+      var kdDnes=new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Prague'}).format(new Date());
+      var kdDalsiPole=(kdPlan&&kdIso(kdPlan.dalsi_rucne)&&kdPlan.dalsi_rucne>=kdDnes)?kdPlan.dalsi_rucne:'';
+      h+='<div style="margin:0 0 .8rem;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">'
+        +'<span style="font-size:.85rem;color:#cbbfae;">📅 Reporty:</span>'
+        +'<select id="kdKad"'+(kdZamek?' disabled':'')+' style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;">'
+        +[1,2,3].map(function(k){ return '<option value="'+k+'"'+((kdPlan?kdPlan.kadence:1)===k?' selected':'')+'>'+kdKadSlovy(k)+'</option>'; }).join('')
+        +'</select>'
+        +'<span style="font-size:.85rem;color:#cbbfae;">další nejdřív:</span>'
+        +'<input type="date" id="kdDalsi" value="'+esc(kdDalsiPole)+'"'+(kdZamek?' disabled':'')+' title="Nech prázdné, když jede podle kadence. Datum termín jen posune dál (dovolená)." style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:6px 10px;color:#fff;font-family:inherit;font-size:.85rem;">'
+        +'<button class="mlogbtn" id="kdPlanSave"'+(kdZamek?' disabled':'')+' style="padding:6px 12px;">Uložit</button>'
+        +'<span id="kdPlanStat" class="'+(kdZamek?'':'muted')+'" style="font-size:.78rem;'+(kdZamek?'color:#F6CD63;':'')+'">'
+        +esc(kdPlanText(d))
+        +'</span></div>';
       function kdTgIn(id,label,unit,ph){
         var v=tg[id]==null?'':String(tg[id]);
         return '<label style="display:block;font-size:.78rem;color:#8F8A99;">'+label+(unit?' <span style="color:#6d6879;">('+unit+')</span>':'')
@@ -2321,17 +2401,20 @@
           var txt=[t.povedlo?'✓ '+t.povedlo:'',t.drhlo?'✗ '+t.drhlo:'',t.otazky?'? '+t.otazky:'',t.dalsi?'💬 '+t.dalsi:''].filter(Boolean).join(' · ');
           var fot=(Array.isArray(r.photos)?r.photos:[]).map(function(p,pi){ return '<a href="#" data-kdoc="'+esc(p)+'" style="color:#F6CD63;text-decoration:none;">📷'+(pi+1)+'</a>'; }).join(' ');
           var dnyArr=(n.dny||[]).filter(Boolean);
-          var datum=dnyArr.length?'<a href="#" data-kdny="'+ri+'" style="color:#F6CD63;text-decoration:none;" title="denní rozpis stravy">▸ '+fmtDay(r.report_date)+'</a>':fmtDay(r.report_date);
+          // [5. 10. 2026] Období reportu: pod datem, když není přesně týden; ve sloupci Dny „18/21".
+          var obdR=kdObdobi(r);
+          var datum=(dnyArr.length?'<a href="#" data-kdny="'+ri+'" style="color:#F6CD63;text-decoration:none;" title="denní rozpis stravy">▸ '+fmtDay(r.report_date)+'</a>':fmtDay(r.report_date))
+            +(obdR&&obdR.dni!==7?'<br><span class="muted" style="font-size:.72rem;" title="období reportu">'+kdKratce(obdR.od)+' až '+kdKratce(obdR['do'])+' ('+obdR.dni+' d)</span>':'');
           // sport v minutach: novy formular = sport_min; stare import-sheet reporty = fitko_min +
           // kardio_min (stejna jednotka, soucet je poctivy; pocty na minuty se neprepocitavaji)
           var sportMin=kliNum(a.sport_min);
           if(sportMin==null&&(kliNum(a.fitko_min)!=null||kliNum(a.kardio_min)!=null)) sportMin=(kliNum(a.fitko_min)||0)+(kliNum(a.kardio_min)||0);
           var pn=a.plan_next||{};
           var plan=(kliNum(pn.kroky)!=null||kliNum(pn.sport_min)!=null)?(kliCz(pn.kroky)+' kr / '+kliCz(pn.sport_min)+' min'+(pn.stejne?' (=)':'')):'–';
-          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b>'+kliZAppky(n,'vaha',r.source)+'</td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+kliZAppky(n,'kcal',r.source)+'</td><td>'+kliCz(n.protein)+kliZAppky(n,'protein',r.source)+'</td><td>'+kliCz(n.carbs)+kliZAppky(n,'carbs',r.source)+'</td><td>'+kliCz(n.fat)+kliZAppky(n,'fat',r.source)+'</td><td>'+kliCz(n.fiber)+kliZAppky(n,'fiber',r.source)+'</td><td>'+kliCz(n.dny_zapsano)+kliZAppky(n,'dny_zapsano',r.source)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'–')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'–')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'–')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
+          h+='<tr><td style="white-space:nowrap;">'+datum+'</td><td><b>'+kliCz(r.weight)+'</b>'+kliZAppky(n,'vaha',r.source)+'</td><td>'+kliCz(m.prsa)+'</td><td>'+kliCz(m.pas)+'</td><td>'+kliCz(m.boky)+'</td><td>'+kliCz(m.zadek)+'</td><td>'+kliCz(m.p_stehno)+'</td><td>'+kliCz(m.l_stehno)+'</td><td>'+kliCz(n.kcal)+kliZAppky(n,'kcal',r.source)+'</td><td>'+kliCz(n.protein)+kliZAppky(n,'protein',r.source)+'</td><td>'+kliCz(n.carbs)+kliZAppky(n,'carbs',r.source)+'</td><td>'+kliCz(n.fat)+kliZAppky(n,'fat',r.source)+'</td><td>'+kliCz(n.fiber)+kliZAppky(n,'fiber',r.source)+'</td><td style="white-space:nowrap;">'+kliCz(n.dny_zapsano)+(obdR&&kliNum(n.dny_zapsano)!=null?'/'+obdR.dni:'')+kliZAppky(n,'dny_zapsano',r.source)+'</td><td>'+(kliNum(a.kroky)!=null?Math.round(kliNum(a.kroky)).toLocaleString('cs-CZ'):'–')+'</td><td>'+kliCz(a.fitko)+'</td><td>'+(sportMin!=null?kliCz(sportMin):'–')+'</td><td style="white-space:nowrap;">'+plan+'</td><td>'+kliCz(s.unava)+'</td><td>'+kliCz(s.hlad)+'</td><td>'+kliCz(s.sila)+'</td><td>'+(s.spanek_h?kliCz(s.spanek_h)+'h/':'')+kliCz(s.spanek_kvalita)+'</td><td>'+kliCz(s.dodrzeni)+'</td><td style="white-space:nowrap;">'+(fot||'–')+'</td><td style="max-width:min(260px,58vw);white-space:normal;">'+esc(txt)+'</td></tr>';
           if(dnyArr.length){
             var dt='<table style="font-size:.76rem;border-collapse:collapse;"><tr><th style="padding:2px 8px;color:#8F8A99;">Den</th><th style="padding:2px 8px;color:#8F8A99;">kcal</th><th style="padding:2px 8px;color:#8F8A99;">B</th><th style="padding:2px 8px;color:#8F8A99;">S</th><th style="padding:2px 8px;color:#8F8A99;">T</th><th style="padding:2px 8px;color:#8F8A99;">Vl</th></tr>'
-              +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;">'+esc(d.den||'')+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table>';
+              +(n.dny||[]).map(function(d){ if(!d) return ''; return '<tr><td style="padding:2px 8px;color:#8F8A99;white-space:nowrap;">'+esc(kdDenRozpisu(d))+'</td><td style="padding:2px 8px;">'+kliCz(d.kcal)+'</td><td style="padding:2px 8px;">'+kliCz(d.p)+'</td><td style="padding:2px 8px;">'+kliCz(d.c)+'</td><td style="padding:2px 8px;">'+kliCz(d.f)+'</td><td style="padding:2px 8px;">'+kliCz(d.fib)+'</td></tr>'; }).join('')+'</table>';
             h+='<tr id="kdnyrow'+ri+'" style="display:none;"><td colspan="25" style="background:rgba(235,177,44,.05);padding:6px 12px;">🍽️ Denní rozpis (z Kalorických tabulek / ručně):<br>'+dt+'</td></tr>';
           }
         });
@@ -2433,7 +2516,7 @@
         +'<div id="tpWrap"><button class="mlogbtn" id="kdTpOpen">Otevřít editor tréninku</button> <span class="muted" style="font-size:.8rem;">Zadání odhadne z dotazníku, plán poskládá generátor, texty napíše AI a Ty je přepíšeš.</span></div></section>';
       // data z appky Tvůj Coach (bonus vedle reportů)
       h+='<h4 style="margin:1rem 0 .3rem;color:#cbbfae;font-size:.78rem;text-transform:uppercase;">📱 Tvůj Coach: reálný zápis jídla</h4>'
-        +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky (14 dní)</button> <button class="mlogbtn" id="kdAppSyncBtn">Uložit data z appky do reportů</button> <span class="muted" style="font-size:.8rem;">Náhled ukáže denní zápis. Uložení doplní prázdná pole v týdenních reportech, čísla, která klient sám napsal, se nepřepíšou.</span><div id="kdAppOut" style="margin-top:.5rem;">'+(KD_APP_SYNC_MSG||'')+'</div></div>';
+        +'<div id="kdApp"><button class="mlogbtn" id="kdAppBtn">Načíst data z appky ('+kdAppDni(d)+' dní)</button> <button class="mlogbtn" id="kdAppSyncBtn">Uložit data z appky do reportů</button> <span class="muted" style="font-size:.8rem;">Náhled ukáže denní zápis. Uložení doplní prázdná pole v týdenních reportech, čísla, která klient sám napsal, se nepřepíšou.</span><div id="kdAppOut" style="margin-top:.5rem;">'+(KD_APP_SYNC_MSG||'')+'</div></div>';
       KD_APP_SYNC_MSG='';
       // 🧾 KONTROLA OD MARTINA: posledni rozbor tohohle klienta.
       // ⛔ Tady se schvalne NEODESILA. Odesila se v karte „Kontrola od Martina" vys,
@@ -2689,6 +2772,32 @@
           else toast('Chyba: '+((o.j&&o.j.error)||o.status));
         }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
       });
+      // 📅 Uložení plánu reportů (kadence + další report nejdřív). ⛔ Termín a neděli výzvy po
+      // uložení přepočítá SERVER (karta si znovu načte `client_detail`), tady se nic nedopočítává.
+      var kdPlanSave=$('kdPlanSave');
+      if(kdPlanSave) kdPlanSave.addEventListener('click',function(){
+        var b=kdPlanSave; if(b.disabled) return;
+        var kad=Number($('kdKad').value), dalsi=($('kdDalsi').value||'').trim();
+        if(!confirm('Uložit pro '+email+': report '+kdKadSlovy(kad)+(dalsi?', další report nejdřív '+czDatum(dalsi):', další report podle kadence')+'?\nPodle toho mu chodí nedělní připomínky. Období reportu se počítá samo od reportu po report.')) return;
+        var t0=b.textContent; b.disabled=true; b.textContent='Ukládám…';
+        api({action:'client_report_plan_save',email:email,kadence:kad,dalsi_report:dalsi}).then(function(o){
+          b.disabled=false; b.textContent=t0;
+          if(o.j&&o.j.ok){
+            toast('📅 Uloženo: report '+kdKadSlovy(o.j.kadence)+(o.j.dalsi_report?', další nejdřív '+czDatum(o.j.dalsi_report):''));
+            api({action:'client_detail',email:email}).then(function(o2){
+              if(!o2.j||!o2.j.ok||KDET.email!==email) return;
+              KDET.data=o2.j;
+              var st=$('kdPlanStat'); if(st) st.textContent=kdPlanText(KDET.data);
+            }).catch(function(){ var st=$('kdPlanStat'); if(st) st.textContent='Uloženo. Termín se ukáže po obnovení karty.'; });
+            loadKlienti();
+          }
+          else if(o.j&&o.j.error==='kadence') toast('Vyber, jestli report chodí každý týden, každé 2 nebo 3 týdny.');
+          else if(o.j&&o.j.error==='dalsi_report') toast('Další report: '+kdDalsiDuvod(o.j.duvod)+' Nic se neuložilo.');
+          else if(o.j&&o.j.error==='neni_klient') toast('Tenhle e-mail nemá koučinkový nárok, kadenci nemá kam uložit.');
+          else if(o.j&&o.j.error==='ukonceny_klient') toast('Klient je ukončený, kadence se mu neukládá.');
+          else toast('Chyba: '+((o.j&&o.j.error)||o.status));
+        }).catch(function(){ b.disabled=false; b.textContent=t0; toast('Chyba spojení'); });
+      });
       // 📨 Doposlání uvítacího mailu. ⛔ Tlačítko musí být `disabled` po dobu volání:
       // dvojklik = dva stejné maily klientovi (stejně jako u pozvánky `kiSend`).
       var kdWelBtn=$('kdWelBtn');
@@ -2939,7 +3048,8 @@
       });
       $('kdAppBtn').addEventListener('click',function(){
         var host=$('kdAppOut'); host.innerHTML='<p class="muted" style="font-size:.85rem;">Načítám z appky…</p>';
-        api({action:'client_app_data',email:email,days:14}).then(function(o){
+        // [5. 10. 2026] U reportu za delší období se appky ptáme na celé období (aspoň 14 dní).
+        api({action:'client_app_data',email:email,days:kdAppDni(KDET.data)}).then(function(o){
           var j=o.j||{};
           if(!j.ok){
             // rozliš: výpadek appky ≠ „klient v appce není", jinak Martin dostane nepravdivou info
@@ -3004,7 +3114,8 @@
       var d=KDET.data; if(!d) return;
       var SEP=';', cols=['Datum','Váha (kg)'];
       KLI_MIRY.forEach(function(x){ cols.push(x[1]+' (cm)'); });
-      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Sport celkem (min)','Plán kroky','Plán sport (min)','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího','Fotek']);
+      // [5. 10. 2026] Období reportu na KONEC, ať se ostatní sloupce v Martinových tabulkách neposunou.
+      cols=cols.concat(['kcal Ø','Bílkoviny Ø (g)','Sacharidy Ø (g)','Tuky Ø (g)','Vláknina Ø (g)','Dny zapsáno','Kroky Ø','Fitko','Sport celkem (min)','Plán kroky','Plán sport (min)','Kardio','Další sport','Únava 1-5','Hlad 1-5','Síla 1-5','Spánek (h)','Spánek kvalita 1-5','Dodržení 1-5','Co se povedlo','Co drhlo','Otázky','Cokoliv dalšího','Fotek','Období od','Období do']);
       function cell(v){ v=v==null?'':String(v).replace(/\./g,','); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
       function cellTxt(v){ v=v==null?'':String(v); return (v.indexOf(SEP)>-1||v.indexOf('\n')>-1||v.indexOf('"')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
       var lines=[cols.join(SEP)];
@@ -3013,7 +3124,7 @@
         var row=[r.report_date,cell(r.weight)];
         KLI_MIRY.forEach(function(x){ row.push(cell(m[x[0]])); });
         var pn=a.plan_next||{};
-        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cell(a.sport_min),cell(pn.kroky),cell(pn.sport_min),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi),cell((Array.isArray(r.photos)?r.photos:[]).length||'')]);
+        row=row.concat([cell(n.kcal),cell(n.protein),cell(n.carbs),cell(n.fat),cell(n.fiber),cell(n.dny_zapsano),cell(a.kroky),cell(a.fitko),cell(a.sport_min),cell(pn.kroky),cell(pn.sport_min),cellTxt(a.kardio),cellTxt(a.dalsi),cell(s.unava),cell(s.hlad),cell(s.sila),cell(s.spanek_h),cell(s.spanek_kvalita),cell(s.dodrzeni),cellTxt(t.povedlo),cellTxt(t.drhlo),cellTxt(t.otazky),cellTxt(t.dalsi),cell((Array.isArray(r.photos)?r.photos:[]).length||''),cellTxt(r.obdobi_od||''),cellTxt(r.obdobi_do||'')]);
         lines.push(row.join(SEP));
       });
       var blob=new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});  // BOM: česká diakritika v Excelu

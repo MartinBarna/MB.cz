@@ -99,7 +99,12 @@
   .m2{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px;}
   .mtgl{margin:4px 0 14px;}
   .days7{display:grid;grid-template-columns:auto repeat(5,1fr);gap:8px 6px;align-items:center;}
-  .days7 .dn{color:#8F8A99;font-size:.85rem;font-weight:700;width:24px;}
+  .days7 .dn{color:#8F8A99;font-size:.85rem;font-weight:700;min-width:24px;white-space:nowrap;}
+  /* Období reportu (5. 10. 2026): rámeček s „od kdy do kdy" v kroku Strava a v souhrnu. */
+  .obdbox{margin:0 0 16px;padding:10px 12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);border-radius:10px;font-size:.88rem;color:#E8E3EF;line-height:1.5;}
+  .obdbox.warn{border-color:rgba(235,177,44,.45);background:rgba(235,177,44,.08);color:#F6CD63;}
+  [data-theme="light"] .obdbox{color:#161310 !important;background:rgba(0,0,0,.03) !important;border-color:rgba(0,0,0,.14) !important;}
+  [data-theme="light"] .obdbox.warn{color:#6B4D06 !important;background:rgba(235,177,44,.12) !important;border-color:rgba(134,96,8,.45) !important;}
   .days7 .hd{font-size:.72rem;color:#8F8A99;text-align:center;}
   .days7 input{padding:8px 6px !important;font-size:.88rem !important;text-align:center;}
   .sumg{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:12px;padding:14px 16px;margin:0 0 12px;}
@@ -111,7 +116,10 @@
   .wdone{text-align:center;padding:40px 10px;}
   .wdone .big{font-size:3.2rem;}
   .wdone h2{font-size:1.5rem;}
-  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#211d2b;border:1px solid rgba(235,177,44,.5);color:#fff;border-radius:12px;padding:12px 20px;font-size:.92rem;z-index:80;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+  /* pointer-events:none (5. 10. 2026): hláška leží přes tlačítko „Pokračovat" ve spodní liště
+     průvodce a ťuk do ní se ztratil. V hlášce nic klikacího není, ťuk projde na tlačítko.
+     Šířka: s `left:50%` měla hláška na mobilu jen půl displeje a delší věta se lámala do sloupce. */
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#211d2b;border:1px solid rgba(235,177,44,.5);color:#fff;border-radius:12px;padding:12px 20px;font-size:.92rem;z-index:80;box-shadow:0 8px 30px rgba(0,0,0,.5);pointer-events:none;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;}
 </style>
 </head>
 <body class="ba ba-klient">
@@ -325,6 +333,13 @@
   // VIEW_BODY = totéž plus startovní bod z dotazníku (jen váha a míry). Stat karty
   // nahoře jedou nad CELOU historií, protože říkají „od začátku" a filtr by z nich udělal lež.
   var VIEW = [], VIEW_BODY = [], periodWeeks = 0; // 0 = vše
+  // ⭐ OBDOBÍ REPORTU (5. 10. 2026, Martin: „od reportu po report, ať to bere samo").
+  // Počítá ho JEN server (akce `obdobi` v client-report, `_shared/report-obdobi.ts`), tady se
+  // nic nedopočítává. OBD = {od, do, dni, prvni, oprava, zkraceno} pro právě otevřený průvodce.
+  // ⛔ null = období se NEPODAŘILO načíst: průvodce jede jako dřív (7 dní Po až Ne, import
+  //    posledních 7 dní) s viditelnou větou a období neposílá. Nikdy si tiše nedosadí
+  //    „první report" ani 7 dní, které by klient po 14 dnech vyplnil jako celé období.
+  var OBD = null;
 
   function el(id){ return document.getElementById(id); }
   function czk(n){ return (n==null||n==="") ? "-" : String(n).replace(".", ","); }
@@ -406,6 +421,88 @@
     return list;
   }
   function toast(msg){ var t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 4200); }
+
+  // ---------- období reportu: jen ZOBRAZENÍ toho, co spočítal server ----------
+  // ⛔ Žádné pravidlo období tu není (kdyby bylo, rozejde se se serverem). Jen kalendářní
+  //    pomůcky na popis dnů, které server poslal. Počítá se v poledne UTC, ať den nikdy
+  //    neskočí přes změnu času nebo časové pásmo prohlížeče.
+  var DNY_ISO = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
+  function isoDate(s){ return /^\d{4}-\d{2}-\d{2}$/.test(String(s == null ? "" : s)); }
+  function isoPoledne(iso){ var p = String(iso).split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2], 12); }
+  function isoPlus(iso, n){ return new Date(isoPoledne(iso) + n * 86400000).toISOString().slice(0, 10); }
+  function isoDen(iso){ return DNY_ISO[(new Date(isoPoledne(iso)).getUTCDay() + 6) % 7]; }
+  function isoKratce(iso, sRokem){ var p = String(iso).split("-"); return (+p[2]) + ". " + (+p[1]) + "." + (sRokem ? " " + p[0] : ""); }
+  function popisObd(od, d){ return od === d ? isoKratce(od, true) : isoKratce(od, od.slice(0, 4) !== d.slice(0, 4)) + " až " + isoKratce(d, true); }
+  function slovoDni(n){ return n + (n === 1 ? " den" : (n >= 2 && n <= 4 ? " dny" : " dní")); }
+  // Den v rozpisu: nový tvar má datum („Po 5. 10."), starý jen zkratku dne.
+  function denRozpisu(d){ return d && isoDate(d.datum) ? isoDen(d.datum) + " " + isoKratce(d.datum, false) : String((d && d.den) || ""); }
+  // Týdenní report (nebo náhradní režim bez období) má texty přesně jako dřív.
+  function obdTydenni(){ return !OBD || OBD.dni === 7; }
+  // Období uložené u reportu v historii, nebo null (starý report bez období).
+  function obdReportu(r){
+    if(!r || !isoDate(r.obdobi_od) || !isoDate(r.obdobi_do)) return null;
+    return { od: r.obdobi_od, "do": r.obdobi_do, dni: Math.round((isoPoledne(r.obdobi_do) - isoPoledne(r.obdobi_od)) / 86400000) + 1 };
+  }
+  // Zeptá se serveru na období (akce `obdobi`). ⛔ Jakákoli chyba, timeout i nesmyslná odpověď
+  // = null, tedy náhradní režim s varováním, nikdy vymyšlené období.
+  function nactiObdobi(){
+    return window.BA.getToken().then(function(t){
+      var ctl = (typeof AbortController === "function") ? new AbortController() : null;
+      var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 10000) : null;
+      return fetch(FN, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
+        body: JSON.stringify({ action: "obdobi" }),
+        signal: ctl ? ctl.signal : undefined
+      }).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
+        if(tm) clearTimeout(tm);
+        if(!j || j.ok !== true || !isoDate(j.od) || !isoDate(j["do"])) return null;
+        var dni = Math.round((isoPoledne(j["do"]) - isoPoledne(j.od)) / 86400000) + 1;
+        if(dni !== j.dni || dni < 1 || dni > 28) return null;
+        return { od: j.od, "do": j["do"], dni: dni, prvni: !!j.prvni, oprava: !!j.oprava, zkraceno: !!j.zkraceno };
+      });
+    }).catch(function(){ return null; });
+  }
+  // Rámeček nad krokem Strava a v souhrnu: od kdy do kdy report je, nebo varování.
+  function obdBox(){
+    if(!OBD) return '<div class="obdbox warn">⚠️ Období reportu se teď nepodařilo načíst, takže formulář jede jako dřív: denní rozpis Po až Ne a z exportu posledních 7 dní. Posíláš-li report za delší dobu, zavři ho a zkus to za chvíli znovu.</div>';
+    var t = 'Tvoje období: <b>' + popisObd(OBD.od, OBD["do"]) + '</b> (' + slovoDni(OBD.dni) + ').';
+    if(OBD.oprava) t += ' Za tohle období už report máš. Když ho pošleš znovu, Martin dostane opravenou verzi.';
+    else if(OBD.zkraceno) t += ' Od minulého reportu uběhly víc než 4 týdny, report proto bere jen poslední 4 týdny.';
+    return '<div class="obdbox">' + t + '</div>';
+  }
+  // Řádky denního rozpisu: s obdobím jeden na každý den (s datem), bez něj Po až Ne jako dřív.
+  function slotyRozpisu(){
+    if(!OBD) return DAYS.map(function(d){ return { label: d, datum: null, den: d }; });
+    var out = [];
+    for(var i = 0; i < OBD.dni; i++){
+      var iso = isoPlus(OBD.od, i);
+      out.push({ label: isoDen(iso) + " " + isoKratce(iso, false), datum: iso, den: isoDen(iso) });
+    }
+    return out;
+  }
+  // Hodnoty dne pro řádek rozpisu: nový tvar se páruje podle data, starý podle pořadí Po až Ne.
+  function rozpisProSlot(dnyArr, slot, i){
+    var arr = Array.isArray(dnyArr) ? dnyArr : [];
+    if(slot.datum){
+      for(var j = 0; j < arr.length; j++){ if(arr[j] && arr[j].datum === slot.datum) return arr[j]; }
+      return {};
+    }
+    var x = arr[i];
+    return (x && !x.datum) ? x : {};
+  }
+  // Koncept v prohlížeči je z jiného období (nebo z doby před obdobím): strava z něj se zahodí,
+  // ať se klientovi nevnutí čísla z minula. Ostatní odpovědi zůstanou.
+  function srovnejKoncept(){
+    var a = W.ans, k = a._obdobi || null;
+    var maStravu = a.nutrition !== undefined || a._noTrack != null;
+    var sedi = OBD ? !!(k && k.od === OBD.od && k["do"] === OBD["do"]) : !k;
+    if(maStravu && !sedi){
+      delete a.nutrition; delete a._noTrack; delete a._dnyOpen;
+      toast("Rozpracovaná strava v konceptu byla z jiného období, smazal jsem ji. Ostatní odpovědi zůstaly.");
+    }
+    if(OBD) a._obdobi = { od: OBD.od, "do": OBD["do"] }; else delete a._obdobi;
+  }
 
   // ---------- data (REST + RLS: vidím jen svoje řádky) ----------
   function api(path){
@@ -772,9 +869,12 @@
     var rows = VIEW.slice().reverse().map(function(r, ri){
       var m = r.measurements || {}, nu = r.nutrition || {}, ac = r.activity || {}, sc = r.scales || {};
       var dnyArr = (nu.dny || []).filter(Boolean);
-      var datum = dnyArr.length
+      // Období reportu (od 5. 10. 2026): pod datem „5. 10. až 25. 10." a ve sloupci Dny „18/21".
+      var obdR = obdReportu(r);
+      var obdTxt = obdR && obdR.dni !== 7 ? '<br><span style="color:#8F8A99;font-size:.75rem;">' + popisObd(obdR.od, obdR["do"]) + '</span>' : "";
+      var datum = (dnyArr.length
         ? '<a href="#" data-hdny="' + ri + '" style="color:#F6CD63;text-decoration:none;" title="denní rozpis stravy">▸ ' + dateCz(r.report_date) + "</a>"
-        : dateCz(r.report_date);
+        : dateCz(r.report_date)) + obdTxt;
       // Sport v minutach; stare importovane reporty maji minuty zvlast (fitko_min + kardio_min),
       // obe jsou stejna jednotka, takze soucet je poctivy. Nikdy neprepocitavat pocty na minuty.
       var sportMin = toNum(ac.sport_min);
@@ -791,14 +891,14 @@
         + "</td><td class='r'>" + czk(toNum(nu.carbs)) + znackaAppky(nu, "carbs", r.source)
         + "</td><td class='r'>" + czk(toNum(nu.fat)) + znackaAppky(nu, "fat", r.source)
         + "</td><td class='r'>" + czk(toNum(nu.fiber)) + znackaAppky(nu, "fiber", r.source)
-        + "</td><td class='r'>" + czk(toNum(nu.dny_zapsano)) + znackaAppky(nu, "dny_zapsano", r.source)
+        + "</td><td class='r'>" + czk(toNum(nu.dny_zapsano)) + (obdR && toNum(nu.dny_zapsano) != null ? "/" + obdR.dni : "") + znackaAppky(nu, "dny_zapsano", r.source)
         + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "-") + delta("kroky", ac.kroky, true, tgR)
         + "</td><td class='r'>" + czk(toNum(ac.fitko)) + delta("treninky", ac.fitko, true, tgR)
         + "</td><td class='r'>" + czk(sportMin) + delta("sport_min", sportMin, true, tgR)
         + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
       if(dnyArr.length){
         var dt = "<table class='hist' style='font-size:.82rem;'><tr><th>Den</th><th class='r'>kcal</th><th class='r'>B</th><th class='r'>S</th><th class='r'>T</th><th class='r'>Vl</th></tr>"
-          + (nu.dny || []).map(function(d){ if(!d) return ""; return "<tr><td>" + escH(d.den || "") + "</td><td class='r'>" + czk(toNum(d.kcal)) + "</td><td class='r'>" + czk(toNum(d.p)) + "</td><td class='r'>" + czk(toNum(d.c)) + "</td><td class='r'>" + czk(toNum(d.f)) + "</td><td class='r'>" + czk(toNum(d.fib)) + "</td></tr>"; }).join("") + "</table>";
+          + (nu.dny || []).map(function(d){ if(!d) return ""; return "<tr><td style='white-space:nowrap;'>" + escH(denRozpisu(d)) + "</td><td class='r'>" + czk(toNum(d.kcal)) + "</td><td class='r'>" + czk(toNum(d.p)) + "</td><td class='r'>" + czk(toNum(d.c)) + "</td><td class='r'>" + czk(toNum(d.f)) + "</td><td class='r'>" + czk(toNum(d.fib)) + "</td></tr>"; }).join("") + "</table>";
         out += '<tr id="hdnyrow' + ri + '" style="display:none;"><td colspan="13" style="background:rgba(235,177,44,.05);">🍽️ Tvůj denní rozpis, tady vidíš, co se kdy dělo:' + dt + "</td></tr>";
       }
       return out;
@@ -889,7 +989,9 @@
     wShow();
   }
   function wCloseFn(force){
-    if(!force && Object.keys(W.ans).length && !confirm("Zavřít? Rozpracované odpovědi zůstanou uložené v tomhle prohlížeči.")) return;
+    // `_obdobi` je jen značka konceptu (období reportu), ne odpověď klienta: sama o sobě se neptá.
+    var odpovedi = Object.keys(W.ans).filter(function(k){ return k !== "_obdobi"; });
+    if(!force && odpovedi.length && !confirm("Zavřít? Rozpracované odpovědi zůstanou uložené v tomhle prohlížeči.")) return;
     el("wiz").classList.remove("open"); document.body.style.overflow = "";
   }
   function wSaveDraft(){ try { localStorage.setItem(draftKey(), JSON.stringify({ ans: W.ans, t: Date.now() })); } catch(e){} }
@@ -970,7 +1072,9 @@
     return '<div class="frow"><label>Fotky a přílohy <span class="opt">(nepovinné · max 6, každá do 8 MB)</span></label>'
       + '<input type="file" id="f_foto" accept="image/*,application/pdf,.xls,.xlsx" multiple class="fin" style="padding:10px;">'
       + '<div id="f_fotoList" style="margin-top:8px;">' + list + '</div></div>'
-      + '<p class="help" style="font-size:.85rem;">Vidíte je jen ty a Martin (tvoje soukromé úložiště). Kromě fotek jde přiložit i <b>PDF/XLS export jídelníčku z Kalorických tabulek</b> (na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden) nebo screenshot statistik z mobilu.</p>';
+      + '<p class="help" style="font-size:.85rem;">Vidíte je jen ty a Martin (tvoje soukromé úložiště). Kromě fotek jde přiložit i <b>PDF/XLS export jídelníčku z Kalorických tabulek</b> (na webu KT: ikona šipky dolů v hlavičce jídelníčku → '
+      + (W.id === "report" && OBD ? "vyber dny " + popisObd(OBD.od, OBD["do"]) : "vyber poslední týden")
+      + ') nebo screenshot statistik z mobilu.</p>';
   }
   function fotoMount(){
     var inp = document.getElementById("f_foto");
@@ -1028,7 +1132,9 @@
     if(m) return new Date(+m[3], +m[2] - 1, +m[1], 12);
     return null;
   }
-  function parseKT(wb){
+  // `obd` = období reportu ({od, do}) nebo null (náhradní režim). Vrací průměry a rozpis,
+  // `{chyba}` když v exportu není žádný den z období, nebo null, když export nejde přečíst.
+  function parseKT(wb, obd){
     var DOW = ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"];
     for(var si = 0; si < wb.SheetNames.length; si++){
       var rows = window.XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[si]], { header: 1, raw: true, defval: null });
@@ -1080,14 +1186,32 @@
       }).filter(function(x){ return x.kcal > 200; });
       if(!list.length) continue;
       list.sort(function(a, b){ return a.date - b.date; });
-      if(list.length > 7) list = list.slice(-7);
-      var dny = [null, null, null, null, null, null, null]; // Po..Ne
-      list.forEach(function(x){ dny[(x.date.getDay() + 6) % 7] = { den: DOW[x.date.getDay()], kcal: x.kcal, p: x.p, c: x.c, f: x.f, fib: x.fib }; });
+      var dny, mimo = 0;
+      if(obd){
+        // ⭐ [5. 10. 2026] S obdobím se berou dny exportu, které do něj PATŘÍ PODLE DATA, nic jiného.
+        //    Dřív se bralo posledních 7 dní v souboru bez ohledu na datum reportu, a když 7 posledních
+        //    zapsaných dnů zabralo víc kalendářních dní, dva se trefily do jednoho slotu (dvě pondělí).
+        var vObd = list.filter(function(x){ var iso = ktIso(x.date); return iso >= obd.od && iso <= obd["do"]; });
+        mimo = list.length - vObd.length;
+        // ⛔ Žádný den z období = chyba s návodem, NIKDY tichý import jiného týdne.
+        if(!vObd.length) return { chyba: "V exportu není žádný zapsaný den z tvého období (" + popisObd(obd.od, obd["do"]) + "). V Kalorických tabulkách vyber tyhle dny a stáhni export znovu." };
+        list = vObd;
+        dny = list.map(function(x){ return { datum: ktIso(x.date), den: DOW[x.date.getDay()], kcal: x.kcal, p: x.p, c: x.c, f: x.f, fib: x.fib }; });
+      } else {
+        // Náhradní režim (období neznáme): přesně jako dřív, posledních 7 dní do slotů Po až Ne.
+        if(list.length > 7) list = list.slice(-7);
+        dny = [null, null, null, null, null, null, null]; // Po..Ne
+        list.forEach(function(x){ dny[(x.date.getDay() + 6) % 7] = { den: DOW[x.date.getDay()], kcal: x.kcal, p: x.p, c: x.c, f: x.f, fib: x.fib }; });
+      }
       var n = list.length;
       var avg = function(key){ return Math.round(list.reduce(function(s, x){ return s + x[key]; }, 0) / n); };
-      return { dny: dny, dnyCount: n, kcal: avg("kcal"), protein: avg("p"), carbs: avg("c"), fat: avg("f"), fiber: avg("fib") };
+      return { dny: dny, dnyCount: n, mimo: mimo, kcal: avg("kcal"), protein: avg("p"), carbs: avg("c"), fat: avg("f"), fiber: avg("fib") };
     }
     return null;
+  }
+  // Datum dne z exportu jako YYYY-MM-DD v místním čase (stejné hodnoty, jaké parser bere pro den v týdnu).
+  function ktIso(d){
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
   function mountPick(id){
@@ -1123,12 +1247,19 @@
 
   // ---------- REPORT WIZARD ----------
   function reportSteps(){
+    // ⭐ [5. 10. 2026] Slova podle období reportu. Týdenní report (i náhradní režim bez období)
+    // má texty slovo od slova jako dřív; jen delší nebo kratší období mluví o „období".
+    // ⚠️ Popisky voleb se porovnávají níž (`indexOf("Ano")`, „Nastavím si čísla"), ty se nemění.
+    var TYD = obdTydenni();
+    var MQ_NE = TYD ? "Tento týden přeskočím" : "Tentokrát přeskočím";
+    var PL_STEJNE = TYD ? "Bude stejně jako tento týden" : "Bude stejně jako dosud";
+    var MAX_DNI = OBD ? OBD.dni : 7;
     return [
       { id: "vaha", title: "Jaká je tvoje váha?", help: "Zvaž se <b>ráno nalačno, po záchodě</b>: jedno vážení stačí. A počítej s tím, že váha běžně kolísá o <b>1–3 kg</b> (voda, glykogen, plné břicho, u žen cyklus) bez ohledu na to, jestli hubneš, proto sledujeme i míry, ty řeknou pravdu.<br><br><span style='color:#8F8A99;font-size:.86rem;'>Pro fitness nadšence: kdo se váží denně, může zadat <b>průměr 7 ranních vážení</b>: je přesnější. Není to ale povinnost, denní vážení není pro každého.</span>",
         render: function(a){ return fNum("f_w", "Váha", "kg", "např. 71,3", a.weight); },
         collect: function(a){ var r = reqNum("f_w", "váhu", 30, 300); if(r.err) return r.err; a.weight = r.v; } },
-      { id: "miryq", title: "Měřil/a ses tento týden?", help: "Míry řeknou to, co váha neumí: hlavně pupík, pas a boky.",
-        render: function(a){ return fChips("f_mq", "Míry tento týden", ["Ano, mám míry", "Tento týden přeskočím"], a._miry === false ? "Tento týden přeskočím" : (a._miry === true ? "Ano, mám míry" : null)); },
+      { id: "miryq", title: TYD ? "Měřil/a ses tento týden?" : "Měřil/a ses od minulého reportu?", help: "Míry řeknou to, co váha neumí: hlavně pupík, pas a boky.",
+        render: function(a){ return fChips("f_mq", TYD ? "Míry tento týden" : "Míry od minulého reportu", ["Ano, mám míry", MQ_NE], a._miry === false ? MQ_NE : (a._miry === true ? "Ano, mám míry" : null)); },
         mount: function(){ mountPick("f_mq"); },
         collect: function(a){ var v = pickVal("f_mq"); if(!v) return "Vyber prosím jednu možnost."; a._miry = (v.indexOf("Ano") === 0); if(!a._miry) a.measurements = {}; } },
       { id: "miry", title: "Tvoje míry (cm)", help: "Každý týden sledujeme <b>hruď, pas, boky, zadek a stehna</b>: zaberou celé tělo a dají Martinovi kontext, který samotná váha neumí. Co nestihneš, nech prázdné.", when: function(a){ return a._miry === true; },
@@ -1151,24 +1282,32 @@
           if(m.prsa == null && m.pas == null && m.boky == null && m.zadek == null && m.p_stehno == null && m.l_stehno == null) return "Vyplň aspoň jednu z hlavních měr, nebo se vrať a zvol „přeskočím“.";
           a.measurements = m;
         } },
-      { id: "strava", title: "Strava: týdenní průměr", help: "Stačí <b>průměr kcal a bílkovin</b> za dny, kdy jsi zapisoval/a, nemusíš na gram přesně (Kalorické tabulky: Statistiky → Analýza jídelníčku). A jestli jedeš KT na webu, nech to celé na mně: nahraj export a čísla doplním sám(a).",
+      { id: "strava", title: TYD ? "Strava: týdenní průměr" : "Strava: průměr za " + slovoDni(MAX_DNI), help: "Stačí <b>průměr kcal a bílkovin</b> za dny, kdy jsi zapisoval/a, nemusíš na gram přesně (Kalorické tabulky: Statistiky → Analýza jídelníčku). A jestli jedeš KT na webu, nech to celé na mně: nahraj export a čísla doplním sám(a).",
         render: function(a){
           var n = a.nutrition || {};
-          return '<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.35);border-radius:12px;padding:12px 14px;margin:0 0 16px;">'
+          // Řádky rozpisu: s obdobím jeden na každý den období (s datem), bez něj Po až Ne.
+          var sloty = slotyRozpisu();
+          return obdBox()
+            + '<div style="background:rgba(235,177,44,.08);border:1px solid rgba(235,177,44,.35);border-radius:12px;padding:12px 14px;margin:0 0 16px;">'
             + '<button type="button" class="kbtn2" id="f_ktBtn" style="width:100%;">📥 Načíst z Kalorických tabulek (XLS export)</button>'
             + '<input type="file" id="f_ktFile" accept=".xls,.xlsx" style="display:none;">'
-            + '<p class="help" style="font-size:.8rem;margin:8px 0 0;">Na webu KT: ikona šipky dolů v hlavičce jídelníčku → vyber poslední týden → XLS. Průměry i denní rozpis se doplní samy a export se přiloží pro Martina.</p></div>'
-            + '<div class="ntrow"><label class="ntlab"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + '> Tenhle týden jsem stravu nezapisoval/a</label>'
+            + '<p class="help" style="font-size:.8rem;margin:8px 0 0;">Na webu KT: ikona šipky dolů v hlavičce jídelníčku → '
+            + (OBD ? 'vyber dny <b>' + popisObd(OBD.od, OBD["do"]) + '</b>' : 'vyber poslední týden')
+            + ' → XLS. Průměry i denní rozpis se doplní samy a export se přiloží pro Martina.</p></div>'
+            + '<div class="ntrow"><label class="ntlab"><input type="checkbox" id="f_noTrack"' + (a._noTrack ? " checked" : "") + '> ' + (TYD ? "Tenhle týden jsem stravu nezapisoval/a" : "Za tohle období jsem stravu nezapisoval/a") + '</label>'
             + '<p class="ntsub">Čísla se přeskočí. Nic si nevymýšlej, Martin to tak uvidí férově.</p>'
             + '<p class="ntnote" id="f_noTrackNote">Pole stravy jsou vypnutá, protože máš zaškrtnuto, že jsi stravu nezapisoval/a. Chceš je vyplnit? Odškrtni políčko, nebo ťukni do pole.</p></div>'
             + fNum("f_kcal", "Kalorie Ø/den", "kcal", "např. 1750", n.kcal)
             + '<div class="m2">' + fNum("f_prot", "Bílkoviny Ø", "g", "", n.protein) + fNum("f_carb", "Sacharidy Ø", "g", "", n.carbs, true) + fNum("f_fat", "Tuky Ø", "g", "", n.fat, true) + fNum("f_fib", "Vláknina Ø", "g", "", n.fiber, true) + "</div>"
-            + fChips("f_dny", "Kolik dní jsi zapisoval/a?", ["0", "1", "2", "3", "4", "5", "6", "7"], n.dny_zapsano != null ? String(n.dny_zapsano) : null)
+            // Do týdne čipy jako dřív, u delšího období číslo (28 čipů by se na mobil nevešlo).
+            + (MAX_DNI <= 7
+              ? fChips("f_dny", "Kolik dní jsi zapisoval/a?", sloty.map(function(_, i){ return String(i); }).concat([String(MAX_DNI)]), n.dny_zapsano != null ? String(n.dny_zapsano) : null)
+              : fNum("f_dnyN", "Kolik dní z " + MAX_DNI + " jsi zapisoval/a?", "dní", "0 až " + MAX_DNI, n.dny_zapsano))
             + '<div class="mtgl"><button type="button" class="kbtn2" id="f_dnyBtn">' + (a._dnyOpen ? "Skrýt denní rozpis" : "+ Denní rozpis (nepovinné)") + '</button></div>'
             + '<div id="f_dnyBox" style="display:' + (a._dnyOpen ? "block" : "none") + ';"><div class="days7"><span></span><span class="hd">kcal</span><span class="hd">B (g)</span><span class="hd">S (g)</span><span class="hd">T (g)</span><span class="hd">Vl (g)</span>'
-            + DAYS.map(function(d, i){
-                var dd = (n.dny || [])[i] || {};
-                return '<span class="dn">' + d + '</span>'
+            + sloty.map(function(s, i){
+                var dd = rozpisProSlot(n.dny, s, i);
+                return '<span class="dn">' + s.label + '</span>'
                   + ["k", "p", "c", "t", "v"].map(function(col){
                       var val = col === "k" ? dd.kcal : col === "p" ? dd.p : col === "c" ? dd.c : col === "t" ? dd.f : dd.fib;
                       return '<input class="fin" inputmode="numeric" id="f_d_' + col + i + '" value="' + escH(val == null ? "" : val) + '">';
@@ -1210,13 +1349,14 @@
           // Každé makro se průměruje jen přes dny, kde je vyplněné: kdo zapsal kcal 7× a bílkoviny 3×,
           // dostane průměr bílkovin ze tří dnů, ne sedmi. Počet zapsaných dnů se bere podle kcal.
           var SLOUPCE = [["k", "f_kcal"], ["p", "f_prot"], ["c", "f_carb"], ["t", "f_fat"], ["v", "f_fib"]];
+          var POCET_SLOTU = slotyRozpisu().length;   // 7 jako dřív, s obdobím počet jeho dnů
           function prumeryZRozpisu(){
             if(nt && nt.checked) return;   // „stravu jsem nezapisoval" = do průměrů nesahat, pole jsou disabled
             var dnu = 0, i;
-            for(i = 0; i < 7; i++) if(toNum(gv("f_d_k" + i)) != null) dnu++;
+            for(i = 0; i < POCET_SLOTU; i++) if(toNum(gv("f_d_k" + i)) != null) dnu++;
             SLOUPCE.forEach(function(par){
               var suma = 0, poc = 0, j, v;
-              for(j = 0; j < 7; j++){ v = toNum(gv("f_d_" + par[0] + j)); if(v != null){ suma += v; poc++; } }
+              for(j = 0; j < POCET_SLOTU; j++){ v = toNum(gv("f_d_" + par[0] + j)); if(v != null){ suma += v; poc++; } }
               var cil = document.getElementById(par[1]);
               if(cil && poc) cil.value = String(Math.round(suma / poc));
             });
@@ -1224,6 +1364,8 @@
             if(chips && dnu) chips.querySelectorAll("button").forEach(function(b){
               b.classList.toggle("on", b.getAttribute("data-v") === String(dnu));
             });
+            var dnyN = document.getElementById("f_dnyN");
+            if(dnyN && dnu) dnyN.value = String(dnu);
             var info = document.getElementById("f_dnyCalc");
             if(info){
               info.style.display = dnu ? "block" : "none";
@@ -1238,14 +1380,18 @@
             var btn = document.getElementById("f_ktBtn"); btn.disabled = true; btn.textContent = "Čtu export…";
             loadXlsx().then(function(){
               return f.arrayBuffer().then(function(buf){
-                var out = parseKT(window.XLSX.read(buf, { type: "array", cellDates: true }));
+                var out = parseKT(window.XLSX.read(buf, { type: "array", cellDates: true }), OBD);
                 if(!out) throw new Error("V souboru jsem nenašel jídelníček, přilož ho prosím v kroku Fotky a přílohy a průměry vyplň ručně.");
-                a.nutrition = { kcal: out.kcal, protein: out.protein, carbs: out.carbs, fat: out.fat, fiber: out.fiber, dny_zapsano: Math.min(out.dnyCount, 7), dny: out.dny };
+                if(out.chyba) throw new Error(out.chyba);
+                a.nutrition = { kcal: out.kcal, protein: out.protein, carbs: out.carbs, fat: out.fat, fiber: out.fiber, dny_zapsano: OBD ? out.dnyCount : Math.min(out.dnyCount, 7), dny: out.dny };
                 a._noTrack = false; // import z KT = strava zapsaná
                 a._dnyOpen = true;
                 if(WFILES.length < 6 && fotoOk(f)) WFILES.push(f); // export rovnou jako příloha pro Martina
                 wShow();
-                toast("✅ Načteno " + out.dnyCount + " dní z Kalorických tabulek, zkontroluj čísla a pokračuj.");
+                // Kolik dní z exportu bylo mimo období, se ŘEKNE: tiché vynechání by klient nepoznal.
+                toast(OBD
+                  ? "✅ Načteno " + slovoDni(out.dnyCount) + " z tvého období" + (out.mimo ? ", " + slovoDni(out.mimo) + " mimo období jsem vynechal" : "") + ". Zkontroluj čísla a pokračuj."
+                  : "✅ Načteno " + out.dnyCount + " dní z Kalorických tabulek, zkontroluj čísla a pokračuj.");
               });
             }).catch(function(err){
               btn.disabled = false; btn.textContent = "📥 Načíst z Kalorických tabulek (XLS export)";
@@ -1262,26 +1408,42 @@
           var carb = optNum("f_carb", 0, 1200); if(carb.err) return "Sacharidy: " + carb.err;
           var fat = optNum("f_fat", 0, 400); if(fat.err) return "Tuky: " + fat.err;
           var fib = optNum("f_fib", 0, 150); if(fib.err) return "Vláknina: " + fib.err;
-          var dny = pickVal("f_dny"); if(dny == null) return "Vyber, kolik dní jsi zapisoval/a (klidně 0).";
+          var dny;
+          if(MAX_DNI <= 7){
+            dny = pickVal("f_dny"); if(dny == null) return "Vyber, kolik dní jsi zapisoval/a (klidně 0).";
+          } else {
+            var rawDny = gv("f_dnyN"), dnyV = toNum(rawDny);
+            if(rawDny === "" || dnyV == null) return "Napiš, kolik dní jsi zapisoval/a (klidně 0).";
+            if(dnyV < 0 || dnyV > MAX_DNI || Math.round(dnyV) !== dnyV) return "Počet zapsaných dní je celé číslo od 0 do " + MAX_DNI + ".";
+            dny = dnyV;
+          }
           var n = { kcal: kcal.v, protein: prot.v, carbs: carb.v, fat: fat.v, fiber: fib.v, dny_zapsano: Number(dny) };
-          var rozpis = [];
-          for(var i = 0; i < 7; i++){
-            var k = optNum("f_d_k" + i, 0, 10000); if(k.err) return DAYS[i] + " kcal: " + k.err;
-            var p = optNum("f_d_p" + i, 0, 600); if(p.err) return DAYS[i] + " bílkoviny: " + p.err;
-            var c = optNum("f_d_c" + i, 0, 1500); if(c.err) return DAYS[i] + " sacharidy: " + c.err;
-            var tt = optNum("f_d_t" + i, 0, 500); if(tt.err) return DAYS[i] + " tuky: " + tt.err;
-            var v = optNum("f_d_v" + i, 0, 200); if(v.err) return DAYS[i] + " vláknina: " + v.err;
-            if(k.v != null || p.v != null || c.v != null || tt.v != null || v.v != null) rozpis.push({ den: DAYS[i], kcal: k.v, p: p.v, c: c.v, f: tt.v, fib: v.v }); else rozpis.push(null);
+          // ⭐ S obdobím se ukládají jen vyplněné dny i s datem ({datum, den, …}); bez něj
+          //    (náhradní režim) sedm slotů Po až Ne s mezerami jako dřív.
+          var sloty = slotyRozpisu(), rozpis = [];
+          for(var i = 0; i < sloty.length; i++){
+            var s = sloty[i];
+            var k = optNum("f_d_k" + i, 0, 10000); if(k.err) return s.label + " kcal: " + k.err;
+            var p = optNum("f_d_p" + i, 0, 600); if(p.err) return s.label + " bílkoviny: " + p.err;
+            var c = optNum("f_d_c" + i, 0, 1500); if(c.err) return s.label + " sacharidy: " + c.err;
+            var tt = optNum("f_d_t" + i, 0, 500); if(tt.err) return s.label + " tuky: " + tt.err;
+            var v = optNum("f_d_v" + i, 0, 200); if(v.err) return s.label + " vláknina: " + v.err;
+            var vyplneno = k.v != null || p.v != null || c.v != null || tt.v != null || v.v != null;
+            if(s.datum){ if(vyplneno) rozpis.push({ datum: s.datum, den: s.den, kcal: k.v, p: p.v, c: c.v, f: tt.v, fib: v.v }); }
+            else rozpis.push(vyplneno ? { den: s.den, kcal: k.v, p: p.v, c: c.v, f: tt.v, fib: v.v } : null);
           }
           if(rozpis.some(function(x){ return x; })) n.dny = rozpis;
           a.nutrition = n;
         } },
-      { id: "aktivity", title: "Aktivity za týden", help: "Kroky ti řekne mobil/hodinky. U sportu Martina zajímají hlavně <b>celkové minuty za týden</b>: „4× fitko\" může znamenat 4× 30 minut i 4× 120 minut, a pro plán je to obrovský rozdíl. Sečti fitko, kardio i jiný pohyb dohromady.",
+      // ⛔ Význam čísel se u delšího období NEMĚNÍ: sport a tréninky jsou dál „za týden" (cíle,
+      //    grafy i engine tak zůstanou srovnatelné), mění se jen popisky (analýza 3.4).
+      { id: "aktivity", title: TYD ? "Aktivity za týden" : "Aktivity (průměrně za týden)", help: "Kroky ti řekne mobil/hodinky. U sportu Martina zajímají hlavně <b>celkové minuty za týden</b>: „4× fitko\" může znamenat 4× 30 minut i 4× 120 minut, a pro plán je to obrovský rozdíl. Sečti fitko, kardio i jiný pohyb dohromady."
+          + (TYD ? "" : "<br><br>Report je za " + slovoDni(MAX_DNI) + ", takže kroky napiš jako denní průměr a sport i tréninky jako <b>průměr na jeden týden</b>."),
         render: function(a){
           var ac = a.activity || {};
           return fNum("f_kroky", "Kroky Ø/den", "kroků", "např. 8500", ac.kroky)
-            + fChips("f_fitko", "Fitko: počet tréninků", ["0", "1", "2", "3", "4", "5", "6", "7"], ac.fitko != null ? String(ac.fitko) : null)
-            + fNum("f_sport", "Sport celkem za týden", "min", "fitko + kardio + vše, např. 240", ac.sport_min)
+            + fChips("f_fitko", TYD ? "Fitko: počet tréninků" : "Fitko: počet tréninků za týden (průměr)", ["0", "1", "2", "3", "4", "5", "6", "7"], ac.fitko != null ? String(ac.fitko) : null)
+            + fNum("f_sport", TYD ? "Sport celkem za týden" : "Sport celkem za týden (průměr)", "min", "fitko + kardio + vše, např. 240", ac.sport_min)
             + fText("f_kardio", "Kardio", "např. 2× 30 min chůze do kopce", ac.kardio, true)
             + fText("f_dalsi", "Jiný sport / pohyb", "např. volejbal 1×, kolo o víkendu", ac.dalsi, true);
         },
@@ -1292,11 +1454,14 @@
           var sp = reqNum("f_sport", "celkové minuty sportu za týden (klidně 0)", 0, 3000); if(sp.err) return sp.err;
           a.activity = { kroky: k.v, fitko: Number(f), sport_min: sp.v, kardio: gv("f_kardio"), dalsi: gv("f_dalsi") };
         } },
-      { id: "plan", title: "Plán na příští týden", help: "Domluva dopředu: kolik kroků denně a kolik minut sportu příští týden dáš? Martin pak v dalším reportu vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\".",
+      { id: "plan", title: TYD ? "Plán na příští týden" : "Plán do dalšího reportu",
+        help: TYD
+          ? "Domluva dopředu: kolik kroků denně a kolik minut sportu příští týden dáš? Martin pak v dalším reportu vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\"."
+          : "Domluva dopředu: kolik kroků denně a kolik minut sportu za týden dáš do dalšího reportu? Martin pak v dalším reportu vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\".",
         render: function(a){
           var p = a.plan || {};
-          var sel = p.stejne === true ? "Bude stejně jako tento týden" : (p.stejne === false ? "Nastavím si čísla" : null);
-          return fChips("f_pmode", "Jak to bude příští týden?", ["Bude stejně jako tento týden", "Nastavím si čísla"], sel)
+          var sel = p.stejne === true ? PL_STEJNE : (p.stejne === false ? "Nastavím si čísla" : null);
+          return fChips("f_pmode", TYD ? "Jak to bude příští týden?" : "Jak to bude do dalšího reportu?", [PL_STEJNE, "Nastavím si čísla"], sel)
             + '<div id="f_pbox" style="display:' + (p.stejne === false ? "block" : "none") + ';">'
             + fNum("f_pkroky", "Plán: kroky Ø/den", "kroků", "např. 9000", p.stejne === false ? p.kroky : null)
             + fNum("f_psport", "Plán: sport celkem za týden", "min", "např. 270", p.stejne === false ? p.sport_min : null)
@@ -1312,7 +1477,7 @@
           });
         },
         collect: function(a){
-          var v = pickVal("f_pmode"); if(!v) return "Vyber, jak to bude příští týden.";
+          var v = pickVal("f_pmode"); if(!v) return TYD ? "Vyber, jak to bude příští týden." : "Vyber, jak to bude do dalšího reportu.";
           if(v === "Nastavím si čísla"){
             var k = reqNum("f_pkroky", "plánované kroky", 0, 60000); if(k.err) return "Plán: " + k.err;
             var s = reqNum("f_psport", "plánované minuty sportu (klidně 0)", 0, 3000); if(s.err) return "Plán: " + s.err;
@@ -1347,7 +1512,7 @@
       { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí, tohle je pro Martina často to nejcennější z celého reportu. Žádné pole nemá limit délky.",
         render: function(a){
           var t = a.notes || {};
-          return fText("f_povedlo", "✓ Co se tenhle týden povedlo?", "", t.povedlo, true, true)
+          return fText("f_povedlo", TYD ? "✓ Co se tenhle týden povedlo?" : "✓ Co se od minulého reportu povedlo?", "", t.povedlo, true, true)
             + fText("f_drhlo", "✗ Co drhlo?", "", t.drhlo, true, true)
             + fText("f_otazky", "? Otázky na Martina", "", t.otazky, true, true)
             + fText("f_dalsi", "💬 Cokoliv dalšího", "prostor jen pro tebe, klidně napiš román", t.dalsi, true, true);
@@ -1363,13 +1528,14 @@
             return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
           }
           var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {}, p = a.plan || {};
-          return g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
-            + g("Míry", a._miry ? "miry" : "miryq", a._miry ? MIRY.map(function(x){ return [x[1], m[x[0]] != null ? czk(m[x[0]]) + " cm" : ""]; }) : [["Tento týden", "přeskočeno"]])
+          return obdBox()
+            + g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
+            + g("Míry", a._miry ? "miry" : "miryq", a._miry ? MIRY.map(function(x){ return [x[1], m[x[0]] != null ? czk(m[x[0]]) + " cm" : ""]; }) : [[TYD ? "Tento týden" : "Tentokrát", "přeskočeno"]])
             + (a.nutrition === null
-              ? g("Strava", "strava", [["Tenhle týden", "strava nezapsána"]])
-              : g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal" + deltaTxt("kcal", n.kcal)], ["Bílkoviny", czk(n.protein) + " g" + deltaTxt("protein", n.protein)], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/7"]]))
-            + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky) + deltaTxt("kroky", ac.kroky)], ["Fitko", ac.fitko + "×" + deltaTxt("treninky", ac.fitko)], ["Sport celkem", ac.sport_min != null ? czk(ac.sport_min) + " min" + deltaTxt("sport_min", ac.sport_min) : ""], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
-            + g("Plán na příští týden", "plan", [["Kroky Ø/den", p.kroky != null ? czk(p.kroky) : ""], ["Sport celkem", p.sport_min != null ? czk(p.sport_min) + " min" : ""], ["Režim", p.stejne ? "stejně jako tento týden" : ""]])
+              ? g("Strava", "strava", [[TYD ? "Tenhle týden" : "Za tohle období", "strava nezapsána"]])
+              : g("Strava Ø", "strava", [["Kalorie", czk(n.kcal) + " kcal" + deltaTxt("kcal", n.kcal)], ["Bílkoviny", czk(n.protein) + " g" + deltaTxt("protein", n.protein)], ["Sacharidy", n.carbs != null ? czk(n.carbs) + " g" : ""], ["Tuky", n.fat != null ? czk(n.fat) + " g" : ""], ["Vláknina", n.fiber != null ? czk(n.fiber) + " g" : ""], ["Zapsáno dní", n.dny_zapsano + "/" + MAX_DNI]]))
+            + g("Aktivity", "aktivity", [["Kroky Ø", czk(ac.kroky) + deltaTxt("kroky", ac.kroky)], ["Fitko", ac.fitko + "×" + (TYD ? "" : " za týden") + deltaTxt("treninky", ac.fitko)], ["Sport celkem", ac.sport_min != null ? czk(ac.sport_min) + " min" + (TYD ? "" : " za týden") + deltaTxt("sport_min", ac.sport_min) : ""], ["Kardio", ac.kardio], ["Další", ac.dalsi]])
+            + g(TYD ? "Plán na příští týden" : "Plán do dalšího reportu", "plan", [["Kroky Ø/den", p.kroky != null ? czk(p.kroky) : ""], ["Sport celkem", p.sport_min != null ? czk(p.sport_min) + " min" : ""], ["Režim", p.stejne ? (TYD ? "stejně jako tento týden" : "stejně jako dosud") : ""]])
             + g("Pocity", "skaly", [["Únava", s.unava + "/5"], ["Hlad", s.hlad + "/5"], ["Síla", s.sila + "/5"], ["Spánek", (s.spanek_h != null ? czk(s.spanek_h) + " h · " : "") + s.spanek_kvalita + "/5"], ["Dodržení plánu", s.dodrzeni + "/5"]])
             + g("Slovně", "texty", [["Povedlo se", t.povedlo], ["Drhlo", t.drhlo], ["Otázky", t.otazky], ["Navíc", t.dalsi]])
             + g("Fotky", "fotky", [["Přiloženo", WFILES.length ? WFILES.length + "×" : ""]]);
@@ -1523,8 +1689,14 @@
     // Filtr v dotazu drží význam UI („moje data") bez ohledu na to, jaké politiky
     // v DB zrovna jsou. `ilike` kvůli velikosti písmen, e-mail nemá zástupné znaky.
     var jaFiltr = "email=ilike." + encodeURIComponent(myEmail);
+    // ⭐ [5. 10. 2026] I období reportu (sloupec „Dny" jako 18/21, rozpis s daty).
+    // ⚠️ Kdyby se web nasadil dřív než migrace se sloupci období, dotaz by skončil chybou
+    //    a všem klientům by se ukázalo „Nepodařilo se načíst data". Proto ještě jeden pokus
+    //    se starým výběrem sloupců: chyba čtení se tím nespolkne, jen nesmí rozbít sekci.
+    var REP_COLS = "report_date,source,weight,measurements,nutrition,activity,scales,targets";
+    var repQ = function(cols){ return api("client_reports?select=" + cols + "&" + jaFiltr + "&order=report_date.asc&limit=200"); };
     Promise.all([
-      api("client_reports?select=report_date,source,weight,measurements,nutrition,activity,scales,targets&" + jaFiltr + "&order=report_date.asc&limit=200"),
+      repQ(REP_COLS + ",obdobi_od,obdobi_do").then(function(r){ return r === null ? repQ(REP_COLS) : r; }),
       api("client_intake?select=id,created_at,data&" + jaFiltr + "&limit=1"),
       // `limit=1` bez řazení vrací libovolný řádek. S filtrem je řádek stejně jen
       // jeden, ale řazení tu drží jako pojistka, ať to nikdy nezávisí na náhodě.
@@ -1599,11 +1771,21 @@
       });
     });
     el("btnReport").addEventListener("click", function(){
-      wOpen("report", reportSteps(), function(a){
-        // plan_next jede uvnitr activity (jsonb), at neni potreba nova kolona v client_reports
-        var ac = a.activity || {};
-        if(a.plan) ac.plan_next = a.plan;
-        submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition === null ? null : (a.nutrition || {}), activity: ac, scales: a.scales || {}, notes: a.notes || {} }, "Report odeslán!");
+      var b = el("btnReport"); if(b.disabled) return;
+      var t0 = b.textContent; b.disabled = true; b.textContent = "Načítám…";
+      // ⭐ [5. 10. 2026] Nejdřív období od serveru, pak průvodce. Neúspěch = OBD null, tedy
+      //    náhradní režim jako dřív s varováním v kroku Strava, nikdy dosazené období.
+      nactiObdobi().then(function(o){
+        b.disabled = false; b.textContent = t0;
+        OBD = o;
+        wOpen("report", reportSteps(), function(a){
+          // plan_next jede uvnitr activity (jsonb), at neni potreba nova kolona v client_reports
+          var ac = a.activity || {};
+          if(a.plan) ac.plan_next = a.plan;
+          // Období, ke kterému patří čísla. Server ho zkontroluje a uloží (bez období = jako dřív).
+          submit("report", { weight: a.weight, measurements: a.measurements || {}, nutrition: a.nutrition === null ? null : (a.nutrition || {}), activity: ac, scales: a.scales || {}, notes: a.notes || {}, obdobi: OBD ? { od: OBD.od, "do": OBD["do"] } : undefined }, "Report odeslán!");
+        });
+        srovnejKoncept();
       });
     });
     el("btnIntake").addEventListener("click", function(){

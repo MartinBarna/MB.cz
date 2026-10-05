@@ -1,13 +1,35 @@
 // client-report: backend klientské sekce koučinku (spec: _zdroje/klientska-sekce-plan.md).
-// POST {action:'report'|'intake', data:{...}} + Authorization: Bearer <JWT klienta>.
+// POST {action:'report'|'intake'|'reference'|'obdobi', data:{...}} + Authorization: Bearer <JWT klienta>.
 // Brána: entitlement 'coaching'. Uloží do client_reports/client_intake a pošle
 // dark-gold HTML mail Martinovi + kopii klientovi (Resend).
-// Deploy: supabase functions deploy client-report --no-verify-jwt
+// [5. 10. 2026] `obdobi` vrátí období reportu ({od, do, dni}); `report` ukládá `obdobi_od/do`
+// a umí `dry_run: true` (vrátí řádek a maily, nic neuloží ani neodešle).
+// Deploy: CELÁ složka i se `_shared` (index.ts + obdobi-kontrola.ts; _shared/report-obdobi.ts,
+// resend-odeslat.ts, secret-guard.ts), paměť `mb-deploy-kopiruje-jen-index-past`.
+// ⛔ Až PO migraci `akademie/_supabase/report-obdobi-2026-10-05.sql` (sloupce obdobi_od/do).
+// supabase functions deploy client-report --no-verify-jwt
 import { createClient } from "jsr:@supabase/supabase-js@2";
 // ⭐ [16. 9. 2026] Odeslani pres spolecny helper, ktery si precte `id` z odpovedi
 // Resendu a zapise ho do `email_events`. Bez toho se bounce ani stiznost na spam
 // u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
+// ⭐ [5. 10. 2026] Období reportu (od reportu po report, 7 až 28 dní). Počítá ho JEN server,
+// jednou funkcí ze sdíleného modulu; formulář se ptá akcí `obdobi`. Pravidlo i důvody
+// jsou v hlavičce `_shared/report-obdobi.ts`.
+import {
+  datumCesky,
+  denTydne,
+  dnesPraha,
+  DNY_TYDNE,
+  jeDatum,
+  popisObdobi,
+  rozdilDni,
+  slovoDni,
+  type RadekReportu,
+} from "../_shared/report-obdobi.ts";
+import { kontrolaObdobi, odpovedObdobi } from "./obdobi-kontrola.ts";
+// Čtení historie s jedním opakováním: chyba čtení není „první report" (CLAUDE.md 13).
+import { ctiSOpakovanim } from "../_shared/secret-guard.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
@@ -102,6 +124,12 @@ function wrap(kicker: string, body: string, footer: string): string {
 }
 const sect = (t: string) =>
   `<div class='mb-sect' style='font-weight:800;color:#F6CD63;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin:18px 0 8px'>${t}</div>`;
+// Varování jen pro Martina (období neověřené nebo jiné, historie se nenačetla). Klient je nevidí.
+const upozorneniHtml = (radky: string[]) => radky.length
+  ? `<table role='presentation' class='mb-box' width='100%' cellpadding='0' cellspacing='0' style='background:#211d2b;border:1px solid #e0a04f;border-radius:10px;margin:0 0 18px'><tr><td style='padding:12px 16px'>` +
+    radky.map((t) => `<p class='mb-warn' style='margin:0 0 6px;font-size:13px;line-height:1.5;color:#e0a04f'>${esc(t)}</p>`).join("") +
+    `</td></tr></table>`
+  : "";
 function delta(cur: number | null, prev: number | null, downGood = true): string {
   if (cur == null || prev == null) return "";
   const d = Math.round((cur - prev) * 10) / 10;
@@ -129,13 +157,30 @@ const MIRY: [string, string][] = [
   ["p_lytko", "P lýtko"], ["l_lytko", "L lýtko"], ["p_paze", "P paže"], ["l_paze", "L paže"], ["krk", "Krk"], ["pupik", "Pupík"],
 ];
 
+// Období uložené v řádku reportu. null = report bez období (stará stránka, náhradní režim
+// formuláře): texty mailu pak zůstávají týdenní přesně jako dřív.
+// deno-lint-ignore no-explicit-any
+function obdobiZRadku(r: any): { od: string; do: string; dni: number } | null {
+  if (!jeDatum(r?.obdobi_od) || !jeDatum(r?.obdobi_do)) return null;
+  return { od: r.obdobi_od, do: r.obdobi_do, dni: rozdilDni(r.obdobi_od, r.obdobi_do) + 1 };
+}
+// Den v rozpisu: nový tvar má datum („Po 5. 10."), starý jen zkratku dne.
+// deno-lint-ignore no-explicit-any
+const denRozpisu = (d: any): string =>
+  jeDatum(d?.datum) ? DNY_TYDNE[denTydne(d.datum)] + " " + datumCesky(d.datum, false) : String(d?.den ?? "");
+
 // ---------- report mail ----------
 // deno-lint-ignore no-explicit-any
 function reportMail(name: string, r: any, prev: any | null, first: any | null, weekNo: number): string {
   const d = new Date(r.report_date + "T12:00:00");
   const dateTxt = `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+  // ⭐ [5. 10. 2026] Report za jiné období než přesně týden má vlastní slova („průměr za 21 dní",
+  // „tentokrát neměřeno"). Týdenní report (i bez uloženého období) zůstává slovo od slova jako dřív.
+  const obd = obdobiZRadku(r);
+  const tydenni = !obd || obd.dni === 7;
   let b = `<p class='mb-w' style='margin:0 0 4px;font-size:20px;font-weight:800;color:#fff'>${esc(name)}</p>` +
-    `<p class='mb-mut' style='margin:0 0 18px;color:#8F8A99;font-size:14px'>Report k ${dateTxt}${weekNo > 0 ? ` · ${weekNo}. report spolupráce` : ""}</p>`;
+    `<p class='mb-mut' style='margin:0 0 ${obd ? "2px" : "18px"};color:#8F8A99;font-size:14px'>Report k ${dateTxt}${weekNo > 0 ? ` · ${weekNo}. report spolupráce` : ""}</p>` +
+    (obd ? `<p class='mb-mut' style='margin:0 0 18px;color:#8F8A99;font-size:14px'>Období ${popisObdobi(obd.od, obd.do)} (${slovoDni(obd.dni)})</p>` : "");
 
   // váha
   const w = num(r.weight), pw = prev ? num(prev.weight) : null, fw = first ? num(first.weight) : null;
@@ -162,15 +207,18 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
     }
     b += `</table>`;
   } else {
-    b += sect("Míry (cm)") + `<p class='mb-mut' style='margin:0;font-size:13px;color:#8F8A99'>Tento týden neměřeno.</p>`;
+    b += sect("Míry (cm)") + `<p class='mb-mut' style='margin:0;font-size:13px;color:#8F8A99'>${tydenni ? "Tento týden neměřeno." : "Tentokrát neměřeno."}</p>`;
   }
 
   // strava (nutrition === null → klient tenhle týden nezapisoval, čísla si nevymýšlel)
   if (r.nutrition == null) {
-    b += sect("Strava") + `<p class='mb-mut' style='margin:0;font-size:13px;color:#8F8A99'>Tenhle týden strava nezapsána, klient nezapisoval.</p>`;
+    b += sect("Strava") + `<p class='mb-mut' style='margin:0;font-size:13px;color:#8F8A99'>${tydenni ? "Tenhle týden strava nezapsána" : "Za tohle období strava nezapsána"}, klient nezapisoval.</p>`;
   } else {
     const n = r.nutrition || {};
-    b += sect(`Strava: týdenní průměr${n.dny_zapsano != null ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)` : ""}`) +
+    const zapsano = n.dny_zapsano == null ? "" : tydenni
+      ? ` (zapsáno ${esc(n.dny_zapsano)}/7 dní)`
+      : ` (zapsáno ${esc(n.dny_zapsano)}/${obd!.dni})`;
+    b += sect(tydenni ? `Strava: týdenní průměr${zapsano}` : `Strava: průměr za ${slovoDni(obd!.dni)}${zapsano}`) +
       `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='border-collapse:separate;border-spacing:6px 0;table-layout:fixed'><tr>` +
       [["kcal", "kcal"], ["protein", "bílkoviny (g)"], ["carbs", "sacharidy (g)"], ["fat", "tuky (g)"], ["fiber", "vláknina (g)"]]
         .map(([k, l]) => `<td class='mb-box' align='center' style='background:#211d2b;border:1px solid #2e2940;border-radius:8px;padding:10px 4px'><div class='mb-w' style='font-size:18px;font-weight:800;color:#fff'>${czk(num(n[k]))}</div><div class='mb-mut' style='font-size:11px;color:#8F8A99'>${l}</div></td>`).join("") +
@@ -185,7 +233,7 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
         ["kcal", "B", "S", "T", "Vl"].map((h) => `<td align='right' style='padding:5px 8px;border-bottom:1px solid #262232'>${h}</td>`).join("") + `</tr>` +
         // deno-lint-ignore no-explicit-any
         dny.map((d: any) =>
-          `<tr><td class='mb-mut' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99'>${esc(d.den ?? "")}</td>` +
+          `<tr><td class='mb-mut' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#8F8A99;white-space:nowrap'>${esc(denRozpisu(d))}</td>` +
           [d.kcal, d.p, d.c, d.f, d.fib].map((v) => `<td class='mb-body' align='right' style='padding:5px 8px;border-bottom:1px solid #211d2b;color:#F0EADF'>${czk(num(v))}</td>`).join("") + `</tr>`).join("");
       b += `</table>`;
     }
@@ -196,7 +244,8 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
   const prevAct = (prev && prev.activity) || {};
   b += sect("Aktivity") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
     `<tr><td style='padding:4px 0'>🚶 Kroky (Ø/den)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${czk(num(a.kroky))}${delta(num(a.kroky), num(prevAct.kroky), false)}</td></tr>` +
-    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" : CHYBI_SLOVO}</td></tr>` +
+    // U delšího období klient píše tréninky jako průměr na týden (formulář to tak říká).
+    `<tr><td style='padding:4px 0'>🏋️ Fitko</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${a.fitko != null && a.fitko !== "" ? esc(a.fitko) + "×" + (tydenni ? "" : " za týden") : CHYBI_SLOVO}</td></tr>` +
     `<tr><td style='padding:4px 0'>⏱️ Sport celkem (min/týden)</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${num(a.sport_min) != null ? czk(num(a.sport_min)) : CHYBI_CISLO}${delta(num(a.sport_min), num(prevAct.sport_min), false)}</td></tr>` +
     `<tr><td style='padding:4px 0'>🏃 Kardio</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.kardio || CHYBI_SLOVO)}</td></tr>` +
     `<tr><td style='padding:4px 0'>⚽ Další</td><td class='mb-w' align='right' style='font-weight:700;color:#fff'>${esc(a.dalsi || CHYBI_SLOVO)}</td></tr></table>`;
@@ -212,12 +261,12 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
       `${czk(num(a.sport_min))} min${planOk(num(prevPlan.sport_min), num(a.sport_min))}.</p>`;
   }
 
-  // plán na příští týden
+  // plán na příští týden (u delšího období „do dalšího reportu", čísla jsou pořád na týden)
   const pn = a.plan_next || {};
   if (num(pn.kroky) != null || num(pn.sport_min) != null) {
-    b += sect("Plán na příští týden") +
+    b += sect(tydenni ? "Plán na příští týden" : "Plán do dalšího reportu (na týden)") +
       `<p class='mb-body' style='margin:0;font-size:14px;color:#F0EADF'>🚶 <strong>${czk(num(pn.kroky))}</strong> kroků denně · ⏱️ <strong>${czk(num(pn.sport_min))}</strong> min sportu za týden` +
-      `${pn.stejne ? ` <span class='mb-mut' style='color:#8F8A99'>(stejně jako tento týden)</span>` : ""}</p>`;
+      `${pn.stejne ? ` <span class='mb-mut' style='color:#8F8A99'>(${tydenni ? "stejně jako tento týden" : "stejně jako dosud"})</span>` : ""}</p>`;
   }
 
   // škály
@@ -318,7 +367,7 @@ Deno.serve(async (req: Request) => {
   const { data: ent } = await userClient.rpc("has_entitlement", { p_product: "coaching" });
   if (ent !== true) return json({ error: "no_coaching" }, C, 403);
 
-  let body: { action?: string; name?: string; data?: Record<string, unknown> };
+  let body: { action?: string; name?: string; data?: Record<string, unknown>; dry_run?: boolean };
   try { body = await req.json(); } catch { return json({ error: "bad_json" }, C, 400); }
   const action = String(body.action ?? "");
   const data = (body.data ?? {}) as Record<string, unknown>;
@@ -375,19 +424,54 @@ Deno.serve(async (req: Request) => {
       `</td></tr></table>`;
   }
 
+  // ⭐ [5. 10. 2026] OBDOBÍ REPORTU pro formulář (průvodce se ptá při otevření).
+  // Stejná brána jako odeslání: JWT klienta a nárok coaching (výš). Počítá se jen tady,
+  // jednou funkcí; formulář si nic nedopočítává.
+  // ⛔ Chyba čtení = 503 `obdobi_neznam`, NIKDY „první report" (`obdobi-kontrola.ts`).
+  //    Formulář pak jede v náhradním režimu (7 dní jako dřív) s viditelným varováním.
+  if (action === "obdobi") {
+    const cteni = await ctiSOpakovanim<{ data: RadekReportu[] | null; error: unknown }>(() =>
+      admin.from("client_reports").select("report_date,source,obdobi_od,obdobi_do").eq("email", email), 2, 400);
+    if (cteni.error) {
+      console.error("[client-report] obdobi: historie se nenacetla: " + String((cteni.error as { message?: unknown }).message ?? cteni.error).slice(0, 160));
+    }
+    const o = odpovedObdobi(dnesPraha(), cteni);
+    return json(o.body, C, o.status);
+  }
+
   if (action === "report") {
     // Cíl NEJDŘÍV, protože se ukládá jako SNÍMEK do reportu. Kdyby se odchylka počítala proti
     // aktuálnímu cíli, zvýšení kalorií z 1800 na 2200 by zpětně obarvilo celou historii na
     // „−400", i když klient tehdy plnil přesně. Snímek to zavírá: minulost se už nikdy nemění.
     const { data: tgRow } = await admin.from("client_targets")
       .select("kcal,protein,kroky,sport_min,treninky").eq("email", email).maybeSingle();
+    // datum v Europe/Prague: report odeslaný po půlnoci CZ nesmí dostat včerejší (UTC) datum
+    const dnes = dnesPraha();
+    // Předchozí + první report pro šipky a historie pro kontrolu období (bez dnešního,
+    // re-submit v tentýž den je update).
+    // ⛔ [5. 10. 2026] Chyba čtení NENÍ prázdná historie. Dřív se z ní stal „1. report
+    //    spolupráce" bez šipek; teď se mail pošle bez srovnání a řekne proč, a období se
+    //    uloží neověřené (klientovo), ne přepočítané z prázdna.
+    const histCteni = await ctiSOpakovanim<{ data: Array<Record<string, unknown>> | null; error: unknown }>(() =>
+      admin.from("client_reports").select("weight,measurements,activity,report_date,source,obdobi_od,obdobi_do")
+        .eq("email", email).order("report_date", { ascending: true }), 2, 400);
+    const histAll = histCteni.error ? null : (histCteni.data ?? []);
+    if (histCteni.error) {
+      console.error("[client-report] report: historie se nenacetla: " + String((histCteni.error as { message?: unknown }).message ?? histCteni.error).slice(0, 160));
+    }
+    const nutrition = data.nutrition === null ? null : (data.nutrition ?? {}); // null = klient stravu nezapisoval
+    const kontrola = kontrolaObdobi({
+      dnes,
+      odKlienta: data.obdobi,
+      rozpis: nutrition && typeof nutrition === "object" ? (nutrition as Record<string, unknown>).dny : undefined,
+      historie: histAll as RadekReportu[] | null,
+    });
     const row = {
       email,
-      // datum v Europe/Prague: report odeslaný po půlnoci CZ nesmí dostat včerejší (UTC) datum
-      report_date: new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Prague" }).format(new Date()),
+      report_date: dnes,
       weight: num(data.weight),
       measurements: data.measurements ?? {},
-      nutrition: data.nutrition === null ? null : (data.nutrition ?? {}), // null = klient stravu nezapisoval
+      nutrition,
       activity: data.activity ?? {},
       scales: data.scales ?? {},
       notes: data.notes ?? {},
@@ -396,23 +480,52 @@ Deno.serve(async (req: Request) => {
       // odchylku vůbec nezobrazí (viz client-targets.sql).
       targets: tgRow ?? null,
       source: "web",
+      // Období, ke kterému patří čísla (to, které viděl klient). null = report bez období
+      // (stará stránka, náhradní režim): bere se jako jeden týden podle pravidla −3 dny.
+      obdobi_od: kontrola.obdobi?.od ?? null,
+      obdobi_do: kontrola.obdobi?.do ?? null,
     };
-    // předchozí + první report pro šipky (bez dnešního, re-submit v tentýž den je update)
-    const { data: histAll } = await admin.from("client_reports").select("weight,measurements,activity,report_date")
-      .eq("email", email).order("report_date", { ascending: true });
-    const hist = (histAll ?? []).filter((h) => h.report_date < row.report_date);
+    const hist = (histAll ?? []).filter((h) => String(h.report_date) < row.report_date);
     const prev = hist.length ? hist[hist.length - 1] : null;
     const first = hist.length ? hist[0] : null;
-    const { error } = await admin.from("client_reports").upsert(row, { onConflict: "email,report_date" });
-    if (error) return json({ error: "db", detail: error.message }, C, 500);
+    // Věty pro Martina nad blokem „Co teď udělat" (klient je v kopii nevidí).
+    const poznamky: string[] = [];
+    if (kontrola.poznamka) poznamky.push(kontrola.poznamka);
+    if (!histAll) poznamky.push("⚠️ Historii reportů se nepodařilo načíst, v mailu proto chybí srovnání s minulým reportem i pořadí reportu.");
 
-    const weekNo = hist.length + 1;
+    const weekNo = histAll ? hist.length + 1 : 0;
     const html = reportMail(name, row, prev, first, weekNo);
     const subj = `📊 Týdenní report: ${name}`;
-    const coachMail = wrap("Martin Barna · týdenní report klienta", coachTodo(email, row, tgRow ?? null) + html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`);
-    const clientMail = wrap("Martin Barna · týdenní report", html, "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz");
-    const s1 = await send(admin, COACH, subj, coachMail);
-    const s2 = await send(admin, email, "Tvůj týdenní report ✓ (kopie)", clientMail, true);
+    const obd = obdobiZRadku(row);
+    const tydenni = !obd || obd.dni === 7;
+    const sloz = () => ({
+      coach: wrap(tydenni ? "Martin Barna · týdenní report klienta" : "Martin Barna · report klienta",
+        upozorneniHtml(poznamky) + coachTodo(email, row, tgRow ?? null) + html, `Report od ${esc(email)} · klientská sekce martinbarna.cz`),
+      client: wrap(tydenni ? "Martin Barna · týdenní report" : "Martin Barna · report", html,
+        "Kopie reportu pro tvůj přehled. Stejnou dostal Martin a ozve se s úpravou plánu. Martin Barna · martinbarna.cz"),
+    });
+    // ⭐ ZKOUŠKA NANEČISTO (`dry_run: true`): vrátí řádek, kontrolu období a oba maily,
+    //    NIC neuloží a NIC neodešle. Na ověření serveru po nasazení bez mailu Martinovi
+    //    a bez řádku ve frontě „Reporty ke zpracování".
+    if (body.dry_run === true) {
+      const m = sloz();
+      return json({ ok: true, dry_run: true, row, obdobi_kontrola: kontrola, predmet: subj, html_coach: m.coach, html_client: m.client }, C);
+    }
+
+    let { error } = await admin.from("client_reports").upsert(row, { onConflict: "email,report_date" });
+    // ⛔ Sloupce období ještě nejsou v DB (migrace `report-obdobi-2026-10-05.sql` nenasazená,
+    //    tedy špatné pořadí nasazení). Report klienta se kvůli tomu NESMÍ ztratit: uloží se
+    //    bez období a Martin to v mailu uvidí červeně. Pozná se jen podle názvu sloupce.
+    if (error && /obdobi_(od|do)/.test(String(error.message ?? ""))) {
+      const { obdobi_od: _od, obdobi_do: _do, ...bezObdobi } = row;
+      ({ error } = await admin.from("client_reports").upsert(bezObdobi, { onConflict: "email,report_date" }));
+      if (!error) poznamky.push("🔴 Období se neuložilo: v databázi chybí sloupce obdobi_od a obdobi_do (nasaď migraci report-obdobi). Report je uložený bez nich.");
+    }
+    if (error) return json({ error: "db", detail: error.message }, C, 500);
+
+    const m = sloz();
+    const s1 = await send(admin, COACH, subj, m.coach);
+    const s2 = await send(admin, email, "Tvůj týdenní report ✓ (kopie)", m.client, true);
     return json(vysledekMailu(s1, s2), C);
   }
 
