@@ -3494,9 +3494,17 @@ Deno.serve(async (req) => {
       // ⛔ [revize R1, nález S1] Webový report BEZ období (náhradní režim formuláře, stará stránka):
       //    když podle historie měl pokrýt jiné dny, Martin to uvidí i u konceptu, týmž textem jako
       //    v mailu (`vetaBezObdobi`). Report s obdobím ani řádek appky se to netýká.
-      const obdobiUpozorneni = !obdRep && String(rep.source ?? "") === "web"
-        ? vetaBezObdobi(String(rep.report_date), starsi as RadekReportu[])
-        : null;
+      // ⛔ [Grok R3, nález N1] Z VLASTNÍHO dotazu na řádky mimo appku, ne z osmičky pro klouzavý
+      //    průměr: u klienta s 8 a víc novějšími řádky appky by v ní žádný web nebyl, výpočet by vyšel
+      //    jako první report a věta by tiše zmizela. Chyba dotazu = věta „historie se nenačetla".
+      let obdobiUpozorneni: string | null = null;
+      if (!obdRep && String(rep.source ?? "") === "web") {
+        const mimoAppku = await admin.from("client_reports").select("report_date, source, obdobi_od, obdobi_do")
+          .eq("email", email).lt("report_date", String(rep.report_date))
+          .or("source.is.null,source.not.in.(tvuj-coach,app)")
+          .order("report_date", { ascending: false }).limit(5);
+        obdobiUpozorneni = vetaBezObdobi(String(rep.report_date), mimoAppku.error ? null : (mimoAppku.data ?? []) as RadekReportu[]);
+      }
       const fakta = rdFakta(
         rep as Record<string, unknown>,
         drive,

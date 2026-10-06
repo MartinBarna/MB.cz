@@ -1059,7 +1059,7 @@ Deno.test("cron i tlačítko čtou okno pro období a předávají kadenci", asy
   // Revize R1: N3 chyba dotazu = 500 (ne prázdná historie), S1 věta u reportu bez období.
   tvrd(admin.includes('["client_reports(starsi)", driveRes.error]') && admin.includes('["client_intake", intakeRes.error]') &&
     admin.includes('return json({ error: "db", co: chybaDotazu[0]'), "report_draft: chyba dotazu = 500");
-  tvrd(admin.includes("vetaBezObdobi(String(rep.report_date), starsi as RadekReportu[])") && admin.includes("obdobi_upozorneni: obdobiUpozorneni"), "report_draft: věta u reportu bez období");
+  tvrd(admin.includes(".or(\"source.is.null,source.not.in.(tvuj-coach,app)\")") && admin.includes("vetaBezObdobi(String(rep.report_date), mimoAppku.error ? null :") && admin.includes("obdobi_upozorneni: obdobiUpozorneni"), "report_draft: věta u reportu bez období z vlastního dotazu mimo appku (Grok R3)");
 });
 
 Deno.test("kadence: delší lhůta před tvuj-coach a ručně posunutý další report", () => {
