@@ -108,7 +108,12 @@ export function obdobiRadku(r: RadekReportu): Obdobi | null {
   const rd = String(r.report_date ?? "").slice(0, 10);
   if (!jeDatum(rd)) return null;
   const t = tydenReportu(rd);
-  return { od: t, do: pridejDny(t, 6), dni: 7 };
+  // ⛔ [revize R1, nález N1] Konec nejdál den odeslání, stejně jako u období z pravidla. Řádek
+  //    bez období poslaný ve čtvrtek až sobotu by jinak „pokryl" i dny do neděle, které ještě
+  //    nenastaly, a nejbližší další report by vyšel jako oprava téhož týdne. U reportů poslaných
+  //    v neděli až středu (a u všech dosavadních řádků z pondělí) se nic nemění.
+  const konec = mensi(pridejDny(t, 6), rd);
+  return { od: t, do: konec, dni: rozdilDni(t, konec) + 1 };
 }
 
 export type VysledekObdobi = Obdobi & {

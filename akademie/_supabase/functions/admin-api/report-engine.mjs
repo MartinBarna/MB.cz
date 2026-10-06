@@ -119,6 +119,23 @@ export function delta(v, jed) {
   return (z > 0 ? "+" : z < 0 ? "-" : "") + fmt(Math.abs(z), jed);
 }
 const j = (r, k) => (r && r[k] ? r[k] : {});
+/**
+ * Průměrný rozestup okna čtyř vážení v týdnech: od nejstaršího vážení okna (`drive[2]`) po
+ * report `r`, děleno třemi. null, když nejstarší bod chybí nebo jeho datum nejde přečíst
+ * (pak se dělí posledním rozestupem jako dřív). Nikdy pod půl týdne, stejně jako `tydnuMezi`.
+ * ⭐ [5. 10. 2026, revize R1, nález V1] Rozdíl průměrů (w0, w1, w2) a (w1, w2, w3) je přesně
+ *    (w0 − w3) / 3, tedy změna za třetinu CELÉHO okna. Dělit posledním rozestupem sedí jen při
+ *    stejných rozestupech; při změně rytmu (týden → 2 týdny, 3 týdny → týden) to dávalo falešnou
+ *    stagnaci nebo falešně rychlý úbytek. Appka trend počítá regresí přes skutečná data
+ *    (`src/lib/checkin/aggregate.ts`, `aggregateWeight`), takže tuhle vadu nemá.
+ */
+export function tydnuOkna(r, drive) {
+  const nej = Array.isArray(drive) ? drive[2] : null;
+  if (!nej) return null;
+  const a = Date.parse(String(r && r.report_date) + "T12:00:00Z"), b = Date.parse(String(nej.report_date) + "T12:00:00Z");
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  return Math.max(0.5, Math.abs(a - b) / (7 * 86400000) / 3);
+}
 /** Kolik týdnů uplynulo mezi dvěma reporty. Nikdy nevrací 0 (dělilo by se nulou). */
 export function tydnuMezi(dA, dB) {
   const a = Date.parse(String(dA) + "T12:00:00Z"), b = Date.parse(String(dB) + "T12:00:00Z");
@@ -172,13 +189,16 @@ export function spocitejBlok(v) {
     return y.length ? y.reduce((a, b) => a + b, 0) / y.length : null;
   };
   const oknoTeď = rada.slice(0, 3), oknoMinule = rada.slice(1, 4);
-  let tempoPct = null, tempoZdroj = "zadne";
+  let tempoPct = null, tempoZdroj = "zadne", tempoTydnu = null;
   if (oknoTeď.length === 3 && oknoMinule.length === 3 &&
       oknoTeď.every((x) => x !== null) && oknoMinule.every((x) => x !== null)) {
     const a = prum(oknoTeď), b = prum(oknoMinule);
-    tempoPct = b ? ((a - b) / b) * 100 / tydnu : null;
+    // ⛔ [revize R1, nález V1] Průměrným rozestupem CELÉHO okna, ne posledním (viz `tydnuOkna`).
+    tempoTydnu = tydnuOkna(r, v.drive) ?? tydnu;
+    tempoPct = b ? ((a - b) / b) * 100 / tempoTydnu : null;
     tempoZdroj = tempoPct === null ? "zadne" : "prumer3";
   } else if (zmenaOdMinule !== null && vahaPrev) {
+    tempoTydnu = tydnu;
     tempoPct = (zmenaOdMinule / vahaPrev) * 100 / tydnu;
     tempoZdroj = "jedno_vazeni";
   }
@@ -213,6 +233,8 @@ export function spocitejBlok(v) {
     datum: String(r.report_date || ""),
     vaha, vahaPrev, vahaPrvni, zmenaOdMinule, zmenaOdStartu, tempoPct, tempoZdroj,
     tydnuOdMinule: tydnu,
+    // Čím se tempo dělilo (týdny): průměrný rozestup okna u `prumer3`, jinak poslední rozestup.
+    tempoTydnu,
     miry,
     dnyZapsano: dny, obdobiDni, kcal, protein, fiber,
     kcalCil: c("kcal"), proteinCil: c("protein"), fiberCil: c("fiber"),
@@ -442,7 +464,7 @@ export function navrhni(v) {
     }
     let novy = Math.round((cil * (1 - REZ_PCT / 100)) / 10) * 10;
     if (novy < dno) {
-      return nic("Váha stojí druhý týden a příjem i zápis sedí, ale řez o " + REZ_PCT + " % by šel na " +
+      return nic("Váha stojí " + (tyden ? "druhý týden" : "druhý report v řadě") + " a příjem i zápis sedí, ale řez o " + REZ_PCT + " % by šel na " +
         fmt(novy, "kcal") + ", tedy pod podlahu " + fmt(dno, "kcal") + ". Kalorie neřežu. " +
         "Zbývá zvednout výdej (kroky, tréninky) nebo si sednout a probrat cíl.", "podlaha");
     }

@@ -172,6 +172,11 @@ Deno.test("obdobiRadku: uložené, odvozené, nečitelné", () => {
   const vadne = obdobiRadku(web("2026-10-05", { obdobi_od: "2026-10-05", obdobi_do: "2026-09-01" }));
   tvrd(!!vadne && vadne.dni === 7, "obrácené uložené období se nebere");
   tvrd(obdobiRadku({ report_date: "nic" }) === null, "nečitelné datum");
+  // Revize R1, nález N1: řádek bez období ze čtvrtka až soboty končí dnem odeslání, ne nedělí.
+  const ctvrtek = obdobiRadku(web("2026-10-08"));
+  tvrd(!!ctvrtek && ctvrtek.od === "2026-10-05" && ctvrtek.do === "2026-10-08" && ctvrtek.dni === 4, "čtvrtek bez období: 5. až 8. 10.");
+  const dalsi = obdobiReportu("2026-10-11", [web("2026-10-04", { obdobi_od: "2026-09-28", obdobi_do: "2026-10-04" }), web("2026-10-08")]);
+  tvrd(!dalsi.oprava && dalsi.od === "2026-10-09" && dalsi.do === "2026-10-11", "neděle po čtvrtku bez období: 9. až 11. 10., žádná oprava (je " + dalsi.od + " až " + dalsi.do + ")");
 });
 
 Deno.test("tydnyObdobi a celé týdny", () => {

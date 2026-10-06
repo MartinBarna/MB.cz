@@ -381,5 +381,75 @@ scenar("14) Návrh enginu u delšího období: „druhý report v řadě“, ne 
 });
 
 // ---------------------------------------------------------------------------
+// SCÉNÁŘ 15 PŘIBYL 5. 10. 2026 (revize R1, nález V1): tempo z klouzavého průměru se dělí
+// průměrným rozestupem CELÉHO okna čtyř vážení, ne posledním rozestupem. Váhy jsou spočítané
+// přesně ze zadaného tempa, takže engine má vrátit totéž tempo, ať jsou rozestupy jakékoli.
+/** Váha k datu `na`, když od `od` (váha `start`) ubývá `pctTyden` % za týden. */
+function vahaPriTempu(start, pctTyden, od, na) {
+  const tydnu = (Date.parse(na + "T12:00:00Z") - Date.parse(od + "T12:00:00Z")) / (7 * 86400000);
+  return Math.round(start * Math.pow(1 + pctTyden / 100, tydnu) * 100) / 100;
+}
+/** Report se splněným zadáním (zápis 7/7 nebo celé období, kcal i kroky na cíli), ať rozhoduje jen tempo. */
+function repSplneno(datum, vaha, dni = 7, obdobi = null) {
+  const r = rep(datum, vaha, { nutrition: { kcal: 2000, protein: 160, dny_zapsano: dni }, activity: { kroky: 10000, fitko: 3, sport_min: 180 } });
+  return obdobi ? Object.assign(r, { obdobi_od: obdobi[0], obdobi_do: obdobi[1] }) : r;
+}
+function fakta(posledni, drive) {
+  return pripravFakta({ posledni, drive, predchozi: drive[0] || null, predpredchozi: drive[1] || null,
+    prvni: drive[drive.length - 1] || null, cile: CILE, smer: "hubnuti", pohlavi: "z" });
+}
+
+scenar("15) Tempo celým oknem vážení: změna rytmu reportů nevyrobí falešnou stagnaci ani rychlý úbytek", () => {
+  // A) Týdenní klient přejde na kadenci 2, skutečné tempo −0,35 % týdně (nad prahem stagnace 0,3).
+  const A = (d) => vahaPriTempu(80, -0.35, "2026-09-06", d);
+  const a1 = fakta(repSplneno("2026-10-04", A("2026-10-04"), 14, ["2026-09-21", "2026-10-04"]),
+    [repSplneno("2026-09-20", A("2026-09-20")), repSplneno("2026-09-13", A("2026-09-13")), repSplneno("2026-09-06", A("2026-09-06"))]);
+  tvrd(a1.cisla.tempoZdroj === "prumer3" && Math.abs(a1.cisla.tempoPct + 0.35) < 0.02, "týden → 2 týdny (4. 10.): tempo −0,35 % (je " + a1.cisla.tempoPct + ")");
+  tvrd(Math.abs(a1.cisla.tempoTydnu - 4 / 3) < 1e-9, "dělí se průměrným rozestupem okna 4/3 týdne (je " + a1.cisla.tempoTydnu + ")");
+  const a2 = fakta(repSplneno("2026-10-18", A("2026-10-18"), 14, ["2026-10-05", "2026-10-18"]),
+    [repSplneno("2026-10-04", A("2026-10-04"), 14, ["2026-09-21", "2026-10-04"]), repSplneno("2026-09-20", A("2026-09-20")), repSplneno("2026-09-13", A("2026-09-13"))]);
+  tvrd(Math.abs(a2.cisla.tempoPct + 0.35) < 0.02, "týden → 2 týdny (18. 10.): tempo −0,35 % (je " + a2.cisla.tempoPct + ")");
+  tvrd(a2.navrh.paka !== "kcal_dolu" && a2.navrh.novyKcal === null, "klient hubne podle plánu: žádný řez (je " + a2.navrh.paka + ")");
+  // Kontrast: posledním rozestupem (2 týdny) by to byla stagnace a řez 2000 → 1880.
+  const stare = ((a2.cisla.tempoPct * a2.cisla.tempoTydnu) / 2);
+  tvrd(Math.abs(stare) < 0.3, "kontrast: dřívější výpočet by ukázal stagnaci (" + stare + ")");
+
+  // B) Návrat ze 3 týdnů na týden, skutečné tempo −0,6 % týdně.
+  const B = (d) => vahaPriTempu(90, -0.6, "2026-08-23", d);
+  const b1 = fakta(repSplneno("2026-10-11", B("2026-10-11")),
+    [repSplneno("2026-10-04", B("2026-10-04"), 21, ["2026-09-14", "2026-10-04"]), repSplneno("2026-09-13", B("2026-09-13"), 21, ["2026-08-24", "2026-09-13"]), repSplneno("2026-08-23", B("2026-08-23"))]);
+  tvrd(Math.abs(b1.cisla.tempoPct + 0.6) < 0.02, "3 týdny → týden: tempo −0,6 % (je " + b1.cisla.tempoPct + ")");
+  tvrd(b1.navrh.paka !== "kcal_nahoru", "žádné falešné „hubne moc rychle“ (je " + b1.navrh.paka + ")");
+
+  // C) Hana 8. 11.: okno 8. 11., 25. 10., 4. 10. a řádek appky 3. 8., skutečné tempo −0,5 % týdně.
+  const C = (d) => vahaPriTempu(70, -0.5, "2026-08-03", d);
+  const c1 = fakta(repSplneno("2026-11-08", C("2026-11-08"), 14, ["2026-10-26", "2026-11-08"]),
+    [repSplneno("2026-10-25", C("2026-10-25"), 21, ["2026-10-05", "2026-10-25"]), repSplneno("2026-10-04", C("2026-10-04")),
+     Object.assign(rep("2026-08-03", C("2026-08-03"), { nutrition: null }), { source: "tvuj-coach" })]);
+  tvrd(Math.abs(c1.cisla.tempoPct + 0.5) < 0.02, "Hana 8. 11.: tempo −0,5 % (je " + c1.cisla.tempoPct + ")");
+  tvrd(c1.navrh.paka !== "kcal_nahoru", "Hana 8. 11.: žádné přidání kalorií (je " + c1.navrh.paka + ")");
+
+  // D) Týdenní klient se stejnými rozestupy: dělí se týdnem, čísla jako dřív.
+  const D = (d) => vahaPriTempu(85, -0.5, "2026-09-13", d);
+  const d1 = fakta(repSplneno("2026-10-04", D("2026-10-04")),
+    [repSplneno("2026-09-27", D("2026-09-27")), repSplneno("2026-09-20", D("2026-09-20")), repSplneno("2026-09-13", D("2026-09-13"))]);
+  tvrd(d1.cisla.tempoTydnu === 1 && d1.cisla.tydnuOdMinule === 1, "týdenní: dělí se jedním týdnem jako dřív");
+  tvrd(Math.abs(d1.cisla.tempoPct + 0.5) < 0.02, "týdenní: tempo −0,5 % (je " + d1.cisla.tempoPct + ")");
+
+  // E) Nečitelné datum nejstaršího bodu: spadne se na poslední rozestup, ne na dělení nesmyslem.
+  const e1 = fakta(repSplneno("2026-10-04", 80), [repSplneno("2026-09-27", 80.3), repSplneno("2026-09-20", 80.6), rep("nesmysl", 80.9)]);
+  tvrd(e1.cisla.tempoTydnu === 1, "nečitelné datum: dělí se posledním rozestupem (je " + e1.cisla.tempoTydnu + ")");
+});
+
+// N8: větev „podlaha“ u reportu za víc týdnů neříká „druhý týden“.
+scenar("16) Podlaha u delšího období: „druhý report v řadě“", () => {
+  const P = (d) => vahaPriTempu(60, 0, "2026-09-06", d);
+  const cile = { kcal: 1250, protein: 110, kroky: 10000 };
+  const r = (d, dni, obd) => Object.assign(rep(d, P(d), { nutrition: { kcal: 1250, protein: 110, dny_zapsano: dni }, activity: { kroky: 10000 } }), obd ? { obdobi_od: obd[0], obdobi_do: obd[1] } : {});
+  const f = pripravFakta({ posledni: r("2026-10-18", 14, ["2026-10-05", "2026-10-18"]), drive: [r("2026-10-04", 14, ["2026-09-21", "2026-10-04"]), r("2026-09-20", 7), r("2026-09-13", 7)],
+    predchozi: r("2026-10-04", 14, ["2026-09-21", "2026-10-04"]), cile, smer: "hubnuti", pohlavi: "z" });
+  tvrd(f.navrh.jistota === "podlaha" && f.navrh.duvod.indexOf("druhý report v řadě") !== -1 && f.navrh.duvod.indexOf("druhý týden") === -1, "podlaha: „druhý report v řadě“ (je " + f.navrh.duvod.slice(0, 60) + ")");
+});
+// ---------------------------------------------------------------------------
 console.log("\n" + (chyb ? "❌ " + chyb + " nesedí, " + ok + " OK" : "✅ všech " + ok + " kontrol sedí"));
 process.exit(chyb ? 1 : 0);
