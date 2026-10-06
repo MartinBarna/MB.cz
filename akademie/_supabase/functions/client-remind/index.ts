@@ -231,7 +231,7 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
       p("Reporty zpracovávám v pondělí. Vyplnit ho můžeš v klidu už v neděli, ať to v pondělí ráno mám.") +
       cta(CTA_URL, "Vyplnit report (3 min)") +
       (maPrilohu ? p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Zapisuješ si jídlo v Kalorických tabulkách? V příloze máš návod, jak z nich data vytáhnout jedním klikem a nahrát do reportu. Vyber v nich dny " + obdTxt + ", průměry za celé období ti formulář spočítá sám.</span>") : "") +
-      p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Kroky piš jako denní průměr a sport s tréninky jako <strong>průměr na jeden týden</strong> (fitko, kardio i jiný pohyb dohromady). Na konci reportu si naklikáš i plán kroků a minut do dalšího reportu, klidně jedním klikem „bude stejně\".</span>"));
+      p("<span class='mb-ps' style='color:#A09AAD;font-size:14px'>Tip: zvaž se ráno nalačno a vezmi metr na hruď, pas, boky, zadek a stehna. Míry řeknou víc než váha. Kroky piš jako denní průměr. Minuty sportu (fitko, kardio i jiný pohyb dohromady) i počet tréninků piš jako <strong>průměr na jeden týden</strong>, samotný počet tréninků mi o zátěži neřekne dost. Na konci reportu si naklikáš i plán kroků a minut do dalšího reportu, klidně jedním klikem „bude stejně\". Jedeš v Kalorických tabulkách? Průměr kcal najdeš ve Statistiky → Analýza jídelníčku.</span>"));
   }
   const telo = kind === "register"
     ? p("od teď mi svoje reporty posílej přes <strong>klientskou sekci</strong> na webu. Budeš v ní mít svoje grafy, historii i appku Tvůj Coach v ceně koučinku. Žádný Excel, nic neopisuješ.") +

@@ -472,7 +472,7 @@
   }
   // Rámeček nad krokem Strava a v souhrnu: od kdy do kdy report je, nebo varování.
   function obdBox(){
-    if(!OBD) return '<div class="obdbox warn">⚠️ Období reportu se teď nepodařilo načíst, takže formulář jede jako dřív: denní rozpis Po až Ne a z exportu posledních 7 dní. Posíláš-li report za delší dobu, zavři ho a zkus to za chvíli znovu.</div>';
+    if(!OBD) return '<div class="obdbox warn">⚠️ Období reportu se teď nepodařilo načíst, formulář proto bere jeden týden: denní rozpis Po až Ne a z exportu posledních 7 dní. Jestli máš report za víc než týden, zavři ho a zkus to za chvíli znovu.</div>';
     var t = 'Tvoje období: <b>' + popisObd(OBD.od, OBD["do"]) + '</b> (' + slovoDni(OBD.dni) + ').';
     if(OBD.oprava) t += ' Za tohle období už report máš. Když ho pošleš znovu, Martin dostane opravenou verzi.';
     else if(OBD.zkraceno) t += ' Report sahá nejvýš 4 týdny zpátky, proto tentokrát bere jen posledních ' + slovoDni(OBD.dni) + '.';
@@ -1464,7 +1464,7 @@
       { id: "plan", title: TYD ? "Plán na příští týden" : "Plán do dalšího reportu",
         help: TYD
           ? "Domluva dopředu: kolik kroků denně a kolik minut sportu příští týden dáš? Martin pak v dalším reportu vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\"."
-          : "Domluva dopředu: kolik kroků denně a kolik minut sportu za týden dáš do dalšího reportu? Martin pak v dalším reportu vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\".",
+          : "Domluva dopředu: kolik kroků denně a kolik minut sportu za týden dáš do dalšího reportu? Martin pak v něm vidí plán vedle reality. Nechceš-li nic měnit, stačí kliknout „bude stejně\".",
         render: function(a){
           var p = a.plan || {};
           var sel = p.stejne === true ? PL_STEJNE : (p.stejne === false ? "Nastavím si čísla" : null);
