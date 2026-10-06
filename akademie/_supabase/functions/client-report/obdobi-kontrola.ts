@@ -16,6 +16,7 @@ import {
   overObdobiKlienta,
   overRozpisKObdobi,
   popisObdobi,
+  vetaBezObdobi,
   type Obdobi,
   type RadekReportu,
 } from "../_shared/report-obdobi.ts";
@@ -57,7 +58,7 @@ export function kontrolaObdobi(v: {
         poznamka: "⚠️ Denní rozpis má data dnů, ale formulář neposlal období. Report je uložený, rozpis ber s rezervou a řekni Claudovi.",
       };
     }
-    return { obdobi: null, stav: "bez_obdobi", poznamka: null };
+    return { obdobi: null, stav: "bez_obdobi", poznamka: vetaBezObdobi(v.dnes, v.historie) };
   }
   const o = overObdobiKlienta(v.odKlienta, v.dnes);
   if (!o || !overRozpisKObdobi(v.rozpis, o)) {

@@ -877,7 +877,7 @@
         else t+='. Výzva mu odejde v neděli '+czDatum(p.vyzva)+(d.remind_on===false?', jenže připomínky má vypnuté.':', když do té doby report nepošle.');
       }
       if(p.kadence_zdroj==='seznam_14d') t+=' Kadence je zatím ze starého seznamu client_remind_14d, ulož ji tady.';
-      if(p.seznam_14d_chyba) t+=' ⚠️ Starý seznam kadence se nenačetl.';
+      if(p.seznam_14d_chyba) t+=' ⚠️ Starý seznam kadence se nenačetl, takže nevím, jestli klient nemá report po 2 týdnech. Ukládat se teď nedá, obnov kartu.';
       return t;
     }
     // 🏁 Konec zaplaceného období. Věta říká DŮSLEDEK, ne jen stav: prázdné pole
@@ -2345,7 +2345,9 @@
       // „Další nejdřív" termín jen posouvá dál (dovolená) a po dalším reportu přestane platit sám.
       // ⛔ Při chybě čtení (`report_plan: null`) se pole zamknou jako u startu: prázdné pole
       //    po chybě není „nic zadané" a uložení by kadenci přepsalo na týden.
-      var kdPlan=d.report_plan||null, kdZamek=!kdPlan;
+      // ⛔ [revize R1, nález N7] Zamyká se i při nenačteném starém seznamu 14d: select by jinak
+      //    u klienta ze seznamu předvybral „každý týden" a uložení data by zapsalo kadenci 1.
+      var kdPlan=d.report_plan||null, kdZamek=!kdPlan||!!kdPlan.seznam_14d_chyba;
       // Ruční termín, který už minul, se do pole nevrací: posunout jde jen dopředu a uložení
       // kadence by jinak spadlo na „datum je v minulosti". Uložením se smaže, což prakticky nic
       // nemění, protože minulé datum termín už nikam neposouvá.
@@ -2872,6 +2874,8 @@
               :e==='ai_prazdno'?'AI vrátila prázdný text, zkus to znovu'
               :e==='chybi_tabulka'?'chybí tabulka report_drafts, je potřeba nasadit migraci'
               :e==='report_nenalezen'?'report se nenašel'
+              // [revize R1, nález N3] Chyba čtení dat klienta: koncept se schválně nepíše bez nich.
+              :e==='db'?'nepodařilo se načíst data klienta ('+esc(j.co||'databáze')+'), zkus to za chvíli'
               :'chyba ('+esc(e)+')';
             out.innerHTML='<p class="muted" style="font-size:.85rem;">⚠️ Koncept se nepovedl: '+why+'.</p>'; return;
           }
@@ -2904,6 +2908,8 @@
           var predmetTxt=R.predmet(vok,datum);
           var celyMail=R.telo({osloveni:vok,datum:datum,stavRadky:j.stav_radky||[],textAi:j.draft||'',tema:tema,temaOdkaz:temaUrl});
           var hh='';
+          // [revize R1, nález S1] Report bez období: týž text jako v mailu Martinovi.
+          if(j.obdobi_upozorneni) hh+='<p style="margin:0 0 6px;font-size:.85rem;color:#F6CD63;">'+esc(j.obdobi_upozorneni)+'</p>';
           if((j.upozorneni||[]).length) hh+='<p style="margin:0 0 6px;font-size:.85rem;color:#ffb4b4;">⚠️ V reportu je téma '+esc((j.upozorneni||[]).join(', '))+'. AI k němu schválně nic neradí, tohle patří Tobě osobně.</p>';
           // Kontrola hlasu ze serveru (rdVarovani): 3. osoba, vykání, špatný rod. Než to odešleš, oprav ručně.
           (j.varovani||[]).forEach(function(w){ hh+='<p style="margin:0 0 6px;font-size:.85rem;color:#ffb4b4;">✍️ '+esc(w)+' Před odesláním to v textu oprav.</p>'; });

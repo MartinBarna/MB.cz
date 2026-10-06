@@ -446,9 +446,16 @@
   // Zeptá se serveru na období (akce `obdobi`). ⛔ Jakákoli chyba, timeout i nesmyslná odpověď
   // = null, tedy náhradní režim s varováním, nikdy vymyšlené období.
   function nactiObdobi(){
+    // ⭐ [revize R1, nález S1] Jeden opakovaný pokus: výpadek sítě nebo brány na pár sekund
+    //    nesmí klienta poslat do náhradního režimu (report bez období, Martin pak dostane jen větu).
+    return nactiObdobiJednou().then(function(o){
+      return o || new Promise(function(res){ setTimeout(res, 1500); }).then(nactiObdobiJednou);
+    });
+  }
+  function nactiObdobiJednou(){
     return window.BA.getToken().then(function(t){
       var ctl = (typeof AbortController === "function") ? new AbortController() : null;
-      var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 10000) : null;
+      var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 8000) : null;
       return fetch(FN, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: "Bearer " + t },
@@ -1529,7 +1536,8 @@
           }
           var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {}, p = a.plan || {};
           return obdBox()
-            + g("Váha", "vaha", [["Týdenní průměr", czk(a.weight) + " kg"]])
+            // [revize R1, nález N8] U delšího období váha není „týdenní průměr" za celé období.
+            + g("Váha", "vaha", [[TYD ? "Týdenní průměr" : "Aktuální váha", czk(a.weight) + " kg"]])
             + g("Míry", a._miry ? "miry" : "miryq", a._miry ? MIRY.map(function(x){ return [x[1], m[x[0]] != null ? czk(m[x[0]]) + " cm" : ""]; }) : [[TYD ? "Tento týden" : "Tentokrát", "přeskočeno"]])
             + (a.nutrition === null
               ? g("Strava", "strava", [[TYD ? "Tenhle týden" : "Za tohle období", "strava nezapsána"]])

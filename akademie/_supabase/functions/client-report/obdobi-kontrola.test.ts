@@ -53,6 +53,22 @@ Deno.test("stará stránka a náhradní režim: období se neposílá", () => {
   tvrd(divne.stav === "neplatne" && !!divne.poznamka, "rozpis s daty bez období se ohlásí");
 });
 
+// Revize R1, nález S1: report bez období (náhradní režim, stará stránka) nesmí být pro Martina tichý.
+Deno.test("report bez období: Martin dostane větu, které dny nepokrývá", () => {
+  const hana = kontrolaObdobi({ dnes: "2026-10-25", odKlienta: undefined, rozpis: undefined, historie: [web("2026-10-04")] });
+  tvrd(hana.stav === "bez_obdobi" && hana.obdobi === null, "uloží se bez období (jako týden)");
+  tvrd(!!hana.poznamka && hana.poznamka.includes("Podle historie měl pokrýt 5. 10. až 25. 10. 2026 (21 dní)") &&
+    hana.poznamka.includes("uložený je jako 19. 10. až 25. 10. 2026 (7 dní)") &&
+    hana.poznamka.includes("Dny 5. 10. až 18. 10. 2026 nepokrývá žádný report."), "věta s obdobím a nepokrytými dny (" + hana.poznamka + ")");
+  const tydenni = kontrolaObdobi({ dnes: "2026-10-04", odKlienta: undefined, rozpis: undefined, historie: [web("2026-09-27")] });
+  tvrd(tydenni.poznamka === null, "týdenní klient v náhradním režimu: žádná věta navíc");
+  const prekryv = kontrolaObdobi({ dnes: "2026-10-11", odKlienta: undefined, rozpis: undefined,
+    historie: [web("2026-10-08", { obdobi_od: "2026-09-28", obdobi_do: "2026-10-08" })] });
+  tvrd(!!prekryv.poznamka && prekryv.poznamka.includes("Dny 5. 10. až 8. 10. 2026 už pokryl předchozí report"), "překryv s předchozím reportem se řekne");
+  const nevim = kontrolaObdobi({ dnes: "2026-10-25", odKlienta: undefined, rozpis: undefined, historie: null });
+  tvrd(!!nevim.poznamka && nevim.poznamka.includes("historie reportů se nenačetla"), "bez historie: věta, že nevím");
+});
+
 Deno.test("client-report nesahá na sync modul a období bere ze sdíleného modulu", async () => {
   const src = await Deno.readTextFile(new URL("./index.ts", import.meta.url));
   tvrd(src.includes('from "../_shared/report-obdobi.ts"'), "index importuje sdílený modul období");

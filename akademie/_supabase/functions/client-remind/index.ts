@@ -219,8 +219,9 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
   // v client_reports ma source='import-sheet'). Text proto NESMI tvrdit "bez pristupu mi neposles report",
   // to by klientovi lhalo tyden pote, co report poslal. Cil je presun kanalu, ne vycitka.
   // Report varianta chodi v NEDELI (Martin 14. 9. 2026): reporty zpracovava v pondeli, vyplnit se da uz v nedeli.
-  // ⭐ [5. 10. 2026] Report za víc týdnů (kadence 2 a 3 týdny, vynechaný týden, posun na později)
-  //    má vlastní znění: „týden je za tebou" by lhalo. Týdenní znění zůstává slovo od slova.
+  // ⭐ [5. 10. 2026] Report za víc týdnů u klienta s kadencí 2 a 3 týdny (i s ručním posunem)
+  //    má vlastní znění: „týden je za tebou" by lhalo. Týdenní klient dostává týdenní znění
+  //    slovo od slova, i když týden vynechal (revize R1, nález N4); `obd` je pro něj null.
   //    ⚠️ NÁVRH TEXTU KE KONTROLE ŠÉFA (Martinův hlas, anti-AI průchod před nasazením).
   if (kind === "report" && obd && obd.tydnu > 1) {
     const obdTxt = popisObdobi(obd.od, obd.do);
@@ -621,10 +622,13 @@ Deno.serve(async (req: Request) => {
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
     // Období do znění výzvy: u ostrého běhu z plánu klienta, u testu vymyšlené podle `test_tydnu`.
+    // ⛔ [revize R1, nález N4, rozhodnutí šéfa 5. 10. 2026] Znění „za víc týdnů" jen pro kadenci
+    //    2 a 3. Týdenní klient po vynechaném týdnu (nebo po dlouhé pauze) dostane původní týdenní
+    //    text slovo od slova; období mu ukáže až formulář.
     const pl = planBy.get(tgt.email);
     const obdMail = testEmail
       ? (testTydnu > 1 ? { tydnu: testTydnu, od: pridejDny(dnesD, -(7 * testTydnu - 1)), do: dnesD } : null)
-      : (pl ? { tydnu: pl.tydnu, od: pl.obdobi.od, do: pl.obdobi.do } : null);
+      : (pl && pl.kadence >= 2 ? { tydnu: pl.tydnu, od: pl.obdobi.od, do: pl.obdobi.do } : null);
     // ⛔ `rezervovano` je ZÁMĚRNĚ mimo `try`: když spadne cokoli mezi rezervací a
     //    odesláním, řádek v `client_remind_sent` už existuje a mail neodešel. Bez tohohle
     //    by to byla tichá ztráta mailu, přesně ta vada, kterou celá dávka opravuje.

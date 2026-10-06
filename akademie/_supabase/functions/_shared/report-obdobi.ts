@@ -266,6 +266,37 @@ export function overRozpisKObdobi(dny: unknown, o: Obdobi | null): boolean {
   return true;
 }
 
+/**
+ * ⛔ [5. 10. 2026, revize R1, nález S1] REPORT BEZ OBDOBÍ NESMÍ BÝT PRO MARTINA TICHÝ.
+ * Přijde, když formulář období nenačetl (náhradní režim) nebo klient poslal report ze staré
+ * stránky. Uloží se jako jeden týden podle pravidla −3 dny (`obdobiRadku`). Když podle historie
+ * měl pokrýt jiné dny (typicky víc týdnů), Martin dostane větu, které dny nepokrývá žádný report
+ * a které se překrývají s předchozím. Období se NEDOPOČÍTÁVÁ ze serveru: čísla, která klient
+ * v náhradním režimu vyplnil, jsou za týden.
+ * null = není co hlásit (týdenní klient, první report, oprava téhož týdne).
+ */
+export function vetaBezObdobi(dnes: string, historie: RadekReportu[] | null): string | null {
+  const jakoTyden = obdobiRadku({ report_date: dnes });
+  if (!jakoTyden) return null;
+  const ulozeno = "uložený je jako " + popisObdobi(jakoTyden.od, jakoTyden.do) + " (" + slovoDni(jakoTyden.dni) + ")";
+  if (!historie) {
+    return "⚠️ Report přišel bez období (formulář ho nenačetl, nebo klient poslal report ze staré stránky) " +
+      "a historie reportů se nenačetla, takže nevím, jestli mezi minulým a tímhle reportem nezůstaly dny bez reportu; " + ulozeno + ".";
+  }
+  const ocek = obdobiReportu(dnes, historie);
+  if (ocek.od === jakoTyden.od && ocek.do === jakoTyden.do) return null;
+  const casti: string[] = [];
+  if (ocek.od < jakoTyden.od) {
+    casti.push("Dny " + popisObdobi(ocek.od, pridejDny(jakoTyden.od, -1)) + " nepokrývá žádný report.");
+  } else if (ocek.od > jakoTyden.od) {
+    casti.push("Dny " + popisObdobi(jakoTyden.od, pridejDny(ocek.od, -1)) + " už pokryl předchozí report, týden se s ním překrývá.");
+  }
+  return "⚠️ Report přišel bez období (formulář ho nenačetl, nebo klient poslal report ze staré stránky). " +
+    "Podle historie měl pokrýt " + popisObdobi(ocek.od, ocek.do) + " (" + slovoDni(ocek.dni) + "), " + ulozeno + ". " +
+    (casti.length ? casti.join(" ") + " " : "") +
+    "Čísla stravy jsou nejspíš jen za posledních 7 dní.";
+}
+
 // ---------- česky pro lidi (mail, karta klienta) ----------
 
 /** „5. 10." nebo „5. 10. 2026". */

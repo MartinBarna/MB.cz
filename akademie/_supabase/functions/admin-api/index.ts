@@ -29,6 +29,7 @@ import {
   jeUvnitrObdobi,
   kadenceKlienta,
   opravovanaVerze,
+  vetaBezObdobi,
   nedeleVyzvy,
   obdobiRadku,
   popisObdobi,
@@ -3392,6 +3393,7 @@ Deno.serve(async (req) => {
           stav_radky: Array.isArray(meta.stav_radky) ? meta.stav_radky : [],
           navrh: meta.navrh ?? null,
           report_date: String(rep.report_date),
+          obdobi_upozorneni: typeof meta.obdobi_upozorneni === "string" ? meta.obdobi_upozorneni : null,
         });
       }
       if (!RD_API_KEY) {
@@ -3418,6 +3420,17 @@ Deno.serve(async (req) => {
         admin.from("client_reports").select("report_date, weight, measurements, source, obdobi_od, obdobi_do")
           .eq("email", email).order("report_date", { ascending: true }).limit(10),
       ]);
+
+      // ⛔ [revize R1, nález N3] CHYBA DOTAZU NENÍ PRÁZDNÁ HISTORIE (CLAUDE.md, pravidlo 13).
+      //    Dřív se z `data ?? []` napsal (a zaplatil) koncept bez minulých reportů, bez startu,
+      //    bez zadání nebo bez zdravotních údajů z dotazníku, a nikde to nebylo vidět.
+      const chybaDotazu = ([
+        ["client_reports(starsi)", driveRes.error], ["client_targets", tgRes.error], ["client_intake", intakeRes.error],
+        ["client_reports(poradi)", poradiRes.error], ["client_reports(prvni)", prvniRes.error],
+      ] as [string, unknown][]).find(([, e]) => e);
+      if (chybaDotazu) {
+        return json({ error: "db", co: chybaDotazu[0], detail: String((chybaDotazu[1] as { message?: string })?.message ?? chybaDotazu[1]).slice(0, 160) }, 500);
+      }
 
       // Data z appky Tvůj Coach jsou bonus, ne podmínka: má ji jen část koučinkových klientů.
       // Když appka nevrátí nic, koncept se napíše bez ní a nikde se to nehlásí jako chyba.
@@ -3478,6 +3491,12 @@ Deno.serve(async (req) => {
       const prvni = obdRep
         ? (prvniVse.find((r) => String(r.report_date) < String(rep.report_date) && !jeUvnitrObdobi(r as RadekReportu, obdRep)) ?? null)
         : (prvniVse[0] ?? null);
+      // ⛔ [revize R1, nález S1] Webový report BEZ období (náhradní režim formuláře, stará stránka):
+      //    když podle historie měl pokrýt jiné dny, Martin to uvidí i u konceptu, týmž textem jako
+      //    v mailu (`vetaBezObdobi`). Report s obdobím ani řádek appky se to netýká.
+      const obdobiUpozorneni = !obdRep && String(rep.source ?? "") === "web"
+        ? vetaBezObdobi(String(rep.report_date), starsi as RadekReportu[])
+        : null;
       const fakta = rdFakta(
         rep as Record<string, unknown>,
         drive,
@@ -3563,12 +3582,14 @@ Deno.serve(async (req) => {
           // Otisk toho, co engine spočítal. Když se za měsíc ptáme, proč koncept radil
           // zrovna tohle, je to tady, a nemusí se to dopočítávat ze starých reportů.
           stav_radky: eng.radky, navrh: eng.navrh, smer, rod, osloveni, varovani,
+          obdobi_upozorneni: obdobiUpozorneni,
         },
       });
       // Neuložený koncept není důvod ho Martinovi zatajit, jen se o tom musí vědět.
       return json({
         ok: true, draft, navrh_zmen, upozorneni, varovani, ulozeno: !insErr, model: RD_MODEL,
         stav_radky: eng.radky, navrh: eng.navrh, report_date: String(rep.report_date),
+        obdobi_upozorneni: obdobiUpozorneni,
       });
     }
 

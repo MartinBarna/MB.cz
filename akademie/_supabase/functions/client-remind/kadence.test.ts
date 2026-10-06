@@ -88,4 +88,6 @@ Deno.test("index.ts: kadence se čte týmž dotazem a klíč pro hlídku zůstá
   tvrd(!src.includes("UZ_DOSTAL_DNI_14D"), "stará konstanta 14d je pryč (nahradilo ji okno podle kadence)");
   // předmět týdenní výzvy beze změny
   tvrd(src.includes('"Týdenní report ✍️ (3 minuty)"'), "předmět týdenní výzvy beze změny");
+  // Revize R1, nález N4: znění „za víc týdnů" jen pro kadenci 2 a 3, týdenní klient má týdenní text.
+  tvrd(src.includes("(pl && pl.kadence >= 2 ? { tydnu: pl.tydnu, od: pl.obdobi.od, do: pl.obdobi.do } : null)"), "znění za víc týdnů jen pro kadenci 2+");
 });

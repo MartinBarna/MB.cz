@@ -1056,6 +1056,10 @@ Deno.test("cron i tlačítko čtou okno pro období a předávají kadenci", asy
   // Revize R2: oprava téhož období počítá tempo od data původní verze, „start" není verze téhož období.
   tvrd(admin.includes("posledni: (puvodni ? { ...rep, report_date: String(puvodni.report_date) } : rep)"), "report_draft: tempo opravy od původní verze");
   tvrd(admin.includes("String(r.report_date) < String(rep.report_date) && !jeUvnitrObdobi(r as RadekReportu, obdRep)"), "report_draft: start mimo období reportu");
+  // Revize R1: N3 chyba dotazu = 500 (ne prázdná historie), S1 věta u reportu bez období.
+  tvrd(admin.includes('["client_reports(starsi)", driveRes.error]') && admin.includes('["client_intake", intakeRes.error]') &&
+    admin.includes('return json({ error: "db", co: chybaDotazu[0]'), "report_draft: chyba dotazu = 500");
+  tvrd(admin.includes("vetaBezObdobi(String(rep.report_date), starsi as RadekReportu[])") && admin.includes("obdobi_upozorneni: obdobiUpozorneni"), "report_draft: věta u reportu bez období");
 });
 
 Deno.test("kadence: delší lhůta před tvuj-coach a ručně posunutý další report", () => {
