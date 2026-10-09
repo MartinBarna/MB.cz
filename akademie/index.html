@@ -152,7 +152,7 @@
     {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
       {"@type":"Question","name":"Potřebuju předchozí vzdělání?","acceptedAnswer":{"@type":"Answer","text":"Ne. Academy začíná od úplných základů. A jestli už praxi máš, dostaneš hloubku a systém, který ti chyběl."}},
       {"@type":"Question","name":"V jaké formě je obsah?","acceptedAnswer":{"@type":"Answer","text":"Prémiové psané lekce s kvízy a úkoly + poslech lekcí jedním klikem (každá lekce se ti umí přečíst nahlas), ať se učíš i v autě nebo na procházce. Doživotní přístup. Videonástavbu plánujeme přidat jako další bonus."}},
-      {"@type":"Question","name":"Je to vědecky podložené?","acceptedAnswer":{"@type":"Answer","text":"Ano. Každá lekce stojí na vědeckých zdrojích, které jsou v textu odcitované - a převedené do srozumitelné, použitelné podoby."}},
+      {"@type":"Question","name":"Je to vědecky podložené?","acceptedAnswer":{"@type":"Answer","text":"Ano. Každá lekce stojí na vědeckých zdrojích, které jsou v textu odcitované a převedené do srozumitelné, použitelné podoby."}},
       {"@type":"Question","name":"Kolik Academy stojí?","acceptedAnswer":{"@type":"Answer","text":"Buď 990 Kč měsíčně (zrušíš kdykoli), nebo jednorázově 8 900 Kč s doživotním přístupem. Obsah je v obou variantách stejný."}},
       {"@type":"Question","name":"Jak zruším měsíční členství?","acceptedAnswer":{"@type":"Answer","text":"Dvěma kliknutími v zákaznickém portálu, odkaz máš v každém potvrzení platby. Přístup ti doběhne do konce zaplaceného měsíce. Vrátit se můžeš kdykoli."}},
       {"@type":"Question","name":"Je appka Tvůj Coach v ceně?","acceptedAnswer":{"@type":"Answer","text":"Ano, u obou variant. U doživotního přístupu dostaneš rok VIP verze (hodnota 4 990 Kč), u měsíčního členství ji máš ve VIP po celou dobu, co ti členství běží."}},
@@ -163,10 +163,18 @@
     {
       "@context": "https://schema.org",
       "@type": "Course",
+      "@id": "https://martinbarna.cz/akademie/#course",
       "name": "Barna Academy - škola pro trenéry, výživové poradce i závodníky fitness",
       "description": "Vzdělávací program pro trenéry, výživové poradce i závodníky fitness: vědecky podložená výživa, psychologie chování, anatomie a byznys. V češtině, autorsky zpracováno Martinem Barnou.",
-      "provider": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz" },
+      "url": "https://martinbarna.cz/akademie/",
+      "image": "https://martinbarna.cz/assets/og/akademie.png?v=g7",
       "inLanguage": "cs",
+      "provider": {
+        "@id": "https://martinbarna.cz/#org"
+      },
+      "creator": {
+        "@id": "https://martinbarna.cz/#martin"
+      },
       "offers": [
         {
           "@type": "Offer",
@@ -197,7 +205,9 @@
       "hasCourseInstance": {
         "@type": "CourseInstance",
         "courseMode": "Online",
-        "courseWorkload": "PT40H"
+        "instructor": {
+          "@id": "https://martinbarna.cz/#martin"
+        }
       }
     }
     </script>
