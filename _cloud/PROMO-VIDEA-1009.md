@@ -22,7 +22,7 @@ v `_cloud/videa/TEXTY.md`.
 | Soubor | Délka | Velikost | Háček (první 1–3 s) | Výzva k akci |
 |---|---|---|---|---|
 | `tvuj-coach-vip-15.mp4` | 15 s | 3,90 MB | Otázka k jídlu ve dvě ráno? + bublina „Kolik mi dnes zbývá?" | 499 Kč / měsíc, videokurz zdarma k první platbě, tvujcoach.cz |
-| `tvuj-coach-vip-30.mp4` | 30 s | 7,59 MB | totéž | 499 Kč / měsíc, videokurz (182 videí), zrušíš kdykoliv, 14 dní vrácení peněz |
+| `tvuj-coach-vip-30.mp4` | 30 s | 7,54 MB | totéž | 499 Kč / měsíc, videokurz (182 videí), zrušíš kdykoliv, 14 dní vrácení peněz |
 | `tvuj-coach-basic-15.mp4` | 15 s | 3,51 MB | Zbývá ti 400 kcal a 30 g bílkovin. Co si ještě dnes dát? | 249 Kč / měsíc, bez AI, tvujcoach.cz |
 | `tvuj-coach-basic-30.mp4` | 30 s | 6,96 MB | Kolik sérií týdně padlo na záda? | 249 Kč / měsíc nebo 2 490 Kč na rok |
 | `videokurz-15.mp4` | 15 s | 2,87 MB | Dá se jíst pizza a pořád mít výsledky? | 1 490 Kč jednorázově, nebo zdarma k VIP, martinbarna.cz/videokurz |
@@ -146,6 +146,40 @@ Viz `_cloud/videa/src/README.md`. Zkráceně: z kořene repa `python3 -m http.se
 pak `NODE_PATH=$(npm root -g) node _cloud/videa/src/render.js [video]`
 a `node _cloud/videa/src/texty.js`.
 
+## Oprava 9. 10.: odznak „Ověřeno Martinem“
+
+Odznak „Ověřeno Martinem“ majitel z appky 22. 8. zrušil a nesmí se nikde objevit (ani hvězdička
+„Od Martina“, ani fajfka „Martin“ u surovin).
+
+**Kontrola očima v plném rozlišení** (ne OCR): všech 8 souborů v `assets/app/` (4 soubory
+`generator-jidelnicku*.png` jsou bajtově stejné) a všechny screenshoty Academy, které videa
+používají (`assets/screeny/academy/02-lekce-mobil`, `03-generator-cz-mobil`, `04-ai-martin-mobil`).
+Výsledek: odznak je **jen v `assets/app/zapis-jidla.webp`**, u dvou položek („Kuřecí prsa“ a „Kuřecí
+prsa grilovaná“, text „Ověřeno Martinem · 120 / 165 kcal/100 g · + zapíše 100 g“). Hvězdička „Od Martina“ ani
+fajfka „Martin“ se v žádném obrázku nevyskytuje. (Žlutá hvězdička ☆ vedle „+“ je tlačítko oblíbených,
+je u všech položek a odznak to není.) V textech webu fráze „Ověřeno Martinem“ ani „Od Martina“ jako
+odznak není.
+
+**Jak je obrázek opravený** (`_cloud/videa/src/oprava-odznaku.py`): nic se nepíše fontem, řádek je
+poskládaný z pixelů originálu. Číslo kcal je vzaté z prvního řádku, „kcal/100 g · + zapíše 100 g“
+z druhého, mezera změřená na řádku „106 kcal/100 g“, který už je v aktuálním tvaru. Písmo, barva
+i vyhlazení jsou tak přesně původní. Položka má teď jeden řádek popisu jako v aktuální appce, takže
+se zkrátila o 40 px a hvězdička s „+“ se posunuly o 20 px nahoru na střed. Ušetřených 80 px je
+dorovnaných prázdným pozadím nad nadpisem „Logování“, takže spodek obrazovky (AI Coach tlačítko,
+navigace) se nehnul. Kontrola: přiblížení řádků, porovnání s řádkem „Kuřecí prsa syrové“ a měření
+skoků mezi sousedními řádky pixelů na všech švech (žádný). Uloženo jako webp q90 (52 kB, originál
+48 kB).
+
+**Videa**: obrázek používá jen `tvuj-coach-vip-30` (scéna 14,5–18 s). Přerenderováno s hudbou
+i bez, cover přegenerovaný (sám obrázek nepoužívá). Kontrola snímků v 15,5 / 16,5 / 17,5 s
+a 6 kontrolních snímků: odznak nikde. Ostatní videa a covery tenhle obrázek nepoužívají, a proto se
+nemění.
+
+**Web**: opravený obrázek je zvlášť ve větvi `cloud/screenshot-bez-odznaku-1009` (z `origin/main`)
+jako `assets/app/zapis-jidla-v2.webp` (nový název kvůli 30denní cache CDN). Ukazuje ho **jediná
+stránka webu: `/tvuj-coach/`** (martinbarna.cz/tvuj-coach/, sekce „Co appka umí“, karta „Zapsat
+jídlo trvá vteřiny“). Žádná jiná stránka, mail ani skript na `zapis-jidla.webp` neodkazuje.
+
 ## Odkud je každé tvrzení
 
 TC = `tvuj-coach/index.html`, VK = `videokurz.html`, AK = `akademie/index.html`,
@@ -166,7 +200,7 @@ KO = `koucing/index.html`. Citace jsou z viditelného textu stránek (Chromium, 
 - **3,0–7,0 s** (záběr): TC: „AI kouč mým hlasem … umí appku ovládat za tebe: zapíše jídlo, upraví ho“ · TC (demo video): „kouč odpoví a jídlo za tebe rovnou zapíše“
 - **7,0–11,0 s** (citace): TC: „Nebo to řekneš nahlas VIP: „Rohlík, tvaroh dvě stě gramů a tři deci vody.“ … ukáže ti, co chce zapsat. Potvrdíš, nebo opravíš.“
 - **11,0–14,5 s** (citace): TC: „Vyfotíš talíř VIP … AI odhadne, co na talíři leží, a spočítá makra … Odhad vidíš a upravíš, než se zapíše.“
-- **14,5–18,0 s** (záběr): TC: „Přes 50 000 potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.“ · Screenshot assets/app/zapis-jidla.webp
+- **14,5–18,0 s** (záběr): TC: „Přes 50 000 potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.“ · Screenshot assets/app/zapis-jidla.webp, opravený bez odznaku „Ověřeno Martinem“ (src/img/zapis-jidla-v2.webp)
 - **18,0–21,5 s** (záběr): TC: „appka přepočítá kalorie a makra na další týden, podle tvé váhy a tvých zápisů z celého týdne“
 - **21,5–25,0 s** (záběr): TC: „Plán ti appka napíše podle toho, kde cvičíš a kolik dní v týdnu máš.“ · TC: „K tomu ti poskládá jídelníček i trénink na míru.“
 - **25,0–30,0 s** (výzva k akci): TC: „499 Kč / měsíc“ · TC: „Videokurz výživy zdarma k první platbě (182 videí …)“ · TC: „Zrušíš kdykoliv, do 14 dnů vrácení peněz“

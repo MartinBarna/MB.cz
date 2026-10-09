@@ -16,7 +16,7 @@ Ke každé scéně: odkud je tvrzení. TC = `tvuj-coach/index.html`, VK = `video
 - **3,0–7,0 s** (záběr): TC: „AI kouč mým hlasem … umí appku ovládat za tebe: zapíše jídlo, upraví ho“ · TC (demo video): „kouč odpoví a jídlo za tebe rovnou zapíše“
 - **7,0–11,0 s** (citace): TC: „Nebo to řekneš nahlas VIP: „Rohlík, tvaroh dvě stě gramů a tři deci vody.“ … ukáže ti, co chce zapsat. Potvrdíš, nebo opravíš.“
 - **11,0–14,5 s** (citace): TC: „Vyfotíš talíř VIP … AI odhadne, co na talíři leží, a spočítá makra … Odhad vidíš a upravíš, než se zapíše.“
-- **14,5–18,0 s** (záběr): TC: „Přes 50 000 potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.“ · Screenshot assets/app/zapis-jidla.webp
+- **14,5–18,0 s** (záběr): TC: „Přes 50 000 potravin včetně zboží z Lidlu, Tesca, Alberta či Globusu.“ · Screenshot assets/app/zapis-jidla.webp, opravený bez odznaku „Ověřeno Martinem“ (src/img/zapis-jidla-v2.webp)
 - **18,0–21,5 s** (záběr): TC: „appka přepočítá kalorie a makra na další týden, podle tvé váhy a tvých zápisů z celého týdne“
 - **21,5–25,0 s** (záběr): TC: „Plán ti appka napíše podle toho, kde cvičíš a kolik dní v týdnu máš.“ · TC: „K tomu ti poskládá jídelníček i trénink na míru.“
 - **25,0–30,0 s** (výzva k akci): TC: „499 Kč / měsíc“ · TC: „Videokurz výživy zdarma k první platbě (182 videí …)“ · TC: „Zrušíš kdykoliv, do 14 dnů vrácení peněz“
