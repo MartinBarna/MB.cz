@@ -1,0 +1,193 @@
+diff -ru a/akademie/_supabase/functions/drip-send/aktivace.test.ts b/akademie/_supabase/functions/drip-send/aktivace.test.ts
+--- a/akademie/_supabase/functions/drip-send/aktivace.test.ts	2026-10-09 08:58:48.131084063 +0000
++++ b/akademie/_supabase/functions/drip-send/aktivace.test.ts	2026-10-09 08:58:48.132929370 +0000
+@@ -6,6 +6,8 @@
+   maPreskocitPodleZapisu,
+   type Podminka,
+   type StavZapisu,
++  rozhodniPodleZapisu,
++  trateProAppSignal,
+   trateSeSignalem,
+ } from './aktivace.ts';
+ 
+@@ -123,13 +125,30 @@
+   'tc-magnet/2', 'tc-magnet/3', 'tc-magnet/4', 'tc-magnet/5',
+   'tc-start/1',
+   'tc-zkusebka/0', 'tc-zkusebka/1', 'tc-zkusebka/2',
++  // [2026-10-09, NAVRH] trat vip-free: kazdy krok jen tomu, kdo zapisuje
++  'vip-free/0', 'vip-free/1', 'vip-free/2', 'vip-free/3',
+ ];
+ const ZIVE_KLICE = Object.keys(KROK_PODLE_ZAPISU).sort();
+ if (JSON.stringify(ZIVE_KLICE) !== JSON.stringify(ZIVE_KLICE_OCEKAVANE)) {
+   selhalo++;
+-  console.error(`✗ KROK_PODLE_ZAPISU se lisi od zive mapy v75 (${JSON.stringify(ZIVE_KLICE)}). Zmena kroku je vedome rozhodnuti: dopln pripady a uprav tuhle pojistku.`);
++  console.error(`✗ KROK_PODLE_ZAPISU se lisi od zive mapy v75 + vip-free (${JSON.stringify(ZIVE_KLICE)}). Zmena kroku je vedome rozhodnuti: dopln pripady a uprav tuhle pojistku.`);
+ } else {
+-  console.log('✓ ziva mapa drzi 18 kroku z v75 (zadna ticha zmena chovani po nasazeni)');
++  console.log('✓ ziva mapa drzi 18 kroku z v75 + 4 kroky vip-free (zadna ticha zmena chovani po nasazeni)');
++}
++
++
++// --- [2026-10-09, NAVRH] vip-free: mail „v appce zapisujes" nesmi dostat ten, kdo nezapisuje ---
++{
++  const pripady: [string, string, string][] = [
++    ['vip-free/0 zapsal → posli', rozhodniPodleZapisu('vip-free', 0, 'zapsal', KROK_PODLE_ZAPISU, { oknoUplynulo: true }).typ, 'posli'],
++    ['vip-free/0 nezapsal v okne → odloz', rozhodniPodleZapisu('vip-free', 0, 'nezapsal', KROK_PODLE_ZAPISU, { oknoUplynulo: false }).typ, 'odloz'],
++    ['vip-free/0 nezapsal po okne → pauza BEZ mailu (zadny rescue)', rozhodniPodleZapisu('vip-free', 0, 'nezapsal', KROK_PODLE_ZAPISU, { oknoUplynulo: true }).typ, 'pauza'],
++    ['vip-free/3 nevime (appka neodpovedela) → posli (fail-open jako ostatni trate)', rozhodniPodleZapisu('vip-free', 3, 'nevime', KROK_PODLE_ZAPISU, { oknoUplynulo: true }).typ, 'posli'],
++    ['vip-free je mezi tratemi, na ktere se drip-send pta appky', String(trateProAppSignal(KROK_PODLE_ZAPISU).has('vip-free')), 'true'],
++  ];
++  for (const [popis, dostal, cekal] of pripady) {
++    if (dostal !== cekal) { selhalo++; console.error(`✗ ${popis}: cekal ${cekal}, dostal ${dostal}`); } else console.log(`✓ ${popis}`);
++  }
+ }
+ 
+ console.log(selhalo === 0 ? `\nHOTOVO: ${CASES.length + 3} kontrol, vse proslo.` : `\nSELHALO: ${selhalo}`);
+diff -ru a/akademie/_supabase/functions/drip-send/aktivace.ts b/akademie/_supabase/functions/drip-send/aktivace.ts
+--- a/akademie/_supabase/functions/drip-send/aktivace.ts	2026-10-09 08:58:48.119074775 +0000
++++ b/akademie/_supabase/functions/drip-send/aktivace.ts	2026-10-09 08:58:48.121437053 +0000
+@@ -17,6 +17,10 @@
+ export const KROK_PODLE_ZAPISU: Record<string, Podminka> = {
+   'tc-zkusebka/0': 'jen_kdyz_nezapsal','tc-zkusebka/1': 'jen_kdyz_zapsal','tc-zkusebka/2': 'jen_kdyz_aktivni',
+   'tc-free/2': 'jen_kdyz_aktivni','tc-free/3': 'jen_kdyz_aktivni','tc-free/4': 'jen_kdyz_aktivni','tc-free/5': 'jen_kdyz_aktivni','tc-free/6': 'jen_kdyz_aktivni','tc-free/7': 'jen_kdyz_aktivni','tc-free/8': 'jen_kdyz_aktivni','tc-free/9': 'jen_kdyz_aktivni','tc-free/10': 'jen_kdyz_aktivni','tc-free/11': 'jen_kdyz_aktivni','tc-magnet/2': 'jen_kdyz_aktivni','tc-magnet/3': 'jen_kdyz_aktivni','tc-magnet/4': 'jen_kdyz_aktivni','tc-magnet/5': 'jen_kdyz_aktivni','tc-start/1': 'jen_kdyz_aktivni',
++  // [2026-10-09, NAVRH] vip-free: kazdy mail tvrdi „v appce zapisujes". `jen_kdyz_zapsal`
++  // (ne `_aktivni`): kdo do 7 dni nezacne zapisovat, dostane PAUZU bez mailu. `jen_kdyz_aktivni`
++  // by mu po okne poslal rescue, tedy prave ten mail s nepravdivou prvni vetou.
++  'vip-free/0': 'jen_kdyz_zapsal','vip-free/1': 'jen_kdyz_zapsal','vip-free/2': 'jen_kdyz_zapsal','vip-free/3': 'jen_kdyz_zapsal',
+ };
+ export const RESCUE_KROK: Record<string, number> = { 'tc-zkusebka': 3 };
+ export function trateSeSignalem(mapa: Record<string, Podminka> = KROK_PODLE_ZAPISU): Set<string> { const out = new Set<string>(); for (const klic of Object.keys(mapa)) { const i = klic.lastIndexOf('/'); if (i > 0) out.add(klic.slice(0, i)); } return out; }
+diff -ru a/akademie/_supabase/functions/drip-send/index.ts b/akademie/_supabase/functions/drip-send/index.ts
+--- a/akademie/_supabase/functions/drip-send/index.ts	2026-10-09 08:58:48.104738156 +0000
++++ b/akademie/_supabase/functions/drip-send/index.ts	2026-10-09 08:58:48.107190851 +0000
+@@ -397,7 +397,7 @@
+   const stavZapisu = (em: string): StavZapisu => zapsaliAktivitu === null ? 'nevime' : (zapsaliAktivitu.has(em.toLowerCase()) ? 'zapsal' : 'nezapsal'); const akcePodleZapisu = (l: { track?: string; step: number; email: string; vars?: unknown; created_at?: unknown }) => { const od = cadenceOdIso(l.vars, l.created_at, nowIso); return rozhodniPodleZapisu(String(l.track || ''), l.step, stavZapisu(String(l.email)), KROK_PODLE_ZAPISU, { oknoUplynulo: oknoUplynulo(od, Date.parse(nowIso)) }); };
+   const kamDal = async (l: any): Promise<string | null> => { const cil = vyberMost(MOSTY, String(l.track || '')); if (!cil) return null; const em = String(l.email).toLowerCase(); if (mostBlokujeVlastnictvi(cil.track, em, owns, exCoaching)) return null; if (mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(em))) return null; if (!(await getTpl(cil.track, 0))) return null; const { data: uzTamByl } = await admin.from('email_events').select('id').eq('lead_id', l.id).eq('type', 'sent').eq('detail->>track', cil.track).limit(1); if ((uzTamByl ?? []).length > 0) return null; return cil.track; };
+   const mostNaDalsiTrat = async (l: any): Promise<string | null> => { const cilTrack = await kamDal(l); if (!cilTrack) return null; const poDnech = odstupDnu(MOSTY[String(l.track || '')]?.po_dnech); await admin.from('leads').update({ track: cilTrack, step: 0, next_send_at: new Date(Date.now() + poDnech * 86400000).toISOString(), updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'bridged', detail: { track: l.track, z: l.track, na: cilTrack, po_dnech: poDnech } }); return cilTrack; };
+-  if (body.dry === true) { const byStep: Record<string, number> = {}; const byBridge: Record<string, number> = {}; let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0, wouldSkipZapis = 0, wouldDelayKonz = 0; let wouldDelayZapis = 0, wouldPauseNeaktivita = 0, wouldRescueNeaktivita = 0, wouldSkipBridgeNeaktivita = 0; const byZapis: Record<string, number> = {}; for (const l of leads) { if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; } if (konzultaceVBehu(String(l.track || ''), String(l.email).toLowerCase(), konzultaceCekaNaHovor)) { wouldDelayKonz++; continue; } if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns)) { wouldSkipOwns++; continue; } const akce = akcePodleZapisu(l); const kCad = l.track + '/step' + l.step + ':' + akce.typ; if (akce.typ === 'preskoc') { wouldSkipZapis++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } if (akce.typ === 'odloz') { wouldDelayZapis++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } if (akce.typ === 'pauza') { wouldPauseNeaktivita++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } const tpl = await getTpl(l.track, akce.typ === 'rescue_krok' ? akce.step : l.step); if (akce.typ === 'rescue_pauza' || akce.typ === 'rescue_krok') { wouldRescueNeaktivita++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; if (!tpl) { wouldPauseNeaktivita++; continue; } const key = l.track + '/step' + (akce.typ === 'rescue_krok' ? akce.step : l.step) + ':' + tpl.key + ':rescue'; byStep[key] = (byStep[key] ?? 0) + 1; would++; continue; } if (!tpl) { const cil = vyberMost(MOSTY, String(l.track || '')); if (cil && mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(String(l.email).toLowerCase()))) wouldSkipBridgeNeaktivita++; const na = await kamDal(l); if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; } else invalid++; continue; } if (tpl.wait_days == null) { const cil = vyberMost(MOSTY, String(l.track || '')); if (cil && mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(String(l.email).toLowerCase()))) { wouldSkipBridgeNeaktivita++; wouldPauseNeaktivita++; } const na = await kamDal(l); if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; } } const key = l.track + '/step' + l.step + ':' + tpl.key; byStep[key] = (byStep[key] ?? 0) + 1; would++; } return json({ ok: true, mode: 'dry', ceny: cenyStav, stopa: stopaStav, followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, would_delay_zapis: wouldDelayZapis, would_delay_konzultace: wouldDelayKonz, konzultace_brana: konzBrana, would_pause_neaktivita: wouldPauseNeaktivita, would_rescue_neaktivita: wouldRescueNeaktivita, would_skip_bridge_neaktivita: wouldSkipBridgeNeaktivita, by_zapis: byZapis, by_step: byStep, okno_neaktivity_dni: OKNO_NEAKTIVITY_DNI }); }
++  if (body.dry === true) { const byStep: Record<string, number> = {}; const byBridge: Record<string, number> = {}; let would = 0, bought = 0, invalid = 0, wouldBridge = 0, wouldSkipOwns = 0, wouldSkipZapis = 0, wouldDelayKonz = 0; let wouldDelayZapis = 0, wouldPauseNeaktivita = 0, wouldRescueNeaktivita = 0, wouldSkipBridgeNeaktivita = 0; const byZapis: Record<string, number> = {}; for (const l of leads) { if (shouldStop(String(l.track || ''), l.step, String(l.email).toLowerCase())) { bought++; continue; } if (konzultaceVBehu(String(l.track || ''), String(l.email).toLowerCase(), konzultaceCekaNaHovor)) { wouldDelayKonz++; continue; } if (maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns, exCoaching)) { wouldSkipOwns++; continue; } const akce = akcePodleZapisu(l); const kCad = l.track + '/step' + l.step + ':' + akce.typ; if (akce.typ === 'preskoc') { wouldSkipZapis++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } if (akce.typ === 'odloz') { wouldDelayZapis++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } if (akce.typ === 'pauza') { wouldPauseNeaktivita++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; continue; } const tpl = await getTpl(l.track, akce.typ === 'rescue_krok' ? akce.step : l.step); if (akce.typ === 'rescue_pauza' || akce.typ === 'rescue_krok') { wouldRescueNeaktivita++; byZapis[kCad] = (byZapis[kCad] ?? 0) + 1; if (!tpl) { wouldPauseNeaktivita++; continue; } const key = l.track + '/step' + (akce.typ === 'rescue_krok' ? akce.step : l.step) + ':' + tpl.key + ':rescue'; byStep[key] = (byStep[key] ?? 0) + 1; would++; continue; } if (!tpl) { const cil = vyberMost(MOSTY, String(l.track || '')); if (cil && mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(String(l.email).toLowerCase()))) wouldSkipBridgeNeaktivita++; const na = await kamDal(l); if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; } else invalid++; continue; } if (tpl.wait_days == null) { const cil = vyberMost(MOSTY, String(l.track || '')); if (cil && mostBlokujeNeaktivitu(String(l.track || ''), cil.track, stavZapisu(String(l.email).toLowerCase()))) { wouldSkipBridgeNeaktivita++; wouldPauseNeaktivita++; } const na = await kamDal(l); if (na) { wouldBridge++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; } } const key = l.track + '/step' + l.step + ':' + tpl.key; byStep[key] = (byStep[key] ?? 0) + 1; would++; } return json({ ok: true, mode: 'dry', ceny: cenyStav, stopa: stopaStav, followups_enabled: followupsEnabled, daily_cap: DAILY_CAP, pools: poolInfo, due: leads.length, would_send: would, skip_bought: bought, would_skip_owns: wouldSkipOwns, invalid_track_step: invalid, would_bridge: wouldBridge, by_bridge: byBridge, mosty: Object.keys(MOSTY), preskoc_kroky: Object.keys(PRESKOC_KROK_KDYZ_VLASTNI), zapis_kroky: Object.keys(KROK_PODLE_ZAPISU), zapis_signal: aktivaceStav, would_skip_zapis: wouldSkipZapis, would_delay_zapis: wouldDelayZapis, would_delay_konzultace: wouldDelayKonz, konzultace_brana: konzBrana, would_pause_neaktivita: wouldPauseNeaktivita, would_rescue_neaktivita: wouldRescueNeaktivita, would_skip_bridge_neaktivita: wouldSkipBridgeNeaktivita, by_zapis: byZapis, by_step: byStep, okno_neaktivity_dni: OKNO_NEAKTIVITY_DNI }); }
+   const dayStart = new Date(nowIso); dayStart.setUTCHours(0, 0, 0, 0); const { count: sentToday } = await admin.from('email_events').select('id', { count: 'exact', head: true }).eq('type', 'sent').gte('created_at', dayStart.toISOString()); const remaining = onlyEmail ? Number.MAX_SAFE_INTEGER : Math.max(0, DAILY_CAP - (sentToday ?? 0));
+   let sent = 0, skippedAlready = 0, errors = 0, finished = 0, stopped = 0, gaveUp = 0, bridged = 0, skippedOwns = 0, skippedZapis = 0, delayedZapis = 0, delayedKonzultace = 0, odznackovanoKonzultace = 0, pausedNeaktivita = 0, rescuedNeaktivita = 0, capped = false, timeUp = false; const byStep: Record<string, number> = {}; const byBridge: Record<string, number> = {};
+   // Maily, ktere cekaji na ceny, a sablony s neznamou promennou. Obe veci konci alertem Martinovi.
+@@ -420,7 +420,7 @@
+     // udalost. Pri chybe brany se nemaze vubec, viz `smiSeOdznackovat`.
+     if (smiSeOdznackovat(l.vars, String(l.email), konzultaceCekaNaHovor, konzBranaOk)) { const cisteVars = varsBezZnackyKonzultace(l.vars); await admin.from('leads').update({ vars: cisteVars, updated_at: nowIso }).eq('id', l.id); l.vars = cisteVars; await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'odklad_konzultace_konec', detail: { track: l.track, duvod: 'uz neni mezi cekajicimi (hovor probehl, termin zrusen nebo narok skoncil)' } }); odznackovanoKonzultace++; }
+     const { data: already } = await admin.from('email_events').select('id').eq('lead_id', l.id).eq('step', l.step).eq('type', 'sent').eq('detail->>track', l.track).maybeSingle(); const advance = async () => { const ns = l.step + 1; const bylOdhlaseny = !!(l.vars && typeof l.vars === 'object' && !Array.isArray(l.vars) && (l.vars as Record<string, unknown>)._byl_odhlaseny); if (bylOdhlaseny && l.step === 0 && String(l.track || '').startsWith('onboarding-nakup-')) { await admin.from('leads').update({ status: 'unsubscribed', next_send_at: null, step: ns, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'stop_odhlaseny_kupec', detail: { track: l.track, duvod: 'koupil po odhlášení, doručení odesláno, marketing ne' } }); finished++; return; } if (tpl.wait_days == null) { const na = await mostNaDalsiTrat(l); if (na) { bridged++; byBridge[l.track + '->' + na] = (byBridge[l.track + '->' + na] ?? 0) + 1; return; } const cilMostu = vyberMost(MOSTY, String(l.track || '')); if (cilMostu && mostBlokujeNeaktivitu(String(l.track || ''), cilMostu.track, stavZapisu(String(l.email)))) { await admin.from('leads').update({ status: 'paused', next_send_at: null, step: ns, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'paused_neaktivita', detail: { track: l.track, key: tpl.key, podminka: 'most_neaktivita', stav: stavZapisu(String(l.email)) } }); pausedNeaktivita++; return; } await admin.from('leads').update({ step: ns, next_send_at: null, updated_at: nowIso }).eq('id', l.id); finished++; } else { const next = new Date(Date.now() + tpl.wait_days * 86400000).toISOString(); await admin.from('leads').update({ step: ns, next_send_at: next, updated_at: nowIso }).eq('id', l.id); } };
+-    const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns); if (preskocProdukt) { await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_owns_product', detail: { track: l.track, key: tpl.key, produkt: preskocProdukt } }); await advance(); skippedOwns++; continue; }
++    const preskocProdukt = maPreskocitKrok(String(l.track || ''), l.step, String(l.email), owns, exCoaching); if (preskocProdukt) { await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_owns_product', detail: { track: l.track, key: tpl.key, produkt: preskocProdukt } }); await advance(); skippedOwns++; continue; }
+     if (already) { await advance(); skippedAlready++; continue; }
+     const akce = akcePodleZapisu(l); let rescueThenPause = false; let krokSend = l.step; const pauzniNeaktivitu = async (krok: number, key: string, podminka: string) => { await admin.from('leads').update({ status: 'paused', next_send_at: null, step: krok, updated_at: nowIso }).eq('id', l.id); await admin.from('email_events').insert({ lead_id: l.id, step: krok, type: 'paused_neaktivita', detail: { track: l.track, key, podminka, stav: stavZapisu(String(l.email)) } }); };
+     if (akce.typ === 'preskoc') { await admin.from('email_events').insert({ lead_id: l.id, step: l.step, type: 'skip_podle_zapisu', detail: { track: l.track, key: tpl.key, podminka: akce.podminka, stav: stavZapisu(String(l.email)) } }); await advance(); skippedZapis++; continue; }
+diff -ru a/akademie/_supabase/functions/drip-send/pravidla.test.ts b/akademie/_supabase/functions/drip-send/pravidla.test.ts
+--- a/akademie/_supabase/functions/drip-send/pravidla.test.ts	2026-10-09 08:58:48.127334475 +0000
++++ b/akademie/_supabase/functions/drip-send/pravidla.test.ts	2026-10-09 08:58:48.129218642 +0000
+@@ -193,6 +193,21 @@
+ zkontroluj('mazani nad prazdnymi vars nespadne', JSON.stringify(varsBezZnackyKonzultace(null)), '{}');
+ zkontroluj('pole misto objektu nespadne', JSON.stringify(varsBezZnackyKonzultace([1, 2])), '{}');
+ 
++
++// ---------- [2026-10-09, NAVRH] TRATE VIP ----------
++zkontroluj('vip-leady: kdo nic nema, dostane VIP nabidku', shouldStop('vip-leady', 0, NIKDO, MA_VK, BEZ_EX), false);
++zkontroluj('vip-leady: majitel videokurzu se stopne uz na kroku 0 (patri do vip-kupci)', shouldStop('vip-leady', 0, JA, MA_VK, BEZ_EX), true);
++zkontroluj('vip-leady: clen Academy se stopne (VIP ma v cene)', shouldStop('vip-leady', 2, JA, MA_ACADEMY, BEZ_EX), true);
++zkontroluj('vip-leady: jen balicek nestopuje', shouldStop('vip-leady', 1, JA, MA_JEN_BALICEK, BEZ_EX), false);
++zkontroluj('vip-kupci: majitel videokurzu projde (to je jeho publikum)', shouldStop('vip-kupci', 1, JA, MA_VK, BEZ_EX), false);
++zkontroluj('vip-kupci: clen Academy se stopne', shouldStop('vip-kupci', 1, JA, MA_ACADEMY, BEZ_EX), true);
++zkontroluj('vip-kupci: aktivni klient koucinku se stopne', shouldStop('vip-kupci', 0, JA, MA_COACHING, BEZ_EX), true);
++zkontroluj('vip-kupci: EX-klient koucinku NEstopne (appka je legitimni nabidka)', shouldStop('vip-kupci', 0, JA, MA_VK, JE_EX), false);
++zkontroluj('vip-free: clen Academy se stopne', shouldStop('vip-free', 0, JA, MA_ACADEMY, BEZ_EX), true);
++zkontroluj('vip-free: nekupec projde', shouldStop('vip-free', 3, NIKDO, MA_ACADEMY, BEZ_EX), false);
++zkontroluj('most do vip-leady zablokuje majitele videokurzu', mostBlokujeVlastnictvi('vip-leady', JA, MA_VK, BEZ_EX), true);
++zkontroluj('most do vip-kupci pusti majitele videokurzu', mostBlokujeVlastnictvi('vip-kupci', JA, MA_VK, BEZ_EX), false);
++
+ // ---------- MAZANI ZNACKY: PODLE MNOZINY, NE PODLE TRATE (po revizi R2, R2-S1) ----------
+ // ⛔ Stara verze mazala znacku pokazde, kdyz `konzultaceVBehu` vratilo `false`. To ma ale
+ // DVA duvody a jen jeden znamena „uz neceka". Druhy je „lead prave neni na prodejni trati",
+diff -ru a/akademie/_supabase/functions/drip-send/pravidla.ts b/akademie/_supabase/functions/drip-send/pravidla.ts
+--- a/akademie/_supabase/functions/drip-send/pravidla.ts	2026-10-09 08:58:48.110207216 +0000
++++ b/akademie/_supabase/functions/drip-send/pravidla.ts	2026-10-09 08:58:48.116682924 +0000
+@@ -93,6 +93,18 @@
+   // ⛔ Bez podminky na `step`: vola se i s KROK_PRO_MOST = 1 (viz `mostBlokujeVlastnictvi`); tvar
+   //    `step > 0 && …` by z pojistky mostu udelal mrtvou paku (incident 6. 8. 2026).
+   if (t === 'evergreen-kupci') return !!owns?.academy?.has(em) || !!owns?.coaching?.has(em);
++  // [2026-10-09, NAVRH cloud/mailing-navrh-1009] TRATE VIP (VIP 499 je hlavni nabidka vsude).
++  //  - vip-leady prodava VIP s videokurzem zdarma lidem BEZ nakupu. Kdo cokoli koupil, nema
++  //    tu nabidku dostat (majitel videokurzu patri do vip-kupci, clen Academy ma VIP v cene,
++  //    klient koucinku plati nejvyssi ticket). Bez podminky na `step`: krok 0 neni freebie
++  //    a vola se i s KROK_PRO_MOST (incident 6. 8. 2026, viz evergreen-kupci vyse).
++  //  - vip-kupci (majitel videokurzu) a vip-free (Free uzivatel appky): stop pri Academy
++  //    (VIP na rok v cene) a pri aktivnim koucinku. Ex-klient koucinku NE: appka je pro nej
++  //    legitimni nabidka, zakazany mu je jen win-back koucinku.
++  //  ⚠️ Kdo VIP nebo Basic koupi v appce, toho z trati vytahne `app-onboarding-hook`
++  //     (prepne ho do onboarding-nakup-tvujcoach), proto tu appka neni.
++  if (t === 'vip-leady') return vlastniCokoli(owns, em);
++  if (t === 'vip-kupci' || t === 'vip-free') return !!owns?.academy?.has(em) || !!owns?.coaching?.has(em);
+   return false;
+ }
+ 
+diff -ru a/akademie/_supabase/functions/drip-send/preskoc.test.ts b/akademie/_supabase/functions/drip-send/preskoc.test.ts
+--- a/akademie/_supabase/functions/drip-send/preskoc.test.ts	2026-10-09 08:58:48.134646794 +0000
++++ b/akademie/_supabase/functions/drip-send/preskoc.test.ts	2026-10-09 08:58:48.136358209 +0000
+@@ -126,9 +126,29 @@
+   }
+ }
+ 
++
++// ---------- [2026-10-09, NAVRH] BYVALY KLIENT KOUCINKU: zadny win-back ani v longtailu ----------
++{
++  const EX = 'byvala@example.com';
++  const EX_SET = new Set([EX]);
++  const PRAZDNE: Record<string, Set<string>> = { videokurz: new Set([EX]), academy: new Set(), coaching: new Set(), balicek: new Set() };
++  const pripady: [string, unknown, unknown][] = [
++    ['ex-klient: longtail-kupci/5 (koucink) se preskoci', maPreskocitKrok('longtail-kupci', 5, EX, PRAZDNE, EX_SET), 'coaching'],
++    ['ex-klient: longtail-consumer/11 (koucink) se preskoci', maPreskocitKrok('longtail-consumer', 11, EX, PRAZDNE, EX_SET), 'coaching'],
++    ['ex-klient: evergreen-consumer/4 (P.S. koucink) se preskoci', maPreskocitKrok('evergreen-consumer', 4, EX, PRAZDNE, EX_SET), 'coaching'],
++    ['ex-klient: krok s videokurzem se kvuli koucinku NEpreskakuje', maPreskocitKrok('evergreen-consumer', 1, 'cizi@example.com', PRAZDNE, EX_SET), null],
++    ['bez exCoaching se funkce chova jako driv (posle)', maPreskocitKrok('longtail-kupci', 5, EX, PRAZDNE), null],
++    ['nikdo cizi: longtail-kupci/5 se posle', maPreskocitKrok('longtail-kupci', 5, 'cizi@example.com', PRAZDNE, EX_SET), null],
++    ['velka pismena v adrese', maPreskocitKrok('longtail-kupci', 5, 'Byvala@Example.com', PRAZDNE, EX_SET), 'coaching'],
++  ];
++  for (const [popis, dostal, cekal] of pripady) {
++    if (dostal !== cekal) { selhalo++; console.error(`✗ ${popis}: cekal ${cekal}, dostal ${dostal}`); } else console.log(`✓ ${popis}`);
++  }
++}
++
+ // Pojistka proti tichemu rozsireni mapy: kdyz nekdo prida dalsi krok, musi pribyt i test.
+ const KLICE = Object.keys(PRESKOC_KROK_KDYZ_VLASTNI).sort();
+-const OCEKAVANE_KLICE = ['evergreen-consumer/1', 'evergreen-consumer/4', 'longtail-consumer/12', 'onboarding-nakup-balicek/2'];
++const OCEKAVANE_KLICE = ['evergreen-consumer/1', 'evergreen-consumer/4', 'longtail-consumer/11', 'longtail-consumer/12', 'longtail-kupci/5', 'onboarding-nakup-balicek/2'];
+ if (JSON.stringify(KLICE) !== JSON.stringify(OCEKAVANE_KLICE)) {
+   selhalo++;
+   console.error(`✗ mapa PRESKOC_KROK_KDYZ_VLASTNI se zmenila: ${JSON.stringify(KLICE)}. Dopln test a uprav OCEKAVANE_KLICE.`);
+diff -ru a/akademie/_supabase/functions/drip-send/preskoc.ts b/akademie/_supabase/functions/drip-send/preskoc.ts
+--- a/akademie/_supabase/functions/drip-send/preskoc.ts	2026-10-09 08:58:48.123191265 +0000
++++ b/akademie/_supabase/functions/drip-send/preskoc.ts	2026-10-09 08:58:48.125186731 +0000
+@@ -32,6 +32,14 @@
+   'evergreen-consumer/1': 'videokurz',
+   // krok 4 evergreen-consumer = sablona `ev-4-checkin`, P.S. prodava koucink -> klientovi koucinku preskocit.
+   'evergreen-consumer/4': 'coaching',
++  // [2026-10-09, NAVRH] Nabidka KOUCINKU v longtailu. Pravidlo z 17. 9. 2026 „byvalym klientum
++  // koucinku zadny win-back" hlidalo jen trat upsell-coaching; tyhle dva kroky ho obchazely
++  // (shouldStop pro longtail-kupci kontroluje jen Academy, longtail-consumer jen AKTIVNI nakup).
++  // Pro produkt `coaching` se proto pocita i `exCoaching` (viz maPreskocitKrok).
++  // ⛔ CISLA KROKU OVERIT PROTI ZIVE DB: podle odloz-koucink-bali-2026-10.sql je koucink
++  //    na longtail-consumer/11 a longtail-kupci/5. Kdo sablony prehazi, prepise i tohle.
++  'longtail-consumer/11': 'coaching',
++  'longtail-kupci/5': 'coaching',
+ };
+ 
+ /**
+@@ -46,9 +54,13 @@
+   step: number,
+   email: string,
+   owns: Record<string, Set<string>>,
++  // [2026-10-09, NAVRH] e-maily VSECH coaching entitlementu (i neaktivnich), tataz mnozina
++  // jako v `shouldStop`. Nepovinny: bez nej se funkce chova jako driv.
++  exCoaching?: Set<string>,
+ ): Produkt | null {
+   const produkt = PRESKOC_KROK_KDYZ_VLASTNI[String(track ?? '') + '/' + step];
+   if (!produkt) return null;
++  if (produkt === 'coaching' && exCoaching?.has(String(email ?? '').toLowerCase())) return produkt;
+   // ⛔ Fail-safe je ODESLAT. Kdyz mapa `owns` chybi nebo je prazdna (napr. dotaz do
+   // entitlements selhal), chova se to jako driv a mail odejde. Opacna volba by
+   // pri vypadku dotazu tise zadrzela maily vsem.
