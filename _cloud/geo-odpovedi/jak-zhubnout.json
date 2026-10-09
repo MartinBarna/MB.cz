@@ -1,0 +1,121 @@
+{
+  "url": "https://martinbarna.cz/jak-zhubnout/",
+  "titulek": "Jak zhubnout: kompletní průvodce bez mýtů a diet",
+  "hlavni_otazka": "Jak zhubnout bez drastické diety?",
+  "kratka_odpoved": "Zhubneš, když dlouhodobě přijímáš míň energie, než vydáš, takže základ je mírný kalorický deficit. K němu přidej zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně, silový trénink a chůzi. Hubni pomalu, zhruba 0,5 až 1 % hmotnosti týdně, kvůli svalům i kvůli tomu, aby kila nešla zpátky.",
+  "faq": [
+    {
+      "otazka": "Kolik bílkovin jíst, když hubnu?",
+      "odpoved": "Rozumný cíl je zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně. Rozlož je do celého dne, ať máš v každém jídle pořádný zdroj. Líp zasytí a spolu se silovým tréninkem chrání svaly."
+    },
+    {
+      "otazka": "Musím při hubnutí vyřadit sladké a oblíbená jídla?",
+      "odpoved": "Ne. Zakázaná jídla nefungují, vytvoří touhu, až jednou povolíš a sníš toho dvakrát tolik. Drž se zhruba pravidla 80/20: kolem 80 % příjmu z kvalitních, sytých a výživných jídel, zbylých 20 % na cokoliv, co máš rád."
+    },
+    {
+      "otazka": "Zhubnu hlavně díky kardiu?",
+      "odpoved": "Kardio je doplněk, ne motor hubnutí. Spálí míň, než lidé čekají, a hlad po něm to často vynuluje. Nejdůležitější je silový trénink, který ti v deficitu udrží svaly, a k tomu obyčejná chůze."
+    },
+    {
+      "otazka": "Jak se vyhnout jojo efektu?",
+      "odpoved": "Hubni pomalým tempem, zhruba 0,5 až 1 % hmotnosti týdně. Po dosažení cíle se nevracej ke všemu starému, kalorie zvedej postupně (reverzní dieta). A hubni stylem, který zvládneš udržet i potom."
+    },
+    {
+      "otazka": "Můžou hubnutí brzdit spánek a stres?",
+      "odpoved": "Ano. I s perfektním jídelníčkem a tréninkem ti hubnutí bude váznout, když spíš pět hodin a žiješ ve stresu. Málo spánku rozhází hormony, které řídí hlad a sytost, a dlouhodobý stres zvyšuje chuť k jídlu."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Zhubneš tehdy, když do sebe dlouhodobě dostaneš míň energie, než vydáš. Tomu se říká kalorický deficit."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Stačí mírný, rozumný deficit, který se dá držet týdny a měsíce."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Rozumný cíl je zhruba 1,6 až 2,2 gramu bílkovin na kilogram tělesné hmotnosti denně."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Silový trénink a chůze: drží svaly a tvaruje, kardio je jen doplněk."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Klíč je pomalé tempo: zhruba 0,5 až 1 % hmotnosti týdně."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pomalé tempo: kvůli svalům i kvůli tomu, aby kila nešla zpátky."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Rozumný cíl je zhruba 1,6 až 2,2 gramu bílkovin na kilogram tělesné hmotnosti denně. Rozlož je do celého dne, ať máš v každém jídle nějaký pořádný zdroj."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Bílkoviny zasytí líp a na déle než stejné množství kalorií ze sacharidů nebo tuků."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Dost bílkovin spolu se silovým tréninkem mu v tom brání a směruje úbytek tam, kam chceš: do tuku."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Zakázaná jídla totiž nefungují. Vytvoří touhu, ta poroste, až jednou povolíš a sníš toho dvakrát tolik."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Drž se zhruba pravidla 80/20: kolem 80 % příjmu z kvalitních, sytých a výživných jídel, zbylých 20 % na cokoliv, co máš rád."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "A kardio? To je doplněk, ne motor hubnutí."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Spálí míň, než lidé čekají, a hlad po něm to často vynuluje."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Nejdůležitější je silový trénink: činky, vlastní váha, posilovna, doma, jedno kde. Není tu od toho, aby spálil hromadu kalorií (to neumí tak, jak si lidé představují), ale aby ti v deficitu udržel svaly."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Nejlevnější a nejlépe udržitelný pohyb je přitom obyčejná chůze"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Klíč je pomalé tempo: zhruba 0,5 až 1 % hmotnosti týdně."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Po dosažení cíle navíc nemáš jednoduše „přestat dietovat\" a vrátit se ke všemu starému. Místo toho kalorie zvedej postupně (tomu se říká reverzní dieta), ať se tělo i návyky stihnou srovnat."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Hubni tempem a stylem, který bys zvládl udržet i napůl navždy."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Můžeš mít perfektní jídelníček i trénink, a když spíš pět hodin a žiješ ve stresu, hubnutí ti bude váznout."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Málo spánku rozhází hormony, co řídí hlad a sytost."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Podobně stres: dlouhodobé napětí zvyšuje chuť k jídlu a svádí k zajídání emocí."
+    }
+  ],
+  "nejiste": [
+    "Pilířový průvodce, ne článek ve složce clanky/. Revize ho zařadila, protože má vlastní text (přes 2 000 slov) a schéma Article.",
+    "Článek neuvádí velikost deficitu v kcal ani v procentech, jen „mírný, rozumný deficit“. Číslo proto v odpovědích není.",
+    "FAQPage JSON-LD, které stránka už má, tvrdí i věci, které ve viditelném textu nejsou (např. „0,3 až 0,7 kg týdně“, „rychlé hubnutí o pár kilo za týden je většinou voda“). Do tohoto JSON se nepřebíraly.",
+    "Rozsah bílkovin 1,6 až 2,2 g/kg je v článku bez rozlišení podle aktivity nebo věku."
+  ],
+  "kontrola": "opraveno: nově doplněno při revizi 10. 10. 2026 (dávky 1 až 3 pilíř vynechaly)"
+}
