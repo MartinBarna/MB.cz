@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,46 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Zvedají sladidla cukr v krvi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Efekt na cukr byl malý a ukázal se jen u 2 ze 4 sladidel, u sacharinu a sukralózy, ne u aspartamu ani stévie. Byl krátkodobý, jen u části lidí a šlo o horší reakci na následnou dávku glukózy. Sladidlo samo cukr nezvedalo. Máš-li cukrovku nebo inzulinovou rezistenci, tvoje reakce může být individuální, prober to s lékařem."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč observační studie se sladidly straší?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Za tím stojí reverzní kauzalita. Lidé, kteří už jsou v riziku, sahají po light variantách právě proto, že chtějí hubnout a hlídat si cukr."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ovlivní druh sladidla moji váhu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ne, o váze pořád rozhoduje kalorický příjem. Druh sladidla na ní nezmění nic."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Co když mám cukrovku nebo inzulinovou rezistenci?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "To je výjimka, tvoje reakce na sladidla může být individuální. Prober si to s lékařem."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +191,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">„Sladidla ti zničí střeva a udělají z tebe diabetika." Tahle věta koluje pořád dokola. Tak jsem nešel po jednom virálním titulku, ale prošel jsem, co k tomu reálně říká věda.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Ničí umělá sladidla střevní mikrobiom?</strong><br>Dosavadní data u lidí říkají, že ne. Složení střevních bakterií ale mění, to ukázala kontrolovaná studie na lidech (Suez 2022). Mikrobiom ti ovšem mění všechno, co sníš, a nejdelší studie na lidech (rok, 341 účastníků) ukázala spíš příznivé změny, žádný rozvrat. Že by sladidla rozvrátila metabolismus, zatím data u lidí nepodpírají.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -194,6 +237,16 @@
                 <li>Crakes & Suez 2025 (Immunometabolism), přehled humánních dat: 10.1097/IN9.0000000000000060</li>
                 <li>Zani 2023 (Nature), myší T-buňky: 10.1038/s41586-023-05801-6</li>
             </ul>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Zvedají sladidla cukr v krvi?</p>
+            <p>Efekt na cukr byl malý a ukázal se jen u 2 ze 4 sladidel, u sacharinu a sukralózy, ne u aspartamu ani stévie. Byl krátkodobý, jen u části lidí a šlo o horší reakci na následnou dávku glukózy. Sladidlo samo cukr nezvedalo. Máš-li cukrovku nebo inzulinovou rezistenci, tvoje reakce může být individuální, prober to s lékařem.</p>
+            <p class="faq-q">Proč observační studie se sladidly straší?</p>
+            <p>Za tím stojí reverzní kauzalita. Lidé, kteří už jsou v riziku, sahají po light variantách právě proto, že chtějí hubnout a hlídat si cukr.</p>
+            <p class="faq-q">Ovlivní druh sladidla moji váhu?</p>
+            <p>Ne, o váze pořád rozhoduje kalorický příjem. Druh sladidla na ní nezmění nic.</p>
+            <p class="faq-q">Co když mám cukrovku nebo inzulinovou rezistenci?</p>
+            <p>To je výjimka, tvoje reakce na sladidla může být individuální. Prober si to s lékařem.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

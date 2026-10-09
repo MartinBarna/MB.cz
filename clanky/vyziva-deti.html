@@ -84,6 +84,8 @@
         .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
         .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -119,6 +121,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Kolikrát musím dítěti nabídnout zeleninu, než ji začne jíst?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Podle výzkumu opakovaného nabízení potřebuje dítě stejnou potravinu vidět a ochutnat klidně 8–15×, většina rodičů to přitom vzdá po třetím pokusu. Nabízej malou porci vedle známého jídla bez nátlaku, jez to s ním a neuplácej dezertem."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kolik cukru a džusu můžou děti?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Volné cukry by podle WHO měly tvořit méně než 10 % energie, ideálně pod 5 %, a pod 2 roky žádný přidaný cukr (doporučení American Heart Association). Džusy podle AAP pod 1 rok vůbec, 1–3 roky nejvýš zhruba 120 ml denně (raději ředit), 4–6 let 120–180 ml a starší děti nejvýš zhruba 240 ml. Na pití patří voda a mléko, kravské mléko ale ne jako hlavní nápoj před prvním rokem a u batolat pod zhruba 500 ml denně."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jaké doplňky stravy dětem dávat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Plošně se doporučuje jen vitamin D: podle České pediatrické společnosti od zhruba druhého týdne věku, kojencům do 6 měsíců 400–600 IU denně, ve 6–12 měsících 600–800 IU a starším dětem 600–1000 IU denně v zimních měsících (říjen–duben). Konkrétní dávku a přípravek vždy řeš s pediatrem. Železo a vápník řeš jídlem a „imunitní“ bonbóny nebo multivitamíny do zásoby jen tehdy, když je doporučí lékař."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč jíst s dítětem společně?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Metaanalýza 17 studií (Hammons & Fiese, Pediatrics) ukázala, že děti, které jedí s rodinou alespoň 3× týdně, mají lepší kvalitu stravy a vyšší příjem zeleniny, nižší riziko nadváhy a výrazně nižší riziko poruch příjmu potravy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Moje dítě skoro nic nesní, mám se bát?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Příjem dětí kolísá den ode dne i jídlo od jídla a to je normální, sleduj spíš dlouhodobý trend (energie, růst, nálada). Když roste a je čilé, většinou je vše v pořádku. Pokud máš pochybnosti o růstu nebo váze, jdi k pediatrovi."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -138,6 +188,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Většina rodičů, co za mnou chodí, nepotřebuje slyšet, že „cukr škodí". To ví. Potřebují vědět, <strong>co reálně dělat zítra ráno u snídaně</strong>. Bez vážení, bez tabulek a bez pocitu, že kazí dítěti život, když mu jednou dají rohlík.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Jak nastavit výživu dítěte, aby jedlo zdravě a u stolu nebyly války?</strong><br>Drž se rozdělení odpovědnosti: rodič rozhoduje, co se podává, kdy a kde, dítě rozhoduje, jestli to sní a kolik. Talíř skládej z poloviny ze zeleniny a ovoce, ze čtvrtiny z bílkoviny a ze čtvrtiny ze sacharidové přílohy, plus kapka tuku. Do jídla nenuť a nové potraviny nabízej opakovaně a v klidu.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -247,6 +298,18 @@
             <p>Výživa dětí není o dokonalosti, ale o tom <strong>dávat dobré jídlo, dost často a v klidu</strong>, a nechat dítě, ať se zbytek naučí samo. Žádné zázraky ani prášky, žádné války u stolu. Stačí trpělivost a pár jednoduchých pravidel, která teď máš černé na bílém.</p>
 
             <p>Tohle téma jsme zpracovali společně s lékárnicí <strong>Helenou Havránkovou</strong>. Pokud řešíš sportující dítě, mrkni na <a href="https://www.instagram.com/farmaceut_po_materske" target="_blank" rel="noopener">farmaceut_po_materske</a> a na další díly série: <a href="vyziva-sportujiciho-ditete.html"><strong>Výživa sportujícího dítěte</strong></a> a <a href="hydratace-deti-sport.html"><strong>Hydratace dětí ve sportu</strong></a>.</p>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Kolikrát musím dítěti nabídnout zeleninu, než ji začne jíst?</p>
+            <p>Podle výzkumu opakovaného nabízení potřebuje dítě stejnou potravinu vidět a ochutnat klidně 8–15×, většina rodičů to přitom vzdá po třetím pokusu. Nabízej malou porci vedle známého jídla bez nátlaku, jez to s ním a neuplácej dezertem.</p>
+            <p class="faq-q">Kolik cukru a džusu můžou děti?</p>
+            <p>Volné cukry by podle WHO měly tvořit méně než 10 % energie, ideálně pod 5 %, a pod 2 roky žádný přidaný cukr (doporučení American Heart Association). Džusy podle AAP pod 1 rok vůbec, 1–3 roky nejvýš zhruba 120 ml denně (raději ředit), 4–6 let 120–180 ml a starší děti nejvýš zhruba 240 ml. Na pití patří voda a mléko, kravské mléko ale ne jako hlavní nápoj před prvním rokem a u batolat pod zhruba 500 ml denně.</p>
+            <p class="faq-q">Jaké doplňky stravy dětem dávat?</p>
+            <p>Plošně se doporučuje jen vitamin D: podle České pediatrické společnosti od zhruba druhého týdne věku, kojencům do 6 měsíců 400–600 IU denně, ve 6–12 měsících 600–800 IU a starším dětem 600–1000 IU denně v zimních měsících (říjen–duben). Konkrétní dávku a přípravek vždy řeš s pediatrem. Železo a vápník řeš jídlem a „imunitní“ bonbóny nebo multivitamíny do zásoby jen tehdy, když je doporučí lékař.</p>
+            <p class="faq-q">Proč jíst s dítětem společně?</p>
+            <p>Metaanalýza 17 studií (Hammons &amp; Fiese, Pediatrics) ukázala, že děti, které jedí s rodinou alespoň 3× týdně, mají lepší kvalitu stravy a vyšší příjem zeleniny, nižší riziko nadváhy a výrazně nižší riziko poruch příjmu potravy.</p>
+            <p class="faq-q">Moje dítě skoro nic nesní, mám se bát?</p>
+            <p>Příjem dětí kolísá den ode dne i jídlo od jídla a to je normální, sleduj spíš dlouhodobý trend (energie, růst, nálada). Když roste a je čilé, většinou je vše v pořádku. Pokud máš pochybnosti o růstu nebo váze, jdi k pediatrovi.</p>
 
             <div class="cta-box">
                 <h3>Chceš mít s jídlem pořádek nejen u dětí, ale i u sebe?</h3>

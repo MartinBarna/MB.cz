@@ -75,6 +75,8 @@
         .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
         .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -125,6 +127,46 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Jak si spočítat, kolik klientů potřebuju?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Napiš si, kolik chceš měsíčně vydělávat, a vyděl to realistickou cenou za měsíc spolupráce. Vyjde ti počet klientů. Pak si ověř, jestli ten počet zvládneš se svými procesy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak vydělávat víc, když už mám deset klientů?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Od deseti klientů přestává být problém počet a začíná být problém čas: buď zvedneš cenu, nebo se udřeš. Lidi ti zaplatí za doložené výsledky a za servis: plán na míru, týdenní check-iny a úpravy podle dat."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč záleží na tom, jak dlouho u mě klient vydrží?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Klient, který vydrží šest měsíců místo jednoho, má šestinásobnou hodnotu, aniž bys hnul prstem navíc v náboru. Retenci dělá systém: klient ví, co má dělat, vidí svůj pokrok v číslech a každý týden dostane zpětnou vazbu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Vydělám víc na osobních trénincích, nebo online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Osobní trénink má strop daný hodinami dne a cenou lekce ve tvém městě. Online koučink ten strop zvedá, protože prodáváš vedení místo hodin. Bez procesů se ale utopíš v psaní jídelníčků už u pěti klientů."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
     <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
@@ -143,6 +185,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">„Kolik si vydělá výživový poradce?“ a „uživí mě trenéřina?“ jsou asi nejčastější otázky lidí po certifikaci. Nebudu ti sypat vymyšlené statistiky. Ukážu ti, jak si to spočítat sám. Protože výdělek v téhle branži není loterie, je to matematika tří čísel.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Kolik si vydělá trenér nebo výživový poradce?</strong><br>Záleží na třech číslech: příjem = počet klientů × cena × jak dlouho u tebe klient vydrží. Když si za měsíc online spolupráce bereš 2 000 Kč, deset klientů znamená 20 000 Kč měsíčně a dvacet klientů 40 000 Kč. Univerzální průměr neexistuje: jedni dělají trenéřinu jako koníček, jiní na ní postavili hlavní příjem.</div>
 
             <h2>Tři čísla, která rozhodují</h2>
             <p>Tvůj příjem = <strong>počet klientů × cena × jak dlouho u tebe klient vydrží</strong>. Nic víc v tom není. Každé z těch tří čísel můžeš ovlivnit, ale každé jinak.</p>
@@ -165,6 +208,16 @@
                 <li>Zeptej se: zvládnu ten počet se svými procesy? Když ne, víš, co budovat dřív než reklamu.</li>
             </ul>
             <p>Tahle třířádková kalkulačka ti řekne o tvém podnikání víc než jakákoliv statistika „průměrného platu trenéra“. Průměr totiž neexistuje: jsou trenéři, co dělají trenéřinu za hubičku jako koníček, a poradci, kteří na systému postavili hlavní příjem. Rozdíl mezi nimi není talent. Je to systém.</p>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Jak si spočítat, kolik klientů potřebuju?</p>
+            <p>Napiš si, kolik chceš měsíčně vydělávat, a vyděl to realistickou cenou za měsíc spolupráce. Vyjde ti počet klientů. Pak si ověř, jestli ten počet zvládneš se svými procesy.</p>
+            <p class="faq-q">Jak vydělávat víc, když už mám deset klientů?</p>
+            <p>Od deseti klientů přestává být problém počet a začíná být problém čas: buď zvedneš cenu, nebo se udřeš. Lidi ti zaplatí za doložené výsledky a za servis: plán na míru, týdenní check-iny a úpravy podle dat.</p>
+            <p class="faq-q">Proč záleží na tom, jak dlouho u mě klient vydrží?</p>
+            <p>Klient, který vydrží šest měsíců místo jednoho, má šestinásobnou hodnotu, aniž bys hnul prstem navíc v náboru. Retenci dělá systém: klient ví, co má dělat, vidí svůj pokrok v číslech a každý týden dostane zpětnou vazbu.</p>
+            <p class="faq-q">Vydělám víc na osobních trénincích, nebo online?</p>
+            <p>Osobní trénink má strop daný hodinami dne a cenou lekce ve tvém městě. Online koučink ten strop zvedá, protože prodáváš vedení místo hodin. Bez procesů se ale utopíš v psaní jídelníčků už u pěti klientů.</p>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🧰 Postav si systém od prvního klienta</h3>

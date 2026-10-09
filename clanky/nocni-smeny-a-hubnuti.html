@@ -82,6 +82,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -117,6 +119,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "O kolik směnný provoz zvyšuje riziko obezity a metabolického syndromu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Meta-analýza z roku 2018 (Sun, Obesity Reviews) dává směnným pracovníkům o 23 % vyšší riziko obezity, meta-analýza z roku 2021 (Wang, Chronobiology International) o 30 % vyšší riziko metabolického syndromu. U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč mám na noční směně větší hlad?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Rozhozený cirkadiánní rytmus poplete signály hladu a sytosti, takže tělo pořádně neví, kdy už má dost. Při úplně stejných jídlech mívají lidé na nočních směnách vyšší hladiny inzulinu a leptinu než ti na denních. K tomu se přidá horší spánek, chuť na něco rychlého a slabá nabídka jídla v práci ve tři ráno."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kdy mám jíst, když pracuju v noci?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hlavní jídlo dej před směnu nebo po ní. Jídlo si připrav z domu, ať se vyhneš tomu, co je zrovna po ruce ve tři ráno."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mám kvůli horšímu spánku jet větší deficit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ne. Spánek ber jako prioritu, protože méně spánku znamená větší hlad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pomůže si na noční směně zdřímnout?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ano, krátký šlofík 20–30 minut doprostřed směny pomůže s energií i s chutěmi."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -136,6 +186,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Děláš noční nebo rotující směny? Pak to máš <strong>objektivně těžší</strong> než kolegové na denním provozu. Není to o slabé vůli. Stojí za tím tvoje biologie a věda ji umí změřit. To dobré: fyzika platí dál a dá se to nastavit tak, abys to zvládl.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Proč se mi na nočních směnách hůř hubne a co s tím dělat?</strong><br>Na nočních nebo rotujících směnách to máš objektivně těžší, protože rozhozený cirkadiánní rytmus poplete signály hladu a sytosti. Termodynamika ale platí pořád, takže zhubnout můžeš dál, jen potřebuješ chytřejší systém. Hlavní jídlo dej před směnu nebo po ní, jídlo si připrav z domu a spánek ber jako prioritu.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -181,6 +232,18 @@
                 <li><strong>Strategický šlofík 20–30 minut</strong> doprostřed směny pomůže s energií i s chutěmi.</li>
             </ul>
             <p>Počítání kalorií ti dá <strong>přesnost</strong>. Načasování jídla a spánek se postarají o to, že to <strong>vydržíš</strong>. A přesně o tohle u hubnutí na směny jde.</p>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">O kolik směnný provoz zvyšuje riziko obezity a metabolického syndromu?</p>
+            <p>Meta-analýza z roku 2018 (Sun, Obesity Reviews) dává směnným pracovníkům o 23 % vyšší riziko obezity, meta-analýza z roku 2021 (Wang, Chronobiology International) o 30 % vyšší riziko metabolického syndromu. U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné.</p>
+            <p class="faq-q">Proč mám na noční směně větší hlad?</p>
+            <p>Rozhozený cirkadiánní rytmus poplete signály hladu a sytosti, takže tělo pořádně neví, kdy už má dost. Při úplně stejných jídlech mívají lidé na nočních směnách vyšší hladiny inzulinu a leptinu než ti na denních. K tomu se přidá horší spánek, chuť na něco rychlého a slabá nabídka jídla v práci ve tři ráno.</p>
+            <p class="faq-q">Kdy mám jíst, když pracuju v noci?</p>
+            <p>Hlavní jídlo dej před směnu nebo po ní. Jídlo si připrav z domu, ať se vyhneš tomu, co je zrovna po ruce ve tři ráno.</p>
+            <p class="faq-q">Mám kvůli horšímu spánku jet větší deficit?</p>
+            <p>Ne. Spánek ber jako prioritu, protože méně spánku znamená větší hlad.</p>
+            <p class="faq-q">Pomůže si na noční směně zdřímnout?</p>
+            <p>Ano, krátký šlofík 20–30 minut doprostřed směny pomůže s energií i s chutěmi.</p>
 
             <div class="cta-box">
                 <h3>Děláš na směny a chceš to mít nastavené na míru?</h3>

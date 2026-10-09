@@ -75,6 +75,8 @@
         .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         @media (prefers-reduced-motion: reduce){ *, *::before, *::after { animation-duration:.001ms!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -110,6 +112,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Kolik vitaminu D denně brát?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Přesnou dávku ti má nastavit lékař podle tvojí hladiny a zdravotního stavu, zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu. Guideline z roku 2025 doporučuje u dospělých, kteří suplementaci potřebují, denní ekvivalent zhruba 600 až 2000 IU a upřednostňuje ho před rutinními dávkami nad 2000 IU. Cílem není hladinu vyšroubovat co nejvýš, přehled z roku 2025 naznačuje rozumné pásmo někde mezi 20 a 40 ng/ml."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pomáhá vitamin D na imunitu a nachlazení?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Data to zatím nepodpírají. Metaanalýza z roku 2024 u lidí s tmavší pletí nenašla žádný jednoznačný efekt na akutní respirační infekce a autoři píšou, že důkazy jsou slabé. Na imunitu ti obvykle víc udělá spánek, dost bílkovin, pohyb a rozumná váha."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Koho se nedostatek vitaminu D týká nejvíc?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vyšší riziko máš, když skoro nechodíš na slunce, máš tmavší pleť, jsi starší, máš nadváhu nebo obezitu, máš osteoporózu či osteopenii, jsi po zlomenině nebo dlouhodobě bereš kortikoidy. V našich zeměpisných šířkách jde hlavně o období od podzimu do jara, kdy slunce nestačí."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč nebrat megadávky vitaminu D?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Vztah připomíná písmeno U: podle přehledu z roku 2025 jsou nízký i nadměrný příjem spojené s vyšším rizikem pádů a zlomenin. V kontrolované studii jednorázové dávky až 500 000 IU u žen v deficitu nepřinesly zlepšení fyzické funkce ani síly, zato krátkodobě rozhýbaly kostní metabolismus. Klinický význam téhle přechodné změny je ale podle autorů nejistý."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak vitamin D správně užívat?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Radši pravidelně v malé dávce než nárazově, s jídlem a ideálně s trochou tuku, protože se tak líp vstřebá. Řeš ho hlavně v chladné půlce roku, a když ho bereš kvůli kostem, nezapomeň na vápník ve stravě. Suplementaci ale nezačínej na vlastní pěst, hladinu i dávkování konzultuj s lékařem."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -129,6 +179,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Vitamin D je asi nejvíc přehypovaný doplněk posledních deseti let. Podle jedněch je to zázrak na všechno, podle druhých úplná zbytečnost. Pravda je jako obvykle uprostřed a je docela nudná: <strong>u někoho dává smysl, u někoho ne, a víc rozhodně není líp.</strong> Pojďme si to po čtyřicítce srovnat v hlavě prakticky a bez strašení.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Má smysl brát po čtyřicítce vitamin D?</strong><br>U někoho ano, u někoho ne, a víc rozhodně není líp. Spolu s vápníkem reálně pomáhá kostem a u lidí s hodně nízkou hladinou může pomoct i se svalovou funkcí a stabilitou, jako prevenci nachlazení ho ale data zatím nepodpírají. Nehádej a nech si od lékaře změřit hladinu 25-OH vitaminu D z krve.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -154,6 +205,18 @@
 
             <h2>Praktické shrnutí pro člověka po 40</h2>
             <p>Když si z toho máš odnést pět vět, tak tyhle:</p><ul><li><strong>Kosti a vápník, u deficitu i svaly a stabilita</strong>: tam vitamin D reálně pomáhá.</li><li><strong>Imunita a „míň nemocí“</strong>: data to zatím nepodpírají, neber ho hlavně kvůli tomu.</li><li><strong>Nehádej, nech si změřit hladinu</strong> a řeš to hlavně od podzimu do jara.</li><li><strong>Rozumná denní dávka</strong> (obecně kolem 600–2000 IU dle lékaře) je lepší volba než megadávky.</li><li><strong>Víc není líp.</strong> Cíl je dostat se do normy, ne přestřelit.</li></ul><p>Vitamin D je dobrý sluha u toho, na co má. Není to zázrak a není to náhrada za spánek, sílu, bílkoviny a pohyb. Ty základy odmakej, tohle je jen doplněk. A jestli chceš mít v hlavě jasno v celém jídelníčku a neřešit náhodné kapsle, od toho tu jsem. Mrkni na <strong>martinbarna.cz</strong>.</p>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Kolik vitaminu D denně brát?</p>
+            <p>Přesnou dávku ti má nastavit lékař podle tvojí hladiny a zdravotního stavu, zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu. Guideline z roku 2025 doporučuje u dospělých, kteří suplementaci potřebují, denní ekvivalent zhruba 600 až 2000 IU a upřednostňuje ho před rutinními dávkami nad 2000 IU. Cílem není hladinu vyšroubovat co nejvýš, přehled z roku 2025 naznačuje rozumné pásmo někde mezi 20 a 40 ng/ml.</p>
+            <p class="faq-q">Pomáhá vitamin D na imunitu a nachlazení?</p>
+            <p>Data to zatím nepodpírají. Metaanalýza z roku 2024 u lidí s tmavší pletí nenašla žádný jednoznačný efekt na akutní respirační infekce a autoři píšou, že důkazy jsou slabé. Na imunitu ti obvykle víc udělá spánek, dost bílkovin, pohyb a rozumná váha.</p>
+            <p class="faq-q">Koho se nedostatek vitaminu D týká nejvíc?</p>
+            <p>Vyšší riziko máš, když skoro nechodíš na slunce, máš tmavší pleť, jsi starší, máš nadváhu nebo obezitu, máš osteoporózu či osteopenii, jsi po zlomenině nebo dlouhodobě bereš kortikoidy. V našich zeměpisných šířkách jde hlavně o období od podzimu do jara, kdy slunce nestačí.</p>
+            <p class="faq-q">Proč nebrat megadávky vitaminu D?</p>
+            <p>Vztah připomíná písmeno U: podle přehledu z roku 2025 jsou nízký i nadměrný příjem spojené s vyšším rizikem pádů a zlomenin. V kontrolované studii jednorázové dávky až 500 000 IU u žen v deficitu nepřinesly zlepšení fyzické funkce ani síly, zato krátkodobě rozhýbaly kostní metabolismus. Klinický význam téhle přechodné změny je ale podle autorů nejistý.</p>
+            <p class="faq-q">Jak vitamin D správně užívat?</p>
+            <p>Radši pravidelně v malé dávce než nárazově, s jídlem a ideálně s trochou tuku, protože se tak líp vstřebá. Řeš ho hlavně v chladné půlce roku, a když ho bereš kvůli kostem, nezapomeň na vápník ve stravě. Suplementaci ale nezačínej na vlastní pěst, hladinu i dávkování konzultuj s lékařem.</p>
 
             <div class="cta-box">
                 <h3>Chceš to mít nastavené na míru?</h3>

@@ -84,6 +84,8 @@
         .academy-box p { color:#d8d8d8; }
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         @media (prefers-reduced-motion: reduce){ *, *::before, *::after { animation-duration:.001ms!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -119,6 +121,46 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Proč by hubnutí mělo prospívat mozku?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tuková tkáň, hlavně břišní, drží tělo v mírném doutnajícím zánětu, který doléhá i na mozek. Když ubude tuku, ubude zánětu. Ve studii šla nižší hladina zánětlivých a metabolických ukazatelů (třeba HOMA a leptin) ruku v ruce s mladším věkem mozku."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Zlepší hubnutí paměť a myšlení?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Data to spolehlivě neukazují. Ve studii Look AHEAD s přes třemi tisíci lidmi s cukrovkou 2. typu byl po deseti letech změny životního stylu podíl lidí s kognitivním postižením 6,4 % v intervenční a 6,6 % v kontrolní skupině, statisticky totožně."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Má nadváha vliv na stárnutí mozku?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Velká zobrazovací práce našla u lidí s nadváhou ve středním věku mozek v průměru zhruba o deset let starší (Ronan 2016). Po výrazném zhubnutí, třeba po bariatrické operaci, odhadovaný věk mozku klesal (Zeighami 2022). Velká část těchto dat je ale pozorovací a stojí na souvislostech."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Co udělat pro mozek prakticky?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pro mozek udělá hodně pohyb, spánek a zdravé cévy, často víc a rychleji než samotné číslo na váze. Hladovky a extrémní diety mozku neprospějí a stejně nevydrží."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -138,6 +180,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Kolovala nová práce a titulky z ní udělaly senzaci: zhubni a omládne ti mozek, budeš chytřejší. Zní to skvěle. Tak si tu studii pojďme přečíst pořádně, protože říká něco o dost opatrnějšího.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Omládne mi mozek, když zhubnu?</strong><br>Na snímku ano, v testech myšlení spolehlivě ne. Berlínská studie s 83 lidmi s nadváhou (Maurer 2026) ukázala, že po zhubnutí odhadovaný věk mozku z MRI klesl, ale z testů se spolehlivě zlepšila hlavně rychlost zpracování a pozornost. Hubni kvůli zdraví, IQ z toho nečekej.</div>
 
             <p>Vědci z Berlína sledovali 83 lidí s nadváhou ze dvou hubnoucích programů, jeden běžel jen pár měsíců, druhý až 39 měsíců. Z každého snímku mozku na MRI odhadli přes algoritmus takzvaný „věk mozku", tedy jak starý mozek vypadá oproti skutečnému věku člověka. Po zhubnutí ten odhad klesl. Mozek vypadal mladší (Maurer 2026).</p>
 
@@ -168,6 +211,16 @@
                 <p>Přečíst studii pořádně, oddělit titulek od dat a převést to do praxe pro klienta. Přesně tak stavím <strong>Barna Academy</strong>, kompletní kurz výživy a tréninku pro trenéry i vážné zájemce, s lekcemi podloženými citacemi. Když chceš rozumět tělu do hloubky a nenaletět na každý headline, je to pro tebe.</p>
                 <a class="btn" href="/akademie/">Prozkoumat Barna Academy →</a>
             </div>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Proč by hubnutí mělo prospívat mozku?</p>
+            <p>Tuková tkáň, hlavně břišní, drží tělo v mírném doutnajícím zánětu, který doléhá i na mozek. Když ubude tuku, ubude zánětu. Ve studii šla nižší hladina zánětlivých a metabolických ukazatelů (třeba HOMA a leptin) ruku v ruce s mladším věkem mozku.</p>
+            <p class="faq-q">Zlepší hubnutí paměť a myšlení?</p>
+            <p>Data to spolehlivě neukazují. Ve studii Look AHEAD s přes třemi tisíci lidmi s cukrovkou 2. typu byl po deseti letech změny životního stylu podíl lidí s kognitivním postižením 6,4 % v intervenční a 6,6 % v kontrolní skupině, statisticky totožně.</p>
+            <p class="faq-q">Má nadváha vliv na stárnutí mozku?</p>
+            <p>Velká zobrazovací práce našla u lidí s nadváhou ve středním věku mozek v průměru zhruba o deset let starší (Ronan 2016). Po výrazném zhubnutí, třeba po bariatrické operaci, odhadovaný věk mozku klesal (Zeighami 2022). Velká část těchto dat je ale pozorovací a stojí na souvislostech.</p>
+            <p class="faq-q">Co udělat pro mozek prakticky?</p>
+            <p>Pro mozek udělá hodně pohyb, spánek a zdravé cévy, často víc a rychleji než samotné číslo na váze. Hladovky a extrémní diety mozku neprospějí a stejně nevydrží.</p>
 
             <div class="author-box"><img src="../assets/foto/martin/portret.webp" alt="Martin Barna - online výživový a fitness kouč" loading="lazy" width="84" height="84" decoding="async"><div><h4>Martin Barna</h4><p>Online výživový a fitness kouč. Od roku 2013 pomohl přes 600 lidem zhubnout a získat formu natrvalo, vědecky, bez drastických diet a jojo efektu.</p><a class="btn gold" href="/koucing/">Chci koučink na míru</a></div></div>
             <!-- [30. 9. 2026] Kvíz na konci článku: sbírá e-mail a od 30. 8. na něj z webu nic nevedlo (audit 15b). Bez UTM záměrně (MBAttr). -->

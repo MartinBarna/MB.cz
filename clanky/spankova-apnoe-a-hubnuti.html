@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,46 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Mají spánkovou apnoi jen lidé s obezitou?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ne. Meta-analýza na 12 860 dospělých ukázala, že 44 % lidí s apnoí má jen nadváhu a 23 % váhu úplně normální (Esmaeili 2025)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pomůže hubnutí na spánkovou apnoi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hubnutí ten začarovaný kruh prokazatelně obrací: podle Malhotry 2024 znamenala o 20 % nižší váha o 57 % méně apnoí. Není to ale přímá úměra, za dvacetiprocentní hranicí přidá každé další kilo už menší efekt."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Přestává se spánkovou apnoí platit kalorický deficit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nepřestává, CICO (kalorie dovnitř, kalorie ven) platí dál. Apnoe ti nemění termodynamiku, jen ti ztěžuje, abys deficit dlouhodobě udržel."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak zjistím, jestli mám spánkovou apnoi?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sám si ji podle Instagramu nediagnostikuješ, apnoe patří do rukou lékaře. Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi, vyšetření je běžně dostupné."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +191,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Děláš všechno správně. Trackuješ, trénuješ, držíš deficit. A váha se nehne. Než si řekneš, že je to slabá vůle, mrkni ještě na jednu věc.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Může za to, že mi stojí váha, spánková apnoe?</strong><br>Může to být jeden z důvodů: apnoe tě unaví, pak se míň hýbeš a víc jíš, přibereš a apnoe se zhorší. Podle klinických odhadů o ní až 85 % lidí, kteří ji mají, vůbec neví. Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -195,6 +238,16 @@
                 <li>→ Stelmach-Mardas et al. (2021), J Clin Med - DOI: 10.3390/jcm10071485 (BMI dolů zlepšuje AHI, tlak, glukózu, triglyceridy)</li>
                 <li>→ Iftikhar et al. (2024), Sleep & Breathing (aerobní cvičení zmírňuje apnoi i bez velkého úbytku váhy)</li>
             </ul>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Mají spánkovou apnoi jen lidé s obezitou?</p>
+            <p>Ne. Meta-analýza na 12 860 dospělých ukázala, že 44 % lidí s apnoí má jen nadváhu a 23 % váhu úplně normální (Esmaeili 2025).</p>
+            <p class="faq-q">Pomůže hubnutí na spánkovou apnoi?</p>
+            <p>Hubnutí ten začarovaný kruh prokazatelně obrací: podle Malhotry 2024 znamenala o 20 % nižší váha o 57 % méně apnoí. Není to ale přímá úměra, za dvacetiprocentní hranicí přidá každé další kilo už menší efekt.</p>
+            <p class="faq-q">Přestává se spánkovou apnoí platit kalorický deficit?</p>
+            <p>Nepřestává, CICO (kalorie dovnitř, kalorie ven) platí dál. Apnoe ti nemění termodynamiku, jen ti ztěžuje, abys deficit dlouhodobě udržel.</p>
+            <p class="faq-q">Jak zjistím, jestli mám spánkovou apnoi?</p>
+            <p>Sám si ji podle Instagramu nediagnostikuješ, apnoe patří do rukou lékaře. Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi, vyšetření je běžně dostupné.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

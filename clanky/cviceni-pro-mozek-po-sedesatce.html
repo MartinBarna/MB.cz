@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,38 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Proč silový trénink pomáhá mozku?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Silovka víc zvedá IGF-1, což pomáhá plasticitě synapsí. Aerobní trénink víc tlačí BDNF, který stojí za tvorbou nových neuronů. Jiná fyziologie, jiné oblasti mozku."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je pro paměť lepší kardio, nebo posilování?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "V meta-analýze Zhang 2025 vyhrál v paměti aerobní trénink. Silovka skončila první v celkové kognici a v kontrole pozornosti."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je silový trénink po čtyřicítce jen o vzhledu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ne. Drží ti svaly a zároveň hlavu, dvě věci za jeden trénink."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +183,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Po šedesátce se pořadí cvičení pro mozek mění. A ne tak, jak by čekala většina lidí.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Jaké cvičení je nejlepší pro mozek po šedesátce?</strong><br>Záleží na tom, co chceš zlepšit. Network meta-analýza 37 randomizovaných studií s 2 585 lidmi nad 60 let (Zhang 2025) dala silový trénink na první místo v celkové kognici i kontrole pozornosti. Aerobní trénink vyhrál v paměti, tai-či a jóga v pracovní paměti a přepínání mezi úkoly.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -193,6 +228,14 @@
                 <li>→ Northey 2018 (meta 39 studií, ≥50 let, BJSM): doi.org/10.1136/bjsports-2016-096587</li>
                 <li>→ Vints et al. 2023 (mechanismus IGF-1, meta-analýza): PMC10389831</li>
             </ul>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Proč silový trénink pomáhá mozku?</p>
+            <p>Silovka víc zvedá IGF-1, což pomáhá plasticitě synapsí. Aerobní trénink víc tlačí BDNF, který stojí za tvorbou nových neuronů. Jiná fyziologie, jiné oblasti mozku.</p>
+            <p class="faq-q">Je pro paměť lepší kardio, nebo posilování?</p>
+            <p>V meta-analýze Zhang 2025 vyhrál v paměti aerobní trénink. Silovka skončila první v celkové kognici a v kontrole pozornosti.</p>
+            <p class="faq-q">Je silový trénink po čtyřicítce jen o vzhledu?</p>
+            <p>Ne. Drží ti svaly a zároveň hlavu, dvě věci za jeden trénink.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

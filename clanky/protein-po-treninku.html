@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Proč Refalo a Helms uvádějí 1,9 až 3,2 g/kg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Jejich doporučení je počítané na beztukovou hmotu. Po přepočtu u běžného cvičence s 18 až 28 % tuku vyjde spodní hranice zhruba na 1,4 až 1,6 g/kg celkové váhy, takže se s Phillipsem potkávají a rozdíl zůstává jen v horní hranici."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kdy dává smysl jít až na 2,2 g/kg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Do 2,2 g/kg jdu jako na pojistku ve třech situacích: když nemáš zápis jídla úplně přesný (nepřesnost bývá 20 až 50 %), při tvrdém hubnutí a u žen, které podle Refalovy podanalýzy možná jedou spíš při spodní hranici."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pomůže víc bílkovin v kalorickém deficitu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Na tom se vědci neshodnou. Phillips říká, že 1,6 g/kg stačí i v deficitu a při tvrdém tréninku, Refalo a Helms naopak míní, že v deficitu může víc bílkovin pomoct."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Roste síla s vyšším příjmem bílkovin pořád dál?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Podle Tagawy (2022) síla roste pěkně do 1,5 g/kg, nad touto hranicí se křivka láme do plata."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jsou bílkoviny to nejdůležitější?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ne. Protein neřeš, dokud nemáš pořešený trénink, kalorie a spánek, bez nich jsou bílkoviny jen drahá pojistka."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +199,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Phillips tvrdí, že 1,6 g <a href="bilkoviny.html" class="ilink">bílkovin</a> na kilo váhy stačí pro 97 až 98 % lidí. Refalo a Helms (2025) jdou výš, na 1,9 až 3,2 g na kilo, jenže to počítají na beztukovou hmotu.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Kolik bílkovin denně potřebuju, když posiluju?</strong><br>Doporučuju 1,6 až 2,2 g bílkovin na kilo celkové váhy, na spodní hranici panuje shoda. Phillips tvrdí, že 1,6 g na kilo stačí pro 97 až 98 % lidí, a Refalova spodní hranice vyjde po přepočtu na celkovou váhu u běžného cvičence zhruba na 1,4 až 1,6 g/kg. O horní hranici se mezi vědci pořád diskutuje.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -187,6 +238,18 @@
             <p>Kolik bílkovin jíš ty? A trackuješ je přesně, nebo spíš od oka?</p>
             <p>Zdroje: Tagawa et al. (2021), Nutrition Reviews, DOI: 10.1093/nutrit/nuaa104. Tagawa et al. (2022), Sports Med Open, DOI: 10.1186/s40798-022-00508-w. Refalo, Trexler & Helms (2025), Strength & Conditioning J, DOI: 10.1519/SSC.0000000000000888. Phillips, McMaster News (2026)</p>
             <p>S respektem ke Stuartu Phillipsovi, jednomu z nejcitovanějších výzkumníků na bílkoviny</p>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Proč Refalo a Helms uvádějí 1,9 až 3,2 g/kg?</p>
+            <p>Jejich doporučení je počítané na beztukovou hmotu. Po přepočtu u běžného cvičence s 18 až 28 % tuku vyjde spodní hranice zhruba na 1,4 až 1,6 g/kg celkové váhy, takže se s Phillipsem potkávají a rozdíl zůstává jen v horní hranici.</p>
+            <p class="faq-q">Kdy dává smysl jít až na 2,2 g/kg?</p>
+            <p>Do 2,2 g/kg jdu jako na pojistku ve třech situacích: když nemáš zápis jídla úplně přesný (nepřesnost bývá 20 až 50 %), při tvrdém hubnutí a u žen, které podle Refalovy podanalýzy možná jedou spíš při spodní hranici.</p>
+            <p class="faq-q">Pomůže víc bílkovin v kalorickém deficitu?</p>
+            <p>Na tom se vědci neshodnou. Phillips říká, že 1,6 g/kg stačí i v deficitu a při tvrdém tréninku, Refalo a Helms naopak míní, že v deficitu může víc bílkovin pomoct.</p>
+            <p class="faq-q">Roste síla s vyšším příjmem bílkovin pořád dál?</p>
+            <p>Podle Tagawy (2022) síla roste pěkně do 1,5 g/kg, nad touto hranicí se křivka láme do plata.</p>
+            <p class="faq-q">Jsou bílkoviny to nejdůležitější?</p>
+            <p>Ne. Protein neřeš, dokud nemáš pořešený trénink, kalorie a spánek, bez nich jsou bílkoviny jen drahá pojistka.</p>
 
             <div class="cta-box">
                 <h3>Chceš to mít nastavené na míru?</h3>

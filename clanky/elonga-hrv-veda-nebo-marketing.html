@@ -58,6 +58,7 @@
         .keytab th, .keytab td { border:1px solid #e6ece6; padding:10px 13px; text-align:left; vertical-align:top; }
         .keytab th { background:var(--green-light); color:var(--green-dark); font-weight:700; }
         .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
         .cta-box { background:var(--green-light); border-radius:20px; padding:2.2rem; margin:3rem 0 0; text-align:center; box-shadow:0 10px 30px rgba(22,22,22,.05); }
         .cta-box h3 { color:var(--green-dark); font-weight:800; margin-top:0; }
         .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; padding:13px 32px; border-radius:50px; text-decoration:none; margin:6px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; }
@@ -119,6 +120,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Co je HRV?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Variabilita srdeční frekvence, tedy to, že se intervaly mezi tepy mírně liší. Souvisí s autonomním nervovým systémem a ve sportovní vědě se desítky let používá jako jeden z ukazatelů regenerace a zátěže."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč mi klesá ranní HRV?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Když máš špatný spánek, chytáš nemoc, přeháníš trénink, vypiješ víc alkoholu nebo jsi v delším stresu, HRV často klesne. Když skóre spadne, nejdřív hledej tyhle banální příčiny."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak HRV náramek používat rozumně?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sleduj trend za 7–14 dní, jedno ranní skóre přeskoč. O tréninku rozhoduj podle plánu, pocitu a dlouhodobého trendu, appka je jen rádce. Při bušení srdce, mdlobách, dlouhodobé únavě nebo duševních potížích jdi k lékaři, u duševní krize volej Linku první psychické pomoci 116 123."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je funkční věk z HRV appky spolehlivý?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Porovnání s věkovými normami HRV ve výzkumu existuje, ale jedno skóre typu „je ti 34“ je marketingový součet a diagnózu stárnutí z něj nevyčteš. Ber ho nanejvýš jako hrubý kompas, jak se v čase měníš ty sám."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je měření z optického náramku stejně přesné jako EKG?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Laboratorní standard pro HRV je EKG. Optika umí být u klidového měření slušná, ale frekvenční složky jsou náchylnější na šum, prokrvení, pohyb a polohu senzoru. Veřejně dostupné recenzované srovnání senzoru Elonga s laboratorním EKG zatím chybí."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script>
     <script defer src="/assets/referral.js?v=g9"></script>
     <script defer src="/assets/lead-popup.js?v=r4"></script>
@@ -140,6 +189,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Klient mi poslal reklamu na Elongu. „Měří regeneraci, stres, funkční věk, připravenost na trénink. Stojí za tím PhD a 30 let výzkumu. Mám si to koupit?" Odpověď je složitější než ano/ne. HRV je reálná věc. Velká část toho, co se z ní v appkách prodává jako jistota o tvém nervovém systému, už tak jistá není.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Vyplatí se HRV náramek Elonga a dá se věřit jeho skóre stresu a regenerace?</strong><br>HRV je reálná věc a ranní trend za týdny umí být užitečný signál, že je něco jinak. Oddělené skóre „stres“ a „regenerace“ je ale zjednodušení: LF pásmo není čistý sympatikus a poměr LF/HF jako měřítko rovnováhy je v literatuře silně zpochybněný. Ber náramek jako deník trendů. Diagnózu z něj nedělej.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -248,6 +298,18 @@
                 <li>Elonga (oficiální science a literature stránky): elonga.com – pro srovnání s tím, co firma sama deklaruje</li>
             </ul>
             <p>Pozn.: Vycházím z veřejných firemních materiálů, standardních HRV guideline a peer-reviewed kritiky frekvenčních metrik. Nemám interní validační data Elongy, která nejsou publikovaná. Když je firma zveřejní proti EKG na lidech, rád tenhle článek doplním.</p>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Co je HRV?</p>
+            <p>Variabilita srdeční frekvence, tedy to, že se intervaly mezi tepy mírně liší. Souvisí s autonomním nervovým systémem a ve sportovní vědě se desítky let používá jako jeden z ukazatelů regenerace a zátěže.</p>
+            <p class="faq-q">Proč mi klesá ranní HRV?</p>
+            <p>Když máš špatný spánek, chytáš nemoc, přeháníš trénink, vypiješ víc alkoholu nebo jsi v delším stresu, HRV často klesne. Když skóre spadne, nejdřív hledej tyhle banální příčiny.</p>
+            <p class="faq-q">Jak HRV náramek používat rozumně?</p>
+            <p>Sleduj trend za 7–14 dní, jedno ranní skóre přeskoč. O tréninku rozhoduj podle plánu, pocitu a dlouhodobého trendu, appka je jen rádce. Při bušení srdce, mdlobách, dlouhodobé únavě nebo duševních potížích jdi k lékaři, u duševní krize volej Linku první psychické pomoci 116 123.</p>
+            <p class="faq-q">Je funkční věk z HRV appky spolehlivý?</p>
+            <p>Porovnání s věkovými normami HRV ve výzkumu existuje, ale jedno skóre typu „je ti 34“ je marketingový součet a diagnózu stárnutí z něj nevyčteš. Ber ho nanejvýš jako hrubý kompas, jak se v čase měníš ty sám.</p>
+            <p class="faq-q">Je měření z optického náramku stejně přesné jako EKG?</p>
+            <p>Laboratorní standard pro HRV je EKG. Optika umí být u klidového měření slušná, ale frekvenční složky jsou náchylnější na šum, prokrvení, pohyb a polohu senzoru. Veřejně dostupné recenzované srovnání senzoru Elonga s laboratorním EKG zatím chybí.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

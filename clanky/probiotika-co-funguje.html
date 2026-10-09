@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Kolik druhů rostlin týdně jíst pro zdravé střevo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Cíl je 30+ druhů týdně, protože každý druh nese jiný typ vlákniny a krmí jiné bakterie. Počítá se všechno: zelenina, ovoce, luštěniny, ořechy, semínka, bylinky, koření."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Pomáhá střevu fermentované jídlo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ve studii ze Stanfordu fermentované jídlo zvedlo pestrost mikrobiomu a snížilo 19 zánětlivých markerů. Patří sem kefír, jogurt s živými kulturami, kysané zelí, kvašáky nebo podmáslí."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kdy mají probiotika smysl?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Americká gastro asociace prošla 8 trávicích stavů a dost důkazů našla u 3 z nich (kolem antibiotik, kde jde o snížení rizika průjmu, předčasně narozené děti, pouchitida), všechny jsou medicínské. U části lidí s IBS některé kmeny pomáhají taky. Bez rizika ale probiotika nejsou u každého: u těžkého zánětu slinivky zvýšila úmrtnost."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je jedno, jaké probiotikum si koupím?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Není, rozhoduje konkrétní kmen, žádné „širokospektrum na všechno“. Výsledek z jedné studie proto nepřeneseš na jiný produkt z pultu."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kdy jít se střevními potížemi k lékaři?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Krev ve stolici, hubnutí bez příčiny, silná nebo dlouhá bolest břicha nebo náhlá změna vyprazdňování patří k lékaři."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +199,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Zdravé střevo si v kapsli nekoupíš. 🦠</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Fungují probiotika v kapslích pro zdravé střevo?</strong><br>Pro zdravého člověka je opora slabá: ve studii, která zkoumala přímo střevní sliznici, se bakterie z kapsle většinou neusadily a u zhruba dvou třetin lidí se nezachytily vůbec. Pro běžné zdraví střev udělá víc pestrost na talíři, tedy rozmanitost rostlin a fermentované jídlo.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -201,6 +252,18 @@
                 <li>Kolem antibiotik (snížení rizika průjmu): Goldenberg et al., Cochrane 2017, CD006095. U IBS nejlépe Bacillus coagulans (síťová metaanalýza, 2022).</li>
                 <li>Bezpečnost u vážně nemocných: u těžkého zánětu slinivky probiotika zvýšila úmrtnost (PROPATRIA, Besselink et al., Lancet 2008). Není to bez rizika u každého.</li>
             </ul>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Kolik druhů rostlin týdně jíst pro zdravé střevo?</p>
+            <p>Cíl je 30+ druhů týdně, protože každý druh nese jiný typ vlákniny a krmí jiné bakterie. Počítá se všechno: zelenina, ovoce, luštěniny, ořechy, semínka, bylinky, koření.</p>
+            <p class="faq-q">Pomáhá střevu fermentované jídlo?</p>
+            <p>Ve studii ze Stanfordu fermentované jídlo zvedlo pestrost mikrobiomu a snížilo 19 zánětlivých markerů. Patří sem kefír, jogurt s živými kulturami, kysané zelí, kvašáky nebo podmáslí.</p>
+            <p class="faq-q">Kdy mají probiotika smysl?</p>
+            <p>Americká gastro asociace prošla 8 trávicích stavů a dost důkazů našla u 3 z nich (kolem antibiotik, kde jde o snížení rizika průjmu, předčasně narozené děti, pouchitida), všechny jsou medicínské. U části lidí s IBS některé kmeny pomáhají taky. Bez rizika ale probiotika nejsou u každého: u těžkého zánětu slinivky zvýšila úmrtnost.</p>
+            <p class="faq-q">Je jedno, jaké probiotikum si koupím?</p>
+            <p>Není, rozhoduje konkrétní kmen, žádné „širokospektrum na všechno“. Výsledek z jedné studie proto nepřeneseš na jiný produkt z pultu.</p>
+            <p class="faq-q">Kdy jít se střevními potížemi k lékaři?</p>
+            <p>Krev ve stolici, hubnutí bez příčiny, silná nebo dlouhá bolest břicha nebo náhlá změna vyprazdňování patří k lékaři.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

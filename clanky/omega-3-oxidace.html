@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Proč omega-3 oxidují snadněji než běžný olej?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "EPA a DHA mají spoustu dvojných vazeb a kyslík se na ně lepí strašně rád. Stačí výroba a pár měsíců skladování a olej začne žluknout, vznikají peroxidy a aldehydy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kolik vzorků rybího oleje v testech neprošlo oxidačními limity?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nezávislé laboratoře testují doplňky z lékáren a docházejí pořád ke stejnému závěru. Aspoň jeden oxidační limit překročilo 92 % vzorků v Norsku, 83 % na Novém Zélandu, 80 % v Jižní Africe, 50 % v Kanadě a 27 % v USA."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Je zoxidovaný rybí olej jed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Označovat rybí olej slovy jako „jed“ nebo „toxické“ je přehnané. Nejspíš jen vyhazuješ peníze za něco, co nefunguje, a možná si tím trochu škodíš."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Mám místo kapslí s rybím olejem radši jíst rybu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kapsle řeším většinou až jako třetí v pořadí, po jídelníčku a tréninku. Nejdřív se snažím dostat do jídelníčku tučnou rybu dvakrát týdně, třeba sardinky, makrelu nebo lososa."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Můžu brát omega-3, když beru léky na ředění krve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pokud bereš léky na ředění krve, třeba warfarin nebo denně aspirin, projdi si omega-3 nejdřív s lékařem."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +199,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Koupíš rybí olej, bereš ho denně a věříš, že děláš něco dobrého pro zdraví. Jenže velká část toho, co se prodává v lékárně, je v době, kdy ji spolkneš, už zoxidovaná. A to mění celou rovnici.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Je rybí olej z lékárny zoxidovaný a má smysl ho brát?</strong><br>Velká část rybího oleje z lékárny je v době, kdy ho spolkneš, nejspíš už zoxidovaná. Jisté je, že zoxidovaný olej má míň účinné EPA a DHA, takže hodně pravděpodobně platíš za produkt, který nefunguje, jak má. Jestli ti přímo škodí, zůstává nejisté, kvalitní studie na zdravých lidech zatím chybí.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -200,6 +251,18 @@
                 <li>Cameron-Smith et al. 2015 (review)</li>
                 <li>Heaton et al. 2017 - GOED follow-up</li>
             </ul>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Proč omega-3 oxidují snadněji než běžný olej?</p>
+            <p>EPA a DHA mají spoustu dvojných vazeb a kyslík se na ně lepí strašně rád. Stačí výroba a pár měsíců skladování a olej začne žluknout, vznikají peroxidy a aldehydy.</p>
+            <p class="faq-q">Kolik vzorků rybího oleje v testech neprošlo oxidačními limity?</p>
+            <p>Nezávislé laboratoře testují doplňky z lékáren a docházejí pořád ke stejnému závěru. Aspoň jeden oxidační limit překročilo 92 % vzorků v Norsku, 83 % na Novém Zélandu, 80 % v Jižní Africe, 50 % v Kanadě a 27 % v USA.</p>
+            <p class="faq-q">Je zoxidovaný rybí olej jed?</p>
+            <p>Označovat rybí olej slovy jako „jed“ nebo „toxické“ je přehnané. Nejspíš jen vyhazuješ peníze za něco, co nefunguje, a možná si tím trochu škodíš.</p>
+            <p class="faq-q">Mám místo kapslí s rybím olejem radši jíst rybu?</p>
+            <p>Kapsle řeším většinou až jako třetí v pořadí, po jídelníčku a tréninku. Nejdřív se snažím dostat do jídelníčku tučnou rybu dvakrát týdně, třeba sardinky, makrelu nebo lososa.</p>
+            <p class="faq-q">Můžu brát omega-3, když beru léky na ředění krve?</p>
+            <p>Pokud bereš léky na ředění krve, třeba warfarin nebo denně aspirin, projdi si omega-3 nejdřív s lékařem.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

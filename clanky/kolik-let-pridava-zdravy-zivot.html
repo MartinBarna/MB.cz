@@ -80,6 +80,8 @@
         .info-gallery img { width:100%; height:auto; border-radius:14px; box-shadow:0 10px 30px rgba(22,22,22,.12); display:block; }
         .gallery-note { text-align:center; color:#666; font-size:.9rem; margin:0 0 1rem; }
         @media (max-width:560px){ .info-gallery { grid-template-columns:1fr; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -130,6 +132,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Jak žila ta nejzdravější třetina lidí?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Spala zhruba 7 až 8 hodin, měla přes 40 minut svižného pohybu denně a dobrou stravu bez stoprocentní dokonalosti. Žádní askety, jejich profil zvládneš v běžném životě."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Má smysl začít s malými změnami?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kdo je na tom nejhůř, získá nejvíc. Od úplného dna stačí denně přidat pět minut spánku, dvě minuty svižného pohybu a půl porce zeleniny a máš z toho zhruba rok života navíc. Funguje to ale jen v kombinaci."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Stačí zlepšit jen jídelníček?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Podle doprovodné studie stejného týmu samotná strava na efekt nestačila. Tři malé změny dohromady ano."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Potvrzují to i jiné studie?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ano. Velká americká práce na 123 000 lidech našla u pěti zdravých návyků o 14 let delší život u žen a o 12 u mužů."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Jak moc se dá těm číslům věřit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Je to pozorovací studie, takže ukazuje souvislost, příčinu z ní s jistotou nevyčteš. Kvalitu stravy zjišťovali jen dotazníkem a roky navíc jsou modelové odhady, pro tebe nejsou žádná garance."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -149,6 +199,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">Zdravý život ti dokáže přidat skoro deset let. A nejde o to být dokonalý, jde o to u toho vydržet. ⏳</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: O kolik let může zdravý životní styl prodloužit život?</strong><br>Skoro o deset let. Ve studii na skoro 60 000 lidech z UK Biobank žila nejzdravější třetina skoro o dekádu déle než ta nejméně zdravá a přibyly i roky bez infarktu, cukrovky, rakoviny nebo demence. Jde ale o pozorovací studii a modelové odhady, žádná záruka.</div>
 
             <div class="cta-box" style="background:#161616;color:#fff;">
                 <h3 style="color:#fff;">🎁 7denní plán na míru zdarma</h3>
@@ -196,6 +247,18 @@
                 <li>Doprovodná studie stejného týmu (kombinace &gt; jedna věc): Stamatakis et al. (2025), BMC Medicine 23:111. Stejné minimum spojené s ~10 % nižší úmrtností. DOI: 10.1186/s12916-024-03833-x</li>
                 <li>Konvergence (že to sedí napříč studiemi): Li et al. (2018), Circulation 138:345–355. Pět zdravých návyků: +14 let (ženy) / +12,2 roku (muži) očekávané délky života. DOI: 10.1161/CIRCULATIONAHA.117.032047</li>
             </ul>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Jak žila ta nejzdravější třetina lidí?</p>
+            <p>Spala zhruba 7 až 8 hodin, měla přes 40 minut svižného pohybu denně a dobrou stravu bez stoprocentní dokonalosti. Žádní askety, jejich profil zvládneš v běžném životě.</p>
+            <p class="faq-q">Má smysl začít s malými změnami?</p>
+            <p>Kdo je na tom nejhůř, získá nejvíc. Od úplného dna stačí denně přidat pět minut spánku, dvě minuty svižného pohybu a půl porce zeleniny a máš z toho zhruba rok života navíc. Funguje to ale jen v kombinaci.</p>
+            <p class="faq-q">Stačí zlepšit jen jídelníček?</p>
+            <p>Podle doprovodné studie stejného týmu samotná strava na efekt nestačila. Tři malé změny dohromady ano.</p>
+            <p class="faq-q">Potvrzují to i jiné studie?</p>
+            <p>Ano. Velká americká práce na 123 000 lidech našla u pěti zdravých návyků o 14 let delší život u žen a o 12 u mužů.</p>
+            <p class="faq-q">Jak moc se dá těm číslům věřit?</p>
+            <p>Je to pozorovací studie, takže ukazuje souvislost, příčinu z ní s jistotou nevyčteš. Kvalitu stravy zjišťovali jen dotazníkem a roky navíc jsou modelové odhady, pro tebe nejsou žádná garance.</p>
 
             <h2>Mohlo by tě zajímat</h2>
             <ul>

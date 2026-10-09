@@ -82,6 +82,8 @@
         .academy-box p { color:#d8d8d8; }
         @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
         @media (prefers-reduced-motion: reduce){ *, *::before, *::after { animation-duration:.001ms!important; transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
     </style>
     <script type="application/ld+json">
 {
@@ -117,6 +119,54 @@
   ]
 }
     </script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Škodí spát 9 hodin a víc?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "V metaanalýze Yin 2017 přidávala každá hodina nad sedmičkou zhruba 13 % rizika úmrtí. Z velké části je to ale příznak skryté nemoci. Zdravému, tvrdě trénujícímu člověku 9 hodin neublíží."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Kolik spánku potřebuje sportovec?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Víc než 7 hodin, často 8–10, protože spánek je hlavní regenerační okno. Vysokoškolským basketbalistům, kteří si objektivně přispali skoro 2 hodiny za noc, se zrychlil sprint a přesnost střelby stoupla o zhruba 9 %."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Může málo spánku brzdit hubnutí?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ano. Pár nocí zkráceného spánku u zdravých lidí zvedne ghrelin (~+28 %), sníží leptin (~−18 %) a vede k 300 až 680 kcal navíc denně, přičemž výdej energie se nezvedne. Při stejné dietě navíc při málo spánku ztrácíš víc svalu a míň tuku. Trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (např. spánková apnoe), při potížích se poraď s lékařem."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Co je důležitější, délka spánku, nebo pravidelnost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Když spíš pod 6 hodin, prioritou je délka. Když spíš 7 hodin a víc, vyhrává pravidelnost. Čas vstávání drž pevně, i o víkendu s odchylkou do hodiny."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Proč záleží na tom, chodit spát pořád ve stejnou dobu?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "V datech z náramků od 60 000 lidí byla pravidelnost spánku silnějším ukazatelem délky života než jeho délka. Nejpravidelnější lidé měli o 20–48 % nižší riziko úmrtí, i po zohlednění toho, kolik hodin spí."
+      }
+    }
+  ]
+}
+    </script>
     <script defer src="/assets/analytics.js?v=g21"></script><script defer src="/assets/referral.js?v=g9"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
@@ -136,6 +186,7 @@
     <div class="wrapc">
         <article>
             <p class="lead">„Kolik mám spát?" je nejčastější otázka po jídelníčku a tréninku. A schovává se v ní vlastně trojice: <strong>jak dlouho</strong>, <strong>jak pravidelně</strong> a <strong>co obětovat, když se obojí nevejde</strong>. Tady je odpověď na všechny tři, s čísly ze studií, ne s dojmy. Je to zkrácená veřejná ukázka z lekce, kterou mám celou pro trenéry v <a href="/akademie/">Barna Academy</a>.</p>
+            <div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: Kolik hodin denně bych měl spát?</strong><br>Velké přehledy ukazují pro běžného dospělého nejnižší úmrtnost i riziko srdečních chorob kolem 7 hodin denně, pod sedmičkou riziko roste zhruba o 6 % za každou ubranou hodinu. Když trénuješ, potřebuješ víc, často 8–10 hodin. Jakmile máš sedm hodin zajištěných, je důležitější chodit spát a vstávat pořád stejně než honit osmou hodinu.</div>
 
             <h2>1) Délka: existuje optimum, a je to křivka</h2>
             <p>Spánek není „čím víc, tím líp" ani naopak. Je to <strong>U-křivka</strong>: riziko pro zdraví klesá k optimu a zase roste na obou koncích. Velké přehledy stovek tisíc až milionů lidí shodně ukazují nejnižší úmrtnost i riziko srdečních chorob kolem <strong>7 hodin denně</strong>. Pod sedmičku riziko roste zhruba o 6 % za každou ubranou hodinu.</p>
@@ -189,6 +240,18 @@
                 <p>Celá lekce (Modul 15: Spánek, stres a regenerace) jde do hloubky pro trenéry: přesná čísla ze studií, rozhodovací stromy pro klienty na dietě i na směny, framework, jak spánek u klienta naprogramovat, a otázky k procvičení. Academy je vzdělávací kurz pro trenéry a nadšence, kteří to chtějí dělat vědecky.</p>
                 <a class="btn gold" href="/akademie/">Prozkoumat Barna Academy →</a>
             </div>
+
+            <h2>Časté otázky</h2>
+            <p class="faq-q">Škodí spát 9 hodin a víc?</p>
+            <p>V metaanalýze Yin 2017 přidávala každá hodina nad sedmičkou zhruba 13 % rizika úmrtí. Z velké části je to ale příznak skryté nemoci. Zdravému, tvrdě trénujícímu člověku 9 hodin neublíží.</p>
+            <p class="faq-q">Kolik spánku potřebuje sportovec?</p>
+            <p>Víc než 7 hodin, často 8–10, protože spánek je hlavní regenerační okno. Vysokoškolským basketbalistům, kteří si objektivně přispali skoro 2 hodiny za noc, se zrychlil sprint a přesnost střelby stoupla o zhruba 9 %.</p>
+            <p class="faq-q">Může málo spánku brzdit hubnutí?</p>
+            <p>Ano. Pár nocí zkráceného spánku u zdravých lidí zvedne ghrelin (~+28 %), sníží leptin (~−18 %) a vede k 300 až 680 kcal navíc denně, přičemž výdej energie se nezvedne. Při stejné dietě navíc při málo spánku ztrácíš víc svalu a míň tuku. Trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (např. spánková apnoe), při potížích se poraď s lékařem.</p>
+            <p class="faq-q">Co je důležitější, délka spánku, nebo pravidelnost?</p>
+            <p>Když spíš pod 6 hodin, prioritou je délka. Když spíš 7 hodin a víc, vyhrává pravidelnost. Čas vstávání drž pevně, i o víkendu s odchylkou do hodiny.</p>
+            <p class="faq-q">Proč záleží na tom, chodit spát pořád ve stejnou dobu?</p>
+            <p>V datech z náramků od 60 000 lidí byla pravidelnost spánku silnějším ukazatelem délky života než jeho délka. Nejpravidelnější lidé měli o 20–48 % nižší riziko úmrtí, i po zohlednění toho, kolik hodin spí.</p>
 
             <div class="cta-box">
                 <h3>Chceš to vyřešit na sobě, ne studovat?</h3>
