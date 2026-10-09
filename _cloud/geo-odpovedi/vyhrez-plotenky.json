@@ -1,0 +1,131 @@
+{
+  "url": "https://martinbarna.cz/clanky/vyhrez-plotenky.html",
+  "titulek": "Výhřez ploténky není doživotní: co data říkají o operaci a cvičení",
+  "hlavni_otazka": "Musím jít s výhřezem ploténky na operaci?",
+  "kratka_odpoved": "U většiny výhřezů operace nespěchá: zkraje uleví od vystřelující bolesti do nohy rychleji, ale po roce až dvou jsou na tom lidé s operací i bez ní srovnatelně. Výhřez se navíc často sám vstřebá, u sekvestrace v 96 % případů. Při varovných příznacích ale jednej hned a nech to posoudit lékaře.",
+  "faq": [
+    {
+      "otazka": "Jak často se výhřez ploténky vstřebá sám?",
+      "odpoved": "Čím hůř nález zní, tím větší je šance: podle přehledu 31 studií (Chiu 2015) se bez operace sám zmenší vyklenutí ve 13 % případů, protruze ve 41 %, extruze v 70 % a sekvestrace v 96 % (procenta podle typu vycházejí z 9 z těch studií). Sekvestrace ve 43 % případů zmizí úplně, u extruze je úplné vymizení v 15 %."
+    },
+    {
+      "otazka": "Znamená nález na magnetické rezonanci, že mě bolí záda kvůli ploténce?",
+      "odpoved": "Ne nutně, výhřezy i opotřebení ploténky najde rezonance i u spousty lidí, které záda vůbec nebolí. Vyklenutou ploténku má bez bolesti 30 % dvacetiletých a 84 % osmdesátníků (Brinjikji 2015). To, co rezonance ukáže, a příčina bolesti nejsou totéž."
+    },
+    {
+      "otazka": "Musím po operaci ploténky cvičit?",
+      "odpoved": "Ano, operace uvolní nerv, ale sílu, stabilitu a pohyblivost zad za tebe neudělá. Cvičení zahájené pár týdnů po operaci zrychluje úbytek bolesti i omezení a je bezpečné, i když důkazy jsou slabší."
+    },
+    {
+      "otazka": "Co záda s výhřezem opravdu potřebují?",
+      "odpoved": "Dát tomu čas v řádu týdnů, začít se hýbat brzy, postupně posilovat hlavně střed těla, hýždě a celá záda a nenechat se vyděsit nálezem. Klid na lůžku zotavení spíš brzdí."
+    },
+    {
+      "otazka": "Kdy jít s bolestí zad okamžitě k lékaři?",
+      "odpoved": "Okamžitě, klidně na pohotovost, při ztrátě citu v rozkroku a kolem konečníku, problému udržet nebo vymočit moč či stolici, nebo rychle se horšící slabosti či necitlivosti nohy. Bez zbytečného odkladu k lékaři patří i horečka spolu s bolestí zad, prodělaná rakovina, nechtěný úbytek váhy nebo silná bolest po vážném úrazu."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "U většiny výhřezů operace nespěchá. Umí zabrat, hlavně na vystřelující bolest do nohy zkraje uleví rychleji než konzervativní léčba. Jenže po roce až dvou jsou na tom lidé s operací i bez ní srovnatelně (Jacobs 2010, Gugliotta 2016)."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Sekvestrace: 96 %"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Čím hůř nález zní, tím větší je šance, že se výhřez sám vstřebá."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když se v příznacích výše poznáváš, jednej hned a nech to posoudit lékaře."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Čím hůř nález zní, tím větší je šance, že se výhřez sám vstřebá."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Přehled 31 studií (Chiu 2015) spočítal, jak často se výhřez bez operace sám zmenší, podle typu:"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Vyklenutí: 13 %"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Protruze: 41 %"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Extruze: 70 %"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Sekvestrace: 96 %"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Ta nejděsivější sekvestrace se tedy vstřebá skoro vždycky a ve 43 % případů zmizí úplně. U extruze je úplné vymizení v 15 %."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Procenta podle typu vycházejí z 9 z těch studií, směr je ale jednoznačný."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "opotřebení i výhřezy ploténky najde rezonance i u spousty lidí, které záda vůbec nebolí."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Přehled nálezů z rezonance a CT u 3 110 lidí bez bolesti zad (Brinjikji 2015) ukázal, že:"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "vyklenutou ploténku má 30 % dvacetiletých a 84 % osmdesátníků"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "To, co rezonance ukáže, a příčina bolesti nejsou totéž."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Operace uvolní nerv, ale sílu, stabilitu a pohyblivost zad za tebe neudělá. To musíš dodat ty, po operaci i bez ní."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Cvičení zahájené pár týdnů po operaci podle přehledu studií (Oosterhuis 2014) zrychluje úbytek bolesti i omezení oproti tomu nedělat nic, a je bezpečné (Danielsen 2000). Jistota tu není velká, důkazy jsou slabší, ale směr je jasný a vrátit se k pohybu se vyplatí."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Dát tomu čas. Počítá se to v týdnech, ne ve dnech."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Začít se hýbat brzy. Klid na lůžku zotavení spíš brzdí."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Postupně posilovat, hlavně střed těla, hýždě a celá záda."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Nenechat se vyděsit nálezem a nepřestat se kvůli strachu hýbat."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Okamžitě, klidně na pohotovost a nečekej do rána, pokud se přidá ztráta citu v rozkroku a kolem konečníku, problém udržet nebo naopak vymočit moč či stolici, nebo rychle se horšící slabost či necitlivost nohy."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Bez zbytečného odkladu k lékaři patří i horečka spolu s bolestí zad, prodělaná rakovina, nechtěný úbytek váhy nebo silná bolest po vážném úrazu."
+    }
+  ],
+  "nejiste": [
+    "Článek neříká, za jak dlouho se výhřez obvykle sám vstřebá.",
+    "Článek neupřesňuje, jak silná a jak dlouho trvající bolest už je „silná, neustupující bolest“, u které je operace legitimní volba.",
+    "Článek neuvádí konkrétní cviky, počet opakování ani frekvenci cvičení a citované studie se týkají bederní páteře, u krční to článek zvlášť neřeší."
+  ]
+}

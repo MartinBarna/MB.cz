@@ -1,0 +1,48 @@
+{
+  "url": "https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html",
+  "titulek": "Kalorický deficit: kolik jíst, abys hubla a přitom fungovala",
+  "hlavni_otazka": "Kolik kalorií mám jíst v deficitu, abych zhubla a přitom měla energii?",
+  "kratka_odpoved": "Vezmi odhad svého denního výdeje (TDEE) a uber z něj 15 až 20 procent. U ženy s výdejem 2 000 kcal to vychází kolem 1 600 až 1 700 kcal. Cílem je hubnout 0,5 až 1 % tělesné hmotnosti týdně, při 70 kg tedy 350 až 700 g.",
+  "faq": [
+    {
+      "otazka": "Proč nehubnout rychleji s větším deficitem?",
+      "odpoved": "Norská studie na 24 elitních sportovcích srovnala tempo 0,7 % a 1,4 % hmotnosti týdně. Obě skupiny zhubly kolem 5,5 %, ale pomalé skupině beztuková hmota vzrostla o 2,1 % a tuková klesla o 31 % proti 21 % u rychlé. Byli to trénovaní sportovci, takže čísla nejdou překlopit jedna ku jedné na začátečníka, směr je ale čitelný."
+    },
+    {
+      "otazka": "Kolik bílkovin jíst v kalorickém deficitu?",
+      "odpoved": "Martin standardně pracuje se zhruba 1,6 až 2,2 g na kilo celkové váhy. Vychází to z přehledu šesti studií na štíhlých sportovcích, který doporučil 2,3 až 3,1 g na kilo beztukové hmoty. Bílkoviny spolu se silovým tréninkem pomáhají udržet svaly."
+    },
+    {
+      "otazka": "Proč nehubnu, když jím podle sebe málo?",
+      "odpoved": "Ve studii z New England Journal of Medicine lidé s obezitou, kteří tvrdili, že jedí pod 1 200 kcal, podhodnocovali svůj příjem v průměru o 47 % a pohyb nadhodnocovali o 51 %. Metabolismus měli do 5 % předpokládaných hodnot. Proto na začátku čtrnáct dní važ a zapisuj úplně všechno, včetně tuku na vaření a tekutých kalorií."
+    },
+    {
+      "otazka": "Co dělat, když se váha nehýbe?",
+      "odpoved": "Jeden týden moc neznamená, u žen do toho mluví i cyklus a zadržená voda, rozhoduj se z dvou až třítýdenních průměrů. Když se za tři týdny nezměnilo nic a zapisuješ poctivě, uber 5 až 10 % energie nebo přidej denní kroky. Když padáš rychleji než 1 % týdně, naopak přidej."
+    },
+    {
+      "otazka": "Mám ubrat sacharidy, nebo tuky?",
+      "odpoved": "Pro hubnutí rozhoduje celkový deficit, takže ubírej z toho, co ti v jídle chybět nebude, a bílkoviny nech nahoře. Kdo miluje pečivo, může nechat sacharidy vysoko a ubrat tuky, obráceně to funguje stejně dobře."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Vezmi si odhad svého denního výdeje (TDEE, tedy kolik energie za den celkem spálíš) a uber z něj 15 až 20 procent. U ženy s výdejem 2 000 kcal vyjde příjem kolem 1 600 až 1 700 kcal."},
+    {"pro": "kratka_odpoved", "citace": "Praktický převod pro běžný život: cíl 0,5 až 1 % tělesné hmotnosti týdně. Při 70 kg to je 350 až 700 g."},
+    {"pro": "faq[0]", "citace": "Norská studie na 24 elitních sportovcích porovnala dvě tempa hubnutí: pomalé 0,7 % tělesné hmotnosti týdně proti rychlému 1,4 %. Obě skupiny trénovaly silově čtyřikrát týdně a obě zhubly podobně, kolem 5,5 % hmotnosti. Lišilo se, co ubylo. Pomalé skupině beztuková hmota vzrostla o 2,1 %, rychlé zůstala beze změny, a tuková hmota klesla o 31 % proti 21 %."},
+    {"pro": "faq[0]", "citace": "Byli to trénovaní sportovci, takže ta čísla nejdou překlopit jedna ku jedné na někoho, kdo začíná. Směr je ale čitelný. Rychlejší tempo tam ubralo víc svalu a míň tuku."},
+    {"pro": "faq[1]", "citace": "Přehled šesti studií na trénovaných a štíhlých sportovcích v kalorické restrikci skončil doporučením 2,3 až 3,1 g bílkovin na kilo beztukové hmoty, tedy váhy bez tuku, a tím výš, čím tvrdší je deficit a čím je člověk štíhlejší (Helms, 2014, PMID 24092765). Pro klientku, která není soutěžní kulturistka, z toho po přepočtu na celkovou váhu vyjde zhruba 1,6 až 2,2 g na kilo. S tím pracuju standardně."},
+    {"pro": "faq[1]", "citace": "Bílkoviny a silový trénink jsou dvě páky, kterými mu naznačíš, že svalovinu potřebuje nechat na pokoji."},
+    {"pro": "faq[2]", "citace": "V klasické studii z New England Journal of Medicine sledovali lidi s obezitou, kteří tvrdili, že nemůžou zhubnout, přestože jedí pod 1 200 kcal denně. Změřili jim skutečný výdej i skutečný příjem. Celkový výdej a klidový metabolismus vyšly do 5 % předpokládaných hodnot, takže pomalý metabolismus to nebyl. Svůj příjem ale podhodnocovali v průměru o 47 % a pohyb naopak nadhodnocovali o 51 % (Lichtman, 1992, PMID 1454084)."},
+    {"pro": "faq[2]", "citace": "Proto při rozjezdu trvám na tom, aby klient čtrnáct dní vážil a zapisoval úplně všechno, i to, co „nic není\"."},
+    {"pro": "faq[2]", "citace": "Zapisuj všechno včetně tuku na vaření a tekutých kalorií. Čtrnáct dní, teprve pak se rozhoduj."},
+    {"pro": "faq[3]", "citace": "Jeden týden sám o sobě moc neznamená, u žen do toho navíc mluví cyklus a zadržená voda. Rozhoduj se z dvou až třítýdenních průměrů. Když se za tři týdny nezměnilo nic a zapisuješ poctivě, uber 5 až 10 % energie nebo přidej denní kroky."},
+    {"pro": "faq[3]", "citace": "Když padáš rychleji než 1 % týdně, naopak přidej."},
+    {"pro": "faq[4]", "citace": "Pro hubnutí rozhoduje celkový deficit, takže ubírej z toho, co ti v jídle chybět nebude, a bílkoviny nech nahoře. U klientů, kteří milují pečivo, nechávám sacharidy vysoko a ubírám tuky. Obráceně to funguje stejně dobře."}
+  ],
+  "nejiste": [
+    "Článek neříká, jak si TDEE spočítat; mluví jen o „odhadu svého denního výdeje“.",
+    "Údaj Mortonovy metaanalýzy (strop asi 1,62 g/kg) jsem do odpovědí nedal: článek sám říká, že platí pro trénink obecně, ne přímo pro hubnutí.",
+    "Rozmezí 1,6 až 2,2 g/kg je Martinův přepočet z doporučení pro štíhlé sportovce, ne výsledek studie na běžných lidech; v odpovědi je to tak i popsané.",
+    "Přepočet 7 700 kcal na kilo tuku a 500 kcal denně na půl kila týdně článek uvádí jako přibližný („zhruba“), proto ho v odpovědích nepoužívám jako přesné pravidlo."
+  ]
+}

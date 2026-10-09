@@ -1,0 +1,87 @@
+{
+  "url": "https://martinbarna.cz/clanky/omlazeni-hubnutim.html",
+  "titulek": "Hubnutí umí omladit tělo až na úrovni buněk",
+  "hlavni_otazka": "Může hubnutí omladit tělo na úrovni buněk?",
+  "kratka_odpoved": "Ano, hubnutí umí omladit tukovou tkáň až na úrovni buněk, ukazují to dvě studie z Nature. Když ubyde tuk, z tkáně skoro zmizí senescentní „zombie“ buňky, klesne zánět a metabolismus se rozjede. Crash dieta, po které nabereš zpátky, ti to omlazení ale zase sebere.",
+  "faq": [
+    {
+      "otazka": "Na jakých datech to stojí?",
+      "odpoved": "Na dvou studiích z Nature. Šlo o atlas 171 247 buněk od 70 lidí."
+    },
+    {
+      "otazka": "Vrátí se tuková tkáň po zhubnutí úplně do normálu?",
+      "odpoved": "Ne úplně. Imunitní buňky se nevrátí úplně na úroveň štíhlých a zůstanou jakoby naprogramované spustit zánět, kdyby se váha vrátila. Druhá studie ukazuje, že si tuková tkáň obezitu „pamatuje“ i po zhubnutí."
+    },
+    {
+      "otazka": "Proč je po zhubnutí tak důležité váhu udržet?",
+      "odpoved": "Udržet váhu je samostatná dovednost a crash dieta, po které nabereš zpátky, ti omlazení zase sebere. Pomalé tempo, které udržíš, vyhraje nad rychlým, které pak neudržíš."
+    },
+    {
+      "otazka": "Vyplatí se hubnout, když si tkáň obezitu pamatuje?",
+      "odpoved": "Ano, hubnout se vyplatí. Každé kilo dolů má buněčný smysl."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Hubnutí umí omladit tukovou tkáň až na úrovni buněk."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Zní to jako fitness žvást, ale stojí za tím dvě studie z Nature."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když ubyde tuk, z tkáně skoro zmizí takzvané senescentní"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "klesne zánět a metabolismus se rozjede."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Crash dieta, po které nabereš zpátky, ti to omlazení zase sebere."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Zní to jako fitness žvást, ale stojí za tím dvě studie z Nature."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Šlo o atlas 171 247 buněk od 70 lidí."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Imunitní buňky se nevrátí úplně na úroveň štíhlých."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Zůstanou jakoby naprogramované spustit zánět, kdyby se váha vrátila."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "A druhá studie ukazuje, že si tuková tkáň obezitu"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Udržet váhu je samostatná dovednost."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Crash dieta, po které nabereš zpátky, ti to omlazení zase sebere."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Jen pomalé tempo, které udržíš, vyhraje nad rychlým, které pak neudržíš."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Ať je jasno, hubnout se vyplatí. Každé kilo dolů má buněčný smysl."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí názvy, autory ani roky obou studií z Nature.",
+    "Článek neříká, kolik lidé ve studiích zhubli ani za jak dlouho, aby se změny v tkáni projevily.",
+    "Není jasné, jak dlouho si tuková tkáň obezitu „pamatuje“ a jestli to časem odezní."
+  ]
+}

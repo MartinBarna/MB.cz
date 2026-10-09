@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/musis-snidat-abys-zhubl-mytus.html",
+  "titulek": "Musíš snídat, abys zhubl? Mýtus o nejdůležitějším jídle dne",
+  "hlavni_otazka": "Musím snídat, abych zhubl?",
+  "kratka_odpoved": "Nemusíš. O hubnutí rozhoduje celkový příjem za den, ne hodina prvního jídla. Randomizovaná studie z roku 2014 ani meta-analýza z BMJ 2019 žádný klinicky významný efekt snídaně na váhu nenašly.",
+  "faq": [
+    {
+      "otazka": "Zpomalí vynechaná snídaně metabolismus?",
+      "odpoved": "Nezpomalí. Termický efekt potravy se počítá z toho, kolik za den sníš, ne z toho, kdy začneš. Když sníš svůj příjem ve dvou jídlech místo čtyř, celkový efekt vyjde zhruba nastejno."
+    },
+    {
+      "otazka": "Pomáhá snídaně hubnout?",
+      "odpoved": "Spolehlivě ne. Podle meta-analýzy v BMJ z roku 2019 měli lidé, kteří snídani přidali, spíš tendenci přijmout za den o něco víc energie, ne míň. Autoři sami varovali, aby se snídaně jako hubnoucí nástroj nedoporučovala."
+    },
+    {
+      "otazka": "Komu se snídaně vyplatí a kdo ji může vynechat?",
+      "odpoved": "Snídaně ti nejspíš sedne, když máš ráno hlad, trénuješ dopoledne, nebo se bez ní večer přejídáš. Klidně ji vynech, když ráno hlad nemáš a nutíš se jíst, nebo ti líp sedí přerušovaný půst. Když ti ale vynechání spustí přejídání večer, snídej."
+    },
+    {
+      "otazka": "Jak zjistím, jestli mi snídaně sedí?",
+      "odpoved": "Vyzkoušej obojí: týden snídej, týden vynechej a sleduj sytost, hlad večer, energii a jak se ti drží plán. Pak si vyber režim, který udržíš měsíce."
+    },
+    {
+      "otazka": "Odkud se vzalo, že snídaně je nejdůležitější jídlo dne?",
+      "odpoved": "Z reklamy, ne z výzkumu metabolismu. Ve dvacátých letech 20. století stál Edward Bernays za kampaní, která měla Američanům prodat víc slaniny a vajec k snídani, a později na to navázaly firmy s cereáliemi."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Musím snídat, abych zhubl? Ne. O hubnutí rozhoduje celkový příjem za den, ne hodina prvního jídla. Randomizovaná studie z roku 2014 ani meta-analýza z BMJ 2019 žádný klinicky významný efekt snídaně na váhu nenašly."},
+    {"pro": "faq[0]", "citace": "Nezpomalí. Termický efekt potravy se počítá z toho, kolik za den sníš, ne z toho, kdy začneš. Když sníš svůj příjem ve dvou jídlech místo čtyř, celkový efekt vyjde zhruba nastejno."},
+    {"pro": "faq[0]", "citace": "Vynechání snídaně ti metabolismus nezpomalí, jen jsi posunul, kdy tělo trávení odvede."},
+    {"pro": "faq[1]", "citace": "Širší obrázek dává meta-analýza publikovaná v BMJ v roce 2019 (Sievert a kol.), která posbírala randomizované studie na snídani a hmotnost. Závěr ji shrnuje slušně: lidé, kteří snídani přidali, spíš měli tendenci přijmout za den o něco víc energie, ne míň. A pravidelná snídaně nebyla spolehlivou strategií na hubnutí. Autoři sami varovali, aby se snídaně nedoporučovala jako hubnoucí nástroj, protože pro to nemají oporu."},
+    {"pro": "faq[2]", "citace": "ráno máš hlad a bez jídla jsi nervózní, bez energie nebo se hůř soustředíš,"},
+    {"pro": "faq[2]", "citace": "trénuješ dopoledne a chceš mít v sobě palivo,"},
+    {"pro": "faq[2]", "citace": "bez snídaně se na tebe večer vrhne vlčí hlad a sníš toho podstatně víc,"},
+    {"pro": "faq[2]", "citace": "A naopak ji v klidu vynech, pokud: ráno prostě nemáš hlad a nutíš se jíst „protože se má\", vyhovuje ti přerušovaný půst a líp se ti drží příjem, když první jídlo dáš později,"},
+    {"pro": "faq[2]", "citace": "Když ti vynechání spustí přejídání večer, je ti k ničemu. Pak snídej."},
+    {"pro": "faq[3]", "citace": "Vyzkoušej obojí. Týden snídej, týden vynechej a sleduj sytost, hlad večer, energii a jak se ti drží plán."},
+    {"pro": "faq[3]", "citace": "Buď konzistentní. Vyber si režim, který udržíš měsíce, ne ten, co zní nejlíp na sociálních sítích."},
+    {"pro": "faq[4]", "citace": "Tahle hláška nepřišla z výzkumu metabolismu. Zpopularizovala ji reklama. Ve 20. letech 20. století stál Edward Bernays, otec moderní PR, za kampaní, která měla Američanům prodat víc slaniny a vajec k snídani."},
+    {"pro": "faq[4]", "citace": "O pár dekád později na to navázaly firmy s cereáliemi."}
+  ],
+  "nejiste": [
+    "Článek sám přiznává, že data nejsou dokonalá a část studií je krátká nebo malá; odpovědi proto netvrdí víc, než že efekt snídaně na váhu se v kontrolovaných pokusech neukázal.",
+    "Výrok „10× důležitější“ (celodenní kalorie vs. hodina prvního jídla) je řečnická nadsázka, ne naměřené číslo, proto není použit.",
+    "Článek neřeší lidi s cukrovkou nebo jinými zdravotními stavy, u kterých může načasování jídla hrát roli.",
+    "Článek neříká, co konkrétně snídat, kromě obecné rady dát si dost bílkovin."
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "url": "https://martinbarna.cz/clanky/tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda.html",
+  "titulek": "Těhotné ženy, netrapte se strachem z těžkých cviků! Další díl série Věda vs. Mýty v Tréninku. 😊",
+  "hlavni_otazka": "Je bezpečné v těhotenství zvedat těžké činky?",
+  "kratka_odpoved": "Podle studie týmu Emilie Mass Dalhaug ve zdravém těhotenství těžký silový trénink, včetně cviků vleže na zádech, plod neohrožuje. U 48 zdravých aktivních těhotných žen zůstala při sumo deadliftu a bench pressu 3×8 s 1 RIR tepová frekvence plodu v normálu a krevní tok k placentě se nezměnil. Trénink ale prober i se svým lékařem.",
+  "faq": [
+    {
+      "otazka": "Vadí v těhotenství zadržování dechu při zvedání?",
+      "odpoved": "Ženy ve studii běžně používaly Valsalvův manévr, tedy přirozené zadržení dechu při zvedání, a ani to nevedlo k nedostatku kyslíku u plodu."
+    },
+    {
+      "otazka": "Můžu v těhotenství cvičit vleže na zádech?",
+      "odpoved": "Ženy ve studii trénovaly i vleže na zádech a po celou dobu se měřila tepová frekvence plodu a krevní tok k placentě. Podle závěru studie ve zdravém těhotenství těžký silový trénink včetně cviků vleže na zádech plod neohrožuje."
+    },
+    {
+      "otazka": "Co mi silový trénink v těhotenství přinese?",
+      "odpoved": "Těžké cviky udrží sílu, kterou pak oceníš po porodu. Pravidelný pohyb v těhotenství navíc pomáhá s energií, trávením, spánkem i náladou."
+    },
+    {
+      "otazka": "Jak s těžkým tréninkem v těhotenství začít?",
+      "odpoved": "Článek radí začít v klidu, třeba sumo deadliftem 3×8 blízko selhání, sledovat, jak se cítíš, kvůli bezpečí to probrat i se svým lékařem a po každém tréninku si poznamenat opakování a jak ses cítila. Studie, o kterou se opírá, se ale týkala zdravých aktivních těhotných žen."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Závěr studie je jasný: ve zdravém těhotenství těžký silový trénink, včetně cviků vleže na zádech, plod neohrožuje."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Emilie Mass Dalhaug a její tým se podívali na to, jestli zvedání těžkých vah ve fitku ohrožuje plod."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Účastnilo se 48 zdravých aktivních těhotných žen, od vrcholových sportovkyň po rekreační cvičenky."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Konkrétně šlo o sumo deadlift a bench press, 3×8 opakování s 1 RIR (tedy jedno opakování v záloze)."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tepová frekvence plodu zůstala v normálu a krevní tok k placentě se nezměnil."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Sleduj, jak se cítíš, a kvůli bezpečí to prober i se svým lékařem."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Ženy přitom běžně používaly Valsalvův manévr, tedy přirozené zadržení dechu při zvedání, a ani to nevedlo k nedostatku kyslíku u plodu."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Trénovaly i v supine poloze, tedy vleže na zádech, a po celou dobu se měřila tepová frekvence plodu (FHR) a krevní tok k placentě."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Závěr studie je jasný: ve zdravém těhotenství těžký silový trénink, včetně cviků vleže na zádech, plod neohrožuje."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "i těžké cviky jsou v pořádku a udrží sílu, kterou pak člověk ocení po porodu."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Pravidelný pohyb v těhotenství navíc pomáhá s energií, trávením, spánkem i náladou, a to se hodí mamince i miminku."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Začni v klidu: Sumo deadlift 3×8 blízko selhání. Sleduj, jak se cítíš, a kvůli bezpečí to prober i se svým lékařem."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Po každém tréninku si poznamenej opakování a jak ses cítila."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Účastnilo se 48 zdravých aktivních těhotných žen, od vrcholových sportovkyň po rekreační cvičenky."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí rok, název ani časopis studie, jde o překlad příspěvku Menna Henselmanse.",
+    "Studie se týkala zdravých aktivních těhotných žen; článek neříká, jak postupovat u žen, které před těhotenstvím necvičily, ani u rizikového těhotenství.",
+    "Článek neuvádí, ve kterém trimestru ženy trénovaly ani jak dlouho sledování trvalo.",
+    "Rada „hlídej si tepovou frekvenci plodu (FHR)“ není vysvětlená, není jasné, jak to má žena při běžném tréninku dělat."
+  ]
+}

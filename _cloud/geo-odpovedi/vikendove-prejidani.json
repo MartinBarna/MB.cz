@@ -1,0 +1,45 @@
+{
+  "url": "https://martinbarna.cz/clanky/vikendove-prejidani.html",
+  "titulek": "Víkendové přejídání: jak si užít víkend a nezbourat celý týden",
+  "hlavni_otazka": "Jak si užít víkend a přitom si nezbořit hubnutí?",
+  "kratka_odpoved": "Přestaň hodnotit každý den zvlášť a počítej týdenní průměr kalorií. Když od pondělí do čtvrtka držíš deficit 300–500 kcal denně, naspoříš si 1 200–2 000 kcal na pořádnou sobotní večeři nebo dvě vyšší jídla a týdenní průměr pořád zůstane v deficitu.",
+  "faq": [
+    {
+      "otazka": "Proč mi víkendy brzdí hubnutí?",
+      "odpoved": "Lidé jedí o víkendech víc než přes týden a právě víkendy jim brzdí nebo úplně zastavují úbytek váhy. Přes týden drží deficit, o víkendu se to celé dorovná."
+    },
+    {
+      "otazka": "Jak si naplánovat víkend, abych se nepřejedl?",
+      "odpoved": "V pátek dopoledne si na 5–10 minut vyber 1–2 jídla, která si za víkend opravdu chceš užít, a zapiš si je předem. Každé větší jídlo začni pořádnou porcí bílkovin (100–150 g masa, ryby, tvarohu) a zeleninou, protože bílkoviny patří k nejvíc sytícím živinám."
+    },
+    {
+      "otazka": "Co dělat v pondělí, když jsem to o víkendu přehnal?",
+      "odpoved": "Pondělí je reset, ne trest: žádné hladovění, žádný detox ani hodiny kardia za trest. Vrátíš se k běžnému plánu, klidně o 100–200 kcal níž na dva tři dny, a jedeš dál."
+    },
+    {
+      "otazka": "Proč nefunguje přístup „všechno, nebo nic“?",
+      "odpoved": "Čím rigidnější kontrola jídla, tím víc záchvatů přejedení a horší výsledky, flexibilní přístup funguje dlouhodobě líp. Lidé, kteří mají jídlo spojené s pocitem viny, navíc hubnou hůř než ti, kteří si ho umí užít a jet dál."
+    },
+    {
+      "otazka": "Kdy je přejídání důvod vyhledat odborníka?",
+      "odpoved": "Pokud se přejídáš opakovaně do nevolnosti, tajně, nebo nad jídlem ztrácíš kontrolu a děsí tě to, promluv si o tom s odborníkem na poruchy příjmu potravy."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Nejdůležitější změna: přestaň hodnotit každý den zvlášť a začni počítat týdenní průměr kalorií."},
+    {"pro": "kratka_odpoved", "citace": "„naspoříš\" si za čtyři dny 1 200–2 000 kcal. To je reálný prostor na pořádnou sobotní večeři nebo dvě vyšší jídla za víkend. A týdenní průměr pořád zůstane v deficitu."},
+    {"pro": "kratka_odpoved", "citace": "Konkrétně: když od pondělí do čtvrtka držíš deficit 300–500 kcal denně"},
+    {"pro": "faq[0]", "citace": "Data to potvrzují: lidé jedí o víkendech víc než přes týden a právě víkendy jim brzdí nebo úplně zastavují úbytek váhy [1]. Přes týden deficit, o víkendu se to celé dorovná."},
+    {"pro": "faq[1]", "citace": "Pátek dopoledne, 5–10 minut: vyber si 1–2 jídla, která si za víkend opravdu chceš užít, a zapiš si je předem."},
+    {"pro": "faq[1]", "citace": "každé větší jídlo začni pořádnou porcí bílkovin (100–150 g masa, ryby, tvarohu) a zeleninou. Bílkoviny patří k nejvíc sytícím živinám [4]."},
+    {"pro": "faq[2]", "citace": "Pondělí = reset, ne trest: žádné hladovění, žádný „detox\", žádné hodiny kardia za trest. Prostě se vrátíš k běžnému plánu, klidně o 100–200 kcal níž na dva tři dny, a jedeš dál."},
+    {"pro": "faq[3]", "citace": "A výzkum říká jasně: čím rigidnější kontrola jídla, tím víc záchvatů přejedení a horší výsledky. Flexibilní přístup (kde se počítá celek, ne dokonalost) funguje dlouhodobě líp [2]."},
+    {"pro": "faq[3]", "citace": "Lidé, kteří mají jídlo spojené s pocitem viny, hubnou hůř než ti, kteří si ho umí užít a jet dál [3]."},
+    {"pro": "faq[4]", "citace": "pokud se přejídáš opakovaně do nevolnosti, tajně, nebo nad jídlem ztrácíš kontrolu a děsí tě to, není to téma na blogový článek. Promluv si o tom s odborníkem na poruchy příjmu potravy."}
+  ],
+  "nejiste": [
+    "Článek neříká, jak do týdenního průměru počítat pátek, když se kalorie „spoří“ od pondělí do čtvrtka.",
+    "Článek neuvádí, co dělat, když víkendový nadbytek převýší naspořených 1 200–2 000 kcal.",
+    "Článek neříká, pro koho je deficit 300–500 kcal denně vhodný (odkazuje jen na kalkulačku výchozích kalorií)."
+  ]
+}

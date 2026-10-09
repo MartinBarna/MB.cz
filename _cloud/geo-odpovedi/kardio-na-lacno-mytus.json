@@ -1,0 +1,48 @@
+{
+  "url": "https://martinbarna.cz/clanky/kardio-na-lacno-mytus.html",
+  "titulek": "Kardio na lačno spaluje víc tuku? Mýtus o fasted cardio",
+  "hlavni_otazka": "Spálím víc tuku, když budu dělat kardio ráno nalačno?",
+  "kratka_odpoved": "Ne. Nalačno v tu chvíli pálíš vyšší podíl tuku jako palivo, ale za 24 hodin se to vyrovná, protože po jídle zase pálíš víc sacharidů a tuk šetříš. O ztrátě tuku rozhoduje celková bilance, ne jedno ranní okénko.",
+  "faq": [
+    {
+      "otazka": "Jaký je rozdíl mezi oxidací tuku a ztrátou tuku?",
+      "odpoved": "Oxidace tuku říká, jaké palivo tělo zrovna pálí, a mění se každou hodinu. Ztráta tuku je, kolik ho reálně ubyde za týdny, a tu řídí kalorický deficit. Můžeš mít skvělou oxidaci a neztratit ani gram."
+    },
+    {
+      "otazka": "Co ukazují srovnání kardia nalačno a po jídle?",
+      "odpoved": "Podle článku existují přímá srovnání, kde jedna skupina dělala stejné kardio nalačno a druhá po jídle. Za pár týdnů při stejném deficitu shodily v podstatě stejně tuku a žádná spalovací výhoda rána se neukázala."
+    },
+    {
+      "otazka": "Může kardio nalačno uškodit?",
+      "odpoved": "U některých lidí ano: bez paliva mnoho lidí ráno nevytáhne takový výkon. U dlouhé nebo tvrdé zátěže nalačno si tělo může část energie brát i z bílkovin, tedy ze svalů, u svižné dvacetiminutovky se ale nic neděje. Někomu ranní trénink nalačno navíc spustí hlad a přejídání přes den."
+    },
+    {
+      "otazka": "Komu kardio nalačno vyhovuje?",
+      "odpoved": "Komu ráno žaludek nesnese těžké jídlo, kdo stíhá trénink jen brzy ráno, nebo kdo ho tak prostě líp drží. Hlavně u kratšího a klidnějšího kardia je to v pohodě. Před tvrdým nebo dlouhým tréninkem si dej něco menšího, i pár soust sacharidů a bílkovin."
+    },
+    {
+      "otazka": "Nespálím víc díky dospalování po tréninku (EPOC)?",
+      "odpoved": "EPOC je reálná věc, ale řádově jsou to desítky kalorií navíc, ne stovky. Řídí ho intenzita, ne to, jestli máš v sobě snídani, takže s otázkou nalačno nebo po jídle nesouvisí."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "V tu chvíli ano, tělo bere jako palivo vyšší podíl tuku. Za 24 hodin se to ale vyrovná: po jídle zase pálíš víc sacharidů a tuk šetříš. O ztrátě tuku rozhoduje celková bilance, ne jedno ranní okénko."},
+    {"pro": "faq[0]", "citace": "Zásadní. Oxidace tuku říká, jaké palivo tělo zrovna pálí, a mění se každou hodinu. Ztráta tuku je, kolik ho reálně ubyde za týdny, a tu řídí kalorický deficit. Můžeš mít skvělou oxidaci a neztratit ani gram."},
+    {"pro": "faq[1]", "citace": "Existují přímá srovnání, kde dvě skupiny dělaly stejné kardio, jedna nalačno, druhá po jídle, a za pár týdnů při stejném deficitu shodily v podstatě stejně tuku. Žádná „spalovací výhoda\" rána se ve výsledcích neukázala."},
+    {"pro": "faq[2]", "citace": "U některých lidí a některých tréninků má cvičení nalačno svoje nevýhody:"},
+    {"pro": "faq[2]", "citace": "Slabší výkon. Bez paliva v sobě mnoho lidí ráno jednoduše nevytáhne tolik."},
+    {"pro": "faq[2]", "citace": "Když jdeš nalačno na dlouhou nebo tvrdou zátěž s vyčerpanými zásobami cukru, tělo si může část energie brát i z bílkovin, tedy ze svalů. U svižné dvacetiminutovky se nic neděje, u hodinového tvrdého výjezdu nalačno už to riziko reálně je."},
+    {"pro": "faq[2]", "citace": "Hlad a přejídání pak přes den. Někomu ranní trénink nalačno spustí takový hlad, že si to po zbytku dne vynahradí i s úroky."},
+    {"pro": "faq[3]", "citace": "Žaludek po ránu těžké jídlo nesnese."},
+    {"pro": "faq[3]", "citace": "Pro lidi, co stíhají trénink jen brzy ráno, je tohle někdy jediná verze, kterou reálně udrží."},
+    {"pro": "faq[3]", "citace": "Pokud máš pocit, že ti ranní kardio nalačno odsýpá a držíš ho líp, je to validní důvod."},
+    {"pro": "faq[3]", "citace": "Jeď nalačno, klidně. Hlavně u kratšího a klidnějšího kardia."},
+    {"pro": "faq[3]", "citace": "Kazí ti to trénink, nebo plánuješ dlouhou tvrdou zátěž? Dej si před tím něco menšího: i pár soust sacharidů a bílkovin zvedne výkon a srazí riziko ujídání svalů."},
+    {"pro": "faq[4]", "citace": "Je to reálná věc a u intenzivnějšího cvičení (intervaly, silový trénink) je o něco větší než u klidného dlouhého kardia. Sám o sobě ale ztrátu tuku nezvrátí. Řádově jsou to desítky kalorií navíc, ne stovky. A hlavně to s otázkou „nalačno vs. po jídle\" nijak nesouvisí. EPOC řídí intenzita, ne to, jestli máš v sobě snídani."}
+  ],
+  "nejiste": [
+    "Přímá srovnání kardia nalačno a po jídle článek uvádí bez konkrétních studií, počtu účastníků a délky trvání („za pár týdnů“).",
+    "Článek neříká, od jaké délky nebo intenzity začíná riziko ztráty svalů nalačno; dává jen dva krajní příklady (svižná dvacetiminutovka vs. hodinový tvrdý výjezd).",
+    "Článek neuvádí, co konkrétně a kolik sníst před tvrdým tréninkem, jen „pár soust sacharidů a bílkovin“."
+  ]
+}

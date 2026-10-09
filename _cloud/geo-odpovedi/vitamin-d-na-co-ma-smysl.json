@@ -1,0 +1,139 @@
+{
+  "url": "https://martinbarna.cz/clanky/vitamin-d-na-co-ma-smysl.html",
+  "titulek": "Vitamin D po 40: na co reálně má a nemá smysl",
+  "hlavni_otazka": "Má smysl brát po čtyřicítce vitamin D?",
+  "kratka_odpoved": "U někoho ano, u někoho ne, a víc rozhodně není líp. Spolu s vápníkem reálně pomáhá kostem a u lidí s opravdu nízkou hladinou může pomoct i se svalovou funkcí a stabilitou, jako prevenci nachlazení ho ale data zatím nepodpírají. Nehádej a nech si od lékaře změřit hladinu 25-OH vitaminu D z krve.",
+  "faq": [
+    {
+      "otazka": "Kolik vitaminu D denně brát?",
+      "odpoved": "Přesnou dávku ti má nastavit lékař podle tvojí hladiny a zdravotního stavu. Guideline z roku 2025 doporučuje u dospělých, kteří suplementaci potřebují, denní ekvivalent zhruba 600 až 2000 IU a upřednostňuje ho před rutinními dávkami nad 2000 IU. Cílem není hladinu vyšroubovat co nejvýš, rozumné pásmo je podle přehledu z roku 2025 někde mezi 20 a 40 ng/ml."
+    },
+    {
+      "otazka": "Pomáhá vitamin D na imunitu a nachlazení?",
+      "odpoved": "Data to zatím nepodpírají. Metaanalýza z roku 2024 u lidí s tmavší pletí nenašla žádný jednoznačný efekt na akutní respirační infekce a autoři píšou, že důkazy jsou slabé. Na imunitu ti obvykle víc udělá spánek, dost bílkovin, pohyb a rozumná váha."
+    },
+    {
+      "otazka": "Koho se nedostatek vitaminu D týká nejvíc?",
+      "odpoved": "Vyšší riziko máš, když skoro nechodíš na slunce, máš tmavší pleť, jsi starší, máš nadváhu nebo obezitu, máš osteoporózu či osteopenii, jsi po zlomenině nebo dlouhodobě bereš kortikoidy. V našich zeměpisných šířkách jde hlavně o období od podzimu do jara, kdy slunce nestačí."
+    },
+    {
+      "otazka": "Proč nebrat megadávky vitaminu D?",
+      "odpoved": "Vztah připomíná písmeno U: podle přehledu z roku 2025 jsou nízký i nadměrný příjem spojené s vyšším rizikem pádů a zlomenin. V kontrolované studii jednorázové dávky až 500 000 IU u žen v deficitu nepřinesly zlepšení fyzické funkce ani síly, zato krátkodobě rozhýbaly kostní metabolismus. Klinický význam téhle přechodné změny je ale podle autorů nejistý."
+    },
+    {
+      "otazka": "Jak vitamin D správně užívat?",
+      "odpoved": "Radši pravidelně v malé dávce než nárazově, s jídlem a ideálně s trochou tuku, protože se tak líp vstřebá. Řeš ho hlavně v chladné půlce roku, a když ho bereš kvůli kostem, nezapomeň na vápník ve stravě."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "u někoho dává smysl, u někoho ne, a víc rozhodně není líp"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tady vitamin D spolu s vápníkem hraje reálnou roli."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Druhá věc, kde jsou data slušná: u lidí, co mají opravdu nízkou hladinu, může doplnění pomoct s kostmi a v některých případech i se svalovou funkcí a stabilitou."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Imunita a „míň nemocí“: data to zatím nepodpírají, neber ho hlavně kvůli tomu."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Vitamin D se prodává jako booster imunity, prevence nachlazení, chřipky, respiračních infekcí. Realita je vlažnější."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nejjistější cesta, jak to zjistit: nechat si od lékaře změřit hladinu (25-OH vitamin D) z krve. Nehádej, změř."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Dám to na rovinu: přesnou dávku ti má nastavit lékař podle tvojí hladiny a zdravotního stavu."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Guideline z roku 2025 postavený na kvalitním hodnocení důkazů (metodika GRADE) doporučuje u dospělých, kteří suplementaci potřebují, denní ekvivalent zhruba 600 až 2000 IU. A výslovně upřednostňuje tento rozsah před rutinními dávkami nad 2000 IU."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Přehled z roku 2025 naznačuje, že rozumné „pásmo“ hladiny je někde mezi 20 a 40 ng/ml: v tomhle rozmezí se riziko pádů i zlomenin jeví jako nejnižší. Cíl tedy není hladinu vyšroubovat co nejvýš, ale dostat se do normy a v ní zůstat."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Imunita a „míň nemocí“: data to zatím nepodpírají, neber ho hlavně kvůli tomu."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Systematický přehled a metaanalýza z roku 2024 se dívala na to, jestli doplňování vitaminu D reálně snižuje výskyt akutních respiračních infekcí u lidí s tmavší pletí (tedy u skupiny s vyšším rizikem deficitu). Výsledek: žádný jednoznačný efekt a autoři výslovně píšou, že důkazy jsou zatím slabé."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Na imunitu ti obvykle víc udělá spánek, dost bílkovin, pohyb a rozumná váha než další kapsle."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Skoro nechodíš na slunce nebo se před ním kompletně chráníš (práce v kanceláři, zima trávená uvnitř)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Máš tmavší pleť: potřebuješ víc slunce na stejný efekt."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Jsi starší: kůže s věkem tvoří vitamin D hůř."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Máš nadváhu nebo obezitu: vitamin D se „schová“ v tukové tkáni."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Máš osteoporózu/osteopenii, jsi po zlomenině, nebo bereš dlouhodobě kortikoidy."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "v našich zeměpisných šířkách hlavně od podzimu do jara, kdy slunce nestačí"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Vztah připomíná písmeno U: riziko roste na obou koncích."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Přehled z roku 2025 to říká natvrdo: nízký i nadměrný příjem vitaminu D jsou spojené s vyšším rizikem pádů a zlomenin."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Kontrolovaná studie zkoumala jednorázové vysoké nárazové dávky (až 500 000 IU) u žen v deficitu. Ukázalo se, že takový náraz nepřinesl žádné zlepšení fyzické funkce ani síly, zato krátkodobě rozhýbal kostní metabolismus."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "A autoři sami dodávají, že klinický význam téhle přechodné změny je nejistý."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Ber ho radši pravidelně, ne nárazově. Malá pravidelná dávka je rozumnější než megadávka jednou za čas"
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Ber ho s jídlem, ideálně s trochou tuku: líp se vstřebá."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Řeš to hlavně v chladné půlce roku."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Nezapomeň na vápník ve stravě, když to točíš kvůli kostem."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí autory ani názvy citovaných přehledů, metaanalýz a guideline z let 2024 a 2025.",
+    "Článek neříká, od jaké hladiny 25-OH vitaminu D jde o deficit ani od jaké dávky je příjem už nadměrný.",
+    "Článek neuvádí, kolik vápníku denně je dostatečný příjem."
+  ]
+}

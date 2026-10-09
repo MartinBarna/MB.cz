@@ -1,0 +1,115 @@
+{
+  "url": "https://martinbarna.cz/clanky/ultra-zpracovana-jidla.html",
+  "titulek": "Ultra-zpracované potraviny: proč se z nich přejíš, aniž bys to zaznamenal",
+  "hlavni_otazka": "Proč se z ultra-zpracovaných potravin přejím, i když to nepoznám?",
+  "kratka_odpoved": "Protože je jíš rychleji a signál sytosti dorazí do mozku s desítkami minut zpoždění. V Hallově pokusu z roku 2019 snědli lidé na ultra-zpracované stravě o 508 kcal denně víc, přestože oba jídelníčky měly srovnané nabízené kalorie i makra, a podle Fordeovy analýzy do nich šlo 48 kcal za minutu místo 31.",
+  "faq": [
+    {
+      "otazka": "Obcházejí ultra-zpracované potraviny kalorický deficit?",
+      "odpoved": "Neobcházejí, termodynamika v Hallově pokusu fungovala normálně: lidé přibrali proto, že snědli víc. Ultra-zpracované potraviny ti jen zhoršují odhad."
+    },
+    {
+      "otazka": "Záleží víc na míře zpracování, nebo na textuře jídla?",
+      "odpoved": "Textura a hustota rozhodují víc než nálepka na obalu. Ve studii Teo 2022 lidé z tvrdších variant obědů snědli o 26 % méně energie a ve Wageningenu (Lasschuijt 2025) se příjem u sendvičů lišil 570 kcal a 1 143 kcal, přestože všechny varianty byly ze 67 až 98 % energie z ultra-zpracovaných ingrediencí."
+    },
+    {
+      "otazka": "Zvyšují ultra-zpracované potraviny riziko nemocí?",
+      "odpoved": "Souhrn 45 analýz v BMJ (Lane 2024) spojuje vyšší příjem s vyšším rizikem kardiovaskulární úmrtnosti (RR 1,50) a cukrovky 2. typu (RR 1,12). Jde ale o pozorovací data, tedy souvislost, ne prokázanou příčinu, a podle GRADE bylo 22 analýz nízké kvality, 19 velmi nízké a jen čtyři střední."
+    },
+    {
+      "otazka": "Zhubnu, když ultra-zpracované jídlo nevyřadím?",
+      "odpoved": "Ano, pokud udržíš kalorický deficit. S klienty se osvědčuje postavit zhruba 80 % kalorií na celistvém jídle a zbylých 20 % nechat na cokoli, co se vejde do denního příjmu."
+    },
+    {
+      "otazka": "Jak se v praxi míň přejídat?",
+      "odpoved": "Vybírej tvrdší a objemnější verze toho samého jídla, třeba celé jablko místo džusu nebo brambory místo pyré. Měkké a energeticky husté jídlo dej na talíř a zvaž, protože odhad od oka bývá vedle víc, než si člověk připouští."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Signál sytosti dorazí do mozku s desítkami minut zpoždění."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Kevin Hall se svým týmem zavřel na měsíc do kliniky amerického NIH dvacet dospělých (Hall 2019, Cell Metabolism, PMID 31105044)."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Na ultra-zpracované stravě šlo do účastníků 48 kcal za minutu, na nezpracované 31 kcal za minutu."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Na ultra-zpracované stravě snědli lidé o 508 kcal denně víc."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Oba jídelníčky měly srovnané nabízené kalorie, energetickou hustotu, makra, cukr, sůl i vlákninu."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ciarán Forde, jeden ze spoluautorů Hallovy studie, se pak podíval na to, jak rychle se v tom pokusu jedlo (Forde 2020, Current Developments in Nutrition, PMID 32110771)."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Termodynamika během toho měsíce fungovala úplně normálně. Lidé přibrali proto, že snědli víc"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Ultra-zpracované potraviny neobcházejí kalorický deficit, jen ti zhoršují odhad."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Textura a hustota rozhodují víc než nálepka na obalu"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Tvrdší varianty se jedly pomaleji a lidé z nich snědli o 26 % méně energie."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Pomalý a energeticky řídký sendvič: 570 kcal. Rychlý a hustý: 1 143 kcal."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Podstatný detail: všechny varianty byly ze 67 až 98 % energie z ultra-zpracovaných ingrediencí."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Nejsilnější zjištění spojuje vyšší příjem ultra-zpracovaných potravin s vyšším rizikem kardiovaskulární úmrtnosti (RR 1,50) a cukrovky 2. typu (RR 1,12)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Loni vyšel v BMJ souhrn 45 analýz nad skoro deseti miliony lidí (Lane 2024, PMID 38418082)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Podle hodnocení GRADE bylo 22 analýz nízké kvality, 19 velmi nízké a jenom čtyři střední"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Jsou to pozorovací data, tedy souvislost, ne prokázaná příčina."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Ano, pokud udržíš kalorický deficit."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Postav zhruba 80 % kalorií na celistvém jídle, zbylých 20 % nech na cokoli, co se vejde do denního příjmu."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Vybírej tvrdší a objemnější verze toho samého jídla. Celé jablko místo džusu, brambory místo pyré, ořechy místo tyčinky."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Když jíš něco měkkého a energeticky hustého, dej si to na talíř a zvaž. Odhad od oka bývá vedle víc, než si člověk připouští"
+    }
+  ],
+  "nejiste": [
+    "Hallův pokus trval jeden měsíc na dvaceti dospělých a článek neříká, jak by výsledky vypadaly při dlouhodobém volném stravování.",
+    "Článek neuvádí, jak dlouho trvala studie se sendviči ve Wageningenu ani jaké přesně potraviny spadají do čtvrté skupiny NOVA.",
+    "Autoři Fordeovy analýzy sami upozorňují, že NOVA sama o sobě žádný doložený mechanismus nenabízí, takže není jasné, nakolik je problém v samotném zpracování."
+  ]
+}

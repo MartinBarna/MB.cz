@@ -1,0 +1,55 @@
+{
+  "url": "https://martinbarna.cz/clanky/silovy-trenink-dlouhovekost.html",
+  "titulek": "Silový trénink a dlouhověkost: stačí hodina týdně",
+  "hlavni_otazka": "Kolik silového tréninku týdně stačí, aby to mělo vliv na délku života?",
+  "kratka_odpoved": "Podle metaanalýzy z roku 2022 vyšlo největší snížení rizika úmrtí, o 27 %, kolem 60 minut silového tréninku týdně a při vyšších objemech byla výhoda menší. Jakékoli množství posilování se pojilo s o 15 % nižším rizikem úmrtí ze všech příčin. Jde o pozorovací data, tedy o souvislost, ne o důkaz příčiny.",
+  "faq": [
+    {
+      "otazka": "Je lepší kombinovat posilování s kardiem?",
+      "odpoved": "Ano. Ve druhé velké metaanalýze z roku 2019 se samotné posilování pojilo s o 21 % nižší celkovou úmrtností, v kombinaci s aerobním pohybem s o 40 % nižší, což je zhruba dvojnásobek. Činky a chůze si nekonkurují, sčítají se."
+    },
+    {
+      "otazka": "Jak si poskládat hodinu silového tréninku týdně?",
+      "odpoved": "Pro začátek dva celotělové tréninky po 30 minutách, každý se čtyřmi až pěti cviky: dolní končetiny, tah, tlak a jeden cvik na střed těla. Dvě až tři série na cvik po 6 až 12 opakováních, poslední dvě opakování mají být těžká, ale do úplného selhání jít nemusíš. Zapisuj si to a váhu přidej, když zvládneš horní hranici opakování ve všech sériích."
+    },
+    {
+      "otazka": "Stačí hodina týdně i na nabírání svalů?",
+      "odpoved": "Na udržení a na start ano, na maximální růst spíš ne. Když je tvým cílem postava a síla, budeš dřív nebo později chtít tři tréninky týdně a víc sérií."
+    },
+    {
+      "otazka": "Musím do posilovny, nebo stačí cvičit doma?",
+      "odpoved": "Studie sledovaly posilování obecně, na vybavení nezáleželo. Doma s vlastní vahou a gumami se dá odvést slušná práce, hlavně na začátku, a činky, kettlebell nebo posilovna se hodí později, až potřebuješ přidávat zátěž."
+    },
+    {
+      "otazka": "Ve kterém věku je na začátek s posilováním pozdě?",
+      "odpoved": "V žádném, studie o síle stisku pracovaly s lidmi až do 85 let a souvislost se silou byla vidět i tam. U starších lidí bývá důležitější rozjezd s nízkou zátěží a stabilní technika než rychlé přidávání. Jestli máš za sebou operaci, srdeční potíže nebo bolesti zad, které tě omezují, nech si začátek odsouhlasit u lékaře nebo fyzioterapeuta."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Nejpřehlednější odpověď dala metaanalýza z roku 2022 (Shailendra a kol., Am J Prev Med, PMID 35599175)."},
+    {"pro": "kratka_odpoved", "citace": "Maximum, snížení rizika o 27 %, autoři pozorovali kolem 60 minut silového tréninku týdně. Při vyšších objemech byla ta výhoda menší."},
+    {"pro": "kratka_odpoved", "citace": "Výsledek: jakékoli množství posilování se pojilo s o 15 % nižším rizikem úmrtí ze všech příčin."},
+    {"pro": "kratka_odpoved", "citace": "Všechno výše jsou pozorovací data."},
+    {"pro": "kratka_odpoved", "citace": "Rozdíl mezi těmito dvěma větami je celý rozdíl mezi korelací a příčinou."},
+    {"pro": "faq[0]", "citace": "Druhá velká metaanalýza (Saeidifard a kol., Eur J Prev Cardiol 2019, PMID 31104484) posbírala 11 studií a 370 256 lidí sledovaných v průměru necelých devět let."},
+    {"pro": "faq[0]", "citace": "Samotné posilování se pojilo s o 21 % nižší celkovou úmrtností. Posilování v kombinaci s aerobním pohybem se pojilo s o 40 % nižší. To je zhruba dvojnásobek."},
+    {"pro": "faq[0]", "citace": "Činky a chůze si nekonkurují, sčítají se."},
+    {"pro": "faq[1]", "citace": "Dva tréninky po 30 minutách. Celotělově."},
+    {"pro": "faq[1]", "citace": "Čtyři až pět cviků na trénink. Něco na dolní končetiny (dřep, výpad, leg press), tah (kladka, přítah), tlak (klik, tlak na ramena nebo lavička), a jeden cvik na střed těla."},
+    {"pro": "faq[1]", "citace": "Dvě až tři série na cvik, 6 až 12 opakování. Poslední dvě opakování mají být těžká. Do úplného selhání jít nemusíš."},
+    {"pro": "faq[1]", "citace": "Zapisuj si to. Váha, opakování, jak to šlo."},
+    {"pro": "faq[1]", "citace": "Když zvládneš horní hranici opakování ve všech sériích, příště přidej váhu."},
+    {"pro": "faq[2]", "citace": "Na udržení a na start ano, na maximální růst spíš ne."},
+    {"pro": "faq[2]", "citace": "Když je tvým cílem postava a síla, budeš dřív nebo později chtít tři tréninky týdně a víc sérií."},
+    {"pro": "faq[3]", "citace": "Studie sledovaly posilování obecně, na vybavení nezáleželo. Doma s vlastní vahou a gumami se dá odvést slušná práce, hlavně na začátku."},
+    {"pro": "faq[3]", "citace": "Limit přijde později, až potřebuješ přidávat zátěž. Tehdy se činky, kettlebell nebo posilovna hodí."},
+    {"pro": "faq[4]", "citace": "V žádném. Studie o síle stisku pracovaly s lidmi až do 85 let a souvislost se silou byla vidět i tam."},
+    {"pro": "faq[4]", "citace": "U starších lidí bývá důležitější rozjezd s nízkou zátěží a stabilní technika než rychlé přidávání."},
+    {"pro": "faq[4]", "citace": "Jestli máš za sebou operaci, srdeční potíže nebo bolesti zad, které tě omezují, začátek si nech odsouhlasit u lékaře nebo fyzioterapeuta."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, od jakého objemu přesně se přínos začal zmenšovat ani o kolik byla výhoda při vyšších objemech menší.",
+    "Studie se v číslech rozcházejí (15 % proti 21 % u celkové úmrtnosti, rozdílné výsledky u nádorové úmrtnosti) a článek sám říká, že přesné číslo nikdo nezná, spolehlivý je jen směr.",
+    "Článek neříká, jakou intenzitu nebo konkrétní formu posilování sledované studie zahrnovaly."
+  ]
+}

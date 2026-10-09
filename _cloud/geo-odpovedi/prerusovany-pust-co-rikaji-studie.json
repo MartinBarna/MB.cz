@@ -1,0 +1,45 @@
+{
+  "url": "https://martinbarna.cz/clanky/prerusovany-pust-co-rikaji-studie.html",
+  "titulek": "Přerušovaný půst: funguje, ale ne kouzelně",
+  "hlavni_otazka": "Funguje přerušovaný půst na hubnutí líp než klasické počítání kalorií?",
+  "kratka_odpoved": "Nefunguje líp: analýza 99 randomizovaných studií a 6 582 lidí, která vyšla v červnu 2025 v BMJ, našla mezi půstem a klasickým deficitem malé až žádné rozdíly. Na dlouhé trati (6+ měsíců) fungovaly všechny přístupy podobně a vyhrával ten, u kterého člověk vydržel.",
+  "faq": [
+    {
+      "otazka": "Proč přerušovaný půst vlastně funguje?",
+      "odpoved": "Když zúžíš okno, kdy jíš, většina lidí toho za den prostě sní míň a je v deficitu, aniž by to počítala. Půst nespaluje tuk žádnou tajnou cestou, je to matematika energetické bilance."
+    },
+    {
+      "otazka": "Která forma přerušovaného půstu vyšla nejlépe?",
+      "odpoved": "Střídání „hladového“ a normálního dne vyšlo o něco líp, asi 1,3 kg navíc, ale hlavně v krátkých studiích do půl roku. V delších studiích už rozdíl zmizel."
+    },
+    {
+      "otazka": "Komu přerušovaný půst může sednout?",
+      "odpoved": "Zkus ho, pokud nerad snídáš, ujídáš hlavně večer, nebo ti vyhovuje mít jasné pravidlo „teď se nejí“. Zúžené okno ti může přirozeně srazit příjem."
+    },
+    {
+      "otazka": "Kdy se do přerušovaného půstu nenutit?",
+      "odpoved": "Když ti kvůli hladu ujíždí koncentrace a nálada, sportuješ brzy ráno, nebo máš sklon se v jídelním okně přejíst tak, že deficit stejně zmizí. Když do okna naskládáš pizzu, colu a dezert, žádný půst tě nezachrání."
+    },
+    {
+      "otazka": "Je lepší jíst dvakrát, nebo pětkrát denně?",
+      "odpoved": "Ani jedno není „správnější“. Rozhoduje, u čeho vydržíš a kolik toho sníš celkem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "V červnu 2025 vyšla v prestižním časopise BMJ zatím největší analýza na tohle téma: spojila 99 randomizovaných studií a 6 582 lidí."},
+    {"pro": "kratka_odpoved", "citace": "Půst není lepší než počítání kalorií. Rozdíly mezi přerušovaným půstem a klasickým deficitem byly malé až žádné."},
+    {"pro": "kratka_odpoved", "citace": "Na dlouhé trati (6+ měsíců) fungovaly všechny přístupy podobně. Vyhrával ten, u kterého člověk vydržel."},
+    {"pro": "faq[0]", "citace": "Půst nespaluje tuk nějakou tajnou cestou. Funguje z jednoho prostého důvodu: když zúžíš okno, kdy jíš, většina lidí toho za den prostě sní míň."},
+    {"pro": "faq[0]", "citace": "A jsi v deficitu, aniž bys to počítal. Není to magie hormonů, je to matematika energetické bilance."},
+    {"pro": "faq[1]", "citace": "Jedna forma, střídání „hladového\" a normálního dne, vyšla o něco líp (asi 1,3 kg navíc), ale hlavně v krátkých studiích do půl roku. V delších už rozdíl zmizel."},
+    {"pro": "faq[2]", "citace": "Zkus ho, pokud: nerad snídáš, ujídáš hlavně večer, nebo ti vyhovuje mít jasné pravidlo „teď se nejí\". Zúžené okno ti může přirozeně srazit příjem."},
+    {"pro": "faq[3]", "citace": "Nenuť se do něj, pokud: ti kvůli hladu ujíždí koncentrace a nálada, sportuješ brzy ráno, nebo máš sklon se v tom okně přejíst tak, že deficit stejně zmizí."},
+    {"pro": "faq[3]", "citace": "A pozor: když v „jídelním okně\" naskládáš pizzu, colu a dezert, žádný půst tě nezachrání."},
+    {"pro": "faq[4]", "citace": "Někomu vyhovuje jíst dvakrát denně, jinému pětkrát. Ani jeden není „správnější\". Rozhoduje, u čeho vydržíš a kolik toho sníš celkem."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik kilogramů lidé v analýze s půstem nebo s klasickým deficitem celkově zhubli.",
+    "Článek nejmenuje autory analýzy v BMJ a neuvádí výsledky zvlášť pro jedení v časovém okně a pro celodenní půsty.",
+    "Článek neříká, jestli se výsledky liší podle pohlaví, věku nebo výchozí váhy."
+  ]
+}

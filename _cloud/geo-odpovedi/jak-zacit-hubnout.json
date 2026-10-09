@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-zacit-hubnout.html",
+  "titulek": "Jak začít hubnout: první 4 týdny bez drastické diety",
+  "hlavni_otazka": "Jak mám začít hubnout, aby to tentokrát vydrželo?",
+  "kratka_odpoved": "Začni jednou změnou týdně, ne vším naráz. První týden jen zapisuj, co jíš, a jez jako obvykle, ve druhém nastav deficit zhruba 15 až 20 procent pod výdejem, ve třetím postav jídla kolem bílkovin a ve čtvrtém přidej dva silové tréninky týdně a chůzi.",
+  "faq": [
+    {
+      "otazka": "Proč si mám na začátku zapisovat jídlo?",
+      "odpoved": "V americké studii lidé, kterým podle nich nešlo zhubnout ani pod 1 200 kcal denně, měli výdej v normě, ale skutečný příjem podhodnotili v průměru o 47 procent. Přehled 59 studií u dospělých s nadváhou a obezitou navíc ukázal, že většina programů se zapisováním jídla vedla ke statisticky významnému úbytku proti kontrolní skupině."
+    },
+    {
+      "otazka": "Jak velký kalorický deficit mám na začátku nastavit?",
+      "odpoved": "Rozumný start je zhruba 15 až 20 procent pod odhadovaným výdejem, u většiny klientů to dělá tempo mezi 0,3 a 0,7 kg týdně. Vyhni se skoku na 1 000 až 1 200 kcal. Hlad je pak tak velký, že se dřív nebo později přejíš, a přijdeš i o svaly."
+    },
+    {
+      "otazka": "Kolik bílkovin jíst, když začínám hubnout?",
+      "odpoved": "Cíl je zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně a bílkovina v každém hlavním jídle. Ve studii se 46 ženami s nadváhou a obezitou v deficitu ztratila skupina s vyšším příjmem bílkovin méně svalové hmoty (1,5 kg proti 2,8 kg)."
+    },
+    {
+      "otazka": "Co dělat, když se váha za týden nehne?",
+      "odpoved": "Váha ukazuje i vodu, obsah střev a u žen fázi cyklu, takže dva kilogramy nahoru a dolů za týden o tuku nic neříkají. Važ se každé ráno po záchodě a porovnávej týdenní průměry. Když se průměr nehne dva týdny po sobě a poctivě zapisuješ, uber zhruba 10 procent kalorií nebo přidej 2 000 kroků denně, jedno z toho, ne obojí."
+    },
+    {
+      "otazka": "Kolik kilo za měsíc je rozumné zhubnout?",
+      "odpoved": "U většiny lidí sedí tempo kolem 0,5 procenta tělesné hmotnosti týdně, tedy zhruba 1,5 až 3 kg měsíčně podle toho, kolik vážíš. První týden bývá výrazně vyšší, protože odchází zadržená voda."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jedna změna týdně. Nic víc."},
+    {"pro": "kratka_odpoved", "citace": "Týden 1: zatím nic neměň, jen se dívej"},
+    {"pro": "kratka_odpoved", "citace": "Zapisuj si, co sníš a vypiješ, klidně do appky, a jez přitom úplně jako obvykle."},
+    {"pro": "kratka_odpoved", "citace": "Týden 2: nastav si deficit, který unese i pátek večer"},
+    {"pro": "kratka_odpoved", "citace": "Rozumný start je zhruba 15 až 20 procent pod tvým odhadovaným výdejem."},
+    {"pro": "kratka_odpoved", "citace": "Týden 3: postav si talíř kolem bílkovin"},
+    {"pro": "kratka_odpoved", "citace": "Týden 4: přidej sílu a chůzi"},
+    {"pro": "kratka_odpoved", "citace": "Na začátek stačí dva silové tréninky týdně po 40 minutách, klidně s vlastní vahou a s jednou činkou. K tomu chůze."},
+    {"pro": "faq[0]", "citace": "Proč tenhle krok nepřeskakovat: v americké studii se sledovali lidé, kterým podle jejich vlastních slov nešlo zhubnout ani při příjmu pod 1 200 kcal denně. Měření ukázalo, že jejich energetický výdej byl v normě. Skutečný příjem jídla ale podhodnotili v průměru o 47 procent a pohyb naopak nadhodnotili o 51 procent (Lichtman, 1992, NEJM, PMID 1454084)."},
+    {"pro": "faq[0]", "citace": "Systematický přehled 59 studií u dospělých s nadváhou a obezitou našel, že většina programů se zapisováním jídla vedla ke statisticky významnému úbytku proti kontrolní skupině, a to jak u podrobného zapisování, tak u toho jednoduššího (Raber, 2021, PMID 34412727)."},
+    {"pro": "faq[1]", "citace": "Rozumný start je zhruba 15 až 20 procent pod tvým odhadovaným výdejem. U většiny mých klientů to znamená tempo někde mezi 0,3 a 0,7 kg týdně a hlavně to znamená, že se na tom dá žít."},
+    {"pro": "faq[1]", "citace": "Čemu se vyhnout: skoku na 1 000 až 1 200 kcal. Hlad je pak tak velký, že se dřív nebo později přejíš, a vezme to s sebou i svaly."},
+    {"pro": "faq[2]", "citace": "Prakticky: cíl je zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně a bílkovina v každém hlavním jídle."},
+    {"pro": "faq[2]", "citace": "Ve studii se 46 ženami s nadváhou a obezitou drželi všichni 12 týdnů dietu s deficitem 750 kcal denně. Jedna skupina jedla 30 procent energie z bílkovin, druhá 18 procent. Úbytek hmotnosti byl srovnatelný, ale skupina s vyšším příjmem bílkovin ztratila méně svalové hmoty (1,5 kg proti 2,8 kg) a pokles pocitu sytosti byl u ní méně výrazný (Leidy, 2007, PMID 17299116)."},
+    {"pro": "faq[3]", "citace": "Váha ukazuje i vodu, obsah střev a u žen fázi cyklu, takže dva kilogramy nahoru a dolů během jednoho týdne neříkají o tuku nic."},
+    {"pro": "faq[3]", "citace": "Co s tím: važ se každé ráno po záchodě a porovnávej týdenní průměry, ne jednotlivá rána. Když se průměr nehne dva týdny po sobě a přitom poctivě zapisuješ, uber zhruba 10 procent kalorií nebo přidej 2 000 kroků denně. Jedno z toho, ne obojí naráz."},
+    {"pro": "faq[4]", "citace": "U většiny lidí sedí tempo kolem 0,5 procenta tělesné hmotnosti týdně, tedy zhruba 1,5 až 3 kg měsíčně podle toho, kolik vážíš. První týden bývá výrazně vyšší, protože odchází zadržená voda."}
+  ],
+  "nejiste": [
+    "Jak odhadnout svůj výdej, článek neuvádí, odkazuje na jiný článek; vzorec ani konkrétní číslo v odpovědích proto nejsou.",
+    "Tempo 0,3–0,7 kg týdně je v článku zkušenost „u většiny mých klientů\", ve FAQ článku je zase „kolem 0,5 procenta tělesné hmotnosti týdně\". Použil jsem obojí jen v jeho vlastním kontextu.",
+    "Kolik kroků denně chodit, článek nestanovuje, jen přidání 2 000 kroků při stagnaci.",
+    "Čísla z meta-analýzy silového tréninku (úbytek tuku 1,6 kg, nárůst svalů 0,8 kg) jsem nepoužil: platí pro silové programy obecně a článek sám píše, že v kombinaci s deficitem svalová hmota přesto klesala."
+  ]
+}

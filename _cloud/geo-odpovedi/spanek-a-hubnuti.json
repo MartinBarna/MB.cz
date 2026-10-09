@@ -1,0 +1,66 @@
+{
+  "url": "https://martinbarna.cz/clanky/spanek-a-hubnuti.html",
+  "titulek": "Spánek a hubnutí: podceňovaný spojenec",
+  "hlavni_otazka": "Jak spánek ovlivňuje hubnutí?",
+  "kratka_odpoved": "Hodně. Když nespíš dost, stoupne ghrelin (hormon hladu) a klesne leptin, takže máš druhý den větší chuť na jídlo, často na rychlé cukry a tučné věci. V kalorickém deficitu ti kvalitní spánek navíc pomáhá udržet svalovou hmotu a zregenerovat po tréninku.",
+  "faq": [
+    {
+      "otazka": "Kolik hodin spánku potřebuju?",
+      "odpoved": "Většině lidí sedne 7–9 hodin kvalitního spánku. Hodně udělá i pravidelnost, tedy chodit spát a vstávat zhruba ve stejnou dobu."
+    },
+    {
+      "otazka": "Co dělá nedostatek spánku se svaly při hubnutí?",
+      "odpoved": "Málo spánku zhorší regeneraci, sebere ti sílu a roste riziko, že místo tuku odbouráváš sval."
+    },
+    {
+      "otazka": "Jak si zlepšit spánek?",
+      "odpoved": "Choď spát a vstávej ve stejný čas i o víkendu, hodinu před spaním omez obrazovky a kofein si nech jen na dopoledne. V ložnici měj tmu a chládek kolem 18–20 °C a přes den se hýbej, protože kdo se hýbe, lépe spí."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Spánek patří k nejsilnějším nástrojům hubnutí a většina lidí ho přitom přehlíží."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Stoupne ghrelin (hormon hladu) a klesne leptin (signál „jsem sytý\"). Druhý den pak máš větší chuť na jídlo, často hlavně na rychlé cukry a tučné věci."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když držíš kalorický deficit, kvalitní spánek ti pomáhá udržet svalovou hmotu a zregenerovat po tréninku."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Většině lidí sedne 7–9 hodin kvalitního spánku. A nejde jen o to, kolik naspíš. Hodně udělá i pravidelnost, tedy chodit spát a vstávat zhruba ve stejnou dobu."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Málo spánku regeneraci zhorší, sebere ti sílu a roste riziko, že místo tuku odbouráváš sval."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Pravidelnost: choď spát a vstávej ve stejný čas, i o víkendu."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Méně obrazovek hodinu před spaním (modré světlo ruší usínání)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Kofein jen dopoledne: odpolední káva ti může rozbít noc."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Tma a chládek v ložnici: ideál je kolem 18–20 °C."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Pohyb přes den: kdo se hýbe, lépe spí."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí žádné studie ani čísla o tom, o kolik nedostatek spánku zvyšuje hlad nebo brzdí hubnutí.",
+    "Článek neříká, od kolika hodin spánku už jde o „málo spánku“."
+  ]
+}

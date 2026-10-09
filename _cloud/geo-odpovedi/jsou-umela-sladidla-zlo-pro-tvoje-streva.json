@@ -1,0 +1,41 @@
+{
+  "url": "https://martinbarna.cz/clanky/jsou-umela-sladidla-zlo-pro-tvoje-streva.html",
+  "titulek": "Jsou umělá sladidla zlo pro tvoje střeva? 😏",
+  "hlavni_otazka": "Škodí umělá sladidla střevní mikroflóře?",
+  "kratka_odpoved": "Podle novější celoroční studie financované EU ne. Skupina, která nahradila cukr nízkokalorickými sladidly, skončila na nižší váze, s menším pasem a lepším složením střevní mikroflóry. Strašák pochází ze studie z roku 2014, kde byla většina dat z myší a lidská část trvala 7 dní se 7 lidmi.",
+  "faq": [
+    {
+      "otazka": "Co zjistila studie z Nature z roku 2014 o sladidlech?",
+      "odpoved": "Tvrdila, že běžná sladidla jako sacharin zhoršují toleranci glukózy tím, že škodí střevní mikroflóře. Většina dat ale byla z myší. Lidská část trvala 7 dní, měla 7 lidí, nereálně vysoké dávky sacharinu a žádnou kontrolní skupinu."
+    },
+    {
+      "otazka": "Jak vypadala novější studie o sladidlech?",
+      "odpoved": "Financovala ji EU a sledovala sladidla, která lidé opravdu jedí, celý rok. Dokončilo ji 225 lidí s nadváhou ze 4 zemí: po dvouměsíční dietě na hubnutí 10 měsíců udržovali váhu. Jedna skupina byla bez sladidel, druhá nahradila cukr sladidly, obě držely přidaný cukr pod 10 % energie."
+    },
+    {
+      "otazka": "Jak sladidla ve studii ovlivnila střeva?",
+      "odpoved": "Skupina se sladidly měla lepší složení mikroflóry, konkrétně víc mikroorganismů, které produkují mastné kyseliny s krátkým řetězcem (SCFA). Ty tlumí zánět a krmí střeva."
+    },
+    {
+      "otazka": "Zvyšují sladidla cukr v krvi, chuť na sladké nebo cholesterol?",
+      "odpoved": "V celoroční studii se neukázaly žádné negativní účinky na glukózový metabolismus ani na chuťové preference. Po 6 měsících měla skupina se sladidly dokonce lepší cholesterol, po roce už ale tenhle rozdíl nevydržel."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Novější studie, kterou financovala EU, se na to podívala jinak. Sledovala sladidla, která lidé opravdu jedí, a to celý rok."},
+    {"pro": "kratka_odpoved", "citace": "Jedna skupina byla bez sladidel, druhá nahradila cukr maximem nízkokalorických sladidel všeho druhu."},
+    {"pro": "kratka_odpoved", "citace": "Skupina se sladidly skončila na nižší váze, měla menší pas a lepší složení střevní mikroflóry."},
+    {"pro": "kratka_odpoved", "citace": "V roce 2014 vyšla v časopise Nature studie, podle které běžná umělá sladidla (třeba sacharin) zhoršují toleranci glukózy tím, že škodí střevní mikroflóře. Rychle se rozšířila pod heslem „sladidla ničí tvoje střeva“. Háček je v tom, že většina dat byla z myší a lidská část trvala 7 dní, zúčastnilo se jí 7 lidí"},
+    {"pro": "faq[0]", "citace": "V roce 2014 vyšla v časopise Nature studie, podle které běžná umělá sladidla (třeba sacharin) zhoršují toleranci glukózy tím, že škodí střevní mikroflóře."},
+    {"pro": "faq[0]", "citace": "Háček je v tom, že většina dat byla z myší a lidská část trvala 7 dní, zúčastnilo se jí 7 lidí, dostávali množství sacharinu, jaké v reálu nikdo nesní, a nebyla tam kontrolní skupina."},
+    {"pro": "faq[1]", "citace": "Novější studie, kterou financovala EU, se na to podívala jinak. Sledovala sladidla, která lidé opravdu jedí, a to celý rok. Výzkum dokončilo 225 lidí s nadváhou ze 4 zemí. Po dvouměsíční dietě na hubnutí se dalších 10 měsíců snažili udržet váhu. Jedna skupina byla bez sladidel, druhá nahradila cukr maximem nízkokalorických sladidel všeho druhu. Obě skupiny přitom držely přidaný cukr pod 10 % energie."},
+    {"pro": "faq[2]", "citace": "Skupina se sladidly skončila na nižší váze, měla menší pas a lepší složení střevní mikroflóry. Konkrétně víc mikroorganismů, které produkují mastné kyseliny s krátkým řetězcem (SCFA). Ty tlumí zánět a krmí střeva."},
+    {"pro": "faq[3]", "citace": "Žádné negativní účinky na glukózový metabolismus ani na chuťové preference se neukázaly. Po 6 měsících měla tahle skupina i lepší cholesterol, i když po roce už tenhle rozdíl nevydržel."}
+  ],
+  "nejiste": [
+    "Článek nejmenuje konkrétní sladidla použitá v celoroční studii (jen „maximem nízkokalorických sladidel všeho druhu“) ani jejich dávky, takže nejde říct, jestli výsledek platí pro každé sladidlo zvlášť.",
+    "Studie se týkala dospělých s nadváhou ve fázi udržování váhy po dietě; článek neříká, jestli se výsledky dají přenést na jiné skupiny.",
+    "Studie z EU ani studie z Nature nejsou v článku dohledatelně citované (bez autorů a PMID).",
+    "Rada kombinovat sladidla s vlákninou pro lepší trávení je Martinova poznámka z praxe bez opory ve studii, proto není v odpovědích."
+  ]
+}

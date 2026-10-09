@@ -1,0 +1,51 @@
+{
+  "url": "https://martinbarna.cz/clanky/kreatin-pro-zeny.html",
+  "titulek": "Kreatin pro ženy: nejen na svaly",
+  "hlavni_otazka": "Má smysl, aby ženy braly kreatin?",
+  "kratka_odpoved": "Ano, hlavně když posiluješ. Ženy mají přirozeně nižší zásoby kreatinu než muži a podle přehledu z roku 2025 jim kreatin prospívá síle, výkonu a složení těla, hlavně se silovým tréninkem. Ber 3–5 g monohydrátu denně, každý den, ale základ (bílkoviny, silový trénink, spánek, konzistence) tím nenahradíš.",
+  "faq": [
+    {
+      "otazka": "Zbytní mě kreatin?",
+      "odpoved": "Ne. Kreatin z tebe neudělá kulturistku. Pomáhá ti být silnější a udržet svaly."
+    },
+    {
+      "otazka": "Zadržuje kreatin vodu a nafukuje?",
+      "odpoved": "Trochu vody navíc je uvnitř svalu, ne „nafouknutí“. U většiny žen je to nepodstatné a s nafouklým bříškem to nemá nic společného."
+    },
+    {
+      "otazka": "Jak mám kreatin brát?",
+      "odpoved": "Kreatin monohydrát, 3–5 g denně, každý den, i v den bez tréninku. Nasycovací fáze není nutná, jen to trvá o pár týdnů dýl, než se zásoby naplní. Načasování neřeš, klidně kdykoliv během dne s jídlem."
+    },
+    {
+      "otazka": "Pomáhá kreatin ženám po menopauze?",
+      "odpoved": "Metaanalýza 7 randomizovaných studií u 608 žen po menopauze ukázala průměrně +0,37 kg svalové hmoty a +7,5 kg na leg-pressu. Platilo to u 5 g denně v kombinaci se silovým tréninkem, dávky do 3 g bez posilování nefungovaly."
+    },
+    {
+      "otazka": "Je kreatin pro ženy bezpečný?",
+      "odpoved": "Patří k nejlépe prověřeným doplňkům z hlediska bezpečnosti a není to steroid, tělo si ho samo vyrábí a přijímá z jídla. V přehledu 22 randomizovaných studií u lidí ve věku 57-70 let se neukázalo poškození jater ani ledvin."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Ženy mají v těle přirozeně nižší zásoby kreatinu než muži a z běžné stravy (hlavně z masa) ho často přijímají míň."},
+    {"pro": "kratka_odpoved", "citace": "Nový velký přehled o kreatinu v ženském zdraví (2025) shrnuje, že kreatin u žen prospívá síle, výkonu a složení těla, hlavně v kombinaci se silovým tréninkem,"},
+    {"pro": "kratka_odpoved", "citace": "3–5 g denně, každý den (i v den bez tréninku)."},
+    {"pro": "kratka_odpoved", "citace": "Pro ženu, která posiluje, je to laciná a bezpečná pojistka navíc"},
+    {"pro": "kratka_odpoved", "citace": "Ale pořád platí: nejdřív základ (dost bílkovin, silový trénink, spánek, konzistence), pak teprve doplňky. Kreatin ten základ krásně doplní, nenahradí ho."},
+    {"pro": "faq[0]", "citace": "„Zbytní mě to.\" Ne. Kreatin z tebe neudělá kulturistku. Pomáhá ti být silnější a udržet svaly, což je pro ženskou postavu naopak výhra."},
+    {"pro": "faq[1]", "citace": "„Zadržuje vodu.\" Trochu vody navíc je uvnitř svalu, ne „nafouknutí\". U většiny žen je to nepodstatné a nemá to nic společného s „nafouklým bříškem\"."},
+    {"pro": "faq[2]", "citace": "Kreatin monohydrát: nejlevnější a nejprozkoumanější forma."},
+    {"pro": "faq[2]", "citace": "3–5 g denně, každý den (i v den bez tréninku). Nasycovací fáze není nutná. Jen to trvá o pár týdnů dýl, než se zásoby naplní."},
+    {"pro": "faq[2]", "citace": "Kdykoliv během dne, klidně s jídlem. Načasování neřeš."},
+    {"pro": "faq[3]", "citace": "Metaanalýza Naddafha a kol. (2026, PMID 42141930) shrnuje 7 randomizovaných studií u 608 žen po menopauze. Průměrný zisk: +0,37 kg svalové hmoty a +7,5 kg na leg-pressu."},
+    {"pro": "faq[3]", "citace": "Platilo to u dávky 5 g denně v kombinaci se silovým tréninkem. Dávky do 3 g bez posilování v tomhle přehledu nefungovaly."},
+    {"pro": "faq[4]", "citace": "„Je to steroid / nezdravé.\" Není. Je to látka, kterou si tělo samo vyrábí a přijímá z jídla. Patří k nejlépe prověřeným doplňkům z hlediska bezpečnosti."},
+    {"pro": "faq[4]", "citace": "Širší pohled dává Chilibeck a kol. (2017, PMID 29138605): 22 randomizovaných studií, 721 lidí ve věku 57-70 let."},
+    {"pro": "faq[4]", "citace": "V těch studiích se neukázalo poškození jater ani ledvin."}
+  ],
+  "nejiste": [
+    "Přínosy pro náladu, paměť a kosti článek formuluje opatrně („nadějně vypadá\", „se pojí\", „vyšší dávky\" bez čísla), proto nejsou v odpovědích jako samostatné tvrzení.",
+    "Článek neřeší těhotenství, kojení ani ženy s onemocněním ledvin; u těch jsem nic nedomýšlel.",
+    "Údaj o bezpečnosti jater a ledvin pochází ze studií u lidí 57-70 let (Chilibeck 2017), ne konkrétně u mladých žen; FAQ to tak uvádí.",
+    "Článek neříká, jak rychle se po vysazení zásoby vyprázdní ani jestli dělat pauzy."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "url": "https://martinbarna.cz/clanky/je-cola-zero-horsi-nez-obycejna-cola.html",
+  "titulek": "Je Cola Zero horší než obyčejná Cola? 🤔",
+  "hlavni_otazka": "Je Cola Zero zdravější než normální Cola, nebo je horší?",
+  "kratka_odpoved": "Cola Zero horší není, naopak je na tom líp. Když dietní sody nahradí slazené nápoje, lidi zhubnou a zlepší se jim metabolické zdraví. Že Cola Zero ničí střevní mikrobiom nebo žene chutě nahoru, na lidech nikdo nepotvrdil.",
+  "faq": [
+    {
+      "otazka": "Ničí aspartam v Cole Zero střevní mikrobiom?",
+      "odpoved": "Podle článku to nic nepotvrzuje. Randomizovaná, dvojitě zaslepená překřížená studie u aspartamu žádnou změnu nenašla. Nedávný přehled studií došel ke stejnému: aspartam ani Ace-K mikrobiom u lidí běžně neovlivňují."
+    },
+    {
+      "otazka": "Zvyšují dietní limonády chuť na sladké?",
+      "odpoved": "Na lidech se to nepotvrdilo. Meta-analýza ukázala, že kdo přejde ze slazených nápojů na dietní, vypije slazených nápojů méně."
+    },
+    {
+      "otazka": "Je lepší vyměnit slazenou limonádu za dietní, nebo za vodu?",
+      "odpoved": "Podle meta-analýzy, kterou článek cituje, zhubne ten, kdo přejde ze slazených nápojů na dietní, dokonce víc než ten, kdo přejde na vodu."
+    },
+    {
+      "otazka": "Pomůže mi při hubnutí pít Colu Zero místo obyčejné?",
+      "odpoved": "Ano, vyměň slazené nápoje za dietní, studie ukazují méně chutí a lepší kontrolu kalorií. Martin dodává, že dietní varianta nasazená s hlavou, typicky místo slazené sody, pomůže shodit tuk. Žádné riziko v tom podle něj není, pokud to sedí do celé stravy s dostatkem bílkovin a zeleniny."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Je Cola Zero horší než obyčejná Cola? Překvapivě ne. Když se na to podíváš pořádně, je na tom líp."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když dietní sody nahradí slazené nápoje, lidi zhubnou, zlepší se metabolické zdraví."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "A ty řeči, že Coke Zero ničí střevní mikrobiom nebo žene chutě nahoru? Na lidech to nikdo nepotvrdil."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Že by aspartam ničil střevní mikrobiom, nic nepotvrzuje."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Střevní mikrobiom: Randomizovaná, dvojitě zaslepená překřížená studie u aspartamu žádnou změnu nenašla (PMID: 33171964). Nedávný přehled studií došel ke stejnému: aspartam ani Ace-K mikrobiom u lidí běžně neovlivňují (PMID: 37111090)."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "A ty řeči, že Coke Zero ničí střevní mikrobiom nebo žene chutě nahoru? Na lidech to nikdo nepotvrdil."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Chutě & příjem: Meta-analýza ukázala, že kdo přejde ze slazených nápojů na dietní, vypije slazených méně a zhubne dokonce víc než ten, kdo přejde na vodu (PMID: 26365102)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Chutě & příjem: Meta-analýza ukázala, že kdo přejde ze slazených nápojů na dietní, vypije slazených méně a zhubne dokonce víc než ten, kdo přejde na vodu (PMID: 26365102)."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Pro hubnutí: Vyměň slazené nápoje za dietní. Studie ukazují méně chutí a lepší kontrolu kalorií."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Když dietní variantu nasadíme s hlavou (typicky místo slazené sody), pomůže to shodit tuk a držet inzulin, energii i trávení v klidu. Žádné riziko v tom není, pokud to sedí do celé stravy s dostatkem bílkovin a zeleniny."
+    }
+  ],
+  "nejiste": [
+    "Článek neříká, kolik dietních nápojů denně je ještě v pořádku, ani neřeší kofein, kyselost nebo zuby.",
+    "Tvrzení o inzulinu, energii a trávení („držet inzulin, energii i trávení v klidu“, „inzulin máš v klidu“) jsou Martinův komentář z praxe a citované studie je v článku nedokládají, proto nejsou použita v odpovědích.",
+    "Jádro článku je překlad příspěvku Layne Nortona; studie jsou uvedené jen odkazem PMID bez velikosti vzorku a délky trvání."
+  ]
+}

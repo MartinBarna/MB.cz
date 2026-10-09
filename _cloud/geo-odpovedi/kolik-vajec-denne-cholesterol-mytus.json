@@ -1,0 +1,52 @@
+{
+  "url": "https://martinbarna.cz/clanky/kolik-vajec-denne-cholesterol-mytus.html",
+  "titulek": "Kolik vajec denně? Mýtus o vejcích a cholesterolu",
+  "hlavni_otazka": "Kolik vajec denně můžu sníst, když se bojím cholesterolu?",
+  "kratka_odpoved": "Pro většinu zdravých lidí žádné magické číslo neexistuje a „max jedno vejce denně“ je dědictví staré teorie, kterou data nepodržela. Většinu cholesterolu si tělo vyrábí samo v játrech, a když ho přijmeš víc z jídla, zpravidla ho vyrobí míň. Máš-li diagnózu nebo špatné odběry, řeš to s lékařem podle svých čísel.",
+  "faq": [
+    {
+      "otazka": "Zvedají vejce cholesterol v krvi?",
+      "odpoved": "U většiny zdravých lidí jen málo. Tělo si tvorbu cholesterolu reguluje samo: když ho z jídla dostane víc, vyrobí míň, když málo, vyrobí víc. Proto pár vajec u většiny zdravých lidí hladinu v krvi nijak dramaticky nezvedne."
+    },
+    {
+      "otazka": "Co doopravdy ovlivňuje cholesterol v krvi?",
+      "odpoved": "Spíš nasycené a hlavně trans tuky, vláknina, tělesná hmotnost a tuk kolem pasu. K tomu celý životní styl: pohyb, kouření, alkohol, spánek a stres."
+    },
+    {
+      "otazka": "Je zdravější jíst jen bílky a žloutek vyhazovat?",
+      "odpoved": "U zdravého člověka většinou zbytečně. Kdo vyhazuje žloutek kvůli cholesterolu, připravuje se o cholin a většinu mikroživin, které vejce má."
+    },
+    {
+      "otazka": "Kdo by si měl s vejci dát pozor?",
+      "odpoved": "Menšina takzvaných hyper-respondérů, kterým cholesterol v krvi reaguje na ten v jídle víc. A lidé s diagnostikovanou hypercholesterolémií, se srdečním onemocněním, cukrovkáři a každý, komu už lékař dal konkrétní dietní doporučení: ti mají počet vajec řešit s lékařem podle svých odběrů."
+    },
+    {
+      "otazka": "Znamená to, že můžu jíst vajec, kolik chci?",
+      "odpoved": "Ne. Nemá smysl jich jíst denně přehršel jen proto, že cholesterol nevadí. Pořád platí celkový obraz jídelníčku a kalorií."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Pravdivá odpověď je nepohodlně jednoduchá: pro většinu zdravých lidí žádné magické číslo neexistuje."},
+    {"pro": "kratka_odpoved", "citace": "„Maximálně jedno vejce denně\" je dědictví staré teorie, kterou data nepodržela."},
+    {"pro": "kratka_odpoved", "citace": "Většinu cholesterolu si tvoje tělo vyrábí samo, hlavně v játrech. A je v tom chytré: když ho přijmeš víc z jídla, játra ho zpravidla začnou tvořit míň."},
+    {"pro": "kratka_odpoved", "citace": "Máš-li diagnózu nebo špatné odběry, řeš to s lékařem podle svých čísel."},
+    {"pro": "faq[0]", "citace": "Když ho z jídla dostaneš málo, naopak ho vyrobí víc. Je to regulační smyčka, ne sčítačka. Proto u většiny zdravých lidí nezvedne pár vajec hladinu v krvi nijak dramaticky. Tělo si to z velké části vyrovná."},
+    {"pro": "faq[0]", "citace": "Cholesterol z talíře a cholesterol v krvi nejsou spojené nádoby. Tělo si tvorbu reguluje samo. Když ho sníš víc, vyrobí ho míň."},
+    {"pro": "faq[0]", "citace": "U většiny zdravých lidí jen málo."},
+    {"pro": "faq[1]", "citace": "Nasycené a hlavně trans tuky. Tradičně se právě tyhle tuky pojí se zhoršením krevního lipidového profilu víc než samotný cholesterol z jídla."},
+    {"pro": "faq[1]", "citace": "Vláknina. Dostatek vlákniny z ovoce, zeleniny, luštěnin a celozrnných potravin patří k tomu, co srdci dlouhodobě prospívá."},
+    {"pro": "faq[1]", "citace": "Tělesná hmotnost a tuk kolem pasu. Nadbytečný tuk, hlavně v břiše, ovlivňuje metabolismus tuků v krvi víc než jedno vejce navíc k snídani."},
+    {"pro": "faq[1]", "citace": "Pohyb, kouření, alkohol, spánek, stres. Celý životní styl."},
+    {"pro": "faq[2]", "citace": "Mimochodem, kdo vyhazuje žloutek a jí jen bílky kvůli cholesterolu, připravuje se právě o ten cholin a většinu mikroživin. U zdravého člověka většinou zbytečně."},
+    {"pro": "faq[3]", "citace": "Existuje menšina, takzvaní hyper-respondéři, kterým hladina cholesterolu v krvi reaguje na ten v jídle víc než ostatním."},
+    {"pro": "faq[3]", "citace": "A pak je tu druhá skupina, která to má řešit s odborníkem, ne podle článku na webu: lidé s diagnostikovanou hypercholesterolémií (familiární i jinou), s prodělaným nebo přítomným srdečním onemocněním, cukrovkáři a obecně každý, komu už lékař dal konkrétní dietní doporučení."},
+    {"pro": "faq[3]", "citace": "Vezmi to se svým lékařem a podle svých odběrů."},
+    {"pro": "faq[4]", "citace": "Nemusíš se nutit do „maximálně jednoho\" a stejně tak nemá smysl jíst jich denně přehršel jen proto, že „cholesterol nevadí\". Pořád platí celkový obraz jídelníčku a kalorií."}
+  ],
+  "nejiste": [
+    "Článek nedává žádný horní počet vajec denně ani týdně, jen říká, že magické číslo neexistuje a přehršel nemá smysl.",
+    "Článek nekvantifikuje, o kolik méně dietní cholesterol z vajec zvedá hladinu v krvi, a necituje konkrétní studie ani přehledy.",
+    "Článek neříká, jak člověk pozná, že je hyper-respondér (kromě odběrů a konzultace s lékařem).",
+    "U nasycených tuků článek mluví opatrně („tradičně se pojí\"), proto odpověď netvrdí víc než to."
+  ]
+}

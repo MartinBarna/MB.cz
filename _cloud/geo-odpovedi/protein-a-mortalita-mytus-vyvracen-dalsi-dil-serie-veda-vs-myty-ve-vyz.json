@@ -1,0 +1,79 @@
+{
+  "url": "https://martinbarna.cz/clanky/protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.html",
+  "titulek": "Protein a mortalita: Mýtus vyvrácen! Další díl série Věda vs. Mýty ve Výživě.",
+  "hlavni_otazka": "Zvyšuje vysoký příjem bílkovin riziko úmrtí?",
+  "kratka_odpoved": "Podle nové analýzy, na které se podílel Stuart Phillips, Ph.D., ne. Studie v časopise Applied Physiology, Nutrition, and Metabolism nenašla žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou. Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu.",
+  "faq": [
+    {
+      "otazka": "Odkud se vzal mýtus, že protein škodí stejně jako kouření?",
+      "odpoved": "Z analýzy dat NHANES, ze které vznikly titulky „Protein je pro tebe stejně špatný jako kouření“ v amerických a britských bulvárech. Podle Stuarta Phillipse, jehož příspěvek článek překládá, byla tahle analýza provedená opravdu špatně, přesto se její data dodnes citují jako fakt."
+    },
+    {
+      "otazka": "Kolik bílkovin mám jíst na jedno jídlo, když hubnu?",
+      "odpoved": "Martin doporučuje cíl 30–50 g na jídlo: spočítej si bílkoviny na celý den a vyděl je počtem jídel. Vyšší protein podle něj tlumí chuť k jídlu, chrání svaly a zvedá TDEE, tedy celkový výdej energie."
+    },
+    {
+      "otazka": "Co Martin vidí u lidí, kteří zvednou bílkoviny na 1,6–2,2 g/kg?",
+      "odpoved": "Podle jeho zkušenosti s klienty nejen shodí tuk, ale často se jim zlepší i trávení, libido, vytrvalost, kostní hustota a mozkové funkce. Bez rizik je to podle něj tehdy, když je strava vyvážená a sedí konkrétnímu člověku."
+    },
+    {
+      "otazka": "Mám se bát IGF-1?",
+      "odpoved": "Podle Martina IGF-1 není žádný ďábel. Místo strachu z proteinu řeš celkovou stravu."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Naše práce v časopise Applied Physiology, Nutrition, and Metabolism neukazuje žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tohle je překlad zajímavého příspěvku od Stuart Phillips Ph.D., předního experta na proteinový metabolismus, svalovou fyziologii a výživu při stárnutí"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Ale analýza dat NHANES, ze které vznikly titulky „Protein je pro tebe stejně špatný jako kouření“ v amerických a britských bulvárech, byla provedená opravdu špatně."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Data z té studie se dodnes citují uctivě jako ‚fakt‘. A je to špatně."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tohle je překlad zajímavého příspěvku od Stuart Phillips Ph.D., předního experta na proteinový metabolismus, svalovou fyziologii a výživu při stárnutí"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Pro hubnutí: Vyšší protein tlumí chuť k jídlu, chrání svaly a zvedá TDEE (celkový výdej energie). Cíl si dej 30-50 g na jídlo. Spočítej si bílkoviny na celý den a vyděl je počtem jídel."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "A co k tomu říkám já, Martin Barna z Online Výživa a Fitness."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "V koučinku to vidím u klientů, kteří zvednou protein na 1.6-2.2 g/kg. Nejen že shodí tuk, ale často se jim zlepší i trávení, libido, vytrvalost, kostní hustota a mozkové funkce"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Bez rizik, pokud je strava vyvážená a sedí konkrétnímu člověku."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Pro zdravé stárnutí: IGF-1 není žádný ďábel. Řeš celkovou stravu místo strachu z proteinu."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "A co k tomu říkám já, Martin Barna z Online Výživa a Fitness."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí velikost vzorku, věk sledovaných lidí ani délku sledování v nové analýze.",
+    "Zlepšení trávení, libida, kostní hustoty a dalších věcí při 1.6-2.2 g/kg je Martinova zkušenost z praxe, ne výsledek citované studie.",
+    "Článek neříká, pro koho vyšší příjem bílkovin vhodný není; uvádí jen podmínku, že strava má být vyvážená a sedět konkrétnímu člověku."
+  ]
+}

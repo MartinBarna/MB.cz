@@ -1,0 +1,34 @@
+{
+  "url": "https://martinbarna.cz/clanky/vo2max-a-delsi-zivot.html",
+  "titulek": "Vysoký VO2max = delší život?",
+  "hlavni_otazka": "Prodlouží mi vysoký VO2max život?",
+  "kratka_odpoved": "Podle studie Kjaergaard z roku 2025 (zhruba 70 000 lidí, Mendelovská randomizace) samotný VO2max život neprodlouží. Prodlužuje ho nízký podíl tuku, víc svalů a celkově pohyb a VO2max je hlavně odraz toho, že tyhle věci máš v pořádku.",
+  "faq": [
+    {
+      "otazka": "Proč to z běžných pozorování vypadá, že vysoká kondice prodlužuje život?",
+      "odpoved": "Lidé s nejvyšší kondicí mají v běžném pozorování až o 50 % nižší riziko úmrtí. Když ale autoři použili genetiku jako přirozený experiment, čísla ukázala, že samotný VO2max život neprodlouží."
+    },
+    {
+      "otazka": "Co je Mendelovská randomizace?",
+      "odpoved": "Zjednodušeně něco jako randomizovaná studie od přírody, kde za tebe „losuje“ genetika."
+    },
+    {
+      "otazka": "Co dělat v praxi, když chci žít déle?",
+      "odpoved": "Silový trénink dvakrát až třikrát týdně, 7 000 až 9 000 kroků denně a podíl tuku ve zdravém pásmu. Kardio ber jako součást, ne jako základ, na kterém všechno stojí."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Nová studie z roku 2025 (Kjaergaard, J Clin Endocrinol Metab, zhruba 70 000 lidí) se na to ale podívala pořádně a výsledek nesedí s tím, co čekáš."},
+    {"pro": "kratka_odpoved", "citace": "Autoři použili metodu Mendelovské randomizace."},
+    {"pro": "kratka_odpoved", "citace": "Samotný VO2max ti život neprodlouží. Co ho prodlužuje, je nízký podíl tuku, víc svalů a celkově pohyb. VO2max je hlavně odraz toho, že tyhle věci máš v pořádku."},
+    {"pro": "faq[0]", "citace": "Z běžného pozorování to vypadá jasně. Lidé s nejvyšší kondicí mají až o 50 % nižší riziko úmrtí."},
+    {"pro": "faq[0]", "citace": "Jenže když autoři sáhli po genetice jako po přirozeném experimentu, čísla ukázala něco jiného. Samotný VO2max ti život neprodlouží."},
+    {"pro": "faq[1]", "citace": "Zjednodušeně řečeno něco jako randomizovaná studie od přírody, kde za tebe „losuje\" genetika."},
+    {"pro": "faq[2]", "citace": "Silový trénink dvakrát až třikrát týdně. 7 000 až 9 000 kroků denně. Podíl tuku ve zdravém pásmu. A kardio ber jako součást, ne jako základ, na kterém všechno stojí."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, co přesně znamená „zdravé pásmo“ podílu tuku.",
+    "Článek neříká, jestli doporučení (silový trénink dvakrát až třikrát týdně, 7 000 až 9 000 kroků denně) vychází přímo ze studie Kjaergaard, nebo je to autorova praktická rada.",
+    "Článek neuvádí zdroj údaje, že lidé s nejvyšší kondicí mají v běžném pozorování až o 50 % nižší riziko úmrtí."
+  ]
+}

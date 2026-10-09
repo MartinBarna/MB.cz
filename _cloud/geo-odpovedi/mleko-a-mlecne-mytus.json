@@ -1,0 +1,47 @@
+{
+  "url": "https://martinbarna.cz/clanky/mleko-a-mlecne-mytus.html",
+  "titulek": "Mléko škodí dospělým? Mýtus o mléčných výrobcích",
+  "hlavni_otazka": "Škodí mléko a mléčné výrobky dospělým?",
+  "kratka_odpoved": "Pokud nemáš laktózovou intoleranci ani alergii na mléčnou bílkovinu, mléko ti neškodí. Mléčné výrobky jsou jeden z nejlepších zdrojů kompletních bílkovin a dodávají dobře vstřebatelný vápník. Tvaroh, skyr a řecký jogurt navíc dávají hodně bílkovin, vysokou sytost a málo kalorií.",
+  "faq": [
+    {
+      "otazka": "Zahleňuje mléko?",
+      "odpoved": "Ne. Pocit „obalené pusy“ je reálný, ale je to jen dočasná textura hustší tekutiny, ne tvorba hlenu. V dýchacích cestách se nic neděje a za pár minut je to pryč."
+    },
+    {
+      "otazka": "Je mléko zánětlivé?",
+      "odpoved": "U zdravého člověka mléčné výrobky zánět neženou. Pokud po nich nemáš trávicí potíže, tělo s nimi nemá problém."
+    },
+    {
+      "otazka": "Co jíst, když mám laktózovou intoleranci?",
+      "odpoved": "Sáhni po bezlaktózových verzích mléka, jogurtu, tvarohu i skyru. Jogurt, kefír a tvrdé a zrající sýry mívají laktózy výrazně míň a spousta lidí s mírnou intolerancí je snese bez potíží."
+    },
+    {
+      "otazka": "Je lepší plnotučné, nebo light mléčné výrobky?",
+      "odpoved": "Obojí je v pořádku. Light má míň kalorií na porci, plnotučné víc zasytí a chutná líp. Rozhoduje kontext a celkové kalorie, ne nálepka „light“."
+    },
+    {
+      "otazka": "Je bio mléko zdravější?",
+      "odpoved": "Výživově ne. Může chutnat líp, ale bílkoviny a vápník jsou v něm plus minus stejné jako v běžném mléce z regálu."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Pokud nemáš laktózovou intoleranci ani alergii na mléčnou bílkovinu, není jediný rozumný důvod, proč by ses měl mléčných výrobků bát. Jsou totiž jeden z nejlepších zdrojů kompletních bílkovin, co existuje, a k tomu dodávají vápník, který se z nich navíc dobře vstřebává."},
+    {"pro": "kratka_odpoved", "citace": "Bílkovinné mléčné výrobky patří v hubnutí mezi úplnou špičku, a to z jednoho prostého důvodu: dávají hodně bílkovin, vysokou sytost a málo kalorií najednou."},
+    {"pro": "kratka_odpoved", "citace": "Hubneš nebo honíš bílkoviny? Postav na tvarohu, skyru a řeckém jogurtu bílkovinovou oporu jídelníčku. Hodně bílkovin, sytost, málo kalorií."},
+    {"pro": "faq[0]", "citace": "Pocit, že máš po sklenici mléka „obalenou pusu\", je reálný. Jenže to není tvorba hlenu. Je to jen dočasná textura: mléko je trochu hustší tekutina a na chvíli změní pocit v ústech, podobně jako po hustším smoothie. Žádný hlen se netvoří a v dýchacích cestách se nic neděje. Za pár minut je to pryč."},
+    {"pro": "faq[1]", "citace": "U zdravého člověka mléčné výrobky zánět neženou."},
+    {"pro": "faq[1]", "citace": "Pokud po mléčných nemáš trávicí potíže, tělo s nimi nemá problém."},
+    {"pro": "faq[2]", "citace": "Bezlaktózové verze. Dnes seženeš bezlaktózové mléko, jogurt, tvaroh i skyr, chuťově skoro k nerozeznání, jen je laktóza předem rozštěpená."},
+    {"pro": "faq[2]", "citace": "Zakysané a vyzrálé. Jogurt, kefír i tvrdé a zrající sýry mívají laktózy výrazně míň a spousta lidí s mírnou intolerancí je snese bez potíží."},
+    {"pro": "faq[3]", "citace": "Plnotučné vs. light. Obojí má svoje místo. Light verze má míň kalorií na porci, takže se hodí, když potřebuješ ušetřit kalorie nebo dostat víc bílkovin do menšího prostoru. Plnotučné víc zasytí a chutná líp. Nerozhoduje nálepka „light\", rozhoduje kontext a celkové kalorie."},
+    {"pro": "faq[3]", "citace": "Obě verze jsou v pořádku."},
+    {"pro": "faq[4]", "citace": "Bio a farmářské. Můžou chutnat líp a můžeš je mít rád z jiných důvodů, ale samy o sobě z mléka nedělají něco výživově extra zdravějšího. Bílkoviny a vápník jsou tam plus minus stejné jako v běžném mléce z regálu."}
+  ],
+  "nejiste": [
+    "Článek neuvádí žádné studie ani čísla (gramy bílkovin na porci, množství vápníku), takže odpovědi jsou bez číselných údajů.",
+    "Alergii na mléčnou bílkovinu článek jen zmiňuje jako výjimku a dál ji neřeší; co dělat při alergii, neříká.",
+    "Článek neříká, kolik mléčných výrobků denně je rozumné, jen „klidně denně“ pro lidi bez intolerance a alergie.",
+    "U laktózové intolerance článek popisuje příznaky, ale neříká, jak ji ověřit nebo kdy jít k lékaři."
+  ]
+}
