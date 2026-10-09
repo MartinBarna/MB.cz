@@ -20,6 +20,7 @@
  *   [KANON_CHYBI]        homepage nedefinuje #martin, #org nebo #website
  *   [ODKAZ_NEDEFINOVAN]  odkaz na @id „https://martinbarna.cz/…#…", který na své stránce není definovaný
  *   [CENA_MIMO_TEXT]     cena v JSON-LD, která není ve viditelném textu stránky
+ *                        (výjimka CENA_SKRYTY_BLOK: jmenovitá cena ve statickém textu skrytého bloku)
  *   [HODNOCENI_MIMO_TEXT]  hodnocení nebo recenze v JSON-LD, které na stránce doslova nejsou
  *   [FAQ_NESEDI]         otázka nebo odpověď FAQPage, která na stránce není slovo od slova
  *   [CLANEK_*]           článek blogu bez BlogPosting, autora, data nebo viditelného autora a data
@@ -68,7 +69,37 @@ export const VYJIMKY = {
     '404.html': 'chybová stránka, server ji vrací se stavem 404, do sitemapy nepatří',
     'akademie/overit/index.html': 'generuj-sitemap.mjs ji záměrně řadí mezi interní (ověření certifikátu); nemá noindex, k rozhodnutí majitele',
   },
+  CENA_SKRYTY_BLOK: {
+    'tvuj-coach/index.html': 'tarif VIP + Kontrola od Martina (1 990 / 5 490 Kč) stojí v bloku #kontrolaBlok, který je do načtení ceníku skrytý a skript ho ukáže, jen když je tarif v pricing_plans aktivní; ceny v JSON-LD se uznají jen když stojí ve statickém textu toho bloku (výchozí hodnota jako u Basic a VIP)',
+  },
 };
+
+/**
+ * Ke CENA_SKRYTY_BLOK: které ceny a ve kterém bloku (id) se smí najít ve skrytém textu.
+ * Cokoli jiného na stránce musí být ve viditelném textu jako obvykle.
+ */
+const SKRYTE_CENY = {
+  'tvuj-coach/index.html': { id: 'kontrolaBlok', ceny: ['1990', '5490'] },
+};
+
+/** Text bloku s daným id i když je skrytý (`display:none` v jeho style se ignoruje). */
+function textSkrytehoBloku(html, id) {
+  const odkryto = html.replace(
+    new RegExp(`(<[a-z]+\\b[^>]*\\bid=["']${id}["'][^>]*?)display\\s*:\\s*none;?`, 'i'),
+    '$1',
+  );
+  const zac = odkryto.search(new RegExp(`\\bid=["']${id}["']`));
+  if (zac < 0) return '';
+  const tag = /<([a-z]+)\b/i.exec(odkryto.slice(odkryto.lastIndexOf('<', zac)))?.[1] || 'div';
+  // Do konce prvku stačí odhad po následující zavírací značku stejné úrovně; text se jen hledá.
+  const kus = odkryto.slice(odkryto.lastIndexOf('<', zac));
+  let hloubka = 0;
+  for (const m of kus.matchAll(new RegExp(`<(/?)${tag}\\b[^>]*>`, 'gi'))) {
+    hloubka += m[1] ? -1 : 1;
+    if (hloubka === 0) return viditelnyText(kus.slice(0, m.index + m[0].length));
+  }
+  return viditelnyText(kus);
+}
 
 const ORG_TYPY = new Set(['Organization', 'ProfessionalService', 'LocalBusiness', 'OnlineBusiness', 'Corporation', 'EducationalOrganization']);
 const CLANEK_TYPY = new Set(['Article', 'BlogPosting', 'NewsArticle']);
@@ -162,9 +193,13 @@ for (const s of stranky) {
         for (const k of ['price', 'lowPrice', 'highPrice']) {
           if (u[k] == null) continue;
           const v = String(u[k]);
-          const ok = Number(v) === 0
+          let ok = Number(v) === 0
             ? /zdarma|\b0 Kč/i.test(vid())
             : variantyCeny(v).some((x) => obsahujeCislo(vid(), x));
+          const skryte = SKRYTE_CENY[rel];
+          if (!ok && skryte?.ceny.includes(v)) {
+            ok = variantyCeny(v).some((x) => obsahujeCislo(textSkrytehoBloku(html, skryte.id), x));
+          }
           if (!ok) chyba('CENA_MIMO_TEXT', rel, `${cesta}.${k} = ${v} (${u.name || u['@type']}) není ve viditelném textu`);
         }
       }
