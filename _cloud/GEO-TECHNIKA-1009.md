@@ -17,7 +17,7 @@ videokurzu, Barna Academy, koučinku a konzultacích odpovídaly podle webu a ci
 | Hodnocení v JSON-LD, které na stránce nestojí | 2 (66 a 114 recenzí) | 0 |
 | Ceny v JSON-LD mimo viditelný text | 2 | 0 |
 | Články s viditelným autorem s odkazem a přesným datem | 0 ze 152 | 152 ze 152 (+ 2 průvodci) |
-| `llms-full.txt` | neexistoval | 177 stránek, z toho 152 článků, 978 kB |
+| `llms-full.txt` | neexistoval | 177 stránek, z toho 152 článků, 971 kB, bez jmen klientů |
 
 ## 1. Strukturovaná data (JSON-LD)
 
@@ -93,8 +93,9 @@ navíc HeroHero, u značky odkaz na hodnocení na Googlu. LinkedIn web nikde neo
   nástroje, kalkulačka, průvodci, mýty, 6 volných lekcí) a pak **všech 152 článků** od nejnovějšího.
   U každé sekce nadpis, URL, u článků autor a data, pak čistý text s nadpisy a odrážkami.
   Bez menu, patičky, formulářů, tlačítek, skrytých prvků a prodejních CTA boxů v článcích.
-  Záměrně bez `/reference/` (70 recenzí se jmény klientů, AI stačí shrnutí v `llms.txt`)
-  a bez interaktivních nástrojů a kvízu (bez JS v nich není text).
+  Záměrně bez `/reference/` a bez **jakýchkoli recenzí a proměn klientů** na ostatních
+  stránkách (doplněno po revizi R1, viz „Opravy po R1"), bez interaktivních nástrojů a kvízu
+  (bez JS v nich není text).
 - **`llms.txt`** zůstal krátkým rozcestníkem, odkazuje na `llms-full.txt`. Každé tvrzení jsem
   dohledal ve viditelném textu stránky, na kterou odkazuje. Co tam nestálo, je pryč nebo
   přeformulované (seznam v části Rozpory). Nově jsou v něm ceny koučinku na 3 a 6 měsíců,
@@ -211,8 +212,8 @@ Zdůvodněné výjimky (jsou v kódu i ve výstupu): tři právní stránky bez 
    MEV/MAV/MRV", „deload", „hledání i celou větou", u „Co si ještě dát" i „vlákninu",
    „auto-regulace zátěže". Na `/tvuj-coach/` je jen „objem po svalových partiích", „mezocyklus",
    doporučení zátěže na další sérii a dorovnání kalorií a bílkovin. Přepsáno podle stránky.
-5. **Počet článků:** `llms.txt` psal 146, článků je 152, blog píše „desítky článků". Teď
-   „přes 150", platí i po dalších vydáních.
+5. **Počet článků:** `llms.txt` psal 146, článků je 152, blog píše „desítky článků". Po
+   revizi R1 je v `llms.txt` bez čísla, slovy z výpisu blogu („desítky článků").
 6. **Profily:** `llms.txt` měl YouTube `youtube.com/@MartinBarna` a Facebook
    `facebook.com/share/1CZuTf2wvb/`; web odkazuje na `youtube.com/MartinBarna` a
    `facebook.com/martinbarnaonlinevyzivaafitness` (share odkaz je už jen v `_zaloha/`).
@@ -268,6 +269,37 @@ Zdůvodněné výjimky (jsou v kódu i ve výstupu): tři právní stránky bez 
 - Společná paměť v `C:\Users\fitne\...\memory\` v cloudovém prostředí není, četl jsem jen
   repo a `CLAUDE.md`. Do `CLAUDE.md` jsem přidal krátké stálé pravidlo „JSON-LD a AI
   vyhledávání", ať další session nerozbije `@id` kopiemi.
+
+## Opravy po R1
+
+Nezávislá revize R1 nenašla vážnou vadu, opravil jsem jejích 5 bodů ve stejné větvi:
+
+1. **(S) Jména klientů v `llms-full.txt`.** Generátor bral recenze z homepage, appky,
+   videokurzu, Academy, koučinku, konzultace a obou plánů zdarma (13 jmen, která revize
+   vypsala, a ve skutečnosti víc: i proměny v galerii homepage, „Kuba Navrátil", „Tomáš & Katka").
+   `scripts/generuj-llms-full.mjs` teď recenzní bloky vždy vynechá (`bezRecenzi`): podle třídy
+   (`rev`, `review`, `ref`, `testimonial`, `story`, `pcard`, `proof` a podobné), `figure`
+   s `blockquote` a nejmenší kartu, která má citaci a hvězdičky nebo zdroj Google/Facebook.
+   ⚠️ První verze vyhodila i třídu `refs`, což jsou zdroje ve dvou článcích; opraveno a ověřeno
+   rozdílem, že z článků nezmizel ani řádek. Grep na všech 70 jmen z `/reference/` + jména
+   z recenzí na dalších stránkách (71 celkem), celá i samotná příjmení: **0 výskytů**.
+   Nová pojistka v `geo-kontrola.mjs`: `LLMS_JMENO_KLIENTA` (jména z recenzí v JSON-LD na
+   `/reference/`, hlídá `llms.txt` i `llms-full.txt`). Na původním souboru hlásí 9 chyb.
+2. **(N) Konce řádků.** `geo-kontrola.mjs` porovnává `llms-full.txt` po převodu CRLF na LF.
+   Ověřeno: soubor uložený s CRLF dřív hlásil `LLMS_FULL_ZASTARALY`, teď ne.
+3. **(N) `llms.txt`:** „přes 150 článků" nahrazeno textem výpisu blogu: „Blog o výživě
+   a fitness: desítky článků bez mýtů a kategorických zákazů, srozumitelně a vědecky" + rubriky
+   z filtru. Kotvy „Databáze přes 50 000 potravin" a „Knihovna přes 410 fit receptů" beze změny;
+   `sync-cisla-web.mjs --dry` je dál najde a přepíše.
+4. **(N) Výpis blogu `clanky/index.html`:** stejná neshoda jako u výhřezu ploténky byla u 13
+   článků (karta má zkrácený titulek, JSON-LD plný). Sjednotil jsem všech 13 `headline` podle
+   karty, jen hodnotu, formát bloku zůstal (počítá s ním `blog-publikuj.mjs`, testy 11/11).
+   Nová kontrola `BLOG_NAZEV`; na původním souboru hlásí 13 chyb.
+   Poznámka mimo R1: JSON-LD výpisu obsahuje jen 60 z 152 článků (starší nejsou v `blogPost`).
+   Neopravoval jsem, kdyby se mělo doplnit, je to návrh pro majitele.
+5. Tahle sekce.
+
+`node scripts/geo-kontrola.mjs` po opravách: **0 chyb, 0 varování**.
 
 ## Nové soubory
 
