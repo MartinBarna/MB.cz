@@ -75,6 +75,19 @@ test('vygenerované HTML: JSON-LD + 0 pomlček + natvrdo CTA barvy', () => {
   assert.match(html, /<footer>/);
 });
 
+test('GEO: autor a vydavatel jako @id, viditelný autor s odkazem a datum', () => {
+  const d = parseDraft(DRAFT);
+  const html = buildArticleHtml(d, loadChrome(TEMPLATE));
+  const bp = JSON.parse(extractJsonLdBlocks(html)[0]);
+  assert.deepEqual(bp.author, { '@id': 'https://martinbarna.cz/#martin' });
+  assert.deepEqual(bp.publisher, { '@id': 'https://martinbarna.cz/#org' });
+  assert.equal(bp.inLanguage, 'cs');
+  assert.match(html, /<p class="hero-meta hero-byline"[^>]*>Autor: <a href="\/#omne"[^>]*>Martin Barna<\/a> · Vydáno <time datetime="2026-08-27">27\. 8\. 2026<\/time><\/p><\/header>/);
+  // FAQ v JSON-LD je čistý text, ne markdown: musí sedět s tím, co je vidět.
+  const faq = JSON.parse(extractJsonLdBlocks(html)[1]);
+  for (const q of faq.mainEntity) assert.doesNotMatch(q.acceptedAnswer.text, /\*\*|\]\(|<[a-z]/);
+});
+
 test('upsertIndex nezdvojí kartu ani JSON-LD a nesahe na cizí záznam', () => {
   const d = parseDraft(DRAFT);
   const index = fs.readFileSync(path.join(ROOT, 'clanky/index.html'), 'utf8');

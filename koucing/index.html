@@ -25,21 +25,66 @@
     {
       "@context": "https://schema.org",
       "@type": "Service",
+      "@id": "https://martinbarna.cz/koucing/#service",
       "name": "Online koučink na míru",
       "serviceType": "Výživový a fitness koučink",
       "description": "Online výživový a fitness koučink na míru s týdenním vedením - nastavení kalorií a maker, flexibilní stravování a týdenní kontroly s úpravou plánu.",
       "url": "https://martinbarna.cz/koucing/",
+      "image": "https://martinbarna.cz/assets/og/koucing.jpg?v=g7",
       "areaServed": "CZ",
       "provider": {
-        "@type": "Person",
-        "name": "Martin Barna",
-        "url": "https://martinbarna.cz/",
-        "jobTitle": "Online výživový a fitness kouč"
+        "@id": "https://martinbarna.cz/#org"
       },
       "offers": [
-        { "@type": "Offer", "name": "Online koučink Gold (měsíční)", "price": "6450", "priceCurrency": "CZK", "url": "https://martinbarna.cz/koucing/" },
-        { "@type": "Offer", "name": "Online koučink Diamond (měsíční)", "price": "11900", "priceCurrency": "CZK", "url": "https://martinbarna.cz/koucing/" },
-        { "@type": "Offer", "name": "Vstupní konzultace", "price": "2990", "priceCurrency": "CZK", "url": "https://martinbarna.cz/konzultace/" }
+        {
+          "@type": "Offer",
+          "name": "Online koučink Gold (měsíční)",
+          "price": "6450",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/koucing/"
+        },
+        {
+          "@type": "Offer",
+          "name": "Online koučink Gold (3 měsíce)",
+          "price": "16950",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/koucing/"
+        },
+        {
+          "@type": "Offer",
+          "name": "Online koučink Gold (6 měsíců)",
+          "price": "31950",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/koucing/"
+        },
+        {
+          "@type": "Offer",
+          "name": "Online koučink Diamond (měsíční)",
+          "price": "11900",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/koucing/"
+        },
+        {
+          "@type": "Offer",
+          "name": "Online koučink Diamond (3 měsíce)",
+          "price": "32900",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/koucing/"
+        },
+        {
+          "@type": "Offer",
+          "name": "Online koučink Diamond (6 měsíců)",
+          "price": "59500",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/koucing/"
+        },
+        {
+          "@type": "Offer",
+          "name": "Vstupní konzultace",
+          "price": "2990",
+          "priceCurrency": "CZK",
+          "url": "https://martinbarna.cz/konzultace/"
+        }
       ]
     }
     </script>
@@ -58,10 +103,10 @@
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
-        {"@type":"Question","name":"Musím chodit do posilovny?","acceptedAnswer":{"@type":"Answer","text":"Ne. Strava dělá 80 % výsledku - a přesně na ní koučink stojí. Pohyb nastavíme podle tvých možností: doma, venku i v posilovně. Zvládneš to i s nabitým diářem."}},
+        {"@type":"Question","name":"Musím chodit do posilovny?","acceptedAnswer":{"@type":"Answer","text":"Ne. Strava dělá 80 % výsledku. A přesně na ní koučink stojí. Pohyb nastavíme podle tvých možností: doma, venku i v posilovně. Zvládneš to i s nabitým diářem."}},
         {"@type":"Question","name":"Jak probíhají týdenní kontroly?","acceptedAnswer":{"@type":"Answer","text":"Jednou týdně vyplníš v klientské sekci krátký report, z mobilu za tři minuty: váhu (pracuju s týdenním průměrem), míry, stravu, kroky a minuty sportu, plus plán na další týden. Já všechno projdu, napíšu ti analýzu a upravím kalorie, makra i plán. Každý týden tak víš, na čem jsi."}},
         {"@type":"Question","name":"Budu se muset vzdát oblíbených jídel?","acceptedAnswer":{"@type":"Answer","text":"Ne. Učím flexibilní stravování: jíš normální jídlo, které tě baví, jen ve správném množství. Vejde se i pizza nebo zmrzlina."}},
-        {"@type":"Question","name":"Jak dlouho spolupráce trvá?","acceptedAnswer":{"@type":"Answer","text":"Balíčky jsou na 1, 3 nebo 6 měsíců - a čím delší období, tím výhodnější cena. Co dává smysl pro tvůj cíl, ti doporučím na konzultaci nebo v první zprávě."}},
+        {"@type":"Question","name":"Jak dlouho spolupráce trvá?","acceptedAnswer":{"@type":"Answer","text":"Balíčky jsou na 1, 3 nebo 6 měsíců. A čím delší období, tím výhodnější cena. Co dává smysl pro tvůj cíl, ti doporučím na konzultaci nebo v první zprávě."}},
         {"@type":"Question","name":"Je lepší koučink, nebo videokurz?","acceptedAnswer":{"@type":"Answer","text":"Když chceš vedení na míru s týdenními úpravami a podporou, vyber koučink. Doporučuju Gold, jde do něj většina lidí a výsledky má stejné jako Diamond. Diamond ber, jen když chceš navíc hovor každý týden. Když se chceš učit vlastním tempem, je ideální videokurz výživy."}}
       ]
     }
@@ -493,9 +538,9 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             <div class="ref"><div class="st">★★★★★</div><p>„S Martinem se mi podařilo shodit přes 40 kg čistého tuku. Naučil mě to, místo aby mi jen posílal jídelníček."</p><b>Rostislav Viencek</b></div>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:1.8rem;">
-            <img src="/assets/foto/promeny/katka.webp" alt="Katka - proměna před a po" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.1);">
-            <img src="/assets/foto/promeny/tomas.webp" alt="Tomáš - proměna před a po" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.1);">
-            <img src="/assets/foto/promeny/muz-97-85.webp" alt="Klient - proměna z 97 na 85 kg" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.1);">
+            <img src="/assets/foto/promeny/katka.webp" width="848" height="560" alt="Katka - proměna před a po" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.1);">
+            <img src="/assets/foto/promeny/tomas.webp" width="848" height="560" alt="Tomáš - proměna před a po" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.1);">
+            <img src="/assets/foto/promeny/muz-97-85.webp" width="1000" height="893" alt="Klient - proměna z 97 na 85 kg" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:14px;border:1px solid rgba(255,255,255,.1);">
         </div>
         <p class="center" style="color:var(--mut);font-size:.9rem;margin-top:.9rem;">Proměny klientů z koučinku, zveřejněné s jejich svolením. Další najdeš v referencích.</p>
         <p class="center" style="margin-top:1.2rem;"><a class="btn btn-ghost" href="/reference/">Přečíst 70 vybraných recenzí →</a></p>

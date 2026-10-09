@@ -33,51 +33,94 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
-      "name": "Martin Barna - Online výživa a fitness",
-      "description": "Online výživový a fitness koučink od roku 2013. Hubnutí, nabírání svalů a zvýšení výkonu bez jojo efektu.",
-      "telephone": "+420603229831",
-      "email": "martin@martinbarna.cz",
-      "url": "https://martinbarna.cz",
-      "logo": "https://martinbarna.cz/assets/icon-512.png",
-      "image": "https://martinbarna.cz/assets/og-default.jpg",
-      "priceRange": "$$",
-      "areaServed": "CZ",
-      "sameAs": [
-        "https://www.instagram.com/martinbarnaonlinevyzivafitness",
-        "https://www.tiktok.com/@martinbarna_cz",
-        "https://www.youtube.com/MartinBarna",
-        "https://www.facebook.com/martinbarnaonlinevyzivaafitness"
-      ],
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "reviewCount": "66",
-        "bestRating": "5",
-        "worstRating": "1"
-      }
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Martin Barna",
-      "url": "https://martinbarna.cz/",
-      "image": "https://martinbarna.cz/assets/og-default.jpg",
-      "jobTitle": "Online výživový a fitness kouč",
-      "description": "Online výživový a fitness kouč od roku 2013, přes 600 klientů. Specializace na flexibilní stravování, hubnutí, nabírání svalů a zvýšení výkonu. Vědecky podloženě, bez jojo efektu.",
-      "knowsAbout": ["výživa", "hubnutí", "flexibilní stravování", "makroživiny", "kalorický deficit", "silový trénink", "fitness koučink", "nabírání svalů"],
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Martin Barna - Online výživa a fitness",
-        "url": "https://martinbarna.cz/"
-      },
-      "sameAs": [
-        "https://www.instagram.com/martinbarnaonlinevyzivafitness",
-        "https://www.tiktok.com/@martinbarna_cz",
-        "https://www.youtube.com/MartinBarna",
-        "https://www.facebook.com/martinbarnaonlinevyzivaafitness"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://martinbarna.cz/#website",
+          "url": "https://martinbarna.cz/",
+          "name": "Martin Barna",
+          "alternateName": "Martin Barna · Online výživa a fitness",
+          "description": "Online výživový a fitness koučink, appka Tvůj Coach, videokurz výživy a Barna Academy. Vědecky podloženě, bez jojo efektu.",
+          "inLanguage": "cs",
+          "publisher": {
+            "@id": "https://martinbarna.cz/#org"
+          },
+          "about": {
+            "@id": "https://martinbarna.cz/#martin"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://martinbarna.cz/#martin",
+          "name": "Martin Barna",
+          "url": "https://martinbarna.cz/",
+          "image": "https://martinbarna.cz/assets/foto/martin/portret.webp",
+          "jobTitle": "Online výživový a fitness kouč",
+          "description": "Online výživový a fitness kouč od roku 2013, přes 600 klientů. Specializace na flexibilní stravování, hubnutí, nabírání svalů a zvýšení výkonu. Vědecky podloženě, bez jojo efektu.",
+          "knowsAbout": [
+            "výživa",
+            "hubnutí",
+            "flexibilní stravování",
+            "makroživiny",
+            "kalorický deficit",
+            "silový trénink",
+            "fitness koučink",
+            "nabírání svalů"
+          ],
+          "knowsLanguage": "cs",
+          "worksFor": {
+            "@id": "https://martinbarna.cz/#org"
+          },
+          "sameAs": [
+            "https://www.instagram.com/martinbarnaonlinevyzivafitness",
+            "https://www.tiktok.com/@martinbarna_cz",
+            "https://www.youtube.com/MartinBarna",
+            "https://www.facebook.com/martinbarnaonlinevyzivaafitness",
+            "https://herohero.co/martinbarna"
+          ]
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://martinbarna.cz/#org",
+          "name": "Martin Barna - Online výživa a fitness",
+          "url": "https://martinbarna.cz/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://martinbarna.cz/assets/icon-512.png",
+            "width": 512,
+            "height": 512
+          },
+          "image": "https://martinbarna.cz/assets/og-default.jpg",
+          "description": "Online výživový a fitness koučink od roku 2013. Hubnutí, nabírání svalů a zvýšení výkonu bez jojo efektu.",
+          "email": "martin@martinbarna.cz",
+          "telephone": "+420603229831",
+          "founder": {
+            "@id": "https://martinbarna.cz/#martin"
+          },
+          "identifier": {
+            "@type": "PropertyValue",
+            "propertyID": "IČO",
+            "value": "76383032"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Lumírova 489/11",
+            "postalCode": "700 30",
+            "addressLocality": "Ostrava-Výškovice",
+            "addressCountry": "CZ"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "Česká republika"
+          },
+          "sameAs": [
+            "https://www.instagram.com/martinbarnaonlinevyzivafitness",
+            "https://www.tiktok.com/@martinbarna_cz",
+            "https://www.youtube.com/MartinBarna",
+            "https://www.facebook.com/martinbarnaonlinevyzivaafitness",
+            "https://search.google.com/local/reviews?placeid=ChIJQ-8yTbnlE0cRJj3EiDujXRY"
+          ]
+        }
       ]
     }
     </script>
@@ -98,16 +141,40 @@
       "@context": "https://schema.org",
       "@type": "Service",
       "serviceType": "Online výživový a fitness koučink",
-      "provider": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz/" },
-      "areaServed": { "@type": "Country", "name": "Česká republika" },
+      "provider": {
+        "@id": "https://martinbarna.cz/#org"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Česká republika"
+      },
       "url": "https://martinbarna.cz/",
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
         "name": "Služby - Martin Barna",
         "itemListElement": [
-          { "@type": "Offer", "name": "Online konzultace", "price": "2990", "priceCurrency": "CZK", "url": "https://martinbarna.cz/konzultace/", "description": "Jednorázová konzultace na míru: nastavení jídelníčku a plán. Cena se odečte z koučinku při objednávce do 14 dní." },
-          { "@type": "Offer", "name": "Online koučink Gold (měsíční)", "price": "6450", "priceCurrency": "CZK", "url": "https://martinbarna.cz/#balicky" },
-          { "@type": "Offer", "name": "Online koučink Diamond (měsíční)", "price": "11900", "priceCurrency": "CZK", "url": "https://martinbarna.cz/#balicky" }
+          {
+            "@type": "Offer",
+            "name": "Online konzultace",
+            "price": "2990",
+            "priceCurrency": "CZK",
+            "url": "https://martinbarna.cz/konzultace/",
+            "description": "Jednorázová konzultace na míru: nastavení jídelníčku a plán. Cena se odečte z koučinku při objednávce do 14 dní."
+          },
+          {
+            "@type": "Offer",
+            "name": "Online koučink Gold (měsíční)",
+            "price": "6450",
+            "priceCurrency": "CZK",
+            "url": "https://martinbarna.cz/#balicky"
+          },
+          {
+            "@type": "Offer",
+            "name": "Online koučink Diamond (měsíční)",
+            "price": "11900",
+            "priceCurrency": "CZK",
+            "url": "https://martinbarna.cz/#balicky"
+          }
         ]
       }
     }
@@ -1031,7 +1098,7 @@ footer a{color:var(--gold-light)}
     </section>
 
     <footer>
-      <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online výživa a fitness" width="230" height="114" decoding="async">
+      <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online výživa a fitness" width="230" height="114" decoding="async" loading="lazy">
       <p>© 2026 Martin Barna · Online výživa a fitness. Všechna práva vyhrazena.</p>
       <p><a href="https://martinbarna.cz">martinbarna.cz</a> · <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> · <a href="tel:+420603229831">+420 603 229 831</a></p>
       <p>Martin Barna · IČO 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</p>

@@ -30,25 +30,41 @@
     {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
       {"@type":"Question","name":"Jak dlouho mám ke kurzu přístup?","acceptedAnswer":{"@type":"Answer","text":"Doživotně. Můžeš se k videím vracet, kdykoliv budeš chtít."}},
       {"@type":"Question","name":"Musím už něco o výživě vědět?","acceptedAnswer":{"@type":"Answer","text":"Ne. Kurz začíná od úplných základů a postupně tě dovede k pokročilým strategiím."}},
-      {"@type":"Question","name":"Na čem můžu kurz sledovat?","acceptedAnswer":{"@type":"Answer","text":"Na mobilu, tabletu i počítači - kdykoliv a kdekoliv."}},
-      {"@type":"Question","name":"Kdy a jak dostanu přístup po zaplacení?","acceptedAnswer":{"@type":"Answer","text":"Hned. Po zaplacení ti přijde e-mail s odkazem - vytvoříš si přístup (e-mail + heslo) a během pár minut jsi uvnitř kurzu."}},
-      {"@type":"Question","name":"Jak přesně funguje záruka vrácení peněz?","acceptedAnswer":{"@type":"Answer","text":"Do 14 dnů od nákupu stačí vyplnit krátký online formulář na martinbarna.cz/odstoupeni (odkaz najdeš i na děkovací stránce) nebo napsat na martin@martinbarna.cz a vrátím ti celou částku. Bez otázek."}},
-      {"@type":"Question","name":"Je lepší kurz, nebo koučink na míru?","acceptedAnswer":{"@type":"Answer","text":"Kurz je ideální, pokud chceš jet vlastním tempem. Chceš-li vedení na míru, mrkni na balíčky Gold a Diamond na martinbarna.cz."}}
+      {"@type":"Question","name":"Na čem můžu kurz sledovat?","acceptedAnswer":{"@type":"Answer","text":"Na mobilu, tabletu i počítači. Kdykoliv a kdekoliv."}},
+      {"@type":"Question","name":"Kdy a jak dostanu přístup po zaplacení?","acceptedAnswer":{"@type":"Answer","text":"Hned. Po zaplacení ti přijde e-mail s odkazem. Vytvoříš si přístup (e-mail + heslo) a během pár minut jsi uvnitř kurzu."}},
+      {"@type":"Question","name":"Jak přesně funguje záruka vrácení peněz?","acceptedAnswer":{"@type":"Answer","text":"Do 14 dnů od nákupu stačí vyplnit krátký online formulář (odkaz najdeš i na děkovací stránce) nebo napsat na martin@martinbarna.cz, a vrátím ti celou částku. Bez otázek."}},
+      {"@type":"Question","name":"Je lepší kurz, nebo koučink na míru?","acceptedAnswer":{"@type":"Answer","text":"Kurz je ideální, pokud chceš jet vlastním tempem. Chceš-li vedení na míru, mrkni na balíčky Gold a Diamond."}}
     ]}
     </script>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Course",
+      "@id": "https://martinbarna.cz/videokurz#course",
       "name": "Videokurz flexibilního stravování",
       "description": "Kompletní videokurz výživy: 182 videí, přes 20 hodin, kalkulačka makroživin, kuchařka 40+ receptů, 2 e-booky a celkem 26 bonusových materiálů. Hubnutí, nabírání i flexibilní stravování, vše vědecky podloženo. Doživotní přístup.",
-      "provider": { "@type": "Person", "name": "Martin Barna", "url": "https://martinbarna.cz" },
+      "url": "https://martinbarna.cz/videokurz",
+      "image": "https://martinbarna.cz/assets/og/videokurz.jpg?v=g7",
+      "inLanguage": "cs",
+      "provider": {
+        "@id": "https://martinbarna.cz/#org"
+      },
+      "creator": {
+        "@id": "https://martinbarna.cz/#martin"
+      },
       "offers": {
         "@type": "Offer",
         "price": "1490",
         "priceCurrency": "CZK",
         "availability": "https://schema.org/InStock",
         "url": "https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs"
+      },
+      "hasCourseInstance": {
+        "@type": "CourseInstance",
+        "courseMode": "Online",
+        "instructor": {
+          "@id": "https://martinbarna.cz/#martin"
+        }
       }
     }
     </script>
@@ -557,7 +573,7 @@
         </div>
     </section>
 
-    <footer><img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async">
+    <footer><img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online výživa a fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async" loading="lazy">
         <p class="mb-1">&copy; 2026 Martin Barna · Online výživa a fitness. Všechna práva vyhrazena.</p>
         <p class="mb-0"><a href="/">Hlavní web</a> · <a href="https://martinbarna.cz">martinbarna.cz</a> · <a href="tel:+420603229831">+420 603 229 831</a></p>
         <p class="mb-0" style="margin-top:.35rem">Martin Barna · IČO 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</p>
