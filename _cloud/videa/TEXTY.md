@@ -99,7 +99,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 15,0–19,0 | výčet | Hotové nástroje pro praxi.<br>• Generátor tréninků (fitko, doma i venku)<br>• Databáze 128 cviků (s provedením a chybami)<br>• Materiály pod tvým jménem (přílohy, kuchařky, plány) |
 | 19,0–22,5 | foto | Certifikát po testu a případovce.<br>Tu čtu osobně. |
 | 22,5–25,5 | čísla | • 256 lekcí ve 24 modulech<br>• 182 videí videokurzu v ceně |
-| 25,5–30,0 | výzva k akci | Barna Academy<br>990 Kč / měsíc<br>nebo 8 900 Kč doživotně<br>Appka Tvůj Coach VIP v ceně členství<br>martinbarna.cz/akademie<br>14denní záruka vrácení peněz. |
+| 25,5–30,0 | výzva k akci | Barna Academy<br>990 Kč / měsíc<br>nebo 8 900 Kč doživotně<br>Appka Tvůj Coach VIP v ceně obou variant<br>martinbarna.cz/akademie<br>14denní záruka vrácení peněz. |
 | cover | obrázek | Pro trenéry a výživové poradce<br>256 lekcí, generátory a AI Martin<br>Barna Academy<br>990 Kč / měsíc<br>martinbarna.cz/akademie |
 
 ## koucing-15.mp4 (15 s)

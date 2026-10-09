@@ -116,10 +116,8 @@
         st.appendChild(num); st.appendChild(lab);
         const dd = d + .1 + i * (def.stagger || .3);
         wrap.appendChild(reg(st, dd, 'pop'));
-        if (s.num != null) S.hooks.push((lt) => {
-          const p = S.cover ? 1 : easeOut(clamp((lt - dd) / .9));
-          num.textContent = Math.round(s.num * p).toLocaleString('cs-CZ').replace(/ /g, ' ') + (s.suf || '');
-        });
+        // Bez odpočítávání: v žádném snímku nesmí být jiné číslo než to pravdivé (náhled, pauza).
+        if (s.num != null) num.textContent = String(s.num).replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + (s.suf || '');
       });
     }
 
