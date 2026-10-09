@@ -26,7 +26,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 18,0–21,5 | záběr | Cíle se ti každý týden přepočítají.<br>Podle tvé váhy a zápisů z celého týdne. |
 | 21,5–25,0 | záběr | Napíše ti trénink i jídelníček.<br>Podle toho, kde cvičíš a kolik dní máš. |
 | 25,0–30,0 | výzva k akci | Appka Tvůj Coach VIP<br>499 Kč / měsíc<br>+ videokurz výživy zdarma k první platbě (182 videí)<br>tvujcoach.cz<br>Zrušíš kdykoliv. Do 14 dnů vrácení peněz. |
-| cover | obrázek | Kouč v kapse. Odpoví ve dvě ráno.<br>Appka Tvůj Coach VIP<br>499 Kč / měsíc<br>tvujcoach.cz |
+| cover | obrázek | AI kouč odpoví i ve dvě ráno.<br>Appka Tvůj Coach VIP<br>499 Kč / měsíc<br>tvujcoach.cz |
 
 ## tvuj-coach-basic-15.mp4 (15 s)
 
@@ -36,7 +36,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 3,5–6,0 | titulek | Appka ti nabídne, čím to dorovnáš.<br>Projde databázi, ať den nepřestřelíš. |
 | 6,0–9,5 | záběr | Poskládá ti celý den i s gramážemi.<br>A přidá nákupní seznam. |
 | 9,5–12,5 | záběr | Trénink podle toho, kde cvičíš. |
-| 12,5–15,0 | výzva k akci | Appka Tvůj Coach Basic<br>249 Kč / měsíc<br>Levnější volba bez AI. Čísla počítá engine appky.<br>tvujcoach.cz |
+| 12,5–15,0 | výzva k akci | Appka Tvůj Coach Basic<br>249 Kč / měsíc<br>Levnější volba bez AI. Všechno počítá appka sama.<br>tvujcoach.cz |
 | cover | obrázek | Zbývá 400 kcal. Co si ještě dát?<br>Appka Tvůj Coach Basic<br>249 Kč / měsíc<br>tvujcoach.cz |
 
 ## tvuj-coach-basic-30.mp4 (30 s)
@@ -62,7 +62,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 6,0–10,0 | čísla | • 182 videí<br>• 20+ hodin obsahu<br>• ∞ doživotní přístup |
 | 10,0–12,5 | výčet | A k tomu bonusy.<br>• Kalkulačka maker<br>• Kuchařka 40+ receptů<br>• Generátor receptů |
 | 12,5–15,0 | výzva k akci | Videokurz výživy<br>1 490 Kč jednorázově, doživotně<br>Nebo zdarma k první platbě appky Tvůj Coach VIP<br>martinbarna.cz/videokurz |
-| cover | obrázek | Pizza a výsledky? Ukážu ti jak.<br>Videokurz výživy · 182 videí<br>1 490 Kč jednorázově<br>martinbarna.cz/videokurz |
+| cover | obrázek | Pizza se do jídelníčku vejde.<br>Videokurz výživy · 182 videí<br>1 490 Kč jednorázově<br>martinbarna.cz/videokurz |
 
 ## videokurz-30.mp4 (30 s)
 
@@ -73,7 +73,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 8,0–12,0 | čísla | • 182 videí<br>• 20+ hodin obsahu<br>• ∞ doživotní přístup |
 | 12,0–16,5 | záběr | 26 bonusových materiálů v ceně.<br>Kalkulačka, kuchařka, e-booky, tréninkový plán. |
 | 16,5–20,5 | foto | Stejný systém, který učím klienty v koučinku.<br>Vlastním tempem, na mobilu i počítači. |
-| 20,5–24,0 | titulek | Nejdřív ochutnej.<br>11 lekcí zdarma. Stačí nechat e-mail. |
+| 20,5–24,0 | titulek | Pusť si 11 lekcí zdarma.<br>Stačí nechat e-mail. |
 | 24,0–30,0 | výzva k akci | Videokurz výživy<br>1 490 Kč jednorázově, doživotně<br>Nebo zdarma k první platbě appky Tvůj Coach VIP<br>martinbarna.cz/videokurz<br>14denní záruka vrácení peněz. |
 | cover | obrázek | Výživa od základů. 182 videí.<br>Videokurz výživy<br>1 490 Kč jednorázově<br>martinbarna.cz/videokurz |
 
@@ -96,7 +96,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 3,0–7,0 | záběr | AI Martin zná všech 256 lekcí a odpoví hned.<br>Je u každé lekce, ve dne v noci. |
 | 7,0–11,0 | záběr | Každá lekce prakticky.<br>Co uděláš s klientem v pondělí. |
 | 11,0–15,0 | záběr | Jídelníček na míru za pár vteřin.<br>Pod tvým jménem. |
-| 15,0–19,0 | výčet | Hotové nástroje pro praxi.<br>• Generátor tréninků (fitko, doma i venku)<br>• Databáze 128 cviků (s provedením a chybami)<br>• Materiály pod tvým jménem (přílohy, kuchařky, plány) |
+| 15,0–19,0 | výčet | Hotové nástroje pro praxi.<br>• Generátor tréninků (fitko, doma i venku)<br>• Databáze 128 cviků (provedení a časté chyby)<br>• Materiály pod tvým jménem (přílohy, kuchařky, plány) |
 | 19,0–22,5 | foto | Certifikát po testu a případovce.<br>Tu čtu osobně. |
 | 22,5–25,5 | čísla | • 256 lekcí ve 24 modulech<br>• 182 videí videokurzu v ceně |
 | 25,5–30,0 | výzva k akci | Barna Academy<br>990 Kč / měsíc<br>nebo 8 900 Kč doživotně<br>Appka Tvůj Coach VIP v ceně obou variant<br>martinbarna.cz/akademie<br>14denní záruka vrácení peněz. |
@@ -111,7 +111,7 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 6,5–10,0 | výčet | Co v koučinku máš.<br>• Jídlo, které tě baví (vejde se i pizza)<br>• Podpora po ruce (e-mail a WhatsApp, po–pá)<br>• Appka Tvůj Coach v ceně (po celou dobu koučinku) |
 | 10,0–12,5 | titulek | Koučink beru jen v omezeném počtu. |
 | 12,5–15,0 | výzva k akci | Online koučink Gold<br>6 450 Kč / měsíc<br>martinbarna.cz/koucing<br>Nebo mi nejdřív nezávazně napiš. |
-| cover | obrázek | Každý týden nový plán od kouče<br>Online koučink · Martin Barna<br>6 450 Kč / měsíc<br>martinbarna.cz/koucing |
+| cover | obrázek | Plán ti každý týden upravím já.<br>Online koučink · Martin Barna<br>6 450 Kč / měsíc<br>martinbarna.cz/koucing |
 
 ## koucing-30.mp4 (30 s)
 
@@ -124,5 +124,5 @@ Vygenerováno z `src/videos.js` (`node _cloud/videa/src/texty.js`). Co se změn�
 | 15,0–19,5 | výčet | V ceně každého balíčku.<br>• Appka Tvůj Coach<br>• AI Martin, kouč 24/7<br>• Klientská sekce s grafy<br>• Videokurz (182 videí) |
 | 19,5–23,0 | záběr | Gold si vybírá většina. |
 | 23,0–26,0 | titulek | Koučink beru jen v omezeném počtu.<br>Aby měl každý klient moji plnou pozornost. |
-| 26,0–30,0 | výzva k akci | Online koučink Gold<br>6 450 Kč / měsíc<br>Konzultace 2 990 Kč ti při objednávce koučinku do 14 dní odečtu<br>martinbarna.cz/koucing |
+| 26,0–30,0 | výzva k akci | Online koučink Gold<br>6 450 Kč / měsíc<br>Začni konzultací za 2 990 Kč, do 14 dní ti ji z koučinku odečtu.<br>martinbarna.cz/koucing |
 | cover | obrázek | Report za 3 minuty. Plán upravím já.<br>Online koučink · Martin Barna<br>6 450 Kč / měsíc<br>martinbarna.cz/koucing |

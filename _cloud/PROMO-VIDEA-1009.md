@@ -23,12 +23,12 @@ v `_cloud/videa/TEXTY.md`.
 |---|---|---|---|---|
 | `tvuj-coach-vip-15.mp4` | 15 s | 3,90 MB | Otázka k jídlu ve dvě ráno? + bublina „Kolik mi dnes zbývá?" | 499 Kč / měsíc, videokurz zdarma k první platbě, tvujcoach.cz |
 | `tvuj-coach-vip-30.mp4` | 30 s | 7,54 MB | totéž | 499 Kč / měsíc, videokurz (182 videí), zrušíš kdykoliv, 14 dní vrácení peněz |
-| `tvuj-coach-basic-15.mp4` | 15 s | 3,51 MB | Zbývá ti 400 kcal a 30 g bílkovin. Co si ještě dnes dát? | 249 Kč / měsíc, bez AI, tvujcoach.cz |
+| `tvuj-coach-basic-15.mp4` | 15 s | 3,50 MB | Zbývá ti 400 kcal a 30 g bílkovin. Co si ještě dnes dát? | 249 Kč / měsíc, bez AI, tvujcoach.cz |
 | `tvuj-coach-basic-30.mp4` | 30 s | 6,96 MB | Kolik sérií týdně padlo na záda? | 249 Kč / měsíc nebo 2 490 Kč na rok |
 | `videokurz-15.mp4` | 15 s | 2,87 MB | Dá se jíst pizza a pořád mít výsledky? | 1 490 Kč jednorázově, nebo zdarma k VIP, martinbarna.cz/videokurz |
 | `videokurz-30.mp4` | 30 s | 7,39 MB | Kalorie, bílkoviny, sacharidy, tuky. Kde začít? | totéž + 14denní záruka |
 | `academy-15.mp4` | 15 s | 4,16 MB | Klient chce jídelníček. Máš ho za pár vteřin? | 990 Kč / měsíc nebo 8 900 Kč doživotně, martinbarna.cz/akademie |
-| `academy-30.mp4` | 30 s | 8,62 MB | Studuješ v deset večer a nemáš se koho zeptat? | totéž + appka VIP v ceně obou variant, 14denní záruka |
+| `academy-30.mp4` | 30 s | 8,61 MB | Studuješ v deset večer a nemáš se koho zeptat? | totéž + appka VIP v ceně obou variant, 14denní záruka |
 | `koucing-15.mp4` | 15 s | 3,07 MB | Kdo ti každý týden projde čísla? | Gold 6 450 Kč / měsíc, martinbarna.cz/koucing |
 | `koucing-30.mp4` | 30 s | 6,79 MB | Týdenní report za 3 minuty z mobilu. | Gold 6 450 Kč / měsíc, konzultace 2 990 Kč se odečte |
 
@@ -145,6 +145,32 @@ Každá se dá vyrenderovat úpravou háčku ve `src/videos.js` (cca minuta na v
 Viz `_cloud/videa/src/README.md`. Zkráceně: z kořene repa `python3 -m http.server 8099`,
 pak `NODE_PATH=$(npm root -g) node _cloud/videa/src/render.js [video]`
 a `node _cloud/videa/src/texty.js`.
+
+## Hlasové kolo 9. 10.: upravené titulky
+
+Kolo hlasu Martina schválilo 67 titulků a sedm kusů přepsalo. Ty jsou ve videích a v `TEXTY.md`
+přesně takto, zbytek beze změny:
+
+| Video | Kde | Bylo | Je |
+|---|---|---|---|
+| `tvuj-coach-vip-30` | cover | Kouč v kapse. Odpoví ve dvě ráno. | AI kouč odpoví i ve dvě ráno. |
+| `tvuj-coach-basic-15` | 12,5–15,0 s | Levnější volba bez AI. Čísla počítá engine appky. | Levnější volba bez AI. Všechno počítá appka sama. |
+| `videokurz-15` | cover | Pizza a výsledky? Ukážu ti jak. | Pizza se do jídelníčku vejde. |
+| `videokurz-30` | 20,5–24,0 s | Nejdřív ochutnej. / 11 lekcí zdarma. Stačí nechat e-mail. | Pusť si 11 lekcí zdarma. / Stačí nechat e-mail. |
+| `academy-30` | 15,0–19,0 s | Databáze 128 cviků (s provedením a chybami) | Databáze 128 cviků (provedení a časté chyby) |
+| `koucing-15` | cover | Každý týden nový plán od kouče | Plán ti každý týden upravím já. |
+| `koucing-30` | 26,0–30,0 s | Konzultace 2 990 Kč ti při objednávce koučinku do 14 dní odečtu | Začni konzultací za 2 990 Kč, do 14 dní ti ji z koučinku odečtu. |
+
+**Ceny ověřené před renderem** (viditelný text stránek, lokální server): koučink Gold „6 450 Kč / měsíc“
+(`koucing/`), konzultace „2 990 Kč“ (`koucing/` i `konzultace/`), odečet „Když si do 14 dní po
+konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku“ (`koucing/`)
+a „Odečtu ti ji z koučinku, objednáš-li do 14 dní“ (`konzultace/`). Všechno sedí, čísla zůstala.
+
+**Bezpečná zóna**: kontrola všech 10 videí i coverů, 0 porušení a 0 přetečení. Přerenderováno
+s hudbou i bez: `tvuj-coach-basic-15`, `videokurz-30`, `academy-30`, `koucing-30` (s covery), plus
+covery `tvuj-coach-vip-30`, `videokurz-15`, `koucing-15` (jejich videa se nemění).
+Kontrolní snímky ze změněných scén v obou verzích jsou v pořádku. Háček „Dá se jíst pizza a pořád
+mít výsledky?“ ve videu `videokurz-15` zůstal, protože hlasové kolo ho nezměnilo (měnil se jen cover).
 
 ## Oprava 9. 10.: odznak „Ověřeno Martinem“
 
@@ -282,4 +308,4 @@ KO = `koucing/index.html`. Citace jsou z viditelného textu stránek (Chromium, 
 - **15,0–19,5 s** (výčet): KO: „Ke koučinku dostaneš vlastní digitální zázemí, v ceně každého balíčku.“ · KO: „Moderní klientská sekce … Grafy váhy, měr a pokroku“, „Appka Tvůj Coach“, „AI Martin: kouč 24/7“, „Videokurz v ceně · 182 videí“
 - **19,5–23,0 s** (záběr): KO: „Gold · Vedení na dálku, tohle si vybírá většina“ · Výřez karty Gold z koucing/index.html (mobil)
 - **23,0–26,0 s** (titulek): KO: „Koučink beru jen v omezeném počtu, aby měl každý klient mou plnou pozornost a výsledky.“
-- **26,0–30,0 s** (výzva k akci): KO: „Gold · 6 450 Kč / měsíc“ · KO: „Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku.“
+- **26,0–30,0 s** (výzva k akci): KO: „Gold · 6 450 Kč / měsíc“ · KO: „Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku.“ · konzultace/: „2 990 Kč“, „Odečtu ti ji z koučinku, objednáš-li do 14 dní“

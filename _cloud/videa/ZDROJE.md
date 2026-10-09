@@ -94,4 +94,4 @@ Ke každé scéně: odkud je tvrzení. TC = `tvuj-coach/index.html`, VK = `video
 - **15,0–19,5 s** (výčet): KO: „Ke koučinku dostaneš vlastní digitální zázemí, v ceně každého balíčku.“ · KO: „Moderní klientská sekce … Grafy váhy, měr a pokroku“, „Appka Tvůj Coach“, „AI Martin: kouč 24/7“, „Videokurz v ceně · 182 videí“
 - **19,5–23,0 s** (záběr): KO: „Gold · Vedení na dálku, tohle si vybírá většina“ · Výřez karty Gold z koucing/index.html (mobil)
 - **23,0–26,0 s** (titulek): KO: „Koučink beru jen v omezeném počtu, aby měl každý klient mou plnou pozornost a výsledky.“
-- **26,0–30,0 s** (výzva k akci): KO: „Gold · 6 450 Kč / měsíc“ · KO: „Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku.“
+- **26,0–30,0 s** (výzva k akci): KO: „Gold · 6 450 Kč / měsíc“ · KO: „Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku.“ · konzultace/: „2 990 Kč“, „Odečtu ti ji z koučinku, objednáš-li do 14 dní“

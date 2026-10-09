@@ -59,7 +59,7 @@ window.VIDEOS = {
         box: '+ [[videokurz výživy zdarma]]\nk první platbě (182 videí)', url: 'tvujcoach.cz', small: 'Zrušíš kdykoliv. Do 14 dnů vrácení peněz.',
         src: ['TC: „499 Kč / měsíc“', 'TC: „Videokurz výživy zdarma k první platbě (182 videí …)“', 'TC: „Zrušíš kdykoliv, do 14 dnů vrácení peněz“'] }
     ],
-    cover: { h: 'Kouč v kapse.\n[[Odpoví ve dvě ráno.]]', shot: A + 'dnes.webp', shotTop: 250, label: 'Appka Tvůj Coach VIP', price: CENY.vip, unit: '/ měsíc', url: 'tvujcoach.cz' }
+    cover: { h: 'AI kouč odpoví\n[[i ve dvě ráno.]]', shot: A + 'dnes.webp', shotTop: 250, label: 'Appka Tvůj Coach VIP', price: CENY.vip, unit: '/ měsíc', url: 'tvujcoach.cz' }
   },
 
   /* ───────────── 2) Tvůj Coach Basic ───────────── */
@@ -75,7 +75,7 @@ window.VIDEOS = {
       { type: 'card', t: [9.5, 12.5], cap: 'Trénink podle toho,\n[[kde cvičíš]].', img: A + 'generator-treninku.png', w: 580, pan: [0, .35],
         src: ['TC: „Plán podle toho, kde cvičíš BASIC“'] },
       { type: 'cta', t: [12.5, 15], label: 'Appka Tvůj Coach Basic', price: CENY.basic, unit: '/ měsíc',
-        box: 'Levnější volba [[bez AI]].\nČísla počítá engine appky.', url: 'tvujcoach.cz',
+        box: 'Levnější volba [[bez AI]].\nVšechno počítá appka sama.', url: 'tvujcoach.cz',
         src: ['TC: „Basic · Levnější volba bez AI · 249 Kč / měsíc“', 'TC: „Všechno tohle počítá engine appky sám, bez AI“'] }
     ],
     cover: { h: 'Zbývá 400 kcal.\n[[Co si ještě dát?]]', shot: A + 'generator-jidelnicku.png', shotTop: 0, label: 'Appka Tvůj Coach Basic', price: CENY.basic, unit: '/ měsíc', url: 'tvujcoach.cz' }
@@ -124,7 +124,7 @@ window.VIDEOS = {
         box: 'Nebo [[zdarma]] k první platbě\nappky Tvůj Coach VIP', url: 'martinbarna.cz/videokurz',
         src: ['VK: „Jednorázově 1 490 Kč, doživotní přístup“', 'VK: „Nebo ho dostaneš zdarma k první platbě appky Tvůj Coach VIP.“', 'URL: canonical videokurz.html = https://martinbarna.cz/videokurz'] }
     ],
-    cover: { h: 'Pizza a výsledky?\n[[Ukážu ti jak.]]', bg: FOTO + 'hero-2048.jpg', bgPos: '50% 20%', label: 'Videokurz výživy · 182 videí', price: CENY.videokurz, unit: 'jednorázově', url: 'martinbarna.cz/videokurz' }
+    cover: { h: 'Pizza se do\n[[jídelníčku vejde.]]', bg: FOTO + 'hero-2048.jpg', bgPos: '50% 20%', label: 'Videokurz výživy · 182 videí', price: CENY.videokurz, unit: 'jednorázově', url: 'martinbarna.cz/videokurz' }
   },
 
   'videokurz-30': {
@@ -141,7 +141,7 @@ window.VIDEOS = {
         src: ['VK: „Ke kurzu dostaneš 26 bonusových materiálů“', 'VK: „Kalkulačka, generátor receptů, kuchařka 40+, e-booky, výpočty, tréninkový plán a další.“'] },
       { type: 'photo', t: [16.5, 20.5], img: FOTO + 'hero-2048.jpg', pos: '50% 20%', cap: 'Stejný systém, který učím\nklienty v [[koučinku]].', sub: 'Vlastním tempem, na mobilu i počítači.',
         src: ['VK: „stejný systém, který učím klienty v osobním koučinku, jen vlastním tempem“', 'VK: „Na mobilu, tabletu i počítači.“'] },
-      { type: 'text', t: [20.5, 24], h: 'Nejdřív [[ochutnej]].', sub: '11 lekcí zdarma.\nStačí nechat e-mail.',
+      { type: 'text', t: [20.5, 24], h: 'Pusť si [[11 lekcí zdarma]].', sub: 'Stačí nechat e-mail.',
         src: ['VK: „Pusť si 11 lekcí zdarma … stačí nechat e-mail.“'] },
       { type: 'cta', t: [24, 30], label: 'Videokurz výživy', price: CENY.videokurz, unit: 'jednorázově, doživotně',
         box: 'Nebo [[zdarma]] k první platbě\nappky Tvůj Coach VIP', url: 'martinbarna.cz/videokurz', small: '14denní záruka vrácení peněz.',
@@ -182,7 +182,7 @@ window.VIDEOS = {
       { type: 'card', t: [11, 15], cap: 'Jídelníček na míru\n[[za pár vteřin]].', sub: 'Pod tvým jménem.', img: AK_IMG + '03-generator-cz-mobil.webp', w: 640, pan: [0, .5],
         src: ['AK: „Jídelníček na míru za pár vteřin.“', 'AK: „Dáš ho klientovi pod svým jménem.“'] },
       { type: 'rows', t: [15, 19], cap: 'Hotové nástroje\n[[pro praxi]].', stagger: .3,
-        rows: [{ ico: 'dumbbell', lab: 'Generátor tréninků', desc: 'fitko, doma i venku' }, { ico: 'list', lab: 'Databáze 128 cviků', desc: 's provedením a chybami' }, { ico: 'doc', lab: 'Materiály pod tvým jménem', desc: 'přílohy, kuchařky, plány' }],
+        rows: [{ ico: 'dumbbell', lab: 'Generátor tréninků', desc: 'fitko, doma i venku' }, { ico: 'list', lab: 'Databáze 128 cviků', desc: 'provedení a časté chyby' }, { ico: 'doc', lab: 'Materiály pod tvým jménem', desc: 'přílohy, kuchařky, plány' }],
         src: ['AK: „Generátor tréninků … Fitko, doma i venku“', 'AK: „Databáze cviků · 128 cviků s provedením krok za krokem a nejčastějšími chybami“', 'AK: „Rebrandovatelné science-based materiály · Profi přílohy, kuchařky, plány a průvodce, přebrandované na tvoje jméno“'] },
       { type: 'photo', t: [19, 22.5], img: FOTO + 'prednaska.jpg', pos: '40% 40%', cap: 'Certifikát po testu\na [[případovce]].', sub: 'Tu čtu osobně.',
         src: ['AK: „Certifikát Barna Academy po testu a případovce, kterou čtu osobně.“'] },
@@ -212,7 +212,7 @@ window.VIDEOS = {
       { type: 'cta', t: [12.5, 15], label: 'Online koučink Gold', price: CENY.gold, unit: '/ měsíc', url: 'martinbarna.cz/koucing', small: 'Nebo mi nejdřív nezávazně napiš.',
         src: ['KO: „Gold · 6 450 Kč / měsíc“', 'KO: „NEZÁVAZNĚ MI NAPSAT“', 'URL: canonical koucing/index.html = https://martinbarna.cz/koucing/'] }
     ],
-    cover: { h: 'Každý týden\n[[nový plán od kouče]]', bg: FOTO + 'koucink.jpg', bgPos: '18% 30%', label: 'Online koučink · Martin Barna', price: CENY.gold, unit: '/ měsíc', url: 'martinbarna.cz/koucing' }
+    cover: { h: 'Plán ti každý týden\n[[upravím já.]]', bg: FOTO + 'koucink.jpg', bgPos: '18% 30%', label: 'Online koučink · Martin Barna', price: CENY.gold, unit: '/ měsíc', url: 'martinbarna.cz/koucing' }
   },
 
   'koucing-30': {
@@ -234,8 +234,8 @@ window.VIDEOS = {
       { type: 'text', t: [23, 26], h: 'Koučink beru jen\nv [[omezeném počtu]].', sub: 'Aby měl každý klient moji plnou pozornost.',
         src: ['KO: „Koučink beru jen v omezeném počtu, aby měl každý klient mou plnou pozornost a výsledky.“'] },
       { type: 'cta', t: [26, 30], label: 'Online koučink Gold', price: CENY.gold, unit: '/ měsíc',
-        box: 'Konzultace ' + CENY.konzultace + ' ti při objednávce\nkoučinku do 14 dní [[odečtu]]', url: 'martinbarna.cz/koucing',
-        src: ['KO: „Gold · 6 450 Kč / měsíc“', 'KO: „Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku.“'] }
+        box: 'Začni konzultací za ' + CENY.konzultace + ',\ndo 14 dní ti ji z koučinku [[odečtu]].', url: 'martinbarna.cz/koucing',
+        src: ['KO: „Gold · 6 450 Kč / měsíc“', 'KO: „Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku.“', 'konzultace/: „2 990 Kč“, „Odečtu ti ji z koučinku, objednáš-li do 14 dní“'] }
     ],
     cover: { h: 'Report za 3 minuty.\n[[Plán upravím já.]]', bg: FOTO + 'hero-2048.jpg', bgPos: '50% 20%', label: 'Online koučink · Martin Barna', price: CENY.gold, unit: '/ měsíc', url: 'martinbarna.cz/koucing' }
   }
