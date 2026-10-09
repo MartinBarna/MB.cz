@@ -44,8 +44,8 @@ def check(json_path):
     errs, warns = [], []
     slug = os.path.basename(json_path)[:-5]
     raw = open(json_path, encoding="utf-8").read()
-    if "—" in raw:
-        errs.append("obsahuje U+2014 (%d x)" % raw.count("—"))
+    if "\u2014" in raw:
+        errs.append("obsahuje U+2014 (%d x)" % raw.count("\u2014"))
     try:
         d = json.loads(raw)
     except Exception as e:  # noqa: BLE001
