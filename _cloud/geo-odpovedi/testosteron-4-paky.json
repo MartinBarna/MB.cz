@@ -1,0 +1,36 @@
+{
+  "url": "https://martinbarna.cz/clanky/testosteron-4-paky.html",
+  "titulek": "Testosteron po čtyřicítce: 4 páky, co nestojí ani korunu",
+  "hlavni_otazka": "Mám po čtyřicítce řešit testosteron doplňky?",
+  "kratka_odpoved": "Podle článku ne jako první krok: čtyři páky, co s testosteronem hýbou nejvíc, leží jinde než zinek, ashwagandha nebo injekce, a žádná tě nestojí ani korunu. Nejdřív si srovnej základy. Jestli máš nízký testosteron, ukáže to jedině krevní test a posoudí lékař.",
+  "faq": [
+    {
+      "otazka": "Jak zjistím, jestli mám nízký testosteron?",
+      "odpoved": "Jedině krevním testem, který posoudí lékař. Článek sám zdůrazňuje, že není diagnóza a doktora nenahradí."
+    },
+    {
+      "otazka": "Je testosteronová terapie (TRT) dobré řešení?",
+      "odpoved": "Článek proti TRT není, ale je to rozhodnutí, které patří doktorovi po vyšetření, ne na první místo. Nejdřív si srovnej základy."
+    },
+    {
+      "otazka": "Kdy jít s testosteronem k lékaři?",
+      "odpoved": "Když tě dlouhodobě táhne únava, mizerné libido nebo nálada a ujíždí ti síla, nečekej a běž na vyšetření."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Po čtyřicítce začne většina chlapů řešit testosteron doplňky. Zinek, ashwagandha, „pět potravin na test\". A někdo rovnou míří na kliniku pro injekce"},
+    {"pro": "kratka_odpoved", "citace": "Přitom ty čtyři páky, co s testosteronem hýbou nejvíc, leží úplně jinde. A žádná z nich tě nestojí ani korunu"},
+    {"pro": "kratka_odpoved", "citace": "Nejdřív si srovnej základy"},
+    {"pro": "kratka_odpoved", "citace": "Jestli máš nízký testosteron, ukáže to jedině krevní test a posoudí lékař."},
+    {"pro": "faq[0]", "citace": "Jestli máš nízký testosteron, ukáže to jedině krevní test a posoudí lékař."},
+    {"pro": "faq[0]", "citace": "Hned na úvod, ať je jasno. Tohle není diagnóza."},
+    {"pro": "faq[0]", "citace": "Tenhle článek říká, na čem stavět. Doktora ti nenahradí"},
+    {"pro": "faq[1]", "citace": "Nejsem proti TRT, ale je to rozhodnutí, které patří doktorovi po vyšetření, ne na první místo. Nejdřív si srovnej základy"},
+    {"pro": "faq[2]", "citace": "A když tě dlouhodobě táhne únava, mizerné libido nebo nálada a ujíždí ti síla, nečekej a běž na vyšetření."}
+  ],
+  "nejiste": [
+    "Samotné čtyři páky jsou popsané jen v infografice (obrázcích). Text článku je nevyjmenovává a neuvádí k nim žádná čísla, ve zdrojích jsou jen nadpisy „Hubnutí a testosteron“, „Tuky v dietě“, „Alkohol“ a „Trénink a klidový testosteron“.",
+    "Článek neuvádí, jaké hodnoty testosteronu se považují za nízké.",
+    "Článek neříká, jestli doplňky jako zinek nebo ashwagandha nefungují vůbec, nebo jen méně než ty čtyři páky."
+  ]
+}

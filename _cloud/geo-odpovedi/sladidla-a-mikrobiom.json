@@ -1,0 +1,39 @@
+{
+  "url": "https://martinbarna.cz/clanky/sladidla-a-mikrobiom.html",
+  "titulek": "Zničí ti sladidla střeva? Co je pravda a co se přehání",
+  "hlavni_otazka": "Ničí umělá sladidla střevní mikrobiom?",
+  "kratka_odpoved": "Podle dosavadních dat u lidí ne, ale opravdu mění složení střevních bakterií, to ukázala kontrolovaná studie na lidech (Suez 2022). Mikrobiom ti ovšem mění všechno, co sníš, a nejdelší studie na lidech (rok, 341 účastníků) ukázala spíš příznivé změny, žádný rozvrat. Že by sladidla rozvrátila metabolismus, zatím data u lidí nepodpírají.",
+  "faq": [
+    {
+      "otazka": "Zvedají sladidla cukr v krvi?",
+      "odpoved": "Efekt na cukr byl malý a ukázal se jen u 2 ze 4 sladidel, u sacharinu a sukralózy, ne u aspartamu ani stévie. Byl krátkodobý, jen u části lidí a šlo o horší reakci na následnou dávku glukózy, ne o to, že by sladidlo cukr zvedalo samo."
+    },
+    {
+      "otazka": "Proč observační studie se sladidly straší?",
+      "odpoved": "Podle článku za tím stojí reverzní kauzalita. Lidé, kteří už jsou v riziku, sahají po light variantách právě proto, že chtějí hubnout a hlídat si cukr."
+    },
+    {
+      "otazka": "Ovlivní druh sladidla moji váhu?",
+      "odpoved": "Ne, o váze pořád rozhoduje kalorický příjem. Druh sladidla na ní nezmění nic."
+    },
+    {
+      "otazka": "Co když mám cukrovku nebo inzulinovou rezistenci?",
+      "odpoved": "To je výjimka, tvoje reakce na sladidla může být individuální. Prober si to s lékařem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Co je pravda: sladidla opravdu mění složení střevních bakterií. Ukázala to kontrolovaná studie na lidech (Suez 2022, výše)."},
+    {"pro": "kratka_odpoved", "citace": "Jenže mikrobiom ti mění úplně všechno, co sníš."},
+    {"pro": "kratka_odpoved", "citace": "Nejdelší studie na lidech trvala rok, měla 341 účastníků a ukázala spíš příznivé změny mikrobiomu. Žádný rozvrat."},
+    {"pro": "kratka_odpoved", "citace": "Ale skok do „rozvrátí ti metabolismus\" zatím data u lidí nepodpírají."},
+    {"pro": "faq[0]", "citace": "Efekt na cukr byl malý, ukázal se jen u 2 ze 4 sladidel (sacharin a sukralóza, ne aspartam ani stévie), byl krátkodobý a jen u části lidí."},
+    {"pro": "faq[0]", "citace": "I tam navíc šlo o horší reakci na následnou dávku glukózy, ne o to, že by sladidlo cukr zvedalo samo."},
+    {"pro": "faq[1]", "citace": "Proč tedy observační studie straší? Za tím stojí reverzní kauzalita. Lidé, kteří už jsou v riziku, sahají po light variantách právě proto, že chtějí hubnout a hlídat si cukr."},
+    {"pro": "faq[2]", "citace": "A o váze pořád rozhoduje kalorický příjem. Druh sladidla na ní nezmění nic."},
+    {"pro": "faq[3]", "citace": "Máš cukrovku nebo inzulinovou rezistenci? Tvoje reakce může být individuální, tohle si prober s lékařem."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, které sladidlo se zkoumalo v roční studii s 341 účastníky ani jaké konkrétní příznivé změny mikrobiomu našla.",
+    "Článek nevyčísluje, jak velká část lidí reagovala horší glukózovou odpovědí ani jak dlouho efekt trval."
+  ]
+}

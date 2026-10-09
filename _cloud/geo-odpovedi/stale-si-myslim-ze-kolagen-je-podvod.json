@@ -1,0 +1,34 @@
+{
+  "url": "https://martinbarna.cz/clanky/stale-si-myslim-ze-kolagen-je-podvod.html",
+  "titulek": "Stále si myslím, že kolagen je PODVOD 👀 😅",
+  "hlavni_otazka": "Má smysl brát kolagen jako doplněk stravy?",
+  "kratka_odpoved": "Podle článku spíš ne, u suplementace kolagenu pořád chybí důkaz jasných přínosů. Ve studii PMID 40523226 nezvýšilo 30 g hydrolyzovaného kolagenu po tréninku tvorbu svalových proteinů, proteinů pojivové tkáně ani proteinů kůže. Stejných, nebo lepších výsledků podle autora dosáhneš se syrovátkou a opalovacím krémem.",
+  "faq": [
+    {
+      "otazka": "Nepomáhá kolagen aspoň na stárnutí kůže?",
+      "odpoved": "Meta-analýza (PMID 40324552) sice našla pozitivní efekt na stárnutí kůže, jenže pozitivně vycházely studie placené prodejci kolagenu. Nezávisle financované studie žádný významný přínos neukázaly, což napovídá, že výsledky mohlo táhnout zkreslení."
+    },
+    {
+      "otazka": "Je kolagen pro pojivovou tkáň lepší než syrovátka?",
+      "odpoved": "Podle článku ne. Jiné studie ukázaly, že kolagen nezvedne tvorbu proteinů pojivové tkáně (CPS) o nic víc než obyčejná syrovátka (PMID 37202878 a 39086044)."
+    },
+    {
+      "otazka": "Je kolagen kvalitní zdroj bílkovin?",
+      "odpoved": "Podle článku ne, má příšerný profil aminokyselin, horší než kterýkoli rostlinný protein. A ani vysoké dávky nezvednou tvorbu svalových proteinů ani proteinů pojivové tkáně."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Ale u suplementace kolagenu podle mě pořád chybí důkaz, že má jasné přínosy."},
+    {"pro": "kratka_odpoved", "citace": "Zdravým dospělým tady po tréninku podali 30 g hydrolyzovaného kolagenu, nebo 30 g odpovídajících volných aminokyselin. A sledovali, jak rychle tělo staví svalové proteiny (MPS), proteiny pojivové tkáně (CPS) a proteiny kůže (SPS). To je ta studie pod PMID: 40523226."},
+    {"pro": "kratka_odpoved", "citace": "Spoiler: kolagen nezvýšil MPS, CPS ani SPS. Prostě nic."},
+    {"pro": "kratka_odpoved", "citace": "Stejných, nebo lepších výsledků dosáhneš se syrovátkou a opalovacím krémem."},
+    {"pro": "faq[0]", "citace": "Na to se podívala nová meta-analýza (PMID: 40324552). A vyšel jí pozitivní efekt kolagenu na stárnutí kůže…"},
+    {"pro": "faq[0]", "citace": "Studie placené prodejci kolagenu vycházely pozitivně. Nezávisle financované studie žádný významný přínos neukázaly. To dost napovídá, že výsledky mohlo táhnout zkreslení."},
+    {"pro": "faq[1]", "citace": "Jiné studie už dřív ukázaly, že kolagen nezvedne CPS o nic víc než obyčejná syrovátka (PMID: 37202878 a 39086044)."},
+    {"pro": "faq[2]", "citace": "Má příšerný profil aminokyselin, horší než kterýkoli rostlinný protein. A ani vysoké dávky nezvednou MPS nebo CPS (PMID: 40523226)."}
+  ],
+  "nejiste": [
+    "Článek se ptá i na studie o lepším hojení ran a pružnosti kůže, ale meta-analýzu rozebírá jen pro stárnutí kůže; k hojení ran závěr neuvádí.",
+    "Článek neuvádí, kolik studií bylo placených prodejci a kolik nezávislých, ani jak dlouho a v jakých dávkách se v nich kolagen užíval."
+  ]
+}

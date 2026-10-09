@@ -1,0 +1,38 @@
+{
+  "url": "https://martinbarna.cz/clanky/silovy-trenink-zlepsuje-mozkove-funkce-studie.html",
+  "titulek": "Silový trénink zlepšuje mozkové funkce – studie",
+  "hlavni_otazka": "Zlepšuje silový trénink fungování mozku?",
+  "kratka_odpoved": "Ano, podle meta-analýzy 58 randomizovaných studií byl odporový trénink nejefektivnější intervencí pro zlepšení globální kognitivní funkce u kognitivně zdravých starších dospělých, s velikostním efektem 0.55. Zlepšila se paměť, inhibiční kontrola i výkonná funkce. Nejvíc těžili starší lidé, ale efekt byl jasně průkazný i u zdravých dospělých pod 65 let.",
+  "faq": [
+    {
+      "otazka": "Proč posilování pomáhá mozku?",
+      "odpoved": "Cvičení stimuluje neurotrofické a růstové faktory a tlumí neurozánět. Mozek pak dostává víc krve a energie, snáz se přestavuje a tolik nedegraduje s časem."
+    },
+    {
+      "otazka": "Které mozkové funkce se po silovém tréninku zlepšují?",
+      "odpoved": "Paměť, inhibiční kontrola, díky které jsi racionálnější a míň impulzivní, a výkonná funkce, díky které jsi organizovanější."
+    },
+    {
+      "otazka": "Funguje to i u mladších lidí, nebo jen u seniorů?",
+      "odpoved": "Nejvíc z toho těžili starší lidé, ale i u zdravých dospělých pod 65 let byl efekt jasně průkazný."
+    },
+    {
+      "otazka": "Jak začít, když chci posilovat i kvůli hlavě?",
+      "odpoved": "Článek radí začít 3 sériemi dřepů, tahů a tlaků 3x týdně. Po měsíci si všímej, jak na tom jsi s pamětí a energií."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Nová meta-analýza 58 experimentů (randomizovaných studií) došla k závěru, že „odporový trénink byl nejefektivnější intervencí pro zlepšení globální kognitivní funkce u kognitivně zdravých starších dospělých“ (s významným velikostním efektem 0.55)."},
+    {"pro": "kratka_odpoved", "citace": "Zlepšila se paměť, inhibiční kontrola (díky ní jsi racionálnější a míň impulzivní) i výkonná funkce (díky ní jsi organizovanější)."},
+    {"pro": "kratka_odpoved", "citace": "Nejvíc z toho těžili starší lidé, ale i u zdravých dospělých pod 65 let byl efekt jasně průkazný."},
+    {"pro": "faq[0]", "citace": "Cvičení mozku pomáhá tak, že stimuluje neurotrofické a růstové faktory a tlumí neurozánět. Mozek pak dostává víc krve a energie, snáz se přestavuje a tolik nedegraduje s časem."},
+    {"pro": "faq[1]", "citace": "Zlepšila se paměť, inhibiční kontrola (díky ní jsi racionálnější a míň impulzivní) i výkonná funkce (díky ní jsi organizovanější)."},
+    {"pro": "faq[2]", "citace": "Nejvíc z toho těžili starší lidé, ale i u zdravých dospělých pod 65 let byl efekt jasně průkazný."},
+    {"pro": "faq[3]", "citace": "Začni dnes: 3 série dřepů, tahů a tlaků 3x týdně – a po měsíci si všímej, jak na tom jsi s pamětí a energií."}
+  ],
+  "nejiste": [
+    "Článek neuvádí autory, rok ani název citované meta-analýzy 58 experimentů.",
+    "Článek neříká, jak dlouho, jak často a s jakým objemem trénovali účastníci zahrnutých studií.",
+    "České údaje (nedostatek pohybu u 70 % dospělých podle MZ ČR, 60 % nadváhy podle ČSÚ) jsou v článku bez roku a přesného zdroje."
+  ]
+}
