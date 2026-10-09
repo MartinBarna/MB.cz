@@ -42,6 +42,7 @@
   .msg b{color:#fff;}
   .gate{color:var(--muted-2);}
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -62,12 +63,12 @@
 
       <form id="ciForm" autocomplete="off">
         <div class="fld">
-          <label>Váha <span class="hint">(kg, tvé jediné tvrdé číslo)</span></label>
+          <label for="weight">Váha <span class="hint">(kg, tvé jediné tvrdé číslo)</span></label>
           <input class="num" id="weight" type="text" inputmode="decimal" placeholder="např. 78,4" required>
         </div>
 
         <div class="fld">
-          <label>Dodržení plánu: <span class="rngval" id="adhVal">50</span> %</label>
+          <label for="adh">Dodržení plánu: <span class="rngval" id="adhVal">50</span> %</label>
           <input class="rng" id="adh" type="range" min="0" max="100" step="5" value="50">
           <div class="pillscap"><span>vůbec</span><span>napůl</span><span>na 100 %</span></div>
         </div>
@@ -99,19 +100,19 @@
         <div class="fld">
           <label>Tréninky <span class="hint">(splněno z plánovaných)</span></label>
           <div class="wk">
-            <input class="num" id="wDone" type="number" min="0" max="21" inputmode="numeric" value="0"> <span>z</span>
-            <input class="num" id="wPlan" type="number" min="0" max="21" inputmode="numeric" value="3">
+            <input class="num" id="wDone" aria-label="Splněné tréninky" type="number" min="0" max="21" inputmode="numeric" value="0"> <span>z</span>
+            <input class="num" id="wPlan" aria-label="Plánované tréninky" type="number" min="0" max="21" inputmode="numeric" value="3">
             <span>tréninků</span>
           </div>
         </div>
 
         <div class="fld">
-          <label>Co se ti povedlo? <span class="hint">(jedna věta, nepovinné)</span></label>
+          <label for="win">Co se ti povedlo? <span class="hint">(jedna věta, nepovinné)</span></label>
           <textarea class="num" id="win" maxlength="280" placeholder="např. Dodržel jsem bílkoviny každý den."></textarea>
         </div>
 
         <div class="fld">
-          <label>Kde to drhne? <span class="hint">(jedna věta, sem míří moje reakce)</span></label>
+          <label for="struggle">Kde to drhne? <span class="hint">(jedna věta, sem míří moje reakce)</span></label>
           <textarea class="num" id="struggle" maxlength="280" placeholder="např. O víkendu mi ujíždí večerní mlsání."></textarea>
         </div>
 

@@ -142,6 +142,7 @@ function videoPage(v) {
   .upsell b { color:#fff; }
   .upsell .go2 { display:block; margin-top:8px; color:var(--gold-soft); font-weight:700; }
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -408,6 +409,7 @@ function dashboard() {
   .freetag { display:inline-block; font-size:.64rem; font-weight:800; letter-spacing:.04em; color:#1A1222; background:var(--gold-soft); padding:1px 8px; border-radius:50px; margin-left:7px; vertical-align:middle; text-transform:uppercase; }
   body.freemode .matcard { display:none; }
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">

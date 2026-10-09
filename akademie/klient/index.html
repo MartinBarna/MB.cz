@@ -121,6 +121,7 @@
      Šířka: s `left:50%` měla hláška na mobilu jen půl displeje a delší věta se lámala do sloupce. */
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#211d2b;border:1px solid rgba(235,177,44,.5);color:#fff;border-radius:12px;padding:12px 20px;font-size:.92rem;z-index:80;box-shadow:0 8px 30px rgba(0,0,0,.5);pointer-events:none;width:max-content;max-width:calc(100vw - 32px);box-sizing:border-box;}
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba ba-klient">
   <div class="top"><div class="in">
@@ -196,7 +197,7 @@
           <h2>🌟 Tvoje proměna může inspirovat</h2>
           <p id="refSub">Máš za sebou pěkný kus cesty. Když budeš souhlasit, Martin může tvůj pokrok (křestní jméno + čísla) použít jako referenci, pomůžeš dalším se rozhoupat.</p>
           <div id="refForm" style="display:none;margin-top:12px;">
-            <textarea class="fin" id="refText" placeholder="Napiš pár vět: jak se ti spolupracuje, co se změnilo…"></textarea>
+            <textarea class="fin" id="refText" aria-label="Tvoje reference" placeholder="Napiš pár vět: jak se ti spolupracuje, co se změnilo…"></textarea>
             <label style="display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:#B9B3C4;margin:10px 0;cursor:pointer;"><input type="checkbox" id="refOk" style="width:auto;margin-top:3px;"> Souhlasím, aby Martin použil moje křestní jméno, moje slova a čísla pokroku jako referenci na webu a sociálních sítích.</label>
             <button class="kbtn" id="refSend">Odeslat Martinovi</button>
           </div>
@@ -1055,10 +1056,10 @@
   // ---- field helpers ----
   function fNum(id, label, unit, ph, val, opt){
     if(typeof val === "number") val = String(val).replace(".", ",");   // česká čárka v inputu (draft ukládá čísla)
-    return '<div class="frow"><label>' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + '</label><div class="funit"><input class="fin" id="' + id + '" type="text" inputmode="decimal" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">' + (unit ? '<span class="u">' + unit + "</span>" : "") + "</div></div>";
+    return '<div class="frow"><label for="' + id + '">' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + '</label><div class="funit"><input class="fin" id="' + id + '" type="text" inputmode="decimal" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">' + (unit ? '<span class="u">' + unit + "</span>" : "") + "</div></div>";
   }
   function fText(id, label, ph, val, opt, area){
-    return '<div class="frow"><label>' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + "</label>" + (area ? '<textarea class="fin" id="' + id + '" placeholder="' + (ph || "") + '">' + escH(val == null ? "" : val) + "</textarea>" : '<input class="fin" id="' + id + '" type="text" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">') + "</div>";
+    return '<div class="frow"><label for="' + id + '">' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + "</label>" + (area ? '<textarea class="fin" id="' + id + '" placeholder="' + (ph || "") + '">' + escH(val == null ? "" : val) + "</textarea>" : '<input class="fin" id="' + id + '" type="text" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">') + "</div>";
   }
   function fScale(id, label, val, lo, hi){
     var b = "";

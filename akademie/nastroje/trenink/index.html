@@ -70,6 +70,7 @@
     h1,.day h3 small{color:#161616!important;}
   }
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}@media (max-width:767px){input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),select,textarea{font-size:16px!important}}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -86,23 +87,23 @@
 
     <div class="panel" id="form">
       <div class="grid">
-        <div><label>Kde klient cvičí</label><select id="location">
+        <div><label for="location">Kde klient cvičí</label><select id="location">
           <option value="fitko">Fitko (posilovna)</option>
           <option value="doma">Doma</option>
           <option value="hriste">Venku / workout hřiště</option>
         </select></div>
-        <div><label>Vybavení</label><select id="equip">
+        <div><label for="equip">Vybavení</label><select id="equip">
           <option value="vse">Plně vybaveno</option>
           <option value="cinky">Jednoručky / kettlebell</option>
           <option value="telo">Jen vlastní tělo</option>
         </select></div>
-        <div><label>Úroveň</label><select id="level">
+        <div><label for="level">Úroveň</label><select id="level">
           <option value="zacatecnik">Začátečník</option>
           <option value="pokrocily" selected>Pokročilý</option>
           <option value="zkuseny">Zkušený</option>
         </select></div>
         <div style="grid-column:1/-1">
-          <label>Struktura tréninku</label>
+          <label for="struktura">Struktura tréninku</label>
           <select id="struktura">
             <option value="min_cviku">Míň cviků, víc sérií</option>
             <option value="standard" selected>Standard (doporučeno)</option>
@@ -111,7 +112,7 @@
           <p class="orez-vysvetleni" id="strukturaVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
         </div>
         <div style="grid-column:1/-1">
-          <label>Opakování a váha</label>
+          <label for="opakovani">Opakování a váha</label>
           <select id="opakovani">
             <option value="tezsi">Těžší váhy, míň opakování</option>
             <option value="standard" selected>Standard podle cíle</option>
@@ -121,7 +122,7 @@
           <p class="orez-vysvetleni" id="opakovaniPoznamka" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78">Je to hlavně o tom, co tě baví. Zhruba od 5 do 30 opakování tělo staví svaly i sílu, pokud je úsilí stejné: poslední série s 1 až 2 opakováními v záloze (tolik bys ještě zvládl). Když je toho v týdnu moc a neregeneruješ, nech v záloze 3 až 4. Cvik, který neumíš nebo nemáš rád, vyměň za náhradu uvedenou u cviku, nebo si nech plán vygenerovat znovu.</p>
         </div>
         <div style="grid-column:1/-1">
-          <label>Když se plán nevejde do objemu, co ubrat první?</label>
+          <label for="orezStyl">Když se plán nevejde do objemu, co ubrat první?</label>
           <select id="orezStyl">
             <option value="velke" selected>Držet velké cviky (doporučeno)</option>
             <option value="pestrost">Držet pestrost</option>
@@ -129,27 +130,27 @@
           </select>
           <p class="orez-vysvetleni" id="orezVysvetleni" style="margin:6px 0 0;font-size:.86rem;line-height:1.45;opacity:.78"></p>
         </div>
-        <div><label>Cíl</label><select id="goal">
+        <div><label for="goal">Cíl</label><select id="goal">
           <option value="svaly" selected>Svaly (hypertrofie)</option>
           <option value="sila">Síla</option>
           <option value="kondice">Hubnutí / kondice</option>
           <option value="vydrz">Vytrvalost / tonus</option>
         </select></div>
-        <div><label>Dní v týdnu</label><select id="daysCount"><option>2</option><option>3</option><option selected>4</option><option>5</option></select></div>
-        <div><label>Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Petr"></div>
+        <div><label for="daysCount">Dní v týdnu</label><select id="daysCount"><option>2</option><option>3</option><option selected>4</option><option>5</option></select></div>
+        <div><label for="client">Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Petr"></div>
       </div>
       <details class="brandbox" id="brandbox">
         <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">projeví se ve výstupu i v PDF (uloží se ti)</span></summary>
         <div class="grid" style="margin-top:12px;">
-          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková, fitness"></div>
+          <div><label for="trainer">Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková, fitness"></div>
           <div><label>Akcentová barva</label>
-            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" aria-label="Barva značky" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
             <span id="swatches" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
           </div>
           <div><label>Logo (nahraj soubor nebo URL)</label>
-            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="logofile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="logoclear" class="ghost no-print" style="display:none;font-size:.82rem">✕ odebrat logo</button></div>
-            <input id="logo" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
-          <div><label>Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="logofile" aria-label="Logo, soubor" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="logoclear" class="ghost no-print" style="display:none;font-size:.82rem">✕ odebrat logo</button></div>
+            <input id="logo" aria-label="Logo, URL" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
+          <div><label for="contact">Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
         </div>
       </details>
       <div class="actions">

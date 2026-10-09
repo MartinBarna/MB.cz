@@ -38,6 +38,7 @@
   .muted{color:var(--muted);font-size:.86rem}
   a{color:var(--gold-soft)}
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -61,16 +62,16 @@
     <!-- FORM -->
     <form id="ci" style="display:none">
       <div class="fld">
-        <label>Váha <span class="hint">(kg, ráno nalačno)</span></label>
-        <input type="text" name="weight" inputmode="decimal" placeholder="např. 82,5">
+        <label for="ci-weight">Váha <span class="hint">(kg, ráno nalačno)</span></label>
+        <input type="text" id="ci-weight" name="weight" inputmode="decimal" placeholder="např. 82,5">
       </div>
       <div class="fld">
-        <label>Pás <span class="hint">(cm, přes pupík)</span></label>
-        <input type="text" name="waist" inputmode="decimal" placeholder="např. 94">
+        <label for="ci-waist">Pás <span class="hint">(cm, přes pupík)</span></label>
+        <input type="text" id="ci-waist" name="waist" inputmode="decimal" placeholder="např. 94">
       </div>
       <div class="fld">
-        <label>Boky <span class="hint">(cm, nepovinné)</span></label>
-        <input type="text" name="hips" inputmode="decimal" placeholder="např. 102">
+        <label for="ci-hips">Boky <span class="hint">(cm, nepovinné)</span></label>
+        <input type="text" id="ci-hips" name="hips" inputmode="decimal" placeholder="např. 102">
       </div>
 
       <div class="fld">
@@ -115,8 +116,8 @@
       </div>
 
       <div class="fld">
-        <label>Chceš mi něco vzkázat? <span class="hint">(nepovinné)</span></label>
-        <input type="text" name="note" maxlength="200" placeholder="Co se povedlo / kde to drhne…">
+        <label for="ci-note">Chceš mi něco vzkázat? <span class="hint">(nepovinné)</span></label>
+        <input type="text" id="ci-note" name="note" maxlength="200" placeholder="Co se povedlo / kde to drhne…">
       </div>
 
       <p class="muted" id="err" style="color:#ff8a8a;display:none"></p>

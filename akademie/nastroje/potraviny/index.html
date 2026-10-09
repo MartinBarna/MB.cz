@@ -39,6 +39,7 @@
   .hidden{display:none;}
   .src{color:var(--muted);font-size:.78rem;margin-top:1.4rem;line-height:1.5;}
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -54,7 +55,7 @@
     <div id="lock" class="lock hidden">🔒 Plná verze je součástí <b>Barna Academy</b>. <a href="/akademie/" style="color:var(--gold-soft)">Získat přístup →</a></div>
 
     <div id="tool">
-      <div class="searchbox"><span class="si">🔍</span><input id="q" type="search" placeholder="Hledej potravinu… (např. rýže, tvaroh, banán)" autocomplete="off"></div>
+      <div class="searchbox"><span class="si">🔍</span><input id="q" type="search" aria-label="Hledat potravinu" placeholder="Hledej potravinu… (např. rýže, tvaroh, banán)" autocomplete="off"></div>
       <p class="hint" id="hint">Nezáleží na diakritice, „rohlik" najde „rohlík".</p>
       <div class="count" id="count"></div>
       <div id="results"></div>
