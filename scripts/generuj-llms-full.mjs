@@ -18,6 +18,10 @@
  * Co se do souboru NEDÁVÁ a proč:
  *   - menu, patička, formuláře, tlačítka, skryté prvky, prodejní CTA boxy v článcích
  *   - /reference/ (70 recenzí se jmény klientů; AI stačí shrnutí v llms.txt)
+ *   - ⛔ RECENZE A PROMĚNY KLIENTŮ NIKDE (revize R1, 9. 10. 2026): v souboru nesmí být
+ *     jméno klienta. Bloky se poznají podle třídy (RECENZE_TRIDA) i podle obsahu
+ *     (hvězdičky + citace, figure s blockquote), protože každá stránka je má jinak.
+ *     Pojistka: scripts/geo-kontrola.mjs hlásí LLMS_JMENO_KLIENTA.
  *   - interaktivní nástroje a kvíz (bez JS v nich není text, jen formulář)
  *   - právní stránky, admin, klientská sekce, placené lekce Academy, noindex
  */
@@ -75,6 +79,60 @@ export const HLAVNI = [
 const PRYC_TRIDA = /\b(nav|navlinks|nav-burger|mb-drawer|fab-wa|wa-modal|modal|cookie\w*|skip-link|cta-bar|ctabar|sticky-cta|author-box|cta-box|crumbs|share|toc-toggle|upsell\w*)\b/i;
 const PRYC_ID = /^(ctaBar|waModal|quiz|quizBar|quizResult|quizRestart|formDiky|kontaktForm|cookieBar|cookie\w*)$/;
 const PRYC_TAG = new Set(['nav', 'footer', 'form', 'button', 'dialog', 'input', 'label', 'select', 'option', 'h1']);
+
+/** Recenze, reference a proměny klientů (obsahují jména a citace klientů). */
+const RECENZE_TRIDA = /\b(rev|revs|review|reviews|ref|testimonials?|recenz\w*|story|stories|story-\w+|promen\w*|pcard|pgrid|proof|quotes?)\b/i;
+const KARTA = new Set(['div', 'figure', 'li', 'blockquote', 'article', 'aside']);
+
+/**
+ * Vyřadí z tokenů recenzní bloky: podle třídy, `figure` s `blockquote` a nejmenší
+ * kartu, která má hvězdičky i citaci („…"). Vrací nové pole tokenů.
+ */
+export function bezRecenzi(tokeny) {
+  // Párování otevíracích a zavíracích tagů (tolerantně jako textZTokenu).
+  const konec = new Array(tokeny.length).fill(-1);
+  const zas = [];
+  tokeny.forEach((t, i) => {
+    if (t.typ === 'otevreni' && !t.samo) zas.push(i);
+    else if (t.typ === 'zavreni') {
+      let k = zas.length - 1;
+      while (k >= 0 && tokeny[zas[k]].jmeno !== t.jmeno) k -= 1;
+      if (k < 0) return;
+      while (zas.length > k) konec[zas.pop()] = i;
+    }
+  });
+  for (const i of zas) konec[i] = tokeny.length - 1;
+  const text = (a, b) => {
+    let o = '';
+    for (let i = a; i <= b; i++) if (tokeny[i].typ === 'text') o += tokeny[i].text;
+    return o;
+  };
+  const jeKarta = (i) => {
+    const t = tokeny[i];
+    if (!KARTA.has(t.jmeno)) return false;
+    const x = text(i, konec[i]);
+    // Citace + hvězdičky, nebo citace + zdroj recenze (karta „doporučení na Facebooku").
+    return /[„"“]/.test(x) && (x.includes('★★★★★') || /\b(Google|Facebook)/.test(x))
+      && x.replace(/\s+/g, ' ').length <= 1500;
+  };
+  const ven = new Array(tokeny.length).fill(false);
+  const kandidati = [];
+  tokeny.forEach((t, i) => {
+    if (t.typ !== 'otevreni' || t.samo || konec[i] < 0) return;
+    const podleTridy = t.attrs.class && RECENZE_TRIDA.test(t.attrs.class);
+    const figura = t.jmeno === 'figure' && tokeny.slice(i, konec[i]).some((x) => x.typ === 'otevreni' && x.jmeno === 'blockquote');
+    if (podleTridy || figura) kandidati.push(i);
+    else if (jeKarta(i)) kandidati.push(i);
+  });
+  // U karet podle obsahu ber jen nejmenší (bez vnořené kandidátky), ať nezmizí celá sekce.
+  for (const i of kandidati) {
+    const vnorena = kandidati.some((j) => j > i && j < konec[i] && jeKarta(j));
+    const podleTridy = tokeny[i].attrs.class && RECENZE_TRIDA.test(tokeny[i].attrs.class);
+    if (!podleTridy && tokeny[i].jmeno !== 'figure' && vnorena) continue;
+    for (let k = i; k <= konec[i]; k++) ven[k] = true;
+  }
+  return tokeny.filter((_, i) => !ven[i]);
+}
 
 function vynechej(jmeno, attrs) {
   if (PRYC_TAG.has(jmeno)) return true;
@@ -142,7 +200,7 @@ export function sekceStranky(rel) {
   if (ld?.datePublished) meta.push(`Vydáno: ${ld.datePublished}`);
   if (ld?.dateModified && ld.dateModified !== ld.datePublished) meta.push(`Aktualizováno: ${ld.dateModified}`);
   const clanek = /^clanky\//.test(rel) ? vyrizni(body, (t) => t.jmeno === 'article') : null;
-  const text = uklid(textZTokenu(clanek || body, vynechej, true));
+  const text = uklid(textZTokenu(bezRecenzi(clanek || body), vynechej, true));
   return { rel, nadpis, url: souborNaUrl(rel), meta: meta.join(' · '), text };
 }
 
