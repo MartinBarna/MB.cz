@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Hrají geny při stavbě postavy roli?",
-      "odpoved": "Ano, ovlivňují výšku, šířku ramen, délku kostí, kam se ukládá tuk nebo jak rychle nabíráš svaly. Tyhle rozdíly jsou ale spektrum, ne tři přihrádky, a nevyplývá z nich, že bys měl jíst a trénovat zásadně jinak."
+      "odpoved": "Ano, ovlivňují výšku, šířku ramen, délku kostí, kam se ukládá tuk nebo jak rychle nabíráš svaly. Tyhle rozdíly jsou ale spektrum, ne tři přihrádky, a nevyplývá z nich, že bys měl jíst a trénovat úplně jinak."
     },
     {
       "otazka": "Proč škodí říkat si „jsem endomorf“?",
@@ -43,5 +43,6 @@
   "nejiste": [
     "Článek neuvádí, jak velký deficit nebo přebytek kalorií zvolit (jen „mírný“).",
     "Článek neuvádí zdroje k historii Sheldonovy teorie."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] zakázané slovo z výčtu AI frází nahrazeno „úplně jinak“ (význam beze změny)"
 }

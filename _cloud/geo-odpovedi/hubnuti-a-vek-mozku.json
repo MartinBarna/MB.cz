@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Má nadváha vliv na stárnutí mozku?",
-      "odpoved": "Velká zobrazovací práce našla u lidí s nadváhou ve středním věku mozek v průměru zhruba o deset let starší (Ronan 2016). Po výrazném zhubnutí, třeba po bariatrické operaci, odhadovaný věk mozku klesal (Zeighami 2022)."
+      "odpoved": "Velká zobrazovací práce našla u lidí s nadváhou ve středním věku mozek v průměru zhruba o deset let starší (Ronan 2016). Po výrazném zhubnutí, třeba po bariatrické operaci, odhadovaný věk mozku klesal (Zeighami 2022). Velká část těchto dat je ale pozorovací a stojí na souvislostech."
     },
     {
       "otazka": "Co udělat pro mozek prakticky?",
@@ -30,11 +30,13 @@
     {"pro": "faq[0]", "citace": "Tuková tkáň, hlavně ta břišní, drží tělo v mírném, doutnajícím zánětu a ten doléhá i na mozek. Když ubude tuku, ubude zánětu. V téhle studii šla nižší hladina zánětlivých a metabolických ukazatelů (třeba HOMA a leptin) ruku v ruce s mladším „věkem mozku\"."},
     {"pro": "faq[1]", "citace": "Look AHEAD sledoval přes tři tisíce lidí s cukrovkou 2. typu, kteří deset let jeli intenzivní změnu životního stylu, hubnutí a pohyb. Výsledek na myšlení? Žádný. Podíl lidí s kognitivním postižením byl v intervenční skupině 6,4 % a v kontrolní 6,6 %, statisticky totožné (Espeland 2017)."},
     {"pro": "faq[2]", "citace": "Velká zobrazovací práce našla u lidí s nadváhou ve středním věku mozek v průměru zhruba o deset let „starší\" (Ronan 2016). A po výrazném zhubnutí, třeba po bariatrické operaci, zase odhadovaný věk mozku klesal (Zeighami 2022)."},
+    {"pro": "faq[2]", "citace": "Velká část dat je pozorovací a stojí na souvislostech napříč studiemi."},
     {"pro": "faq[3]", "citace": "Pro mozek udělá hodně pohyb, spánek a zdravé cévy, často víc a rychleji než samotné číslo na váze."},
     {"pro": "faq[3]", "citace": "Žádné hladovky a extrémní diety. Mozku neprospějí a stejně nevydrží."}
   ],
   "nejiste": [
     "Článek neuvádí, o kolik let odhadovaný věk mozku po zhubnutí klesl ani kolik kilo lidé ve studii zhubli.",
     "Autoři studie podle článku sami volají po větších a lépe kontrolovaných studiích; výsledek je tedy předběžný."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] (nadváha a stárnutí mozku) doplněno, že data jsou z velké části pozorovací (souvislost, ne prokázaná příčina), ze závěrečného upozornění"
 }

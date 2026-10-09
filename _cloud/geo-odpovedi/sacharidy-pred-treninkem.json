@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/sacharidy-pred-treninkem.html",
   "titulek": "Banán před tréninkem: nutnost, nebo rituál?",
   "hlavni_otazka": "Potřebuju před silovým tréninkem sníst sacharidy, třeba banán?",
-  "kratka_odpoved": "Pro většinu lidí, co trénují najezení, jsou sacharidy před tréninkem zbytečné. Přehled 49 studií z roku 2022 (Henselmans et al., Nutrients) došel k tomu, že u silového tréninku v najezeném stavu výkon neovlivní. Reálně pomůžou po osmi a víc hodinách nalačno, při hodně objemovém tréninku nebo u tréninků delších než 45 minut.",
+  "kratka_odpoved": "Pro většinu lidí, co trénují najezení, jsou sacharidy před tréninkem zbytečné. Přehled 49 studií z roku 2022 (Henselmans et al., Nutrients) došel k tomu, že u silového tréninku v najezeném stavu sacharidy před cvičením výkon neovlivní. Reálně pomůžou po osmi a víc hodinách nalačno, při hodně objemovém tréninku nebo u tréninků delších než 45 minut.",
   "faq": [
     {
       "otazka": "Co ukázala studie se sladkým nápojem?",
@@ -67,5 +67,6 @@
     "Článek neuvádí, kolik sacharidů a jak dlouho před tréninkem sníst v situacích, kdy pomůžou.",
     "Článek mluví o silovém tréninku; neříká, jak je to u jiných druhů sportu.",
     "Zdroje uvedené na konci (King et al. 2022, Hamidvand et al. 2025) článek v textu nijak nerozebírá."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněn chybějící podmět („sacharidy před cvičením“), bez něj věta nedávala jasný smysl"
 }

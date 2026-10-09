@@ -13,8 +13,8 @@
       "odpoved": "Při postupném snižování utrácíš pořád stejně, ale účet pomalu klesá podle plánu. Celou dobu se cítíš líp, máš lepší vyhlídky a celá cesta je udržitelnější."
     },
     {
-      "otazka": "Můžu při hubnutí jíst o víkendu víc?",
-      "odpoved": "Ano, kouč tě má naučit, jak si dát i rande o víkendu s víc kaloriemi a pořád hubnout."
+      "otazka": "Stačí jednou pořádně seknout kalorie?",
+      "odpoved": "Ne. Pointa je naučit se fungovat s vlastním tělem dlouhodobě, jednorázové seknutí prostě nestačí."
     }
   ],
   "opory": [
@@ -28,11 +28,12 @@
     {"pro": "faq[1]", "citace": "Utrácíš pořád stejně, ale výplata ti pomalu klesá. A s ní i částka na účtu. Přesně podle plánu „vyšší síly“."},
     {"pro": "faq[1]", "citace": "Celou dobu se cítíš líp a máš lepší vyhlídky."},
     {"pro": "faq[1]", "citace": "Cítíš se líp a celá cesta je udržitelnější."},
-    {"pro": "faq[2]", "citace": "coach tě učí, jak si dát i rande o víkendu s víc kaloriemi a pořád hubnout"}
+    {"pro": "faq[2]", "citace": "Pointa je naučit se fungovat s výplatou i s vlastním tělem dlouhodobě. Strhnout částku jednou prostě nestačí."}
   ],
   "nejiste": [
     "Článek odpovídá hlavně přirovnáním k výplatě; fyziologii (metabolickou adaptaci, hormony) přímo nevysvětluje.",
     "Článek nevysvětluje, proč klient hubl i po navýšení sacharidů ze 130 na 160 g, jen ten případ uvádí jako podnět.",
     "Článek neuvádí, o kolik a jak rychle kalorie postupně snižovat."
-  ]
+  ],
+  "kontrola": "smazano: faq[2] (víkend s víc kaloriemi) odkazovalo na kouče a z vedlejší poznámky v přirovnání dělalo obecnou radu; nahrazeno otázkou o jednorázovém seknutí kalorií z pointy článku"
 }

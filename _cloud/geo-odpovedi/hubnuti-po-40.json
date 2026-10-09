@@ -17,8 +17,8 @@
       "odpoved": "Má po čtyřicítce ještě horší poměr rizika a výnosu než ve dvaceti. Odejde s ní víc svalu a ten se v padesáti nabírá pomaleji, než v jakém tempu odešel."
     },
     {
-      "otazka": "Proč váha v přechodu neklesá, i když se postava mění?",
-      "odpoved": "Ve studii SWAN se na začátku přechodu zdvojnásobila rychlost přibývání tuku a beztuková hmota začala klesat, zhruba do dvou let po poslední menstruaci. Číslo na váze může vypadat měsíce stejně, a přesto se pod ním mění poměr tuku a svalu. Proto měř i obvod pasu."
+      "otazka": "Proč se mi v přechodu mění postava, i když váha stojí?",
+      "odpoved": "Ve studii SWAN se na začátku přechodu zdvojnásobila rychlost přibývání tuku a beztuková hmota začala klesat, zhruba do dvou let po poslední menstruaci. Číslo na váze tak může vypadat měsíce stejně, a přesto se pod ním mění poměr tuku a svalu, proto měř i obvod pasu. O hormonální terapii se bav s lékařem."
     },
     {
       "otazka": "Jak rychle se dá po čtyřicítce hubnout?",
@@ -37,11 +37,13 @@
     {"pro": "faq[2]", "citace": "Ostrá dieta na 1 200 kcal má po čtyřicítce ještě horší poměr rizika a výnosu než ve dvaceti. Odejde s ní víc svalu a ten se v padesáti nabírá pomaleji, než v jakém tempu odešel."},
     {"pro": "faq[3]", "citace": "Ve studii SWAN, která ženám opakovaně měřila složení těla přístrojem DXA, se na začátku přechodu zdvojnásobila rychlost přibývání tuku a beztuková hmota začala klesat. Trvalo to zhruba do dvou let po poslední menstruaci, potom se křivky srovnaly."},
     {"pro": "faq[3]", "citace": "číslo na váze může vypadat celé měsíce stejně, a přesto se pod ním mění poměr tuku a svalu. Proto v tomhle období měřím i obvod pasu"},
+    {"pro": "faq[3]", "citace": "O hormonální terapii se bav s lékařem, tam já neradím."},
     {"pro": "faq[4]", "citace": "U většiny klientů dává smysl tempo kolem 0,5 procenta tělesné hmotnosti týdně, tedy zhruba 1,5 až 3 kg za měsíc podle toho, kolik vážíš. Rychlejší tempo jde taky, jen za cenu většího úbytku svalů a horší udržitelnosti."}
   ],
   "nejiste": [
     "O hormonální terapii v přechodu článek výslovně neradí a odkazuje na lékaře.",
     "Studie Verreijen 2017 běžela na lidech ve věku 55 až 80 let a šlo o výsledek uvnitř jedné skupiny (+0,6 kg beztukové hmoty při kombinaci bílkovin a posilování); článek sám říká, že si z ní bere hlavně směr, proto ji neuvádím jako samostatnou odpověď.",
     "Tempo 0,3 až 0,7 kg týdně a 0,5 % hmotnosti týdně (1,5 až 3 kg měsíčně) jsou v článku dvě různé formulace Martinovy praxe; nechávám je u dvou různých otázek tak, jak stojí."
-  ]
+  ],
+  "kontrola": "opraveno: faq[3] otázka přeformulována (článek netvrdí, že váha v přechodu neklesá, ale že může stát, zatímco se mění poměr tuku a svalu) a doplněno „o hormonální terapii se bav s lékařem“"
 }

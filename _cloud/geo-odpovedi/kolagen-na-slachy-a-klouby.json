@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kolagen-na-slachy-a-klouby.html",
   "titulek": "Kolagen na šlachy a klouby?",
   "hlavni_otazka": "Pomáhá kolagen na šlachy a klouby?",
-  "kratka_odpoved": "Nezávislé studie efekt nenašly: 15 g kolagenových peptidů denně nezměnilo adaptace šlach na 15 týdnů silového tréninku. Tělo si kolagen postaví samo, pokud má dost bílkovin a vitamínu C. Většina lidí podle článku žádný kolagen navíc nepotřebuje.",
+  "kratka_odpoved": "Nezávislé studie, které shrnuje Menno Henselmans, efekt nenašly: 15 g kolagenových peptidů denně nezměnilo adaptace šlach na 15 týdnů silového tréninku. Tělo si kolagen postaví samo, pokud má dost bílkovin a vitamínu C. Většina lidí podle něj žádný kolagen navíc nepotřebuje.",
   "faq": [
     {
       "otazka": "Co se s kolagenem v těle stane po snědení?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Co ukázaly nezávislé studie o kolagenu?",
-      "odpoved": "U silově trénovaných mužů neměl 15 g hydrolyzovaného kolagenu 2x denně žádný efekt na svalovou ani spojivovou tkáň, ani na bolest svalů. Aussieker a kol. (2023) nenašli, že by 30 g kolagenu po tréninku zvýšilo svalovou spojivovou tkáň nebo celkovou syntézu kolagenu v těle."
+      "odpoved": "V jedné nedávné studii u silově trénovaných mužů neměl 15 g hydrolyzovaného kolagenu 2x denně žádný efekt na svalovou ani spojivovou tkáň, ani na bolest svalů. Aussieker a kol. (2023) nenašli, že by 30 g kolagenu po tréninku zvýšilo svalovou spojivovou tkáň nebo celkovou syntézu kolagenu v těle."
     },
     {
       "otazka": "Co tedy dělat pro zdravé klouby a šlachy?",
@@ -38,12 +38,14 @@
     {"pro": "faq[2]", "citace": "Aussieker et al. (2023) nenašli, že suplementace 30 g kolagenu po tréninku zvyšuje svalovou spojivovou tkáň nebo myo-fibrilární syntézu proteinů, ani celkovou tělesnou syntézu kolagenu nebo rozklad"},
     {"pro": "faq[3]", "citace": "Pro zdraví kloubů radím svým studentům jednoduchou věc: dost bílkovin, vitamín C a omega-3 v jídelníčku, který tlumí zánět. K tomu dohlídnout na spánek a na stres."},
     {"pro": "faq[3]", "citace": "Přitom dost bílkovin (1,6–2,2 g/kg), vitamín C z citrusů a zeleniny a omega-3 z ryb a olejů odvedou pro spojivové tkáně, regeneraci i prevenci bolesti lepší práci."},
-    {"pro": "faq[4]", "citace": "V ER se řetězce hydroxylují (přidává se OH skupina) na prolinu a lysinu – to vyžaduje vitamín C (askorbovou kyselinu) jako kofaktor enzymů (prolyl hydroxylázy). Bez vitamínu C se kolagen nestabilizuje (jako u kurdějí)."}
+    {"pro": "faq[4]", "citace": "V ER se řetězce hydroxylují (přidává se OH skupina) na prolinu a lysinu – to vyžaduje vitamín C (askorbovou kyselinu) jako kofaktor enzymů (prolyl hydroxylázy). Bez vitamínu C se kolagen nestabilizuje (jako u kurdějí)."},
+    {"pro": "kratka_odpoved", "citace": "Toto je překlad zajímavého příspěvku od Menno Henselmans, experta na evidence-based fitness a výživu."}
   ],
   "nejiste": [
     "První popsaná studie (15 g 2x denně) trvala podle textu „během týdne silového tréninku“. Není jasné, jestli šlo o jediný týden, proto délku v odpovědi neuvádím.",
     "Článek připouští, že kolagen může fungovat líp na spojivové tkáně mimo svaly, a důkazy proti tomu opírá o dvě studie. Odpověď proto mluví o tom, co studie nenašly, ne o tom, že kolagen prokazatelně nefunguje nikdy.",
     "Údaje bez citovaného zdroje (syntéza kolagenu klesá po 25 letech o 1–1,5 % ročně, vitamín C 100 mg denně, spánek 7–9 h, ryby 2x týdně) jsem do odpovědí nedal. Článek je podává jako rady autora, ne jako výsledek studií.",
     "Velká část článku je překlad příspěvku Menna Henselmanse, zbytek je komentář a biochemický výklad autora. Článek neříká, kdo by kolagen naopak potřebovat mohl."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved přisouzena Mennu Henselmansovi (studie i věta „většina lidí kolagen nepotřebuje“ jsou z překladu jeho příspěvku, ne Martinovy); faq[2] doplněno „v jedné nedávné studii“"
 }

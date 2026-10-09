@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/bolave-svaly-doms-mytus.html",
   "titulek": "Bolavé svaly = dobrý trénink? Mýtus o svalovce (DOMS)",
   "hlavni_otazka": "Znamená svalovka po tréninku, že svaly rostou?",
-  "kratka_odpoved": "Ne, svalovka (DOMS) je hlavně reakce na nezvyklý podnět, třeba nový cvik nebo víc sérií než obvykle, a o růstu svalů ti neřekne skoro nic. Sval roste z progresivního přetížení, dost bílkovin a energie a z regenerace a spánku. Růst skoro bez svalovky je normální.",
+  "kratka_odpoved": "Ne, svalovka (DOMS) je hlavně reakce na nezvyklý podnět, třeba nový cvik nebo víc sérií než obvykle, a o růstu svalů ti neřekne skoro nic. Sval roste z progresivního přetížení, dost bílkovin a energie a z regenerace a spánku. Skvěle růst můžeš i skoro bez svalovky.",
   "faq": [
     {
       "otazka": "Co je DOMS?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Co sledovat místo svalovky?",
-      "odpoved": "Progres v zátěži a opakováních v čase, kvalitní techniku a plný rozsah pohybu, rozumný objem napříč týdnem, dost bílkovin a energie a spánek. Když ti postupně přibývají kila a opakování při čisté technice, rosteš, ať tě bolí, nebo ne."
+      "odpoved": "Progres v zátěži a opakováních v čase, kvalitní techniku a plný rozsah pohybu, rozumný objem napříč týdnem, dost bílkovin a energie a spánek. Když ti postupně přibývají kila a opakování při čisté technice a cítíš se odpočatý a silný, rosteš, ať tě bolí, nebo ne."
     },
     {
       "otazka": "Proč je honba za svalovkou špatně?",
@@ -49,5 +49,6 @@
     "Článek neuvádí, jak dlouho svalovka typicky trvá celkem, jen že vrcholí zhruba den až dva po tréninku.",
     "Článek neříká, kdy už bolest po tréninku není svalovka, ale zranění, a kdy s ní jít k lékaři.",
     "Článek nedává konkrétní čísla k objemu tréninku (počet sérií týdně) ani k množství bílkovin."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved „růst skoro bez svalovky je normální“ přepsáno blíž článku („můžeš skvěle růst skoro bez svalovky“); faq[2] doplněna vynechaná podmínka „cítíš se odpočatý a silný“"
 }

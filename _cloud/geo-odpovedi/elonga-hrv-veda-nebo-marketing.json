@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Jak HRV náramek používat rozumně?",
-      "odpoved": "Sleduj trend za 7–14 dní, ne jedno ranní skóre. O tréninku rozhoduj podle plánu, subjektivního pocitu a dlouhodobého trendu, appka je rádce, ne trenér. Při bušení srdce, mdlobách nebo dlouhodobé únavě jdi k lékaři."
+      "odpoved": "Sleduj trend za 7–14 dní, ne jedno ranní skóre. O tréninku rozhoduj podle plánu, subjektivního pocitu a dlouhodobého trendu, appka je rádce, ne trenér. Při bušení srdce, mdlobách, dlouhodobé únavě nebo duševních potížích jdi k lékaři, u duševní krize volej Linku první psychické pomoci 116 123."
     },
     {
       "otazka": "Je funkční věk z HRV appky spolehlivý?",
@@ -40,6 +40,7 @@
     {"pro": "faq[2]", "citace": "Sleduj trend za 7–14 dní, ne jedno ranní skóre."},
     {"pro": "faq[2]", "citace": "Rozhodnutí o tréninku nech na plánu + subjektivním pocitu + dlouhodobém trendu. Appka je rádce, ne trenér."},
     {"pro": "faq[2]", "citace": "Když máš zdravotní potíže (bušení srdce, mdloby, dlouhodobá únava, duševní potíže), jdi k lékaři. Náramek není ordinace."},
+    {"pro": "faq[2]", "citace": "U duševní krize volej Linku první psychické pomoci 116 123."},
     {"pro": "faq[3]", "citace": "Porovnání s věkovými normami HRV existuje ve výzkumu."},
     {"pro": "faq[3]", "citace": "Jedno skóre „je ti 34\" je marketingový kompozit, ne diagnóza stárnutí."},
     {"pro": "faq[3]", "citace": "Ber ho maximálně jako hrubý kompas v čase u tebe samotného."},
@@ -51,5 +52,6 @@
     "Článek nedává jednoznačné ano, nebo ne ke koupi; říká, že odpověď je „složitější než ano/ne“, a vymezuje, kdy náramek dává a nedává smysl.",
     "Článek výslovně uvádí, že nemá interní validační data Elongy; hodnocení přesnosti se může změnit, pokud firma zveřejní srovnání s EKG.",
     "Článek jmenuje konkrétní firmu a osobu (Radim Šlachta, Ph.D., mySASY). Odpovědi jsou formulované tak, aby tvrzení o firmě nepřesahovala článek; před zveřejněním doporučuji, aby je Martin zkontroloval."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] doplněny vynechané „duševní potíže“ mezi důvody jít k lékaři a Linka první psychické pomoci 116 123 ze závěrečného upozornění"
 }
