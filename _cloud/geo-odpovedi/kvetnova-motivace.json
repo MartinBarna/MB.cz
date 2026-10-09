@@ -5,7 +5,7 @@
   "kratka_odpoved": "Počítej s tím, že tě to bavit nemusí, a dělej to stejně. Mnoho úspěšných lidí, se kterými Martin Barna mluvil, cvičí a dbá na výživu šest dní v týdnu, nenávidí to, ale dělají to stejně. Nuť tělo do věcí, do kterých se mu nechce, ať je to poslední opakování, nebo odmítnutí dalšího sladkého.",
   "faq": [
     {
-      "otazka": "Jaký pohyb je nejlepší, abych u toho vydržel?",
+      "otazka": "Záleží na tom, jaký pohyb si vyberu?",
       "odpoved": "Je to jedno. Běhej, zvedej, jezdi na kole, dělej pilates, jez bílkoviny, zeleninu, vyváženě. Hlavně tělo nuť do věcí, do kterých se mu nechce."
     },
     {
@@ -20,7 +20,15 @@
   "opory": [
     {
       "pro": "kratka_odpoved",
-      "citace": "Mnoho úspěšných lidí, se kterými jsem mluvil, cvičí a dbá na výživu šest dní v týdnu. Nenávidí to. Ale dělají to stejně."
+      "citace": "Mnoho úspěšných lidí, se kterými jsem mluvil, cvičí a dbá na výživu šest dní v týdnu."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nenávidí to."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ale dělají to stejně."
     },
     {
       "pro": "kratka_odpoved",
@@ -47,5 +55,6 @@
     "Článek je motivační úvaha z osobní zkušenosti, ne návod. Nedává žádná čísla ani praktický postup, jak začít, kolikrát týdně trénovat nebo jak si návyk udržet.",
     "„Šest dní v týdnu\" popisuje, co dělají úspěšní lidé, se kterými autor mluvil. Článek to nepodává jako doporučení, proto to v odpovědi tak není.",
     "Postřeh, že nikdo z podnikatelů na akci neměl nadváhu, je jedna anekdota; jako obecné tvrzení jsem ho nepoužil."
-  ]
+  ],
+  "kontrola": "opraveno: otázka faq[0] ‚Jaký pohyb je nejlepší, abych u toho vydržel?‘ → ‚Záleží na tom, jaký pohyb si vyberu?‘, článek o vydržení u konkrétního pohybu nemluví, jen říká, že na volbě nezáleží; opora kratka_odpoved rozdělena na tři citace, protože původní přecházela přes CTA box (perex a tělo článku)"
 }

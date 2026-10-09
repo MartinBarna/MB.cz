@@ -5,7 +5,7 @@
   "kratka_odpoved": "Na nočních nebo rotujících směnách to máš objektivně těžší, protože rozhozený cirkadiánní rytmus poplete signály hladu a sytosti. Termodynamika ale platí pořád, takže zhubnout můžeš dál, jen potřebuješ chytřejší systém. Hlavní jídlo dej před směnu nebo po ní, jídlo si připrav z domu a spánek ber jako prioritu.",
   "faq": [
     {
-      "otazka": "O kolik směnný provoz zvyšuje riziko obezity?",
+      "otazka": "O kolik směnný provoz zvyšuje riziko obezity a metabolického syndromu?",
       "odpoved": "Podle meta-analýzy z roku 2018 (Sun, Obesity Reviews) mají směnní pracovníci o 23 % vyšší riziko obezity a podle meta-analýzy z roku 2021 (Wang, Chronobiology International) o 30 % vyšší riziko metabolického syndromu. U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné."
     },
     {
@@ -47,5 +47,6 @@
   "nejiste": [
     "Článek neříká, jestli se „zhruba dvojnásobné“ riziko u lidí s nočními směnami přes 20 let týká obezity, nebo metabolického syndromu, a neuvádí k tomu zdroj.",
     "Článek neuvádí, o kolik vyšší jsou hladiny inzulinu a leptinu u nočních směn ani z jaké studie údaj pochází."
-  ]
+  ],
+  "kontrola": "opraveno: otázka faq[0] rozšířena o metabolický syndrom, protože odpověď uvádí i jeho riziko a článek neříká, ke kterému riziku patří „zhruba dvojnásobné“ u nočních směn přes 20 let (pod otázkou jen na obezitu by to četlo jako dvojnásobné riziko obezity)"
 }

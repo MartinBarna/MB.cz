@@ -9,7 +9,7 @@
       "odpoved": "Ano. Chůzí spálíš mnohem víc než sezením, pomáhá proti bolesti zad a kloubů, zlepšuje náladu a spánek. I 20 minut denně udělá oproti člověku, který se nehýbe vůbec, obrovský rozdíl."
     },
     {
-      "otazka": "Proč je silový trénink lepší než kardio?",
+      "otazka": "Jakou výhodu má silový trénink oproti kardiu?",
       "odpoved": "Při kardiu sice spálíš víc energie, ale po silovém tréninku má tělo dalších 36–48 hodin potenciál regenerovat, a když mu dodáš dost bílkovin, regenerace sama pálí značné množství energie. U kardia ty následující dny regenerace nejsou."
     },
     {
@@ -43,5 +43,6 @@
     "Článek nevyčísluje, kolik energie spálí regenerace po silovém tréninku („značné množství“).",
     "Článek neuvádí zdroje k tvrzení o trojnásobném zatížení kloubů při běhu.",
     "Článek nedefinuje, od jaké nadváhy běh nedoporučuje."
-  ]
+  ],
+  "kontrola": "opraveno: otázka faq[1] ‚Proč je silový trénink lepší než kardio?‘ změněna na ‚Jakou výhodu má…‘, článek mluví o výhodě, ne o tom, že je silový trénink obecně lepší"
 }

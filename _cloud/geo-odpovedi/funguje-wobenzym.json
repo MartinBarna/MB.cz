@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/funguje-wobenzym.html",
   "titulek": "Funguje Wobenzym?",
   "hlavni_otazka": "Funguje Wobenzym na záněty a bolest kloubů?",
-  "kratka_odpoved": "Podle článku přesvědčivě ne: nejlepší data má u bolesti kloubů a urologických zánětů, jenže velkou část studií financoval výrobce a jsou staršího data. Do doporučených postupů odborných společností se nedostal a mechanismus účinku je sporný. Efekt srovnatelný s lékem nečekej a kvůli němu neodkládej návštěvu lékaře.",
+  "kratka_odpoved": "Důkazy přesvědčivé nejsou: nejlepší data má u bolesti kloubů a urologických zánětů, jenže velkou část studií financoval výrobce a jsou staršího data. Do doporučených postupů odborných společností se nedostal a mechanismus účinku je sporný. Efekt srovnatelný s lékem nečekej a kvůli němu neodkládej návštěvu lékaře.",
   "faq": [
     {
       "otazka": "Co je Wobenzym?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Je Wobenzym bezpečný?",
-      "odpoved": "Vážné vedlejší účinky se popisují jen výjimečně. Podle výrobce stojí za přípravkem víc než 200 studií bez vážných vedlejších účinků."
+      "odpoved": "Vážné vedlejší účinky se popisují jen výjimečně. Podle výrobce stojí za přípravkem víc než 200 studií bez vážných vedlejších účinků. Efekt srovnatelný s lékem od něj ale nečekej a kvůli němu rozhodně neodkládej návštěvu lékaře."
     }
   ],
   "opory": [
@@ -31,11 +31,13 @@
     {"pro": "faq[1]", "citace": "Argumentují tím, že část studií je starších nebo placených výrobcem a že výsledky nejsou konzistentní."},
     {"pro": "faq[2]", "citace": "U bolavých kloubů toho víc udělá silový trénink, úprava váhy a spánek. Tyhle tři věci mají za sebou výrazně víc důkazů a nestojí nic."},
     {"pro": "faq[3]", "citace": "vážné vedlejší účinky se popisují jen výjimečně"},
-    {"pro": "faq[3]", "citace": "Co se bezpečnosti týče, podle výrobce stojí za přípravkem víc než 200 studií a bez vážných vedlejších účinků."}
+    {"pro": "faq[3]", "citace": "Co se bezpečnosti týče, podle výrobce stojí za přípravkem víc než 200 studií a bez vážných vedlejších účinků."},
+    {"pro": "faq[3]", "citace": "Čekat od něj efekt srovnatelný s lékem bych ale nedoporučoval a rozhodně kvůli němu neodkládej návštěvu lékaře."}
   ],
   "nejiste": [
     "Článek neuvádí dávkování ani kontraindikace (léky na ředění krve, alergie); jde o lék, takže to patří k lékaři nebo lékárníkovi.",
     "Článek nejmenuje konkrétní studie (autory, časopisy), jen roky a typy studií.",
     "Údaj o 200 studiích bez vážných vedlejších účinků pochází od výrobce, ne z nezávislého zdroje; v odpovědi je to tak označené."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved ‚Podle článku přesvědčivě ne‘ → ‚Důkazy přesvědčivé nejsou‘ (článek říká, že důkazy nejsou přesvědčivé, ne že přesvědčivě nefunguje); faq[3] o bezpečnosti doplněno, že nemá čekat efekt léku a neodkládat návštěvu lékaře"
 }

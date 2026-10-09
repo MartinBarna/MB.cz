@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-ovoce-vs-bebe-susenka-z-hlediska-cuk.html",
   "titulek": "E-book Nejčastější dotazy klientů – Ovoce vs Bebe sušenka (z hlediska cukrů/sacharidů)",
   "hlavni_otazka": "Je ovoce lepší než sušenka, když obojí obsahuje cukr?",
-  "kratka_odpoved": "Pro většinu lidí ano, ale ne kvůli cukru samotnému. Bebe má pravděpodobně méně vlákniny a víc cukrů než většina ovoce, jablko nebo banán mají víc vitaminů a minerálů a díky vodě a vláknině vydržíš déle najedený. Občasná sušenka ale nevadí, když máš bílkoviny, vlákninu i kalorie jinak v pořádku.",
+  "kratka_odpoved": "Pro většinu lidí může být ovoce vhodnější. Bebe má pravděpodobně méně vlákniny a víc cukrů než většina ovoce, jablko nebo banán mají víc vitaminů a minerálů a díky vodě a vláknině vydržíš déle najedený. Občasná sušenka ale nevadí, když máš bílkoviny, vlákninu i kalorie jinak v pořádku.",
   "faq": [
     {
       "otazka": "Proč rýže zvedá krevní cukr pomaleji než cola?",
@@ -39,5 +39,6 @@
     "Článek neuvádí konkrétní obsah cukru, vlákniny ani kalorií v Bebe sušenkách a ovoci; srovnání je jen „pravděpodobně“.",
     "Pasáž o cukrovce a inzulinu (včetně věty, že jednotka inzulinu přenáší asi 10–15 jednotek glukózy) je zjednodušená a nepřesná, proto jsem z ní do odpovědí nic nebral. Doporučuji ji odborně zkontrolovat.",
     "Článek tvrdí, že po dvou oplatkách máš srovnatelné kalorie jako po ovoci, ale neuvádí, s jakým množstvím ovoce srovnává."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved z „Pro většinu lidí ano, ale ne kvůli cukru samotnému“ na „může být vhodnější“, článek to formuluje opatrně („může být ovoce všeobecně vhodnější“) a rozdíl v cukrech sám uvádí"
 }

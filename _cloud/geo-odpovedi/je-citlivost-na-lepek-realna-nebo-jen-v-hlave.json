@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/je-citlivost-na-lepek-realna-nebo-jen-v-hlave.html",
   "titulek": "Je citlivost na lepek reálná nebo jen v hlavě? 😏",
   "hlavni_otazka": "Je citlivost na lepek skutečná, nebo si ji lidé jen namlouvají?",
-  "kratka_odpoved": "U menšiny lidí je citlivost na lepek reálná i bez celiakie, spousta lidí ale ve skutečnosti řeší dráždivý tračník (IBS), citlivost na FODMAP nebo nocebo efekt. Ve studii, kde lidé nevěděli, co jedí, hlásili ti „citliví\" potíže, ať lepek jedli, nebo ne. Potíže si nech prověřit a nevyhýbej se lepku naslepo.",
+  "kratka_odpoved": "Podle Menna Henselmanse, jehož příspěvek článek překládá, je citlivost na lepek u menšiny lidí reálná i bez celiakie. Spousta lidí ale ve skutečnosti řeší dráždivý tračník (IBS), citlivost na FODMAP nebo nocebo efekt: ve studii, kde nevěděli, co jedí, hlásili „citliví“ potíže, ať lepek jedli, nebo ne. Potíže si nech prověřit a nevyhýbej se lepku naslepo.",
   "faq": [
     {
       "otazka": "Co ukázala studie, kde lidé nevěděli, jestli jedí lepek?",
@@ -22,6 +22,7 @@
     }
   ],
   "opory": [
+    {"pro": "kratka_odpoved", "citace": "Tohle je překlad zajímavého příspěvku od Menno Henselmanse, experta na evidence-based fitness a výživu."},
     {"pro": "kratka_odpoved", "citace": "U menšiny lidí je ta citlivost reálná i bez celiakie."},
     {"pro": "kratka_odpoved", "citace": "Spousta lidí, kteří si myslí, že jsou citliví na lepek, ve skutečnosti řeší syndrom dráždivého tračníku (IBS) nebo citlivost na FODMAP a jen to mylně hodí na gluten."},
     {"pro": "kratka_odpoved", "citace": "V jedné studii dostala skupina zdravých lidí (s i bez samozvané citlivosti na lepek) jídla s lepkem i bez něj, aniž by věděli, co zrovna jedí."},
@@ -37,9 +38,10 @@
   ],
   "nejiste": [
     "Článek je překlad příspěvku Menna Henselmanse a citovanou studii nijak nepojmenovává (autor, rok, počet účastníků), takže sílu důkazu nejde ověřit.",
-    "Článek neříká, kdo a jak má potíže prověřit (lékař, gastroenterolog), ani jak se testuje celiakie; zmiňuje jen „eliminační FODMAP dietu nebo testy\".",
-    "Poměr „na jednoho citlivého zhruba deset lidí bez důvodu\" je v článku nadsázka bez zdroje, nepoužil jsem ho.",
-    "Tvrzení z koučinkové části (tuk dolů, stabilnější inzulin, libido, kostní hustota po návratu sacharidů) a rada „dej si dost bílkovin na regeneraci\" nemají v článku oporu ve studii, proto nejsou v odpovědích.",
+    "Článek neříká, kdo a jak má potíže prověřit (lékař, gastroenterolog), ani jak se testuje celiakie; zmiňuje jen „eliminační FODMAP dietu nebo testy“.",
+    "Poměr „na jednoho citlivého zhruba deset lidí bez důvodu“ je v článku nadsázka bez zdroje, nepoužil jsem ho.",
+    "Tvrzení z koučinkové části (tuk dolů, stabilnější inzulin, libido, kostní hustota po návratu sacharidů) a rada „dej si dost bílkovin na regeneraci“ nemají v článku oporu ve studii, proto nejsou v odpovědích.",
     "Studie trvala pět dní; článek neříká, jestli by výsledek platil i dlouhodobě."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved přisouzena Mennu Henselmansovi (článek je překlad jeho příspěvku) a sjednocena česká uvozovka; v nejiste opraveny uvozovky"
 }

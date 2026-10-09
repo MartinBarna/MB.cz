@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-suplementy-se-kterymi-se-muzete-setk.html",
   "titulek": "E-book Nejčastější dotazy klientů – Suplementy, se kterými se můžete setkat",
   "hlavni_otazka": "Které doplňky stravy mají smysl a které jsou zbytečné?",
-  "kratka_odpoved": "Kreatin monohydrát je asi nejprověřenější doplněk: prokazatelně zvyšuje sílu a svalovou hmotu a stačí 3–5 g denně. BCAA ani multivitamin nepotřebuješ, když máš dost bílkovin a pestrou stravu. Spalovače fungují hlavně díky kofeinu a bez kalorického deficitu tuk neshodíš.",
+  "kratka_odpoved": "Kreatin monohydrát je asi nejprověřenější doplněk: prokazatelně zvyšuje sílu a svalovou hmotu a stačí 3–5 g denně. BCAA ani multivitamin nepotřebuješ, když máš dost bílkovin a pestrou stravu. Hlavní funkční složkou většiny spalovačů je kofein a bez kalorického deficitu tuk neshodíš.",
   "faq": [
     {
       "otazka": "Kolik kreatinu brát a je potřeba nasycovací fáze?",
@@ -33,6 +33,7 @@
     {"pro": "kratka_odpoved", "citace": "Mít ho nemusíš. Podle novějších výzkumů se ukazuje jako neúčinný."},
     {"pro": "kratka_odpoved", "citace": "Hlavní funkční složkou většiny spalovačů je kofein."},
     {"pro": "kratka_odpoved", "citace": "Bez kalorického deficitu tělesný tuk neshodíš."},
+    {"pro": "kratka_odpoved", "citace": "Dr. Eric Helms kdysi rozebral studie na většinu spalovačů a ukázalo se, že žádný statisticky významný vliv na spalování neprokázaly."},
     {"pro": "faq[0]", "citace": "Doporučuju brát 3 – 5 g denně podle tvojí tělesné váhy."},
     {"pro": "faq[0]", "citace": "Hlavní je brát ho každý den, aby se svalové buňky kreatinem nasytily."},
     {"pro": "faq[0]", "citace": "Někdo zařadí první 2 nebo 3 týdny nasycovací fázi a bere 10 – 20 g denně, rozdělených do dávek po 5 g a zapitých dostatkem vody. Tím zásoby nasytí dřív a pak drží 3 – 5 g dlouhodobě. Stejně tak můžeš od začátku brát jen 3 – 5 g denně bez nasycovací fáze – po měsíci budeš mít zásoby nasycené taky, jen to potrvá o něco déle."},
@@ -58,5 +59,6 @@
     "U BCAA článek nejdřív popisuje, že si je přisypává do jídla s málem bílkovin, pak je kupovat nedoporučuje. Do odpovědi jsem dal jen závěr článku (při dostatku bílkovin BCAA nic navíc nepřinesou).",
     "Článek tvrdí, že kreatin monohydrát je „100% efektivní v nasycení buněk“; formulace je nejasná, proto ji necituji.",
     "Hranice leucinu 1,7 g a 3,5–4 g na jídlo jsou v článku „podle výzkumů“ bez konkrétního zdroje, proto jsem je do odpovědí nedal."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved „Spalovače fungují hlavně díky kofeinu“ → „Hlavní funkční složkou většiny spalovačů je kofein“, článek uvádí, že spalovače žádný statisticky významný vliv na spalování neprokázaly"
 }

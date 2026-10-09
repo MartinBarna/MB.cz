@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/doporuceni-bisglycinatu-horciku-pro-vas-aktivni-zivotni-styl.html",
   "titulek": "Doporučení bisglycinátu hořčíku pro váš aktivní životní styl",
   "hlavni_otazka": "Jaký hořčík brát, když hodně sportuju?",
-  "kratka_odpoved": "Když pravidelně chodíš do fitka nebo naplno sportuješ, vyzkoušej bisglycinát hořčíku. Hořčík je v něm navázaný na glycin, dobře se vstřebává a obvykle nedělá problémy se zažíváním jako oxid hořčíku. Martin doporučuje 300–400 mg elementárního hořčíku denně, nejlíp večer, a začít nižší dávkou, třeba 200 mg.",
+  "kratka_odpoved": "Když pravidelně chodíš do fitka nebo naplno sportuješ, vyzkoušej bisglycinát hořčíku: dobře se vstřebává a obvykle nedělá problémy se zažíváním jako oxid hořčíku. Martin doporučuje 300–400 mg elementárního hořčíku denně, nejlíp večer, a začít nižší dávkou, třeba 200 mg. Než začneš brát jakýkoliv doplněk, poraď se s lékařem.",
   "faq": [
     {
       "otazka": "Proč zrovna bisglycinát hořčíku?",
@@ -25,6 +25,7 @@
     {"pro": "kratka_odpoved", "citace": "pokud pravidelně chodíš do fitka nebo sportuješ naplno, bisglycinát hořčíku je forma, kterou ti doporučuju vyzkoušet. Hořčík je tu navázaný na aminokyselinu glycin, díky čemuž se dobře vstřebává a obvykle nedělá problémy se zažíváním tak, jako třeba oxid hořčíku"},
     {"pro": "kratka_odpoved", "citace": "Doporučuju 300–400 mg elementárního hořčíku denně ve formě bisglycinátu, nejlíp večer"},
     {"pro": "kratka_odpoved", "citace": "Začni radši nižší dávkou (třeba 200 mg) a sleduj, jak na to tělo reaguje."},
+    {"pro": "kratka_odpoved", "citace": "A než začneš brát jakýkoliv doplněk, probereš to s lékařem, ať máš jistotu, že ti to sedí."},
     {"pro": "faq[0]", "citace": "Vazba na glycin pomáhá, aby se hořčík vstřebal v tenkém střevě přes dipeptidové kanály"},
     {"pro": "faq[0]", "citace": "Studie ukazují, že tahle forma drží hladiny hořčíku v těle líp. To se hodí hlavně aktivním lidem, kteří hořčík ztrácejí potem při sportu"},
     {"pro": "faq[1]", "citace": "Doporučuju 300–400 mg elementárního hořčíku denně ve formě bisglycinátu, nejlíp večer, ať podpoříš spánek a regeneraci svalů"},
@@ -39,5 +40,6 @@
     "Článek neuvádí, pro koho hořčík není vhodný (onemocnění ledvin, léky); obecně odkazuje na lékaře.",
     "Ceny a značky jsou k datu napsání článku; článek sám radí porovnat ceny na Heureka.cz nebo v lékárnách.",
     "Tvrzení o pomoci proti křečím a úzkosti článek jen zmiňuje bez čísel, proto jsem z nich samostatnou otázku nedělal."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o radu poradit se s lékařem před začátkem užívání doplňku (článek: „než začneš brát jakýkoliv doplněk, probereš to s lékařem“), protože uvádí dávkování"
 }

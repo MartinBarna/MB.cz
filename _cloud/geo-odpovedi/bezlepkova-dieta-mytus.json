@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co ukázala studie z roku 2025 o citlivosti na lepek?",
-      "odpoved": "Ve dvojitě zaslepeném pokusu s 28 lidmi s IBS, kteří věřili, že jim lepek škodí, nebyl mezi variantami statisticky významný rozdíl. Zhoršení nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu."
+      "odpoved": "Ve dvojitě zaslepeném pokusu s 28 lidmi s IBS, kteří věřili, že jim lepek škodí, nebyl mezi variantami statisticky významný rozdíl. Zhoršení nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu. Neceliakální citlivost na lepek přesto reálně existuje a část lidí ji skutečně má, potíže si proto nech prověřit u lékaře."
     }
   ],
   "opory": [
@@ -33,10 +33,13 @@
     {"pro": "faq[2]", "citace": "Celozrnná pšenice, žito a další obiloviny s lepkem jsou běžný zdroj vlákniny, B-vitaminů a minerálů."},
     {"pro": "faq[2]", "citace": "Když je vyřadíš jen proto, že je „lepek zrovna v módě\", spíš si ochudíš jídelníček, než pomůžeš."},
     {"pro": "faq[3]", "citace": "Vzali 28 lidí se syndromem dráždivého tračníku (IBS), kteří byli přesvědčení, že jim lepek dělá potíže"},
-    {"pro": "faq[3]", "citace": "Výsledek? Mezi variantami nebyl statisticky významný rozdíl. Zhoršení potíží nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu, které žádný lepek ani pšenici neobsahovalo."}
+    {"pro": "faq[3]", "citace": "Výsledek? Mezi variantami nebyl statisticky významný rozdíl. Zhoršení potíží nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu, které žádný lepek ani pšenici neobsahovalo."},
+    {"pro": "faq[3]", "citace": "Pozor, ať to nevyzní špatně: neceliakální citlivost na lepek (a citlivost na pšenici kvůli tzv. FODMAP, hůř stravitelné vláknině) reálně existuje a část lidí ji skutečně má."},
+    {"pro": "faq[3]", "citace": "O důvod víc nediagnostikovat se podle pocitu a nechat si potíže prověřit u lékaře."}
   ],
   "nejiste": [
     "Článek neuvádí, jak se celiakie nebo neceliakální citlivost na lepek diagnostikuje (jaké vyšetření).",
     "Článek neuvádí, kolik kilo lidé po vyřazení lepku typicky shodí; píše jen „pár kilo“."
-  ]
+  ],
+  "kontrola": "opraveno: faq[3] doplněno upozornění z článku, že neceliakální citlivost na lepek reálně existuje a potíže je třeba nechat prověřit u lékaře (bez něj studie zněla jako popření citlivosti)"
 }

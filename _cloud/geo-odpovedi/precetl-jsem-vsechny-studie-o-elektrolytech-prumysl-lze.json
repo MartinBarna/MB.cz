@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Co je ve skutečnosti v elektrolytových prášcích jako LMNT nebo Liquid IV?",
-      "odpoved": "Většina je v podstatě jen drahý chlorid sodný, tedy běžná sůl, s trochou draslíku a hořčíku."
+      "odpoved": "Podle Henselmanse je většina v podstatě jen drahý chlorid sodný, tedy běžná sůl, s trochou draslíku a hořčíku."
     },
     {
       "otazka": "Může přebytek sodíku škodit?",
@@ -14,11 +14,11 @@
     },
     {
       "otazka": "Kdy mají elektrolyty smysl?",
-      "odpoved": "Pouze v extrémních případech: při ultra-vytrvalostních závodech 4+ hodiny v horku, při keto nebo nízkosacharidové dietě (vyšší ztráty sodíku) a u některých zdravotních stavů s rizikem hyponatremie."
+      "odpoved": "Podle Henselmanse pouze v extrémních případech: při ultra-vytrvalostních závodech 4+ hodiny v horku, při keto nebo nízkosacharidové dietě (vyšší ztráty sodíku) a u některých zdravotních stavů s rizikem hyponatremie."
     },
     {
       "otazka": "Jak vzniká hyponatremie?",
-      "odpoved": "Hyponatremie, tedy nebezpečně nízký sodík, vzniká podle shrnutí většinou z přílišného pití vody bez dostatku sodíku, ne z jeho nedostatku."
+      "odpoved": "Hyponatremie, tedy nebezpečně nízký sodík, vzniká podle Henselmanse většinou z přílišného pití vody bez dostatku sodíku."
     }
   ],
   "opory": [
@@ -37,6 +37,10 @@
     {
       "pro": "faq[0]",
       "citace": "Většina „elektrolytových“ prášků (LMNT, Liquid IV, Element atd.) je v podstatě jen drahý chlorid sodný (běžná sůl) s trochou draslíku a hořčíku."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Menno Henselmans si dal tu práci a opravdu prošel všechny dostupné studie o elektrolytech, včetně hlavní přehledové studie z roku 2025."
     },
     {
       "pro": "faq[1]",
@@ -67,8 +71,16 @@
       "citace": "Některé zdravotní stavy s rizikem hyponatremie"
     },
     {
+      "pro": "faq[2]",
+      "citace": "Menno Henselmans si dal tu práci a opravdu prošel všechny dostupné studie o elektrolytech, včetně hlavní přehledové studie z roku 2025."
+    },
+    {
       "pro": "faq[3]",
       "citace": "Hyponatremie (nebezpečně nízký sodík) vzniká většinou z přílišného pití vody bez dostatku sodíku, ne z jeho nedostatku."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Menno Henselmans si dal tu práci a opravdu prošel všechny dostupné studie o elektrolytech, včetně hlavní přehledové studie z roku 2025."
     }
   ],
   "nejiste": [
@@ -76,5 +88,6 @@
     "U nárůstu rizika „přibližně o 6 % na každý gram navíc“ článek neříká, jaké přesně riziko a vůči jakému výchozímu příjmu se počítá.",
     "Článek nejmenuje, o jaké zdravotní stavy s rizikem hyponatremie jde, ani kolik sodíku tělo skutečně potřebuje.",
     "Věta o hyponatremii („z přílišného pití vody bez dostatku sodíku, ne z jeho nedostatku“) je formulovaná nejasně."
-  ]
+  ],
+  "kontrola": "opraveno: článek je shrnutí videa Menno Henselmanse, tvrzení ve faq[0], faq[2] a faq[3] nově přisouzena jemu (faq[3] místo vágního ‚podle shrnutí‘); z faq[3] vypuštěn nejasný dovětek ‚ne z jeho nedostatku‘, který odpovědi protiřečil"
 }

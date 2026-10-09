@@ -14,11 +14,11 @@
     },
     {
       "otazka": "Komu přerušovaný půst může sednout?",
-      "odpoved": "Zkus ho, pokud nerad snídáš, ujídáš hlavně večer, nebo ti vyhovuje mít jasné pravidlo „teď se nejí“. Zúžené okno ti může přirozeně srazit příjem."
+      "odpoved": "Zkus ho, pokud nerad snídáš, ujídáš hlavně večer, nebo ti vyhovuje mít jasné pravidlo „teď se nejí“. Zúžené okno ti může přirozeně srazit příjem. Není ale pro každého: těhotným, lidem s poruchou příjmu potravy nebo diabetikům na lécích se nehodí, při zdravotních potížích se poraď s lékařem."
     },
     {
       "otazka": "Kdy se do přerušovaného půstu nenutit?",
-      "odpoved": "Když ti kvůli hladu ujíždí koncentrace a nálada, sportuješ brzy ráno, nebo máš sklon se v jídelním okně přejíst tak, že deficit stejně zmizí. Když do okna naskládáš pizzu, colu a dezert, žádný půst tě nezachrání."
+      "odpoved": "Když ti kvůli hladu ujíždí koncentrace a nálada, sportuješ brzy ráno, nebo máš sklon se v jídelním okně přejíst tak, že deficit stejně zmizí. Když do okna naskládáš pizzu, colu a dezert, žádný půst tě nezachrání. Vůbec se nehodí třeba v těhotenství, při poruše příjmu potravy nebo u diabetiků na lécích, tam se poraď s lékařem."
     },
     {
       "otazka": "Je lepší jíst dvakrát, nebo pětkrát denně?",
@@ -33,13 +33,16 @@
     {"pro": "faq[0]", "citace": "A jsi v deficitu, aniž bys to počítal. Není to magie hormonů, je to matematika energetické bilance."},
     {"pro": "faq[1]", "citace": "Jedna forma, střídání „hladového\" a normálního dne, vyšla o něco líp (asi 1,3 kg navíc), ale hlavně v krátkých studiích do půl roku. V delších už rozdíl zmizel."},
     {"pro": "faq[2]", "citace": "Zkus ho, pokud: nerad snídáš, ujídáš hlavně večer, nebo ti vyhovuje mít jasné pravidlo „teď se nejí\". Zúžené okno ti může přirozeně srazit příjem."},
+    {"pro": "faq[2]", "citace": "Přerušovaný půst není vhodný pro každého (těhotné, lidé s poruchou příjmu potravy, diabetici na lécích aj.). Při zdravotních potížích se poraď s lékařem."},
     {"pro": "faq[3]", "citace": "Nenuť se do něj, pokud: ti kvůli hladu ujíždí koncentrace a nálada, sportuješ brzy ráno, nebo máš sklon se v tom okně přejíst tak, že deficit stejně zmizí."},
     {"pro": "faq[3]", "citace": "A pozor: když v „jídelním okně\" naskládáš pizzu, colu a dezert, žádný půst tě nezachrání."},
+    {"pro": "faq[3]", "citace": "Přerušovaný půst není vhodný pro každého (těhotné, lidé s poruchou příjmu potravy, diabetici na lécích aj.). Při zdravotních potížích se poraď s lékařem."},
     {"pro": "faq[4]", "citace": "Někomu vyhovuje jíst dvakrát denně, jinému pětkrát. Ani jeden není „správnější\". Rozhoduje, u čeho vydržíš a kolik toho sníš celkem."}
   ],
   "nejiste": [
     "Článek neuvádí, kolik kilogramů lidé v analýze s půstem nebo s klasickým deficitem celkově zhubli.",
-    "Článek nejmenuje autory analýzy v BMJ a neuvádí výsledky zvlášť pro jedení v časovém okně a pro celodenní půsty.",
+    "Článek neuvádí výsledky zvlášť pro jedení v časovém okně a pro celodenní půsty (autory analýzy jmenuje jen ve zdroji: Semnani-Azad Z. a kol., BMJ 2025).",
     "Článek neříká, jestli se výsledky liší podle pohlaví, věku nebo výchozí váhy."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] a faq[3] doplněno upozornění ze závěrečného disclaimeru (půst není vhodný pro těhotné, lidi s poruchou příjmu potravy a diabetiky na lécích, poraď se s lékařem); nejiste[1] opraveno, článek autory analýzy ve zdroji uvádí"
 }

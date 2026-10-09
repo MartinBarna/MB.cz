@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.html",
   "titulek": "Protein a mortalita: Mýtus vyvrácen! Další díl série Věda vs. Mýty ve Výživě.",
   "hlavni_otazka": "Zvyšuje vysoký příjem bílkovin riziko úmrtí?",
-  "kratka_odpoved": "Podle nové analýzy, na které se podílel Stuart Phillips, Ph.D., ne. Studie v časopise Applied Physiology, Nutrition, and Metabolism nenašla žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou. Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu.",
+  "kratka_odpoved": "Podle nové analýzy, na které se podílel Stuart Phillips, Ph.D., to data neukazují. Jeho studie v časopise Applied Physiology, Nutrition, and Metabolism nenašla žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou. Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu.",
   "faq": [
     {
       "otazka": "Odkud se vzal mýtus, že protein škodí stejně jako kouření?",
@@ -11,10 +11,6 @@
     {
       "otazka": "Kolik bílkovin mám jíst na jedno jídlo, když hubnu?",
       "odpoved": "Martin doporučuje cíl 30–50 g na jídlo: spočítej si bílkoviny na celý den a vyděl je počtem jídel. Vyšší protein podle něj tlumí chuť k jídlu, chrání svaly a zvedá TDEE, tedy celkový výdej energie."
-    },
-    {
-      "otazka": "Co Martin vidí u lidí, kteří zvednou bílkoviny na 1,6–2,2 g/kg?",
-      "odpoved": "Podle jeho zkušenosti s klienty nejen shodí tuk, ale často se jim zlepší i trávení, libido, vytrvalost, kostní hustota a mozkové funkce. Bez rizik je to podle něj tehdy, když je strava vyvážená a sedí konkrétnímu člověku."
     },
     {
       "otazka": "Mám se bát IGF-1?",
@@ -56,24 +52,17 @@
     },
     {
       "pro": "faq[2]",
-      "citace": "V koučinku to vidím u klientů, kteří zvednou protein na 1.6-2.2 g/kg. Nejen že shodí tuk, ale často se jim zlepší i trávení, libido, vytrvalost, kostní hustota a mozkové funkce"
-    },
-    {
-      "pro": "faq[2]",
-      "citace": "Bez rizik, pokud je strava vyvážená a sedí konkrétnímu člověku."
-    },
-    {
-      "pro": "faq[3]",
       "citace": "Pro zdravé stárnutí: IGF-1 není žádný ďábel. Řeš celkovou stravu místo strachu z proteinu."
     },
     {
-      "pro": "faq[3]",
+      "pro": "faq[2]",
       "citace": "A co k tomu říkám já, Martin Barna z Online Výživa a Fitness."
     }
   ],
   "nejiste": [
     "Článek neuvádí velikost vzorku, věk sledovaných lidí ani délku sledování v nové analýze.",
-    "Zlepšení trávení, libida, kostní hustoty a dalších věcí při 1.6-2.2 g/kg je Martinova zkušenost z praxe, ne výsledek citované studie.",
+    "Zlepšení trávení, libida, kostní hustoty a dalších věcí při 1.6-2.2 g/kg i věta „Bez rizik“ jsou Martinova zkušenost z praxe bez dat a bez výjimek pro nemoci (např. ledvin), ne výsledek citované studie; proto z nich FAQ není.",
     "Článek neříká, pro koho vyšší příjem bílkovin vhodný není; uvádí jen podmínku, že strava má být vyvážená a sedět konkrétnímu člověku."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved místo kategorického „ne“ formulace „data to neukazují“ (pozorovací analýza ukazuje jen nepřítomnost souvislosti); nejiste upraveno; smazano: faq[2] o zlepšení trávení, libida, kostní hustoty a mozku při 1,6–2,2 g/kg „bez rizik“ (jen Martinova zkušenost z praxe, zdravotní tvrzení bez dat a bez výjimky pro nemoci ledvin), faq[3] přečíslováno na faq[2]"
 }

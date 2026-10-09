@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Které krevní testy mají smysl?",
-      "odpoved": "Štítná žláza, vitamin D nebo krevní obraz. Ty ale řeší zdraví, ne hubnutí, a patří k lékaři, ne do laboratoře z reklamy."
+      "odpoved": "Štítná žláza, vitamin D nebo krevní obraz. Ty ale řeší zdraví, ne hubnutí, a patří k lékaři, ne do laboratoře z reklamy. Když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři."
     },
     {
       "otazka": "Reaguje každý na jídlo jinak?",
@@ -29,6 +29,7 @@
     {"pro": "faq[1]", "citace": "Pak je tu jiná studie, 204 lidí na šest měsíců, a ta postavila chytrou apku na cukr proti obyčejné nízkotučné dietě. Na váze vyšlo stejně. Personalizace dietu nedohnala."},
     {"pro": "faq[1]", "citace": "Senzor na paži je ale u zdravého člověka spíš drahá hračka. Deficit ti stejně nepřebije."},
     {"pro": "faq[2]", "citace": "Krevní testy svoje místo mají. Štítná žláza, vitamin D, krevní obraz. To ale řeší zdraví, ne hubnutí. A patří k lékaři, ne do laboratoře z reklamy."},
+    {"pro": "faq[2]", "citace": "Když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři"},
     {"pro": "faq[3]", "citace": "Že každý reaguje na jídlo trochu jinak, to je pravda a věda to potvrdila."},
     {"pro": "faq[3]", "citace": "Personalizace dietu nedohnala."}
   ],
@@ -36,5 +37,6 @@
     "Článek nejmenuje konkrétní tři alergologické společnosti, které IgG testy odmítají (ve zdrojích je jen CSACI Position Statement).",
     "Článek neuvádí, o kolik lidé ve studiích zhubli.",
     "Velká část tématu je v infografikách (obrázcích); text obrázků jsem nepoužil."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] doplněno „když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři“ z poznámky pod zdroji"
 }

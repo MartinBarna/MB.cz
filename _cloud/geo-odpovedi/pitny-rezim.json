@@ -19,10 +19,6 @@
     {
       "otazka": "Co se stane, když piju málo?",
       "odpoved": "Když máš vody málo, přijde únava, hůř se soustředíš a trénink za moc nestojí."
-    },
-    {
-      "otazka": "Počítá se káva a alkohol do pitného režimu?",
-      "odpoved": "Ano, i káva a alkohol se do pitného režimu počítají, proto je hlídej."
     }
   ],
   "opory": [
@@ -33,12 +29,12 @@
     {"pro": "faq[1]", "citace": "Slazené nápoje, džusy, slazená káva nebo alkohol do tebe dostanou stovky kalorií, které tě vůbec nezasytí."},
     {"pro": "faq[1]", "citace": "Stačí sklenice limonády a k tomu malé pivo a máš pryč celý dnešní deficit, aniž bys přitom cokoliv snědl."},
     {"pro": "faq[2]", "citace": "žízeň si často spleteš s hladem. Takže než sáhneš po svačině, dej si sklenici vody a chvíli počkej, jestli to nebyla jen žízeň."},
-    {"pro": "faq[3]", "citace": "Když jí máš málo, přijde únava, hůř se soustředíš a trénink za moc nestojí."},
-    {"pro": "faq[4]", "citace": "Hlídej kávu a alkohol. I ty se do pitného režimu počítají."}
+    {"pro": "faq[3]", "citace": "Když jí máš málo, přijde únava, hůř se soustředíš a trénink za moc nestojí."}
   ],
   "nejiste": [
     "Článek neříká, o kolik víc pít, když sportuješ nebo je horko (jen „přidej“).",
     "Článek neuvádí, odkud pochází orientační hodnota 30–35 ml na kilogram.",
-    "Článek nevysvětluje, proč je dobré hlídat kávu a alkohol, když se do pitného režimu počítají."
-  ]
+    "Věta „Hlídej kávu a alkohol. I ty se do pitného režimu počítají.“ je dvojznačná (nevysvětluje, proč je hlídat ani v jakém smyslu se alkohol „počítá“), proto z ní FAQ není."
+  ],
+  "kontrola": "opraveno: nejiste upraveno k vymazané položce; smazano: faq[4] o kávě a alkoholu v pitném režimu (odpověď „Ano … proto je hlídej“ domýšlela příčinnou vazbu, kterou článek nemá, a věta, že se alkohol počítá do pitného režimu, by citovaná samostatně mohla mást)"
 }

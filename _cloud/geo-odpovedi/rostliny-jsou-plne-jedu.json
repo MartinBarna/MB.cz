@@ -22,61 +22,23 @@
     }
   ],
   "opory": [
-    {
-      "pro": "kratka_odpoved",
-      "citace": "Jo, rostliny mají toxiny. Lektiny, fytáty, oxaláty, polyfenoly."
-    },
-    {
-      "pro": "kratka_odpoved",
-      "citace": "Ty rostlinné látky ve normálním množství fungují jako hormeze → malá dávka stresu, po které je tělo silnější, odolnější a zdravější."
-    },
-    {
-      "pro": "kratka_odpoved",
-      "citace": "Lidi, co jedí víc ovoce a zeleniny → nižší riziko úmrtí, srdečních chorob a rakoviny (PMID: 28338764, 39862679)"
-    },
-    {
-      "pro": "kratka_odpoved",
-      "citace": "Co na to velké meta-analýzy?"
-    },
-    {
-      "pro": "kratka_odpoved",
-      "citace": "Přestaň se bát rajčete nebo fazolí."
-    },
-    {
-      "pro": "kratka_odpoved",
-      "citace": "Layne Norton, PhD to shrnul dobře, já to jen přeložím a přidám český kontext:"
-    },
-    {
-      "pro": "faq[0]",
-      "citace": "A co fytáty, které trochu blokují železo a zinek?"
-    },
-    {
-      "pro": "faq[0]",
-      "citace": "Blokují, to je pravda. Ale v pestré stravě je celkový efekt pořád drtivě pozitivní."
-    },
-    {
-      "pro": "faq[1]",
-      "citace": "Podle dat SZÚ a České obezitologické společnosti jí 80–85 % Čechů méně než 400 g ovoce a zeleniny denně. Doporučuje se přitom aspoň 600–800 g."
-    },
-    {
-      "pro": "faq[1]",
-      "citace": "Takže většina z nás řeší spíš to, že zeleniny jí MÁLO."
-    },
-    {
-      "pro": "faq[2]",
-      "citace": "Kyslík. Voda. Sůl. A když to dotáhneme, tak i maso (heterocyklické aminy, PAH z grilování)."
-    },
-    {
-      "pro": "faq[2]",
-      "citace": "Layne Norton, PhD to shrnul dobře, já to jen přeložím a přidám český kontext:"
-    },
-    {
-      "pro": "faq[3]",
-      "citace": "Lepší metabolické zdraví, nižší inzulinová rezistence (PMID: 37549644, 29151369)"
-    }
+    {"pro": "kratka_odpoved", "citace": "Jo, rostliny mají toxiny. Lektiny, fytáty, oxaláty, polyfenoly."},
+    {"pro": "kratka_odpoved", "citace": "Ty rostlinné látky ve normálním množství fungují jako hormeze → malá dávka stresu, po které je tělo silnější, odolnější a zdravější."},
+    {"pro": "kratka_odpoved", "citace": "Lidi, co jedí víc ovoce a zeleniny → nižší riziko úmrtí, srdečních chorob a rakoviny (PMID: 28338764, 39862679)"},
+    {"pro": "kratka_odpoved", "citace": "Co na to velké meta-analýzy?"},
+    {"pro": "kratka_odpoved", "citace": "Přestaň se bát rajčete nebo fazolí."},
+    {"pro": "kratka_odpoved", "citace": "Layne Norton, PhD to shrnul dobře, já to jen přeložím a přidám český kontext:"},
+    {"pro": "faq[0]", "citace": "A co fytáty, které trochu blokují železo a zinek?"},
+    {"pro": "faq[0]", "citace": "Blokují, to je pravda. Ale v pestré stravě je celkový efekt pořád drtivě pozitivní."},
+    {"pro": "faq[1]", "citace": "Podle dat SZÚ a České obezitologické společnosti jí 80–85 % Čechů méně než 400 g ovoce a zeleniny denně. Doporučuje se přitom aspoň 600–800 g."},
+    {"pro": "faq[1]", "citace": "Takže většina z nás řeší spíš to, že zeleniny jí MÁLO."},
+    {"pro": "faq[2]", "citace": "Kyslík. Voda. Sůl. A když to dotáhneme, tak i maso (heterocyklické aminy, PAH z grilování)."},
+    {"pro": "faq[2]", "citace": "Layne Norton, PhD to shrnul dobře, já to jen přeložím a přidám český kontext:"},
+    {"pro": "faq[3]", "citace": "Lepší metabolické zdraví, nižší inzulinová rezistence (PMID: 37549644, 29151369)"}
   ],
   "nejiste": [
     "Článek neříká, co přesně je „normální množství“ těchto rostlinných látek ani od jaké dávky by mohly škodit.",
     "Článek neuvádí, o kolik fytáty snižují vstřebávání železa a zinku."
-  ]
+  ],
+  "kontrola": "ok"
 }

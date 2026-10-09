@@ -13,12 +13,12 @@
       "odpoved": "Ne. Tělo si z bílkovin vyrábí v játrech glukózu (glukoneogeneze), takže při efektivním množství bílkovin v ketóze nezůstaneš. Do ketózy se dostaneš jen při několika dnech v kuse s hodně málo sacharidy i bílkovinami."
     },
     {
-      "otazka": "Potřebuju sacharidy, když cvičím?",
+      "otazka": "Jsou sacharidy užitečné, když cvičím?",
       "odpoved": "Ano, pro svaly a jejich výkon jsou hodně užitečné. Mají antikatabolické účinky a ukládají se do svalů. Dej si je i před tréninkem a mezi tréninky."
     },
     {
       "otazka": "Proč cvičícímu člověku váha kolísá víc?",
-      "odpoved": "Trénink zvyšuje zásoby glykogenu ve svalech: u netrénovaného člověka je to kolem 12 g na 100 g svaloviny, u hodně trénovaného atleta kolem 32 g. S každým 1 g sacharidu se váží 3 g vody, takže váha kolísá podle toho, jak máš svaly nasycené."
+      "odpoved": "Trénink zvyšuje zásoby glykogenu ve svalech, u hodně trénovaného atleta je to skoro 3x tolik co u netrénovaného člověka. S každým 1 g sacharidu se váží 3 g vody, takže váha kolísá podle toho, jak máš svaly nasycené."
     },
     {
       "otazka": "Je pravda, že naši předci nejedli sacharidy?",
@@ -37,7 +37,7 @@
     {"pro": "faq[1]", "citace": "Jenže aby tělo přešlo do ketózy, musíš jíst několik dní v kuse nejen hodně málo sacharidů (tedy přílohy maximálně troška zeleniny), ale i málo bílkovin."},
     {"pro": "faq[2]", "citace": "A pokud cvičíš, sacharidy jsou pro svaly a jejich výkon hodně užitečné. Mají antikatabolické účinky, ukládají se právě do svalů"},
     {"pro": "faq[2]", "citace": "doporučuju je i před tréninkem a mezi tréninky."},
-    {"pro": "faq[3]", "citace": "Podle materiálů z Advanced Koučink Academy je to u netrénovaného člověka kolem 12 g glykogenu na 100 g svaloviny, u hodně trénovaného atleta kolem 32 g na 100 g."},
+    {"pro": "faq[3]", "citace": "u hodně trénovaného atleta kolem 32 g na 100 g. To je skoro 3x tolik."},
     {"pro": "faq[3]", "citace": "Pojmou taky víc sacharidů a s nimi na každý 1 g sacharidu 3 g vody."},
     {"pro": "faq[3]", "citace": "Klidně tam jsou velké výkyvy jen podle toho, jak akutně máš svaly nasycené glykogenem a vodou."},
     {"pro": "faq[4]", "citace": "podle zubní analýzy pravěkých pozůstatků našli důkazy, že pravěcí lidé jedli vlákninu."},
@@ -47,5 +47,6 @@
     "Článek neuvádí konkrétní hranici sacharidů nebo bílkovin v gramech, při které tělo přejde do ketózy.",
     "Článek nepíše, jestli má keto smysl z jiných než hubnoucích důvodů (například při nemoci).",
     "Sacharidové vlny článek zmiňuje jen jednou větou (smysl hlavně u lidí s nízkým tělesným tukem, kteří hodně trénují) a nevysvětluje je."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] otázka „Potřebuju sacharidy“ změněna na „Jsou sacharidy užitečné“ (článek říká „hodně užitečné“, ne nutné); faq[3] vypuštěna čísla 12 g a 32 g glykogenu na 100 g svaloviny (podezření na chybu jednotek v článku), ponecháno „skoro 3x tolik“"
 }

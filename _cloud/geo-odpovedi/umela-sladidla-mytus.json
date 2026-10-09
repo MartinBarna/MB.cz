@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/umela-sladidla-mytus.html",
   "titulek": "Umělá sladidla: kolik je vlastně moc?",
   "hlavni_otazka": "Jsou umělá sladidla škodlivá a kolik je moc?",
-  "kratka_odpoved": "Panikařit nemusíš: aby ti aspartam v light cole uškodil, musel bys jí vypít 9 až 14 plechovek denně, každý den, celý život. Meta-analýza 9 randomizovaných studií (1 457 lidí, Qin 2025) nenašla mezi uměle slazenými nápoji a vodou žádný rozdíl ve váze, pase, krevním cukru, inzulinu, cholesterolu ani tlaku.",
+  "kratka_odpoved": "Panikařit nemusíš: aby ti aspartam v light cole uškodil, musel bys jí vypít 9 až 14 plechovek denně, každý den, celý život. Meta-analýza 9 randomizovaných studií (1 457 lidí, Qin 2025) nenašla mezi uměle slazenými nápoji a vodou žádný rozdíl ve váze, pase, krevním cukru, inzulinu, cholesterolu ani tlaku. Výjimka: lidé s fenylketonurií se aspartamu vyhýbají.",
   "faq": [
     {
       "otazka": "Proč mají umělá sladidla tak špatnou pověst?",
@@ -33,6 +33,10 @@
     {
       "pro": "kratka_odpoved",
       "citace": "Meta-analýza 9 randomizovaných studií (1 457 lidí, Qin 2025) nenašla mezi uměle slazenými nápoji a vodou žádný rozdíl ve váze, pase, krevním cukru, inzulinu, cholesterolu ani tlaku."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pro koho to neplatí: lidé s fenylketonurií se aspartamu vyhýbají."
     },
     {
       "pro": "faq[0]",
@@ -75,5 +79,6 @@
     "Článek neuvádí, z jakého limitu a pro jakou tělesnou hmotnost vychází přepočet na 9 až 14 plechovek denně.",
     "Článek odkazuje na podrobnější rozbor WHO a IARC „výš“, který v textu článku není.",
     "Konkrétní hranici dávky uvádí jen pro aspartam, u jiných sladidel ne."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved (začíná „Panikařit nemusíš“) doplněna výjimka z článku pro lidi s fenylketonurií, kteří se aspartamu vyhýbají"
 }

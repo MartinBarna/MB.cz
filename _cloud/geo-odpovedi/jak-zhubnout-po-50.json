@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/jak-zhubnout-po-50.html",
   "titulek": "Jak zhubnout po 50: metabolismus, bílkoviny a silový trénink",
   "hlavni_otazka": "Jak zhubnout po padesátce, když se mi zpomalil metabolismus?",
-  "kratka_odpoved": "Metabolismus po padesátce nepadá tak, jak se říká: denní výdej přepočtený na beztukovou hmotu zůstává stabilní mezi 20 a 60 lety. Ubývá hlavně sval a pohyb. Drž mírný deficit 15 až 20 % pod výdejem, jez 1,6 až 2,2 g bílkovin na kilo a posiluj dvakrát až třikrát týdně.",
+  "kratka_odpoved": "Metabolismus po padesátce nepadá tak, jak se říká, ubývá sval a pohyb. Drž mírný deficit 15 až 20 % pod výdejem, jez 1,6 až 2,2 g bílkovin na kilo a posiluj dvakrát až třikrát týdně. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, konkrétní nastavení probírej se svým lékařem.",
   "faq": [
     {
       "otazka": "Proč je silový trénink po padesátce tak důležitý?",
@@ -10,11 +10,11 @@
     },
     {
       "otazka": "Kolik bílkovin jíst po padesátce, když hubnu?",
-      "odpoved": "V praxi se cílí na 1,6 až 2,2 g na kilogram tělesné hmotnosti, rozdělené do všech jídel dne. Člověk se 75 kg se tak dostane na 120 až 140 g denně třemi jídly a jednou svačinou. Metaanalýza u lidí starších 50 let ukázala, že při vyšším příjmu bílkovin si udrželi víc svalové hmoty a shodili víc tuku."
+      "odpoved": "V praxi se cílí na 1,6 až 2,2 g na kilogram tělesné hmotnosti, rozdělené do všech jídel dne. Metaanalýza u lidí starších 50 let ukázala, že při vyšším příjmu bílkovin si udrželi víc svalové hmoty a shodili víc tuku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber tato čísla jako orientaci a nastavení probírej se svým lékařem."
     },
     {
       "otazka": "Jak velký deficit držet po padesátce?",
-      "odpoved": "Mírný a dlouhý, 15 až 20 % pod denní výdej, takže při udržovačce 2 200 kcal je cíl kolem 1 800 kcal. Rychleji to jde taky, jen za cenu většího úbytku svalu a horšího spánku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, probírej konkrétní nastavení se svým lékařem."
+      "odpoved": "Mírný a dlouhý, 15 až 20 % pod denní výdej, takže při udržovačce 2 200 kcal je cíl kolem 1 800 kcal. Rychleji to jde taky, jen za cenu většího úbytku svalu a horšího spánku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, probírej konkrétní nastavení se svým lékařem."
     },
     {
       "otazka": "Proč mi v přechodu váha neukazuje, co se s tělem děje?",
@@ -32,10 +32,6 @@
     },
     {
       "pro": "kratka_odpoved",
-      "citace": "Po přepočtu na beztukovou hmotu, tedy na všechno kromě tuku, zůstává denní výdej stabilní mezi 20. a 60. rokem a klesat začíná až u starších lidí."
-    },
-    {
-      "pro": "kratka_odpoved",
       "citace": "Odsud plyne, proč u většiny lidí funguje mírný a dlouhý deficit líp než hladovka: 15 až 20 % pod tvůj denní výdej."
     },
     {
@@ -45,6 +41,10 @@
     {
       "pro": "kratka_odpoved",
       "citace": "Prakticky to znamená dvakrát až třikrát týdně silový trénink celého těla, šest až osm cviků, a postupné přidávání zátěže nebo opakování."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber čísla níž jako orientaci a konkrétní nastavení probírej se svým lékařem."
     },
     {
       "pro": "faq[0]",
@@ -68,11 +68,11 @@
     },
     {
       "pro": "faq[1]",
-      "citace": "Člověk s 75 kg se tak dostane na 120 až 140 g za den třemi jídly a jednou svačinou."
+      "citace": "Metaanalýza dvaceti randomizovaných studií u lidí starších 50 let (Kim a kolektiv, Nutrition Reviews 2016, PMID 26883880) porovnávala hubnutí s nižším a vyšším příjmem bílkovin (hranice byla 25 % energie, respektive 1,0 g na kilogram za den). Závěr abstraktu je stručný: starší dospělí si při vyšším příjmu bílkovin udrželi víc svalové hmoty a shodili víc tuku."
     },
     {
       "pro": "faq[1]",
-      "citace": "Metaanalýza dvaceti randomizovaných studií u lidí starších 50 let (Kim a kolektiv, Nutrition Reviews 2016, PMID 26883880) porovnávala hubnutí s nižším a vyšším příjmem bílkovin (hranice byla 25 % energie, respektive 1,0 g na kilogram za den). Závěr abstraktu je stručný: starší dospělí si při vyšším příjmu bílkovin udrželi víc svalové hmoty a shodili víc tuku."
+      "citace": "Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber čísla níž jako orientaci a konkrétní nastavení probírej se svým lékařem."
     },
     {
       "pro": "faq[2]",
@@ -102,6 +102,7 @@
     "Tempo „0,5 až 0,7 % tělesné hmotnosti týdně\" a „2 až 3 kg měsíčně\" z FAQ článku jsou bez zdroje; použil jsem jen druhé, tak jak ho článek podává.",
     "Kolik kroků denně, článek řeší jinde, tady konkrétní číslo není.",
     "Hormonální léčbu v přechodu článek posílá ke gynekologovi a nerozebírá ji.",
-    "Článek u 75 kg uvádí 120 až 140 g bílkovin denně, ale 1,6 až 2,2 g na kilo dává při 75 kg 120 až 165 g. Příklad je v FAQ převzatý doslova; čísla v článku by stálo za to sladit."
-  ]
+    "Článek u 75 kg uvádí 120 až 140 g bílkovin denně, ale 1,6 až 2,2 g na kilo dává při 75 kg 120 až 165 g. Příklad proto v odpovědích není; čísla v článku by stálo za to sladit."
+  ],
+  "kontrola": "opraveno: kratka_odpoved a faq[1] doplněny o upozornění na léky na štítnou žlázu, cukrovku nebo tlak a lékaře (článek ho vztahuje na všechna čísla), faq[2] doplněno „nebo řešíš čerstvou diagnózu“; z faq[1] vypuštěn příklad 75 kg = 120 až 140 g, který s 1,6 až 2,2 g/kg nesedí; nejiste upraveno"
 }

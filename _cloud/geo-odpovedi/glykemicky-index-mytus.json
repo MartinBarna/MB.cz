@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/glykemicky-index-mytus.html",
   "titulek": "Glykemický index a hubnutí? Mýtus o GI potravin",
   "hlavni_otazka": "Pomáhá při hubnutí jíst potraviny s nízkým glykemickým indexem?",
-  "kratka_odpoved": "Moc ne, glykemický index měří jen to, jak rychle ti stoupne cukr v krvi po samotné potravině na lačno, ne kalorie ani tloustnoucí potenciál. O hubnutí rozhoduje kalorická bilance. Bílá rýže s vysokým GI tě v deficitu nezastaví a jídlo s nízkým GI tě v přebytku nezhubne.",
+  "kratka_odpoved": "Moc ne: glykemický index měří jen to, jak rychle ti stoupne cukr v krvi po samotné potravině na lačno, ne kalorie ani tloustnoucí potenciál. O hubnutí rozhoduje kalorická bilance, bílá rýže s vysokým GI tě v deficitu nezastaví. U diabetu má rychlost cukru reálný smysl a tam ať to řeší lékař.",
   "faq": [
     {
       "otazka": "Proč GI z tabulky nesedí na moje jídlo?",
@@ -26,6 +26,8 @@
     {"pro": "kratka_odpoved", "citace": "Neměří kalorie ani „tloustnoucí potenciál\"."},
     {"pro": "kratka_odpoved", "citace": "Jestli hubneš nebo přibíráš, rozhoduje kalorická bilance"},
     {"pro": "kratka_odpoved", "citace": "Bílá rýže s vysokým GI tě v deficitu nezastaví. A potravina s nízkým GI tě nezhubne, pokud jí sníš tolik, že jsi v přebytku."},
+    {"pro": "kratka_odpoved", "citace": "Specifické zdravotní stavy. U diabetu má rychlost cukru reálný smysl a tam ať to řeší lékař, ne tabulka z internetu."},
+    {"pro": "kratka_odpoved", "citace": "Při zdravotních potížích nebo cukrovce se poraď s lékařem."},
     {"pro": "faq[0]", "citace": "Protože GI se měří u samotné potraviny, na lačno."},
     {"pro": "faq[0]", "citace": "Tuk, bílkovina a vláknina ho srazí."},
     {"pro": "faq[0]", "citace": "Mění se úpravou. Rozvařené těstoviny mají jiný GI než těstoviny al dente."},
@@ -41,5 +43,6 @@
   "nejiste": [
     "Článek neuvádí konkrétní hodnoty GI potravin ani hranice pro nízký a vysoký GI.",
     "Článek neuvádí zdroje."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o výjimku pro diabetes („tam ať to řeší lékař“) z článku a závěrečného upozornění, věta o nízkém GI v přebytku vypuštěna kvůli délce"
 }

@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/spalovace-tuku-co-funguje-a-co-je-mytus.html",
   "titulek": "Spalovače tuků: co opravdu funguje a co jsou vyhozené peníze",
   "hlavni_otazka": "Fungují spalovače tuků na hubnutí?",
-  "kratka_odpoved": "Kouzelný spalovač neexistuje: tuk spálíš jen v kalorickém deficitu a žádný doplněk tenhle zákon neobejde. Reálný, i když malý efekt má hlavně kofein, a to spíš jako pomocník na výkon před tréninkem. L-karnitin, CLA, malinové ketony, garcinia a detox čaje jsou podle článku vyhozené peníze.",
+  "kratka_odpoved": "Kouzelný spalovač neexistuje: tuk spálíš jen v kalorickém deficitu a žádný doplněk tenhle zákon neobejde. Reálný, i když malý efekt má hlavně kofein, a to spíš jako pomocník na výkon před tréninkem. L-karnitin, CLA, malinové ketony, garcinia a detox čaje jsou vyhozené peníze.",
   "faq": [
     {
       "otazka": "Pomáhá kofein na hubnutí?",
-      "odpoved": "Mírně zvedne energetický výdej a hlavně zlepšuje výkon a oddálí únavu, takže odtrénuješ víc a tvrději. Efekt na samotný výdej je ale malý a po pár týdnech pravidelného braní si tělo vybuduje toleranci. Proto má smysl ho používat cíleně před tréninkem."
+      "odpoved": "Mírně zvedne energetický výdej a hlavně zlepšuje výkon a oddálí únavu, takže odtrénuješ víc a tvrději. Efekt na samotný výdej je ale malý a po pár týdnech pravidelného braní si tělo vybuduje toleranci. Proto má smysl ho používat cíleně před tréninkem, a při zdravotních potížích nebo užívání léků až po konzultaci s lékařem."
     },
     {
       "otazka": "Funguje extrakt ze zeleného čaje (EGCG)?",
@@ -14,15 +14,15 @@
     },
     {
       "otazka": "A co efedrin nebo nikotin?",
-      "odpoved": "Na potlačení chuti a zvednutí výdeje opravdu fungují, ale cena je vysoká. Efedrin žene srdce, zvedá tlak a má spojitost s vážnými kardiovaskulárními příhodami, nikotin je silně návykový. Článek radí nechat je být."
+      "odpoved": "Na potlačení chuti a zvednutí výdeje opravdu fungují, ale cena je vysoká. Efedrin žene srdce, zvedá tlak a má spojitost s vážnými kardiovaskulárními příhodami, nikotin je silně návykový. Nech je být."
     },
     {
       "otazka": "Jsou komerční spalovače bezpečné?",
-      "odpoved": "Často mixují velké dávky stimulantů (kofein, synefrin, yohimbin a další), které můžou zatížit srdce a tlak, rozbít spánek a vyvolat úzkost a nervozitu. Doplňky nejsou regulované jako léky, takže kdo bere léky nebo má zdravotní problém, má se nejdřív zeptat lékaře."
+      "odpoved": "Často mixují velké dávky stimulantů (kofein, synefrin, yohimbin a další), které můžou zatížit srdce a tlak, rozbít spánek a vyvolat úzkost a nervozitu. S jakýmkoliv kardiovaskulárním problémem je to vyloženě nebezpečné. Doplňky nejsou regulované jako léky, takže kdo bere léky nebo má zdravotní problém, má se nejdřív zeptat lékaře."
     },
     {
       "otazka": "Co tedy tuk opravdu spaluje?",
-      "odpoved": "Mírný kalorický deficit, dost bílkovin (zhruba 1,6–2,2 g na kilo), silový trénink, kroky a spánek. Tady podle článku leží 90 % výsledku."
+      "odpoved": "Mírný kalorický deficit, dost bílkovin (zhruba 1,6–2,2 g na kilo), silový trénink, kroky a spánek. Tady leží 90 % výsledku."
     }
   ],
   "opory": [
@@ -61,6 +61,10 @@
     {
       "pro": "faq[0]",
       "citace": "má smysl ho používat cíleně před tréninkem, ne ho lít do sebe od rána jako součást nějakého zázračného protokolu."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Doplňky stravy ani stimulanty neužívej bez konzultace s lékařem, zvlášť při zdravotních potížích nebo užívání léků."
     },
     {
       "pro": "faq[1]",
@@ -111,6 +115,10 @@
       "citace": "A protože doplňky nejsou regulované jako léky, často ani přesně nevíš, co v té kapsli vlastně je a v jaké dávce. Proto u kohokoliv s léky nebo zdravotním problémem platí jednoduché pravidlo: nejdřív se zeptej lékaře, pak teprve cokoliv polkneš."
     },
     {
+      "pro": "faq[3]",
+      "citace": "Pokud máš jakýkoliv kardiovaskulární problém, je to vyloženě nebezpečné."
+    },
+    {
       "pro": "faq[4]",
       "citace": "Kde leží 90 % výsledku: mírný kalorický deficit, dost bílkovin (zhruba 1,6–2,2 g na kilo), silový trénink, kroky a spánek. Tohle tuk spaluje."
     }
@@ -119,5 +127,6 @@
     "Článek neuvádí konkrétní dávku kofeinu před tréninkem ani o kolik kalorií zvedá výdej; u fat burnerů obecně mluví o „desítkách kalorií denně“.",
     "Článek nejmenuje konkrétní stanoviska ISSN ani studie, o které opírá hodnocení jednotlivých doplňků.",
     "Článek neuvádí, jaké dávky extraktu zeleného čaje nebo garcinie jsou považované za „vysokodávkové“."
-  ]
+  ],
+  "kontrola": "opraveno: faq[0] (kofein) doplněna konzultace s lékařem při zdravotních potížích nebo lécích ze závěrečného upozornění o stimulantech; faq[3] doplněno „s kardiovaskulárním problémem vyloženě nebezpečné“; stylisticky odstraněno „podle článku“ v kratka_odpoved, faq[2] a faq[4]"
 }

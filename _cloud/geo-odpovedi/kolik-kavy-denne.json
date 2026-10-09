@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kolik-kavy-denne.html",
   "titulek": "Kolik kávy denně: co pro tebe káva dělá a co ne",
   "hlavni_otazka": "Kolik kávy denně je zdravé?",
-  "kratka_odpoved": "Nejnižší rizika vycházejí kolem 3 až 4 šálků denně proti nulové spotřebě. Jsou to ale pozorovací data a průměr z velkých skupin, ne předpis pro tebe. Když kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat, a když ji nepiješ, nejsou důvod začít.",
+  "kratka_odpoved": "Nejnižší rizika vycházejí kolem 3 až 4 šálků denně proti nulové spotřebě, jde ale o pozorovací data a průměr z velkých skupin, ne předpis pro tebe. Když kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat, a když ji nepiješ, nejsou důvod začít. V těhotenství je to otázka na lékaře nebo gynekologa.",
   "faq": [
     {
       "otazka": "Pomáhá káva při hubnutí?",
@@ -30,6 +30,7 @@
     {"pro": "kratka_odpoved", "citace": "Obě práce stojí na pozorovacích datech."},
     {"pro": "kratka_odpoved", "citace": "Podle dat vychází nejlíp pásmo 3 až 4 šálky denně, ale je to průměr z pozorování velkých skupin, ne předpis pro tebe."},
     {"pro": "kratka_odpoved", "citace": "Praktický dopad je klidný: pokud kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat. Pokud ji nepiješ, tyhle studie nejsou důvod začít."},
+    {"pro": "kratka_odpoved", "citace": "Těhotenství je vedle zlomenin u žen jedna ze dvou oblastí, kde přehled v BMJ našel u kávy rizika, a je to otázka na tvého lékaře nebo gynekologa, ne na výživového kouče."},
     {"pro": "faq[0]", "citace": "Káva a hubnutí: efekt existuje a je malý"},
     {"pro": "faq[0]", "citace": "Metaanalýza 13 randomizovaných studií s 606 účastníky (Tabrizi a kolektiv, 2019, PMID 30335479) našla, že zdvojnásobení příjmu kofeinu zvětšilo průměrný úbytek hmotnosti o 22 %, pokles BMI o 17 % a úbytek tukové hmoty o 28 %."},
     {"pro": "faq[0]", "citace": "Jsou to procenta už probíhajícího úbytku, ne kilogramy navíc."},
@@ -48,5 +49,6 @@
     "Výsledek pro nejvyšší kategorii (medián 5 šálků, RR 0,95, interval přes jedničku) jsem do odpovědí nedal. Článek výslovně říká, že tam není prokázaný efekt ani ochrana, jen že riziko nestoupalo.",
     "Článek neříká, jaká konkrétní rizika přehled v BMJ u kávy v těhotenství našel ani jaký limit tam platí. Odkazuje na lékaře, a tak to zůstalo.",
     "Studie o hubnutí se podle článku mezi sebou obrovsky rozcházely (I² 91 až 94 %) a autoři píší jen „kofein by mohl podporovat“, proto je efekt v odpovědi podán jako malý a nejistý."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o upozornění, že v těhotenství je káva otázka na lékaře nebo gynekologa (článek: těhotenství je jedna ze dvou oblastí, kde přehled v BMJ našel rizika), protože krátká odpověď uvádí pásmo 3 až 4 šálků denně"
 }

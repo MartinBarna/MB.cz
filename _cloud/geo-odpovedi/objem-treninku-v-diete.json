@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co si z té studie vzít do praxe?",
-      "odpoved": "V dietě neubírej objem jen ze zvyku, svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů."
+      "odpoved": "V dietě neubírej objem jen ze zvyku, svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů. Jde ale o preprint, který čeká na recenzi, takže je to zajímavý signál, ne hotová věc."
     }
   ],
   "opory": [
@@ -33,11 +33,13 @@
     {"pro": "faq[1]", "citace": "Pak přišly DXA scany a ve složení těla mezi skupinami žádný statisticky významný rozdíl nebyl. Obě shodily slušně tuku a beztukovou hmotu si udržely."},
     {"pro": "faq[2]", "citace": "Skupina s 30 sériemi přidala v silových testech 15 až 27 %, skupina s 12 sériemi 7 až 14 %."},
     {"pro": "faq[2]", "citace": "Zůstává otázka, jestli za tím stojí čistý růst svalu, nebo se tělo jen líp naučilo pohyb (neurální adaptace). Za čtyři týdny a přes DXA to nerozlišíš."},
-    {"pro": "faq[3]", "citace": "V dietě neubírej objem jen ze zvyku. Svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů."}
+    {"pro": "faq[3]", "citace": "V dietě neubírej objem jen ze zvyku. Svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů."},
+    {"pro": "faq[3]", "citace": "A pozor, pořád mluvíme o preprintu, který čeká na recenzi. Beru to jako zajímavý signál, ne hotovou věc."}
   ],
   "nejiste": [
     "Článek neuvádí, kolik lidí ve studii bylo, ani zda šlo o muže, ženy, nebo obojí.",
     "Článek neříká, kolik bílkovin přesně účastníci jedli (jen „hodně bílkovin“).",
     "Studie trvala jen čtyři týdny, článek neříká nic o tom, jestli by výsledek platil i při delší dietě, a jde o preprint, který ještě neprošel recenzí."
-  ]
+  ],
+  "kontrola": "opraveno: faq[3] (praktický závěr) doplněno upozornění, že jde o preprint před recenzí a zajímavý signál, ne hotovou věc, aby závěr z jedné nerecenzované studie nezněl jako jistota"
 }

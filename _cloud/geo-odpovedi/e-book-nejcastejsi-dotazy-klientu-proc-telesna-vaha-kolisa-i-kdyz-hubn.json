@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-proc-telesna-vaha-kolisa-i-kdyz-hubn.html",
   "titulek": "E-book Nejčastější dotazy klientů – Proč tělesná váha kolísá, i když hubnete",
   "hlavni_otazka": "Proč mi kolísá váha, i když hubnu?",
-  "kratka_odpoved": "Hlavně kvůli glykogenu, zásobním sacharidům ve svalech a játrech. Na každý gram glykogenu si tělo ukládá 3 gramy vody, takže plnění a vyprazdňování zásob pohne váhou bez ohledu na tuk. Važ se každé ráno za stejných podmínek, porovnávej týdenní průměry a měř si i tělesné míry.",
+  "kratka_odpoved": "Jedním z důvodů je glykogen, zásobní sacharidy ve svalech a játrech. Na každý gram glykogenu si tělo ukládá 3 gramy vody, takže plnění a vyprazdňování zásob pohne váhou bez ohledu na tuk. Važ se každé ráno za stejných podmínek, porovnávej týdenní průměry a měř si i tělesné míry.",
   "faq": [
     {
       "otazka": "Kolik glykogenu má člověk ve svalech?",
@@ -25,6 +25,7 @@
     {"pro": "kratka_odpoved", "citace": "Glykogen je forma sacharidů, které si tělo ukládá hlavně pro regulaci hladiny krevního cukru (glukózy), na pohyb a fungování ve vyšší intenzitě"},
     {"pro": "kratka_odpoved", "citace": "Také proto, že na každý 1 gram glykogenu tělo ukládá vždy 3 gramy vody spolu s tím."},
     {"pro": "kratka_odpoved", "citace": "Kolísání váhy tedy samo o sobě nic neříká o tom, jestli přibíráš nebo hubneš tuk."},
+    {"pro": "kratka_odpoved", "citace": "K tomu navíc běží tisíce metabolických procesů, které pracují s tekutinami a do váhy se taky promítají."},
     {"pro": "kratka_odpoved", "citace": "Teď už je asi jasnější, proč s klienty pravidelně měříme tělesné míry a nespoléháme na jedno vážení. Pokud se přesto jen vážíš, važ se aspoň každé ráno za stejných podmínek a porovnávej týdenní průměry mezi sebou, ne jednotlivá čísla z různých dní."},
     {"pro": "faq[0]", "citace": "Netrénovaný člověk má na 100 g svalů v zásobě zhruba 12 g glykogenu."},
     {"pro": "faq[0]", "citace": "Trénovaný atlet může mít v zásobě až 33 g glykogenu na 100 g svaloviny, což je téměř 3x více než netrénovaný člověk."},
@@ -39,5 +40,6 @@
     "Článek neuvádí, o kolik kilogramů může kolísat váha u netrénovaného člověka, jen u atletů („o několik kilogramů“).",
     "Článek neuvádí zdroj čísel 12 g, 33 g a 500 g glykogenu („podle většiny zdrojů“).",
     "Kromě glykogenu článek zmiňuje „tisíce metabolických procesů“ s tekutinami, ale konkrétně je nerozebírá."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved „Hlavně kvůli glykogenu“ → „Jedním z důvodů je glykogen“, článek glykogen neoznačuje za hlavní příčinu a zmiňuje i další procesy s tekutinami"
 }

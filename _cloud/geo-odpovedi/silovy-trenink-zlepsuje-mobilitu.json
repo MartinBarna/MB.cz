@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Které cviky dělat, aby posilování zlepšilo mobilitu?",
-      "odpoved": "Dřep do hloubky, rumunský mrtvý tah a mrtvý tah s pořádným protažením hamstringů, výpady a bulharský split dřep do plné hloubky, tlaky a kliky s plným rozsahem a shyby a přítahy z plného visu. Ke všemu přidej kontrolovanou excentriku: váhu aktivně brzdi 2–3 vteřiny."
+      "odpoved": "Dřep do hloubky (jak ti dovolí kyčel a technika), rumunský mrtvý tah a mrtvý tah s pořádným protažením hamstringů, výpady a bulharský split dřep do plné hloubky, tlaky a kliky s plným rozsahem a shyby a přítahy z plného visu. Ke všemu přidej kontrolovanou excentriku: váhu aktivně brzdi 2–3 vteřiny."
     },
     {
       "otazka": "Ztuhnu z posilování?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Je tedy strečink zbytečný?",
-      "odpoved": "Není, když máš někde rozsah opravdu omezený, strečink ti ho pomůže otevřít. Jen si nemusíš přidávat hodiny protahování, abys byl pohyblivý, když posiluješ přes plný rozsah."
+      "odpoved": "Není. Když máš někde rozsah opravdu omezený, protahování ti ho pomůže otevřít, a při omezené pohyblivosti nebo zdravotních potížích se poraď s lékařem nebo fyzioterapeutem. Jen si nemusíš přidávat hodiny protahování, abys byl pohyblivý, když posiluješ přes plný rozsah."
     }
   ],
   "opory": [
@@ -44,11 +44,13 @@
     {"pro": "faq[3]", "citace": "Naopak když v posilovně jedeš všechno na půl (půlené dřepy, tlaky, které nedotáhneš, bicepsy v malé výseči), svaly v protažení nikdy pořádně nezatížíš."},
     {"pro": "faq[3]", "citace": "Není to posilováním. Je to osekaným rozsahem."},
     {"pro": "faq[4]", "citace": "Ne. Protahování má svoje místo: když máš někde rozsah opravdu omezený, po tréninku nebo v jiný čas ti pomůže ho otevřít, a spoustě lidí prostě dělá dobře."},
-    {"pro": "faq[4]", "citace": "nemusíš si přidávat hodiny protahování, abys byl pohyblivý. Když posiluješ přes plný rozsah, mobilitu si buduješ rovnou u toho, spolu se silou a svaly."}
+    {"pro": "faq[4]", "citace": "nemusíš si přidávat hodiny protahování, abys byl pohyblivý. Když posiluješ přes plný rozsah, mobilitu si buduješ rovnou u toho, spolu se silou a svaly."},
+    {"pro": "faq[4]", "citace": "Při zdravotních potížích nebo omezené pohyblivosti se poraď s lékařem nebo fyzioterapeutem."}
   ],
   "nejiste": [
     "Článek neuvádí doporučený počet sérií, opakování ani kolikrát týdně takhle trénovat.",
     "Článek neříká, jak velký je „středně velký“ efekt v konkrétních číslech, ani za jak dlouho se pohyblivost zlepší (kromě osmi týdnů v jedné studii).",
-    "Článek neřeší, jak postupovat při zranění nebo bolesti kloubů."
-  ]
+    "Článek nerozebírá postup při zranění nebo bolesti kloubů; jen v závěrečném upozornění posílá při zdravotních potížích nebo omezené pohyblivosti k lékaři nebo fyzioterapeutovi."
+  ],
+  "kontrola": "opraveno: faq[4] doplněno „při omezené pohyblivosti nebo zdravotních potížích se poraď s lékařem nebo fyzioterapeutem“ ze závěrečného upozornění; faq[2] vrácena podmínka „jak ti dovolí kyčel a technika“ u dřepu; nejiste opraveno (článek lékaře a fyzioterapeuta zmiňuje)"
 }

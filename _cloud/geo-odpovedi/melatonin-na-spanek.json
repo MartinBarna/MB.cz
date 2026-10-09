@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/melatonin-na-spanek.html",
   "titulek": "Je melatonin prášek na spaní? Není. A v tom je háček",
   "hlavni_otazka": "Pomáhá melatonin na spaní a kolik ho brát?",
-  "kratka_odpoved": "Melatonin není prášek na spaní: netlumí nervový systém, jen tělu dá vědět, že je noc. Usneš s ním zhruba o 7 minut dřív než po placebu a pomáhá hlavně při rozhozeném vnitřním čase, třeba při jet lagu. Tělu stačí 0,5–1 mg.",
+  "kratka_odpoved": "Melatonin není prášek na spaní: netlumí nervový systém, jen tělu dá vědět, že je noc. Usneš s ním zhruba o 7 minut dřív než po placebu a pomáhá hlavně při rozhozeném vnitřním čase, třeba při jet lagu. Tělu stačí 0,5–1 mg, u dětí jen po domluvě s pediatrem.",
   "faq": [
     {
       "otazka": "Je melatonin návykový?",
@@ -29,6 +29,7 @@
     {"pro": "kratka_odpoved", "citace": "Klasické prášky na spaní tlumí nervový systém. Melatonin netlumí nic, jen tělu dá vědět, že je noc. Proto pomáhá hlavně tam, kde máš rozhozený vnitřní čas: jet lag, sovy se zpožděnou fází, starší lidi, co si ho sami vyrábějí míň, návrat do režimu po cestách"},
     {"pro": "kratka_odpoved", "citace": "Usneš zhruba o 7 minut dřív než po placebu. Efekt to je, zázrak ne."},
     {"pro": "kratka_odpoved", "citace": "Víc miligramů nefunguje líp. Tělu stačí 0,5–1 mg."},
+    {"pro": "kratka_odpoved", "citace": "Je to hormon, ne bonbon. U dětí jen po domluvě s pediatrem a pozor na kombinaci s léky"},
     {"pro": "faq[0]", "citace": "Návykový není. Žádná tolerance, fyzická závislost ani absťák. Lékaři ho dávají i lidem, co slézají ze silných prášků"},
     {"pro": "faq[1]", "citace": "Víc miligramů nefunguje líp. Tělu stačí 0,5–1 mg. Nad 5 mg už spánku nic nepřidáš, akorát si koleduješ o ranní opici"},
     {"pro": "faq[2]", "citace": "Proto pomáhá hlavně tam, kde máš rozhozený vnitřní čas: jet lag, sovy se zpožděnou fází, starší lidi, co si ho sami vyrábějí míň, návrat do režimu po cestách"},
@@ -42,5 +43,6 @@
     "Článek neuvádí, se kterými léky se melatonin nekombinuje, jen obecně varuje; konkrétní léky si nedomýšlím.",
     "U chronické nespavosti se článek nestaví jednoznačně (EU regulátor rychlejší usínání uznává, americká spánková akademie ho jako první volbu nedoporučuje, „pravda leží někde mezi“), proto tvrdím jen, že funguje hlavně na rozhozený čas.",
     "Údaj 7 minut pochází z meta-analýzy 19 studií; článek neuvádí, pro jakou skupinu lidí a dávku platí."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved, která odpovídá i na ‚kolik ho brát‘, doplněna o upozornění z článku ‚u dětí jen po domluvě s pediatrem‘"
 }

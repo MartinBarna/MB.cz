@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Kolik vitaminu D denně brát?",
-      "odpoved": "Přesnou dávku ti má nastavit lékař podle tvojí hladiny a zdravotního stavu. Guideline z roku 2025 doporučuje u dospělých, kteří suplementaci potřebují, denní ekvivalent zhruba 600 až 2000 IU a upřednostňuje ho před rutinními dávkami nad 2000 IU. Cílem není hladinu vyšroubovat co nejvýš, rozumné pásmo je podle přehledu z roku 2025 někde mezi 20 a 40 ng/ml."
+      "odpoved": "Přesnou dávku ti má nastavit lékař podle tvojí hladiny a zdravotního stavu, zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu. Guideline z roku 2025 doporučuje u dospělých, kteří suplementaci potřebují, denní ekvivalent zhruba 600 až 2000 IU a upřednostňuje ho před rutinními dávkami nad 2000 IU. Cílem není hladinu vyšroubovat co nejvýš, přehled z roku 2025 naznačuje rozumné pásmo někde mezi 20 a 40 ng/ml."
     },
     {
       "otazka": "Pomáhá vitamin D na imunitu a nachlazení?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Jak vitamin D správně užívat?",
-      "odpoved": "Radši pravidelně v malé dávce než nárazově, s jídlem a ideálně s trochou tuku, protože se tak líp vstřebá. Řeš ho hlavně v chladné půlce roku, a když ho bereš kvůli kostem, nezapomeň na vápník ve stravě."
+      "odpoved": "Radši pravidelně v malé dávce než nárazově, s jídlem a ideálně s trochou tuku, protože se tak líp vstřebá. Řeš ho hlavně v chladné půlce roku, a když ho bereš kvůli kostem, nezapomeň na vápník ve stravě. Suplementaci ale nezačínej na vlastní pěst, hladinu i dávkování konzultuj s lékařem."
     }
   ],
   "opory": [
@@ -61,6 +61,10 @@
     {
       "pro": "faq[0]",
       "citace": "Přehled z roku 2025 naznačuje, že rozumné „pásmo“ hladiny je někde mezi 20 a 40 ng/ml: v tomhle rozmezí se riziko pádů i zlomenin jeví jako nejnižší. Cíl tedy není hladinu vyšroubovat co nejvýš, ale dostat se do normy a v ní zůstat."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Neupravuj ani nevysazuj žádné léky a nezačínej suplementaci na vlastní pěst: hladinu vitaminu D i dávkování konzultuj se svým lékařem, zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu."
     },
     {
       "pro": "faq[1]",
@@ -129,11 +133,16 @@
     {
       "pro": "faq[4]",
       "citace": "Nezapomeň na vápník ve stravě, když to točíš kvůli kostem."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Neupravuj ani nevysazuj žádné léky a nezačínej suplementaci na vlastní pěst: hladinu vitaminu D i dávkování konzultuj se svým lékařem, zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu."
     }
   ],
   "nejiste": [
-    "Článek neuvádí autory ani názvy citovaných přehledů, metaanalýz a guideline z let 2024 a 2025.",
+    "Autory a názvy citovaných přehledů, metaanalýz a guideline z let 2024 a 2025 článek uvádí jen v seznamu zdrojů na konci, v textu je odkazuje rokem a typem studie.",
     "Článek neříká, od jaké hladiny 25-OH vitaminu D jde o deficit ani od jaké dávky je příjem už nadměrný.",
     "Článek neuvádí, kolik vápníku denně je dostatečný příjem."
-  ]
+  ],
+  "kontrola": "opraveno: faq[0] (dávka) doplněno „zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu“ a faq[4] (užívání) „nezačínej na vlastní pěst, konzultuj s lékařem“ ze závěrečného upozornění; faq[0] pásmo 20–40 ng/ml zmírněno na „naznačuje“ jako v článku; nejiste[0] opraveno, autoři jsou v seznamu zdrojů"
 }

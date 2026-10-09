@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kofein-a-jeho-bezpecna-konzumace.html",
   "titulek": "Kofein a jeho bezpečná konzumace",
   "hlavni_otazka": "Kolik kofeinu denně je bezpečné?",
-  "kratka_odpoved": "Zdravý dospělý člověk zvládne podle EFSA i FDA až 400 mg kofeinu denně. Jedna dávka by neměla přesáhnout 200 mg, jinak se snáz dostaví nervozita, třes nebo problémy se spánkem. Šálek filtrované kávy (240 ml) má přibližně 95 mg.",
+  "kratka_odpoved": "Zdravý dospělý člověk zvládne podle EFSA i FDA až 400 mg kofeinu denně a jedna dávka by neměla přesáhnout 200 mg, jinak se snáz dostaví nervozita, třes nebo problémy se spánkem. Šálek filtrované kávy (240 ml) má přibližně 95 mg. Těhotné a kojící ženy by měly příjem omezit na 200 mg denně a poradit se s lékařem.",
   "faq": [
     {
       "otazka": "Kolik kofeinu je v Kofole bez cukru?",
@@ -28,6 +28,7 @@
   "opory": [
     {"pro": "kratka_odpoved", "citace": "Evropský úřad pro bezpečnost potravin (EFSA) i americký FDA se shodují: zdravý dospělý člověk zvládne v pohodě až 400 mg kofeinu denně. Jedna dávka by neměla přesáhnout 200 mg, jinak se snáz dostaví nervozita, třes nebo problémy se spánkem."},
     {"pro": "kratka_odpoved", "citace": "Šálek filtrované kávy (240 ml) obsahuje přibližně 95 mg kofeinu."},
+    {"pro": "kratka_odpoved", "citace": "Těhotné a kojící ženy: Omezte příjem na 200 mg denně a konzultujte s lékařem."},
     {"pro": "faq[0]", "citace": "Háček je v tom, že kofein v sobě má: až 15 mg na 100 ml."},
     {"pro": "faq[0]", "citace": "500 ml lahev obsahuje přibližně 75 mg kofeinu."},
     {"pro": "faq[0]", "citace": "2 litry obsahují až 300 mg kofeinu, což je blízko dennímu limitu."},
@@ -45,5 +46,6 @@
     "Článek neříká, jak přesně definovat „pozdě odpoledne“ ani kolik hodin před spaním kofein vynechat.",
     "U těhotných se tabulka a text mírně liší (u kojících uvádí i jednotlivou dávku 200 mg, u těhotných ne). Odpověď drží jen společný denní limit 200 mg a odkaz na lékaře.",
     "Obsah kofeinu v energetických nápojích (80–100 mg na 250 ml) je jen v tabulce a nepoužil jsem ho."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o limit 200 mg denně a konzultaci s lékařem pro těhotné a kojící ženy, protože krátká odpověď uvádí bezpečný denní limit"
 }

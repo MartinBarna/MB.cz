@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co ženskému tělu těžké činky reálně dají?",
-      "odpoved": "Tvar a pevnost zadku, nohou a zad, silnější kosti, lepší metabolismus a sílu do běžného dne. Zátěž patří k nejlepší prevenci řídnutí kostí, což je u žen po čtyřicítce naprosto zásadní věc."
+      "odpoved": "Tvar a pevnost zadku, nohou a zad, silnější kosti, lepší metabolismus a sílu do běžného dne. Zátěž patří k nejlepší prevenci řídnutí kostí, což je u žen po čtyřicítce obzvlášť důležité."
     },
     {
       "otazka": "Proč jsou tedy některé ženy tak svalnaté?",
@@ -87,5 +87,6 @@
     "Článek neuvádí přesné hodnoty testosteronu u žen a mužů ani zdroj údaje o „jednotkách procent“.",
     "Článek neříká, kolik sérií a kolikrát týdně trénovat, „dvakrát“ a „třikrát týdně“ zmiňuje jen v příkladech.",
     "Článek neuvádí, jak velký má být „mírný deficit“."
-  ]
+  ],
+  "kontrola": "opraveno: faq[3] zakázané slovo ze seznamu AI frází (z citace článku) nahrazeno „obzvlášť důležité“, význam podle článku zachován"
 }

@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Pomůže na přibírání v menopauze hormonální terapie?",
-      "odpoved": "U řady žen dokáže HRT s příznaky přechodu i se složením těla hodně pomoct. Je to ale individuální rozhodnutí, které patří výhradně do rukou tvojí lékařky nebo gynekologa."
+      "odpoved": "U řady žen dokáže HRT s příznaky přechodu i se složením těla hodně pomoct. Je to ale individuální rozhodnutí podle tvého zdraví, historie a rizik a patří výhradně do rukou tvojí lékařky nebo gynekologa. Léky si sama neupravuj."
     }
   ],
   "opory": [
@@ -39,12 +39,14 @@
     {"pro": "faq[1]", "citace": "Přehled tréninkových programů ukazuje, co se v praxi nejčastěji používalo: komplexní cviky na celé tělo (dřepy, leg press, tlaky na hrudník), typicky 3 série po 8–10 opakováních. Nemusíš do toho jít jako kulturistka. Musíš to dělat pravidelně a postupně přidávat zátěž."},
     {"pro": "faq[2]", "citace": "Pokud posiluješ a chceš si sval udržet, miř zhruba na 1,2–1,6 g bílkovin na kilo tělesné hmotnosti denně, při hubnutí spíš k horní hranici. Klasických 0,8 g/kg je obecné minimum pro sedavé lidi a na udržení svalu při tréninku obvykle nestačí."},
     {"pro": "faq[3]", "citace": "Systematický přehled uvádí, že mírný deficit (řádově 250–750 kcal/den) navíc k posilování zesiluje úbytek tuku."},
-    {"pro": "faq[4]", "citace": "Hormonální terapie (HRT) je legitimní téma a u řady žen dokáže s příznaky přechodu i s kompozicí těla hodně pomoct. Ale tohle patří výhradně do rukou tvojí lékařky nebo gynekologa. Je to individuální rozhodnutí, které závisí na tvém zdraví, historii a rizicích."}
+    {"pro": "faq[4]", "citace": "Hormonální terapie (HRT) je legitimní téma a u řady žen dokáže s příznaky přechodu i s kompozicí těla hodně pomoct. Ale tohle patří výhradně do rukou tvojí lékařky nebo gynekologa. Je to individuální rozhodnutí, které závisí na tvém zdraví, historii a rizicích."},
+    {"pro": "faq[4]", "citace": "U hormonální terapie, léků a zdravotních potíží se poraď se svým lékařem a léky si sama neupravuj."}
   ],
   "nejiste": [
     "Článek neříká, kolikrát týdně posilovat.",
     "Rozsah 1,2–1,6 g bílkovin na kilo článek neopírá o konkrétní studii; přebírám ho tak, jak je napsaný, včetně podmínky „pokud posiluješ“.",
     "Kreatin a vitamin D článek zmiňuje jen okrajově bez dávek („můžou trénink podpořit“), proto nejsou v odpovědích.",
     "Účinek HRT na váhu článek nekvantifikuje a záměrně ho nechává na lékařce."
-  ]
+  ],
+  "kontrola": "opraveno: faq[4] (HRT) doplněno „léky si sama neupravuj“ ze závěrečného upozornění a „podle tvého zdraví, historie a rizik“ z textu článku"
 }

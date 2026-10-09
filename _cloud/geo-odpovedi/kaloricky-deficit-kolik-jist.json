@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Proč nehubnout rychleji s větším deficitem?",
-      "odpoved": "Norská studie na 24 elitních sportovcích srovnala tempo 0,7 % a 1,4 % hmotnosti týdně. Obě skupiny zhubly kolem 5,5 %, ale pomalé skupině beztuková hmota vzrostla o 2,1 % a tuková klesla o 31 % proti 21 % u rychlé. Byli to trénovaní sportovci, takže čísla nejdou překlopit jedna ku jedné na začátečníka, směr je ale čitelný."
+      "odpoved": "Norská studie na 24 elitních sportovcích srovnala tempo 0,7 % a 1,4 % hmotnosti týdně. Obě skupiny trénovaly silově čtyřikrát týdně a zhubly kolem 5,5 %, ale pomalé skupině beztuková hmota vzrostla o 2,1 % a tuková klesla o 31 % proti 21 % u rychlé. Byli to trénovaní sportovci, takže čísla nejdou překlopit jedna ku jedné na začátečníka, směr je ale čitelný."
     },
     {
       "otazka": "Kolik bílkovin jíst v kalorickém deficitu?",
@@ -44,5 +44,6 @@
     "Údaj Mortonovy metaanalýzy (strop asi 1,62 g/kg) jsem do odpovědí nedal: článek sám říká, že platí pro trénink obecně, ne přímo pro hubnutí.",
     "Rozmezí 1,6 až 2,2 g/kg je Martinův přepočet z doporučení pro štíhlé sportovce, ne výsledek studie na běžných lidech; v odpovědi je to tak i popsané.",
     "Přepočet 7 700 kcal na kilo tuku a 500 kcal denně na půl kila týdně článek uvádí jako přibližný („zhruba“), proto ho v odpovědích nepoužívám jako přesné pravidlo."
-  ]
+  ],
+  "kontrola": "opraveno: faq[0] doplněna podmínka studie „obě skupiny trénovaly silově čtyřikrát týdně“ (nárůst beztukové hmoty platí při silovém tréninku)"
 }

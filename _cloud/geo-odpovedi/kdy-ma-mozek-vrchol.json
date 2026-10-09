@@ -2,22 +2,22 @@
   "url": "https://martinbarna.cz/clanky/kdy-ma-mozek-vrchol.html",
   "titulek": "Kdy má mozek vrchol? Není to ve třiceti",
   "hlavni_otazka": "V kolika letech má mozek nejvyšší výkon?",
-  "kratka_odpoved": "Podle australské studie (Intelligence, 2025) přišel vrchol mentálního výkonu mezi 55 a 60 lety. Studie sledovala devět oblastí mentálního výkonu u lidí od 18 do 85 let a v tomhle věku se nejlíp potkává paměť, úsudek, emoční stabilita a nasbírané zkušenosti.",
+  "kratka_odpoved": "Podle australské studie (Intelligence, 2025) přišel vrchol souhrnného ukazatele mentálního výkonu (CPFI) mezi 55 a 60 lety. Studie sledovala devět oblastí mentálního výkonu u lidí od 18 do 85 let a v tomhle věku se nejlíp potkává paměť, úsudek, emoční stabilita a nasbírané zkušenosti.",
   "faq": [
     {
       "otazka": "Jde to s mozkem po třicítce z kopce?",
-      "odpoved": "Po třicítce zdaleka není všechno pryč. Australská studie našla vrchol mentálního výkonu až mezi 55 a 60 lety."
+      "odpoved": "Po třicítce zdaleka není všechno pryč. Australská studie našla vrchol souhrnného ukazatele mentálního výkonu až mezi 55 a 60 lety."
     },
     {
       "otazka": "Co je ukazatel CPFI?",
       "odpoved": "Jeden ukazatel, který australská studie poskládala z devíti oblastí mentálního výkonu u lidí od 18 do 85 let."
     },
     {
-      "otazka": "Proč přichází vrchol mentálního výkonu až mezi 55 a 60 lety?",
+      "otazka": "Proč podle studie přichází vrchol až mezi 55 a 60 lety?",
       "odpoved": "V tu chvíli se nejlíp potkává paměť, úsudek, emoční stabilita a roky nasbírané zkušenosti."
     },
     {
-      "otazka": "Dá se pokles mentálního výkonu s věkem zpomalit?",
+      "otazka": "Dá se pokles fluidní inteligence s věkem zpomalit?",
       "odpoved": "Pokles fluidní inteligence i svalové hmoty se dá zpomalit. Pomáhá držet se ve štíhlé formě, trénovat a jíst kvalitně. Fyzická forma, výživa a síla rozhodují o tom, jestli svůj mentální výkon dokážeš opravdu využít."
     }
   ],
@@ -26,6 +26,7 @@
     {"pro": "kratka_odpoved", "citace": "Kdy přišel vrchol? Mezi 55 a 60 lety. V tu chvíli se nejlíp potkává paměť, úsudek, emoční stabilita a roky nasbírané zkušenosti."},
     {"pro": "faq[0]", "citace": "Po třicítce tedy zdaleka není všechno pryč."},
     {"pro": "faq[0]", "citace": "Kdy přišel vrchol? Mezi 55 a 60 lety."},
+    {"pro": "faq[0]", "citace": "Australská studie (Intelligence, 2025) sledovala devět oblastí mentálního výkonu u lidí od 18 do 85 let a poskládala z nich jeden ukazatel, CPFI."},
     {"pro": "faq[1]", "citace": "Australská studie (Intelligence, 2025) sledovala devět oblastí mentálního výkonu u lidí od 18 do 85 let a poskládala z nich jeden ukazatel, CPFI."},
     {"pro": "faq[2]", "citace": "Kdy přišel vrchol? Mezi 55 a 60 lety. V tu chvíli se nejlíp potkává paměť, úsudek, emoční stabilita a roky nasbírané zkušenosti."},
     {"pro": "faq[3]", "citace": "Pokles fluidní inteligence i svalové hmoty se dá zpomalit. Pomáhá držet se ve štíhlé formě, trénovat a jíst kvalitně."},
@@ -35,5 +36,6 @@
     "Článek neříká, kterých devět oblastí studie měřila, kolik lidí sledovala ani kdo ji vedl. Neříká ani, co zkratka CPFI znamená.",
     "Není jasné, jestli vrchol mezi 55 a 60 lety platí pro všechny oblasti zvlášť, nebo jen pro souhrnný ukazatel. Odpověď proto mluví o celkovém mentálním výkonu.",
     "Článek neříká, o kolik nebo jak rychle se pokles fluidní inteligence dá zpomalit a jaký trénink či strava konkrétně pomáhá. Že to pomáhá, je tvrzení autora, ne výsledek citované studie."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved a faq[0] upřesněno, že vrchol 55–60 let platí pro souhrnný ukazatel (CPFI), ne pro mentální výkon obecně; otázky faq[2] a faq[3] zúženy na to, co článek říká (vrchol podle studie, pokles fluidní inteligence)"
 }

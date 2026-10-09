@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/vyziva-sportujiciho-ditete.html",
   "titulek": "Výživa sportujícího dítěte: proč nemůže jíst jako jeho nesportující sourozenec",
   "hlavni_otazka": "Co a kolik má jíst dítě, které sportuje skoro každý den?",
-  "kratka_odpoved": "Hlavně dost jídla: u aktivních dětí málokdy chybí vitamíny, mnohem častěji prostě nesní dost energie. Dej ke každému jídlu sacharidovou přílohu, jídlo navíc kolem tréninku, svačiny a do každého jídla zdroj bílkoviny. Jediný doplněk s plošnou oporou je u dětí vitamin D, jakékoli další konzultuj s lékařem.",
+  "kratka_odpoved": "Hlavně dost jídla: u aktivních dětí málokdy chybí vitamíny, mnohem častěji prostě nesní dost energie. Dej ke každému jídlu sacharidovou přílohu, jídlo navíc kolem tréninku, svačiny a do každého jídla zdroj bílkoviny. Jediný doplněk s plošnou oporou je u dětí vitamin D, i jeho dávku a jakékoli další doplňky řeš s lékařem.",
   "faq": [
     {
       "otazka": "Jak poznám, že sportující dítě dlouhodobě nejí dost?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Kolik vitaminu D dávat sportujícímu dítěti?",
-      "odpoved": "Běžné doporučení pro děti je 600–1000 IU/den v zimě (Česká pediatrická společnost), u aktivních jedinců se jako udržovací běžně uvádí 1000–2000 IU/den. Bezpečný horní limit je u dětí 1–10 let 2000 IU/den a u dospívajících 4000 IU/den. Dávkuj individuálně, ideálně podle krevního testu (25-OH-D) a vždy s lékařem, ne od oka."
+      "odpoved": "Běžné doporučení pro děti je 600–1000 IU/den v zimě (Česká pediatrická společnost), u aktivních jedinců se jako udržovací běžně uvádí 1000–2000 IU/den. Bezpečný horní limit je u dětí 1–10 let 2000 IU/den a u dospívajících 4000 IU/den. Dávkuj individuálně, ideálně podle krevního testu (25-OH-D), s ohledem na věk a vždy s lékařem, ne od oka."
     },
     {
       "otazka": "Pomáhá dětem hořčík na svalové křeče?",
@@ -53,6 +53,10 @@
     {
       "pro": "kratka_odpoved",
       "citace": "Jakékoli doplňky nad rámec vitaminu D konzultujte s lékařem."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Vždy s lékařem, ne od oka."
     },
     {
       "pro": "faq[0]",
@@ -124,7 +128,7 @@
     },
     {
       "pro": "faq[3]",
-      "citace": "Dávkuj ale individuálně, ideálně podle krevního testu (25-OH-D)"
+      "citace": "Dávkuj ale individuálně, ideálně podle krevního testu (25-OH-D) a s ohledem na věk"
     },
     {
       "pro": "faq[3]",
@@ -148,5 +152,6 @@
     "Rozmezí 1,3 až 1,8 g bílkovin na kilogram platí pro pravidelně trénující dospívající, pro mladší děti článek číslo neuvádí.",
     "U doplňku omega-3 (EPA/DHA) článek neuvádí žádnou dávku.",
     "Není vysvětleno, z čeho vychází tvrzení, že podchycením množství jídla je „z kola ven zhruba 80 % problému“."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno, že i dávku vitaminu D řeš s lékařem (článek: „Vždy s lékařem, ne od oka.“); faq[3] doplněno „s ohledem na věk“ u dávkování vitaminu D; opory doplněny"
 }

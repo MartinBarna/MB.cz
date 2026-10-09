@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/injekce-na-hubnuti-ozempic.html",
   "titulek": "Injekce na hubnutí (Ozempic, Wegovy): co o nich vědět",
   "hlavni_otazka": "Fungují injekce na hubnutí jako Ozempic a co se stane, když je přestanu brát?",
-  "kratka_odpoved": "Ozempic, Wegovy a Mounjaro jsou léky na předpis, které tlumí hlad, takže sníš méně a vznikne kalorický deficit. Ve studii STEP 1 klesla váha za 68 týdnů v průměru o 14,9 % na léku a o 2,4 % na placebu. Rok po vysazení se ale vrátily zhruba dvě třetiny úbytku.",
+  "kratka_odpoved": "Ozempic, Wegovy a Mounjaro jsou léky na předpis, které tlumí hlad, takže sníš méně a vznikne kalorický deficit. Ve studii STEP 1 u lidí s obezitou, nebo s nadváhou a nemocí, klesla váha za 68 týdnů v průměru o 14,9 % na léku a o 2,4 % na placebu. Rok po vysazení se ale vrátily zhruba dvě třetiny úbytku.",
   "faq": [
     {
       "otazka": "Jaký je rozdíl mezi Ozempicem, Wegovy a Mounjarem?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Přijdu na injekcích na hubnutí o svaly?",
-      "odpoved": "Ve studiích s těmito léky tvoří beztuková hmota zhruba čtvrtinu až třetinu úbytku, u tirzepatidu asi 25 %, u semaglutidu asi 35 %, a samotné svaly jsou z toho zhruba polovina. Proto k léku patří od prvního týdne silový trénink 2 až 3× týdně a bílkovina v každém jídle. Odborné společnosti u lidí na léku uvádějí zhruba 1,2 až 1,6 g bílkovin na kilo."
+      "odpoved": "Ve studiích s těmito léky tvoří beztuková hmota zhruba čtvrtinu až třetinu úbytku, u tirzepatidu asi 25 %, u semaglutidu asi 35 %, a samotné svaly jsou z toho zhruba polovina. Proto k léku patří od prvního týdne silový trénink 2 až 3× týdně (kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře) a bílkovina v každém jídle. Odborné společnosti u lidí na léku uvádějí zhruba 1,2 až 1,6 g bílkovin na kilo, u velké nadváhy počítáno z cílové váhy."
     },
     {
       "otazka": "Co se stane s váhou, když injekce vysadím?",
@@ -22,12 +22,13 @@
     },
     {
       "otazka": "Jaké nežádoucí účinky mají injekce na hubnutí?",
-      "odpoved": "Nejčastější jsou trávicí potíže: ve STEP 1 je mělo 74 lidí ze 100 na léku a 48 ze 100 na placebu. Většinou šlo o nevolnost, průjem, zácpu nebo pálení žáhy, hlavně na začátku a při zvyšování dávky, a většinou byly mírné a přechodné. Když potíže neodezní, patří to k lékaři, a pokud bereš jiné léky nebo jsi těhotná, o léku rozhoduje výhradně on."
+      "odpoved": "Nejčastější jsou trávicí potíže (ve STEP 1 je mělo 74 lidí ze 100 na léku a 48 ze 100 na placebu), většinou nevolnost, průjem, zácpa nebo pálení žáhy, hlavně na začátku a při zvyšování dávky, a většinou mírné a přechodné. Když potíže neodezní, patří to k lékaři. Pokud bereš jiné léky, jsi těhotná, máš zkušenost s poruchou příjmu potravy nebo řešíš jakoukoli nemoc, o léku rozhoduje výhradně tvůj lékař."
     }
   ],
   "opory": [
     {"pro": "kratka_odpoved", "citace": "Jsou to léky na předpis."},
     {"pro": "kratka_odpoved", "citace": "Tyhle léky tuk přímo nespalují, fungují tak, že díky utlumenému hladu sníš méně a vznikne kalorický deficit."},
+    {"pro": "kratka_odpoved", "citace": "Studie STEP 1 (Wilding a kol., 2021) dala 1 961 dospělým s obezitou, nebo s nadváhou a nemocí, bez cukrovky, semaglutid nebo placebo."},
     {"pro": "kratka_odpoved", "citace": "Za 68 týdnů klesla váha v průměru o 14,9 % na léku a o 2,4 % na placebu."},
     {"pro": "kratka_odpoved", "citace": "Rok po vysazení nabrala 11,6 procentního bodu zpět. Autoři píší, že se za rok vrátily zhruba dvě třetiny úbytku."},
     {"pro": "faq[0]", "citace": "Ozempic i Wegovy obsahují stejnou účinnou látku, semaglutid. Mounjaro obsahuje tirzepatid."},
@@ -41,6 +42,7 @@
     {"pro": "faq[2]", "citace": "Ve studiích s těmito léky tvoří beztuková hmota (svaly, voda, orgány) zhruba čtvrtinu až třetinu úbytku: u tirzepatidu asi 25 %, u semaglutidu asi 35 % (souhrn 20 studií, Eisa a kol., 2026). Samotné svaly jsou z toho zhruba polovina, tedy u semaglutidu asi pětina shozených kil."},
     {"pro": "faq[2]", "citace": "Proto k léku patří od prvního týdne silový trénink a bílkoviny v každém jídle."},
     {"pro": "faq[2]", "citace": "Silový trénink 2 až 3× týdně, aby tělo mělo důvod si svaly a kosti nechat."},
+    {"pro": "faq[2]", "citace": "Kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře."},
     {"pro": "faq[2]", "citace": "Odborné společnosti u lidí na léku uvádějí zhruba 1,2 až 1,6 g na kilo; u velké nadváhy počítej z cílové váhy."},
     {"pro": "faq[3]", "citace": "SURMOUNT-4 (Aronne a kol., 2024): po 36 týdnech tirzepatidu průměrný úbytek 20,9 %. Kdo pak dostal placebo, nabral za rok 14 % váhy zpět."},
     {"pro": "faq[3]", "citace": "Všichni přitom dál dostávali poradenství ke stravě a pohybu."},
@@ -59,5 +61,6 @@
     "Údaje o kostech jsou smíšené (pokles hustoty v jedné malé studii, žádné zvýšení zlomenin v souhrnu 60 studií), do FAQ jsem je nedával.",
     "Přínosy pro srdce (SELECT) a prevenci cukrovky u prediabetu jsem vynechal: článek je váže na lidi s nemocí a na rozhodnutí lékaře a vytržené by zněly jako doporučení léku.",
     "„14 % váhy zpět\" v SURMOUNT-4 přebírám doslova; článek nevysvětluje, jestli jde o procento původní váhy, nebo o procentní body."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno, pro koho platí čísla STEP 1 (lidé s obezitou, nebo s nadváhou a nemocí); faq[2] doplněno ‚kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře‘ a že 1,2–1,6 g/kg se u velké nadváhy počítá z cílové váhy; faq[4] doplněna chybějící porucha příjmu potravy a jakákoli nemoc mezi situace, kdy rozhoduje výhradně lékař"
 }

@@ -10,7 +10,7 @@
     },
     {
       "otazka": "U koho silový trénink zlepšuje myšlení?",
-      "odpoved": "U zdravých lidí i u lidí s kognitivním postižením. Zlepšují se dokonce i výsledky testů u dětí, které pravidelně trénují."
+      "odpoved": "Podle Layna Nortona u zdravých lidí i u lidí s kognitivním postižením. Zlepšují se dokonce i výsledky testů u dětí, které pravidelně trénují."
     },
     {
       "otazka": "Pomáhá pohyb starším lidem proti kognitivnímu úpadku?",
@@ -51,6 +51,10 @@
       "citace": "U zdravých lidí, u lidí s kognitivním postižením, a dokonce i výsledky testů u dětí, které pravidelně trénují"
     },
     {
+      "pro": "faq[1]",
+      "citace": "Tenhle text je překladem obsahu od Layne Nortona, PhD, vědce a experta na výživu a trénink."
+    },
+    {
       "pro": "faq[2]",
       "citace": "Studie ze zahraničí (např. Frontiers in Neuroscience 2019) to potvrzují: pravidelný pohyb včetně silového tréninku snižuje u starších lidí riziko úpadku."
     },
@@ -71,5 +75,6 @@
     "Článek neuvádí, jaký objem, frekvence nebo typ silového tréninku je potřeba, aby se přínosy pro mozek projevily.",
     "Článek mluví o souvislosti mezi svaly a kognicí, ale nerozebírá, nakolik jde o příčinu a nakolik jen o korelaci.",
     "U části zdrojů (Frontiers in Neuroscience 2019, BMC Geriatrics 2020, ResearchGate 2022) článek neuvádí přesnou citaci ani autory."
-  ]
+  ],
+  "kontrola": "opraveno: faq[1] (zlepšení myšlení u zdravých, s kognitivním postižením a u dětí) přisouzeno Laynu Nortonovi, jehož text článek překládá"
 }

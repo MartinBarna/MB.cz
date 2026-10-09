@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/maslo-a-kardiovaskularni-onemocneni.html",
   "titulek": "Máslo a kardiovaskulární onemocnění",
   "hlavni_otazka": "Je máslo zdravé, nebo škodí srdci?",
-  "kratka_odpoved": "Máslo není superpotravina. Literatura u něj ukazuje neutrální až mírně vyšší celkovou úmrtnost a žádný ochranný efekt proti srdečním a cévním onemocněním, a jako koncentrovaný nasycený tuk spolehlivě zvyšuje LDL cholesterol. Do vyvážené stravy se vejde, ale nazývat ho zdravým jídlem je přehnané.",
+  "kratka_odpoved": "Podle Layne Nortona, jehož příspěvek článek překládá, máslo není superpotravina. Literatura u něj ukazuje neutrální až mírně vyšší celkovou úmrtnost a žádný ochranný efekt proti srdečním a cévním onemocněním, a jako koncentrovaný nasycený tuk spolehlivě zvyšuje LDL cholesterol. Do vyvážené stravy se vejde, ale nazývat ho zdravým jídlem je přehnané.",
   "faq": [
     {
       "otazka": "Proč vadí, že máslo zvyšuje LDL cholesterol?",
-      "odpoved": "LDL není jen marker, je to kauzální hnací síla zúžení cév (aterosklerotického CVD). Čím víc LDL jsi za život vystaven, tím větší je riziko kardiovaskulární události i úmrtí na ni."
+      "odpoved": "Podle Layne Nortona LDL není jen marker, je to kauzální hnací síla zúžení cév (aterosklerotického CVD). Čím víc LDL jsi za život vystaven, tím větší je riziko kardiovaskulární události i úmrtí na ni."
     },
     {
       "otazka": "Čím máslo nahradit, když chci chránit srdce?",
-      "odpoved": "Nenasycenými tuky. Když nasycené tuky nahradíš PUFA, v randomizovaných studiích klesají ischemická srdeční onemocnění, v meta-analýze zhruba o 19 %. Prakticky třeba olivový olej do salátu místo másla, nebo avokádo na chleba."
+      "odpoved": "Nenasycenými tuky. Podle Layne Nortona při náhradě nasycených tuků za PUFA klesají v randomizovaných studiích události ischemického srdečního onemocnění, v meta-analýze zhruba o 19 %. Prakticky třeba olivový olej do salátu místo másla, nebo avokádo na chleba."
     },
     {
       "otazka": "Kolik nasycených tuků je v pořádku?",
@@ -18,17 +18,21 @@
     },
     {
       "otazka": "Zvyšuje sýr cholesterol stejně jako máslo?",
-      "odpoved": "Ne stejně. Randomizované studie ukazují, že máslo zvyšuje LDL víc než sýr, což se přičítá vlivu celkové struktury jídla (food-matrix efekt)."
+      "odpoved": "Ne stejně. Podle Layne Nortona randomizované studie ukazují, že máslo zvyšuje LDL víc než sýr, což se přičítá vlivu celkové struktury jídla (food-matrix efekt)."
     },
     {
       "otazka": "Co jíst pro zdravé srdce?",
-      "odpoved": "Drž se nenasycených tuků, vlákniny, rostlin a dostatku proteinu. LDL cholesterol si nech změřit."
+      "odpoved": "Layne Norton radí držet se nenasycených tuků, vlákniny, rostlin a dostatku proteinu. LDL cholesterol si nech změřit."
     }
   ],
   "opory": [
     {
       "pro": "kratka_odpoved",
       "citace": "Nějak jsme se ocitli v roce 2025 a stále ještě nazýváme máslo „superpotravinou“."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tohle je překlad příspěvku od Layne Nortona PhD, experta na evidence-based výživu a fitness."
     },
     {
       "pro": "kratka_odpoved",
@@ -41,6 +45,10 @@
     {
       "pro": "kratka_odpoved",
       "citace": "Máslo se do vyvážené stravy vejde. Ale nazývat ho zdravým jídlem je přehnané."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tohle je překlad příspěvku od Layne Nortona PhD, experta na evidence-based výživu a fitness."
     },
     {
       "pro": "faq[0]",
@@ -63,6 +71,10 @@
       "citace": "Konkrétní tip: místo másla dej na chleba avokádo."
     },
     {
+      "pro": "faq[1]",
+      "citace": "Tohle je překlad příspěvku od Layne Nortona PhD, experta na evidence-based výživu a fitness."
+    },
+    {
       "pro": "faq[2]",
       "citace": "Pro hubnutí: Drž SFA (nasycené tuky, jako v másle) na max 10 % kalorií a nahraď je PUFA (nenasycené tuky, jako v olivovém oleji)."
     },
@@ -71,12 +83,20 @@
       "citace": "Randomizované studie taky ukazují, že máslo zvyšuje LDL víc než sýr (food-matrix efekt, tj. vliv celkové struktury jídla)."
     },
     {
+      "pro": "faq[3]",
+      "citace": "Tohle je překlad příspěvku od Layne Nortona PhD, experta na evidence-based výživu a fitness."
+    },
+    {
       "pro": "faq[4]",
       "citace": "Když ti jde o srdeční zdraví, drž se nenasycených tuků, vlákniny, rostlin a dostatku proteinu."
     },
     {
       "pro": "faq[4]",
       "citace": "LDL-C je kauzální riziko CVD (kardiovaskulárních onemocnění, tj. srdečních a cévních problémů). Nech si ho změřit (test je u nás levný)"
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Tohle je překlad příspěvku od Layne Nortona PhD, experta na evidence-based výživu a fitness."
     }
   ],
   "nejiste": [
@@ -84,5 +104,6 @@
     "Číslo 19 % se v článku objevuje dvakrát s jiným významem (pokles CHD událostí v meta-analýze vs. obecně „riziko CVD“); použil jsem jen přesnější první formulaci.",
     "Česká čísla v závěru (40 % lidí s vysokým LDL-C, 60 % nadváhy, MZ ČR, ČSÚ, NÚDZ) nemají v článku dohledatelný zdroj, proto nejsou použita. Stejně tak tvrzení „míň chutí“ a výpočet „ušetříš 5 g SFA a přidáš 10 g PUFA“ bez udaného množství.",
     "Článek je převážně překlad příspěvku Layne Nortona; neuvádí, jestli totéž platí pro přepuštěné máslo nebo ghí."
-  ]
+  ],
+  "kontrola": "opraveno: článek je (kromě závěrečného shrnutí) překlad příspěvku Layne Nortona, tvrzení z překladu v kratka_odpoved, faq[0], faq[1], faq[3] a faq[4] jsou nově přisouzena jemu; faq[1] přesněji ‚události ischemického srdečního onemocnění‘ místo ‚klesají ischemická srdeční onemocnění‘"
 }

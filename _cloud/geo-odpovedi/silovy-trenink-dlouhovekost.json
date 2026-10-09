@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Jak si poskládat hodinu silového tréninku týdně?",
-      "odpoved": "Pro začátek dva celotělové tréninky po 30 minutách, každý se čtyřmi až pěti cviky: dolní končetiny, tah, tlak a jeden cvik na střed těla. Dvě až tři série na cvik po 6 až 12 opakováních, poslední dvě opakování mají být těžká, ale do úplného selhání jít nemusíš. Zapisuj si to a váhu přidej, když zvládneš horní hranici opakování ve všech sériích."
+      "odpoved": "Pro začátek dva celotělové tréninky po 30 minutách, každý se čtyřmi až pěti cviky: dolní končetiny, tah, tlak a jeden cvik na střed těla. Dvě až tři série na cvik po 6 až 12 opakováních, poslední dvě opakování mají být těžká, ale do úplného selhání jít nemusíš; zapisuj si to a váhu přidej, když zvládneš horní hranici opakování ve všech sériích. Jestli máš za sebou operaci, srdeční potíže nebo bolesti zad, které tě omezují, nech si začátek odsouhlasit u lékaře nebo fyzioterapeuta."
     },
     {
       "otazka": "Stačí hodina týdně i na nabírání svalů?",
@@ -39,6 +39,7 @@
     {"pro": "faq[1]", "citace": "Dvě až tři série na cvik, 6 až 12 opakování. Poslední dvě opakování mají být těžká. Do úplného selhání jít nemusíš."},
     {"pro": "faq[1]", "citace": "Zapisuj si to. Váha, opakování, jak to šlo."},
     {"pro": "faq[1]", "citace": "Když zvládneš horní hranici opakování ve všech sériích, příště přidej váhu."},
+    {"pro": "faq[1]", "citace": "Jestli máš za sebou operaci, srdeční potíže nebo bolesti zad, které tě omezují, začátek si nech odsouhlasit u lékaře nebo fyzioterapeuta."},
     {"pro": "faq[2]", "citace": "Na udržení a na start ano, na maximální růst spíš ne."},
     {"pro": "faq[2]", "citace": "Když je tvým cílem postava a síla, budeš dřív nebo později chtít tři tréninky týdně a víc sérií."},
     {"pro": "faq[3]", "citace": "Studie sledovaly posilování obecně, na vybavení nezáleželo. Doma s vlastní vahou a gumami se dá odvést slušná práce, hlavně na začátku."},
@@ -51,5 +52,6 @@
     "Článek neuvádí, od jakého objemu přesně se přínos začal zmenšovat ani o kolik byla výhoda při vyšších objemech menší.",
     "Studie se v číslech rozcházejí (15 % proti 21 % u celkové úmrtnosti, rozdílné výsledky u nádorové úmrtnosti) a článek sám říká, že přesné číslo nikdo nezná, spolehlivý je jen směr.",
     "Článek neříká, jakou intenzitu nebo konkrétní formu posilování sledované studie zahrnovaly."
-  ]
+  ],
+  "kontrola": "opraveno: faq[1] (tréninkový plán) doplněno o upozornění, že po operaci, se srdečními potížemi nebo omezujícími bolestmi zad si začátek nech odsouhlasit u lékaře nebo fyzioterapeuta; článek ho má hned pod plánem, JSON ho měl jen u otázky na věk"
 }

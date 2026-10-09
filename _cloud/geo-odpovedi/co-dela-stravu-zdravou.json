@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Pomůžou mi polyfenoly zhubnout?",
-      "odpoved": "Ne. Polyfenoly nejsou kouzlo, které přebije kalorie, o váze pořád rozhoduje energetická bilance. Ber je jako bonus ke kvalitě jídelníčku, ne jako náhradu za základy."
+      "odpoved": "Nečekej to od nich. Polyfenoly nejsou kouzlo, které přebije kalorie, o váze pořád rozhoduje energetická bilance. Ber je jako bonus ke kvalitě jídelníčku, ne jako náhradu za základy."
     },
     {
       "otazka": "Mám kvůli polyfenolům pít červené víno?",
@@ -38,5 +38,6 @@
   "nejiste": [
     "Článek neuvádí, kolik polyfenolů denně jíst, ani jejich konkrétní účinky na zdraví.",
     "Článek nechává otevřený spor o datech Blue Zones (Saul Newman vs. tvůrci konceptu) a nerozhoduje ho."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] „Ne.“ nahrazeno „Nečekej to od nich.“, článek netvrdí, že polyfenoly s hubnutím nepomáhají vůbec, jen že nepřebijí kalorie"
 }
