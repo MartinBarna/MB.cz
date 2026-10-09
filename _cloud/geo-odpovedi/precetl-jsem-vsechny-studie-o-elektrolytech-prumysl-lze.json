@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Může přebytek sodíku škodit?",
-      "odpoved": "Přebytečný sodík zvyšuje krevní tlak a riziko kardiovaskulárních problémů, riziko stoupá přibližně o 6 % na každý gram navíc. Průměrný člověk přitom přijímá 3–5 g sodíku denně, což je často víc, než tělo potřebuje."
+      "odpoved": "Podle Henselmansova shrnutí zvyšuje přebytečný sodík krevní tlak a riziko kardiovaskulárních problémů, riziko stoupá přibližně o 6 % na každý gram navíc. Průměrný člověk přitom přijímá 3–5 g sodíku denně, což je často víc, než tělo potřebuje."
     },
     {
       "otazka": "Kdy mají elektrolyty smysl?",
@@ -22,17 +22,54 @@
     }
   ],
   "opory": [
-    {"pro": "kratka_odpoved", "citace": "Menno Henselmans si dal tu práci a opravdu prošel všechny dostupné studie o elektrolytech, včetně hlavní přehledové studie z roku 2025."},
-    {"pro": "kratka_odpoved", "citace": "Závěr videa: pro 95 % lidí jsou elektrolytové doplňky zbytečné, drahé a můžou i škodit. Stačí normálně solit jídlo podle chuti a máš vystaráno."},
-    {"pro": "kratka_odpoved", "citace": "Pro běžné lidi a většinu sportovců žádný prokázaný přínos pro výkon, hydrataci ani prevenci křečí."},
-    {"pro": "faq[0]", "citace": "Většina „elektrolytových“ prášků (LMNT, Liquid IV, Element atd.) je v podstatě jen drahý chlorid sodný (běžná sůl) s trochou draslíku a hořčíku."},
-    {"pro": "faq[1]", "citace": "Naopak: přebytečný sodík zvyšuje krevní tlak a riziko kardiovaskulárních problémů (riziko stoupá přibližně o 6 % na každý gram navíc)."},
-    {"pro": "faq[1]", "citace": "Průměrný člověk přijímá 3–5 g sodíku denně – to už je často víc, než tělo potřebuje."},
-    {"pro": "faq[2]", "citace": "Pouze v extrémních případech:"},
-    {"pro": "faq[2]", "citace": "Ultra-vytrvalostní závody 4+ hodiny v horku"},
-    {"pro": "faq[2]", "citace": "Keto / nízkosacharidová dieta (vyšší ztráty sodíku)"},
-    {"pro": "faq[2]", "citace": "Některé zdravotní stavy s rizikem hyponatremie"},
-    {"pro": "faq[3]", "citace": "Hyponatremie (nebezpečně nízký sodík) vzniká většinou z přílišného pití vody bez dostatku sodíku, ne z jeho nedostatku."}
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Menno Henselmans si dal tu práci a opravdu prošel všechny dostupné studie o elektrolytech, včetně hlavní přehledové studie z roku 2025."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Závěr videa: pro 95 % lidí jsou elektrolytové doplňky zbytečné, drahé a můžou i škodit. Stačí normálně solit jídlo podle chuti a máš vystaráno."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pro běžné lidi a většinu sportovců žádný prokázaný přínos pro výkon, hydrataci ani prevenci křečí."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Většina „elektrolytových“ prášků (LMNT, Liquid IV, Element atd.) je v podstatě jen drahý chlorid sodný (běžná sůl) s trochou draslíku a hořčíku."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Naopak: přebytečný sodík zvyšuje krevní tlak a riziko kardiovaskulárních problémů (riziko stoupá přibližně o 6 % na každý gram navíc)."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Průměrný člověk přijímá 3–5 g sodíku denně – to už je často víc, než tělo potřebuje."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Menno Henselmans si dal tu práci a opravdu prošel všechny dostupné studie o elektrolytech, včetně hlavní přehledové studie z roku 2025."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Pouze v extrémních případech:"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Ultra-vytrvalostní závody 4+ hodiny v horku"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Keto / nízkosacharidová dieta (vyšší ztráty sodíku)"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Některé zdravotní stavy s rizikem hyponatremie"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Hyponatremie (nebezpečně nízký sodík) vzniká většinou z přílišného pití vody bez dostatku sodíku, ne z jeho nedostatku."
+    }
   ],
   "nejiste": [
     "Článek je shrnutí videa Menno Henselmanse a neuvádí název ani autory zmíněné přehledové studie z roku 2025.",

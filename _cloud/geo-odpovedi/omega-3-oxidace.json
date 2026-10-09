@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Mám místo kapslí s rybím olejem radši jíst rybu?",
-      "odpoved": "Kapsle přicházejí na řadu většinou až jako třetí, po jídelníčku a tréninku. Nejdřív se snaž dostat do jídelníčku tučnou rybu dvakrát týdně, třeba sardinky, makrelu nebo lososa."
+      "odpoved": "Martin řeší kapsle většinou až jako třetí v pořadí, po jídelníčku a tréninku. Nejdřív se snaží dostat do jídelníčku tučnou rybu dvakrát týdně, třeba sardinky, makrelu nebo lososa."
     },
     {
       "otazka": "Můžu brát omega-3, když beru léky na ředění krve?",
@@ -110,6 +110,6 @@
   "nejiste": [
     "Článek neuvádí, jaké jsou konkrétní oxidační limity, co přesně znamená hodnota TOTOX ani jaká hodnota je v pořádku.",
     "Článek neříká, jak při nákupu poznat nebo vybrat nezoxidovaný rybí olej.",
-    "U procent vzorků podle zemí není řečeno, ze které studie a z kterého roku každé číslo pochází."
+    "U Norska, Jižní Afriky a USA článek neuvádí, ze které studie číslo pochází. U Nového Zélandu a Kanady odkazuje na Albert et al. 2015 a Jackowski et al. 2015."
   ]
 }

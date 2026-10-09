@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Jak s těžkým tréninkem v těhotenství začít?",
-      "odpoved": "V klidu, třeba sumo deadliftem 3×8 blízko selhání. Sleduj, jak se cítíš, kvůli bezpečí to prober i se svým lékařem a po každém tréninku si poznamenej opakování a jak ses cítila."
+      "odpoved": "Článek radí začít v klidu, třeba sumo deadliftem 3×8 blízko selhání, sledovat, jak se cítíš, kvůli bezpečí to probrat i se svým lékařem a po každém tréninku si poznamenat opakování a jak ses cítila. Studie, o kterou se opírá, se ale týkala zdravých aktivních těhotných žen."
     }
   ],
   "opory": [
@@ -73,6 +73,10 @@
     {
       "pro": "faq[3]",
       "citace": "Po každém tréninku si poznamenej opakování a jak ses cítila."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Účastnilo se 48 zdravých aktivních těhotných žen, od vrcholových sportovkyň po rekreační cvičenky."
     }
   ],
   "nejiste": [

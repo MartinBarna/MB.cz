@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Kolik cukru a džusu můžou děti?",
-      "odpoved": "Volné cukry by podle WHO měly tvořit méně než 10 % energie, ideálně pod 5 %, a pod 2 roky žádný přidaný cukr. Džusy podle AAP pod 1 rok vůbec, 1–3 roky nejvýš zhruba 120 ml denně (raději ředit), 4–6 let 120–180 ml a starší děti nejvýš zhruba 240 ml. Na pití patří voda a mléko."
+      "odpoved": "Volné cukry by podle WHO měly tvořit méně než 10 % energie, ideálně pod 5 %, a pod 2 roky žádný přidaný cukr (doporučení American Heart Association). Džusy podle AAP pod 1 rok vůbec, 1–3 roky nejvýš zhruba 120 ml denně (raději ředit), 4–6 let 120–180 ml a starší děti nejvýš zhruba 240 ml. Na pití patří voda a mléko, kravské mléko ale ne jako hlavní nápoj před prvním rokem a u batolat pod zhruba 500 ml denně."
     },
     {
       "otazka": "Jaké doplňky stravy dětem dávat?",
@@ -26,31 +26,114 @@
     }
   ],
   "opory": [
-    {"pro": "kratka_odpoved", "citace": "Rodič rozhoduje, CO se podává, KDY a KDE."},
-    {"pro": "kratka_odpoved", "citace": "Dítě rozhoduje, JESTLI to sní a KOLIK."},
-    {"pro": "kratka_odpoved", "citace": "½ talíře: zelenina a ovoce"},
-    {"pro": "kratka_odpoved", "citace": "¼ talíře: bílkovina (maso, ryba, vejce, tvaroh, luštěniny, sýr)"},
-    {"pro": "kratka_odpoved", "citace": "¼ talíře: sacharidová příloha (brambory, rýže, těstoviny, pečivo, kaše)"},
-    {"pro": "kratka_odpoved", "citace": "+ kapka tuku: olej, máslo, ořechy, avokádo"},
-    {"pro": "kratka_odpoved", "citace": "Nucení do jídla je nejrychlejší cesta, jak z normálního jídla udělat bojiště. Nedělej to."},
-    {"pro": "kratka_odpoved", "citace": "Nabízej znovu, bez nátlaku."},
-    {"pro": "faq[0]", "citace": "Z výzkumu opakovaného nabízení (systematický přehled Spill 2019, randomizovaná studie Fildes 2014) vychází jasně, že dítě potřebuje stejnou potravinu vidět a ochutnat klidně 8–15×, než ji přijme. Většina rodičů to vzdá po třetím pokusu."},
-    {"pro": "faq[0]", "citace": "Nabízej znovu, bez nátlaku. Malá porce vedle známého jídla. Žádný komentář, žádné drama."},
-    {"pro": "faq[0]", "citace": "Jez to s ním. Děti kopírují."},
-    {"pro": "faq[0]", "citace": "Neuplácej dezertem."},
-    {"pro": "faq[1]", "citace": "Volné cukry (přidaný cukr + cukr z džusů a medu) by měly tvořit méně než 10 % energie, ideálně pod 5 % (WHO)."},
-    {"pro": "faq[1]", "citace": "Pod 2 roky: žádný přidaný cukr. Vůbec."},
-    {"pro": "faq[1]", "citace": "Džusy a šťávy (AAP): pod 1 rok vůbec; 1–3 roky max ~120 ml/den (a raději ředit); 4–6 let 120–180 ml; starší max ~240 ml."},
-    {"pro": "faq[1]", "citace": "Pití = voda a mléko. Tečka."},
-    {"pro": "faq[2]", "citace": "Vitamin D ☀️: jediný doplněk, který se dětem plošně doporučuje."},
-    {"pro": "faq[2]", "citace": "Podle České pediatrické společnosti se podává od ~2. týdne věku: kojencům do 6 měsíců 400–600 IU/den, 6–12 měsíců 600–800 IU/den, u starších dětí 600–1000 IU/den v zimních měsících (říjen–duben), kdy slunce u nás nestačí. Konkrétní dávku a přípravek vždy s pediatrem."},
-    {"pro": "faq[2]", "citace": "Železo 🥩: neřeš ho práškem, ale jídlem"},
-    {"pro": "faq[2]", "citace": "Vápník 🦴: pro stavbu kostí; pokryje ho pestrá strava (mléčné výrobky, někdy listová zelenina)."},
-    {"pro": "faq[2]", "citace": "Všechno ostatní, ať jsou to „imunitní\" bonbóny, multivitamíny do zásoby nebo superpotraviny, řeš jen tehdy, když to doporučí lékař."},
-    {"pro": "faq[3]", "citace": "Metaanalýza 17 studií (Hammons & Fiese, časopis Pediatrics) na statisících dětí ukázala, že děti, které jedí s rodinou alespoň 3× týdně, mají:"},
-    {"pro": "faq[3]", "citace": "lepší kvalitu stravy a vyšší příjem zeleniny,"},
-    {"pro": "faq[3]", "citace": "výrazně nižší riziko poruch příjmu potravy."},
-    {"pro": "faq[4]", "citace": "Příjem dětí kolísá den ode dne i jídlo od jídla, to je normální. Sleduj spíš dlouhodobý trend (energie, růst, nálada) než jeden talíř. Když roste a je čilé, většinou je vše v pořádku. Pokud máš pochybnosti o růstu nebo váze, jdi k pediatrovi."}
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Rodič rozhoduje, CO se podává, KDY a KDE."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Dítě rozhoduje, JESTLI to sní a KOLIK."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "½ talíře: zelenina a ovoce"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "¼ talíře: bílkovina (maso, ryba, vejce, tvaroh, luštěniny, sýr)"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "¼ talíře: sacharidová příloha (brambory, rýže, těstoviny, pečivo, kaše)"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "+ kapka tuku: olej, máslo, ořechy, avokádo"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nucení do jídla je nejrychlejší cesta, jak z normálního jídla udělat bojiště. Nedělej to."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nabízej znovu, bez nátlaku."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Z výzkumu opakovaného nabízení (systematický přehled Spill 2019, randomizovaná studie Fildes 2014) vychází jasně, že dítě potřebuje stejnou potravinu vidět a ochutnat klidně 8–15×, než ji přijme. Většina rodičů to vzdá po třetím pokusu."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Nabízej znovu, bez nátlaku. Malá porce vedle známého jídla. Žádný komentář, žádné drama."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Jez to s ním. Děti kopírují."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Neuplácej dezertem."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Volné cukry (přidaný cukr + cukr z džusů a medu) by měly tvořit méně než 10 % energie, ideálně pod 5 % (WHO)."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Pod 2 roky: žádný přidaný cukr. Vůbec."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Džusy a šťávy (AAP): pod 1 rok vůbec; 1–3 roky max ~120 ml/den (a raději ředit); 4–6 let 120–180 ml; starší max ~240 ml."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Pití = voda a mléko. Tečka."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Sladkosti, slazené nápoje, dochucené jogurty jsou zbytečné (doporučení American Heart Association)."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Kravské mléko nedávej jako hlavní nápoj před 1. rokem a u batolat ho drž pod ~500 ml/den, jinak vytlačí jiná jídla a zvyšuje riziko nedostatku železa."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Vitamin D ☀️: jediný doplněk, který se dětem plošně doporučuje."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Podle České pediatrické společnosti se podává od ~2. týdne věku: kojencům do 6 měsíců 400–600 IU/den, 6–12 měsíců 600–800 IU/den, u starších dětí 600–1000 IU/den v zimních měsících (říjen–duben), kdy slunce u nás nestačí. Konkrétní dávku a přípravek vždy s pediatrem."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Železo 🥩: neřeš ho práškem, ale jídlem"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Vápník 🦴: pro stavbu kostí; pokryje ho pestrá strava (mléčné výrobky, někdy listová zelenina)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Všechno ostatní, ať jsou to „imunitní\" bonbóny, multivitamíny do zásoby nebo superpotraviny, řeš jen tehdy, když to doporučí lékař."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Metaanalýza 17 studií (Hammons & Fiese, časopis Pediatrics) na statisících dětí ukázala, že děti, které jedí s rodinou alespoň 3× týdně, mají:"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "lepší kvalitu stravy a vyšší příjem zeleniny,"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "výrazně nižší riziko poruch příjmu potravy."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Příjem dětí kolísá den ode dne i jídlo od jídla, to je normální. Sleduj spíš dlouhodobý trend (energie, růst, nálada) než jeden talíř. Když roste a je čilé, většinou je vše v pořádku. Pokud máš pochybnosti o růstu nebo váze, jdi k pediatrovi."
+    }
   ],
   "nejiste": [
     "Článek neuvádí, do jakého věku podávat dětem vitamin D v zimních měsících ani jestli i mimo ně.",

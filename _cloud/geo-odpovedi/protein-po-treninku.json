@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/protein-po-treninku.html",
   "titulek": "Protein hned po tréninku: musí to být?",
   "hlavni_otazka": "Kolik bílkovin denně potřebuju, když posiluju?",
-  "kratka_odpoved": "Martin doporučuje 1,6 až 2,2 g bílkovin na kilo celkové váhy, na spodní hranici panuje shoda. Phillips tvrdí, že 1,6 g na kilo stačí pro 97 až 98 % lidí, a Refalova spodní hranice vyjde po přepočtu na celkovou váhu na 1,4 až 1,6 g/kg. O horní hranici se mezi vědci pořád diskutuje.",
+  "kratka_odpoved": "Martin doporučuje 1,6 až 2,2 g bílkovin na kilo celkové váhy, na spodní hranici panuje shoda. Phillips tvrdí, že 1,6 g na kilo stačí pro 97 až 98 % lidí, a Refalova spodní hranice vyjde po přepočtu na celkovou váhu u běžného cvičence zhruba na 1,4 až 1,6 g/kg. O horní hranici se mezi vědci pořád diskutuje.",
   "faq": [
     {
       "otazka": "Proč Refalo a Helms uvádějí 1,9 až 3,2 g/kg?",
@@ -41,6 +41,10 @@
     {
       "pro": "kratka_odpoved",
       "citace": "A o té horní hranici se mezi vědci pořád diskutuje, hotovo to není."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Po přepočtu u běžného cvičence s 18 až 28 % tuku vyjde spodní hranice zhruba na 1,4 až 1,6 g/kg celkové váhy."
     },
     {
       "pro": "faq[0]",
