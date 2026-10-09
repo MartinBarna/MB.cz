@@ -1,0 +1,47 @@
+{
+  "url": "https://martinbarna.cz/clanky/vetsina-lidi-ma-za-to-ze-po-30-letech-jde-mozek-z-kopce-realita-je-jin.html",
+  "titulek": "Většina lidí má za to, že po 30. létech jde mozek z kopce. Realita je jinde 👇",
+  "hlavni_otazka": "Opravdu jde po třicítce mozek z kopce?",
+  "kratka_odpoved": "Podle nové australské studie (Intelligence, 2025) ne. Studie sledovala 9 oblastí mentálního výkonu u lidí od 18 do 85 let a vrchol z nich poskládaného indexu CPFI vyšel na 55 až 60 let.",
+  "faq": [
+    {
+      "otazka": "Proč vychází vrchol mentálního výkonu až mezi 55 a 60 lety?",
+      "odpoved": "V tom věku se potkává slušná paměť, úsudek, emoční stabilita a roky zkušeností. Mozek si pak podle článku vede líp než ve dvaceti."
+    },
+    {
+      "otazka": "Dá se pokles s věkem zpomalit?",
+      "odpoved": "Podle článku se pokles fluidní inteligence i svalové hmoty dá zpomalit, a to pořád stejnou trojicí: rozumná štíhlost, trénink a kvalitní strava."
+    },
+    {
+      "otazka": "Proč na mentální výkon v pozdějším věku má vliv fyzická forma?",
+      "odpoved": "Fyzická forma, výživa a síla rozhodují o tom, jestli si mentální výkon v pětapadesáti opravdu užiješ, nebo ti ho rozeberou bolavá záda a únava."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nová australská studie (Intelligence, 2025) to vidí jinak. Sledovala 9 oblastí mentálního výkonu u lidí od 18 do 85 let a poskládala z nich jeden index, CPFI."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Vrchol vyšel na 55 až 60 let."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "V tom věku se totiž potkává slušná paměť, úsudek, emoční stabilita a roky zkušeností. Mozek si pak vede líp než ve dvaceti."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Pokles fluidní inteligence i svalové hmoty se dá zpomalit. Pořád stejnou trojicí: rozumná štíhlost, trénink a kvalitní strava."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Fyzická forma, výživa a síla rozhodují o tom, jestli si ten mentální výkon v pětapadesáti opravdu užiješ, nebo ti ho rozeberou bolavá záda a únava."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí velikost vzorku ani autory australské studie.",
+    "Článek nevyjmenovává, kterých 9 oblastí mentálního výkonu studie sledovala, ani jak se index CPFI počítá.",
+    "U tvrzení, že pokles fluidní inteligence lze zpomalit štíhlostí, tréninkem a stravou, článek neuvádí, o kolik ani z jakého zdroje."
+  ]
+}

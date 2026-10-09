@@ -1,0 +1,106 @@
+{
+  "url": "https://martinbarna.cz/clanky/silovy-trenink-pro-zeny.html",
+  "titulek": "Silový trénink pro ženy: jak začít (bez strachu ze zmohutnění)",
+  "hlavni_otazka": "Zmohutní žena z posilování?",
+  "kratka_odpoved": "Nezmohutní. Ženy mají výrazně méně testosteronu než muži, takže velký svalový objem budují jen velmi pomalu a obtížně. Běžným silovým tréninkem 2–3x týdně získáš spíš pevné a vytvarované tělo, ne mohutnost.",
+  "faq": [
+    {
+      "otazka": "Kolikrát týdně má žena posilovat, když začíná?",
+      "odpoved": "Pro začátek stačí 2–3 celotělové tréninky týdně s alespoň jedním dnem odpočinku mezi nimi. Od každého cviku dej 2–3 série po 8–12 opakováních a mezi sériemi si dej 60–120 sekund pauzu."
+    },
+    {
+      "otazka": "Jak začít se silovým tréninkem doma bez vybavení?",
+      "odpoved": "Postav trénink kolem čtyř základních pohybů: dřep, klik, tah a hip thrust. Stačí vlastní váha, podložka a kuchyňská židle, na tah doma pomůže gumový expandér nebo ručníkové tahy."
+    },
+    {
+      "otazka": "Co ženě silový trénink přinese kromě postavy?",
+      "odpoved": "Silnější kosti, protože zatížení stimuluje kostní hustotu, mírně vyšší klidový výdej díky víc svalové hmotě, lepší náladu a energii a zdravější záda a klouby. Když hubneš, síla ti pomáhá udržet svaly, takže ubývá hlavně tuk."
+    },
+    {
+      "otazka": "Jak v tréninku postupně přidávat?",
+      "odpoved": "Drž se progresivního přetížení: postupně dávej tělu o kousek víc než minule, tedy opakování, sérii, těžší variantu cviku nebo o kilo vyšší zátěž. Nemusíš přidávat každý trénink, stačí trend nahoru v čase."
+    },
+    {
+      "otazka": "Spálím cviky na problémovou partii tuk právě z ní?",
+      "odpoved": "Ne, lokální hubnutí nefunguje. Trénuj pro sílu a tvar, hubnutí řeší jídlo, konkrétně mírný kalorický deficit."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ne. Ženy mají výrazně méně testosteronu než muži, takže velký svalový objem budují jen velmi pomalu a obtížně. Běžným silovým tréninkem 2-3x týdně získáš spíš pevné a vytvarované tělo, ne mohutnost."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Pro začátek bohatě stačí 2-3 celotělové tréninky týdně s alespoň jedním dnem odpočinku mezi nimi."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Objem: od každého cviku 2-3 série po 8-12 opakováních."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Pauzy: 60-120 sekund mezi sériemi, klidně podle pocitu."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Postav trénink kolem čtyř základních pohybů:"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Pro úplný začátek stačí jednoduchý rámec: 2-3 tréninky týdně, v každém jeden pohyb z každé kategorie (dřep, tlak, tah, hip thrust)"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Silový trénink pro ženy doma zvládneš s vlastní vahou (kalistenika pro ženy je přesně tohle) a klidně jen s podložkou a kuchyňskou židlí."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Tah: záda. Doma pomůže gumový expandér nebo ručníkové tahy"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Silnější kosti: zatížení stimuluje kostní hustotu, což je zásadní prevence proti řídnutí kostí s věkem."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Víc spálených kalorií: víc svalové hmoty mírně zvedá klidový výdej"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Lepší nálada a energie: trénink spolehlivě zvedá náladu a pomáhá zvládat stres."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Zdravější záda a klouby: silné svaly stabilizují tělo a chrání tě před bolestí i zraněním v běžném životě."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "pokud zrovna hubneš, síla ti pomáhá udržet svaly, takže ubývá hlavně tuk, ne svalová hmota."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Nejdůležitější princip celého silového tréninku je progresivní přetížení: postupně dávej tělu o kousek víc než minule. Přidej opakování, sérii, těžší variantu cviku nebo o kilo vyšší zátěž."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Nemusíš přidávat každý trénink, stačí trend nahoru v čase."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Jednu věc si ale ujasněme: cviky na konkrétní partii ti nespálí tuk zrovna z toho místa. Lokální hubnutí nefunguje."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Trénuj pro sílu a tvar, hubnutí řeší jídlo."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Chceš-li zhubnout, potřebuješ mírný kalorický deficit"
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik bílkovin má žena při silovém tréninku jíst, jen „dostatek bílkovin“.",
+    "Článek neříká, jak velký má být „mírný kalorický deficit“ v kaloriích."
+  ]
+}

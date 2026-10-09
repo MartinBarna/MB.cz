@@ -1,0 +1,99 @@
+{
+  "url": "https://martinbarna.cz/clanky/poceni-a-spalovani-tuku-mytus.html",
+  "titulek": "Pocení znamená spalování tuku? Mýtus o saunách a zábalech",
+  "hlavni_otazka": "Spaluje pocení v sauně nebo pod neoprenovým pásem tuk?",
+  "kratka_odpoved": "Nespaluje. Pocením se tělo jen chladí a úbytek, který ti po sauně nebo zábalu ukáže váha, je vypocená voda, která je po napití a jídle během pár hodin zpátky. Tuk z těla ubyde jen tehdy, když jsi za delší dobu v kalorickém deficitu.",
+  "faq": [
+    {
+      "otazka": "Proč po sauně vážím míň?",
+      "odpoved": "Protože jsi ztratil vodu, ne tuk. Váha v tu chvíli měří stav hydratace, ne množství tuku, a po prvním pití a jídle je číslo zpátky."
+    },
+    {
+      "otazka": "Funguje neoprenový pás nebo zábal na břicho?",
+      "odpoved": "Zadrží na jednom místě teplo, takže se tam víc zpotíš, lokálně ztratíš trochu vody a obvod se na chvíli zmenší. Lokální „vypocení tuku“ ale neexistuje: kde tělo ubírá tuk, řídí hlavně genetika a hormony."
+    },
+    {
+      "otazka": "Může přehnané vypocování uškodit?",
+      "odpoved": "Může. Hrozí dehydratace s bolestí hlavy, slabostí a motáním a horší výkon i regenerace. U extrémů, jako je dlouhé saunování bez pití nebo cvičení v neprodyšném obleku v horku, si už zahráváš s přehřátím a oběhem."
+    },
+    {
+      "otazka": "Má sauna vůbec nějaký smysl?",
+      "odpoved": "Má, jen ne na hubnutí tuku. Článek jí přiznává benefity jako regenerace po tréninku, uvolnění, příjemné prohřátí a podpora kardiovaskulárního systému."
+    },
+    {
+      "otazka": "Co na tuk opravdu funguje?",
+      "odpoved": "Kalorický deficit, tedy jíst o něco míň, než vydáš. K tomu dost bílkovin, silový trénink na udržení svalů a chůze a běžný pohyb, které zvednou výdej líp a udržitelněji než hodina v sauně."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pocením tělo nepálí tuk, jenom se chladí."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Jenže to není tuk, ale voda, kterou jsi vypotil. Jakmile se napiješ a najíš, je to během pár hodin zpátky."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tuk z těla ubyde jen tehdy, když za delší dobu vydáš víc energie, než přijmeš, tedy když jsi v kalorickém deficitu."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Váha po sauně klesne, protože jsi ztratil vodu, ne tuk. Po prvním pití a jídle je číslo zpátky."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Číslo na váze opravdu spadne, jen ti nikdo neřekne, že měříš stav hydratace, ne množství tuku."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Všechny fungují stejně: zadrží na jednom místě teplo, tak se tam víc zpotíš, lokálně ztratíš trochu vody a obvod se na chvíli zmenší."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "A tady je ten zásadní háček: lokální „vypocení tuku\" neexistuje."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Kde tělo ubírá tuk, řídí hlavně genetika a hormony, ne to, kterou partii zrovna namažeš nebo obtočíš pásem."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Dehydratace. Když ze sebe soustavně ženeš vodu a nedoplňuješ ji, jdeš do minusu na tekutinách. Přijde bolest hlavy, slabost, motání."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Horší výkon a regenerace. Dehydratovaný odvedeš v tréninku míň, hůř se soustředíš a tělo se po zátěži pomaleji vzpamatovává."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "U extrémů i nebezpečí. Drsné „shazování vody\" před vážením, dlouhé saunování bez pití, cvičení v neprodyšném obleku v horku: to už si zahráváš s přehřátím a oběhem."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Má svoje opravdové benefity: regenerace po tréninku, uvolnění, příjemné prohřátí, podpora kardiovaskulárního systému."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Jen ji neber jako nástroj na hubnutí tuku."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Postav to na deficitu. Jez o něco míň, než vydáš."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Dost bílkovin. Drží sytost a chrání svaly, když jdeš s kaloriemi dolů."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Síla a kroky. Silový trénink udrží svaly, chůze a běžný pohyb zvednou výdej líp a udržitelněji než hodina v sauně."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik vody se v sauně běžně vypotí, jen příklad „třeba půl kila nebo i víc“.",
+    "Článek neříká, jak dlouhé a časté saunování je bezpečné ani kolik u něj pít.",
+    "U benefitů sauny (například podpora kardiovaskulárního systému) článek neuvádí žádný zdroj ani míru účinku."
+  ]
+}

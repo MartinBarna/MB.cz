@@ -1,0 +1,75 @@
+{
+  "url": "https://martinbarna.cz/clanky/rostlinne-vs-zivocisne-bilkoviny-svaly.html",
+  "titulek": "Rostlinné vs živočišné bílkoviny na svaly",
+  "hlavni_otazka": "Dají se postavit svaly na rostlinných bílkovinách stejně jako na mase?",
+  "kratka_odpoved": "Podle randomizované studie z roku 2025 ano: rostlinná i živočišná strava nastartovaly tvorbu svalových bílkovin stejně. Rozhoduje, kolik bílkovin sníš celkem za den, ne jestli pochází z kuřete, nebo z čočky. Studie ale zkoumala mladé zdravé lidi po krátkou dobu.",
+  "faq": [
+    {
+      "otazka": "Jak ta studie probíhala?",
+      "odpoved": "Vědci vzali 40 zdravých aktivních lidí, kteří devět dní silově trénovali a jedli přesně nastavenou stravu s 1,1–1,2 g bílkovin na kilo tělesné hmotnosti. Jedna skupina jedla živočišné zdroje, druhá výhradně rostlinné, a pak se citlivou metodou změřila tvorba svalových bílkovin."
+    },
+    {
+      "otazka": "Záleží na tom, jak bílkoviny rozložím do dne?",
+      "odpoved": "U lidí ve studii rozložení do dne nehrálo velkou roli a obavy typu „musíš mít 30 g v každém jídle“ byly zbytečné. Prakticky stačí rozložit bílkoviny zhruba do 3–5 jídel a přesnost na minuty neřešit."
+    },
+    {
+      "otazka": "Kolik bílkovin jíst, když chci stavět svaly z rostlinné stravy?",
+      "odpoved": "Orientačně 1,6–2,2 g bílkovin na kilo, pokud chceš stavět nebo držet svaly. Na rostlinné stravě přidej trochu navrch a kombinuj zdroje, třeba luštěniny s obilovinami, tofu, tempeh, sóju nebo kvalitní rostlinný protein."
+    },
+    {
+      "otazka": "Jaké má ta studie limity?",
+      "odpoved": "Šlo o mladé zdravé lidi, krátkou dobu a spíš střední příjem bílkovin. U starších lidí, u velmi vysokého příjmu nebo v tvrdém deficitu můžou drobné rozdíly, jako je kvalita bílkoviny a obsah leucinu, hrát o něco větší roli."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Randomizovaná studie z roku 2025 poslala mladé sportovce buď na klasickou stravu s masem, nebo na čistě rostlinnou."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Rostlinná i živočišná strava nastartovaly tvorbu svalových bílkovin stejně."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Zjednodušeně: rozhoduje, kolik bílkovin sníš celkem za den, ne jestli pochází z kuřete, nebo z čočky."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Šlo o mladé zdravé lidi, krátkou dobu a spíš střední příjem bílkovin."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Vědci vzali 40 zdravých aktivních lidí, nechali je devět dní silově trénovat a jíst přesně nastavenou stravu s 1,1–1,2 g bílkovin na kilo tělesné hmotnosti. Jedna skupina jedla živočišné zdroje, druhá výhradně rostlinné."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Pak citlivou metodou změřili tvorbu svalových bílkovin."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Ani rozložení do dne nehrálo velkou roli. Obavy typu „musíš mít 30 g v každém jídle\" byly u těchhle lidí zbytečné."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Nestresuj se časováním. Rozlož bílkoviny zhruba do 3–5 jídel a je to. Přesnost na minuty neřeš."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Hlídej celkový příjem, orientačně 1,6–2,2 g bílkovin na kilo, pokud chceš stavět nebo držet svaly."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Na rostlinné stravě přidej trochu navrch a kombinuj zdroje (luštěniny + obiloviny, tofu, tempeh, sója, kvalitní rostlinný protein), tím doženeš složení aminokyselin."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Šlo o mladé zdravé lidi, krátkou dobu a spíš střední příjem bílkovin. U starších lidí, u velmi vysokého příjmu nebo v tvrdém deficitu můžou drobné rozdíly (kvalita bílkoviny, obsah leucinu) hrát o něco větší roli."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí název, autory ani časopis studie z roku 2025.",
+    "Článek neříká, o kolik konkrétně má být příjem bílkovin na rostlinné stravě vyšší, jen „trochu navrch“.",
+    "Studie trvala devět dní a měřila tvorbu svalových bílkovin; článek neuvádí data o dlouhodobém přírůstku svalové hmoty."
+  ]
+}
