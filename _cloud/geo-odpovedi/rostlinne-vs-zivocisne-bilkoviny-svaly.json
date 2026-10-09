@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Kolik bílkovin jíst, když chci stavět svaly z rostlinné stravy?",
-      "odpoved": "Orientačně 1,6–2,2 g bílkovin na kilo, pokud chceš stavět nebo držet svaly. Na rostlinné stravě přidej trochu navrch a kombinuj zdroje, třeba luštěniny s obilovinami, tofu, tempeh, sóju nebo kvalitní rostlinný protein."
+      "odpoved": "Orientačně 1,6–2,2 g bílkovin na kilo, pokud chceš stavět nebo držet svaly. Na rostlinné stravě přidej trochu navrch a kombinuj zdroje, třeba luštěniny s obilovinami, tofu, tempeh, sóju nebo kvalitní rostlinný protein. Při zdravotních potížích nebo speciální dietě se poraď s lékařem či nutričním specialistou."
     },
     {
       "otazka": "Jaké má ta studie limity?",
@@ -63,13 +63,18 @@
       "citace": "Na rostlinné stravě přidej trochu navrch a kombinuj zdroje (luštěniny + obiloviny, tofu, tempeh, sója, kvalitní rostlinný protein), tím doženeš složení aminokyselin."
     },
     {
+      "pro": "faq[2]",
+      "citace": "Při zdravotních potížích nebo speciální dietě se poraď s lékařem či nutričním specialistou."
+    },
+    {
       "pro": "faq[3]",
       "citace": "Šlo o mladé zdravé lidi, krátkou dobu a spíš střední příjem bílkovin. U starších lidí, u velmi vysokého příjmu nebo v tvrdém deficitu můžou drobné rozdíly (kvalita bílkoviny, obsah leucinu) hrát o něco větší roli."
     }
   ],
   "nejiste": [
-    "Článek neuvádí název, autory ani časopis studie z roku 2025.",
+    "Studie je v textu popsaná jen obecně; název, autory a časopis (Askow A. a kol., Med Sci Sports Exerc, 2025) uvádí až řádek Zdroj pod článkem.",
     "Článek neříká, o kolik konkrétně má být příjem bílkovin na rostlinné stravě vyšší, jen „trochu navrch“.",
     "Studie trvala devět dní a měřila tvorbu svalových bílkovin; článek neuvádí data o dlouhodobém přírůstku svalové hmoty."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] doplněno ze závěrečného upozornění ‚při zdravotních potížích nebo speciální dietě se poraď s lékařem či nutričním specialistou‘; nejiste[0] opraveno, článek studii ve Zdroji uvádí (Askow a kol., Med Sci Sports Exerc 2025)"
 }

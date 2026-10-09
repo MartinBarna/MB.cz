@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Je agáve sirup vhodný na hubnutí?",
-      "odpoved": "Ne. Nízký glykemický index má proto, že je z velké části fruktóza, a ten ti nepomůže, když celkově sníš cukru moc. Navíc je tekutý, takže ho snadno přeženeš."
+      "odpoved": "Dietní zkratka to není. Nízký glykemický index má proto, že je z velké části fruktóza, a ten ti nepomůže, když celkově sníš cukru moc. Navíc je tekutý, takže ho snadno přeženeš."
     },
     {
       "otazka": "Můžu si dávat med?",
@@ -30,6 +30,7 @@
     {"pro": "faq[0]", "citace": "Rozdíl oproti bílému cukru je v praxi zanedbatelný."},
     {"pro": "faq[1]", "citace": "Bývá vychvalovaná za „nízký glykemický index\", jenže to je proto, že je z velké části fruktóza. Nízký glykemák ti nepomůže, když celkově sníš cukru moc."},
     {"pro": "faq[1]", "citace": "Nízký glykemák, ale pořád cukr a kalorie. Tekuté = snadno přeženeš."},
+    {"pro": "faq[1]", "citace": "Žádná z těchhle variant není dietní zkratka."},
     {"pro": "faq[2]", "citace": "Med klidně pro chuť, ale počítej ho jako cukr. Lžíce medu do ovesky? V pohodě, jen ji zahrň do dne jako každý jiný cukr."},
     {"pro": "faq[3]", "citace": "Největší cukr stejně chodí z nápojů. Slazené limonády, džusy, slazené kávy, energeťáky, tam se schovává největší tichý příjem. Tam se vyplatí škrtat dřív než řešit, jestli máš v čaji bílý nebo třtinový."}
   ],
@@ -37,5 +38,6 @@
     "Článek neuvádí konkrétní kalorické hodnoty jednotlivých sladidel.",
     "Článek neříká, kolik přidaného cukru denně je v pořádku.",
     "Pár živin navíc u medu článek zmiňuje, ale nevyjmenovává je."
-  ]
+  ],
+  "kontrola": "opraveno: faq[1] kategorické ‚Ne.‘ na otázku, zda je agáve vhodné na hubnutí, nahrazeno slovy článku ‚Dietní zkratka to není.‘ (článek sladidla pro chuť připouští)"
 }

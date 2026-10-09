@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje.html",
   "titulek": "🔥 FUNKČNÍ TRÉNINK VS. POCTIVÁ SÍLA – CO SKUTEČNĚ FUNGUJE?",
   "hlavni_otazka": "Je lepší funkční trénink, nebo klasický silový trénink s činkami?",
-  "kratka_odpoved": "Klasický silový trénink. Ve studii Keiner et al. (2022) se 48 fotbalisty ve věku 15–17 let, kteří k běžnému tréninku přidali 10 měsíců po 2 hodinách týdně, vyhrála skupina s dřepy, mrtvými tahy a benchem. Funkční skupina s TRX, bosu a gumami se zlepšila ze všech nejmíň.",
+  "kratka_odpoved": "Ve studii Keiner et al. (2022) na 48 profi fotbalistech ve věku 15–17 let, kteří k běžnému tréninku přidali 10 měsíců po 2 hodinách týdně, drtivě vyhrál klasický silový trénink s dřepy, mrtvými tahy a benchem. Funkční skupina s TRX, bosu a gumami se zlepšila ze všech nejmíň.",
   "faq": [
     {
       "otazka": "O kolik se fotbalisté v silové skupině zlepšili?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Jak silní byli fotbalisté ve studii?",
-      "odpoved": "Už na startu dřepovali 1,4násobek vlastní váhy. U českých mládežnických fotbalistů v kategoriích U15–U18 se podle článku průměrná relativní síla v dřepu pohybuje kolem 1,0–1,3násobku tělesné váhy."
+      "odpoved": "Už na startu dřepovali 1,4násobek vlastní váhy. U českých mládežnických fotbalistů v kategoriích U15–U18 se podle expertů z FAČR a českých akademií průměrná relativní síla v dřepu pohybuje kolem 1,0–1,3násobku tělesné váhy."
     }
   ],
   "opory": [
@@ -33,6 +33,7 @@
     {"pro": "faq[1]", "citace": "A tvůj sport (fotbal, hokej, basket, běhání za dětmi…) ten potenciál promění ve skutečný výkon."},
     {"pro": "faq[1]", "citace": "Nejlepší „funkční trénink“ je trénink tvého sportu."},
     {"pro": "faq[2]", "citace": "Už na startu dřepovali 1,4× vlastní váhu."},
+    {"pro": "faq[2]", "citace": "Podle expertů z FAČR a českých akademií (Slavia, Sparta, projekt Talent) se u našich mládežnických fotbalistů na sílu často zapomíná."},
     {"pro": "faq[2]", "citace": "Průměrná relativní síla v dřepu se v kategoriích U15–U18 pohybuje kolem 1,0–1,3× tělesné váhy."}
   ],
   "nejiste": [
@@ -40,5 +41,6 @@
     "Článek neuvádí výsledky skupiny s plyometrií a sprinty v číslech.",
     "Údaje o síle českých mládežnických fotbalistů jsou připsané „expertům z FAČR a českých akademií“ bez konkrétního zdroje.",
     "Tvrzení na konci (méně zranění, lepší hubnutí, víc energie) článek neopírá o studii, proto je v odpovědích nemám. Doporučuji ověřit údaje o studii (Keiner et al. 2022) proti originálu před použitím."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved už nezačíná obecným ‚Klasický silový trénink.‘, výsledek je vázaný na studii s mladými fotbalisty (zobecnění nad rámec jedné studie); faq[2] české údaje připsány expertům z FAČR místo ‚podle článku‘"
 }

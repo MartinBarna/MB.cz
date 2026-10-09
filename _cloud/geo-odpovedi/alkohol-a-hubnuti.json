@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/alkohol-a-hubnuti.html",
   "titulek": "Zhubneš i s alkoholem? Co na to věda",
   "hlavni_otazka": "Můžu hubnout, když piju alkohol?",
-  "kratka_odpoved": "Ano, na hubnutí rozhoduje kalorický deficit, ne pivo samo o sobě, a lehká až střední konzumace se s přibíráním nepojí. Pár sklenek za týden, započítaných do dne, ti hubnutí nerozbije. Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu.",
+  "kratka_odpoved": "Ano, na hubnutí rozhoduje kalorický deficit, ne pivo samo o sobě, a lehká až střední konzumace se podle velkých přehledů studií s přibíráním nepojí. Pár sklenek za týden, započítaných do dne, ti hubnutí nerozbije. Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu.",
   "faq": [
     {
       "otazka": "Proč se po alkoholu hůř hubne, když drink sám tolik nevadí?",
@@ -28,6 +28,7 @@
     {"pro": "faq[1]", "citace": "2) Po alkoholu sníš víc a nekompenzuješ (meta-analýza 22 studií)"},
     {"pro": "faq[1]", "citace": "(Jídla navíc v průměru +343 kJ ≈ +82 kcal, bez kompenzace.)"},
     {"pro": "faq[2]", "citace": "WHO v roce 2023 řekla natvrdo, že žádná dávka alkoholu není pro zdraví bezpečná. Je to karcinogen nejvyšší kategorie a je návykový. To se deficitem přebít nedá."},
+    {"pro": "faq[3]", "citace": "Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu."},
     {"pro": "faq[3]", "citace": "3) Tlumení stavby svalů (i s proteinem)"},
     {"pro": "faq[3]", "citace": "(−24 % i s proteinem. Pozor: dávka byla ~12 drinků, tedy opíjení, ne sklenka.)"}
   ],
@@ -35,5 +36,6 @@
     "Článek číselně nevymezuje, co je lehká až střední konzumace, ani kolik sklenek týdně je ještě „pár“.",
     "Článek neuvádí kalorickou hodnotu konkrétních nápojů (pivo, víno, panák).",
     "Vliv na spánek je jen ve zdrojích (potlačení REM a fragmentace spánku, hlavně v druhé půlce noci), hlavní text ho dál nerozvádí, proto jsem z něj samostatnou otázku nedělal."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno ‚podle velkých přehledů studií‘, na nich tvrzení o lehké až střední konzumaci stojí; faq[3] doplněna opora pro větu o pravidelném popíjení"
 }

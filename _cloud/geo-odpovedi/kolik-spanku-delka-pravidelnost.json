@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/kolik-spanku-delka-pravidelnost.html",
   "titulek": "Kolik hodin spát? Délka vs. pravidelnost",
   "hlavni_otazka": "Kolik hodin denně bych měl spát?",
-  "kratka_odpoved": "Pro běžného dospělého vychází nejnižší úmrtnost i riziko srdečních chorob kolem 7 hodin denně, pod sedmičkou riziko roste zhruba o 6 % za každou ubranou hodinu. Když trénuješ, potřebuješ víc, často 8–10 hodin. Jakmile máš sedm hodin zajištěných, je důležitější chodit spát a vstávat pořád stejně než honit osmou hodinu.",
+  "kratka_odpoved": "Podle velkých přehledů vychází pro běžného dospělého nejnižší úmrtnost i riziko srdečních chorob kolem 7 hodin denně, pod sedmičkou riziko roste zhruba o 6 % za každou ubranou hodinu. Když trénuješ, potřebuješ víc, často 8–10 hodin. Jakmile máš sedm hodin zajištěných, je důležitější chodit spát a vstávat pořád stejně než honit osmou hodinu.",
   "faq": [
     {
       "otazka": "Škodí spát 9 hodin a víc?",
-      "odpoved": "Ve studiích každá hodina nad sedmičkou přidává zhruba 13 % rizika úmrtí. Z velké části je to ale značka skryté nemoci, ne příčina. Zdravému, tvrdě trénujícímu člověku 9 hodin neublíží."
+      "odpoved": "Podle metaanalýzy Yin 2017 každá hodina nad sedmičkou přidává zhruba 13 % rizika úmrtí. Z velké části je to ale značka skryté nemoci, ne příčina. Zdravému, tvrdě trénujícímu člověku 9 hodin neublíží."
     },
     {
       "otazka": "Kolik spánku potřebuje sportovec?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Může málo spánku brzdit hubnutí?",
-      "odpoved": "Ano. Pár nocí zkráceného spánku u zdravých lidí zvedne ghrelin (~+28 %), sníží leptin (~−18 %) a vede k 300 až 680 kcal navíc denně, přičemž výdej energie se nezvedne. Při stejné dietě navíc při málo spánku ztrácíš víc svalu a míň tuku."
+      "odpoved": "Ano. Pár nocí zkráceného spánku u zdravých lidí zvedne ghrelin (~+28 %), sníží leptin (~−18 %) a vede k 300 až 680 kcal navíc denně, přičemž výdej energie se nezvedne. Při stejné dietě navíc při málo spánku ztrácíš víc svalu a míň tuku. Trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (např. spánková apnoe), při potížích se poraď s lékařem."
     },
     {
       "otazka": "Co je důležitější, délka spánku, nebo pravidelnost?",
@@ -38,6 +38,7 @@
     {"pro": "faq[2]", "citace": "zvedne „hladový\" hormon ghrelin (~+28 %) a sníží sytostní leptin (~−18 %),"},
     {"pro": "faq[2]", "citace": "vede k 300 až 680 kcal navíc denně, a výdej energie se přitom nezvedne."},
     {"pro": "faq[2]", "citace": "A při stejné dietě navíc při málo spánku ztrácíš víc svalu a míň tuku."},
+    {"pro": "faq[2]", "citace": "Trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (např. spánková apnoe). Při potížích se poraď s lékařem."},
     {"pro": "faq[3]", "citace": "Spíš pod 6 hodin? Prioritou je délka."},
     {"pro": "faq[3]", "citace": "Spíš 7 hodin a víc? Vyhrává pravidelnost."},
     {"pro": "faq[3]", "citace": "Vždycky: fixuj čas vstávání, i o víkendu s odchylkou do hodiny."},
@@ -48,5 +49,6 @@
     "Článek sám uvádí, že hierarchie není jedna studie, ale jeho shrnutí dat do praktického pravidla.",
     "Dopočítaná čísla (~12 % u pěti hodin, ~28 % u devíti) nejsou v odpovědích použita samostatně, jsou jen v citaci; článek je uvádí jako řádový odhad.",
     "Článek nedává praktické rady, jak spánek prodloužit nebo zlepšit (to odkazuje do placené lekce)."
-  ]
+  ],
+  "kontrola": "opraveno: faq[2] doplněno ze závěrečného upozornění, že trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (spánková apnoe) a při potížích se poradit s lékařem; kratka_odpoved doplněno ‚podle velkých přehledů‘; faq[0] ‚ve studiích‘ → ‚podle metaanalýzy Yin 2017‘ (čísla jsou z jedné metaanalýzy)"
 }

@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/vyhrez-plotenky.html",
   "titulek": "Výhřez ploténky není doživotní: co data říkají o operaci a cvičení",
   "hlavni_otazka": "Musím jít s výhřezem ploténky na operaci?",
-  "kratka_odpoved": "U většiny výhřezů operace nespěchá: zkraje uleví od vystřelující bolesti do nohy rychleji, ale po roce až dvou jsou na tom lidé s operací i bez ní srovnatelně. Výhřez se navíc často sám vstřebá, u sekvestrace v 96 % případů. Při varovných příznacích ale jednej hned a nech to posoudit lékaře.",
+  "kratka_odpoved": "U většiny výhřezů operace nespěchá: zkraje uleví od vystřelující bolesti do nohy rychleji, ale po roce až dvou jsou na tom lidé s operací i bez ní srovnatelně. Výhřez se navíc může sám vstřebat, a čím hůř nález zní, tím spíš (sekvestrace v 96 % případů). Při varovných příznacích ale jednej hned a nech to posoudit lékaře.",
   "faq": [
     {
       "otazka": "Jak často se výhřez ploténky vstřebá sám?",
@@ -14,11 +14,11 @@
     },
     {
       "otazka": "Musím po operaci ploténky cvičit?",
-      "odpoved": "Ano, operace uvolní nerv, ale sílu, stabilitu a pohyblivost zad za tebe neudělá. Cvičení zahájené pár týdnů po operaci zrychluje úbytek bolesti i omezení a je bezpečné, i když důkazy jsou slabší."
+      "odpoved": "Ano, operace uvolní nerv, ale sílu, stabilitu a pohyblivost zad za tebe neudělá. Podle přehledu studií (Oosterhuis 2014) cvičení zahájené pár týdnů po operaci zrychluje úbytek bolesti i omezení oproti tomu nedělat nic a je bezpečné, i když důkazy jsou slabší."
     },
     {
       "otazka": "Co záda s výhřezem opravdu potřebují?",
-      "odpoved": "Dát tomu čas v řádu týdnů, začít se hýbat brzy, postupně posilovat hlavně střed těla, hýždě a celá záda a nenechat se vyděsit nálezem. Klid na lůžku zotavení spíš brzdí."
+      "odpoved": "Když odhlédneš od malé části vážných případů: dát tomu čas v řádu týdnů, začít se hýbat brzy, postupně posilovat hlavně střed těla, hýždě a celá záda a nenechat se vyděsit nálezem. Klid na lůžku zotavení spíš brzdí."
     },
     {
       "otazka": "Kdy jít s bolestí zad okamžitě k lékaři?",
@@ -100,6 +100,10 @@
     },
     {
       "pro": "faq[3]",
+      "citace": "Když odhlédneme od té malé části vážných případů, recept je nudný a účinný zároveň."
+    },
+    {
+      "pro": "faq[3]",
       "citace": "Dát tomu čas. Počítá se to v týdnech, ne ve dnech."
     },
     {
@@ -127,5 +131,6 @@
     "Článek neříká, za jak dlouho se výhřez obvykle sám vstřebá.",
     "Článek neupřesňuje, jak silná a jak dlouho trvající bolest už je „silná, neustupující bolest“, u které je operace legitimní volba.",
     "Článek neuvádí konkrétní cviky, počet opakování ani frekvenci cvičení a citované studie se týkají bederní páteře, u krční to článek zvlášť neřeší."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved ‚výhřez se často sám vstřebá‘ → ‚může sám vstřebat, a čím hůř nález zní, tím spíš‘ (u vyklenutí jen 13 %); faq[2] doplněn zdroj Oosterhuis 2014 a srovnání ‚oproti tomu nedělat nic‘; faq[3] doplněna podmínka článku ‚když odhlédneš od malé části vážných případů‘"
 }

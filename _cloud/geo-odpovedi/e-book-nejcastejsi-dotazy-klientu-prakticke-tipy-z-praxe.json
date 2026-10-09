@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-prakticke-tipy-z-praxe.html",
   "titulek": "E-book Nejčastější dotazy klientů – PRAKTICKÉ TIPY Z PRAXE",
   "hlavni_otazka": "Proč nehubnu, i když podle výpočtu jím málo kalorií?",
-  "kratka_odpoved": "Nejčastěji proto, že lidé strašně nepřesně odhadují velikost porce a kalorickou hodnotu jídla, podle jedné studie o 20–60 %. Stačí přetáhnout plán týdne o 20 % a hubnutí se může zastavit. Vzorec ti dá jen výchozí bod, ne tvoje osobní potřeby.",
+  "kratka_odpoved": "Nejčastěji proto, že lidé strašně nepřesně odhadují velikost porce a kalorickou hodnotu jídla, podle jedné studie o 20–60 %. Stačí přetáhnout plán týdne o 20 % a hubnutí se může zastavit. Vzorec ti pomůže s výchozím bodem, ale nemusí sedět na tvoje osobní potřeby.",
   "faq": [
     {
       "otazka": "Proč dva lidé hubnou na úplně jiném počtu kalorií?",
@@ -31,5 +31,6 @@
     "Článek nejmenuje studii, podle které se lidé v odhadu kalorií mýlí o 20–60 %.",
     "Věta „Cyklické snižování a zvyšování příjmu většiny makronutrientů je periodicky prospěšné, ale chronicky hloupé“ není v článku vysvětlená, proto jsem z ní otázku nedělal.",
     "Článek nevysvětluje, jak přesně si nastavit makroživiny podle životního stylu; jen že se to ukáže až sledováním reakce konkrétního člověka."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved, poslední věta zněla kategoričtěji než článek (‚ne tvoje osobní potřeby‘ → ‚nemusí sedět na tvoje osobní potřeby‘)"
 }

@@ -6,14 +6,14 @@
   "faq": [
     {
       "otazka": "Co ukázala studie na opicích z Boston University?",
-      "odpoved": "Opice rhesus, které byly přes 20 let mírně lehčí díky nižšímu příjmu kalorií, měly ve stáří mladší mozek na buněčné úrovni: míň zánětu a líp zachovaný myelin. Studie vyšla v listopadu 2025 v Aging Cell."
+      "odpoved": "Opice rhesus s nižším příjmem kalorií, které byly přes 20 let mírně lehčí, měly ve stáří mladší mozek na buněčné úrovni: míň zánětu a líp zachovaný myelin. Studie vyšla v listopadu 2025 v Aging Cell."
     },
     {
       "otazka": "Musím pro zpomalení stárnutí výrazně omezit kalorie?",
       "odpoved": "Ve studii CALERIE s 220 lidmi cílili na 25% omezení kalorií, dotáhli jen 11,7 %, a stejně zpomalili biologické stárnutí."
     },
     {
-      "otazka": "Záleží víc na tom, jak rychle zhubnu, nebo jak dlouho váhu udržím?",
+      "otazka": "Záleží pro zdraví mozku víc na tom, jak tvrdě hubnu, nebo jak dlouho lehčí váhu udržím?",
       "odpoved": "Na udržení. Skoro ve všech studiích se opakuje dlouhodobě udržená lehčí váha; jak tvrdě jsi přitom hubl, na tom záleží mnohem míň."
     }
   ],
@@ -31,5 +31,6 @@
     "Studie Dolatshahi 2025 (MRI u lidí) je jen v seznamu zdrojů bez výkladu.",
     "Velká část tématu je v infografikách (obrázcích) a na Instagramu; text obrázků jsem nepoužil.",
     "U studie CALERIE článek neříká, jak se biologické stárnutí měřilo."
-  ]
+  ],
+  "kontrola": "opraveno: faq[0] ‚díky nižšímu příjmu kalorií‘ (příčinnost) → ‚s nižším příjmem kalorií‘ podle článku; faq[2] otázka ‚jak rychle zhubnu‘ → ‚jak tvrdě hubnu‘, článek mluví o tvrdosti hubnutí, ne o rychlosti"
 }
