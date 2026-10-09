@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/cholesterol-co-snizuje-ldl.html",
   "titulek": "Cholesterol a LDL: co strava a pohyb reálně sníží (a co je marketing)",
   "hlavni_otazka": "Jak snížit LDL cholesterol stravou a pohybem?",
-  "kratka_odpoved": "Nejsilnější páka ze stravy je vyměnit nasycené tuky (máslo, tučné maso, sádlo) za nenasycené (olivový a řepkový olej, ořechy, semínka, avokádo, tučné ryby). Pomáhá rozpustná vláknina, hubnutí při nadváze a pravidelný pohyb. Životní styl posune LDL typicky o jednotky až nižší desítky procent.",
+  "kratka_odpoved": "Nejsilnější páka ze stravy je vyměnit nasycené tuky (máslo, tučné maso, sádlo) za nenasycené (olivový a řepkový olej, ořechy, semínka, avokádo, tučné ryby). Pomáhá rozpustná vláknina, hubnutí při nadváze a pravidelný pohyb. U průměrného člověka posune životní styl LDL typicky o jednotky až nižší desítky procent.",
   "faq": [
     {
       "otazka": "Zvedají vejce cholesterol v krvi?",
@@ -45,5 +45,6 @@
     "Článek neuvádí denní množství vlákniny ani dávku psyllia.",
     "Článek neuvádí, o kolik konkrétně sníží LDL hubnutí nebo pohyb u běžné populace; studie o pohybu se týkala žen po menopauze.",
     "Článek nepíše, jak poznat familiární hypercholesterolémii."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno „u průměrného člověka“ (článek číslo omezuje na průměrného člověka, u dědičné formy neplatí)"
 }

@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Pomáhá dřívější večeře zhubnout?",
-      "odpoved": "Pár studií naznačuje, že může mírně pomoct i při podobném příjmu. V randomizované studii s 82 ženami zhubla po 12 týdnech skupina s večeří v 19:00–19:30 víc než skupina s večeří v 22:30–23:00 (−6,7 vs −4,8 kg). Celkové kalorie jsou ale motor, načasování je nanejvýš malé kolečko navíc."
+      "odpoved": "Pár studií naznačuje, že může mírně pomoct i při podobném příjmu. V randomizované studii s 82 ženami v redukčním režimu zhubla po 12 týdnech skupina s večeří v 19:00–19:30 víc než skupina s večeří v 22:30–23:00 (−6,7 vs −4,8 kg). Celkové kalorie jsou ale motor, načasování je nanejvýš malé kolečko navíc."
     },
     {
       "otazka": "Proč by dřívější jídlo mohlo s hubnutím pomáhat?",
@@ -84,5 +84,6 @@
     "Studii s 97 dospělými (dřívější začátek jídelního okna) a studii u dospívajících článek popisuje jen slovně bez čísel, proto je v odpovědích nerozvádím.",
     "Seznam zdrojů [1] až [3] je v článku až pod sekcí „Mohlo by tě zajímat“ (Madjd 2021, Hatanaka 2022, Hegedus 2024); citace se opírají jen o text výkladu, ne o tento seznam.",
     "Článek neříká, o kolik hodin dřív by večeře měla být, aby to mělo smysl."
-  ]
+  ],
+  "kontrola": "opraveno: faq[1] doplněno „v redukčním režimu“ ke studii s 82 ženami (podmínka studie chyběla, ačkoli nejiste tvrdilo, že je zachovaná)"
 }

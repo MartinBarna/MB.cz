@@ -2,23 +2,23 @@
   "url": "https://martinbarna.cz/clanky/nez-se-zacnes-bat-chemikalii-ujisti-se-ze-jsi-absolvoval-zakladni-kurz.html",
   "titulek": "Než se začneš bát ‚chemikálií‘, ujisti se, že jsi absolvoval ZÁKLADNÍ KURZ CHEMIE!",
   "hlavni_otazka": "Mám se bát chemikálií v jídle?",
-  "kratka_odpoved": "Samotné slovo „chemikálie“ nic neříká: o tom, jestli něco škodí, nerozhoduje látka, ale dávka. Všechno je chemie, i obyčejný banán nebo voda. Místo strašení se ptej na přímé důkazy, jestli konkrétní látka škodí v množství, které normálně sníš.",
+  "kratka_odpoved": "Podle Layna Nortona, jehož thread článek překládá, samotné slovo „chemikálie“ nic neříká: o tom, jestli něco škodí, nerozhoduje látka, ale dávka. Všechno je chemie, i obyčejný banán nebo voda. Místo strašení se ptej na přímé důkazy, jestli konkrétní látka škodí v množství, které normálně sníš.",
   "faq": [
     {
       "otazka": "Co znamená, že dávka dělá jed?",
-      "odpoved": "Cokoliv může být neškodné v dostatečně malém množství a skoro cokoliv jedovaté v dostatečně velkém. Existuje bezpečné množství kyanidu, které sneseš, a existuje i toxické množství vody."
+      "odpoved": "Podle Layna Nortona může být cokoliv neškodné v dostatečně malém množství a skoro cokoliv jedovaté v dostatečně velkém. Existuje bezpečné množství kyanidu, které sneseš, a existuje i toxické množství vody."
     },
     {
       "otazka": "Jsou umělá sladidla v dietní limonádě nebezpečná?",
-      "odpoved": "V běžném množství ne. Abys měl problémy, musel bys sníst 1000 až 10 000x normální množství, zatímco u vody je smrtelná dávka jen asi 10x běžná. Na otravu vodou bys tak umřel dřív, než bys snědl tolik aspartamu, aby ti ublížil."
+      "odpoved": "V běžném množství ne. Podle Layna Nortona bys musel sníst 1000 až 10 000x normální množství, abys měl problémy, zatímco u vody je smrtelná dávka jen asi 10x běžná. Na otravu vodou bys tak umřel dřív, než bys snědl tolik aspartamu, aby ti ublížil."
     },
     {
       "otazka": "Jsou chemikálie i v přírodních potravinách?",
-      "odpoved": "Ano, i obyčejný organický banán obsahuje spoustu chemikálií, včetně toxických látek. Toxické jsou ale v tom smyslu, že by ti uškodily, kdybys naráz snědl 10 000 banánů."
+      "odpoved": "Ano, podle Layna Nortona i obyčejný organický banán obsahuje spoustu chemikálií, včetně toxických látek. Toxické jsou ale v tom smyslu, že by ti uškodily, kdybys naráz snědl 10 000 banánů."
     },
     {
       "otazka": "Jsou zpracované potraviny automaticky nezdravé?",
-      "odpoved": "Ne. Držet se hlavně minimálně zpracovaných jídel je rozumné vodítko, ne železné pravidlo. Třeba syrovátkový protein je zpracovaný, a přesto podle článku snižuje zánět, zlepšuje citlivost na inzulin, snižuje tělesný tuk a pomáhá budovat svaly."
+      "odpoved": "Ne. Držet se hlavně minimálně zpracovaných jídel je rozumné vodítko, ne železné pravidlo. Třeba syrovátkový protein je zpracovaný, a přesto podle Layna Nortona snižuje zánět, zlepšuje citlivost na inzulin, snižuje tělesný tuk a pomáhá budovat svaly."
     }
   ],
   "opory": [
@@ -26,19 +26,25 @@
     {"pro": "kratka_odpoved", "citace": "A když ho vypiješ zhruba 10x víc, než je doporučené množství, zabije tě. Mluvím o vodě."},
     {"pro": "kratka_odpoved", "citace": "Co kdybych ti řekl, že tohle je seznam chemikálií v organickém banánu? Je to tak, opravdu jde o obyčejný banán. Tak proč jich je v něm tolik? Protože všechno je chemie."},
     {"pro": "kratka_odpoved", "citace": "Z toho plyne jedna věc: přestaňme strašit „chemikáliemi“ v jídle. Dává mnohem větší smysl ptát se po přímých důkazech. Tedy jestli konkrétní jídlo nebo látka má v množství, které normálně sníme, prokazatelně dobrý nebo špatný vliv na zdraví."},
+    {"pro": "kratka_odpoved", "citace": "Tohle byl překlad zajímavého threadu od Layne Norton PhD, experta na výživu a fitness založené na důkazech."},
     {"pro": "faq[0]", "citace": "Cokoliv může být neškodné v dostatečně malém množství. A skoro cokoliv může být jedovaté v dostatečně velkém množství."},
     {"pro": "faq[0]", "citace": "Existuje bezpečné množství kyanidu, které sneseš. A existuje i toxické množství vody."},
+    {"pro": "faq[0]", "citace": "Tohle byl překlad zajímavého threadu od Layne Norton PhD, experta na výživu a fitness založené na důkazech."},
     {"pro": "faq[1]", "citace": "Zajímavé je, že množství vody, které by tě zabilo, je jen asi 10x běžná dávka. U umělých sladidel bys musel sníst 1000 až 10 000x normální množství, aby ti začala dělat problémy."},
     {"pro": "faq[1]", "citace": "Takže se bojíš sladidla v dietní limonádě, ale na otravu vodou bys umřel dřív, než bys vůbec stihl spořádat tolik aspartamu, aby ti ublížil."},
     {"pro": "faq[1]", "citace": "Umělá sladidla v dietních nápojích nejsou v běžném množství problém a pomáhají hlídat kalorie."},
+    {"pro": "faq[1]", "citace": "Tohle byl překlad zajímavého threadu od Layne Norton PhD, experta na výživu a fitness založené na důkazech."},
     {"pro": "faq[2]", "citace": "Co kdybych ti řekl, že tohle je seznam chemikálií v organickém banánu? Je to tak, opravdu jde o obyčejný banán."},
     {"pro": "faq[2]", "citace": "Jsou tam i toxické látky. Toxické v tom smyslu, že by ti uškodily, kdybys naráz snědl 10 000 banánů."},
-    {"pro": "faq[3]", "citace": "Obecně mi přijde rozumné držet se hlavně minimálně zpracovaných jídel. Bereme to ale jako vodítko, ne jako železné pravidlo. Jakmile z toho uděláš pravidlo, lidi začnou dělat nesmysly. Třeba syrovátkový protein je zpracovaný, a přitom snižuje zánět, zlepšuje citlivost na inzulin, snižuje tělesný tuk a pomáhá budovat svaly."}
+    {"pro": "faq[2]", "citace": "Tohle byl překlad zajímavého threadu od Layne Norton PhD, experta na výživu a fitness založené na důkazech."},
+    {"pro": "faq[3]", "citace": "Obecně mi přijde rozumné držet se hlavně minimálně zpracovaných jídel. Bereme to ale jako vodítko, ne jako železné pravidlo. Jakmile z toho uděláš pravidlo, lidi začnou dělat nesmysly. Třeba syrovátkový protein je zpracovaný, a přitom snižuje zánět, zlepšuje citlivost na inzulin, snižuje tělesný tuk a pomáhá budovat svaly."},
+    {"pro": "faq[3]", "citace": "Tohle byl překlad zajímavého threadu od Layne Norton PhD, experta na výživu a fitness založené na důkazech."}
   ],
   "nejiste": [
     "Článek je překlad threadu Layne Nortona a neuvádí k číslům (10x u vody, 1000 až 10 000x u sladidel) žádné zdroje ani to, od jaké „běžné dávky“ se počítá.",
-    "Přínosy syrovátkového proteinu (zánět, inzulin, tělesný tuk) článek uvádí bez studií; v odpovědi jsou proto označené jako tvrzení článku.",
+    "Přínosy syrovátkového proteinu (zánět, inzulin, tělesný tuk) článek uvádí bez studií; v odpovědi jsou proto označené jako tvrzení Layna Nortona.",
     "Údaj o dihydrogenmonoxidu („zabíjí čtvrt milionu lidí ročně“) je řečnický příklad bez zdroje, proto není použit.",
     "Samotný seznam chemikálií v banánu je v původním příspěvku na obrázku (slide), v textu článku chybí."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved a faq[0] až faq[3] přisouzeny Layne Nortonovi (článek je překlad jeho threadu, odpovědi to podávaly bez autora nebo jako „podle článku“); nejiste[1] upraveno"
 }

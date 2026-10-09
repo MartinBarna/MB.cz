@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-zanety-a-stravovani-studie.html",
   "titulek": "E-book Nejčastější dotazy klientů – Záněty a stravování – studie",
   "hlavni_otazka": "Existuje protizánětlivá dieta?",
-  "kratka_odpoved": "Když jsou pohlídané kalorie a tělesný tuk, makroživiny a jejich poměry nemají na zánětlivost velký vliv. Studie v článku ukázaly stejné zánětlivé markery u keto i vysokosacharidové diety a u živočišných i rostlinných bílkovin. CRP vždy klesá, když zhubneš tuk, takže hlídej hlavně tělesný tuk.",
+  "kratka_odpoved": "Když jsou pohlídané kalorie a tělesný tuk, makroživiny a jejich poměry nemají na zánětlivost velký vliv. Studie v článku ukázaly při stejných kaloriích stejné zánětlivé markery u keto i vysokosacharidové diety a u živočišných i rostlinných bílkovin. CRP vždy klesá, když zhubneš tuk, takže hlídej hlavně tělesný tuk.",
   "faq": [
     {
       "otazka": "Je zánět po tréninku škodlivý?",
@@ -42,5 +42,6 @@
     "Článek v jedné větě píše, že malé zvýšení systémového zánětu s rizikem nemocí nesouvisí, a hned vysvětluje na příkladu lokálního zánětu (odřenina). Rozlišení lokálního a systémového zánětu je v článku místy nejasné, proto jsem v odpovědi použil jen větu, že lokální zánět se systémovým nesouvisí, a příklad s odřeninou.",
     "U nasycených tuků článek uvádí smíšené výsledky (observační studie bez kontroly kcal vs. zlepšení při náhradě polynenasycenými) a nerozhoduje je, proto k nim otázku nedávám.",
     "Článek neuvádí normální hodnoty CRP."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno „při stejných kaloriích“ (srovnání keto vs. sacharidy a živočišné vs. rostlinné bílkoviny platí v článku jen při stejných kcal)"
 }

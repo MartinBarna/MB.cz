@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/co-jist-pri-hubnuti.html",
   "titulek": "Co jíst při hubnutí: talíř, který funguje (bez zázračných potravin)",
   "hlavni_otazka": "Co jíst, když chci zhubnout?",
-  "kratka_odpoved": "Z žádné potraviny sám o sobě neshodíš, rozhoduje celkový příjem energie a mírný udržitelný deficit. Talíř si slož zhruba ze čtvrtiny z bílkoviny, ze čtvrtiny z kvalitní přílohy a z poloviny ze zeleniny. Tuk ber jako dochucení a pij vodu místo slazených nápojů.",
+  "kratka_odpoved": "Z žádné potraviny sám o sobě neshodíš, rozhoduje celkový příjem energie a mírný udržitelný deficit. Talíř si slož zhruba ze čtvrtiny z bílkoviny, ze čtvrtiny z kvalitního sacharidu a z poloviny ze zeleniny. Tuk ber jako dochucení a pij vodu místo slazených nápojů.",
   "faq": [
     {
       "otazka": "Existují potraviny, po kterých se hubne?",
@@ -44,5 +44,6 @@
     "Článek neuvádí, jak velký má deficit být (kolik kcal denně ani kolik procent).",
     "Článek neuvádí konkrétní množství bílkovin na kilo; odkazuje na samostatný článek o bílkovinách.",
     "Článek neuvádí, kolik vlákniny denně jíst, říká jen „mít ji v každém hlavním jídle“."
-  ]
+  ],
+  "kontrola": "opraveno: kratka_odpoved „kvalitní příloha“ → „kvalitní sacharid“ (šablona v článku řadí do čtvrtiny i ovoce, ne jen přílohu)"
 }

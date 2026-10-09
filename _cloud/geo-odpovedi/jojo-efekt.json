@@ -5,7 +5,7 @@
   "kratka_odpoved": "Jojo efekt většinou nezpůsobuje slabá vůle, ale špatně nastavený proces: příliš velký deficit, ztráta svalů a dieta s jasným koncem. Aby to vydrželo, drž mírný deficit 15–20 % pod výdejem, jez 1,6–2 g bílkovin na kilo, posiluj a po dietě postupně přidávej kalorie zpátky na udržovací příjem.",
   "faq": [
     {
-      "otazka": "Proč se mi po dietě zpomalí metabolismus?",
+      "otazka": "Proč se po agresivním hubnutí zpomalí metabolismus?",
       "odpoved": "Když hubneš agresivně a bez bílkovin a silového tréninku, tělo si nebere jen tuk, ale i sval. Míň svalu znamená nižší denní výdej, a o to snadněji se tuk vrátí, jakmile se vrátíš k normálnímu jídlu."
     },
     {
@@ -46,5 +46,6 @@
   "nejiste": [
     "Článek neříká, jak dlouho zůstat na udržovacím příjmu po dietě (jen „chvíli\"), ani o kolik kalorií a jak rychle je přidávat.",
     "Údaj o metabolismu nižším zhruba o 700 kcal denně (Fothergill 2016) článek výslovně označuje za extrémní případ, proto není použit jako obecná odpověď."
-  ]
+  ],
+  "kontrola": "opraveno: faq[0] otázka „Proč se mi po dietě zpomalí metabolismus?“ zpřesněna na agresivní hubnutí (článek to váže na hubnutí agresivně a bez bílkovin a silového tréninku, ne na každou dietu)"
 }
