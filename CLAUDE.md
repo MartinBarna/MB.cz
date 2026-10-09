@@ -88,6 +88,25 @@ videokurz→Academy promo. Ať prodejní stránky vždy odrážejí realitu obsa
 **POZOR:** úpravy landingu dělej **chirurgicky a jen aditivně**, nikdy nemaž formulář,
 patičku ani nepřestavuj strukturu; jen přidej zmínku do výčtu funkcí.
 
+## ⛔ STANDING RULE: JSON-LD a AI vyhledávání (GEO, 9. 10. 2026)
+
+Aby ChatGPT, Perplexity, Claude i Google AI Overviews o Martinovi říkaly totéž co web:
+- **Martin (`Person`, `https://martinbarna.cz/#martin`), značka (`Organization`, `/#org`)
+  a web (`WebSite`, `/#website`) jsou definované JEN v JSON-LD homepage.** Jinde jen
+  `{"@id": "…"}`. Nekopíruj jméno, telefon ani profily: AI pak vidí dvě různé osoby.
+  Stejně produkty: `/videokurz#course`, `/akademie/#course`, `/tvuj-coach/#app` jsou doma na své stránce.
+- **Článek:** `author` = `#martin`, `publisher` = `#org`, `inLanguage: "cs"`. V hero je viditelný
+  řádek „Autor: Martin Barna · Vydáno / Aktualizováno <datum>" (`<time>` = `dateModified`).
+  Když měníš obsah článku, zvedni `dateModified` a pusť `node scripts/geo-sjednot.mjs`.
+  `scripts/blog-publikuj.mjs` to u nových článků dělá sám.
+- **Ceny v JSON-LD jen ty, které stojí ve viditelném textu té stránky.** FAQPage slovo od slova
+  jako viditelný text. Žádné hodnocení ani počet recenzí, které na stránce doslova nejsou.
+- **Počty potravin a receptů do JSON-LD nepiš:** `sync-cisla-web.mjs` je přepisuje jen v HTML.
+- Po změně článku nebo prodejní stránky: `node scripts/generuj-llms-full.mjs` a
+  `node scripts/geo-kontrola.mjs` (musí hlásit 0 chyb). `llms.txt` je ruční; věty
+  „Databáze přes X potravin" a „Knihovna přes X fit receptů" nepřeformulovávej (kotvy pro sync čísel).
+- Detail a rozpory ve faktech mezi stránkami: `_cloud/GEO-TECHNIKA-1009.md`.
+
 ## ⚠️ STANDING RULE: affiliate / doporučení = pro Academy I VIDEOKURZ klienty
 
 Referral (kód `DOPORUC10` = −10 % pro kamaráda, jednorázově na e-mail, platí na videokurz
