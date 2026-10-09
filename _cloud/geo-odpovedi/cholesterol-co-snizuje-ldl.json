@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/cholesterol-co-snizuje-ldl.html",
+  "titulek": "Cholesterol a LDL: co strava a pohyb reálně sníží (a co je marketing)",
+  "hlavni_otazka": "Jak snížit LDL cholesterol stravou a pohybem?",
+  "kratka_odpoved": "Nejsilnější páka ze stravy je vyměnit nasycené tuky (máslo, tučné maso, sádlo) za nenasycené (olivový a řepkový olej, ořechy, semínka, avokádo, tučné ryby). Pomáhá rozpustná vláknina, hubnutí při nadváze a pravidelný pohyb. Životní styl posune LDL typicky o jednotky až nižší desítky procent.",
+  "faq": [
+    {
+      "otazka": "Zvedají vejce cholesterol v krvi?",
+      "odpoved": "Cholesterol v jídle, třeba ve vejcích, není to samé co LDL v krvi. U většiny lidí příjem cholesterolu z potravy ovlivní hladinu v krvi jen málo. Mnohem víc rozhoduje druh tuků, vláknina, tělesná hmotnost, pohyb a genetika."
+    },
+    {
+      "otazka": "O kolik sníží LDL výměna tuků?",
+      "odpoved": "Podle meta-analýzy z roku 2025 snížila strava s vyšším poměrem nenasycených ku nasyceným tukům LDL v průměru zhruba o 10 mg/dl. Tam, kde nenasycené tuky opravdu nahradily nasycené, to bylo kolem 16 mg/dl."
+    },
+    {
+      "otazka": "Jak pomáhá vláknina na cholesterol?",
+      "odpoved": "Rozpustná vláknina (oves a ovesné otruby, luštěniny, ječmen, jablka, hrušky, psyllium) naváže ve střevě část žlučových kyselin a cholesterolu a odnese je pryč. Tělo si pak vezme cholesterol z krve a LDL klesne, ne dramaticky, ale spolehlivě."
+    },
+    {
+      "otazka": "Zlepší keto dieta LDL?",
+      "odpoved": "Ne automaticky. Meta-analýza 174 randomizovaných studií z roku 2025 ukázala, že nízkosacharidové a keto diety snižují triglyceridy a zvedají HDL, ale LDL a celkový cholesterol u nich mírně stoupají, u keto nejvíc. Po větší změně stravy se vyplatí kontrolní odběr."
+    },
+    {
+      "otazka": "Můžu kvůli lepší stravě vysadit statiny?",
+      "odpoved": "Ne. Pokud bereš statiny nebo jiné léky na cholesterol, nevysazuj je a neupravuj dávku podle článku na internetu, to řeší tvůj lékař. U dědičné familiární hypercholesterolémie sebelepší strava sama o sobě nestačí."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Když nahradíš nasycené tuky (máslo, tučné maso, sádlo, hodně palmového tuku v průmyslových sladkostech) nenasycenými (olivový a řepkový olej, ořechy, semínka, avokádo, tučné ryby), LDL jde dolů."},
+    {"pro": "kratka_odpoved", "citace": "Tuky: vyměnit nasycené za nenasycené je nejsilnější páka ze stravy"},
+    {"pro": "kratka_odpoved", "citace": "Přidej vlákninu denně: oves, luštěniny, zelenina, ovoce."},
+    {"pro": "kratka_odpoved", "citace": "Řeš hmotnost, pokud je nadváha: i pár kilo dolů zlepší triglyceridy a HDL a podpoří i LDL."},
+    {"pro": "kratka_odpoved", "citace": "Hýbej se pravidelně: kombinace aerobního a silového."},
+    {"pro": "kratka_odpoved", "citace": "Životní styl u průměrného člověka posune LDL typicky o jednotky až nižší desítky procent."},
+    {"pro": "faq[0]", "citace": "Důležité: cholesterol v jídle (třeba ve vejcích) není to samé co LDL v krvi. U většiny lidí příjem cholesterolu z potravy ovlivní hladinu v krvi jen málo. Mnohem víc rozhoduje druh tuků, vláknina, tělesná hmotnost a pohyb. A genetika."},
+    {"pro": "faq[1]", "citace": "Meta-analýza randomizovaných studií z roku 2025 v Advances in Nutrition to ukázala konkrétně: strava s vyšším poměrem nenasycených ku nasyceným tukům snížila LDL v průměru zhruba o 10 mg/dl, a efekt byl výrazně silnější (kolem 16 mg/dl) tam, kde nenasycené tuky opravdu nahradily nasycené."},
+    {"pro": "faq[2]", "citace": "Rozpustná vláknina (oves a ovesné otruby, luštěniny, ječmen, jablka, hrušky, psyllium) v střevě naváže část žlučových kyselin a cholesterolu a odnese je pryč. Tělo pak sáhne pro cholesterol z krve, aby žluč doplnilo, a LDL klesne. Není to dramatický propad, ale je spolehlivý"},
+    {"pro": "faq[3]", "citace": "Velká meta-analýza 174 randomizovaných studií z roku 2025 v American Journal of Clinical Nutrition potvrdila, že nízkosacharidové a keto diety hezky snižují triglyceridy a zvedají HDL, ale LDL a celkový cholesterol u nich mírně stoupají, u keto nejvíc."},
+    {"pro": "faq[3]", "citace": "Proto se po každé větší změně stravy vyplatí zajít na kontrolní odběr."},
+    {"pro": "faq[4]", "citace": "pokud už bereš statiny nebo jiné léky na cholesterol, nevysazuj je a neupravuj dávku podle článku na internetu ani podle mě. To řeší tvůj lékař."},
+    {"pro": "faq[4]", "citace": "U familiární hypercholesterolémie, dědičné poruchy, kdy je LDL vysoký od narození, sebelepší strava sama o sobě nestačí."}
+  ],
+  "nejiste": [
+    "Článek neuvádí cílové ani normální hodnoty LDL; odkazuje na lékaře.",
+    "Článek neuvádí denní množství vlákniny ani dávku psyllia.",
+    "Článek neuvádí, o kolik konkrétně sníží LDL hubnutí nebo pohyb u běžné populace; studie o pohybu se týkala žen po menopauze.",
+    "Článek nepíše, jak poznat familiární hypercholesterolémii."
+  ]
+}

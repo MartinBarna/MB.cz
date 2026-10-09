@@ -1,0 +1,46 @@
+{
+  "url": "https://martinbarna.cz/clanky/detox-diety-a-caje-mytus.html",
+  "titulek": "Detox diety, čaje a šťávové očisty: proč jsou mýtus (a co tělo opravdu čistí)",
+  "hlavni_otazka": "Fungují detox diety a detoxikační čaje?",
+  "kratka_odpoved": "Ne. Tělo má detox zabudovaný: játra a ledviny pracují čtyřiadvacet hodin denně a žádná šťáva, čaj ani prášek je nerozjede rychleji. Kila shozená na šťávové očistě jsou hlavně voda a zásobní cukr (glykogen), ne tuk, a po návratu k normálnímu jídlu se během pár dní vrátí.",
+  "faq": [
+    {
+      "otazka": "Proč na šťávové očistě zhubnu dvě kila za tři dny?",
+      "odpoved": "Sníš zlomek obvyklých kalorií a tělo sáhne na glykogen, zásobní cukr ve svalech a játrech. Každý gram glykogenu na sebe váže zhruba tři gramy vody, takže s ním mizí i voda. Jakmile zase normálně jíš, glykogen i voda se vrátí."
+    },
+    {
+      "otazka": "Jak poznám, že detox produkt nefunguje?",
+      "odpoved": "Zeptej se, jaký konkrétní toxin odstraňuje a kudy ho z těla dostane. Dostaneš jen slova jako škodliviny nebo usazeniny bez chemického názvu. Kdyby firma napsala konkrétní látku, dalo by se to změřit v krvi před a po."
+    },
+    {
+      "otazka": "Jsou detox čaje na vyčištění střev bezpečné?",
+      "odpoved": "Často obsahují bylinky s projímavým účinkem (senna, řešetlák) nebo látky, co tě odvodní. Dráždivá projímadla braná pravidelně rozhodí elektrolyty, můžou způsobit křeče, dehydrataci a při dlouhodobém užívání i závislost střeva na nich."
+    },
+    {
+      "otazka": "Co játrům a ledvinám opravdu pomůže?",
+      "odpoved": "Dost vody, bílkoviny a vláknina, zelenina každý den, míň alkoholu, spánek a pohyb. Nic z toho se nemusí kupovat."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "čistírnu už máš. Jmenuje se játra a ledviny a makají na tom čtyřiadvacet hodin denně"},
+    {"pro": "kratka_odpoved", "citace": "Žádná šťáva, žádný čaj a žádný prášek nedokáže tahle játra nebo ledviny „rozjet rychleji\" nebo „vyčistit hloub\"."},
+    {"pro": "kratka_odpoved", "citace": "Co se na váze ukáže, je tedy hlavně vyprázdněná voda a zásobní cukr, ne spálený tuk. Jakmile začneš zase normálně jíst, glykogen i voda se během pár dní vrátí a s nimi i ta „shozená\" kila."},
+    {"pro": "faq[0]", "citace": "Když tři dny piješ jen šťávy nebo čaj, sníš zlomek kalorií, co normálně. Tělo sáhne na glykogen (zásobní cukr ve svalech a játrech) a každý gram glykogenu na sebe váže zhruba tři gramy vody. Jak glykogen mizí, mizí s ním voda."},
+    {"pro": "faq[0]", "citace": "Jakmile začneš zase normálně jíst, glykogen i voda se během pár dní vrátí"},
+    {"pro": "faq[1]", "citace": "polož jednu otázku: jaký konkrétní toxin to odstraňuje a kudy ho z těla dostane?"},
+    {"pro": "faq[1]", "citace": "Samé slovo bez chemického názvu. Protože kdyby firma napsala konkrétní látku, dalo by se to změřit v krvi před a po, a ukázalo by se, že se nestalo nic."},
+    {"pro": "faq[2]", "citace": "často tam najdeš bylinky s projímavým účinkem (senna, řešetlák) nebo látky, co tě odvodní."},
+    {"pro": "faq[2]", "citace": "Dráždivá projímadla braná pravidelně rozhodí elektrolyty, můžou způsobit křeče, dehydrataci a u dlouhodobého užívání i závislost střeva na nich."},
+    {"pro": "faq[3]", "citace": "Dost vody. Ledviny filtrují líp, když nejsi vyschlý."},
+    {"pro": "faq[3]", "citace": "Bílkoviny a vláknina."},
+    {"pro": "faq[3]", "citace": "Zelenina každý den."},
+    {"pro": "faq[3]", "citace": "Míň alkoholu. Tohle uleví játrům víc než jakýkoliv čaj, který si na úlevu kupuješ."},
+    {"pro": "faq[3]", "citace": "Spánek a pohyb."},
+    {"pro": "faq[3]", "citace": "Nepotřebuješ kupovat nic"}
+  ],
+  "nejiste": [
+    "Článek neuvádí zdroje ani studie k detox produktům.",
+    "Článek nespecifikuje, kolik vody denně pít.",
+    "Nálepky na chodidla článek zmiňuje v úvodu, ale samostatně je nevyvrací, proto k nim otázku nedávám."
+  ]
+}

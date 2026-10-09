@@ -1,0 +1,40 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-nabirani-tuku-na-bunecne-urovni.html",
+  "titulek": "E-book Nejčastější dotazy klientů – NABÍRÁNÍ TUKŮ NA BUNĚČNÉ ÚROVNI",
+  "hlavni_otazka": "Proč po dietě naberu víc tuku, než jsem měl předtím?",
+  "kratka_odpoved": "Podle studií MacLeana může tělo při hubnutí na hodně nízkém příjmu a rychlém nabrání zpátky začít vyrábět nové tukové buňky. Na stejném procentu tuku pak máš víc menších buněk, které snižují leptin, a jsi hladovější. Nedělají to diety samy, ale zpomalení metabolismu a energetická mezera.",
+  "faq": [
+    {
+      "otazka": "Co se děje s tukovými buňkami při hubnutí a přibírání?",
+      "odpoved": "Když hubneš, tukové buňky se zmenšují, a když nabíráš, zvětšují se. Jejich počet určuje takzvanou výchozí hodnotu tělesného tuku (body fat set point)."
+    },
+    {
+      "otazka": "Jak tukové buňky ovlivňují metabolismus?",
+      "odpoved": "Zmenšená tuková buňka sníží vylučování hormonu leptin, což snižuje rychlost metabolismu a vede k dalším metabolickým adaptacím. Zvětšená buňka leptin zvýší a metabolismus zrychlí. Tělo se tak snaží udržet rovnovážný stav."
+    },
+    {
+      "otazka": "Proč lidé, kteří drželi hodně diet, snáz přibírají?",
+      "odpoved": "Ne proto, že by je diety dělaly tlustými, ale kvůli podmínkám, které typické diety vytvářejí: zpomalení metabolismu a energetické mezeře. Po rychlém nabrání můžou mít víc tukových buněk a být hladovější na stejném procentu tuku."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "MacLean ve svých studiích ukázal, že když hubneš na hodně nízkém kalorickém příjmu a pak váhu rychle nabereš zpátky (jak to dělá většina lidí – soutěže, jojo diety), tělo může začít vyrábět nové tukové buňky."},
+    {"pro": "kratka_odpoved", "citace": "Když se dostanete na vaše původní procento tělesného tuku, máte stejné množství tuků, ale každá jednotlivá buňka je teď menší, protože jich máte více."},
+    {"pro": "kratka_odpoved", "citace": "Menší tukové buňky snižují leptin a jsou citlivější na inzulín a jsou skvěle připravené pro nabírání tuků."},
+    {"pro": "kratka_odpoved", "citace": "Jste hladovější než předtím, a to na stejném procentu tělesného tuku jako předtím."},
+    {"pro": "kratka_odpoved", "citace": "Není to proto, že by vás diety dělaly tlustými. Je to kvůli podmínkám, které typické diety vytvářejí: zpomalení metabolismu energetická mezera"},
+    {"pro": "faq[0]", "citace": "Pokud nabíráte či hubnete tuky, máte určité množství tukových buněk a tyto buňky se zmenšují, když hubnete a zvětšují, když nabíráte."},
+    {"pro": "faq[0]", "citace": "Počet těchto buněk určuje vaši takzvanou „výchozí hodnotu tělesného tuku“ (z AJ body fat set point)."},
+    {"pro": "faq[1]", "citace": "Když zmenšíte tukovou buňku, začne pomocí vylučování hormonu leptin snižovat “rychlost metabolismu“ a toto vede k dalším metabolickým adaptacím."},
+    {"pro": "faq[1]", "citace": "Když se vaše buňka naopak zvětší, zvýší se leptin a zrychlí se metabolismus. To proto, aby se zabránilo překročení „výchozí hodnoty tělesného tuku“, tělo se snaží zachovat homeostázu, tedy rovnovážný stav."},
+    {"pro": "faq[2]", "citace": "Proč mají lidé, kteří prošli za život větším množstvím diet, tendenci nabírat více tuků?"},
+    {"pro": "faq[2]", "citace": "Není to proto, že by vás diety dělaly tlustými. Je to kvůli podmínkám, které typické diety vytvářejí: zpomalení metabolismu energetická mezera"},
+    {"pro": "faq[2]", "citace": "Jste hladovější než předtím, a to na stejném procentu tělesného tuku jako předtím."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak tomu předejít (jak rychle hubnout ani jak velký deficit držet); odkazuje na celý původní článek.",
+    "Číselný příklad s 1 000 000 a 1 500 000 buňkami je v článku jen ilustrace (sám píše, že neodpovídá realitě) a obsahuje nejasnost: po zhubnutí buňky „zmenší a je jich zhruba 1 000 000“. Proto jsem čísla do odpovědí nedával.",
+    "Studie MacLeana článek necituje konkrétně (rok, časopis) a jde zřejmě převážně o výzkum na zvířatech; to článek neříká. Doporučuji ověřit před použitím jako citovatelné odpovědi.",
+    "Článek je psaný střídavě ve vykání a tykání; odpovědi jsem sjednotil do tykání."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "url": "https://martinbarna.cz/clanky/co-jist-pri-hubnuti.html",
+  "titulek": "Co jíst při hubnutí: talíř, který funguje (bez zázračných potravin)",
+  "hlavni_otazka": "Co jíst, když chci zhubnout?",
+  "kratka_odpoved": "Z žádné potraviny sám o sobě neshodíš, rozhoduje celkový příjem energie a mírný udržitelný deficit. Talíř si slož zhruba ze čtvrtiny z bílkoviny, ze čtvrtiny z kvalitní přílohy a z poloviny ze zeleniny. Tuk ber jako dochucení a pij vodu místo slazených nápojů.",
+  "faq": [
+    {
+      "otazka": "Existují potraviny, po kterých se hubne?",
+      "odpoved": "Ne. Rozhoduje celkový příjem energie za den a týden. Bílkoviny a zelenina ti hubnutí usnadní tím, že líp zasytí, ale ani ony samy tuk nespalují."
+    },
+    {
+      "otazka": "Proč jsou při hubnutí důležité bílkoviny?",
+      "odpoved": "Ze všech živin nejvíc zasytí, takže máš při stejném počtu kalorií menší hlad. V deficitu tělo sahá i po svalech a dostatek bílkovin spolu se silovým tréninkem pomáhá svaly udržet."
+    },
+    {
+      "otazka": "Musím si při hubnutí zakázat sladké a přílohy?",
+      "odpoved": "Nemusíš. Sacharidy ani sladkosti nejsou nepřítel, stačí je vejít do svého denního rámce kalorií. Doživotní zákazy nejčastěji končí sjetím z diety a jojo efektem."
+    },
+    {
+      "otazka": "Počítají se při hubnutí i nápoje?",
+      "odpoved": "Ano. Slazené limonády, džusy, ochucené kávy se šlehačkou, energeťáky i alkohol se počítají, jen tě nezasytí jako jídlo. Základ pití je voda, neslazený čaj a káva bez kalorických přídavků."
+    },
+    {
+      "otazka": "Můžu při hubnutí jíst ovoce?",
+      "odpoved": "Ano. Ovoce je normální potravina, ne cukr, který kazí dietu. Jen se počítá do celkového příjmu jako všechno ostatní."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "z žádné potraviny sám o sobě neshodíš ani neztloustneš. Rozhoduje celkový příjem energie za den a týden."},
+    {"pro": "kratka_odpoved", "citace": "Cíl je udržitelný mírný deficit, u kterého se dá normálně fungovat."},
+    {"pro": "kratka_odpoved", "citace": "zhruba čtvrtina talíře bílkovina: maso, ryba, vejce, tvaroh, luštěniny"},
+    {"pro": "kratka_odpoved", "citace": "zhruba čtvrtina kvalitní sacharid: brambory, rýže, celozrnná příloha, ovoce"},
+    {"pro": "kratka_odpoved", "citace": "zhruba polovina zelenina: objem a vláknina, které zasytí"},
+    {"pro": "kratka_odpoved", "citace": "tuk jako dochucení: trochu oleje, ořechů či avokáda, ale s mírou"},
+    {"pro": "kratka_odpoved", "citace": "k pití voda místo slazených nápojů"},
+    {"pro": "faq[0]", "citace": "Ne. Z žádné potraviny sám neshodíš ani neztloustneš. Rozhoduje celkový příjem energie za den a týden. Bílkoviny a zelenina ti hubnutí usnadní tím, že líp zasytí, ale ani ony samy \"nespalují tuk\"."},
+    {"pro": "faq[1]", "citace": "Ze všech živin nejvíc zasytí, takže s dostatkem bílkovin máš při stejném počtu kalorií menší hlad. A hlavně: v deficitu tělo sahá i po svalech, ne jen po tuku. Dostatek bílkovin (spolu se silovým tréninkem) pomáhá svaly udržet"},
+    {"pro": "faq[2]", "citace": "Nemusíš. Sacharidy ani sladkosti nejsou nepřítel. Stačí je vejít do svého denního rámce kalorií. Doživotní zákazy nejčastěji končí sjetím z diety a jojo efektem."},
+    {"pro": "faq[3]", "citace": "Slazené limonády, džusy, ochucené kávy se šlehačkou, energeťáky, ale i alkohol. To všechno se počítá, jen tě to nezasytí tak jako jídlo."},
+    {"pro": "faq[3]", "citace": "základ pití = voda, neslazený čaj, káva bez kalorických přídavků"},
+    {"pro": "faq[4]", "citace": "Ovoce klidně jez taky. Je to normální potravina, ne \"cukr, který kazí dietu\". Jen počítá do celkového příjmu jako všechno ostatní."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak velký má deficit být (kolik kcal denně ani kolik procent).",
+    "Článek neuvádí konkrétní množství bílkovin na kilo; odkazuje na samostatný článek o bílkovinách.",
+    "Článek neuvádí, kolik vlákniny denně jíst, říká jen „mít ji v každém hlavním jídle“."
+  ]
+}

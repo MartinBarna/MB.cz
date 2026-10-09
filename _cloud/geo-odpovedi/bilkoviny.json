@@ -1,0 +1,36 @@
+{
+  "url": "https://martinbarna.cz/clanky/bilkoviny.html",
+  "titulek": "Bílkoviny: kolik jich jíst a proč",
+  "hlavni_otazka": "Kolik bílkovin denně bych měl jíst?",
+  "kratka_odpoved": "Pro většinu aktivních lidí se osvědčuje 1,6–2,2 g bílkovin na kilogram tělesné hmotnosti denně. Když vážíš 80 kg, je to zhruba 130–175 g za den. Pokud hubneš, klidně miř k horní hranici, líp tě to zasytí.",
+  "faq": [
+    {
+      "otazka": "Proč jsou bílkoviny při hubnutí tak důležité?",
+      "odpoved": "V deficitu chrání svalovou hmotu, takže hubneš tuk, ne sval. Po bílkovinném jídle navíc vydržíš déle bez hladu a tělo na jejich trávení spálí víc energie než u tuků a sacharidů."
+    },
+    {
+      "otazka": "Z čeho bílkoviny vzít?",
+      "odpoved": "Z masa a ryb, vajec a mléčných výrobků (tvaroh, řecký jogurt, skyr, sýry), z luštěnin a tofu. Proteinový prášek je šikovná pomoc, když to z běžného jídla nestíháš."
+    },
+    {
+      "otazka": "Jak se dostat na svoje číslo bez počítání každého gramu?",
+      "odpoved": "Dej si zdroj bílkovin do každého jídla: na snídani, oběd i večeři. Je to nejjednodušší způsob, jak se na své číslo dostat."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Pro většinu aktivních lidí se osvědčuje 1,6–2,2 g bílkovin na kilogram tělesné hmotnosti denně. Pokud vážíš 80 kg, bav se zhruba o 130–175 g za den. Pokud hubneš, klidně miř k horní hranici. Líp tě to zasytí a budeš mít menší hlad."},
+    {"pro": "faq[0]", "citace": "Drží svaly. V deficitu chrání svalovou hmotu, takže hubneš tuk, ne sval."},
+    {"pro": "faq[0]", "citace": "Zasytí. Po bílkovinném jídle vydržíš déle bez hladu."},
+    {"pro": "faq[0]", "citace": "Tělo na jejich trávení spálí víc energie než u tuků a sacharidů."},
+    {"pro": "faq[1]", "citace": "Maso a ryby (kuřecí, krůtí, hovězí, losos, tuňák)"},
+    {"pro": "faq[1]", "citace": "Vejce a mléčné výrobky (tvaroh, řecký jogurt, skyr, sýry)"},
+    {"pro": "faq[1]", "citace": "Luštěniny a tofu (rostlinné zdroje)"},
+    {"pro": "faq[1]", "citace": "Proteinový prášek: šikovná pomoc, když to z běžného jídla nestíháš"},
+    {"pro": "faq[2]", "citace": "Snaž se dát si zdroj bílkovin do každého jídla. Je to nejjednodušší způsob, jak se dostat na své číslo, aniž bys musel nad každým gramem počítat. Snídaně, oběd, večeře."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik bílkovin obsahují konkrétní potraviny.",
+    "Doporučení 1,6–2,2 g/kg je v článku pro „většinu aktivních lidí“; pro neaktivní lidi článek číslo neuvádí.",
+    "Článek nevyčísluje, o kolik víc energie tělo spálí na trávení bílkovin."
+  ]
+}

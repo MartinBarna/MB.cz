@@ -1,0 +1,48 @@
+{
+  "url": "https://martinbarna.cz/clanky/bilkoviny-a-ledviny-mytus.html",
+  "titulek": "Hodně bílkovin ničí ledviny? Mýtus o proteinu a zdraví",
+  "hlavni_otazka": "Ničí vysoký příjem bílkovin ledviny?",
+  "kratka_odpoved": "U zdravého člověka ne. Přehledy a meta-analýzy kontrolovaných studií ukazují, že vyšší příjem proteinu nezhoršuje funkci ledvin (GFR) u lidí se zdravými ledvinami, a to klidně i při 2 g na kilo a víc. Bílkoviny se omezují tomu, kdo už ledviny nemocné má.",
+  "faq": [
+    {
+      "otazka": "Odkud se vzal strach, že bílkoviny ničí ledviny?",
+      "odpoved": "Z rady pro nemocné. Lidem s onemocněním ledvin se bílkoviny opravdu omezují, protože poškozené ledviny hůř zvládají odpadní látky z metabolismu bílkovin. Po cestě se z toho ale stalo, že bílkoviny škodí každému, a to je úplně jiná věta."
+    },
+    {
+      "otazka": "Co je hyperfiltrace po jídle s bílkovinami?",
+      "odpoved": "Krátkodobé zvýšení výkonu ledvin po proteinu. Je to normální adaptace, ne poškození, stejně jako když ti při běhu zrychlí srdce."
+    },
+    {
+      "otazka": "Kolik bílkovin denně je tak akorát?",
+      "odpoved": "Pro běžný cíl zhruba 1,6 až 2,2 g na kilo tělesné hmotnosti denně: při běžné aktivitě 1,4–1,8 g, při hubnutí 1,8–2,2 g a při stavbě svalů 1,6–2,2 g. Nad zhruba 2,2 g/kg už většinou žádný bonus navíc nečekej."
+    },
+    {
+      "otazka": "Musím při vyšším příjmu bílkovin víc pít?",
+      "odpoved": "Tělo musí vyloučit víc dusíkatých zplodin a potřebuje na to vodu, žádný speciální režim ale není potřeba, stačí se rozumně napít přes den. Tmavší a koncentrovaná moč je signál, že vody dáváš málo."
+    },
+    {
+      "otazka": "Kdy mám příjem bílkovin řešit s lékařem?",
+      "odpoved": "Když máš diagnostikované onemocnění ledvin, bereš léky nebo máš stav, kde ti lékař dietu cíleně nastavuje. Když nevíš, jak na tom ledviny jsi, nech si je zkontrolovat odběrem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "U zdravých lidí ne. Přehledy a meta-analýzy kontrolovaných studií ukazují, že vyšší příjem proteinu nezhoršuje funkci ledvin (GFR) u lidí se zdravými ledvinami."},
+    {"pro": "kratka_odpoved", "citace": "Pro zdravou populaci je ale signál konzistentní: vyšší příjem bílkovin, klidně i 2 g na kilo a víc, nevedl k poškození ledvin."},
+    {"pro": "kratka_odpoved", "citace": "Bílkoviny se omezují tomu, kdo už ledviny nemocné má. Z toho ale nevyplývá, že je zdravým ničí."},
+    {"pro": "faq[0]", "citace": "Poškozené ledviny hůř zvládají odpadní látky z metabolismu bílkovin (hlavně dusíkaté zplodiny), a tak jim lékaři protein cíleně přiškrtí, aby je zbytečně nepřetěžovali."},
+    {"pro": "faq[0]", "citace": "Z rady pro nemocné: lidem s onemocněním ledvin se bílkoviny opravdu omezují. Z „nemocný má hlídat protein“ se ale po cestě stalo „bílkoviny škodí každému“. A to je úplně jiná věta."},
+    {"pro": "faq[1]", "citace": "Krátkodobé zvýšení výkonu ledvin po proteinu. Je to normální adaptace, ne poškození. Stejně jako když ti při běhu zrychlí srdce."},
+    {"pro": "faq[2]", "citace": "Pro běžný cíl, jako je zhubnout, zpevnit se nebo držet formu, se pohybuješ zhruba mezi 1,6 a 2,2 g bílkovin na kilo tělesné hmotnosti denně."},
+    {"pro": "faq[2]", "citace": "Běžná aktivita, držení formy 1,4–1,8 g Hubnutí (chceš udržet svaly) 1,8–2,2 g Stavba svalů, silový trénink 1,6–2,2 g"},
+    {"pro": "faq[2]", "citace": "Jakmile přelezeš zhruba 2,2 g/kg, žádný bonus navíc už většinou nečekej, jen jíš dráž a vytlačuješ z talíře jiné věci, třeba vlákninu."},
+    {"pro": "faq[3]", "citace": "Když jíš dost bílkovin, tělo musí vyloučit víc dusíkatých zplodin, a na to potřebuje vodu. Nic dramatického, žádný speciální „proteinový\" režim: prostě se normálně rozumně napij přes den. Tmavší a koncentrovaná moč je signál, že vody dáváš málo."},
+    {"pro": "faq[4]", "citace": "Máš diagnostikované onemocnění ledvin (chronická nemoc ledvin, jedna funkční ledvina, sledovaná snížená filtrace)."},
+    {"pro": "faq[4]", "citace": "Bereš léky nebo máš stav, kde ti lékař dietu cíleně nastavuje."},
+    {"pro": "faq[4]", "citace": "Nevíš, jak na tom ledviny jsi. Pak je nejjednodušší si to nechat zkontrolovat odběrem: pár minut a máš jasno."}
+  ],
+  "nejiste": [
+    "Článek sám upozorňuje, že velká část studií běžela týdny až měsíce, ne desítky let, a sledovala převážně dospělé bez onemocnění ledvin. Dlouhodobý efekt přes desítky let tedy z článku jistý není.",
+    "Článek neuvádí, kolik vody denně pít při vyšším příjmu bílkovin.",
+    "Článek nenavrhuje konkrétní příjem bílkovin pro lidi s nemocnými ledvinami, odkazuje je na lékaře nebo nutričního terapeuta."
+  ]
+}

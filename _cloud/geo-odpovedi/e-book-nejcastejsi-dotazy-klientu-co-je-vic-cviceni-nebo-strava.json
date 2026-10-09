@@ -1,0 +1,37 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-co-je-vic-cviceni-nebo-strava.html",
+  "titulek": "E-book Nejčastější dotazy klientů – CO JE VÍC? CVIČENÍ NEBO STRAVA?",
+  "hlavni_otazka": "Co je důležitější pro výsledky, cvičení, nebo strava?",
+  "kratka_odpoved": "Obojí je stejně důležité a teprve dohromady tě fyzicky posune, jedno bez druhého nefunguje. Trénink dává tělu signál ke stavbě svalů, strava dodává energii a živiny, ze kterých se svaly přestaví. Kdyby se mělo vybrat jen pro růst svalů, vyhrál by trénink.",
+  "faq": [
+    {
+      "otazka": "Porostou mi svaly, když cvičím, ale nejím dobře?",
+      "odpoved": "Když dostatečně tvrdě trénuješ, svaly ti porostou i bez perfektní stravy, i když ne optimálně. Když ale nebudeš správně jíst, nebudou mít z čeho růst."
+    },
+    {
+      "otazka": "Porostou mi svaly jen ze správné stravy, bez cvičení?",
+      "odpoved": "Ne. Když budeš perfektně jíst, ale cvičit nebudeš, svaly neporostou. Trénink je signál, který tělu dává důvod investovat energii do růstu svalů."
+    },
+    {
+      "otazka": "Co přesně dělá pro postavu strava?",
+      "odpoved": "Ovlivňuje hormony, které řídí svalovou proteinovou syntézu, hubnutí, zdraví, pocity i hlad. Dodává energii, makro a mikroživiny, aby měly svaly z čeho se přestavět, a vyvažuje trénink a stres."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Ani jedno tedy není víc nebo míň důležité. Obě jsou stejně důležité a teprve dohromady nám umožní se fyzicky posunout (nebo jít zpátky). Jedno bez druhého nefunguje"},
+    {"pro": "kratka_odpoved", "citace": "Pokud je správně sestaven a prováděn, dává tělu signál, že je potřeba se přizpůsobit novým podmínkám"},
+    {"pro": "kratka_odpoved", "citace": "Také dodává energii, makro a mikroživiny tělu pro to, aby měly svaly z čeho přestavět či se zvětšit"},
+    {"pro": "kratka_odpoved", "citace": "Kdybych měl fakt „na přísno“ říct, co je pro růst svalů „důležitější“, řekl bych trénink."},
+    {"pro": "faq[0]", "citace": "Když dostatečně tvrdě trénuješ, svaly ti porostou (i když ne optimálně) i bez perfektní stravy."},
+    {"pro": "faq[0]", "citace": "Takže i když budeš cvičit, svaly ti neporostou, pokud nebudeš správně jíst – nebudou mít z čeho."},
+    {"pro": "faq[1]", "citace": "Když budeš perfektně jíst, ale cvičit nebudeš, svaly neporostou."},
+    {"pro": "faq[1]", "citace": "Toto je tedy velmi zjednodušeně signál pro tělo investovat spoustu energie (kterou by jinak – bez stimulu z tréninku – nemělo důvod plýtvat) do svalové proteinové syntézy"},
+    {"pro": "faq[2]", "citace": "Tvoje strava ovlivňuje hormony (manažeři lidského těla), které řídí svalovou proteinovou syntézu, hubnutí, zdraví, pocity, hlad apod."},
+    {"pro": "faq[2]", "citace": "Také dodává energii, makro a mikroživiny tělu pro to, aby měly svaly z čeho přestavět či se zvětšit"},
+    {"pro": "faq[2]", "citace": "Strava vždy vyvažuje trénink a stresové vypětí."}
+  ],
+  "nejiste": [
+    "Článek se týká hlavně růstu svalů; na otázku, co je důležitější pro hubnutí, přímo neodpovídá.",
+    "Článek neuvádí konkrétní množství živin ani tréninkový plán."
+  ]
+}

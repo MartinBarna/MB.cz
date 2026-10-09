@@ -1,0 +1,43 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-ovoce-vs-bebe-susenka-z-hlediska-cuk.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Ovoce vs Bebe sušenka (z hlediska cukrů/sacharidů)",
+  "hlavni_otazka": "Je ovoce lepší než sušenka, když obojí obsahuje cukr?",
+  "kratka_odpoved": "Pro většinu lidí ano, ale ne kvůli cukru samotnému. Bebe má pravděpodobně méně vlákniny a víc cukrů než většina ovoce, jablko nebo banán mají víc vitaminů a minerálů a díky vodě a vláknině vydržíš déle najedený. Občasná sušenka ale nevadí, když máš bílkoviny, vlákninu i kalorie jinak v pořádku.",
+  "faq": [
+    {
+      "otazka": "Proč rýže zvedá krevní cukr pomaleji než cola?",
+      "odpoved": "Rýže obsahuje komplexní sacharidy, tedy dlouhé řetězce glukózy. Ty se v trávicím traktu rozloží na jednotlivé jednotky a do krve se dostávají pomaleji a postupně. Cola má krátké cukry, které se do krve dostanou mnohem rychleji."
+    },
+    {
+      "otazka": "Jak zpomalit vstřebávání cukru z jídla?",
+      "odpoved": "Rychlost trávení ovlivňuje vláknina, bílkoviny a tuky v daném jídle. Když si ke kusu dortu dáš tvaroh a celozrnný chléb s vlákninou, cukr se do krve dostává pozvolněji, než kdybys jedl jen cukr samotný."
+    },
+    {
+      "otazka": "Obsahuje syrové ovoce enzymy, které pomáhají trávení?",
+      "odpoved": "Takhle to nefunguje. Trávicí enzymy si tělo vyrábí samo a ty z jídla se v kyselém žaludku z větší části rozloží. Ovoce vyhrává vlákninou, vitaminy a sytostí."
+    },
+    {
+      "otazka": "Jak zjistím, jestli mi chybí vitaminy a minerály?",
+      "odpoved": "Jen krevními testy. Ne tím, že ti výživový poradce podle kruhů pod očima doporučí multivitamin."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Bebe má pravděpodobně méně vlákniny a více cukrů než většina typů ovoce – to je jeden pohled, proč „může být ovoce všeobecně vhodnější“ pro většinu lidí"},
+    {"pro": "kratka_odpoved", "citace": "Tak či tak třeba jablko, banán bude mít více různých vitamínů a minerálů než zmiňované bebe oplatky."},
+    {"pro": "kratka_odpoved", "citace": "Jablko nebo banán s sebou nesou vodu a vlákninu, takže po nich vydržíš dýl najedený."},
+    {"pro": "kratka_odpoved", "citace": "to ale neznamená, že když si občas dáš Bebe a bílkoviny, vlákninu i kcal máš jinak v pořádku, je to problém"},
+    {"pro": "faq[0]", "citace": "je to řetězec velkého množství glukózy"},
+    {"pro": "faq[0]", "citace": "v trávicím traktu se to pak „naseká“ na jednotky glukózy a ta jde teprve do krve"},
+    {"pro": "faq[0]", "citace": "a protože je to delší řetězec, do krve se dostává pomaleji a postupně."},
+    {"pro": "faq[0]", "citace": "Sklenice coly nemá řetězce, ale například 2 spojené jednotky cukrů:"},
+    {"pro": "faq[0]", "citace": "cukr se mnohem rychleji dostane do krve a zvedne se krevní cukr."},
+    {"pro": "faq[1]", "citace": "OVŠEM rychlost trávení (i sacharidů/cukrů) ovlivňuje i příjem vlákniny, bílkovin a tuků v daném jídle, tzn. když sníš kus dortu a dáš si k tomu tvaroh a třeba nějaký celozrnný chléb s kupou vlákniny, tak i když jsi snědl nějaké to množství cukru, do krve se bude dostávat ÚPLNĚ JINAK A POZVOLNĚJI NEŽ KDYBYS JEDL JEN CUKR SAMOTNÝ."},
+    {"pro": "faq[2]", "citace": "Takhle to ale nefunguje. Trávicí enzymy si tělo vyrábí samo a ty z jídla se v kyselém žaludku z větší části rozloží. Ovoce vyhrává vlákninou, vitamíny a sytostí."},
+    {"pro": "faq[3]", "citace": "Nedostatek vitamínů a minerálů se dá zjistit pouze krevními testy, ne tím že vám výživový poradce řekne: “Hmm máte kruhy pod očima, kupte si multivitamin.“"}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní obsah cukru, vlákniny ani kalorií v Bebe sušenkách a ovoci; srovnání je jen „pravděpodobně“.",
+    "Pasáž o cukrovce a inzulinu (včetně věty, že jednotka inzulinu přenáší asi 10–15 jednotek glukózy) je zjednodušená a nepřesná, proto jsem z ní do odpovědí nic nebral. Doporučuji ji odborně zkontrolovat.",
+    "Článek tvrdí, že po dvou oplatkách máš srovnatelné kalorie jako po ovoci, ale neuvádí, s jakým množstvím ovoce srovnává."
+  ]
+}

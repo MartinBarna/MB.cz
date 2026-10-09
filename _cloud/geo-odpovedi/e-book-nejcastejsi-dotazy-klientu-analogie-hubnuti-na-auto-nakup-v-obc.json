@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-analogie-hubnuti-na-auto-nakup-v-obc.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Analogie hubnutí na auto/nákup v obchodě",
+  "hlavni_otazka": "Jak si jednoduše představit, jak funguje hubnutí a kalorie?",
+  "kratka_odpoved": "Představ si tělo jako auto, svaly jako motor a tuk jako palivovou nádrž. Kolik paliva v nádrži zůstane, záleží na tom, kolik najezdíš a jakou máš spotřebu, ale taky na tom, kolik litrů doléváš, tedy kolik toho sníš. Kalorie ber jako litry benzinu.",
+  "faq": [
+    {
+      "otazka": "Proč nejíst na začátku hubnutí moc málo?",
+      "odpoved": "Tělo se na to adaptuje. Krátkodobě sice shodíš víc, ale postupně si zvykne na míň a pro další hubnutí musíš ubírat jídlo znova. Proto radši maraton než sprint."
+    },
+    {
+      "otazka": "Proč kulturista spálí víc energie než netrénovaný člověk?",
+      "odpoved": "Má obrovské svaly, tedy velký motor, a ten žere hodně energie, když spí, cvičí i chodí. Navíc podá větší výkon, takže za trénink spálí víc než netrénovaný začátečník."
+    },
+    {
+      "otazka": "Jak se naučit odhadovat kalorie jídla?",
+      "odpoved": "Stejně jako ceny v obchodě. Víš, jaký máš rozpočet na jídlo a kolik co stojí v korunách. Tvůj kalorický strop je rozpočet a postupně se naučíš z hlavy, kolik která potravina stojí energie."
+    },
+    {
+      "otazka": "Co dělat při sedavé práci?",
+      "odpoved": "Zkus do dne vměstnat víc chůze, třeba do práce, z práce a na oběd. Vypadá to jako maličkost, ale energii to spálí."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Tělo si představ jako auto a svaly jako jeho motor."},
+    {"pro": "kratka_odpoved", "citace": "Máme něco jako palivovou nádrž, což jsou tuky."},
+    {"pro": "kratka_odpoved", "citace": "kolik najezdíte,"},
+    {"pro": "kratka_odpoved", "citace": "jakou máte spotřebu,"},
+    {"pro": "kratka_odpoved", "citace": "ALE také na tom, kolik litrů paliva doléváte."},
+    {"pro": "kratka_odpoved", "citace": "Tedy kolik toho sníš. Energii tady počítáme v kaloriích a ber je jako litry benzinu."},
+    {"pro": "faq[0]", "citace": "Hned na startu nechceš jíst moc málo. Tělo se na to adaptuje – krátkodobě sice shodíš víc, ale postupně si zvykne na míň a zefektivní si procesy. A pak musíš pro další hubnutí ubírat jídlo znova. S klienty proto radši běžíme maraton než sprint."},
+    {"pro": "faq[1]", "citace": "Třeba kulturista má obrovské svaly/motor a ty mu žerou hodně energie:"},
+    {"pro": "faq[1]", "citace": "a hlavně dokáže podat lepší výkon/větší síla, takže spálí za trénink více energie než netrénovaný začátečník."},
+    {"pro": "faq[2]", "citace": "určitě už víte z hlavy, jaký máte +- rozpočet na jídlo (to je analogie na plán/kalorický strop)"},
+    {"pro": "faq[2]", "citace": "Takže jako jste se naučili, kolik co stojí v Kč, tak stejně se postupně začnete více z hlavy rozlišovat „kolik ta a ta potravina stojí energie“."},
+    {"pro": "faq[3]", "citace": "Pokud máš hodně sedavou práci, zkus do dne vměstnat víc chůze – třeba do práce, z práce, na oběd. Vypadá to jako maličkost, ale energii to spálí."}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní čísla: kolik kalorií ubrat, kolik kroků ujít ani kolik energie spálí svaly.",
+    "Reverse dieting článek jen zmiňuje jako po-dietní servis a nevysvětluje, jak funguje."
+  ]
+}

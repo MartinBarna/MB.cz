@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/clean-eating-mytus.html",
+  "titulek": "Musíš jíst „čistě“? Mýtus o clean eating a zakázaných jídlech",
+  "hlavni_otazka": "Musím jíst čistě, abych zhubl?",
+  "kratka_odpoved": "Nemusíš. Žádná potravina není sama o sobě čistá ani špinavá a žádné jediné jídlo tě neztloustí ani neudělá zdravým. Rozhoduje celek: kalorie, bílkoviny, vláknina a to, jak dlouho to držíš. Zhubneš z deficitu a konzistence, ne z čistoty talíře.",
+  "faq": [
+    {
+      "otazka": "Co je pravidlo 80/20 ve stravování?",
+      "odpoved": "Zhruba osmdesát procent jídelníčku postavíš na základních, sytících a nutričně hodnotných potravinách: maso, ryby, vejce, mléčné, luštěniny, obiloviny, ovoce a zelenina. Zbylý prostor necháš na věci, které máš rád."
+    },
+    {
+      "otazka": "Proč může být clean eating škodlivé?",
+      "odpoved": "Dělení jídla na dobré a zlé snadno vede k úzkosti a výčitkám z normálního jídla. Posedlost zdravým jídlem má i jméno, orthorexie. Striktní zákazy navíc dřív nebo později spustí binge cyklus: týden čistě, pak přejedení a vina."
+    },
+    {
+      "otazka": "Můžu jíst zdravé potraviny bez omezení?",
+      "odpoved": "Ne, tělo počítá kalorie, ne marketing. Ořechy, ořechová másla, oleje, avokádo nebo granola jsou energeticky vydatné. Lžíce oleje má víc kalorií než kostka cukru."
+    },
+    {
+      "otazka": "Má tělo s „čistým“ jídlem jinou práci než se „špinavým“?",
+      "odpoved": "Ne. Tělo nepozná, jestli glukóza přišla z domácí ovesné kaše nebo z tyčinky, a zpracuje obojí stejnou cestou. Bílkovina z kuřete i z proteinového dezertu jsou pořád aminokyseliny."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "žádná potravina není sama o sobě „čistá\" ani „špinavá\"."},
+    {"pro": "kratka_odpoved", "citace": "Žádné jediné jídlo tě neztloustí ani neudělá zdravým. Dělá to celkový obraz: kalorie, bílkoviny, vláknina a to, jak dlouho to držíš."},
+    {"pro": "kratka_odpoved", "citace": "Zhubneš z deficitu a konzistence, ne z čistoty talíře."},
+    {"pro": "faq[0]", "citace": "Postav většinu jídelníčku, řekněme tak osmdesát procent, na základních, sytících a nutričně hodnotných potravinách. Maso, ryby, vejce, mléčné, luštěniny, obiloviny, ovoce, zelenina. A zbylý prostor nech klidně na věci, co máš rád"},
+    {"pro": "faq[1]", "citace": "Když si rozdělíš svět jídla na dobré a zlé, snadno z toho vyroste úzkost"},
+    {"pro": "faq[1]", "citace": "Tahle posedlost „zdravým\" jídlem má i svoje jméno, orthorexie, a umí lidem reálně otrávit život."},
+    {"pro": "faq[1]", "citace": "Když si něco striktně zakážeš, dřív nebo později to spustí binge cyklus: týden „čistě\", pak se to láme do přejedení, po něm přijde vina, a kolo se točí znova."},
+    {"pro": "faq[2]", "citace": "Jenže tělo počítá kalorie, ne marketing. Spousta „zdravých\" potravin je hodně energeticky vydatných"},
+    {"pro": "faq[2]", "citace": "Lžíce oleje má víc kalorií než kostka cukru."},
+    {"pro": "faq[2]", "citace": "Ořechy a ořechová másla. Skvělá věc, ale jsou plné tuku a kalorií."},
+    {"pro": "faq[2]", "citace": "Granola, müsli tyčinky, „fit\" dezerty. Často mají cukru a tuku jako klasická sladkost"},
+    {"pro": "faq[3]", "citace": "Tělo nepozná, jestli ti glukóza přišla z domácí ovesné kaše nebo z „nezdravé\" tyčinky: zpracuje obojí stejnou cestou. Stejně tak bílkovina z kuřete a bílkovina z proteinového dezertu jsou pořád aminokyseliny."}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní množství bílkovin, vlákniny ani kalorií.",
+    "Orthorexii článek jen zmiňuje; neříká, jak ji poznat ani kam se obrátit pro pomoc."
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-maso-versus-proteinovy-prasek.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Maso versus „proteinový prášek“",
+  "hlavni_otazka": "Je lepší bílkovina z masa, nebo z proteinového prášku?",
+  "kratka_odpoved": "Hovězí maso i syrovátkový protein mají hodně esenciálních aminokyselin, takže obojí je prvotřídní zdroj bílkovin. Čerstvé potraviny ale mají víc mikroživin, enzymů a fytonutrientů. Protein z prášku klidně ber, v jídelníčku ale chceš převahu čerstvých, méně zpracovaných potravin.",
+  "faq": [
+    {
+      "otazka": "Jaký proteinový prášek vybrat?",
+      "odpoved": "Syrovátkový. Používají ho i ve vědeckých výzkumech a je to nejlevnější a zároveň nejkvalitnější forma suplementu na příjem bílkovin."
+    },
+    {
+      "otazka": "Kolik bílkovin v jednom jídle stačí na regeneraci svalů?",
+      "odpoved": "Když si dáš 30–40 g bílkovin z masa nebo syrovátky, vytěžíš z toho plus minus maximum regenerace, i kdybys byl hodně svalnatý."
+    },
+    {
+      "otazka": "Je bílkovina z chleba stejně dobrá jako z masa?",
+      "odpoved": "Formálně sníš stejně bílkovin, ale esenciálních aminokyselin tam bude míň, protože v rostlinných produktech jich je menší zastoupení. Proto se píše „tolik a tolik denně z kvalitních zdrojů“."
+    },
+    {
+      "otazka": "Co jsou esenciální aminokyseliny?",
+      "odpoved": "Je jich 9 a tělo si je neumí vyrobit, musí je dostat zvenčí. Tři z nich, leucin, valin a isoleucin, jsou v BCAA a mají největší vliv na svaly a jejich regeneraci."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "I hovězí maso a syrovátkový protein má esenciálních aminokyselin poměrně hodně na gramáž dané potraviny, takže obojí je prvotřídní zdroj bílkovin."},
+    {"pro": "kratka_odpoved", "citace": "Čerstvé potraviny jich mají víc, k tomu víc enzymů a fytonutrientů, které dobře působí na trávení, zdraví a mikroflóru."},
+    {"pro": "kratka_odpoved", "citace": "Bílkoviny pořád můžeš brát i z proteinového prášku. V jídelníčku ale chceš převahu „čerstvých nezpracovaných/méně trvanlivých“ potravin."},
+    {"pro": "faq[0]", "citace": "Jednoznačně doporučuju syrovátkový, ten používají i ve vědeckých výzkumech."},
+    {"pro": "faq[0]", "citace": "Je to totiž nejlevnější a zároveň nejkvalitnější forma suplementu na příjem bílkovin."},
+    {"pro": "faq[1]", "citace": "Když si dáš 30 – 40 g z masa nebo syrovátky, tak i kdybys byl svalově jako já, plus minus z toho vytěžíš maximum regenerace."},
+    {"pro": "faq[2]", "citace": "Ale kdybys snědl 30 – 40 g bílkovin třeba z chleba, tak sice formálně najíš tolik bílkovin, jenže těch „esenciálních aminokyselin“ tam bude míň. V rostlinných produktech jich je prostě menší zastoupení."},
+    {"pro": "faq[2]", "citace": "proto se vždycky píše „tolik a tolik denně z KVALITNÍCH zdrojů“"},
+    {"pro": "faq[3]", "citace": "Existuje 9 esenciálních aminokyselin"},
+    {"pro": "faq[3]", "citace": "které si tělo neumí vyrobit a musí je dostat zvenčí"},
+    {"pro": "faq[3]", "citace": "3 z nich jsou v BCAA (branched chain amino acids) = leucine/valine/isoleucine a ty právě mají největší vliv na svaly a jejich regeneraci."}
+  ],
+  "nejiste": [
+    "Článek na konci uvádí, že od roku 2021 se ukazuje, že rostlinné i živočišné bílkoviny dokážou podpořit růst svalů srovnatelně. To částečně oslabuje předchozí výklad o chlebu a rostlinných zdrojích a článek to nerozhoduje; doporučuji, aby to Martin před použitím sjednotil.",
+    "Článek neuvádí celkový denní příjem bílkovin na kilo.",
+    "Článek neuvádí, kolik masa odpovídá 30–40 g bílkovin."
+  ]
+}

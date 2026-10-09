@@ -1,0 +1,47 @@
+{
+  "url": "https://martinbarna.cz/clanky/bcaa-aminokyseliny-mytus.html",
+  "titulek": "Musíš brát BCAA na svaly? Mýtus o aminokyselinách",
+  "hlavni_otazka": "Mám brát BCAA, abych nepřišel o svaly?",
+  "kratka_odpoved": "Pokud normálně jíš, nemusíš. Každá kompletní bílkovina (maso, vejce, ryby, mléčné výrobky, syrovátkový protein) už BCAA obsahuje i se zbylými esenciálními aminokyselinami. O sval tě připraví velký a dlouhý kalorický deficit, málo bílkovin a žádný silový trénink, ne vynechaný šejkr.",
+  "faq": [
+    {
+      "otazka": "Co jsou BCAA?",
+      "odpoved": "BCAA jsou větvené aminokyseliny, konkrétně tři: leucin, isoleucin a valin. Pro stavbu svalu jsou opravdu důležité, leucin obzvlášť."
+    },
+    {
+      "otazka": "Proč samotné BCAA sval nepostaví?",
+      "odpoved": "Tři aminokyseliny samy o sobě sval nepostaví. Leucin dá svalu signál ke stavbě, ale chybí materiál: tělo potřebuje celé spektrum esenciálních aminokyselin, tedy všech devět."
+    },
+    {
+      "otazka": "Kdy mají BCAA aspoň teoreticky smysl?",
+      "odpoved": "Při tréninku nalačno při hodně nízkém příjmu bílkovin. I tam je ale jednodušší a levnější jíst víc bílkovin a dát si před tréninkem normální jídlo nebo odměrku proteinu."
+    },
+    {
+      "otazka": "Kolik bílkovin denně mám jíst místo BCAA?",
+      "odpoved": "Cíl je zhruba 1,6–2,2 g bílkovin na kilo tělesné hmotnosti za den, pro většinu lidí stačí mířit doprostřed. Bílkoviny rozlož přes den a dej si je v každém hlavním jídle."
+    },
+    {
+      "otazka": "Do jakého doplňku dát peníze radši než do BCAA?",
+      "odpoved": "Do kreatinu a kvalitního proteinu. Kreatin funguje, je laciný, pomáhá výkonu a síle a stojí pár korun na den."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jenže pro většinu lidí, co normálně jí, je to jeden z nejzbytečnějších doplňků na trhu."},
+    {"pro": "kratka_odpoved", "citace": "jakákoliv kompletní bílkovina (maso, vejce, ryby, mléčné výrobky, syrovátkový protein) už tyhle tři BCAA obsahuje. A k tomu i všech zbylých šest esenciálních aminokyselin, které taky potřebuješ."},
+    {"pro": "kratka_odpoved", "citace": "O sval tě připraví hlavně velký a dlouhý kalorický deficit, málo bílkovin v jídelníčku a žádný silový trénink, který by svalu dával důvod tam zůstat."},
+    {"pro": "faq[0]", "citace": "BCAA znamená „větvené aminokyseliny\", konkrétně tři kusy: leucin, isoleucin a valin. Jsou to opravdu důležité aminokyseliny pro stavbu svalu, leucin obzvlášť."},
+    {"pro": "faq[1]", "citace": "Jenže tři aminokyseliny samy o sobě sval nepostaví."},
+    {"pro": "faq[1]", "citace": "Když jich máš jen pár, máš signál, ale chybí materiál."},
+    {"pro": "faq[1]", "citace": "Tělo na stavbu svalu nepotřebuje jen tyhle tři, ale celé spektrum esenciálních aminokyselin, devět druhů, které si neumí vyrobit a musí je dostat z jídla."},
+    {"pro": "faq[2]", "citace": "trénink nalačno při hodně nízkém příjmu bílkovin"},
+    {"pro": "faq[2]", "citace": "Ale i tam je řešení mnohem jednodušší a levnější: prostě jíst víc bílkovin a dát si před tréninkem normální jídlo nebo odměrku proteinu."},
+    {"pro": "faq[3]", "citace": "Cíl je zhruba 1,6–2,2 g bílkovin na kilo tělesné hmotnosti za den. To je rozumné rozpětí pro stavbu i udržení svalu. Pro většinu lidí stačí mířit někam doprostřed."},
+    {"pro": "faq[3]", "citace": "Rozlož bílkoviny přes den. Ne všechno k večeři. Dej si bílkovinu v každém hlavním jídle."},
+    {"pro": "faq[4]", "citace": "Chceš utratit peníze za doplněk? Dej je do kreatinu a kvalitního proteinu, ne do BCAA prášku."},
+    {"pro": "faq[4]", "citace": "Kreatin. Tenhle doplněk funguje a je laciný. Pomáhá výkonu a síle, je prověřený a stojí pár korun na den."}
+  ],
+  "nejiste": [
+    "Článek neuvádí dávkování kreatinu ani konkrétní studie k BCAA.",
+    "Článek neříká, jestli BCAA mohou škodit, jen že „nejsou škodlivé“ a nic moc nedají; o vedlejších účincích ani dávkách nic dalšího neuvádí."
+  ]
+}

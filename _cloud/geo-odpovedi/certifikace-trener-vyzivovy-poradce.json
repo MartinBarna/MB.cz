@@ -1,0 +1,36 @@
+{
+  "url": "https://martinbarna.cz/clanky/certifikace-trener-vyzivovy-poradce.html",
+  "titulek": "Certifikace trenéra a výživového poradce: co potřebuješ a co rozhoduje",
+  "hlavni_otazka": "Co potřebuju, abych mohl pracovat jako trenér nebo výživový poradce?",
+  "kratka_odpoved": "V Česku jsou trenérství a výživové poradenství dvě různé činnosti a každá má jiné podmínky pro živnost. U sportovních služeb se běžně vyžaduje doložení odborné způsobilosti, poradenská činnost mívá podmínky volnější. Aktuální podmínky si ověř na živnostenském úřadě nebo u akreditovaného poskytovatele kurzu.",
+  "faq": [
+    {
+      "otazka": "Jak vybrat certifikační kurz pro trenéry a výživové poradce?",
+      "odpoved": "Dívej se na akreditaci a obsah, ne na marketing: co konkrétně se naučíš a kdo učí. Pokud kurz staví na zázračných dietách, detoxech a zakázaných potravinách, uteč. Zeptej se, kolik času věnuje vedení reálného klienta."
+    },
+    {
+      "otazka": "Odliší mě certifikát od ostatních trenérů?",
+      "odpoved": "Ne. Klient mezi diplomy nepozná rozdíl. Pozná ale okamžitě, jak vedeš první konzultaci, jestli máš systém, nebo improvizuješ, a jestli tvoji klienti mají doložitelné výsledky."
+    },
+    {
+      "otazka": "Co si postavit hned po kurzu?",
+      "odpoved": "Vstupní proces (dotazník a strukturu první konzultace), systém vedení s plánem a týdenními check-iny, jednoduchý postup náboru a byznys základy: cenu, nabídku a obsah na sítě."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "V Česku jsou trenérství a výživové poradenství dvě různé činnosti a každá má jiné podmínky pro živnost. U tělovýchovných a sportovních služeb se běžně vyžaduje doložení odborné způsobilosti (akreditovaný kurz nebo příslušné vzdělání), poradenská činnost mívá podmínky volnější."},
+    {"pro": "kratka_odpoved", "citace": "takže si aktuální podmínky ověř na živnostenském úřadě nebo u akreditovaného poskytovatele kurzu."},
+    {"pro": "faq[0]", "citace": "Akreditace a obsah před marketingem. Zajímej se, co konkrétně se naučíš a kdo učí."},
+    {"pro": "faq[0]", "citace": "Pokud kurz staví na zázračných dietách, detoxech a zakázaných potravinách, uteč."},
+    {"pro": "faq[0]", "citace": "Zeptej se, kolik času věnuje kurz vedení reálného klienta: vstupnímu rozhovoru, stavbě plánu, vyhodnocování pokroku."},
+    {"pro": "faq[1]", "citace": "Klient mezi nimi nepozná rozdíl. Co pozná okamžitě: jak vedeš první konzultaci, jestli máš systém, nebo improvizuješ, a jestli tvoji klienti mají doložitelné výsledky."},
+    {"pro": "faq[2]", "citace": "Vstupní proces: dotazník a struktura první konzultace, ať od prvního zájemce působíš jako profík."},
+    {"pro": "faq[2]", "citace": "Systém vedení: plán, týdenní check-iny, úpravy podle dat."},
+    {"pro": "faq[2]", "citace": "Nábor: jednoduchý postup, jak se dostávat k prvním konzultacím"},
+    {"pro": "faq[2]", "citace": "Byznys základy: cena, nabídka a obsah na sítě."}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní typ živnosti, název kvalifikace ani seznam akreditovaných kurzů a sám říká, že se požadavky mění a záleží na přesném vymezení činnosti.",
+    "Článek neuvádí cenu ani délku certifikačních kurzů."
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "url": "https://martinbarna.cz/clanky/alkohol-a-hubnuti.html",
+  "titulek": "Zhubneš i s alkoholem? Co na to věda",
+  "hlavni_otazka": "Můžu hubnout, když piju alkohol?",
+  "kratka_odpoved": "Ano. Na hubnutí rozhoduje kalorický deficit, ne pivo samo o sobě, a lehká až střední konzumace se s přibíráním nepojí. Pár sklenek za týden, započítaných do dne, ti hubnutí nerozbije. Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu.",
+  "faq": [
+    {
+      "otazka": "Proč se po alkoholu hůř hubne, když drink sám tolik nevadí?",
+      "odpoved": "Háček je v tom, co se k pití váže. Alkohol zvedne chuť a sníží zábrany, takže sníš víc a tělo si to z piva nijak neodečte. Kebab cestou domů nadělá víc škody než drink samotný."
+    },
+    {
+      "otazka": "O kolik víc sním, když piju alkohol?",
+      "odpoved": "Meta-analýza 22 studií, kterou článek uvádí ve zdrojích, ukázala, že po alkoholu sníš víc a nekompenzuješ to. Jídla navíc bylo v průměru +343 kJ, tedy asi +82 kcal."
+    },
+    {
+      "otazka": "Je nějaká dávka alkoholu pro zdraví bezpečná?",
+      "odpoved": "Ne. WHO v roce 2023 řekla, že žádná dávka alkoholu není pro zdraví bezpečná. Je to karcinogen nejvyšší kategorie a je návykový, a to se deficitem přebít nedá."
+    },
+    {
+      "otazka": "Brzdí alkohol růst svalů?",
+      "odpoved": "Pravidelné popíjení ano. Studie ve zdrojích článku naměřila tlumení stavby svalů o 24 % i s proteinem, dávka ale byla asi 12 drinků, tedy opíjení, ne sklenka."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Na hubnutí rozhoduje kalorický deficit, ne pivo samo o sobě. Velké přehledy studií se shodují, že lehká až střední konzumace se s přibíráním nepojí."},
+    {"pro": "kratka_odpoved", "citace": "Pár sklenek za týden, započítaných do dne, ti hubnutí ani formu nerozbije. Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu."},
+    {"pro": "faq[0]", "citace": "Háček je v tom, co se k pití váže. Alkohol zvedne chuť a sníží zábrany. Sníš víc a tělo si to z piva nijak neodečte. Kebab cestou domů nadělá víc škody než drink samotný."},
+    {"pro": "faq[1]", "citace": "2) Po alkoholu sníš víc a nekompenzuješ (meta-analýza 22 studií)"},
+    {"pro": "faq[1]", "citace": "(Jídla navíc v průměru +343 kJ ≈ +82 kcal, bez kompenzace.)"},
+    {"pro": "faq[2]", "citace": "WHO v roce 2023 řekla natvrdo, že žádná dávka alkoholu není pro zdraví bezpečná. Je to karcinogen nejvyšší kategorie a je návykový. To se deficitem přebít nedá."},
+    {"pro": "faq[3]", "citace": "3) Tlumení stavby svalů (i s proteinem)"},
+    {"pro": "faq[3]", "citace": "(−24 % i s proteinem. Pozor: dávka byla ~12 drinků, tedy opíjení, ne sklenka.)"}
+  ],
+  "nejiste": [
+    "Článek číselně nevymezuje, co je lehká až střední konzumace, ani kolik sklenek týdně je ještě „pár“.",
+    "Článek neuvádí kalorickou hodnotu konkrétních nápojů (pivo, víno, panák).",
+    "Vliv na spánek je jen ve zdrojích (potlačení REM a fragmentace spánku, hlavně v druhé půlce noci), hlavní text ho dál nerozvádí, proto jsem z něj samostatnou otázku nedělal."
+  ]
+}
