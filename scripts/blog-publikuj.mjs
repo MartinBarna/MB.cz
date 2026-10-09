@@ -14,12 +14,19 @@
  * (kratší text jen pro <title>; h1 i og:title zůstávají z nadpisu). <title> včetně
  * " | Martin Barna" smí mít max 70 znaků, Meta max 170, jinak běh spadne.
  *
+ * JSON-LD (GEO, 9. 10. 2026): autor a vydavatel jsou jen odkazy na kanonické
+ * entity z homepage (`#martin`, `#org`, viz scripts/geo-spolecne.mjs), žádné kopie.
+ * Do hero se vkládá viditelný řádek „Autor: Martin Barna · Vydáno <datum>"
+ * (scripts/geo-sjednot.mjs → radekAutora). Kontrola: node scripts/geo-kontrola.mjs.
+ *
  * Idempotentní: druhý běh na týž slug nezdvojí kartu ani sitemap záznam.
  * Bez --force skončí, když clanky/<slug>.html už existuje.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { REF } from './geo-spolecne.mjs';
+import { radekAutora } from './geo-sjednot.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const SCRIPT_DIR = path.dirname(__filename);
@@ -542,6 +549,15 @@ export function inlineMarkdown(s) {
   return t;
 }
 
+/** Text z HTML (pro JSON-LD, které musí sedět s viditelným textem). */
+export function plainText(html) {
+  return String(html)
+    .replace(/<[^>]+>/g, '')
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function markdownToHtml(md) {
   const text = String(md || '').trim();
   if (!text) return '';
@@ -657,6 +673,8 @@ export function validateJsonLdBlocks(blocks) {
       for (const k of ['headline', 'description', 'datePublished', 'mainEntityOfPage']) {
         if (!data[k]) errors.push(`BlogPosting: chybí ${k}`);
       }
+      if (data.author?.['@id'] !== REF.martin['@id']) errors.push('BlogPosting: author není odkaz na #martin');
+      if (data.publisher?.['@id'] !== REF.org['@id']) errors.push('BlogPosting: publisher není odkaz na #org');
     } else if (t === 'FAQPage') {
       if (!Array.isArray(data.mainEntity) || data.mainEntity.length === 0) {
         errors.push('FAQPage: prázdné mainEntity');
@@ -746,11 +764,11 @@ export function buildArticleHtml(draft, chrome) {
     image: chrome.ogImg,
     datePublished: draft.date,
     dateModified: draft.date,
-    author: { '@type': 'Person', name: 'Martin Barna', url: `${ORIGIN}/` },
-    publisher: { '@type': 'Person', name: 'Martin Barna', url: `${ORIGIN}/` },
+    author: { ...REF.martin },
+    publisher: { ...REF.org },
     mainEntityOfPage: { '@type': 'WebPage', '@id': draft.canonical },
     articleSection: draft.category,
-    inLanguage: 'cs-CZ',
+    inLanguage: 'cs',
   };
   const faqPage = {
     '@context': 'https://schema.org',
@@ -758,7 +776,8 @@ export function buildArticleHtml(draft, chrome) {
     mainEntity: draft.faq.map((f) => ({
       '@type': 'Question',
       name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a.replace(/\s+/g, ' ').trim() },
+      // Slovo od slova jako viditelná odpověď: bez markdownu (**, odkazy), jen text.
+      acceptedAnswer: { '@type': 'Answer', text: plainText(inlineMarkdown(f.a)) },
     })),
   };
   const crumbs = {
@@ -816,7 +835,7 @@ ${chrome.bodyOpenNav}    <nav class="crumbs" aria-label="Drobečková navigace">
     <header class="hero" id="obsah">
         <span class="tag">${escapeHtml(draft.tag)}</span>
         <h1>${escapeHtml(draft.title)}</h1>
-    <p class="hero-meta">📅 ${czechMonthYear(draft.date)} · ⏱️ ${draft.minutes} min čtení</p></header>
+    <p class="hero-meta">📅 ${czechMonthYear(draft.date)} · ⏱️ ${draft.minutes} min čtení</p>${radekAutora(draft.date, draft.date)}</header>
 
     <div class="wrapc">
         <article>
