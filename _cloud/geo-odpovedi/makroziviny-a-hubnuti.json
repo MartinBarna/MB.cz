@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/makroziviny-a-hubnuti.html",
+  "titulek": "Na hubnutí nemusíš hlídat všechna makra",
+  "hlavni_otazka": "Musím při hubnutí počítat všechna makra, nebo stačí kalorie?",
+  "kratka_odpoved": "Nemusíš počítat všechna makra. Stačí hlídat kalorie a bílkoviny, k tomu vlákninu pro sytost a zdraví. Když máš dané kalorie a bílkoviny, poměr sacharidů a tuků s výsledkem skoro nehne, takže si je rozděl podle chuti a tréninku.",
+  "faq": [
+    {
+      "otazka": "Hubne se líp na nízkosacharidové, nebo na nízkotučné dietě?",
+      "odpoved": "Při stejné bílkovině skoro stejně. Hall a Guo prošli 32 přísně kontrolovaných studií a rozdíl v úbytku tuku vyšel asi na 16 gramů za den, navíc ve prospěch nízkotučných diet. Sacks dva roky sledoval 811 lidí na čtyřech různých poměrech a zhubli zhruba stejně."
+    },
+    {
+      "otazka": "Proč při hubnutí hlídat bílkoviny?",
+      "odpoved": "Protože chrání svaly. Leidy ukázala, že při stejném hubnutí udržela vyšší bílkovina skoro o polovinu víc svalů než nižší."
+    },
+    {
+      "otazka": "Kolik tuků mám při hubnutí jíst?",
+      "odpoved": "Zhruba 25 až 35 % kalorií. Dlouhodobě nechoď pod 20 %, kvůli hormonům a vstřebávání vitaminů."
+    },
+    {
+      "otazka": "Znamená to, že sacharidy a tuky můžu úplně ignorovat?",
+      "odpoved": "Ne. Vypustit makro z počítání neznamená na něj kašlat. Sacharidy táhnou tvrdý trénink a sytost má každý jinou."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Na hubnutí nemusíš hlídat všechna makra. Stačí kalorie a bílkoviny, k tomu vláknina pro sytost a zdraví."},
+    {"pro": "kratka_odpoved", "citace": "Jenže když máš dané kalorie a bílkoviny, ten poměr s výsledkem skoro nehne."},
+    {"pro": "kratka_odpoved", "citace": "Sacharidy a tuky si rozděl podle chuti a tréninku."},
+    {"pro": "faq[0]", "citace": "Hall a Guo prošli 32 přísně kontrolovaných studií se stejnou bílkovinou. Rozdíl v úbytku tuku mezi vysokými a nízkými sacharidy vyšel asi na 16 gramů za den. To je sotva lžička. A i ten malý náskok patřil nízkotučným dietám, ne nízkosacharidovým,"},
+    {"pro": "faq[0]", "citace": "Sacks pak dva roky sledoval 811 lidí na čtyřech různých poměrech a zhubli zhruba stejně."},
+    {"pro": "faq[1]", "citace": "Bílkoviny jsou jiná liga. Leidy ukázala, že při stejném hubnutí udržela vyšší bílkovina skoro o polovinu víc svalů než nižší."},
+    {"pro": "faq[2]", "citace": "Tuky drž zhruba na 25 až 35 % kalorií a dlouhodobě nechoď pod 20 %, kvůli hormonům a vstřebávání vitaminů."},
+    {"pro": "faq[3]", "citace": "Sacharidy táhnou tvrdý trénink a sytost má každý jinou. Vypustit makro z počítání neznamená na něj kašlat."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik bílkovin (g/kg) ani kolik vlákniny denně mířit, ani jak velký má být kalorický deficit.",
+    "U studie Leidy článek neříká, jaké konkrétní dávky „vyšší\" a „nižší\" bílkoviny se srovnávaly.",
+    "„Protože chrání svaly\" ve faq[1] je shrnutí věty o Leidy; obecný mechanismus článek dál nerozvádí.",
+    "Článek je krátký post k infografice, studie cituje jen jménem autora bez roku."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] otázka „low-carb“ česky"
+}

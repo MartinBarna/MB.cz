@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/kreatin-nejen-pro-svaly-ale-i-pro-mozek.html",
+  "titulek": "Kreatin: Nejen pro svaly, ale i pro mozek",
+  "hlavni_otazka": "Pomáhá kreatin mozku a paměti?",
+  "kratka_odpoved": "Jistý efekt to není: přehled studií ukázal, že kreatin může u zdravých lidí zlepšit krátkodobou paměť a logické myšlení, u zdravého vyspalého člověka se ale efekt na myšlení neprokázal. Ber ho hlavně kvůli síle, výkonu, svalům a regeneraci (3–5 g monohydrátu denně), mozek ber jako bonus. Než ho začneš brát, poraď se se svým lékařem.",
+  "faq": [
+    {
+      "otazka": "Pomáhá kreatin, když málo spím?",
+      "odpoved": "Možná. Studie z roku 2006 zjistila, že kreatin dokáže zmírnit negativní dopady nedostatku spánku na pozornost, reakce i přemýšlení. Přehled z roku 2026 vidí pozitivní trend, ale studie jsou zatím jen pětka a efekt se liší podle typu úkolu, takže zatím jde o slibný signál bez důkazu."
+    },
+    {
+      "otazka": "Zlepší kreatin myšlení zdravému a vyspalému člověku?",
+      "odpoved": "Ve studii z roku 2026 ne: 40 zdravých dobrovolníků bralo týden 20 g kreatinu denně a výkon na kole se zlepšil, ale na kognitivních testech nic. Autoři dodávají, že se účastníci testy „naučili“, což mohlo případný efekt zamaskovat."
+    },
+    {
+      "otazka": "Kolik kreatinu denně brát kvůli mozku?",
+      "odpoved": "Pro kognitivní účinky se běžně bere kolem 5 g denně, některé studie, třeba u Alzheimerovy choroby, šly i na 20 g denně. Optimální dávka se zatím dál zkoumá. Obyčejný monohydrát úplně stačí, za drahé „nootropní“ verze nepřeplácej."
+    },
+    {
+      "otazka": "Pomáhá kreatin při depresi?",
+      "odpoved": "Výzkumy naznačují, že může fungovat jako doplněk k léčbě deprese, hlavně v kombinaci s SSRI nebo s kognitivně behaviorální terapií. Rozhodně to ale neznamená, že kreatin léčí depresi. Při psychických potížích vždy řeš s lékařem, kreatin není náhrada léčby."
+    },
+    {
+      "otazka": "Má kreatin vedlejší účinky?",
+      "odpoved": "Obecně se bere jako bezpečný, ale některé studie zmiňují zažívací potíže a u lidí s bipolární poruchou riziko manických epizod. Než s ním začneš, prober to se svým lékařem, hlavně pokud máš zdravotní potíže, třeba s ledvinami."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Systematický přehled randomizovaných kontrolovaných studií ukázal, že kreatin může u zdravých lidí zlepšit krátkodobou paměť a logické myšlení."},
+    {"pro": "kratka_odpoved", "citace": "U zdravého vyspalého člověka se efekt na myšlení neprokázal."},
+    {"pro": "kratka_odpoved", "citace": "Ber kreatin hlavně kvůli tomu, na co je prokázaný stoprocentně: síla, výkon, svaly, regenerace (3–5 g monohydrátu denně, bezpečné a levné). Mozkové benefity ber jako bonus, ne jako hlavní důvod."},
+    {"pro": "kratka_odpoved", "citace": "Než kreatin začneš brát, poraď se se svým lékařem."},
+    {"pro": "faq[0]", "citace": "Když málo spíš, projeví se to na pozornosti, reakcích i přemýšlení. Studie z roku 2006 zjistila, že kreatin tyto negativní dopady dokáže zmírnit."},
+    {"pro": "faq[0]", "citace": "Výsledek? Pozitivní trend: kreatin dopady nevyspání zřejmě částečně tlumí. Ale studie jsou zatím jen pětka a efekt se liší podle typu úkolu. Slibné, ne dokázané."},
+    {"pro": "faq[0]", "citace": "Nový systematický přehled (Williams a kol., 2026, Journal of Integrative and Complementary Medicine) prošel studie na akutní spánkovou deprivaci."},
+    {"pro": "faq[1]", "citace": "U vyspalého zdravého člověka kreatin hlavu nezrychlí. Studie z roku 2026 (Silva a kol., Research in Sports Medicine) dala 40 zdravým dobrovolníkům (20 mužů a 20 žen) 20 g kreatinu denně po dobu týdne. Výkon na kole (Wingate test) se zlepšil, ale na kognitivních testech (Stroop, Trail) nic."},
+    {"pro": "faq[1]", "citace": "Autoři dodávají, že se testy účastníci „naučili\", což mohlo případný efekt zamaskovat."},
+    {"pro": "faq[2]", "citace": "Pro kognitivní účinky se běžně bere kolem 5 g denně. Některé studie, třeba ty u Alzheimerovy choroby, šly i výš (20 g denně). Co je opravdu optimální dávka a jak kreatin působí na mozek dlouhodobě, to se zatím dál zkoumá."},
+    {"pro": "faq[2]", "citace": "A nepřeplácej za drahé „nootropní\" verze. Obyčejný monohydrát úplně stačí."},
+    {"pro": "faq[3]", "citace": "Výzkumy naznačují, že kreatin může fungovat jako doplněk k léčbě deprese. Narativní přehled studií ukázal, že hlavně v kombinaci se selektivními inhibitory zpětného vychytávání serotoninu (SSRI) nebo s kognitivně behaviorální terapií (CBT) může urychlit zmírnění depresivních příznaků."},
+    {"pro": "faq[3]", "citace": "Rozhodně to neznamená, že kreatin léčí depresi. Při psychických potížích vždy řeš s lékařem, kreatin není náhrada léčby."},
+    {"pro": "faq[4]", "citace": "Kreatin se obecně bere jako bezpečný doplněk, ale některé studie zmiňují možné vedlejší účinky. Třeba zažívací potíže, a u lidí s bipolární poruchou riziko manických epizod."},
+    {"pro": "faq[4]", "citace": "Než s ním začneš, probereš to radši se svým lékařem, hlavně pokud máš nějaké zdravotní potíže, třeba s ledvinami."}
+  ],
+  "nejiste": [
+    "Článek si v bezpečnosti částečně odporuje: Sandkühler (2023) uvádí častější vedlejší účinky než u placeba (relativní riziko 4,25), přehled Kerksick (2026) žádný vyšší výskyt než u placeba. Proto FAQ o vedlejších účincích neuvádí čísla ani jednu stranu jako závěr.",
+    "Podobně starší studie (Prokopidis 2018) mluví o možném zlepšení paměti u zdravých lidí, souhrn 2026 o neprokázaném efektu u zdravých vyspalých. Krátká odpověď uvádí obojí, článek rozpor sám nerozhoduje.",
+    "Alzheimerovu chorobu (pilot s 20 pacienty, o 11 % vyšší kreatin v mozku) jsem do FAQ nedal: článek sám říká, že je to teprve začátek, a jde o nemoc, kde se nemá radit.",
+    "Článek neříká, jak dlouho kreatin brát, než by se mohl projevit efekt na mozek, ani zda ho brát nárazově před nevyspalým dnem."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o radu poradit se před užíváním s lékařem (článek ji má v závěru i v části o bezpečnosti), protože uvádí dávkování; věta o nevyspání vypuštěna kvůli délce (zůstává ve faq[0]) a s ní její opora",
+  "hlas": "upraveno: faq[0] bez „slibné, ne dokázané“; faq[1] bez úvodního „Podle“"
+}

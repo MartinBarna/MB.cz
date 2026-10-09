@@ -1,0 +1,45 @@
+{
+  "url": "https://martinbarna.cz/clanky/kaloricky-deficit.html",
+  "titulek": "Kalorický deficit v kostce",
+  "hlavni_otazka": "Jak velký kalorický deficit mám mít, abych zhubl?",
+  "kratka_odpoved": "Ideální start je deficit 15–20 % pod tvým TDEE, tedy denním výdejem. Reálně to znamená hubnout zhruba 0,3–0,7 kg týdně. Extrém typu 800 kalorií denně končí hladem, ztrátou svalů, vyhořením a jojo efektem.",
+  "faq": [
+    {
+      "otazka": "Co je kalorický deficit?",
+      "odpoved": "Přijmeš v jídle míň energie, než vydáš. Celému dennímu výdeji na dýchání, trávení, pohyb a trénink se říká TDEE. Rozdíl si tělo vezme z vlastních zásob, hlavně z tuku."
+    },
+    {
+      "otazka": "Proč nehubnout rychle na 800 kaloriích denně?",
+      "odpoved": "Výsledek bývá stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt. Pomalejší hubnutí zachová víc svalů a dává větší šanci, že ti výsledek vydrží."
+    },
+    {
+      "otazka": "Jak v deficitu neztratit svaly?",
+      "odpoved": "Drží tě před tím dvě věci: dost bílkovin, zhruba 1,6 až 2 g na kilo váhy, a silový trénink. Bílkoviny tě navíc zasytí, takže s hladem bojuješ míň."
+    },
+    {
+      "otazka": "Proč nehubnu, i když se snažím jíst míň?",
+      "odpoved": "Častá chyba jsou „neviditelné“ kalorie: olej, máslo, slazené nápoje a ujídání při vaření. Pět dní v deficitu a dva dny nadbytek o víkendu dají stagnaci. A váhu ovlivňuje voda, sleduj trend za týdny."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "15–20 % pod tvým TDEE je ideální start."},
+    {"pro": "kratka_odpoved", "citace": "Celému tomu výdeji se říká TDEE."},
+    {"pro": "kratka_odpoved", "citace": "Reálně to znamená hubnout zhruba 0,3–0,7 kg týdně."},
+    {"pro": "kratka_odpoved", "citace": "Vrhnou se do extrému ve stylu „budu jíst 800 kalorií denně\". Výsledek bývá pokaždé stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt."},
+    {"pro": "faq[0]", "citace": "Musíš přijmout míň energie, než vydáš. Tomu se říká kalorický deficit"},
+    {"pro": "faq[0]", "citace": "Tvoje tělo každý den něco spálí. Na dýchání, trávení, pohyb, trénink. Celému tomu výdeji se říká TDEE. Když v jídle přijmeš míň, než kolik vydáš, tělo si rozdíl vezme z vlastních zásob, hlavně z tuku. A ty hubneš."},
+    {"pro": "faq[1]", "citace": "Vrhnou se do extrému ve stylu „budu jíst 800 kalorií denně\". Výsledek bývá pokaždé stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt."},
+    {"pro": "faq[1]", "citace": "Pomaleji = víc svalů zachováno a větší šance, že ti výsledek vydrží."},
+    {"pro": "faq[2]", "citace": "V deficitu ti hrozí, že kromě tuku spálíš i svaly. Drží tě před tím dvě věci. Dost bílkovin, zhruba 1,6 až 2 g na kilo váhy, a silový trénink. Bílkoviny tě k tomu pěkně zasytí, takže s hladem bojuješ míň."},
+    {"pro": "faq[3]", "citace": "Zapomínáš na „neviditelné\" kalorie: olej, máslo, slazené nápoje, ujídání při vaření."},
+    {"pro": "faq[3]", "citace": "Víkendy mažou celý týden: pět dní v deficitu a dva dny nadbytek = stagnace."},
+    {"pro": "faq[3]", "citace": "Soustředíš se jen na váhu: voda kolísá, sleduj trend za týdny, ne jedno ráno."}
+  ],
+  "nejiste": [
+    "Článek neříká, jak si TDEE spočítat nebo odhadnout, ani jak deficit upravit, když váha stojí.",
+    "Rozmezí 0,3–0,7 kg týdně článek neváže na výchozí váhu, takže není jasné, pro koho platí spodní a pro koho horní hranice.",
+    "Článek neuvádí, jak dlouho v deficitu zůstat ani jestli dělat pauzy."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „pokaždé“; faq[3] bez „ne jedno ráno“"
+}

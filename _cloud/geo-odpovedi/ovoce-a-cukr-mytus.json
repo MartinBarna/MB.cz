@@ -1,0 +1,100 @@
+{
+  "url": "https://martinbarna.cz/clanky/ovoce-a-cukr-mytus.html",
+  "titulek": "Ovoce má moc cukru? Mýtus o ovoci v dietě",
+  "hlavni_otazka": "Můžu jíst ovoce, když hubnu, nebo má moc cukru?",
+  "kratka_odpoved": "Ano, klidně 2–3 porce ovoce denně i v dietě. Ovoce má díky vodě a vláknině málo kalorií na velký objem a dobře sytí, takže se jím těžko přejíš. Tloustne se z celkového nadbytku energie, jen ovoce počítej do kalorií jako vše ostatní.",
+  "faq": [
+    {
+      "otazka": "Musím se bát fruktózy v ovoci?",
+      "odpoved": "U celého ovoce ne. Množství fruktózy je v něm malé a přichází zabalené ve vláknině, která zpomalí, jak rychle se cukr dostane do těla. Problém, který lidi s fruktózou spojují, se týká tekutých a koncentrovaných cukrů v obřích množstvích. Jablko, hruška nebo hrst malin do toho nespadají."
+    },
+    {
+      "otazka": "Na jaké ovoce si v dietě dát pozor?",
+      "odpoved": "Na sušené ovoce, smoothie a džusy. Kalorie a cukr v nich utečou rychle a sytí míň. Nemusíš je zakazovat, jen je drž v menším."
+    },
+    {
+      "otazka": "Je cukr z ovoce pro tělo jiný než cukr ze sušenky?",
+      "odpoved": "Tělo chemicky řeší pořád to samé, ať je gram cukru z ovoce, z medu, nebo ze sušenky. O přibírání nebo hubnutí rozhoduje celková energetická bilance za delší dobu."
+    },
+    {
+      "otazka": "Co ovoce v dietě dává kromě cukru?",
+      "odpoved": "Vlákninu, která sytí a pomáhá trávení, vitamíny a antioxidanty, draslík a další minerály a velkou sytost na málo kalorií."
+    },
+    {
+      "otazka": "Rozhodí mi dietu banán?",
+      "odpoved": "Ne. Banán má víc kalorií než okurka, ale jeden banán ti dietu nerozhodí."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Klidně 2–3 porce ovoce denně i v dietě."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ovoce má díky vodě a vláknině málo kalorií na velký objem a dobře sytí, takže se jím těžko přejíš."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tloustne se z celkového nadbytku energie, ne z jablka."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Počítej ho do kalorií jako vše ostatní."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "U celého ovoce ne."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "V celém ovoci je množství fruktózy malé a navíc přichází zabalené ve vláknině, která zpomalí, jak rychle se cukr dostane do těla."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Problém, který lidi s fruktózou spojují, se týká tekutých a koncentrovaných cukrů v obřích množstvích, ne jablka, hrušky nebo hrsti malin."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Na sušené ovoce, smoothie a džusy. Kalorie a cukr v nich utečou rychle a sytí míň. Nemusíš je zakazovat, jen je měj pod kontrolou, ne v hlavní roli."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Tělu je jedno, jestli je gram cukru"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Chemicky řeší pořád to samé."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Co rozhoduje o tom, jestli přibíráš nebo hubneš, není původ jednotlivého sousta, ale celková energetická bilance za delší dobu."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Vláknina. Sytí, pomáhá trávení a drží tě dýl spokojeného."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Vitamíny a antioxidanty."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Draslík a další minerály."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Sytost na málo kalorií."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Banánu se bát nemusíš. Ano, má víc kalorií než okurka. Ne, jeden banán ti dietu nerozhodí."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak velká je jedna porce ovoce (v gramech ani kusech).",
+    "Článek neuvádí konkrétní čísla, kolik cukru nebo kalorií má sušené ovoce, džus či smoothie oproti čerstvému ovoci."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[1], faq[2] bez „X, ne Y“"
+}

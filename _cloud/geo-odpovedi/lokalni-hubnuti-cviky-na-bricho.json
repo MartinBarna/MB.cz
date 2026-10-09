@@ -1,0 +1,47 @@
+{
+  "url": "https://martinbarna.cz/clanky/lokalni-hubnuti-cviky-na-bricho.html",
+  "titulek": "Lokální hubnutí je mýtus: proč ti tisíc sklapovaček neudělá ploché břicho",
+  "hlavni_otazka": "Zhubnu na břiše, když budu každý den dělat sklapovačky?",
+  "kratka_odpoved": "Ne. Tuk nezmizí z místa, které procvičuješ, uvolňuje se z celého těla a pořadí řídí hlavně genetika a hormony. Na břišní tuk zabere mírný kalorický deficit, zhruba 1,6 až 2,2 g bílkovin na kilo, silový trénink celého těla a 8 až 10 tisíc kroků denně.",
+  "faq": [
+    {
+      "otazka": "Co o lokálním hubnutí říkají studie?",
+      "odpoved": "Když lidé týdny posilovali jen jednu nohu nebo paži, případný rozdíl v úbytku tuku mezi končetinami byl tak malý, že nemá praktický význam. Při velkých objemech břišních cviků břišní sval zesílil, ale obvod pasu ani tuk na břiše se proti kontrolní skupině prakticky nezměnily."
+    },
+    {
+      "otazka": "Proč nevidím břišáky, i když posiluju břicho?",
+      "odpoved": "Břišáky máš, každý je má. Nevidíš je kvůli vrstvě tuku, která leží přes ně. Sundat ji jde jedině celkovým poklesem tělesného tuku, tedy deficitem."
+    },
+    {
+      "otazka": "Proč mi břicho hubne až jako poslední?",
+      "odpoved": "Pořadí, ve kterém ti tuk z jednotlivých míst ubývá, si tělo určuje samo podle genetiky. U někoho jde dolů nejdřív obličej a hrudník, břicho a boky až nakonec. Za tím nestojí špatný trénink."
+    },
+    {
+      "otazka": "Má tedy smysl cvičit břicho?",
+      "odpoved": "Ano, jen ne na lokální hubnutí. Silný střed těla ti drží správné držení, chrání záda při dřepu a mrtvém tahu a stabilizuje tě skoro u všeho. A lépe vyvinutý břišní sval bude víc vidět, až tuk shodíš."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Tuk nezmizí z místa, které procvičuješ."},
+    {"pro": "kratka_odpoved", "citace": "Tuková tkáň se neuvolňuje lokálně podle toho, co zrovna namáháš. Uvolňuje se z celého těla, krví se dostává tam, kde je potřeba, a pořadí, ve kterém ti odkud ubývá, řídí hlavně genetika a hormony."},
+    {"pro": "kratka_odpoved", "citace": "Mírný kalorický deficit. Tohle je motor celého snižování tuku."},
+    {"pro": "kratka_odpoved", "citace": "Dost bílkovin. Zhruba 1,6 až 2,2 g na kilo."},
+    {"pro": "kratka_odpoved", "citace": "Silový trénink celého těla."},
+    {"pro": "kratka_odpoved", "citace": "8 až 10 tisíc kroků denně udělá víc než hodina sklapovaček."},
+    {"pro": "faq[0]", "citace": "V kontrolovaných studiích nechali účastníky po řadu týdnů posilovat jen jednu nohu nebo jednu paži a pak porovnávali, jestli z procvičované končetiny ubyl tuk víc než z té druhé."},
+    {"pro": "faq[0]", "citace": "To se nepotvrdilo: případný rozdíl mezi končetinami byl tak malý, že nemá praktický význam, a tuk ubýval plošně z celého těla."},
+    {"pro": "faq[0]", "citace": "Stejně dopadají i studie, kde lidé týdny dělali velké objemy břišních cviků. Břišní sval zesílil a vytrvalost vzrostla, ale obvod pasu ani množství tuku na břiše se proti kontrolní skupině prakticky nezměnily."},
+    {"pro": "faq[1]", "citace": "Břišáky máš. Každý je má. Je to sval jako každý jiný a roste ti, když ho zatěžuješ. Důvod, proč ho nevidíš, není slabý sval, ale vrstva tuku, která leží přes něj."},
+    {"pro": "faq[1]", "citace": "A sundat ji jde jedině celkovým poklesem tělesného tuku, tedy deficitem, který platí pro celé tělo."},
+    {"pro": "faq[2]", "citace": "A v jakém pořadí ti tuk z jednotlivých míst ubývá, si tělo určuje samo. U někoho jde dolů nejdřív obličej a hrudník, břicho a boky až nakonec. Za tím nestojí špatný trénink, ale tvoje genetika."},
+    {"pro": "faq[3]", "citace": "Aby to bylo fér: cvičit břicho má smysl. Jen ne jako nástroj na lokální hubnutí. Silný střed těla ti drží správné držení, chrání záda při dřepu a mrtvém tahu a stabilizuje tě v podstatě u všeho, co děláš."},
+    {"pro": "faq[3]", "citace": "Stejně tak platí, že lépe vyvinutý břišní sval bude víc vidět, až tuk shodíš, takže trénink se ti vyplatí."}
+  ],
+  "nejiste": [
+    "Článek necituje konkrétní studie (autory, roky, počty účastníků), popisuje je jen obecně; proto v odpovědích nejsou žádná čísla ze studií.",
+    "Článek neříká, jak velký má být „mírný\" kalorický deficit, ani jak dlouho trvá, než se břicho ukáže (jen „během pár měsíců\" u jeho klientů, což jsem jako obecný údaj nepoužil).",
+    "Článek nezmiňuje, jak často a jaké cviky na střed těla zařadit."
+  ],
+  "kontrola": "ok",
+  "hlas": "beze změny"
+}

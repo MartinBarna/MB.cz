@@ -1,0 +1,73 @@
+{
+  "url": "https://martinbarna.cz/clanky/sacharidy-pred-treninkem.html",
+  "titulek": "Banán před tréninkem: nutnost, nebo rituál?",
+  "hlavni_otazka": "Potřebuju před silovým tréninkem sníst sacharidy, třeba banán?",
+  "kratka_odpoved": "Pro většinu lidí, co trénují najezení, jsou sacharidy před tréninkem zbytečné. Přehled 49 studií z roku 2022 (Henselmans et al., Nutrients) došel k tomu, že u silového tréninku v najezeném stavu sacharidy před cvičením výkon neovlivní. Reálně pomůžou po osmi a víc hodinách nalačno, při hodně objemovém tréninku nebo u tréninků delších než 45 minut.",
+  "faq": [
+    {
+      "otazka": "Je efekt banánu před tréninkem jen v hlavě?",
+      "odpoved": "Ve studii z roku 2025 (Lee et al., Physiology & Behavior) dostali silově trénující sportovci sladký nápoj, který byl placebo, a k tomu povídání o tom, jak sacharidy pomáhají. Žádné sacharidy ve hře nebyly, a síla šla i tak nahoru. Čím víc tomu lidé věřili, tím byl efekt větší."
+    },
+    {
+      "otazka": "Jak se pozná, že jde o placebo?",
+      "odpoved": "Kromě studie s falešným nápojem přehled 49 studií nenašel ani dávkový efekt sacharidů před silovým tréninkem. A to bývá typický znak placeba."
+    },
+    {
+      "otazka": "Kdy sacharidy před tréninkem pomůžou?",
+      "odpoved": "Ve třech situacích: když jdeš cvičit po osmi a víc hodinách nalačno, při hodně objemovém tréninku, tedy deset a víc sérií na partii, a u tréninků delších než 45 minut."
+    },
+    {
+      "otazka": "Co když bez banánu před tréninkem nemůžu?",
+      "odpoved": "Když si zafixuješ, že bez sacharidů trénovat nejde, uděláš si na nich závislost v hlavě. Den bez banánu je pak horší, jenže kvůli hlavě, energie ti nechybí."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pro většinu lidí, co trénují najezení, jsou sacharidy před tréninkem zbytečné."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Přehled 49 studií z roku 2022 (Henselmans et al., Nutrients) došel k tomu, že u silového tréninku v najezeném stavu sacharidy před cvičením výkon neovlivní."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když jdeš cvičit po osmi a víc hodinách nalačno. Při hodně objemovém tréninku, tedy deset a víc sérií na partii. A u tréninků delších než 45 minut."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Vyšla k tomu studie z roku 2025 (Lee et al., Physiology & Behavior)."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Druhá sladký nápoj, který byl ve skutečnosti placebo, a k tomu povídání o tom, jak sacharidy pomáhají."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Reálně přitom žádné sacharidy ve hře nebyly. A síla šla i tak nahoru. Čím víc tomu lidé věřili, tím byl ten efekt větší."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Nenašel se ani dávkový efekt, a to bývá typický znak placeba."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Aby to bylo fér, ve třech situacích sacharidy před tréninkem reálně pomůžou. Když jdeš cvičit po osmi a víc hodinách nalačno. Při hodně objemovém tréninku, tedy deset a víc sérií na partii. A u tréninků delších než 45 minut."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Když si zafixuješ, že bez sacharidů trénovat nejde, uděláš si na nich závislost v hlavě."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Den, kdy banán nedáš, je pak horší, ale ne kvůli energii. Kvůli tomu, co máš v hlavě."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik sacharidů a jak dlouho před tréninkem sníst v situacích, kdy pomůžou.",
+    "Článek mluví o silovém tréninku; neříká, jak je to u jiných druhů sportu.",
+    "Zdroje uvedené na konci (King et al. 2022, Hamidvand et al. 2025) článek v textu nijak nerozebírá."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněn chybějící podmět („sacharidy před cvičením“), bez něj věta nedávala jasný smysl",
+  "hlas": "upraveno: faq[0], faq[1], faq[2] otázky jako dotaz člověka (bez „co ukázala studie“, „proč článek“, „opravdu“); faq[0] bez „ve skutečnosti“; faq[3] bez „ne kvůli energii, kvůli“"
+}

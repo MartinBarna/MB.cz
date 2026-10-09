@@ -1,0 +1,44 @@
+{
+  "url": "https://martinbarna.cz/clanky/vlaknina.html",
+  "titulek": "Vláknina: zdraví v každém soustu",
+  "hlavni_otazka": "Kolik vlákniny denně jíst a proč pomáhá při hubnutí?",
+  "kratka_odpoved": "Dobrý cíl je zhruba 30–38 g vlákniny denně, jednoduchá pomůcka je asi 14 g na každých 1000 kalorií. Při hubnutí pomáhá, protože tě zasytí, zpomaluje vstřebávání cukru a má skoro nula kalorií. Přidávej ji postupně a pij dost vody.",
+  "faq": [
+    {
+      "otazka": "Jaký je rozdíl mezi rozpustnou a nerozpustnou vlákninou?",
+      "odpoved": "Rozpustná vláknina zpomaluje trávení a pomáhá držet cukr v krvi v klidu. Nerozpustná rozhýbe střeva."
+    },
+    {
+      "otazka": "Proč mě po vláknině může nadýmat?",
+      "odpoved": "Když přidáš hodně vlákniny ze dne na den, ze začátku tě může nadýmat. Proto ji přidávej postupně a pij dost vody."
+    },
+    {
+      "otazka": "Ve kterých potravinách najdu vlákninu?",
+      "odpoved": "V zelenině a ovoci (se slupkou, kde to jde), v luštěninách jako čočka, fazole a cizrna, v celozrnných obilovinách a ovesných vločkách a v ořeších a semínkách, třeba chia nebo lněných."
+    },
+    {
+      "otazka": "Jak dostat víc vlákniny do jídelníčku bez velkých změn?",
+      "odpoved": "Stačí ke každému jídlu přihodit porci zeleniny nebo párkrát týdně dát luštěniny. Nemusíš kvůli tomu jíst „jako králík“."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Dobrý cíl je zhruba 30–38 g denně. Jednoduchá pomůcka: asi 14 g na každých 1000 kalorií."},
+    {"pro": "kratka_odpoved", "citace": "Zasytí tě. Po jídle s vlákninou vydržíš dýl bez hladu a míň pak uzobáváš."},
+    {"pro": "kratka_odpoved", "citace": "Zpomaluje vstřebávání cukru. Nepřijdou prudké výkyvy energie a chutě na sladké."},
+    {"pro": "kratka_odpoved", "citace": "Má skoro nula kalorií. Naplní talíř, aniž bys přidal energii navíc."},
+    {"pro": "kratka_odpoved", "citace": "Přidávej ji ale postupně a pij dost vody."},
+    {"pro": "faq[0]", "citace": "Rozpustná zpomaluje trávení a pomáhá držet cukr v krvi v klidu. Nerozpustná rozhýbe střeva."},
+    {"pro": "faq[1]", "citace": "Když to přeženeš ze dne na den, ze začátku tě může nadýmat."},
+    {"pro": "faq[2]", "citace": "Zelenina a ovoce (se slupkou, kde to jde)"},
+    {"pro": "faq[2]", "citace": "Luštěniny: čočka, fazole, cizrna"},
+    {"pro": "faq[2]", "citace": "Celozrnné obiloviny, ovesné vločky"},
+    {"pro": "faq[2]", "citace": "Ořechy a semínka (chia, lněné)"},
+    {"pro": "faq[3]", "citace": "Stačí ke každému jídlu přihodit porci zeleniny nebo párkrát týdně dát luštěniny."}
+  ],
+  "nejiste": [
+    "Článek neříká, jestli se cíl 30–38 g denně liší pro muže a ženy, ani odkud rozsah pochází.",
+    "Článek neuvádí, kolik vlákniny mají konkrétní potraviny, ani kolik jí lidé v průměru skutečně snědí (jen že „většina lidí jí přitom sní málo“)."
+  ],
+  "kontrola": "ok",
+  "hlas": "beze změny"
+}

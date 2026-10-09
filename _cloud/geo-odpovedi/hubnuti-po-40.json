@@ -1,0 +1,50 @@
+{
+  "url": "https://martinbarna.cz/clanky/hubnuti-po-40.html",
+  "titulek": "Hubnutí po 40: co se mění doopravdy a co si jen říkáme",
+  "hlavni_otazka": "Proč se po čtyřicítce hůř hubne, zpomalí se metabolismus?",
+  "kratka_odpoved": "Metabolismus ve čtyřiceti nespadne: výdej přepočtený na beztukovou hmotu zůstává mezi 20 a 60 lety stabilní (Pontzer, 2021). Mění se hlavně množství svalů a pohybu, a když ubude sval, ubude i výdej. Po čtyřicítce proto pomáhá silový trénink, dost bílkovin a mírnější deficit.",
+  "faq": [
+    {
+      "otazka": "Jak velký deficit a kolik bílkovin po čtyřicítce?",
+      "odpoved": "U klientů po čtyřicítce nastavuju deficit kolem 15 až 20 procent pod odhadovaným výdejem, tedy tempo zhruba 0,3 až 0,7 kg týdně. Bílkoviny cílím na 1,6 až 2,2 g na kilogram hmotnosti denně, v každém hlavním jídle."
+    },
+    {
+      "otazka": "Jak začít se silovým tréninkem po čtyřicítce?",
+      "odpoved": "Na začátek stačí dva silové tréninky týdně po 40 až 50 minutách: komplexní cviky na dolní polovinu těla (dřep, mrtvý tah, výpady), tlak a tah na horní, a postupné přidávání zátěže. Kdo nikdy necvičil, začne s vlastní vahou a jednou činkou."
+    },
+    {
+      "otazka": "Proč je dieta na 1 200 kcal po čtyřicítce špatný nápad?",
+      "odpoved": "Má po čtyřicítce ještě horší poměr rizika a výnosu než ve dvaceti. Odejde s ní víc svalu a ten se v padesáti nabírá pomaleji, než v jakém tempu odešel."
+    },
+    {
+      "otazka": "Proč se mi v přechodu mění postava, i když váha stojí?",
+      "odpoved": "Ve studii SWAN se na začátku přechodu zdvojnásobila rychlost přibývání tuku a beztuková hmota začala klesat, zhruba do dvou let po poslední menstruaci. Číslo na váze tak může vypadat měsíce stejně, a přesto se pod ním mění poměr tuku a svalu, proto měř i obvod pasu. O hormonální terapii se bav s lékařem."
+    },
+    {
+      "otazka": "Jak rychle se dá po čtyřicítce hubnout?",
+      "odpoved": "U většiny klientů dává smysl tempo kolem 0,5 procenta tělesné hmotnosti týdně, tedy zhruba 1,5 až 3 kg za měsíc podle toho, kolik vážíš. Rychlejší tempo jde taky, jen za cenu většího úbytku svalů a horší udržitelnosti."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Metabolismus ti ve čtyřiceti nespadl"},
+    {"pro": "kratka_odpoved", "citace": "Výdej přepočtený na beztukovou hmotu, tedy na svaly a orgány, zůstává v dospělosti mezi 20 a 60 lety stabilní a klesat začíná až u starších lidí (Pontzer, 2021, Science, PMID 34385400)."},
+    {"pro": "kratka_odpoved", "citace": "Výdej se počítá z ní, takže když ubude sval, ubude i výdej."},
+    {"pro": "kratka_odpoved", "citace": "Změnilo se něco jiného: kolik toho za den ujdeš, kolik toho ve skutečnosti uneseš a kolik svalů ti pod tím zbylo."},
+    {"pro": "kratka_odpoved", "citace": "Silový trénink je tady hlavní páka"},
+    {"pro": "kratka_odpoved", "citace": "Jídlo: mírnější deficit a víc bílkovin"},
+    {"pro": "faq[0]", "citace": "Prakticky u klientů po čtyřicítce nastavuju deficit kolem 15 až 20 procent pod odhadovaným výdejem, tedy tempo zhruba 0,3 až 0,7 kg týdně. Bílkoviny cílím na 1,6 až 2,2 g na kilogram hmotnosti denně a chci je v každém hlavním jídle."},
+    {"pro": "faq[1]", "citace": "Na začátek stačí dva silové tréninky týdně po 40 až 50 minutách. Komplexní cviky na dolní polovinu těla (dřep, mrtvý tah, výpady), tlak a tah na horní, a hlavně postupné přidávání zátěže. Kdo posilovnu nikdy nedělal, začne s vlastní vahou a jednou činkou"},
+    {"pro": "faq[2]", "citace": "Ostrá dieta na 1 200 kcal má po čtyřicítce ještě horší poměr rizika a výnosu než ve dvaceti. Odejde s ní víc svalu a ten se v padesáti nabírá pomaleji, než v jakém tempu odešel."},
+    {"pro": "faq[3]", "citace": "Ve studii SWAN, která ženám opakovaně měřila složení těla přístrojem DXA, se na začátku přechodu zdvojnásobila rychlost přibývání tuku a beztuková hmota začala klesat. Trvalo to zhruba do dvou let po poslední menstruaci, potom se křivky srovnaly."},
+    {"pro": "faq[3]", "citace": "číslo na váze může vypadat celé měsíce stejně, a přesto se pod ním mění poměr tuku a svalu. Proto v tomhle období měřím i obvod pasu"},
+    {"pro": "faq[3]", "citace": "O hormonální terapii se bav s lékařem, tam já neradím."},
+    {"pro": "faq[4]", "citace": "U většiny klientů dává smysl tempo kolem 0,5 procenta tělesné hmotnosti týdně, tedy zhruba 1,5 až 3 kg za měsíc podle toho, kolik vážíš. Rychlejší tempo jde taky, jen za cenu většího úbytku svalů a horší udržitelnosti."}
+  ],
+  "nejiste": [
+    "O hormonální terapii v přechodu článek výslovně neradí a odkazuje na lékaře.",
+    "Studie Verreijen 2017 běžela na lidech ve věku 55 až 80 let a šlo o výsledek uvnitř jedné skupiny (+0,6 kg beztukové hmoty při kombinaci bílkovin a posilování); článek sám říká, že si z ní bere hlavně směr, proto ji neuvádím jako samostatnou odpověď.",
+    "Tempo 0,3 až 0,7 kg týdně a 0,5 % hmotnosti týdně (1,5 až 3 kg měsíčně) jsou v článku dvě různé formulace Martinovy praxe; nechávám je u dvou různých otázek tak, jak stojí."
+  ],
+  "kontrola": "opraveno: faq[3] otázka přeformulována (článek netvrdí, že váha v přechodu neklesá, ale že může stát, zatímco se mění poměr tuku a svalu) a doplněno „o hormonální terapii se bav s lékařem“",
+  "hlas": "upraveno: faq[0] z 3. osoby („Martin nastavuje“) do 1. osoby"
+}

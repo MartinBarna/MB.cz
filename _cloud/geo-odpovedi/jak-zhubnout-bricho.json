@@ -1,0 +1,50 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-zhubnout-bricho.html",
+  "titulek": "Jak zhubnout břicho: co reálně funguje (a co je jen mýtus)",
+  "hlavni_otazka": "Jak zhubnout břicho, pomůžou na to sklapovačky?",
+  "kratka_odpoved": "Lokální hubnutí neexistuje, žádný cvik ani potravina nespálí tuk konkrétně na břiše. Břicho zmizí, až ubereš tuk z celého těla mírným, udržitelným kalorickým deficitem. K tomu posiluj 2–4× týdně a jez zhruba 1,6–2,2 g bílkovin na kilo, ať ti zůstanou svaly a jde dolů tuk.",
+  "faq": [
+    {
+      "otazka": "Pomůžou cviky na břicho zhubnout pupek?",
+      "odpoved": "Samy o sobě ne. Cviky na břicho svaly posílí a zpevní, ale nespálí tuk konkrétně nad nimi. Tělo čerpá tuk z tukových zásob po celém těle podle své genetiky a hormonů."
+    },
+    {
+      "otazka": "Proč mi břicho mizí jako poslední?",
+      "odpoved": "Kde se ti tuk ukládá jako první a mizí jako poslední, ovlivnit nedokážeš. U spousty lidí je právě břicho to poslední místo, které se pročistí."
+    },
+    {
+      "otazka": "Jak zhubnout břicho za 14 dní?",
+      "odpoved": "Za 14 dní ploché břicho nevykouzlíš, pokud vycházíš z většího nadbytku tuku. Realistické tempo je zhruba 0,3–0,7 kg tuku týdně. Za dva týdny ale stihneš nastartovat návyky: mírný deficit, silový trénink, dost bílkovin a lepší spánek."
+    },
+    {
+      "otazka": "Existuje hormonální břicho?",
+      "odpoved": "Chronický stres a málo spánku můžou hubnutí zpomalit a přispět k ukládání tuku v oblasti břicha. Hormony ale nedělají břicho navzdory kalorickému deficitu, spíš deficit ztěžují. Pokud máš podezření na hormonální poruchu nebo bereš léky, řeš to s lékařem."
+    },
+    {
+      "otazka": "Musím kvůli břichu vyřadit nějaká jídla?",
+      "odpoved": "Ne, žádnou potravinu zakazovat nemusíš. Pivo, čokoláda i řízek se do deficitu vejdou, když si pohlídáš celkovou bilanci."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Rovnou ti řeknu nepříjemnou pravdu: lokální hubnutí neexistuje. Žádný cvik ani zázračná potravina nespálí tuk konkrétně na břiše. Břicho zmizí až tehdy, když ubereš tuk z celého těla."},
+    {"pro": "kratka_odpoved", "citace": "Nastav si mírný, udržitelný kalorický deficit (klidně flexibilně, bez zakázaných jídel)."},
+    {"pro": "kratka_odpoved", "citace": "Posiluj 2–4× týdně a jez dost bílkovin, ať ztrácíš tuk, ne svaly."},
+    {"pro": "kratka_odpoved", "citace": "Dost bílkovin (zhruba 1,6–2,2 g na kilo tělesné hmotnosti) chrání svalovou hmotu a víc zasytí, takže se v deficitu líp drží."},
+    {"pro": "faq[0]", "citace": "Samy o sobě ne. Lokální hubnutí neexistuje. Cviky na břicho posílí a zpevní svaly, ale nespálí tuk konkrétně nad nimi."},
+    {"pro": "faq[0]", "citace": "Tělo nespaluje tuk z místa, které zrovna zatěžuješ. Čerpá ho z tukových zásob po celém těle podle své vlastní genetiky a hormonů."},
+    {"pro": "faq[1]", "citace": "Kde se ti tuk ukládá jako první a mizí jako poslední, ovlivnit nedokážeš. U spousty lidí je bohužel právě břicho to poslední místo, které se pročistí."},
+    {"pro": "faq[2]", "citace": "Za 14 dní ploché břicho nevykouzlíš, pokud vycházíš z většího nadbytku tuku. Realistické tempo je zhruba 0,3–0,7 kg tuku týdně. Co za dva týdny reálně zvládneš, je nastartovat návyky, které fungují: mírný kalorický deficit, silový trénink, dost bílkovin a lepší spánek."},
+    {"pro": "faq[3]", "citace": "Chronický stres a málo spánku (vyšší kortizol) opravdu můžou hubnutí zpomalit a přispět k ukládání tuku v oblasti břicha. Ale hormony nedělají břicho navzdory kalorickému deficitu. Spíš deficit ztěžují. Pokud máš podezření na hormonální poruchu nebo bereš léky, řeš to s lékařem, ne svépomocí."},
+    {"pro": "faq[4]", "citace": "Nemusíš zakazovat žádnou potravinu."},
+    {"pro": "faq[4]", "citace": "Pivo, čokoláda i řízek se do deficitu vejdou, když si pohlídáš celkovou bilanci."}
+  ],
+  "nejiste": [
+    "Jak velký má být „mírný\" deficit (v kcal nebo procentech), článek neuvádí, odkazuje na jiný článek.",
+    "Tempo 0,3–0,7 kg tuku týdně je v článku bez zdroje a „za dva týdny to je pár kilo\" je jen orientační; převzal jsem jen samotné rozmezí.",
+    "Kolik hodin spánku a jak zvládat stres, článek konkrétně neříká, uvádí jen obecné tipy (pravidelný režim, méně obrazovek, procházky).",
+    "Zmínku o viscerálním tuku a zdraví metabolismu článek podává obecně a bez čísel, proto jsem z ní nedělal FAQ.",
+    "Kroky článek doporučuje jako spojence, ale počet neuvádí."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „tuk, ne svaly“; faq[3] bez „opravdu“"
+}

@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-chute-a-hlad.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Chutě a hlad",
+  "hlavni_otazka": "Proč mám při hubnutí chutě na sladké?",
+  "kratka_odpoved": "Vlivů bývá víc: velmi přísná dieta, nedostatek bílkovin a vlákniny a u některých žen období periody. Když hubneš, máš častěji nižší krevní cukr a sladké ho zvedne nejrychleji. Tělo proto vyšle signál chuti na sladké, protože nechce čekat hodiny.",
+  "faq": [
+    {
+      "otazka": "Proč mám při přísné dietě velký hlad a únavu?",
+      "odpoved": "Když hubneš moc rychle, tělo jedná pro přežití. Donutí tě chutěmi a hladem sníst víc a zároveň tě udělá unaveným, takže míň chodíš a šetříš energii. Při velké únavě a hladu se proto nasazuje diet break, pauza od diety."
+    },
+    {
+      "otazka": "Proč mě luštěniny zasytí líp než sladké?",
+      "odpoved": "Ve fazolích je kromě sacharidů hromada bílkovin a vlákniny. Cítíš se sytější, trávíš pomaleji a cukry se do krve uvolňují pomaleji, takže krevní cukr drží stabilněji."
+    },
+    {
+      "otazka": "Proč mám chutě na sladké kolem periody?",
+      "odpoved": "Některé ženy mívají v tom období nižší krevní cukr a projeví se to většími chutěmi. Často stačí povolit si trochu sladkého a držet priority. Vyšší váha a míry kolem periody jsou jen dočasné zavodnění, které zase opadne."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Proč máš chutě na sladké? Vlivů na to bývá víc, tak si je projdeme."},
+    {"pro": "kratka_odpoved", "citace": "Velmi přísná dieta."},
+    {"pro": "kratka_odpoved", "citace": "Nedostatek bílkovin a vlákniny"},
+    {"pro": "kratka_odpoved", "citace": "Období periody ženy."},
+    {"pro": "kratka_odpoved", "citace": "Když hubneš, máš častěji nižší krevní cukr."},
+    {"pro": "kratka_odpoved", "citace": "Jak tělu nejrychleji zvedneš krevní cukr? Ano, sladkým."},
+    {"pro": "kratka_odpoved", "citace": "Když máš nízký krevní cukr, nechceš čekat několik hodin na pořádnou dávku cukrů, co jde postupně po troškách. Tak vyšleš signál „máme chuť na sladké“ a to zvýšení krevního cukru si doručíš hned."},
+    {"pro": "faq[0]", "citace": "Když klient hubne moc rychle, přijde velká únava a hlad."},
+    {"pro": "faq[0]", "citace": "Unavený klient míň chodí, míň mává rukama, když mluví, a celkově šetří energii – tělo nechce zkrachovat, stejně jako my."},
+    {"pro": "faq[0]", "citace": "Tělo vidí „účetnictví“ a jedná pro přežití. Proto když mi klienti hlásí velkou únavu a hlad, nasazuje se tzv. diet break"},
+    {"pro": "faq[1]", "citace": "Když sníš sacharidy ve fazolích, je tam hromada bílkovin a vlákniny, takže se cítíš sytější, trávíš pomaleji a pomaleji se i ty „cukry“ uvolňují do krve. Krevní cukr ti tak drží stabilněji."},
+    {"pro": "faq[2]", "citace": "NĚKTERÉ ženy mívají nižší krevní cukr a projeví se to většími chutěmi. Často stačí povolit si trochu sladkého, udržet +- priority a je klid"},
+    {"pro": "faq[2]", "citace": "kolem periody čekej víc kg i větší míry – jde jen o dočasné zavodnění, které vždycky zase opadne"}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik bílkovin a vlákniny jíst, aby chutě ustoupily.",
+    "Jak diet break přesně funguje, článek nevysvětluje, odkazuje na samostatnou kapitolu.",
+    "Článek nedefinuje, co je hubnutí „moc rychle“."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] bez „vždycky“"
+}

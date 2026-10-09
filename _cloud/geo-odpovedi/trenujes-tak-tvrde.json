@@ -1,0 +1,96 @@
+{
+  "url": "https://martinbarna.cz/clanky/trenujes-tak-tvrde.html",
+  "titulek": "Trénuješ tak tvrdě, jak si myslíš? 160 sportovců napovídá",
+  "hlavni_otazka": "Trénuju v posilovně tak tvrdě, jak si myslím?",
+  "kratka_odpoved": "Nejspíš ne. Ve studii Barbosa-Netto (2021) zvládlo 160 silových sportovců se svou obvyklou váhou na 10 opakování na benči v průměru 16 opakování a jen 22 % se trefilo blízko svého odhadu. Většinu sérií proto drž na nule až třech opakováních v rezervě.",
+  "faq": [
+    {
+      "otazka": "Kolik opakování lidem ve studii reálně zbývalo?",
+      "odpoved": "Místo nuly v rezervě jim reálně zbývalo šest až osm opakování a vůbec o tom nevěděli. Skoro polovina, přesněji 47 %, udělala 15 a víc."
+    },
+    {
+      "otazka": "Mám tedy jít každou sérii do selhání?",
+      "odpoved": "Ne, to je druhý extrém a taky to nefunguje. Meta-analýza Refalo 2023 ukázala, že rozdíl mezi selháním a jedním až třemi opakováními v rezervě je pro růst svalu zanedbatelný (velikost účinku 0,19)."
+    },
+    {
+      "otazka": "Ovlivní blízkost selhání přírůstky síly?",
+      "odpoved": "V práci Ruple 2023 měla skupina s nulou až jedním opakováním v rezervě stejné přírůstky síly jako skupina se třemi až čtyřmi, jen se hůř zotavovala."
+    },
+    {
+      "otazka": "Jak často jít až do selhání?",
+      "odpoved": "Jednou za dva tři týdny si v poslední sérii doraz až do selhání. Uvidíš, jak selhání reálně vypadá, a tvůj odhad bude příště přesnější (Halperin 2022)."
+    },
+    {
+      "otazka": "Jak se v tréninku posouvat dál?",
+      "odpoved": "Progresivním přetížením: přidávej opakování nebo půl kila každý trénink a piš si to. Bez čísel je intenzita jen pocit."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Data od 160 silových sportovců naznačují, že nejspíš ne."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ve studii z roku 2021 (Barbosa-Netto a spol.) dostali účastníci jednoduchý úkol."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nejdřív řekli, jakou váhu obvykle dají na 10 opakování na benči."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "V průměru 16 místo deklarovaných 10."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Jen 22 % se trefilo blízko svého odhadu."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Většinu sérií drž na nule až třech opakováních v rezervě"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "jim reálně zbývalo šest až osm opakování, a vůbec o tom nevěděli."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Skoro polovina, přesněji 47 %, udělala 15 a víc."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Neznamená to, že máš jít každou sérii do selhání. To je druhý extrém a taky to nefunguje."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Meta-analýza (Refalo 2023, Sports Medicine) ukázala, že rozdíl mezi selháním a jedním až třemi opakováními v rezervě je pro růst svalu zanedbatelný (velikost účinku 0,19)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Ruple 2023 přidává druhou polovinu obrázku: skupina s nulou až jedním opakováním v rezervě měla stejné přírůstky síly jako skupina se třemi až čtyřmi, jen se hůř zotavovala."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Jednou za dva tři týdny si v poslední sérii doraz až do selhání."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "uvidíš, jak selhání reálně vypadá, a tvůj odhad bude příště přesnější (Halperin 2022)."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "A pak progresivní přetížení, přidávej opakování nebo půl kila každý trénink."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Piš si to. Bez čísel je intenzita jen pocit, ne data."
+    }
+  ],
+  "nejiste": [
+    "Článek neříká, jestli výsledky studie Barbosa-Netto platí i pro jiné cviky než bench press.",
+    "Článek neupřesňuje, jak dlouho a u kterých cviků jde přidávat opakování nebo půl kila každý trénink."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; faq[2] bez úvodního „Podle“; faq[4] bez „pocit, ne data“"
+}

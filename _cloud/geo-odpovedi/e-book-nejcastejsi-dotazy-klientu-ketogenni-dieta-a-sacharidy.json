@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-ketogenni-dieta-a-sacharidy.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Ketogenní dieta a sacharidy",
+  "hlavni_otazka": "Hubne se na ketogenní dietě líp než na jiných dietách?",
+  "kratka_odpoved": "Ne, pokud keto funguje, funguje jen díky kalorickému deficitu, a ten si vytvoříš i bez keta. Při stejných kaloriích a bílkovinách je poměr tuků a sacharidů z hlediska hubnutí podle studií jedno. Rychlý úbytek váhy na začátku je hlavně odvodnění.",
+  "faq": [
+    {
+      "otazka": "Proč na keto dietě rychle klesne váha?",
+      "odpoved": "Sacharidy se ukládají i do svalů a na 1 g sacharidu připadají 3 g vody. Když sacharidy vyřadíš, odejde s nimi i dost vody, takže většina rychlého úbytku je jen odvodnění."
+    },
+    {
+      "otazka": "Můžu být v ketóze a jíst dost bílkovin?",
+      "odpoved": "Ne. Tělo si z bílkovin vyrábí v játrech glukózu (glukoneogeneze), takže při efektivním množství bílkovin v ketóze nezůstaneš. Do ketózy se dostaneš jen při několika dnech v kuse s hodně málo sacharidy i bílkovinami."
+    },
+    {
+      "otazka": "Jsou sacharidy užitečné, když cvičím?",
+      "odpoved": "Ano, pro svaly a jejich výkon jsou hodně užitečné. Mají antikatabolické účinky a ukládají se do svalů. Dej si je i před tréninkem a mezi tréninky."
+    },
+    {
+      "otazka": "Proč cvičícímu člověku váha kolísá víc?",
+      "odpoved": "Trénink zvyšuje zásoby glykogenu ve svalech, u hodně trénovaného atleta je to skoro 3x tolik co u netrénovaného člověka. S každým 1 g sacharidu se váží 3 g vody, takže váha kolísá podle toho, jak máš svaly nasycené."
+    },
+    {
+      "otazka": "Je pravda, že naši předci nejedli sacharidy?",
+      "odpoved": "Jedli. Zubní analýza pravěkých pozůstatků ukázala, že pravěcí lidé jedli vlákninu, a vláknina je sacharid sama o sobě."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "A pokud ketogenní dieta funguje, funguje jen díky kalorickému deficitu. Ten si přitom vytvoříš i bez keta."},
+    {"pro": "kratka_odpoved", "citace": "poměr tuků a sacharidů je na tobě, protože při stejných kaloriích a bílkovinách je to z hlediska hubnutí podle studií jedno"},
+    {"pro": "kratka_odpoved", "citace": "Většina úbytku je ale jen odvodnění."},
+    {"pro": "faq[0]", "citace": "Říkali jsme si, že sacharidy se ukládají i do svalů. Na 1 g sacharidu připadají 3 g vody."},
+    {"pro": "faq[0]", "citace": "Když sacharidy vyřadíš, odejde s nimi i dost vody."},
+    {"pro": "faq[0]", "citace": "Většina úbytku je ale jen odvodnění."},
+    {"pro": "faq[1]", "citace": "Tělo si totiž z aminokyselin a bílkovin vyrábí v játrech glukózu, pomocí glukoneogeneze. Takže v ketóze nezůstaneš, protože k tomu není důvod."},
+    {"pro": "faq[1]", "citace": "Když jich ale v jídelníčku budeš mít tolik, kolik je efektivní, nemůžeš být zároveň v ketóze."},
+    {"pro": "faq[1]", "citace": "Jenže aby tělo přešlo do ketózy, musíš jíst několik dní v kuse nejen hodně málo sacharidů (tedy přílohy maximálně troška zeleniny), ale i málo bílkovin."},
+    {"pro": "faq[2]", "citace": "A pokud cvičíš, sacharidy jsou pro svaly a jejich výkon hodně užitečné. Mají antikatabolické účinky, ukládají se právě do svalů"},
+    {"pro": "faq[2]", "citace": "doporučuju je i před tréninkem a mezi tréninky."},
+    {"pro": "faq[3]", "citace": "u hodně trénovaného atleta kolem 32 g na 100 g. To je skoro 3x tolik."},
+    {"pro": "faq[3]", "citace": "Pojmou taky víc sacharidů a s nimi na každý 1 g sacharidu 3 g vody."},
+    {"pro": "faq[3]", "citace": "Klidně tam jsou velké výkyvy jen podle toho, jak akutně máš svaly nasycené glykogenem a vodou."},
+    {"pro": "faq[4]", "citace": "podle zubní analýzy pravěkých pozůstatků našli důkazy, že pravěcí lidé jedli vlákninu."},
+    {"pro": "faq[4]", "citace": "Vláknina je sacharid sama o sobě"}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní hranici sacharidů nebo bílkovin v gramech, při které tělo přejde do ketózy.",
+    "Článek nepíše, jestli má keto smysl z jiných než hubnoucích důvodů (například při nemoci).",
+    "Sacharidové vlny článek zmiňuje jen jednou větou (smysl hlavně u lidí s nízkým tělesným tukem, kteří hodně trénují) a nevysvětluje je."
+  ],
+  "kontrola": "opraveno: faq[2] otázka „Potřebuju sacharidy“ změněna na „Jsou sacharidy užitečné“ (článek říká „hodně užitečné“, ne nutné); faq[3] vypuštěna čísla 12 g a 32 g glykogenu na 100 g svaloviny (podezření na chybu jednotek v článku), ponecháno „skoro 3x tolik“",
+  "hlas": "upraveno: faq[4] bez třetího „Ne.“ v řadě"
+}

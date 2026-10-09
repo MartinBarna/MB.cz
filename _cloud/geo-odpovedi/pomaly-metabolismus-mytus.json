@@ -1,0 +1,120 @@
+{
+  "url": "https://martinbarna.cz/clanky/pomaly-metabolismus-mytus.html",
+  "titulek": "Za to může pomalý metabolismus? Mýtus o zpomaleném metabolismu",
+  "hlavni_otazka": "Může za to, že nehubnu, pomalý metabolismus?",
+  "kratka_odpoved": "Málokdy. Klidový výdej lidí stejné výšky, váhy a svalové hmoty je většinou hodně podobný. Viník bývá podceněný příjem a nadhodnocený výdej: jíš víc, než si myslíš, a vydáš míň, než si myslíš.",
+  "faq": [
+    {
+      "otazka": "Proč skoro nic nejím, a stejně nehubnu?",
+      "odpoved": "Když si lidé, co skoro nic nejedí, začnou přesně zapisovat, co snědí, výsledek bývá stejný: snědí výrazně víc, než si mysleli. Typická slepá místa jsou podhodnocené porce, dojídání po dětech a ze servíru, volné víkendy, tekuté kalorie a ujídání při vaření."
+    },
+    {
+      "otazka": "Zpomalí se metabolismus při dietě?",
+      "odpoved": "Trochu ano: při delší dietě se tělo přizpůsobí a začne trochu šetřit energií, odborně adaptivní termogeneze. Je to ale malý efekt, který po navýšení příjmu odezní, a deficit pořád funguje, jen ho možná musíš mírně doladit."
+    },
+    {
+      "otazka": "Jak můžu metabolismus reálně ovlivnit?",
+      "odpoved": "Víc svalů díky silovému tréninku, víc denního pohybu (NEAT), dost bílkovin a dost spánku. Žádná z těch pák nefunguje přes noc, ale dohromady udělají s denním výdejem mnohem víc než jakýkoliv „booster metabolismu“."
+    },
+    {
+      "otazka": "Kdy jít s problémy s hubnutím k lékaři?",
+      "odpoved": "U menšiny lidí stojí za potížemi s hmotností reálná zdravotní příčina, třeba snížená funkce štítné žlázy. Když po poctivém týdnu přesného zapisování pořád něco nesedí, nebo máš pocit, že je něco vážně mimo (výrazná únava, zima, vypadávání vlasů, suchá kůže, otoky, nálada na dně), jdi na vyšetření a krevní testy, fórum to nevyřeší."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Málokdy. Klidový výdej lidí stejné výšky, váhy a svalové hmoty je většinou hodně podobný."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Skutečný viník bývá podceněný příjem a nadhodnocený výdej: jíš víc, než si myslíš."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Jíš víc, než si myslíš, a vydáš míň, než si myslíš."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "začnou skutečně přesně zapisovat, co snědí, výsledek bývá pokaždé stejný: snědí výrazně víc, než si mysleli."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Podhodnocené porce."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Dojídání po dětech a ze servíru."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Víkendy. Pět dní v týdnu disciplína, dva dny volně."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tekuté kalorie. Káva se sirupem, džus, pivo, víno, smoothie."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Ujídání při vaření."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Když držíš delší dobu dietu, tělo se přizpůsobí a začne trochu šetřit energií, odborně adaptivní termogeneze."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Malý efekt. Řádově nepatrný posun, ne polovina tvého výdeje. Deficit pořád funguje, jen ho možná musíš mírně doladit."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Jakmile přestaneš dietit a navýšíš příjem, adaptace odezní."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Silový trénink dlouhodobě zvedá tvůj výdej a chrání svaly v dietě."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Víc denního pohybu (NEAT)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Dost bílkovin. Na jejich trávení tělo spotřebuje víc energie než na tuky a sacharidy (vyšší termický efekt)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Málo spánku rozhází hlad, chutě i chuť hýbat se."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Žádná z nich není kouzlo a žádná nefunguje přes noc, ale dohromady udělají s tvým denním výdejem mnohem víc než jakýkoliv"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "U menšiny lidí za potížemi s hmotností stojí reálná zdravotní příčina, třeba snížená funkce štítné žlázy (hypotyreóza) nebo jiné hormonální záležitosti."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Když si dáš poctivý týden vážení a zapisování a pořád něco nesedí."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Když máš pocit, že je něco vážně mimo (výrazná únava, zima, vypadávání vlasů, suchá kůže, otoky, nálada na dně), nehádej a neřeš to čtením fór."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Patří to k lékaři na vyšetření a krevní testy."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Když po tomhle pořád něco nesedí, jdi k lékaři. Ne na fórum. Na vyšetření."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí čísla, jak velké jsou rozdíly v klidovém výdeji mezi lidmi ani o kolik kalorií adaptivní termogeneze výdej sníží.",
+    "Článek neříká, jak dlouhá dieta už je „delší doba“, ani jak dlouhou pauzu na udržovacím příjmu dát."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „Skutečný“; faq[0] bez „pokaždé“; faq[3] bez „ne na fórum“"
+}

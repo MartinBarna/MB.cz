@@ -1,0 +1,76 @@
+{
+  "url": "https://martinbarna.cz/clanky/tuky-a-light-potraviny-mytus.html",
+  "titulek": "Tuk tě dělá tlustým? Mýtus o tucích a „light“ potravinách",
+  "hlavni_otazka": "Tloustne se z tuku v jídle a pomáhají light potraviny zhubnout?",
+  "kratka_odpoved": "Tloustneš z kalorií navíc, ať přijdou odkudkoli. Tuk je jen energeticky hustší, zhruba 9 kcal na gram proti okolo 4 u bílkovin a sacharidů, takže se s ním snáz přejíš. Nálepka „light“ ti sama o sobě nezhubne ani gram.",
+  "faq": [
+    {
+      "otazka": "Proč light potraviny často nepomáhají?",
+      "odpoved": "Když výrobce z produktu vyndá tuk, doplní cukr, škrob, zahušťovadla nebo různé náhražky. Jídlo pak bývá míň sytící a kaloricky podobné, někdy i vyšší, takže máš dřív hlad a kalorií jsi neušetřil."
+    },
+    {
+      "otazka": "Proč tělo tuk potřebuje?",
+      "odpoved": "Má z něj esenciální mastné kyseliny, které si samo neumí vyrobit, a bez tuku v jídle se ti hůř vstřebávají vitaminy A, D, E a K. Tuk hraje roli i v tvorbě hormonů."
+    },
+    {
+      "otazka": "Může mi tuk pomoct držet dietu?",
+      "odpoved": "Může. Kvalitní zdroje jako olivový olej, ořechy, ryby, vejce nebo avokádo udělají jídlo chutné a sytící, a když po jídle nemáš za hodinu hlad, deficit držíš mnohem líp."
+    },
+    {
+      "otazka": "Na co si dát u tučných potravin pozor?",
+      "odpoved": "Na porce energeticky hustých věcí jako oleje, ořechy, máslo a ořechová másla: nemusíš je vyhazovat, jen je odměřuj a počítej. Lžíce oleje má klidně přes 100 kcal a pár soust ořechů snadno udělá pár set kalorií."
+    },
+    {
+      "otazka": "Jak poznám, jestli se light verze vyplatí?",
+      "odpoved": "Otoč obal a koukni na kalorie a cukr, nápis vepředu přeskoč. Když má light verze stejně nebo víc kalorií a víc cukru, není to žádná výhra."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tloustneš z toho, že přijmeš víc kalorií, než spálíš, ne z toho, že na talíři byl tuk. A „light“ nálepka ti sama o sobě nezhubne ani gram."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tuk má zhruba 9 kcal na gram, zatímco bílkoviny a sacharidy okolo 4."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tuk je jen energeticky hustší, proto se s ním snáz přejíš, když nedáváš pozor na porce."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Když výrobce z produktu vyndá tuk, musí dodat chuť a konzistenci, a tak doplní cukr, škrob, zahušťovadla nebo různé náhražky."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Dvě věci se přitom dějí zároveň: jídlo bývá míň sytící (tuk zasytí, cukr a škrob tolik ne) a kaloricky je často podobné, někdy i vyšší. Takže máš dřív hlad a kalorií jsi neušetřil."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Tělo z něj má esenciální mastné kyseliny, které si samo neumí vyrobit. Bez tuku v jídle se ti hůř vstřebávají vitaminy A, D, E a K. Ty jsou rozpustné právě v tuku. Tuk hraje roli i v tvorbě hormonů."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "A rozumný podíl tuku ti to vydržení usnadní. Kvalitní zdroje jako olivový olej, ořechy, ryby, vejce nebo avokádo udělají jídlo chutné a sytící. Když je jídlo dobré a po něm nemáš za hodinu hlad, deficit držíš mnohem líp."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Porce energeticky hustých věcí. Oleje, ořechy, máslo, ořechová másla: tady kalorie utečou rychle. Nemusíš je vyhazovat, jen je odměřuj a počítej. Pár soust ořechů snadno udělá pár set kalorií."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Lžíce oleje má klidně přes 100 kcal a ani si nevšimneš, že jsi něco snědl."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "„Light\" čti kriticky. Otoč obal a koukni na kalorie a cukr, ne na nápis vepředu. Když má light verze stejně nebo víc kalorií a víc cukru, není to žádná výhra."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí doporučený podíl tuku ve stravě ani konkrétní denní množství v gramech.",
+    "Srovnání plnotučného a light jogurtu je obecné; článek neuvádí konkrétní hodnoty kalorií ani cukru."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „Netloustneš z X, ale z Y“; faq[4] bez „ne na nápis vepředu“"
+}

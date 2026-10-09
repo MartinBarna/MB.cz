@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/nocni-smeny-a-hubnuti.html",
+  "titulek": "Pracuješ v noci? Hubnutí je těžší, a věda ví proč",
+  "hlavni_otazka": "Proč se mi na nočních směnách hůř hubne a co s tím dělat?",
+  "kratka_odpoved": "Na nočních nebo rotujících směnách to máš objektivně těžší, protože rozhozený cirkadiánní rytmus poplete signály hladu a sytosti. Termodynamika ale platí pořád, takže zhubnout můžeš dál, jen potřebuješ chytřejší systém. Hlavní jídlo dej před směnu nebo po ní, jídlo si připrav z domu a spánek ber jako prioritu.",
+  "faq": [
+    {
+      "otazka": "O kolik směnný provoz zvyšuje riziko obezity a metabolického syndromu?",
+      "odpoved": "Meta-analýza z roku 2018 (Sun, Obesity Reviews) dává směnným pracovníkům o 23 % vyšší riziko obezity, meta-analýza z roku 2021 (Wang, Chronobiology International) o 30 % vyšší riziko metabolického syndromu. U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné."
+    },
+    {
+      "otazka": "Proč mám na noční směně větší hlad?",
+      "odpoved": "Rozhozený cirkadiánní rytmus poplete signály hladu a sytosti, takže tělo pořádně neví, kdy už má dost. Při úplně stejných jídlech mívají lidé na nočních směnách vyšší hladiny inzulinu a leptinu než ti na denních. K tomu se přidá horší spánek, chuť na něco rychlého a slabá nabídka jídla v práci ve tři ráno."
+    },
+    {
+      "otazka": "Kdy mám jíst, když pracuju v noci?",
+      "odpoved": "Hlavní jídlo dej před směnu nebo po ní. Jídlo si připrav z domu, ať se vyhneš tomu, co je zrovna po ruce ve tři ráno."
+    },
+    {
+      "otazka": "Mám kvůli horšímu spánku jet větší deficit?",
+      "odpoved": "Ne. Spánek ber jako prioritu, protože méně spánku znamená větší hlad."
+    },
+    {
+      "otazka": "Pomůže si na noční směně zdřímnout?",
+      "odpoved": "Ano, krátký šlofík 20–30 minut doprostřed směny pomůže s energií i s chutěmi."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Děláš noční nebo rotující směny? Pak to máš objektivně těžší než kolegové na denním provozu."},
+    {"pro": "kratka_odpoved", "citace": "Rozhozený cirkadiánní rytmus poplete signály hladu a sytosti."},
+    {"pro": "kratka_odpoved", "citace": "Tohle si drž: termodynamika platí pořád."},
+    {"pro": "kratka_odpoved", "citace": "Zhubnout můžeš dál, jen na to potřebuješ chytřejší systém."},
+    {"pro": "kratka_odpoved", "citace": "Hlavní jídlo dej před směnu nebo po ní, ne doprostřed noci."},
+    {"pro": "kratka_odpoved", "citace": "Jídlo si připrav z domu."},
+    {"pro": "kratka_odpoved", "citace": "Spánek ber jako prioritu, ne jako důvod k většímu deficitu."},
+    {"pro": "faq[0]", "citace": "+23 % vyšší riziko obezity u směnných pracovníků (Sun a kol., 2018, meta-analýza, Obesity Reviews)."},
+    {"pro": "faq[0]", "citace": "+30 % vyšší riziko metabolického syndromu (Wang a kol., 2021, meta-analýza, Chronobiology International)."},
+    {"pro": "faq[0]", "citace": "U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné."},
+    {"pro": "faq[1]", "citace": "Rozhozený cirkadiánní rytmus poplete signály hladu a sytosti. Tělo pak pořádně neví, kdy už má dost."},
+    {"pro": "faq[1]", "citace": "Při úplně stejných jídlech mívají lidé na nočních směnách vyšší hladiny inzulinu a leptinu než ti na denních."},
+    {"pro": "faq[1]", "citace": "K tomu přidej horší spánek a chuť na něco rychlého. A nabídka jídla v práci ve tři ráno bývá slabá."},
+    {"pro": "faq[2]", "citace": "Hlavní jídlo dej před směnu nebo po ní, ne doprostřed noci."},
+    {"pro": "faq[2]", "citace": "Jídlo si připrav z domu. Vyhneš se tomu, co je zrovna po ruce ve tři ráno."},
+    {"pro": "faq[3]", "citace": "Spánek ber jako prioritu, ne jako důvod k většímu deficitu. Méně spánku = větší hlad."},
+    {"pro": "faq[4]", "citace": "Strategický šlofík 20–30 minut doprostřed směny pomůže s energií i s chutěmi."}
+  ],
+  "nejiste": [
+    "Článek neříká, jestli se „zhruba dvojnásobné“ riziko u lidí s nočními směnami přes 20 let týká obezity, nebo metabolického syndromu, a neuvádí k tomu zdroj.",
+    "Článek neuvádí, o kolik vyšší jsou hladiny inzulinu a leptinu u nočních směn ani z jaké studie údaj pochází."
+  ],
+  "kontrola": "opraveno: otázka faq[0] rozšířena o metabolický syndrom, protože odpověď uvádí i jeho riziko a článek neříká, ke kterému riziku patří „zhruba dvojnásobné“ u nočních směn přes 20 let (pod otázkou jen na obezitu by to četlo jako dvojnásobné riziko obezity)",
+  "hlas": "upraveno: faq[0] bez úvodního „Podle“; faq[2] a faq[3] bez „X, ne Y“; faq[4] „strategický šlofík“ → „krátký šlofík“"
+}

@@ -1,0 +1,109 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-zhubnout-po-50.html",
+  "titulek": "Jak zhubnout po 50: metabolismus, bílkoviny a silový trénink",
+  "hlavni_otazka": "Jak zhubnout po padesátce, když se mi zpomalil metabolismus?",
+  "kratka_odpoved": "Metabolismus po padesátce nepadá tak, jak se říká, ubývá sval a pohyb. Drž mírný deficit 15 až 20 % pod výdejem, jez 1,6 až 2,2 g bílkovin na kilo a posiluj dvakrát až třikrát týdně. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, konkrétní nastavení probírej se svým lékařem.",
+  "faq": [
+    {
+      "otazka": "Proč je silový trénink po padesátce tak důležitý?",
+      "odpoved": "Ve studii se 160 lidmi ve vyšším věku s obezitou klesla váha ve všech cvičících skupinách o 9 %, beztuková hmota ale ubyla o 5 % u samotného aerobního tréninku a jen o 2 % u silového a o 3 % u kombinace. Kombinace silového a aerobního tréninku vyšla jako nejúčinnější. Prakticky to znamená dvakrát až třikrát týdně silový trénink celého těla s postupným přidáváním zátěže."
+    },
+    {
+      "otazka": "Kolik bílkovin jíst po padesátce, když hubnu?",
+      "odpoved": "V praxi cílím na 1,6 až 2,2 g na kilogram tělesné hmotnosti, rozdělené do všech jídel dne. Metaanalýza u lidí starších 50 let ukázala, že při vyšším příjmu bílkovin si udrželi víc svalové hmoty a shodili víc tuku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber tato čísla jako orientaci a nastavení probírej se svým lékařem."
+    },
+    {
+      "otazka": "Jak velký deficit držet po padesátce?",
+      "odpoved": "Mírný a dlouhý, 15 až 20 % pod denní výdej, takže při udržovačce 2 200 kcal je cíl kolem 1 800 kcal. Rychleji to jde taky, jen za cenu většího úbytku svalu a horšího spánku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, probírej konkrétní nastavení se svým lékařem."
+    },
+    {
+      "otazka": "Proč mi v přechodu váha neukazuje, co se s tělem děje?",
+      "odpoved": "Ve studii SWAN se se začátkem přechodu zdvojnásobila rychlost přibývání tuku a beztuková hmota začala klesat, zhruba do dvou let po poslední menstruaci. Váha přitom může ukazovat skoro totéž. Sleduj proto i obvod pasu, fotky po měsíci a kolik uzvedneš."
+    },
+    {
+      "otazka": "Kolik kilo za měsíc je po padesátce rozumné zhubnout?",
+      "odpoved": "U většiny lidí 2 až 3 kg měsíčně na začátku a pak méně, jak klesá hmotnost. Když jde váha dolů rychleji několik týdnů po sobě a zároveň ti klesá síla v tréninku, ubíráš moc."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Metabolismus po padesátce nepadá tak, jak se říká. Ubývá sval a ubývá pohyb, a to se dá ovlivnit."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Odsud plyne, proč u většiny lidí funguje mírný a dlouhý deficit líp než hladovka: 15 až 20 % pod tvůj denní výdej."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "V praxi cílím u klientů na 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti a rozděluju je do všech jídel dne."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Prakticky to znamená dvakrát až třikrát týdně silový trénink celého těla, šest až osm cviků, a postupné přidávání zátěže nebo opakování."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber čísla níž jako orientaci a konkrétní nastavení probírej se svým lékařem."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tohle je část, kterou lidé po padesátce vynechávají nejčastěji, a přitom má nejtvrdší data. Studie ze 160 lidí ve vyšším věku s obezitou (Villareal a kolektiv, New England Journal of Medicine 2017, PMID 28514618) rozdělila účastníky na hubnutí s aerobním tréninkem, se silovým, s kombinací obojího, a na kontrolní skupinu bez programu."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tělesná hmotnost klesla ve všech cvičících skupinách o 9 %, takže na váze mezi nimi rozdíl nebyl. Rozdíl byl v tom, co z těla zmizelo. Beztuková hmota ubyla o 5 % u samotného aerobního tréninku, ale jen o 2 % u silového a o 3 % u kombinace."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Autoři to shrnují tak, že z porovnávaných variant byla kombinace silového a aerobního tréninku nejúčinnější."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Prakticky to znamená dvakrát až třikrát týdně silový trénink celého těla, šest až osm cviků, a postupné přidávání zátěže nebo opakování."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "V praxi cílím u klientů na 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti a rozděluju je do všech jídel dne."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Metaanalýza dvaceti randomizovaných studií u lidí starších 50 let (Kim a kolektiv, Nutrition Reviews 2016, PMID 26883880) porovnávala hubnutí s nižším a vyšším příjmem bílkovin (hranice byla 25 % energie, respektive 1,0 g na kilogram za den). Závěr abstraktu je stručný: starší dospělí si při vyšším příjmu bílkovin udrželi víc svalové hmoty a shodili víc tuku."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber čísla níž jako orientaci a konkrétní nastavení probírej se svým lékařem."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Odsud plyne, proč u většiny lidí funguje mírný a dlouhý deficit líp než hladovka: 15 až 20 % pod tvůj denní výdej. Když tvoje udržovačka vychází na 2 200 kcal, cíl je někde kolem 1 800 kcal. Rychleji to jde taky, jen za cenu většího úbytku svalu a horšího spánku, což je po padesátce ta poslední věc, kterou chceš obětovat."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber čísla níž jako orientaci a konkrétní nastavení probírej se svým lékařem."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Dlouhodobá studie SWAN (Greendale a kolektiv, JCI Insight 2019, PMID 30843880) sledovala složení těla kolem poslední menstruace. Se začátkem přechodu se rychlost přibývání tuku zdvojnásobila a beztuková hmota začala klesat, obojí pokračovalo do zhruba dvou let po poslední menstruaci a pak se to zastavilo."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Z toho plyne praktická věc: váha může ukazovat skoro totéž, zatímco poměr tuku a svalu se mění. Proto po padesátce nesleduj jen jedno číslo a přidej k němu obvod pasu, fotky po měsíci a to, kolik uzvedneš."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "U většiny lidí 2 až 3 kg měsíčně na začátku a pak méně, jak klesá hmotnost. Když jde váha dolů rychleji několik týdnů po sobě a zároveň ti klesá síla v tréninku, ubíráš moc."
+    }
+  ],
+  "nejiste": [
+    "Článek neříká, o kolik denní výdej klesá po 60. roce, jen že „klesat začíná až u starších lidí\".",
+    "Tvrzení, že lidé podceňují příjem „běžně o 20 až 50 %\", je v článku bez zdroje, proto jsem ho nepoužil.",
+    "Rozmezí 1,6 až 2,2 g bílkovin na kilo je autorova praxe u klientů; citovaná metaanalýza dělila skupiny jinou hranicí (25 % energie, resp. 1,0 g na kilo), takže rozmezí sama nepotvrzuje.",
+    "Tempo „0,5 až 0,7 % tělesné hmotnosti týdně\" a „2 až 3 kg měsíčně\" z FAQ článku jsou bez zdroje; použil jsem jen druhé, tak jak ho článek podává.",
+    "Kolik kroků denně, článek řeší jinde, tady konkrétní číslo není.",
+    "Hormonální léčbu v přechodu článek posílá ke gynekologovi a nerozebírá ji.",
+    "Článek u 75 kg uvádí 120 až 140 g bílkovin denně, ale 1,6 až 2,2 g na kilo dává při 75 kg 120 až 165 g. Příklad proto v odpovědích není; čísla v článku by stálo za to sladit."
+  ],
+  "kontrola": "opraveno: kratka_odpoved a faq[1] doplněny o upozornění na léky na štítnou žlázu, cukrovku nebo tlak a lékaře (článek ho vztahuje na všechna čísla), faq[2] doplněno „nebo řešíš čerstvou diagnózu“; z faq[1] vypuštěn příklad 75 kg = 120 až 140 g, který s 1,6 až 2,2 g/kg nesedí; nejiste upraveno",
+  "hlas": "upraveno: faq[1] „v praxi se cílí“ → 1. osoba"
+}

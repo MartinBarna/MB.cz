@@ -1,0 +1,90 @@
+{
+  "url": "https://martinbarna.cz/clanky/jist-vecer-tloustne.html",
+  "titulek": "Jíst večer tloustne? Mýtus o jídle po 18. hodině",
+  "hlavni_otazka": "Ztloustnu, když budu jíst po 18. hodině?",
+  "kratka_odpoved": "Kvůli samotné hodině na hodinách neztloustneš, rozhodují celkové kalorie za den. Dřívější večeře může s hubnutím trochu pomoct, hlavně přes chuť a menší večerní přejídání. Není to ale zázrak ani povinnost.",
+  "faq": [
+    {
+      "otazka": "Proč lidi hubnou, když přestanou jíst po šesté?",
+      "odpoved": "Zkrátí si tím okno, ve kterém jedí, a snědí míň kalorií celkově: vynechají večerní uzobávání u televize, druhou večeři nebo noční nájezd na lednici. Samotná hodina v tom roli nehraje."
+    },
+    {
+      "otazka": "Pomáhá dřívější večeře zhubnout?",
+      "odpoved": "Pár studií naznačuje, že může mírně pomoct i při podobném příjmu. V randomizované studii s 82 ženami v redukčním režimu zhubla po 12 týdnech skupina s večeří v 19:00–19:30 víc než skupina s večeří v 22:30–23:00 (−6,7 vs −4,8 kg). Celkové kalorie jsou ale motor, načasování je nanejvýš malé kolečko navíc."
+    },
+    {
+      "otazka": "Proč by dřívější jídlo mohlo s hubnutím pomáhat?",
+      "odpoved": "Vysvětlení jsou tři. Tělo je na trávení o něco líp naladěné přes den, ale ten efekt je malý. Pozdní jedení bývá spojené s větší chutí a horším řízením hladu druhý den a večer je past na bezmyšlenkovité uzobávání."
+    },
+    {
+      "otazka": "Jak jíst večer, když chci zhubnout?",
+      "odpoved": "Klidně jez večer, jen hlídej celkové kalorie a bílkoviny. Naplánuj si slušnou večeři s bílkovinami a vlákninou, které zasytí, a dej si pozor na sáček brambůrek u seriálu."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "kvůli samotné hodině na hodinách neztloustneš. Rozhodují celkové kalorie za den."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Dřívější večeře může trochu pomoct, hlavně přes chuť a menší večerní přejídání, ale není to zázrak ani povinnost."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Když někdo začne jíst „nic po šesté\" a zhubne, není to tou hodinou, ale tím, že tím pravidlem zkrátil okno, ve kterém jí, a tím spořádal míň kalorií celkově. Vynechal večerní uzobávání u televize, druhou večeři, noční nájezd na lednici."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Podle databáze PubMed pár studií naznačuje, že dřívější jídlo může s hubnutím mírně pomoct, i když srovnáš podobný příjem kalorií:"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Randomizovaná studie s 82 ženami v redukčním režimu porovnala večeři brzy (19:00–19:30) versus pozdě (22:30–23:00). Po 12 týdnech skupina s dřívější večeří zhubla víc (−6,7 vs −4,8 kg)"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Vezmi to takhle: celkové kalorie jsou motor, načasování je nanejvýš malé kolečko navíc."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Reálnější vysvětlení jsou tři:"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Cirkadiánní rytmus. Tělo je na trávení a využití energie o něco líp naladěné přes den než pozdě v noci. Efekt je ale malý a nepřebije celkovou bilanci."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Chuť a hlad. Pozdní a noční jedení bývá spojené s větší chutí a horším řízením hladu druhý den, a to už snadno vede k víc snědeným kaloriím."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Chování, ne biologie. Večer je klasická past na bezmyšlenkovité uzobávání: u seriálu, z nudy, po náročném dni."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Ne. Klidně jez večer, hlídej ale celkové kalorie a bílkoviny."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Naplánuj si slušnou večeři, klidně i pozdě."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Dej si pozor na bezmyšlenkovité uzobávání. Ne na hodinu, ale na sáček brambůrek u seriálu."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Bílkoviny a vláknina do večeře. Zasytí a udrží tě v klidu, takže se večer líp ubráníš mlsání."
+    }
+  ],
+  "nejiste": [
+    "Studie s 82 ženami se týkala žen v redukčním režimu; článek neříká, jestli by výsledek platil i pro muže nebo pro lidi mimo dietu, proto je v odpovědi podmínka zachovaná.",
+    "Studii s 97 dospělými (dřívější začátek jídelního okna) a studii u dospívajících článek popisuje jen slovně bez čísel, proto je v odpovědích nerozvádím.",
+    "Seznam zdrojů [1] až [3] je v článku až pod sekcí „Mohlo by tě zajímat“ (Madjd 2021, Hatanaka 2022, Hegedus 2024); citace se opírají jen o text výkladu, ne o tento seznam.",
+    "Článek neříká, o kolik hodin dřív by večeře měla být, aby to mělo smysl."
+  ],
+  "kontrola": "opraveno: faq[1] doplněno „v redukčním režimu“ ke studii s 82 ženami (podmínka studie chyběla, ačkoli nejiste tvrdilo, že je zachovaná)",
+  "hlas": "upraveno: faq[0] bez úvodního „Ne kvůli té hodině“; faq[2] bez „Článek uvádí“"
+}

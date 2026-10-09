@@ -68,6 +68,7 @@ jobs:
             _import/**
             _zaloha/**
             _zdroje/**
+            _cloud/**
             Logo-rebrand/**
             scripts/**
             akademie/_ai/**

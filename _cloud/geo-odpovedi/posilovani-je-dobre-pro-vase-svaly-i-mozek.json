@@ -1,0 +1,81 @@
+{
+  "url": "https://martinbarna.cz/clanky/posilovani-je-dobre-pro-vase-svaly-i-mozek.html",
+  "titulek": "Posilování je dobré pro vaše SVALY i MOZEK!",
+  "hlavni_otazka": "Prospívá posilování i mozku, nebo je pravda, že svalovci jsou hloupí?",
+  "kratka_odpoved": "Layne Norton, PhD, to shrnuje tak, že výzkum ukazuje pravý opak mýtu o hloupých svalovcích: budování svalů a síly prospívá tělu i mozku. Mezi svalovou hmotou a silou a poklesem kognice je silná nepřímá souvislost, stejně jako u rizika Alzheimerovy choroby, demence, úzkosti a deprese. Pravidelný silový trénink navíc zlepšuje i samotné myšlení.",
+  "faq": [
+    {
+      "otazka": "Pomáhá silový trénink na depresi a úzkost?",
+      "odpoved": "Norton, jehož text tady překládám, píše, že pravidelný silový trénink prokazatelně snižuje příznaky deprese, úzkosti i schizofrenie. Odkazuje přitom na studie s PMID 26375919, 37429171 a 40711106."
+    },
+    {
+      "otazka": "U koho silový trénink zlepšuje myšlení?",
+      "odpoved": "U zdravých lidí i u lidí s kognitivním postižením, píše Norton. Zlepšují se dokonce i výsledky testů u dětí, které pravidelně trénují."
+    },
+    {
+      "otazka": "Pomáhá pohyb starším lidem proti kognitivnímu úpadku?",
+      "odpoved": "Zahraniční studie (například Frontiers in Neuroscience 2019) uvádějí, že pravidelný pohyb včetně silového tréninku snižuje u starších lidí riziko úpadku. Práce z PMC (například BMC Geriatrics 2020) potvrzují, že jakýkoli pohyb zlepšuje seniorům kognitivní funkce i celkovou pohodu."
+    },
+    {
+      "otazka": "Jak častá je demence v Česku?",
+      "odpoved": "V ČR demence postihuje zhruba 7–8 % lidí nad 65 let, podle ČSÚ a odhadů ResearchGate 2022 jde o zhruba 120–150 tisíc případů a většinu tvoří Alzheimer. Lidé nad 65 let přitom podle ČSÚ 2023 tvoří asi 20 % obyvatel."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Výzkum ukazuje pravý opak. Budování svalů a síly prospívá tělu i mozku."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Mezi svalovou hmotou a silou na jedné straně a poklesem kognice na straně druhé je silná nepřímá souvislost. Totéž platí pro riziko Alzheimerovy choroby, demence, úzkosti a deprese"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "A zlepšuje i samotné myšlení."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tenhle text je překladem obsahu od Layne Nortona, PhD, vědce a experta na výživu a trénink."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Pravidelný silový trénink navíc prokazatelně snižuje příznaky deprese, úzkosti i schizofrenie (PMIDs: 26375919, 37429171, 40711106)."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tenhle text je překladem obsahu od Layne Nortona, PhD, vědce a experta na výživu a trénink."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "U zdravých lidí, u lidí s kognitivním postižením, a dokonce i výsledky testů u dětí, které pravidelně trénují"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Tenhle text je překladem obsahu od Layne Nortona, PhD, vědce a experta na výživu a trénink."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Studie ze zahraničí (např. Frontiers in Neuroscience 2019) to potvrzují: pravidelný pohyb včetně silového tréninku snižuje u starších lidí riziko úpadku."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "práce z PMC (např. BMC Geriatrics 2020) potvrzují, že jakýkoli pohyb zlepšuje seniorům kognitivní funkce i celkovou pohodu"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "V ČR demence postihuje zhruba 7–8 % lidí nad 65 let (podle ČSÚ a odhadů ResearchGate 2022 jde o ~120–150 tisíc případů, většinu tvoří Alzheimer)"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "ČSÚ 2023: lidé nad 65 let tvoří ~20 % obyvatel"
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, jaký objem, frekvence nebo typ silového tréninku je potřeba, aby se přínosy pro mozek projevily.",
+    "Článek mluví o souvislosti mezi svaly a kognicí, ale nerozebírá, nakolik jde o příčinu a nakolik jen o korelaci.",
+    "U části zdrojů (Frontiers in Neuroscience 2019, BMC Geriatrics 2020, ResearchGate 2022) článek neuvádí přesnou citaci ani autory."
+  ],
+  "kontrola": "opraveno: faq[1] (zlepšení myšlení u zdravých, s kognitivním postižením a u dětí) přisouzeno Laynu Nortonovi, jehož text článek překládá",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[1] bez tří „Podle Layna Nortona“ za sebou, přisouzení v 1. osobě („tady překládám“)"
+}

@@ -1,0 +1,109 @@
+{
+  "url": "https://martinbarna.cz/clanky/toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o.html",
+  "titulek": "Toxiny v jídle: Strach versus realita aneb 8 nejčastějších „toxinových“ obav 🤦‍♂️",
+  "hlavni_otazka": "Jsou pesticidy, sladidla, GMO a další „toxiny“ v jídle nebezpečné?",
+  "kratka_odpoved": "Většina „toxinových“ obav je výrazně přehnaná. Ve vyspělých zemích má drtivá většina potravin rezidua pesticidů hluboko pod bezpečnou hranicí a umělá sladidla jsou v rámci přijatelného denního příjmu bezpečná. Zdraví doopravdy ohrožuje spíš nadváha, nedostatek pohybu, špatný spánek, chronický stres, kouření a nadměrný alkohol.",
+  "faq": [
+    {
+      "otazka": "Jsou umělá sladidla bezpečná?",
+      "odpoved": "Schválila je FDA, EFSA i WHO a v rámci přijatelného denního příjmu jsou bezpečná. Problémy, třeba s mikrobiomem, přicházejí až při extrémních dávkách, řádově desítky litrů dietních limonád denně po léta."
+    },
+    {
+      "otazka": "Mám se vyhýbat GMO potravinám?",
+      "odpoved": "Nemusíš. Patří k nejpřísněji testovaným potravinám na světě a desítky let studií nepřinesly žádný důkaz škodlivosti."
+    },
+    {
+      "otazka": "Jsou konzervanty a aditiva v průmyslových potravinách nebezpečné?",
+      "odpoved": "Většina z nich je na seznamu GRAS (obecně považováno za bezpečné) a riziko hrozí jen tomu, kdo dlouhodobě jí hodně ultra-zpracovaných potravin. Ať tvoji stravu z 80–90 % tvoří minimálně zpracované věci, občasný hot dog nebo chipsy tě nezabijí."
+    },
+    {
+      "otazka": "Škodí potravinářská barviva dětem?",
+      "odpoved": "Schválila je FDA a EFSA a studie, které ukazují problémy, jedou s dávkami 10–100× vyššími, než kolik člověk reálně sní. Když máš citlivé dítě, můžeš se jim vyhnout, pro většinu lidí to ale problém není."
+    },
+    {
+      "otazka": "Mám řešit mikroplasty?",
+      "odpoved": "Mikroplasty jsou všude, ale jejich zdravotní dopady zatím neznáme, výzkum teprve začíná. Zatím se tím netrap, nemá smysl honit něco, čemu se stejně nevyhneš."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Většina „toxinových“ obav je přehnaná."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Realita: Ve vyspělých zemích (USA, EU) limity hlídají agentury EPA, FDA a USDA. Testy ukazují, že drtivá většina potravin má rezidua hluboko pod bezpečnou hranicí."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "V rámci přijatelného denního příjmu jsou bezpečná."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Co naše zdraví ohrožuje doopravdy:"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "❌Nadváha / obezita"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "❌Nedostatek pohybu"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "❌Špatný spánek"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "❌Chronický stres"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "❌Kouření a nadměrný alkohol"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Realita: Schválila je FDA, EFSA i WHO. V rámci přijatelného denního příjmu jsou bezpečná. Problémy (třeba s mikrobiomem) přicházejí až při extrémních dávkách, řádově desítky litrů dietních limonád denně po léta."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Realita: Patří k nejpřísněji testovaným potravinám na světě (FDA, USDA, EFSA, WHO). Desítky let studií a žádný důkaz škodlivosti."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Doporučení: Vyhýbat se jim nemusíš."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Realita: Většina z nich je na seznamu GRAS (obecně považováno za bezpečné). Riziko hrozí jen tomu, kdo dlouhodobě jí hodně ultra-zpracovaných potravin."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Doporučení: Ať tvoji stravu z 80–90 % tvoří minimálně zpracované věci: maso, vejce, zelenina, ovoce, celozrnné produkty, zdravé tuky. Občasný hot dog nebo chipsy tě nezabijí."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Realita: Schválila je FDA a EFSA. Studie, co ukazují problémy, jedou s dávkami 10–100× vyššími, než kolik člověk reálně sní."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Doporučení: Když máš citlivé dítě, můžeš se jim vyhnout. Pro většinu lidí to problém není."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Realita: Ano, jsou všude. Jenže jejich zdravotní dopady zatím neznáme, výzkum teprve začíná."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Doporučení: Zatím se tím netrap. Nemá smysl honit něco, čemu se stejně nevyhneš."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní hodnoty přijatelného denního příjmu jednotlivých sladidel.",
+    "U endokrinních disruptorů článek nejmenuje konkrétní látky, uvádí jen, že důkazy jsou smíšené a účinek malý.",
+    "U tvrzení, že GMO potraviny „často bývají dokonce výživnější“, článek neuvádí příklady ani zdroj."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; kratka_odpoved, faq[1] a faq[4] bez „podle článku / Článek radí“"
+}

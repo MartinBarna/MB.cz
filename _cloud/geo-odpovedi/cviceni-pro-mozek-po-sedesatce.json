@@ -1,0 +1,38 @@
+{
+  "url": "https://martinbarna.cz/clanky/cviceni-pro-mozek-po-sedesatce.html",
+  "titulek": "Nejlepší cvičení pro mozek po šedesátce",
+  "hlavni_otazka": "Jaké cvičení je nejlepší pro mozek po šedesátce?",
+  "kratka_odpoved": "Záleží na tom, co chceš zlepšit. Network meta-analýza 37 randomizovaných studií s 2 585 lidmi nad 60 let (Zhang 2025) dala silový trénink na první místo v celkové kognici i kontrole pozornosti. Aerobní trénink vyhrál v paměti, tai-či a jóga v pracovní paměti a přepínání mezi úkoly.",
+  "faq": [
+    {
+      "otazka": "Proč silový trénink pomáhá mozku?",
+      "odpoved": "Silovka víc zvedá IGF-1, což pomáhá plasticitě synapsí. Aerobní trénink víc tlačí BDNF, který stojí za tvorbou nových neuronů. Jiná fyziologie, jiné oblasti mozku."
+    },
+    {
+      "otazka": "Je pro paměť lepší kardio, nebo posilování?",
+      "odpoved": "V meta-analýze Zhang 2025 vyhrál v paměti aerobní trénink. Silovka skončila první v celkové kognici a v kontrole pozornosti."
+    },
+    {
+      "otazka": "Je silový trénink po čtyřicítce jen o vzhledu?",
+      "odpoved": "Ne. Drží ti svaly a zároveň hlavu, dvě věci za jeden trénink."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Network meta-analýza 37 randomizovaných studií (2 585 lidí nad 60, Zhang 2025, Experimental Gerontology)"},
+    {"pro": "kratka_odpoved", "citace": "silovka skončila první v celkové kognici i v kontrole pozornosti"},
+    {"pro": "kratka_odpoved", "citace": "aerobní trénink vyhrál v paměti"},
+    {"pro": "kratka_odpoved", "citace": "tai-či a jóga zase v pracovní paměti a přepínání mezi úkoly"},
+    {"pro": "faq[0]", "citace": "Silovka víc zvedá IGF-1, což pomáhá plasticitě synapsí. Aerobní trénink víc tlačí BDNF, který stojí za tvorbou nových neuronů. Jiná fyziologie, jiné oblasti mozku."},
+    {"pro": "faq[1]", "citace": "aerobní trénink vyhrál v paměti"},
+    {"pro": "faq[1]", "citace": "silovka skončila první v celkové kognici i v kontrole pozornosti"},
+    {"pro": "faq[2]", "citace": "Po čtyřicítce už silovka není o vzhledu. Drží ti svaly a zároveň hlavu. Dvě věci za jeden trénink."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak často, jak dlouho a jak intenzivně cvičit.",
+    "Studie Liu-Ambrose 2010 a Northey 2018 jsou jen v seznamu zdrojů bez výkladu výsledků, proto jsem z nich nic necitoval.",
+    "Hodnota SMD 0,48 pro IGF-1 (Vints 2023) je v článku bez vysvětlení, co znamená, proto ji v odpovědích neuvádím.",
+    "Velká část textu je v infografikách (obrázcích); text obrázků jsem nepoužil, jen viditelný text článku."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez úvodního „Podle“"
+}

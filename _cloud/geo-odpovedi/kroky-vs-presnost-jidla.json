@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/kroky-vs-presnost-jidla.html",
+  "titulek": "Chodíš 10 tisíc kroků a váha stojí? Proč",
+  "hlavni_otazka": "Proč nehubnu, i když chodím 10 tisíc kroků denně?",
+  "kratka_odpoved": "Nejspíš nevíš přesně, kolik toho sníš, a tělo si část výdeje z chůze vezme zpátky. Ve studii lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně, ale tělo si skoro 40 % vzalo zpátky. A svůj příjem lidi podhodnotí klidně o 20 až 50 %.",
+  "faq": [
+    {
+      "otazka": "Jak si tělo bere zpátky kalorie spálené chůzí?",
+      "odpoved": "Ve studii Knaan a spol. (2026) lidem klesl klidový výdej, hůř spali, chůze začala být úspornější a přes den se nevědomky hýbali míň. Dohromady si tělo vzalo zpátky skoro 40 % výdeje z chůze."
+    },
+    {
+      "otazka": "Co je na hubnutí důležitější, kroky, nebo jídlo?",
+      "odpoved": "Nejdřív rozhoduje strava, tedy deficit a dost bílkovin. Pak silový trénink, ať si v redukci udržíš svaly. Kroky a kardio jsou až bonus navrch."
+    },
+    {
+      "otazka": "Kde se mi berou kalorie navíc, když jím zdravě?",
+      "odpoved": "Z drobností, které nepočítáš: olej od oka, kousek čokolády, sklenka vína k večeři, dojídání po dětech. Lidi svůj příjem podhodnotí klidně o 20 až 50 %, takže na úbytek tuku si změř, co jíš."
+    },
+    {
+      "otazka": "Má tedy smysl chodit, když to na hubnutí tolik nedělá?",
+      "odpoved": "Ano, kvůli zdraví se hýbej každý den, ideálně i posiluj. Na úbytek tuku ale rozhoduje, co a kolik jíš."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky."},
+    {"pro": "kratka_odpoved", "citace": "Studie ukazují, že lidi svůj příjem podhodnotí klidně o 20 až 50 % (Lichtman, NEJM 1992; Burrows 2019)."},
+    {"pro": "kratka_odpoved", "citace": "Takže to nejspíš není genetika ani pomalý metabolismus. Spíš jen nevíš přesně, kolik toho jíš."},
+    {"pro": "faq[0]", "citace": "Četl jsem nedávno studii (Knaan a spol., Communications Medicine 2026). Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky. Klesl klidový výdej, hůř se spalo, chůze začala být úspornější a přes den se člověk nevědomky hýbal míň."},
+    {"pro": "faq[1]", "citace": "Nejdřív rozhoduje strava, tedy deficit a dost bílkovin. Pak silák, ať si v redukci udržíš svaly. Kroky a kardio jsou bonus, ne základ."},
+    {"pro": "faq[2]", "citace": "Studie ukazují, že lidi svůj příjem podhodnotí klidně o 20 až 50 % (Lichtman, NEJM 1992; Burrows 2019). Olej od oka, kousek čokolády, sklenka vína k večeři, dojídání po dětech. Sečte se to do pěkné porce."},
+    {"pro": "faq[2]", "citace": "Ale na úbytek tuku si fakt změř, co jíš."},
+    {"pro": "faq[3]", "citace": "Kvůli zdraví se hýbej každý den, ideálně i posiluj. Ale na úbytek tuku si fakt změř, co jíš."},
+    {"pro": "faq[3]", "citace": "Nejdřív rozhoduje strava, tedy deficit a dost bílkovin."}
+  ],
+  "nejiste": [
+    "Článek je krátký post k infografice. Neuvádí, kolik lidí ve studii Knaan bylo, ani jak velký deficit nebo kolik bílkovin mířit.",
+    "Článek neříká, jak přesně jídlo měřit (vážit, aplikace), jen „změř si, co jíš\".",
+    "Číslo 1 500 kcal týdně je výdej z chůze ve studii, ne obecný výdej 10 tisíc kroků; v odpovědi je tak podané."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „bonus, ne základ“"
+}

@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-zhubnout-v-obliceji.html",
+  "titulek": "Jak zhubnout v obličeji: co funguje a co je mýtus",
+  "hlavni_otazka": "Jak zhubnout v obličeji a pomůžou na to cviky na tvář?",
+  "kratka_odpoved": "Zhubnout jen v obličeji nejde, tuk z tváří dostaneš pryč jen kalorickým deficitem, kdy hubne celé tělo. Rychleji se dá ubrat zadržená voda: méně alkoholu, méně soli a dost spánku. Válečky ani gua sha kameny tuk nespálí.",
+  "faq": [
+    {
+      "otazka": "Fungují cviky na obličej, válečky nebo gua sha?",
+      "odpoved": "Studie, která by prokázala úbytek tuku z tváří cvičením nebo masáží, jsem při psaní článku nenašel. Masáž umí krátkodobě rozhýbat zadrženou vodu, takže obličej může na pár hodin vypadat svěžeji. Tuk ale nespálí ani váleček, ani kámen."
+    },
+    {
+      "otazka": "Proč mám ráno oteklý obličej?",
+      "odpoved": "Nejčastěji za tím je sůl, alkohol, krátký spánek nebo jejich kombinace z předchozího dne. Zadržená voda se přes den rozhýbe a večer je obličej štíhlejší než ráno. Když ti otoky přetrvávají bez ohledu na jídlo, pití a spánek, nech to zkontrolovat u lékaře."
+    },
+    {
+      "otazka": "Pomůžou cviky na dvojitou bradu?",
+      "odpoved": "Tuk pod bradou cvičením tváří nezmizí, rozhoduje celkový deficit a genetika. Na fotce pomůže narovnat se a bradu mírně předsunout, tím ale měníš jen pózu, tuk zůstává stejný."
+    },
+    {
+      "otazka": "Za jak dlouho bude hubnutí na obličeji vidět?",
+      "odpoved": "Změny ze zadržené vody uvidíš do pár dnů. Úbytek tuku bývá na obličeji znát po několika týdnech poctivého deficitu, přesné tempo je ale individuální a řídí ho genetika."
+    },
+    {
+      "otazka": "Rozhoduje o tuku v obličeji genetika?",
+      "odpoved": "Ano, o tom, kde tuk ubývá první a kde drží nejdéle, rozhoduje z velké části genetika. Meta-analýza genomů více než 224 tisíc lidí našla desítky genových oblastí spojených s rozložením tuku. Kulatější tváře po babičce žádný cvik na tvář nepřepíše."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Tuk se neodbourává v místě, které zrovna trápíš cvičením nebo masáží. Tělo si při hubnutí sahá do zásob po celém těle a pořadí si řídí samo."},
+    {"pro": "kratka_odpoved", "citace": "1. Kalorický deficit. Jediná cesta, jak z těla dostat tuk, obličej nevyjímaje."},
+    {"pro": "kratka_odpoved", "citace": "2. Méně alkoholu. Alkohol znamená kalorie navíc a k tomu otoky."},
+    {"pro": "kratka_odpoved", "citace": "3. Hlídat sůl. Po hodně slaném dni tělo zadrží vodu a část z ní nosíš ve tvářích."},
+    {"pro": "kratka_odpoved", "citace": "4. Spát. Krátký a nepravidelný spánek podporuje otoky a k tomu rozjíždí chutě, které ti rozbijí deficit."},
+    {"pro": "kratka_odpoved", "citace": "Všimni si, že tři body ze čtyř jsou o vodě, ne o tuku. Voda se hýbe ve dnech, tuk v týdnech."},
+    {"pro": "kratka_odpoved", "citace": "Tuk ale nespálí ani váleček, ani kámen."},
+    {"pro": "faq[0]", "citace": "Studii, která by prokázala úbytek tuku z tváří cvičením nebo masáží, jsem při psaní nenašel."},
+    {"pro": "faq[0]", "citace": "Masáž umí krátkodobě rozhýbat zadrženou vodu, takže obličej může na pár hodin vypadat svěžeji. Tuk ale nespálí ani váleček, ani kámen."},
+    {"pro": "faq[1]", "citace": "Nejčastěji sůl, alkohol, krátký spánek nebo jejich kombinace z předchozího dne. Zadržená voda se přes den rozhýbe a večer je obličej štíhlejší než ráno."},
+    {"pro": "faq[1]", "citace": "A pokud ti otoky obličeje přetrvávají bez ohledu na jídlo, pití a spánek, nech to zkontrolovat u lékaře."},
+    {"pro": "faq[2]", "citace": "Tuk pod bradou cvičením tváří nezmizí, rozhoduje celkový deficit a genetika. Pokud ti jde o držení hlavy a postavení krku, na fotce pomůže narovnat se a bradu mírně předsunout. Tím ale měníš pózu, tuk zůstává stejný."},
+    {"pro": "faq[3]", "citace": "Změny ze zadržené vody uvidíš do pár dnů. Úbytek tuku bývá na obličeji znát po několika týdnech poctivého deficitu. Přesné tempo ti ale nikdo fér neslíbí, je individuální a řídí ho genetika."},
+    {"pro": "faq[4]", "citace": "O tom, kde tuk ubývá první a kde drží nejdéle, rozhoduje z velké části genetika. Meta-analýza genomů více než 224 tisíc lidí našla desítky genových oblastí spojených s rozložením tuku a u většiny z nich byl efekt silnější u žen (Shungin, 2015, Nature, PMID 25673412). Jinými slovy, kulatější tváře po babičce jsou reálná věc a žádný cvik na tvář to nepřepíše."}
+  ],
+  "nejiste": [
+    "Velikost deficitu ani tempo hubnutí článek nevyčísluje, odkazuje na jiný článek.",
+    "Kolik soli nebo alkoholu je ještě v pořádku, článek neříká; v akčním plánu je jen „uber alkohol na polovinu\" a „vynech dva nejslanější kusy jídelníčku\".",
+    "Studie Kostek 2007 je o posilování jedné paže, ne o obličeji; článek z ní vyvozuje obecný princip a čísla jsem na obličej nepřenášel.",
+    "Studie Alam 2018 o obličejovém cvičení zkoumala vzhled stárnutí, ne hubnutí, proto ji v odpovědích nepoužívám jako důkaz pro ani proti.",
+    "Tvrzení, že obličej bývá jedno z prvních míst, kde okolí změnu zaregistruje, je v článku úvaha bez zdroje, do FAQ jsem ho nedal."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] „se nenašla“ → 1. osoba"
+}

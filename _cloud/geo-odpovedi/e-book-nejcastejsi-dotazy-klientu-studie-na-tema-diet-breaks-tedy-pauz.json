@@ -1,0 +1,40 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-studie-na-tema-diet-breaks-tedy-pauz.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Studie na téma diet breaks, tedy pauzy od diety a hubnutí",
+  "hlavni_otazka": "Pomáhají pauzy od diety (diet breaks) zhubnout víc?",
+  "kratka_odpoved": "Ve studii zhubla skupina s dvoutýdenními pauzami na udržovacích kaloriích za dané období téměř dvojnásobek tuku, udržela víc svalů a po dietě nabrala mnohem méně tuku zpět. Studie z roku 2021 ale u diet breaks oproti plynulému hubnutí žádnou výhodu nenašly. Pauza má smysl hlavně psychologicky.",
+  "faq": [
+    {
+      "otazka": "Jak vypadala studie o pauzách od diety?",
+      "odpoved": "První skupina držela 16 týdnů diety na 67 % kcal svého standardního příjmu. Druhá měla taky 16 týdnů diety, ale po každém dvoutýdenním bloku vložila 2 týdny udržovacích kalorií, takže celá dieta trvala 30 týdnů. Kvůli vloženým udržovacím obdobím měla druhá skupina nižší průměrný úbytek tuku na týden než první."
+    },
+    {
+      "otazka": "Přiberu během pauzy od diety?",
+      "odpoved": "Když víš, kolik je tvoje aktuální udržovací hodnota kcal, a vrátíš se na ni, nenabereš zpátky žádné tuky, jen zastavíš hubnutí. Pozor, udržovací příjem se během diety snižuje spolu s tvou váhou."
+    },
+    {
+      "otazka": "Kdy má pauza od diety smysl?",
+      "odpoved": "Třeba když máš náročnější týden, oslavu nebo si potřebuješ odpočinout a nechceš nic přibrat. Často je udržitelnější jednou za čas na hubnutí nemířit, hlavně z psychologických důvodů."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "2. skupina zhubla téměř dvojnásobné množství tuků za dané období, udrželi více svalové hmoty a nabrali mnohem méně tuků zpět po dietě."},
+    {"pro": "kratka_odpoved", "citace": "skupina: 16 týdnů diety, po každém dvoutýdenním bloku diety vložili 2 týdny udržovacích kcal"},
+    {"pro": "kratka_odpoved", "citace": "V roce 2021 ale vyšly další studie, podle kterých diet breaks oproti plynulému hubnutí žádnou výhodu nemají"},
+    {"pro": "kratka_odpoved", "citace": "Často je udržitelnější jednou za čas na hubnutí nemířit, hlavně z psychologických důvodů"},
+    {"pro": "faq[0]", "citace": "skupina: 16 týdnů diety, z jejich standardního příjmu jedli 67 % kcal"},
+    {"pro": "faq[0]", "citace": "skupina: 16 týdnů diety, po každém dvoutýdenním bloku diety vložili 2 týdny udržovacích kcal (toto číslo se během diety samozřejmě mění), takže celková délka diety byla 30 týdnů"},
+    {"pro": "faq[0]", "citace": "Ovšem kvůli vloženým kalorickým „udržovacím obdobím“ byl průměrný úbytek tuků na týden nižší než v 1. skupině."},
+    {"pro": "faq[1]", "citace": "Pokud víte, kolik je vaše aktuální hodnota kcal pro udržení stávajícího stavu a vrátíte se na ni během diety, tak nenaberete zpátky žádné tuky, pouze hubnutí zastavíte."},
+    {"pro": "faq[1]", "citace": "Vaše „udržovačka“ se během diety snižuje spolu s vaší tělesnou hmotností."},
+    {"pro": "faq[2]", "citace": "Třeba když má klient náročnější týden, oslavu nebo si potřebuje trochu odpočinout, ale zároveň nechce nic přibrat."},
+    {"pro": "faq[2]", "citace": "Často je udržitelnější jednou za čas na hubnutí nemířit, hlavně z psychologických důvodů"}
+  ],
+  "nejiste": [
+    "Článek nejmenuje rozebíranou studii (autory, rok, počet účastníků).",
+    "Článek neuvádí, jak zjistit svou udržovací hodnotu kcal.",
+    "V první skupině článek píše 67 % kcal ze standardního příjmu; u druhé skupiny v dietních blocích procento výslovně neopakuje, proto jsem ho u ní neuváděl."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno „za dané období“ (dieta s pauzami trvala 30 místo 16 týdnů); faq[0] doplněno, že průměrný úbytek tuku na týden byl ve skupině s pauzami nižší (článek to výslovně uvádí), aby odpověď nevyzněla, že pauzy hubnutí zrychlují",
+  "hlas": "upraveno: kratka_odpoved bez „kterou článek rozebírá“"
+}

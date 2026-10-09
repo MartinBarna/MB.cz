@@ -1,0 +1,41 @@
+{
+  "url": "https://martinbarna.cz/clanky/malo-spanku-a-hubnuti.html",
+  "titulek": "Co dělá málo spánku s hubnutím (a hlavně s tukem)",
+  "hlavni_otazka": "Zhubnu, když v dietě málo spím?",
+  "kratka_odpoved": "Na váze ano, ale při krátkém spánku odchází hlavně sval a tuk zůstává. Ve studii s 10 lidmi na 14 dní v deficitu shodili při 8,5 hodinách spánku 1,4 kg tuku a 1,5 kg svalu, při 5,5 hodinách jen 0,6 kg tuku a 2,4 kg svalu.",
+  "faq": [
+    {
+      "otazka": "Platí to i mimo laboratoř?",
+      "odpoved": "Venku je ten rozdíl spíš ještě větší. V běžném životě se přidá míň spontánního pohybu, větší únava a odhad příjmu, který lidi obvykle podcení."
+    },
+    {
+      "otazka": "Jak důležitý je spánek pro hubnutí?",
+      "odpoved": "Patří do první čtyřky priorit: deficit, bílkoviny, silový trénink, spánek. Zbytek až potom."
+    },
+    {
+      "otazka": "Zkazí mi jedna probdělá noc dietu?",
+      "odpoved": "Ne, jedna horší noc ti dietu nezboří. Pokud spíš pravidelně 7 až 9 hodin, tohle není tvoje téma a řeš jiné věci."
+    },
+    {
+      "otazka": "Nejsem jeden z lidí, kterým stačí málo spánku?",
+      "odpoved": "Lidé, kteří díky genetice vystačí s míň spánku, existují, ale jsou vzácní. Jde o jednotlivé rodiny, žádná procenta populace, takže ty to skoro jistě nejsi."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Vezmi si 10 lidí na 14 dní do laboratoře. Kalorie drž v deficitu pod kontrolou, výdej změř přes doubly-labeled water a v obou fázích ho udrž podobný. Měň jen jednu věc: spánek."},
+    {"pro": "kratka_odpoved", "citace": "Když lidi spali 8,5 hodiny, shodili 1,4 kg tuku a 1,5 kg svalu. Při 5,5 hodinách to bylo 0,6 kg tuku a 2,4 kg svalu."},
+    {"pro": "kratka_odpoved", "citace": "Na váze pokaždé 3 kg dolů. Jenže v úplně jiném poměru. Při kratším spánku odešel hlavně sval, kdežto tuk zůstal."},
+    {"pro": "faq[0]", "citace": "V běžném životě se k tomu přidá míň spontánního pohybu, větší únava a odhad příjmu, který lidi obvykle podcení. Takže venku je ten rozdíl spíš ještě větší."},
+    {"pro": "faq[1]", "citace": "Spánek proto řadím hned do první čtyřky priorit: deficit, bílkoviny, silový trénink, spánek. Zbytek až potom."},
+    {"pro": "faq[2]", "citace": "Jedna horší noc ti dietu nezboří. Pokud spíš 7 až 9 hodin pravidelně, tohle není tvoje téma a vyřešíš jiné věci."},
+    {"pro": "faq[3]", "citace": "A pak jsou tu vzácné případy lidí, kteří díky genetice vystačí s míň spánku. Nejsou to procenta populace, jak se občas píše, ale jednotlivé rodiny. Ty to skoro jistě nejsi."}
+  ],
+  "nejiste": [
+    "Článek nevysvětluje, proč při krátkém spánku odchází víc svalu (mechanismus je jen ve zdroji Lamon 2021, v textu není).",
+    "Článek nedává žádné rady, jak spánek zlepšit, ani co dělat, když nejde spát déle.",
+    "Výsledek pochází z jedné malé laboratorní studie (10 lidí, 14 dní); další studie (Wang 2018, Tasali 2022) jsou jen ve zdrojích bez popsaných výsledků, proto nejsou použité.",
+    "Tvrzení, že venku je rozdíl větší, článek podává jako odhad („spíš ještě větší“), ne jako změřený výsledek."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „Podle článku“; faq[3] bez „Nejsou to X, ale Y“"
+}

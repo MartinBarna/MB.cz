@@ -1,0 +1,40 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-proc-hubnu-v-ruznych-fazich-zivota-n.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Proč hubnu v různých fázích života na různém množství kcal?",
+  "hlavni_otazka": "Proč hubnu v různých obdobích na jiném množství kalorií?",
+  "kratka_odpoved": "Tělo se přizpůsobuje tomu, jak s ním zacházíš, podobně jako člověk, kterému šéf snižuje výplatu: když ji sekne najednou o polovinu, panikaří a šetří. Když klesá postupně, cítíš se líp a cesta je udržitelnější. Nauč se s tělem fungovat dlouhodobě, jednorázové seknutí nestačí.",
+  "faq": [
+    {
+      "otazka": "Co se stane, když kalorie seknu najednou?",
+      "odpoved": "Tělo se zachová jako člověk, kterému šéf z ničeho nic sníží plat o polovinu: dostane motivaci přežít, začne šetřit a jinak hospodařit. Tělo je chytřejší, než si myslíme."
+    },
+    {
+      "otazka": "Proč je lepší snižovat příjem postupně?",
+      "odpoved": "Při postupném snižování utrácíš pořád stejně, ale účet pomalu klesá podle plánu. Celou dobu se cítíš líp, máš lepší vyhlídky a celá cesta je udržitelnější."
+    },
+    {
+      "otazka": "Stačí jednou pořádně seknout kalorie?",
+      "odpoved": "Ne. Nauč se fungovat s vlastním tělem dlouhodobě, jednorázové seknutí prostě nestačí."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "A když ti šéf z ničeho nic sníží plat o polovinu, máš najednou motivaci. Skutečnou motivaci přežít. Přesně tak funguje i tělo."},
+    {"pro": "kratka_odpoved", "citace": "Musíš si zvyknout. Začneš utrácet jinak, jinak řídit svoje finance a mezitím tak trochu panikaříš. Šetříš i z té menší výplaty, co ti chodí."},
+    {"pro": "kratka_odpoved", "citace": "Celou dobu se cítíš líp a máš lepší vyhlídky."},
+    {"pro": "kratka_odpoved", "citace": "Cítíš se líp a celá cesta je udržitelnější."},
+    {"pro": "kratka_odpoved", "citace": "Pointa je naučit se fungovat s výplatou i s vlastním tělem dlouhodobě. Strhnout částku jednou prostě nestačí."},
+    {"pro": "faq[0]", "citace": "A když ti šéf z ničeho nic sníží plat o polovinu, máš najednou motivaci. Skutečnou motivaci přežít. Přesně tak funguje i tělo. Není hloupé, naopak je chytřejší, než si myslíme."},
+    {"pro": "faq[1]", "citace": "Začne ti výplatu snižovat postupně"},
+    {"pro": "faq[1]", "citace": "Utrácíš pořád stejně, ale výplata ti pomalu klesá. A s ní i částka na účtu. Přesně podle plánu „vyšší síly“."},
+    {"pro": "faq[1]", "citace": "Celou dobu se cítíš líp a máš lepší vyhlídky."},
+    {"pro": "faq[1]", "citace": "Cítíš se líp a celá cesta je udržitelnější."},
+    {"pro": "faq[2]", "citace": "Pointa je naučit se fungovat s výplatou i s vlastním tělem dlouhodobě. Strhnout částku jednou prostě nestačí."}
+  ],
+  "nejiste": [
+    "Článek odpovídá hlavně přirovnáním k výplatě; fyziologii (metabolickou adaptaci, hormony) přímo nevysvětluje.",
+    "Článek nevysvětluje, proč klient hubl i po navýšení sacharidů ze 130 na 160 g, jen ten případ uvádí jako podnět.",
+    "Článek neuvádí, o kolik a jak rychle kalorie postupně snižovat."
+  ],
+  "kontrola": "smazano: faq[2] (víkend s víc kaloriemi) odkazovalo na kouče a z vedlejší poznámky v přirovnání dělalo obecnou radu; nahrazeno otázkou o jednorázovém seknutí kalorií z pointy článku",
+  "hlas": "upraveno: kratka_odpoved a faq[2] bez „Pointa je“; faq[0] bez „skutečnou“ a „Není X, je Y“"
+}

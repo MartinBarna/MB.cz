@@ -1,0 +1,65 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-suplementy-se-kterymi-se-muzete-setk.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Suplementy, se kterými se můžete setkat",
+  "hlavni_otazka": "Které doplňky stravy mají smysl a které jsou zbytečné?",
+  "kratka_odpoved": "Kreatin monohydrát je asi nejprověřenější doplněk: prokazatelně zvyšuje sílu a svalovou hmotu a stačí 3–5 g denně. BCAA ani multivitamin nepotřebuješ, když máš dost bílkovin a pestrou stravu. Hlavní funkční složkou většiny spalovačů je kofein a bez kalorického deficitu tuk neshodíš.",
+  "faq": [
+    {
+      "otazka": "Kolik kreatinu brát a je potřeba nasycovací fáze?",
+      "odpoved": "Na kosterní svaly dlouhodobě stačí 3–5 g denně podle tělesné váhy a hlavní je brát ho každý den. Nasycovací fáze (2–3 týdny 10–20 g denně po dávkách 5 g) zásoby nasytí dřív, ale bez ní budeš mít zásoby nasycené po měsíci taky. Když ti dráždí žaludek, ber ho po jídle a zapíjej víc vodou."
+    },
+    {
+      "otazka": "Je kreatin steroid?",
+      "odpoved": "Ne. Najdeš ho ve svalstvu všech obratlovců a běžně ho přijmeš i z masa a ryb. Kreatin monohydrát má za sebou přes 20 let studií a je to bezpečný a funkční doplněk stravy."
+    },
+    {
+      "otazka": "Pomáhá L-karnitin spalovat tuk?",
+      "odpoved": "Na spalování tuků nefunguje, i když může povzbudit bdělost. Tělo si ho samo vyrobí dost a jeho doplňování navíc spalování tuků zvednout nemusí."
+    },
+    {
+      "otazka": "Kolik kofeinu zlepšuje výkon?",
+      "odpoved": "Atletický výkon prokazatelně zvedá zhruba 3–6 mg kofeinu na 1 kg tělesné hmotnosti. Ve spalovačích a pre-workoutech bývá 200–400 mg na odměrku, a to je hodně. Spoustě lidí stačí silná káva."
+    },
+    {
+      "otazka": "Potřebuju multivitamin?",
+      "odpoved": "Mít ho nemusíš, podle novějších výzkumů se ukazuje jako neúčinný. Většinu vitaminů a minerálů přijmeš z jídla. Jestli ti něco chybí, zjistíš jedině z krve, nech si udělat krevní testy u lékaře."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Asi neexistuje doplněk, který by byl vědecky tak prověřený jako kreatin monohydrát."},
+    {"pro": "kratka_odpoved", "citace": "Prokazatelně zvyšuje sílu a svalovou hmotu."},
+    {"pro": "kratka_odpoved", "citace": "Je to individuální, ale na kosterní svaly ti dlouhodobě stačí 3 – 5 g denně."},
+    {"pro": "kratka_odpoved", "citace": "Ale pokud máš dost bílkovin na den i dost kvalitních bílkovin v jednotlivých jídlech podle mých instrukcí, BCAA ti pro svaly nic navíc nepřinese."},
+    {"pro": "kratka_odpoved", "citace": "Mít ho nemusíš. Podle novějších výzkumů se ukazuje jako neúčinný."},
+    {"pro": "kratka_odpoved", "citace": "Hlavní funkční složkou většiny spalovačů je kofein."},
+    {"pro": "kratka_odpoved", "citace": "Bez kalorického deficitu tělesný tuk neshodíš."},
+    {"pro": "kratka_odpoved", "citace": "Dr. Eric Helms kdysi rozebral studie na většinu spalovačů a ukázalo se, že žádný statisticky významný vliv na spalování neprokázaly."},
+    {"pro": "faq[0]", "citace": "Doporučuju brát 3 – 5 g denně podle tvojí tělesné váhy."},
+    {"pro": "faq[0]", "citace": "Hlavní je brát ho každý den, aby se svalové buňky kreatinem nasytily."},
+    {"pro": "faq[0]", "citace": "Někdo zařadí první 2 nebo 3 týdny nasycovací fázi a bere 10 – 20 g denně, rozdělených do dávek po 5 g a zapitých dostatkem vody. Tím zásoby nasytí dřív a pak drží 3 – 5 g dlouhodobě. Stejně tak můžeš od začátku brát jen 3 – 5 g denně bez nasycovací fáze – po měsíci budeš mít zásoby nasycené taky, jen to potrvá o něco déle."},
+    {"pro": "faq[0]", "citace": "Pokud ti dráždí žaludek, zkus ho brát ne nalačno, ale po jídle a zapíjej ho víc vodou."},
+    {"pro": "faq[1]", "citace": "Někoho to možná překvapí, ale kreatin (creatine) není steroid."},
+    {"pro": "faq[1]", "citace": "Najdeš ho ve svalstvu všech obratlovců"},
+    {"pro": "faq[1]", "citace": "Přitom ho běžně přijmeš i z jídla – maso (hlavně hovězí, vepřové, zvěřina), ryby (třeba losos) a další."},
+    {"pro": "faq[1]", "citace": "Kreatin monohydrát má za sebou přes 20 let odborných studií."},
+    {"pro": "faq[1]", "citace": "Je to bezpečný a funkční doplněk stravy."},
+    {"pro": "faq[2]", "citace": "Třeba L-carnitine na spalování tuků nefunguje, i když může povzbudit bdělost."},
+    {"pro": "faq[2]", "citace": "Tělo si ho samo vyrobí dost."},
+    {"pro": "faq[2]", "citace": "i když carnitine mastné kyseliny přenáší, jeho doplňování navíc spalování tuků zvednout nemusí."},
+    {"pro": "faq[3]", "citace": "Atletický výkon prokazatelně zvedá zhruba 3 – 6 mg kofeinu na 1 kg tělesné hmotnosti."},
+    {"pro": "faq[3]", "citace": "Ve spalovačích a pre-workoutech bývá třeba 200 – 400 mg na odměrku, a to je opravdu hodně."},
+    {"pro": "faq[3]", "citace": "Spoustě lidí na to stačí silná káva."},
+    {"pro": "faq[4]", "citace": "Mít ho nemusíš. Podle novějších výzkumů se ukazuje jako neúčinný."},
+    {"pro": "faq[4]", "citace": "Většinu vitamínů a minerálů stejně přijmeš z jídla"},
+    {"pro": "faq[4]", "citace": "Mimochodem, jestli ti nějaký vitamín chybí, zjistíš to jedině z krve."},
+    {"pro": "faq[4]", "citace": "Když si nejsi jistý, zajdi za lékařem, třeba na bezplatnou preventivní prohlídku, a nech si udělat krevní testy."}
+  ],
+  "nejiste": [
+    "U omega-3 si článek protiřečí: nejdřív doporučuje 1 g EPA po tréninku a 1 g EPA jindy během dne, pak píše, že v roce 2021 se ukázalo, že rybí olej většinu přínosů nemá, a kupovat ho nedoporučuje. Navíc jiný článek ve stejné dávce („3 suplementy“) omega-3 doporučuje. Proto jsem k omega-3 otázku nedával; doporučuji, aby to Martin sjednotil.",
+    "U BCAA článek nejdřív popisuje, že si je přisypává do jídla s málem bílkovin, pak je kupovat nedoporučuje. Do odpovědi jsem dal jen závěr článku (při dostatku bílkovin BCAA nic navíc nepřinesou).",
+    "Článek tvrdí, že kreatin monohydrát je „100% efektivní v nasycení buněk“; formulace je nejasná, proto ji necituji.",
+    "Hranice leucinu 1,7 g a 3,5–4 g na jídlo jsou v článku „podle výzkumů“ bez konkrétního zdroje, proto jsem je do odpovědí nedal."
+  ],
+  "kontrola": "opraveno: kratka_odpoved „Spalovače fungují hlavně díky kofeinu“ → „Hlavní funkční složkou většiny spalovačů je kofein“, článek uvádí, že spalovače žádný statisticky významný vliv na spalování neprokázaly",
+  "hlas": "upraveno: faq[3] bez „opravdu“"
+}

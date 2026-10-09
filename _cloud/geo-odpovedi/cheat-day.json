@@ -1,0 +1,38 @@
+{
+  "url": "https://martinbarna.cz/clanky/cheat-day.html",
+  "titulek": "Cheat day, nebo cheat meal? Jak na volnost bez sabotáže",
+  "hlavni_otazka": "Je lepší cheat day, nebo cheat meal, když hubnu?",
+  "kratka_odpoved": "Cheat meal. Jedno uvolněné jídlo se ti do týdne v pohodě vejde a deficit nerozbije, celý den bez brzd ano. Když týden držíš deficit 500 kcal denně, máš 3 500 kcal k dobru, a cheat day s 2 000 až 3 000 kcal navíc ti smaže pět dní práce.",
+  "faq": [
+    {
+      "otazka": "Proč mi cheat day kazí hubnutí?",
+      "odpoved": "Při deficitu 500 kcal denně máš za týden 3 500 kcal k dobru. Sníst při cheat day 2 000 až 3 000 kcal navíc je úplně snadné, a týden snažení je během jednoho odpoledne pryč."
+    },
+    {
+      "otazka": "Jak si dopřát oblíbené jídlo a nezničit si výsledky?",
+      "odpoved": "Plánuj dopředu: jedno jídlo místo celého dne a hned dalším jídlem se vrať k normálu. Nehladověj celý den předem, skončí to přejedením, a nedělej z toho vinu."
+    },
+    {
+      "otazka": "Dá se úplně obejít bez cheat day?",
+      "odpoved": "Ano. Když si oblíbená jídla zařadíš průběžně do běžného jídelníčku, žádné podvádění nepotřebuješ. Tomu se říká flexibilní stravování."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Cheat meal je jedno uvolněné jídlo. Pizza, dezert, cokoliv si dáš rád. Cheat day je celý den bez brzd. Jedno jídlo navíc ti deficit nerozbije, v pohodě se do týdne vejde. Celý den ti ho rozbije."},
+    {"pro": "kratka_odpoved", "citace": "Celý týden držíš deficit 500 kcal denně, to máš 3 500 kcal „k dobru\". Pak dorazí cheat day a sníst 2 000 až 3 000 kcal navíc je úplně snadné."},
+    {"pro": "kratka_odpoved", "citace": "Jeden den ti smaže pět dní práce."},
+    {"pro": "faq[0]", "citace": "Celý týden držíš deficit 500 kcal denně, to máš 3 500 kcal „k dobru\". Pak dorazí cheat day a sníst 2 000 až 3 000 kcal navíc je úplně snadné. A je hotovo, týden snažení je během jednoho odpoledne pryč."},
+    {"pro": "faq[1]", "citace": "Plánuj dopředu. Vědomá volnost chutná líp než výčitky."},
+    {"pro": "faq[1]", "citace": "Jedno jídlo, ne celý den."},
+    {"pro": "faq[1]", "citace": "Hned další jídlo se vrať k normálu."},
+    {"pro": "faq[1]", "citace": "Nehladověj „na splátku\" celý den předem, skončí to přejedením."},
+    {"pro": "faq[1]", "citace": "Nedělej z toho vinu."},
+    {"pro": "faq[2]", "citace": "Když si oblíbená jídla zařadíš průběžně do běžného jídelníčku, žádné „podvádění\" vlastně nepotřebuješ. Tomu se říká flexibilní stravování"}
+  ],
+  "nejiste": [
+    "Článek neříká, jak často si cheat meal dát (jednou týdně, častěji).",
+    "Čísla 500 kcal deficitu a 2 000 až 3 000 kcal navíc jsou v článku modelový příklad, ne obecné pravidlo pro každého."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „jedno jídlo, ne celý den“"
+}

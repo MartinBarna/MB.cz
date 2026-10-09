@@ -1,0 +1,102 @@
+{
+  "url": "https://martinbarna.cz/clanky/spanek-vyziva-a-fitness-u-populace-40.html",
+  "titulek": "Spánek, výživa a fitness u populace 40+",
+  "hlavni_otazka": "Co pomáhá lidem po čtyřicítce se stravou, pohybem a spánkem?",
+  "kratka_odpoved": "Z nových studií plynou tyhle tipy: po čtyřicítce vsaď na vyvážený příjem bílkovin i z rostlinných zdrojů a středomořskou stravu. K tomu 30 minut středně náročného pohybu denně a slušný spánek. Pro lepší usínání choď odpoledne na přirozené světlo a večer uber obrazovky.",
+  "faq": [
+    {
+      "otazka": "Kolik bílkovin je optimální kvůli riziku cukrovky 2. typu?",
+      "odpoved": "Studie z června 2025 u dospělých s průměrným věkem 55 let našla U-křivku: optimální příjem 12–17 % energie z bílkovin riziko snižuje, příliš nízký nebo příliš vysoký ho zvedá. U rostlinných bílkovin se ukazuje opačný vztah, tedy nižší riziko."
+    },
+    {
+      "otazka": "Je vegetariánská strava ve vyšším věku riziková?",
+      "odpoved": "Studie z dubna 2025 u čínských seniorů (60+) zjistila, že vegetariáni mají nižší šanci dožít se „zdravého stárnutí“ (OR 0,65 oproti omnivorům), a to kvůli riziku nedostatku bílkovin a vitaminů. Autoři proto radí kvalitní vegetariánskou stravu s vysokým indexem zdravých rostlinných potravin."
+    },
+    {
+      "otazka": "Pomáhá středomořská dieta proti Alzheimerově chorobě?",
+      "odpoved": "Studie z března 2024 uvádí, že úpravy stravy jako středomořská dieta nebo kalorická restrikce snižují riziko neurodegenerativních onemocnění, u Alzheimerovy choroby třeba o 35–53 % díky středomořské dietě. Zároveň podporují imunitu."
+    },
+    {
+      "otazka": "Jak souvisí pohyb a spánek s psychikou?",
+      "odpoved": "Výzkum z prosince 2024 u čínských dospělých ukázal, že středně a hodně intenzivní pohyb snižuje riziko deprese (OR 0,596 u středního, OR 0,697 u intenzivního), zatímco nedostatek spánku ho zvedá. Proto spoj pohyb s kvalitním spánkem, řekněme 7–9 hodin."
+    },
+    {
+      "otazka": "Jak si po čtyřicítce zlepšit usínání?",
+      "odpoved": "Podle výzkumu z června 2025 jasné světlo přes den (nad 1000 lx) zvýší večerní produkci melatoninu a večerní světlo ho už tolik netlumí, takže se lépe usíná. Choď proto odpoledne na přirozené světlo a večer ubírej obrazovky, usínání se tak může posunout o 20–30 minut dřív."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tip pro klienty: Vsaďte na vyvážený příjem bílkovin i z rostlinných zdrojů a držte se středomořské stravy."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tip pro klienty: Začněte s 30 minutami středně náročného pohybu denně (chůze, kolo). Posílí to tělo i hlavu, hlavně když k tomu přidáte slušný spánek."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tip pro klienty: Choďte odpoledne na přirozené světlo (klidně jen procházka venku) a večer ubírejte obrazovky."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Další studie z června 2025 se dívala na příjem bílkovin a riziko cukrovky 2. typu u dospělých (průměrný věk 55 let)."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Vyšla z toho U-křivka: optimální příjem 12-17 % energie z bílkovin riziko snižuje, příliš nízký nebo příliš vysoký ho naopak zvedá. U rostlinných bílkovin platí opačný vztah (nižší riziko)"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Třeba výzkum z dubna 2025 sledoval vliv vegetariánské stravy na zdravé stárnutí u čínských seniorů (60+)"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Vyšlo, že vegetariáni mají nižší šanci dožít se „zdravého stárnutí“ (OR 0.65 oproti omnivorům), a to kvůli riziku nedostatku bílkovin a vitaminů."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Autoři proto radí vegetariánskou stravu, která je kvalitní (vysoký index zdravých rostlinných potravin), aby se ta rizika co nejvíc snížila."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "A pak je tu studie z března 2024, která vyzdvihuje úpravy stravy (středomořská dieta nebo kalorická restrikce) u nemocí spojených se stárnutím."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Tyhle přístupy snižují riziko neurodegenerativních onemocnění (u Alzheimerovy choroby třeba o 35-53 % díky středomořské dietě) a podporují imunitu."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Výzkum z prosince 2024 sledoval, jak souvisí pohyb (PA) a spánek s psychikou u čínských dospělých"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Středně a hodně intenzivní pohyb (OR 0.596 u středního, OR 0.697 u intenzivního) snižuje riziko deprese, zatímco nedostatek spánku ho zvedá."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "může spojení pohybu se spánkem (řekněme 7-9 hodin kvalitního spánku) zlepšit hlavu a srazit úzkost"
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Další výzkum z června 2025 se zaměřil na vliv jasného světla odpoledne až večer na spánek dospělých."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Když se člověk přes den vystaví jasnému světlu (nad 1000 lx), večer mu stoupne produkce melatoninu a večerní světlo ho už tolik netlumí. Výsledkem je lepší usínání."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Choďte odpoledne na přirozené světlo (klidně jen procházka venku) a večer ubírejte obrazovky. Usínání se Vám díky tomu může posunout o 20-30 minut dřív."
+    }
+  ],
+  "nejiste": [
+    "Článek je souhrn studií připravený s pomocí AI (Groka) a odkazy na zdroje jsou v něm zkrácené, takže se nedají přesně dohledat.",
+    "Část studií je na jiných skupinách (čínští senioři 60+, spíš mladší čínští dospělí) a článek jejich výsledky vztahuje na 40+ bez dalšího doložení.",
+    "Článek nevysvětluje, co přesně znamená „opačný vztah“ u rostlinných bílkovin ve studii o cukrovce 2. typu.",
+    "Posun usínání o 20–30 minut dřív nemá v článku uvedený zdroj."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[3], faq[4] bez „Článek vyvozuje / podle článku / Článek doporučuje / Článek radí“"
+}

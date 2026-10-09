@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/ektomorf-mezomorf-endomorf.html",
+  "titulek": "Ektomorf, mezomorf, endomorf: proč je dělení na typy postavy mýtus",
+  "hlavni_otazka": "Jsou somatotypy ektomorf, mezomorf a endomorf pravda?",
+  "kratka_odpoved": "Jako pevné genetické typy ne. Dělení vymyslel ve 40. letech psycholog William Sheldon, aby podle těla odhadoval povahu, a dnes je jeho teorie považovaná za nesmysl. Typ postavy popisuje jen tvoje aktuální složení těla, hlavně poměr svalů a tuku, a to se dá změnit.",
+  "faq": [
+    {
+      "otazka": "Můžu jako endomorf zhubnout a vypadat atleticky?",
+      "odpoved": "Ano. Když začneš silově trénovat, jíst dost bílkovin a hlídat kalorie, za rok z tebe může být ten mezomorf, o kterém sis myslel, že se tak prostě nenarodil. Geny si neseš stejné, výsledek udělá chování."
+    },
+    {
+      "otazka": "Potřebuju speciální dietu podle svého typu postavy?",
+      "odpoved": "Ne. Páky jsou pro všechny stejné: kalorie podle cíle, zhruba 1,6–2,2 g bílkovin na kilo, silový trénink jako základ, kroky a konzistence v čase. Liší se jen startovní bod a tempo."
+    },
+    {
+      "otazka": "Hrají geny při stavbě postavy roli?",
+      "odpoved": "Ano, ovlivňují výšku, šířku ramen, délku kostí, kam se ukládá tuk nebo jak rychle nabíráš svaly. Tyhle rozdíly jsou ale plynulá škála bez tří přihrádek a nevyplývá z nich, že bys měl jíst a trénovat úplně jinak."
+    },
+    {
+      "otazka": "Proč škodí říkat si „jsem endomorf“?",
+      "odpoved": "Nálepka ti bere zodpovědnost a dává výmluvu: za to nemůžu já, za to může moje tělo. Je to sebenaplňující předpověď, která ti vezme pocit, že to máš ve svých rukou."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Přišel s ní ve 40. letech americký psycholog William Sheldon, a původně se vůbec netýkala tréninku. Sheldon tvrdil, že podle tvaru těla dokáže odhadnout povahu člověka."},
+    {"pro": "kratka_odpoved", "citace": "Sheldonova „konstituční psychologie\" je dlouho považovaná za nesmysl."},
+    {"pro": "kratka_odpoved", "citace": "Popisují jen aktuální složení a tvar tvého těla, hlavně poměr svalové a tukové hmoty"},
+    {"pro": "kratka_odpoved", "citace": "Je to jen popis toho, jak vypadáš teď. A to si měníš."},
+    {"pro": "faq[0]", "citace": "Když „endomorf\" začne silově trénovat, jíst dost bílkovin a hlídat kalorie, za rok z něj může být ten „mezomorf\", o kterém si myslel, že se tak prostě nenarodil."},
+    {"pro": "faq[0]", "citace": "Nezměnily se mu geny. Změnilo se chování."},
+    {"pro": "faq[1]", "citace": "nepotřebuješ tajnou dietu pro svůj „typ\". Páky jsou pro všechny stejné, liší se jen startovní bod a tempo"},
+    {"pro": "faq[1]", "citace": "Kalorie podle cíle."},
+    {"pro": "faq[1]", "citace": "Dost bílkovin, zhruba 1,6–2,2 g na kilo."},
+    {"pro": "faq[1]", "citace": "Silový trénink jako základ."},
+    {"pro": "faq[1]", "citace": "Kroky a běžný pohyb."},
+    {"pro": "faq[1]", "citace": "Konzistence v čase."},
+    {"pro": "faq[2]", "citace": "Jasně, geny hrají roli: ovlivňují tvoji výšku, šířku ramen, délku kostí, kam se ti ukládá tuk nebo jak rychle nabíráš svaly."},
+    {"pro": "faq[2]", "citace": "Jenže tyhle rozdíly jsou spektrum, ne tři přihrádky. A hlavně z nich nevyplývá, že bys měl trénovat a jíst zásadně jinak."},
+    {"pro": "faq[3]", "citace": "Hlavní problém těch škatulek není, že jsou nepřesné, ale že berou zodpovědnost a dávají výmluvu."},
+    {"pro": "faq[3]", "citace": "„za to nemůžu já, za to může moje tělo\""},
+    {"pro": "faq[3]", "citace": "Tomu se říká sebenaplňující předpověď. Nálepka tě uklidní, ale zároveň ti vezme tu nejdůležitější věc: pocit, že to máš ve svých rukou."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak velký deficit nebo přebytek kalorií zvolit (jen „mírný“).",
+    "Článek neuvádí zdroje k historii Sheldonovy teorie."
+  ],
+  "kontrola": "opraveno: faq[2] zakázané slovo z výčtu AI frází nahrazeno „úplně jinak“ (význam beze změny)",
+  "hlas": "upraveno: faq[0] bez „Nezmění se X, změní se Y“; faq[2] bez „spektrum, ne tři přihrádky“"
+}

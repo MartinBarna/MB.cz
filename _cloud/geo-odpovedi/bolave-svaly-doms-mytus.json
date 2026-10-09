@@ -1,0 +1,55 @@
+{
+  "url": "https://martinbarna.cz/clanky/bolave-svaly-doms-mytus.html",
+  "titulek": "Bolavé svaly = dobrý trénink? Mýtus o svalovce (DOMS)",
+  "hlavni_otazka": "Znamená svalovka po tréninku, že svaly rostou?",
+  "kratka_odpoved": "Ne, svalovka (DOMS) je hlavně reakce na nezvyklý podnět, třeba nový cvik nebo víc sérií než obvykle, a o růstu svalů ti neřekne skoro nic. Sval roste z progresivního přetížení, dost bílkovin a energie a z regenerace a spánku. Skvěle růst můžeš i skoro bez svalovky.",
+  "faq": [
+    {
+      "otazka": "Co je DOMS?",
+      "odpoved": "Opožděná svalová bolest. Tupá, citlivá bolest, která nepřijde hned po tréninku, ale naběhne s odstupem a vrcholí zhruba den až dva potom."
+    },
+    {
+      "otazka": "Proč mě stejný trénink po pár týdnech skoro nebolí?",
+      "odpoved": "Tělo si na podnět zvykne, odborně se tomu říká efekt opakované zátěže. Stejný trénink už takovou bolest nevyvolá, ale ty přitom dál rosteš."
+    },
+    {
+      "otazka": "Co sledovat místo svalovky?",
+      "odpoved": "Progres v zátěži a opakováních v čase, kvalitní techniku a plný rozsah pohybu, rozumný objem napříč týdnem, dost bílkovin a energie a spánek. Když ti postupně přibývají kila a opakování při čisté technice a cítíš se odpočatý a silný, rosteš, ať tě bolí, nebo ne."
+    },
+    {
+      "otazka": "Proč je honba za svalovkou špatně?",
+      "odpoved": "Vede ke zbytečnému ničení se, horší regeneraci a slabšímu výkonu v dalším tréninku. Honba za bolestí znamená přestřelovat dávku, a to zvyšuje riziko zranění a přetrénování."
+    },
+    {
+      "otazka": "Jak svalovku zmírnit?",
+      "odpoved": "Lehkým pohybem. Procházka, lehké rozhýbání nebo mírná aktivita prokrví svaly a bolest odejde rychleji než ležením na gauči."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jenže bolest po tréninku ti o růstu svalů neřekne skoro nic."},
+    {"pro": "kratka_odpoved", "citace": "svalovka je hlavně reakce na nezvyklý podnět. Naběhne, když uděláš něco, na co tělo není zvyklé: nový cvik, výrazně víc sérií než obvykle, hodně brzdivé (excentrické) fáze, delší rozsah pohybu."},
+    {"pro": "kratka_odpoved", "citace": "Progresivní přetížení."},
+    {"pro": "kratka_odpoved", "citace": "Dost bílkovin a celkově dost energie."},
+    {"pro": "kratka_odpoved", "citace": "Regenerace a spánek."},
+    {"pro": "kratka_odpoved", "citace": "Můžeš skvěle růst skoro bez svalovky, typicky když máš zaběhnutý, chytře postavený trénink, kterému tělo rozumí."},
+    {"pro": "faq[0]", "citace": "Odborně se tomu říká DOMS: opožděná svalová bolest. Je to ta tupá, citlivá bolest, která nepřijde hned po tréninku, ale naběhne s odstupem a vrcholí zhruba den až dva potom."},
+    {"pro": "faq[1]", "citace": "tělo si na podnět zvykne. Když ten samý trénink zopakuješ za týden, bolí míň. Za další týden skoro vůbec. Odborně se tomu říká efekt opakované zátěže. Tělo se adaptuje a stejný trénink už takovou bolest nevyvolá. Ale ty přitom dál rosteš."},
+    {"pro": "faq[2]", "citace": "Progres v zátěži a opakováních v čase"},
+    {"pro": "faq[2]", "citace": "Kvalitní technika a plný rozsah pohybu"},
+    {"pro": "faq[2]", "citace": "Rozumný objem (počet sérií) napříč týdnem"},
+    {"pro": "faq[2]", "citace": "Dost bílkovin a celkové energie"},
+    {"pro": "faq[2]", "citace": "Spánek a regenerace mezi tréninky"},
+    {"pro": "faq[2]", "citace": "Když ti v sešitě (nebo v appce) postupně přibývají kila a opakování při čisté technice a cítíš se odpočatý a silný, rosteš. Ať tě bolí, nebo ne."},
+    {"pro": "faq[3]", "citace": "Zbytečné ničení se."},
+    {"pro": "faq[3]", "citace": "Horší regenerace. Když jsi pořád dobitý, hůř se zotavuješ, hůř spíš a v dalším tréninku podáš slabší výkon."},
+    {"pro": "faq[3]", "citace": "Riziko zranění a přetrénování. Honba za bolestí znamená přestřelovat dávku."},
+    {"pro": "faq[4]", "citace": "Když přijde svalovka, zmírni ji lehkým pohybem. Procházka, lehké rozhýbání, mírná aktivita prokrví svaly a bolest odejde rychleji než ležením na gauči."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak dlouho svalovka typicky trvá celkem, jen že vrcholí zhruba den až dva po tréninku.",
+    "Článek neříká, kdy už bolest po tréninku není svalovka, ale zranění, a kdy s ní jít k lékaři.",
+    "Článek nedává konkrétní čísla k objemu tréninku (počet sérií týdně) ani k množství bílkovin."
+  ],
+  "kontrola": "opraveno: kratka_odpoved „růst skoro bez svalovky je normální“ přepsáno blíž článku („můžeš skvěle růst skoro bez svalovky“); faq[2] doplněna vynechaná podmínka „cítíš se odpočatý a silný“",
+  "hlas": "beze změny"
+}

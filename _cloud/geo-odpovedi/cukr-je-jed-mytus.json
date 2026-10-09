@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/cukr-je-jed-mytus.html",
+  "titulek": "Cukr je jed? Mýtus o cukru, tloustnutí a cukrovce",
+  "hlavni_otazka": "Je cukr jed a tloustne se z něj?",
+  "kratka_odpoved": "Není. Jed dělá dávka a lžíce cukru v kávě má kolem 20 kalorií. Tloustne se z dlouhodobého kalorického nadbytku a je jedno, jestli přišel z cukru, másla nebo rýže. Problém je, kolik cukru se nasčítá za celý den, hlavně ve slazených nápojích.",
+  "faq": [
+    {
+      "otazka": "Způsobuje cukr cukrovku 2. typu?",
+      "odpoved": "Přímo ne. Cukrovka 2. typu stojí hlavně na inzulinové rezistenci, kterou nejvíc žene nadváha a viscerální tuk, nedostatek pohybu, slabá svalovina, genetika a věk. Cukr s tím souvisí nepřímo, přes přejídání a tloustnutí."
+    },
+    {
+      "otazka": "Proč vadí hlavně slazené nápoje?",
+      "odpoved": "Jsou to tekuté kalorie, které tě nezasytí. Půl litru koly má zhruba 200 kalorií a tělo to skoro nezaregistruje jako jídlo. Proto je u hubnutí jedna z prvních věcí omezit slazené pití."
+    },
+    {
+      "otazka": "Kolik přidaného cukru denně je v pořádku?",
+      "odpoved": "Orientačně do zhruba 10 % denního příjmu energie. U běžného jídelníčku je to klidně prostor na zákusek či dezert a nemusíš počítat každý gram."
+    },
+    {
+      "otazka": "Živí cukr rakovinu?",
+      "odpoved": "Vyřazení cukru rakovinu neléčí ani jí nezabrání. Glukózu si tělo umí vyrobit i bez toho, abys ji snědl. Riziko některých nádorů reálně zvedá spíš obezita."
+    },
+    {
+      "otazka": "Jak nejlíp předejít cukrovce 2. typu?",
+      "odpoved": "Nejsilnější páky jsou rozumná hmotnost, pravidelný pohyb, silový trénink a víc svalů. Zákaz cukru mezi nimi není. Sval je metabolicky aktivní tkáň, která glukózu zpracovává. Pokud už máš diagnostikovanou cukrovku, poraď se s lékařem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jed nedělá látka, ale její množství."},
+    {"pro": "kratka_odpoved", "citace": "Lžíce cukru v kávě má kolem 20 kalorií."},
+    {"pro": "kratka_odpoved", "citace": "Sám o sobě ne. Tloustne se z dlouhodobého kalorického nadbytku a je jedno, jestli přišel z cukru, másla nebo rýže."},
+    {"pro": "kratka_odpoved", "citace": "Problém je, kolik cukru se nasčítá za celý den, aniž si toho všimneš."},
+    {"pro": "kratka_odpoved", "citace": "Reálně dává smysl hlídat hlavně slazené nápoje: tekuté kalorie, které nezasytí."},
+    {"pro": "faq[0]", "citace": "Přímo ne. Cukrovka 2. typu stojí hlavně na inzulinové rezistenci, která souvisí s nadváhou a viscerálním tukem."},
+    {"pro": "faq[0]", "citace": "Nadváha, hlavně viscerální tuk (ten kolem orgánů v břiše), nedostatek pohybu, slabá svalovina, genetika a věk."},
+    {"pro": "faq[0]", "citace": "Cukr s tím souvisí nepřímo: když se přejídáš a tloustneš, roste riziko"},
+    {"pro": "faq[1]", "citace": "Vypiješ půl litru koly se zhruba 200 kaloriemi za pár doušků a tvoje tělo to skoro nezaregistruje jako jídlo."},
+    {"pro": "faq[1]", "citace": "Ne proto, že je jed, ale proto, že tě nezasytí."},
+    {"pro": "faq[1]", "citace": "Proto je u hubnutí jedna z prvních a nejjednodušších věcí omezit slazené pití"},
+    {"pro": "faq[2]", "citace": "Orientačně do ~10 % denního příjmu energie. U běžného jídelníčku je to klidně prostor na zákusek či dezert, ne nutnost počítat každý gram."},
+    {"pro": "faq[3]", "citace": "Glukózu si tělo umí vyrobit i bez toho, abys ji snědl"},
+    {"pro": "faq[3]", "citace": "Vyřazení cukru rakovinu neléčí ani jí nezabrání. To, co riziko některých nádorů reálně zvedá, je spíš obezita"},
+    {"pro": "faq[4]", "citace": "nejsilnější páky proti cukrovce 2. typu nejsou „zakázat cukr\". Jsou to udržení rozumné hmotnosti, pravidelný pohyb, silový trénink a víc svalů. Sval je metabolicky aktivní tkáň, která glukózu zpracovává."},
+    {"pro": "faq[4]", "citace": "Při zdravotních potížích nebo diagnostikované cukrovce se poraď s lékařem."}
+  ],
+  "nejiste": [
+    "Článek neuvádí zdroje ani studie, ze kterých tvrzení vychází.",
+    "Článek nepřevádí 10 % energie na gramy cukru; to by se muselo dopočítat a nedopočítával jsem to.",
+    "U návykovosti cukru článek říká, že přirovnání ke kokainu pochází hlavně z pokusů na krysách; neuvádí, jestli a jak moc je cukr návykový u lidí."
+  ],
+  "kontrola": "opraveno: faq[4] doplněno „pokud už máš diagnostikovanou cukrovku, poraď se s lékařem“ ze závěrečného upozornění; faq[1] otázka bez srovnání se sladkým jídlem, které článek nedělá",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; kratka_odpoved bez „dávka, ne látka“; faq[1] otázka přirozeněji; faq[4] bez „nejsou X, ale Y“"
+}

@@ -1,0 +1,43 @@
+{
+  "url": "https://martinbarna.cz/clanky/kofein-pred-treninkem.html",
+  "titulek": "Kofein před tréninkem: jistota, nebo spíš zvyk?",
+  "hlavni_otazka": "Funguje kofein před tréninkem, nebo je to jen placebo?",
+  "kratka_odpoved": "Kofein není pouhé placebo, funguje i farmakologicky: blokuje adenosin, pomáhá náboru svalových vláken a drží tě bdělejšího. Účinkuje ale slaběji, než si fitness scéna ráda namlouvá, a když ho piješ každý den, účinkuje ještě míň.",
+  "faq": [
+    {
+      "otazka": "Pomohl kofein ve studii se skokem do výšky?",
+      "odpoved": "Vědci dali 34 ženám 6 mg kofeinu na kilo a řekli jim, že možná dostávají kofein, placebo, nebo laktát, který výkon zhorší. Ve skoku do výšky nevyšel oproti kontrolnímu dni žádný rozdíl. Co dostaly, uhodla jen třetina (33 %)."
+    },
+    {
+      "otazka": "Znamená to, že kofein je jen placebo?",
+      "odpoved": "Ne. Jedna studie ještě není věda a kofein funguje i farmakologicky, jen slaběji, než se o něm tvrdí."
+    },
+    {
+      "otazka": "Kolik kofeinu si dát před tréninkem?",
+      "odpoved": "Běžně se uvádí 3 až 6 mg na kilo tělesné hmotnosti."
+    },
+    {
+      "otazka": "Funguje kofein, když ho piju každý den?",
+      "odpoved": "Funguje, ale ještě slaběji než u člověka, který ho denně nepije."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jak to vidím já: kofein není pouhé placebo, funguje i farmakologicky. Blokuje adenosin, pomáhá náboru svalových vláken a drží tě bdělejšího. Jen účinkuje slaběji, než si fitness scéna ráda namlouvá. A když ho piješ každý den, účinkuje ještě míň."},
+    {"pro": "faq[0]", "citace": "Vzali 34 žen a dali jim 6 mg kofeinu na kilo, to je zhruba pět Red Bullů. Háček byl v tom, co jim k tomu řekli: možná dostáváte kofein, možná placebo, možná laktát, který vám výkon naopak zhorší."},
+    {"pro": "faq[0]", "citace": "Pak se měřil skok do výšky."},
+    {"pro": "faq[0]", "citace": "A výsledek? Oproti kontrolnímu dni žádný rozdíl. Když pak měly hádat, co vlastně dostaly, trefila se jen třetina (33 %)."},
+    {"pro": "faq[0]", "citace": "Nedávno jsem narazil na jednu chytře postavenou studii z roku 2026."},
+    {"pro": "faq[1]", "citace": "Internet by z toho hned udělal titulek, že kofein je jen placebo. Jenže jedna studie ještě není věda."},
+    {"pro": "faq[1]", "citace": "Jak to vidím já: kofein není pouhé placebo, funguje i farmakologicky."},
+    {"pro": "faq[1]", "citace": "Jen účinkuje slaběji, než si fitness scéna ráda namlouvá."},
+    {"pro": "faq[2]", "citace": "Výše v obrázcích najdeš i konkrétní návod na dávkování (3 až 6 mg na kilo)."},
+    {"pro": "faq[3]", "citace": "Jen účinkuje slaběji, než si fitness scéna ráda namlouvá. A když ho piješ každý den, účinkuje ještě míň."}
+  ],
+  "nejiste": [
+    "Konkrétní návod na dávkování (načasování, jak se dostat k 3 až 6 mg na kilo, cyklování) je jen v infografice, ne v textu. Odpověď proto uvádí jen rozsah dávky.",
+    "Článek neříká, o kolik slaběji kofein u denních pijáků účinkuje, ani jestli pomáhá kofein na čas vysadit. Otázku na cyklování jen klade čtenáři.",
+    "Studie byla na 34 ženách a měřila jen skok do výšky. Článek sám varuje, že jedna studie není věda, proto ji odpovědi nepodávají jako obecný závěr."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] otázka přirozeněji; faq[2] bez „Článek uvádí“"
+}

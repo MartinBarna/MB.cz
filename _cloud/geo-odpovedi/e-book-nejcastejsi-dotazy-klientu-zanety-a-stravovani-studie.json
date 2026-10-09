@@ -1,0 +1,48 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-zanety-a-stravovani-studie.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Záněty a stravování – studie",
+  "hlavni_otazka": "Existuje protizánětlivá dieta?",
+  "kratka_odpoved": "Když jsou pohlídané kalorie a tělesný tuk, makroživiny a jejich poměry nemají na zánětlivost velký vliv. Studie ukázaly při stejných kaloriích stejné zánětlivé markery u keto i vysokosacharidové diety a u živočišných i rostlinných bílkovin. CRP vždy klesá, když zhubneš tuk, takže hlídej hlavně tělesný tuk.",
+  "faq": [
+    {
+      "otazka": "Je zánět po tréninku škodlivý?",
+      "odpoved": "Ne. Krátké přechodné zvýšení tepu, tlaku a volných radikálů při tréninku neškodí, ten proces ho potřebuje. Dobrý trénink funguje trochu jako očkování: dá tělu kontrolovanou dávku stresu a ono se naučí líp adaptovat."
+    },
+    {
+      "otazka": "Jaký je rozdíl mezi lokálním a systémovým zánětem?",
+      "odpoved": "Lokální zánět je reakce při zotavení ze zranění nebo po tréninku a se systémovým nesouvisí: když se odřeš, rakovinu do toho místa nedostaneš. Dlouhodobě zvýšené zánětlivé markery v krvi (CRP) však riziko různých nemocí zvyšují."
+    },
+    {
+      "otazka": "Je cukr zánětlivý?",
+      "odpoved": "Ve studiích s kontrolovanými kaloriemi měly skupiny s více i méně cukry stejný vliv na zánětlivost. Kdo jí hodně cukrů, jí většinou hodně kalorií a tloustne, a právě tuková tkáň zánětlivost zvyšuje, protože produkuje adipokiny."
+    },
+    {
+      "otazka": "Snižují omega-3 mastné kyseliny zánět?",
+      "odpoved": "Omega-3 mají nejvíc důkazů o zlepšení zánětlivých markerů. Studie ukazují buď neutrální vliv, nebo zlepšení."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Makroživiny a jejich poměry nemají velký vliv na zánětlivost, když jsou kontrolovány kcal a tělesný tuk."},
+    {"pro": "kratka_odpoved", "citace": "Srovnává keto dietu vs. vysokosacharidovou, stejné kcal u obou skupin. stejné zánětlivé, CRP markery CRP vždy klesá, když zhubnete tuk"},
+    {"pro": "kratka_odpoved", "citace": "Živočišné vs. rostlinné zdroje bílkovin, stejné kcal u obou skupin. stejné zlepšení CRP, zánětů"},
+    {"pro": "kratka_odpoved", "citace": "Kontrolujte, kolik máte tělesného tuku."},
+    {"pro": "faq[0]", "citace": "Jenže krátké přechodné zvýšení neškodí. Naopak, ten proces ho potřebuje. Dobrý trénink funguje trochu jako očkování. Dá tělu kontrolovanou dávku stresu a ono se na ni naučí líp adaptovat."},
+    {"pro": "faq[0]", "citace": "Zvedne se ti tepovka, krevní tlak i produkce volných radikálů."},
+    {"pro": "faq[1]", "citace": "Body 2. a 3. spadají pod takzvaný lokální zánět."},
+    {"pro": "faq[1]", "citace": "zotavuje ze zranění zotavuje po tréninku (reakce na mikro poškození tkáně)"},
+    {"pro": "faq[1]", "citace": "Lokální zánět tedy nesouvisí se systémovým."},
+    {"pro": "faq[1]", "citace": "Když se odřete, nedostanete do toho místa rakovinu, i když se tam zvýší zánětlivost."},
+    {"pro": "faq[1]", "citace": "Dlouhodobě zvýšené zánětlivé markery v krvi (CRP) však zvyšují riziko různých nemocí."},
+    {"pro": "faq[2]", "citace": "u studií s kontrolovanými kcal skupiny s více cukry i méně cukry ukazují stejný vliv na zánětlivost"},
+    {"pro": "faq[2]", "citace": "Když jíte hodně cukrů, jíte většinou hodně kcal celkově a stáváte se tím pádem obéznější, právě tímto se zvyšuje zánětlivost."},
+    {"pro": "faq[2]", "citace": "tuková tkáň zvyšuje zánětlivost, protože produkuje adipokiny a ty zvyšují zánětlivost"},
+    {"pro": "faq[3]", "citace": "Omega 3 (polynenasycené tuky) mají nejvíce důkazů o zlepšení zánětlivých markerů – buď ukazují neutrální vliv, nebo zlepšení."}
+  ],
+  "nejiste": [
+    "Článek v jedné větě píše, že malé zvýšení systémového zánětu s rizikem nemocí nesouvisí, a hned vysvětluje na příkladu lokálního zánětu (odřenina). Rozlišení lokálního a systémového zánětu je v článku místy nejasné, proto jsem v odpovědi použil jen větu, že lokální zánět se systémovým nesouvisí, a příklad s odřeninou.",
+    "U nasycených tuků článek uvádí smíšené výsledky (observační studie bez kontroly kcal vs. zlepšení při náhradě polynenasycenými) a nerozhoduje je, proto k nim otázku nedávám.",
+    "Článek neuvádí normální hodnoty CRP."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno „při stejných kaloriích“ (srovnání keto vs. sacharidy a živočišné vs. rostlinné bílkoviny platí v článku jen při stejných kcal)",
+  "hlas": "upraveno: kratka_odpoved bez „Studie v článku“"
+}

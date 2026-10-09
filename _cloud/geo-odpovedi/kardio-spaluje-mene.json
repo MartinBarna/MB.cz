@@ -1,0 +1,46 @@
+{
+  "url": "https://martinbarna.cz/clanky/kardio-spaluje-mene.html",
+  "titulek": "Kardio spaluje míň, než si myslíš",
+  "hlavni_otazka": "Kolik kalorií doopravdy spálím kardiem?",
+  "kratka_odpoved": "Míň, než ukazují hodinky. Podle přehledu 18 aerobních intervencí (Pontzer a Trexler, Current Biology 2026) tělo zhruba 70 % kalorií spálených v kardiu dožene jinde. Když ti hodinky ukážou 600 kcal, denní výdej ti často naroste třeba jen o 180.",
+  "faq": [
+    {
+      "otazka": "Jak tělo dohání kalorie spálené kardiem?",
+      "odpoved": "Sníží klidový metabolismus, míň se hýbeš mimo trénink, tělo šetří i v noci a doladí hormony."
+    },
+    {
+      "otazka": "Kdy je kompenzace po kardiu největší?",
+      "odpoved": "Při hlubokém deficitu, dlouhé pravidelné aktivitě a v soutěžní přípravě. Tam se kompenzace může blížit ke 100 %."
+    },
+    {
+      "otazka": "Platí to stejně i u silového tréninku?",
+      "odpoved": "U silovky je kompenzace výrazně nižší, i když dat na ni je zatím míň než na kardio. Proto ti silovka dá podobné výsledky při nižším celkovém výdeji."
+    },
+    {
+      "otazka": "Je kardio na hubnutí k ničemu?",
+      "odpoved": "Pro srdce, hlavu i kondici je kardio super. Jako hlavní nástroj na hubnutí je ale slabé."
+    },
+    {
+      "otazka": "Na co se při hubnutí zaměřit místo kardia?",
+      "odpoved": "Nahoře je strava, tedy kalorický deficit. Pak silový trénink, který drží svaly a líp odolává kompenzaci. Kardio ber jako bonus navrch."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Pontzer a Trexler prošli v Current Biology (2026) 18 aerobních intervencí."},
+    {"pro": "kratka_odpoved", "citace": "Tělo zhruba 70 % kalorií „spálených v kardiu\" dožene jinde."},
+    {"pro": "kratka_odpoved", "citace": "Hodinky ti ukážou 600 kcal? Reálně ti denní výdej často naroste třeba jen o 180."},
+    {"pro": "faq[0]", "citace": "Sníží klidový metabolismus, míň se hýbe mimo trénink, šetří i v noci, doladí hormony."},
+    {"pro": "faq[1]", "citace": "A kdy to bolí nejvíc? Při hlubokém deficitu, dlouhé pravidelné aktivitě a soutěžní přípravě. Tam se kompenzace může blížit ke 100 %."},
+    {"pro": "faq[2]", "citace": "U silovky je tahle kompenzace výrazně nižší, i když dat na ni máme zatím míň než na kardio."},
+    {"pro": "faq[2]", "citace": "Proto ti silovka dá podobné výsledky při nižším celkovém výdeji."},
+    {"pro": "faq[3]", "citace": "Kardio přitom není špatné. Pro srdce, hlavu i kondici je super. Jenom je to špatný hlavní nástroj na hubnutí."},
+    {"pro": "faq[4]", "citace": "Nahoře je strava (kalorický deficit). Zkratku zatím nikdo nenašel. Pak silový trénink, ten drží svaly a líp odolává kompenzaci. A kardio ber jako bonus, ne jako základ."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, o kolik přesně je kompenzace u silového tréninku nižší, a sám přiznává, že dat na ni je míň než na kardio.",
+    "Pár 600 kcal na hodinkách a 180 kcal reálně je v článku ilustrační příklad („třeba“, „často“), ne pevné pravidlo pro každého. Proto je v odpovědi podán stejně opatrně.",
+    "Článek neříká nic o tom, kdo byl ve studiích (pohlaví, věk, výchozí váha) ani jak dlouho intervence trvaly."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] bez „Není X, je Y“; faq[4] bez „bonus, ne základ“"
+}

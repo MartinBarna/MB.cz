@@ -1,0 +1,86 @@
+{
+  "url": "https://martinbarna.cz/jak-nabrat-svaly/",
+  "titulek": "Jak nabrat svaly: kompletní průvodce pro naturály",
+  "hlavni_otazka": "Jak nabrat svaly bez steroidů?",
+  "kratka_odpoved": "Svaly rostou ze tří věcí: postupně zvedáš zátěž v posilovně, jíš dost bílkovin v mírném kalorickém přebytku a dopřeješ tělu čas a regeneraci. Bílkovin dej kolem 1,6–2,2 g/kg každý den. Jako naturál počítej s roky.",
+  "faq": [
+    {
+      "otazka": "Kolik bílkovin potřebuju na růst svalů?",
+      "odpoved": "Rozumný cíl pro naturála je zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně. Pro většinu lidí je v pohodě mířit kolem 2 g/kg. Důležitější než přesné číslo je trefovat to každý den a rozdělit do několika jídel."
+    },
+    {
+      "otazka": "Musím na svaly jíst co nejvíc?",
+      "odpoved": "Ne. Svaly se nejlíp nabírají v mírném kalorickém přebytku, takzvaném lean bulku. Když do sebe nacpeš dvojnásobek jídla, sval nevyroste rychleji a nadbytek se uloží jako tuk."
+    },
+    {
+      "otazka": "Dají se nabírat svaly i v kalorickém deficitu?",
+      "odpoved": "U některých lidí ano, tomu se říká rekompozice: u úplných začátečníků, u lidí po delší pauze a u lidí s vyšším procentem tuku. U trénovaného, štíhlého pokročilého je to mnohem těžší a pomalejší, tam je na slušný růst lepší jít do přebytku."
+    },
+    {
+      "otazka": "Ničí kardio svaly?",
+      "odpoved": "Rozumné množství kardia svaly nesežere, naopak ti zlepší zdraví srdce, kondici i schopnost regenerovat. Proti svalu může jít až extrém: hodiny vytrvalostního kardia denně k tomu málo jídla a málo bílkovin."
+    },
+    {
+      "otazka": "Které suplementy na svaly mají smysl?",
+      "odpoved": "Nejdřív si srovnej trénink, jídlo a spánek. Z doplňků vede kreatin, levný a jeden z nejlépe prozkoumaných. BCAA jsou při dostatku bílkovin pro většinu lidí vyhozené peníze a protein v prášku je jen pohodlný způsob, jak dohnat bílkoviny."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Rostou ze tří věcí, které musíš dávat poctivě a dlouho: postupně zvedat zátěž v posilovně, jíst dost bílkovin a být v mírném kalorickém přebytku, a dopřát tělu čas a regeneraci, aby ten nový sval mělo z čeho a kdy postavit."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Dej dost bílkovin: kolem 1,6–2,2 g/kg každý den."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Buď trpělivý. Jako naturál se to měří v letech, ne týdnech."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Rozumný cíl pro naturála je zhruba 1,6 až 2,2 gramu bílkovin na kilogram tělesné hmotnosti denně. Pro většinu lidí je úplně v pohodě mířit kolem 2 g/kg a netrápit se desetinkami. Důležitější než přesné číslo je tu hodnotu trefovat každý den, ne jen v den tréninku, a rozdělit ji do několika jídel."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Proto se svaly nejlíp nabírají v kalorickém přebytku."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Tělo neumí postavit sval rychleji jen proto, že do něj nacpeš dvojnásobek jídla; ten nadbytek se uloží jako tuk. Proto dává smysl takzvaný lean bulk: malý, kontrolovaný přebytek, při kterém přibíráš pomalu a většina přírůstku je sval, ne sádlo."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Existuje rekompozice, současné ubývání tuku a přibývání svalu. U určitých skupin lidí funguje překvapivě dobře: u úplných začátečníků, u lidí po delší pauze, kteří se vracejí k tréninku, a u lidí s vyšším procentem tuku, ze kterého má tělo energii na stavbu."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "U trénovaného, štíhlého pokročilého je to mnohem těžší a pomalejší. Tam už platí, že na slušný růst je lepší jít do přebytku."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Realita: rozumné množství kardia svaly nesežere, naopak ti zlepší zdraví srdce, kondici i schopnost regenerovat. Problém nastává až v extrémech: hodiny vytrvalostního kardia denně k tomu málo jídla a málo bílkovin, to ano, to může jít proti svalu."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Nejdřív musíš mít srovnaný trénink, jídlo a spánek, pak teprve řeš prášky. Z toho, co se reálně vyplatí, vede kreatin: levný, jeden z nejlépe prozkoumaných doplňků vůbec, pomáhá s výkonem a tím nepřímo i s růstem."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Naopak BCAA jsou pro většinu lidí vyhozené peníze: pokud jíš dost bílkovin (a po přečtení sekce výše už víš, že máš), tělo všechny potřebné aminokyseliny dostává z jídla a samostatné BCAA nic navíc nepřidají."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Protein v prášku není „suplement na svaly\" v pravém slova smyslu, je to jen pohodlný způsob, jak dohnat bílkoviny, když to z běžného jídla nestíháš."
+    }
+  ],
+  "nejiste": [
+    "Pilířový průvodce, ne článek ve složce clanky/. Revize ho zařadila, protože má vlastní text (přes 1 700 slov) a schéma Article.",
+    "Článek neuvádí velikost přebytku v kcal ani tempo přibírání v kg za měsíc, jen „malý, kontrolovaný přebytek“.",
+    "Článek nedává dávku kreatinu, proto v odpovědi není.",
+    "FAQPage JSON-LD na stránce mluví o rychlosti nabírání za první rok bez čísla a o 2 g/kg „víc už extra svaly nepřidá“; viditelný text tu druhou větu nemá, do JSON se nepřebírala."
+  ],
+  "kontrola": "opraveno: nově doplněno při revizi 10. 10. 2026 (dávky 1 až 3 pilíř vynechaly)",
+  "hlas": "upraveno: kratka_odpoved bez „v letech, ne týdnech“; faq[4] bez „musíš“"
+}

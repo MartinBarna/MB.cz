@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-pohybove-aktivity.html",
+  "titulek": "E-book Nejčastější dotazy klientů – POHYBOVÉ AKTIVITY",
+  "hlavni_otazka": "Jaký pohyb je nejlepší, když chci hubnout a mám nadváhu?",
+  "kratka_odpoved": "Při nadváze doporučuju posilování nebo chůzi, běh rozhodně ne: při nárazech působí na klouby trojnásobek tvé váhy. Vyber si pravidelnou aktivitu, která tě baví, a stanov si standard, třeba 3x týdně fitko 60 minut nebo 3x týdně chůzi 7 000 kroků.",
+  "faq": [
+    {
+      "otazka": "Má smysl chodit, když na sport nemám?",
+      "odpoved": "Ano. Chůzí spálíš mnohem víc než sezením, pomáhá proti bolesti zad a kloubů, zlepšuje náladu a spánek. I 20 minut denně udělá oproti člověku, který se nehýbe vůbec, obrovský rozdíl."
+    },
+    {
+      "otazka": "Jakou výhodu má silový trénink oproti kardiu?",
+      "odpoved": "Při kardiu sice spálíš víc energie, ale po silovém tréninku může tělo dalších 36–48 hodin regenerovat, a když mu dodáš dost bílkovin, regenerace sama pálí značné množství energie. U kardia ty následující dny regenerace nejsou."
+    },
+    {
+      "otazka": "Jak si nastavit kroky na týden?",
+      "odpoved": "Stáhni si do mobilu krokoměr a stanov si týdenní cíl, třeba 49 000 kroků, tedy 7 000 denně. Jeden den můžeš ujít víc a druhý míň, ale máš přehled i motivaci."
+    },
+    {
+      "otazka": "Potřebuju na posilování trenéra?",
+      "odpoved": "Nejlepší je fitness centrum pod odborným dohledem, kde se naučíš správnou techniku, protože cvičení může být prospěšné i na škodu. Když nemáš na trenéra, stačí cvičit doma podle videí z YouTube, na workoutovém hřišti nebo s kamarády, kteří mají zkušenosti."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jednoduše jakýkoliv sport a pohyb bude pro vás skvělý, pokud se jedná o člověka s nadváhou."},
+    {"pro": "kratka_odpoved", "citace": "Výrazně doporučuji cvičení fitness nebo chůzi."},
+    {"pro": "kratka_odpoved", "citace": "Rozhodně nedoporučuji běh. Při nárazech u běhu působí na naše klouby naše váha 3x tolik."},
+    {"pro": "kratka_odpoved", "citace": "Najdi si něco, co tě baví, a toho se drž."},
+    {"pro": "kratka_odpoved", "citace": "Zároveň doporučuji, stanovit si standardní počet aktivit týdně. Například 3x týdně fitko 60 min nebo 3x týdně chůze 7 000 kroků."},
+    {"pro": "faq[0]", "citace": "Chůze je často podceňovaná zbraň proti bolesti zad a kloubů."},
+    {"pro": "faq[0]", "citace": "Chůzí spalujeme mnohem více než sezením."},
+    {"pro": "faq[0]", "citace": "Podporuje naši imunitu, zlepšuje náladu, pomáhá nám lépe usínat."},
+    {"pro": "faq[0]", "citace": "I 20 minut denně udělá oproti člověku, který se nehýbe vůbec, obrovský rozdíl."},
+    {"pro": "faq[1]", "citace": "když cvičíte a poškozujete si tím v podstatě svaly, tak dalších 36 – 48 hodin po tréninku má tělo potenciál regenerovat a pokud mu dodáte dostatek bílkovin, tak ta samotná regenerace pálí značné množství energie."},
+    {"pro": "faq[1]", "citace": "U kardio cvičení sice spálíte energie více, ale ty následující dny potenciální regenerace u něj nejsou."},
+    {"pro": "faq[2]", "citace": "do mobilu se dá stáhnout krokoměr a díky němu vidíme, kolik kroků denně, týdně a měsíčně ujdete."},
+    {"pro": "faq[2]", "citace": "za týden chcete ujít 49 000 kroků. To je 7 000 kroků denně. Jeden den můžete ujít více a druhý méně. Ale máte jasný přehled a motivaci dodržení aktivity"},
+    {"pro": "faq[3]", "citace": "Nejlepší volbou je fitness centrum pod odborným dohledem, kdy se naučíte, jak správně cvičit, protože jak vždy říkám svým klientům: „Cvičení může být prospěšné, stejně tak jako na škodu.“"},
+    {"pro": "faq[3]", "citace": "Ovšem ne každý má finance na trenéra a to naprosto chápu, v tom případě stačí cvičit doma podle videí z YouTube."},
+    {"pro": "faq[3]", "citace": "Můžete cvičit i na workout hřišti, případně požádat kamarády, kteří mají se cvičením zkušenosti."}
+  ],
+  "nejiste": [
+    "Článek nevyčísluje, kolik energie spálí regenerace po silovém tréninku („značné množství“).",
+    "Článek neuvádí zdroje k tvrzení o trojnásobném zatížení kloubů při běhu.",
+    "Článek nedefinuje, od jaké nadváhy běh nedoporučuje."
+  ],
+  "kontrola": "opraveno: otázka faq[1] ‚Proč je silový trénink lepší než kardio?‘ změněna na ‚Jakou výhodu má…‘, článek mluví o výhodě, ne o tom, že je silový trénink obecně lepší",
+  "hlas": "upraveno: kratka_odpoved z 3. osoby („Martin doporučuje“) do 1. osoby; faq[1] bez „má potenciál regenerovat“; faq[3] „workout hřiště“ → „workoutové hřiště“"
+}

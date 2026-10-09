@@ -1,0 +1,36 @@
+{
+  "url": "https://martinbarna.cz/clanky/namitky-proti-kalorickemu-deficitu.html",
+  "titulek": "5 námitek proti kalorickému deficitu (a proč ani jedna neplatí)",
+  "hlavni_otazka": "Platí kalorický deficit, i když mám problém s hormony nebo metabolismem?",
+  "kratka_odpoved": "Platí. Zdravotní stavy, termický efekt potravin i hormony jsou reálné, ale energetickou bilanci neruší, jen mění čísla, která do ní dosadíš. U lidí, kteří o sobě tvrdili, že jim hubnutí nejde, stál podle studie Lichtman (1992) za neúspěchem podhodnocený příjem a přeceněný pohyb.",
+  "faq": [
+    {
+      "otazka": "Deficit mi nefungoval. Nemám pomalý metabolismus?",
+      "odpoved": "Ve studii Lichtman (1992) seděl u lidí, kteří tvrdili, že jim hubnutí nejde, výdej i klidový metabolismus do 5 % předpovědi. Za selháním stál podhodnocený příjem a přeceněný pohyb."
+    },
+    {
+      "otazka": "Neplatí termodynamika jen pro uzavřený systém?",
+      "odpoved": "Ne, zachování energie platí i pro otevřené systémy, jen musíš počítat víc toků: jídlo dovnitř, teplo, pohyb, dech a to, co odejde ven. Právě proto, že je tělo otevřené, vůbec můžeš zhubnout, tuk z něj odchází pryč."
+    },
+    {
+      "otazka": "A co hormony, zdravotní problémy a to, že kcal není jako kcal?",
+      "odpoved": "Všechno to existuje: zdravotní stavy hubnutí ztěžují, termický efekt potravin je reálný a hormony posouvají obě strany rovnice. Rovnice ale dál platí, mění se jen čísla, která do ní dosadíš."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Zdravotní stavy hubnutí ztěžují, termický efekt potravin je reálný, hormony posouvají obě strany rovnice. Jenže to rovnici nemění v tom smyslu, že by přestala platit. Mění jen čísla, která do ní dosadíš."},
+    {"pro": "kratka_odpoved", "citace": "žádná z těch námitek bilanci neruší, jen mění čísla v ní."},
+    {"pro": "kratka_odpoved", "citace": "Lichtman et al. (1992), NEJM: u lidí, kteří o sobě tvrdili, že jim hubnutí nejde, seděl výdej i klidový metabolismus do 5 % předpovědi. Za selháním stál podhodnocený příjem a přeceněný pohyb, ne porucha metabolismu."},
+    {"pro": "faq[0]", "citace": "Lichtman et al. (1992), NEJM: u lidí, kteří o sobě tvrdili, že jim hubnutí nejde, seděl výdej i klidový metabolismus do 5 % předpovědi. Za selháním stál podhodnocený příjem a přeceněný pohyb, ne porucha metabolismu."},
+    {"pro": "faq[1]", "citace": "Zachování energie platí i pro otevřené systémy. Jen musíš počítat víc toků: jídlo dovnitř, teplo, pohyb, dech, to, co odejde ven. A právě díky tomu, že je tělo otevřené, vůbec můžeš zhubnout. Tuk z něj odchází pryč."},
+    {"pro": "faq[2]", "citace": "Žádná z těch námitek není hloupá. Každá míří na něco, co opravdu existuje. Zdravotní stavy hubnutí ztěžují, termický efekt potravin je reálný, hormony posouvají obě strany rovnice. Jenže to rovnici nemění v tom smyslu, že by přestala platit. Mění jen čísla, která do ní dosadíš."}
+  ],
+  "nejiste": [
+    "Článek je krátký a odkazuje na celý rozbor pěti námitek na Instagramu; podrobně vysvětluje jen námitku „mně to nefungovalo“ (Lichtman) a „tělo je otevřený systém“.",
+    "Článek neříká, jak přesně hormony nebo konkrétní nemoci posouvají výdej či příjem, ani o kolik; proto jsou v odpovědi jen obecně.",
+    "Článek neradí, jak příjem a pohyb přesněji měřit, aby se člověk vyhnul podhodnocení, proto taková rada v FAQ není.",
+    "Počet účastníků Lichtmanovy studie článek neuvádí."
+  ],
+  "kontrola": "opraveno: kratka_odpoved ‚u lidí, kterým hubnutí nešlo‘ → ‚u lidí, kteří o sobě tvrdili, že jim hubnutí nejde‘, studie Lichtman sledovala lidi podle jejich vlastního tvrzení",
+  "hlas": "upraveno: kratka_odpoved bez „ne porucha metabolismu“"
+}

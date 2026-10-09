@@ -1,0 +1,45 @@
+{
+  "url": "https://martinbarna.cz/clanky/meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.html",
+  "titulek": "Měli byste počítat objem tréninku jako sety nebo opakování? Oboje! Další díl série Věda vs. Mýty v Tréninku.",
+  "hlavni_otazka": "Mám objem tréninku na svaly počítat podle setů, nebo podle opakování?",
+  "kratka_odpoved": "Oboje, píše Menno Henselmans, expert na fitness postavené na důkazech. Většinu stimulu k růstu podle něj udává počet setů na svalovou skupinu za týden, ale kolik opakování v každém setu uděláš se stejnou váhou a tempem, se taky počítá. Na opakováních záleží, pokud kvůli nim neobětuješ tenzi.",
+  "faq": [
+    {
+      "otazka": "Kolik opakování je nejlepší na růst svalů?",
+      "odpoved": "Představa „zóny maximální hypertrofie“ v rozmezí 6 až 12 opakování je mýtus. Spousta studií ukázala, že když trénuješ blízko selhání, funguje spíš rozsah 5 až 30 opakování."
+    },
+    {
+      "otazka": "Proč na počtu opakování vůbec záleží?",
+      "odpoved": "Svaly rostou hlavně díky mechanické tenzi, kterou z velké části určuje váha na ose. Důležitá je i doba, po kterou tenze trvá (time under tension, TUT). Menno Henselmans vidí stimul růstu zhruba jako plochu pod křivkou, kterou tyhle dvě věci dohromady tvoří."
+    },
+    {
+      "otazka": "Pomůže delší pauza mezi sety k většímu růstu?",
+      "odpoved": "Podle Menna Henselmanse ano: když prodloužíš pauzu a všechno ostatní necháš stejné, tenze zůstane a TUT se zvedne, protože zvládneš opakování navíc. To je větší stimul k růstu. Stejně funguje, když set dotáhneš blíž k selhání."
+    },
+    {
+      "otazka": "Je lepší zvednout váhu, nebo udělat víc opakování?",
+      "odpoved": "Henselmans to počítá tak, že když zvedneš intenzitu, tenze stoupne, ale TUT klesne. Na stimul růstu to ve výsledku vyjde víceméně nastejno."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Měli byste počítat objem tréninku jako sety nebo opakování? Oboje!"},
+    {"pro": "kratka_odpoved", "citace": "V evidence-based fitku se kvůli tomu skoro všichni shodli na jednom: objem tréninku má smysl počítat jako počet setů na svalovou skupinu za týden."},
+    {"pro": "kratka_odpoved", "citace": "Takže ano, na opakováních záleží – pokud kvůli nim neobětuješ tenzi. Většinu stimulu k růstu udává počet setů, ale kolik opakování v každém setu uděláš (se stejnou váhou a tempem) se taky počítá."},
+    {"pro": "kratka_odpoved", "citace": "Tohle je překlad zajímavého příspěvku od Menna Henselmanse, experta na evidence-based fitness a výživu."},
+    {"pro": "faq[0]", "citace": "Posledních deset let pořádně zamávalo s mýtem o „zóně maximální hypertrofie“ v rozmezí 6-12 opakování. Spousta studií ukázala, že pokud trénuješ blízko selhání, funguje spíš rozsah 5-30 opakování."},
+    {"pro": "faq[1]", "citace": "Svaly rostou hlavně díky mechanické tenzi. Jak velká ta tenze je, určuje z velké části váha na ose, tedy tvoje tréninková intenzita (% z 1RM, a taky jak moc se snažíš pohyb zrychlit). Doba, po kterou tenze trvá, se značí jako time under tension (TUT). Stimul růstu vidím zhruba jako plochu pod křivkou, kterou tyhle dvě věci dohromady tvoří."},
+    {"pro": "faq[1]", "citace": "Tohle je překlad zajímavého příspěvku od Menna Henselmanse, experta na evidence-based fitness a výživu."},
+    {"pro": "faq[2]", "citace": "Když si naopak prodloužíš pauzu mezi sety a všechno ostatní necháš stejné, tenze zůstane na svém, ale TUT se zvedne. To je větší stimul k růstu, odpovídající tomu, kolik opakování navíc zvládneš. Stejně to funguje, když set dotáhneš blíž k selhání: opakování navíc znamenají víc TUT při podobné úrovni tenze."},
+    {"pro": "faq[2]", "citace": "Tohle je překlad zajímavého příspěvku od Menna Henselmanse, experta na evidence-based fitness a výživu."},
+    {"pro": "faq[3]", "citace": "Když zvedneš intenzitu, tenze stoupne, ale TUT klesne. Na stimul růstu to ve výsledku vyjde víceméně nastejno."},
+    {"pro": "faq[3]", "citace": "Tohle je překlad zajímavého příspěvku od Menna Henselmanse, experta na evidence-based fitness a výživu."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik setů na svalovou skupinu za týden je potřeba, ani jak dlouhé pauzy mezi sety volit.",
+    "Model „plocha pod křivkou“ (tenze krát TUT) je v článku osobní pohled autora („vidím zhruba“), ne změřený výsledek; v odpovědi je proto podán jako „zhruba“.",
+    "Konkrétní studie, o které se tvrzení opírá, článek nejmenuje (jde o překlad příspěvku Menna Henselmanse).",
+    "Zdravotní přínosy ze shrnutí (inzulin, libido, hustota kostí, mozek) článek nijak nedokládá, proto nejsou použity."
+  ],
+  "kontrola": "opraveno: článek je překlad příspěvku Menna Henselmanse, tvrzení v kratka_odpoved, faq[1] (model plochy pod křivkou), faq[2] a faq[3] přisouzena jemu",
+  "hlas": "upraveno: kratka_odpoved „evidence-based“ česky; faq[3] bez třetího „Podle Menna Henselmanse“ v řadě"
+}

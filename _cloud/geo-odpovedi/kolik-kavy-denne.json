@@ -1,0 +1,55 @@
+{
+  "url": "https://martinbarna.cz/clanky/kolik-kavy-denne.html",
+  "titulek": "Kolik kávy denně: co pro tebe káva dělá a co ne",
+  "hlavni_otazka": "Kolik kávy denně je zdravé?",
+  "kratka_odpoved": "Nejnižší rizika vycházejí kolem 3 až 4 šálků denně proti nulové spotřebě, jde ale o pozorovací data a průměr z velkých skupin, žádný předpis pro tebe. Když kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat, a když ji nepiješ, nejsou důvod začít. V těhotenství je to otázka na lékaře nebo gynekologa.",
+  "faq": [
+    {
+      "otazka": "Pomáhá káva při hubnutí?",
+      "odpoved": "Efekt existuje, ale je malý. V metaanalýze 13 randomizovaných studií zvětšilo zdvojnásobení příjmu kofeinu průměrný úbytek hmotnosti o 22 %, jde ale o procenta z úbytku, který už běží, žádná kila navíc. Hubnutí řeší příjem a výdej, káva je doplněk."
+    },
+    {
+      "otazka": "Kdy si dát poslední kávu, aby mi nenarušila spánek?",
+      "odpoved": "Od většího množství kofeinu si nech aspoň šest hodin před spaním pokoj. Když chodíš spát v jedenáct, poslední větší káva má být kolem páté odpoledne. Ve studii narušilo 400 mg kofeinu spánek i tehdy, když ho lidé dostali 6 hodin před spaním."
+    },
+    {
+      "otazka": "Má káva kalorie?",
+      "odpoved": "Černá káva je energeticky zanedbatelná, ale velké latte se sirupem už je svačina. Tři takové denně jsou stovky kalorií, které dokážou sníst celý deficit, takže je zapisuj a počítej s nimi."
+    },
+    {
+      "otazka": "Je na cholesterol lepší filtrovaná káva?",
+      "odpoved": "Podle přehledu je vařená a nefiltrovaná káva kvůli diterpenům horší pro cévy (aterogennější) než filtrovaná, jde ale o slabší typ důkazu. Pokud řešíš cholesterol, dává smysl dát přednost filtrované kávě před frenchpressem, tureckou nebo překapávanou přes kovové sítko. I 600 ml filtrované kávy denně ale ve studii zvedlo za čtyři týdny celkový cholesterol o 0,15 až 0,25 mmol/l."
+    },
+    {
+      "otazka": "Můžu pít kávu v těhotenství?",
+      "odpoved": "To je otázka na tvého lékaře nebo gynekologa. Těhotenství je jedna ze dvou oblastí, kde přehled v BMJ našel u kávy rizika."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Nejnižší rizika vycházela shodně kolem 3 až 4 šálků denně proti nulové spotřebě:"},
+    {"pro": "kratka_odpoved", "citace": "Obě práce stojí na pozorovacích datech."},
+    {"pro": "kratka_odpoved", "citace": "Podle dat vychází nejlíp pásmo 3 až 4 šálky denně, ale je to průměr z pozorování velkých skupin, ne předpis pro tebe."},
+    {"pro": "kratka_odpoved", "citace": "Praktický dopad je klidný: pokud kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat. Pokud ji nepiješ, tyhle studie nejsou důvod začít."},
+    {"pro": "kratka_odpoved", "citace": "Těhotenství je vedle zlomenin u žen jedna ze dvou oblastí, kde přehled v BMJ našel u kávy rizika, a je to otázka na tvého lékaře nebo gynekologa, ne na výživového kouče."},
+    {"pro": "faq[0]", "citace": "Káva a hubnutí: efekt existuje a je malý"},
+    {"pro": "faq[0]", "citace": "Metaanalýza 13 randomizovaných studií s 606 účastníky (Tabrizi a kolektiv, 2019, PMID 30335479) našla, že zdvojnásobení příjmu kofeinu zvětšilo průměrný úbytek hmotnosti o 22 %, pokles BMI o 17 % a úbytek tukové hmoty o 28 %."},
+    {"pro": "faq[0]", "citace": "Jsou to procenta už probíhajícího úbytku, ne kilogramy navíc."},
+    {"pro": "faq[0]", "citace": "Hubnutí řeší příjem a výdej, káva je doplněk."},
+    {"pro": "faq[1]", "citace": "Autoři z toho odvozují doporučení nechat si od většího množství kofeinu aspoň šest hodin před spaním pokoj."},
+    {"pro": "faq[1]", "citace": "V praxi to znamená: když chodíš spát v jedenáct, poslední větší káva má být kolem páté odpoledne."},
+    {"pro": "faq[1]", "citace": "Randomizovaná dvojitě zaslepená studie (Drake a kolektiv, 2013, PMID 24235903) dala lidem 400 mg kofeinu, tedy zhruba čtyři šálky filtrované kávy najednou, a to buď těsně před spaním, 3 hodiny před spaním, nebo 6 hodin před spaním. Spánek se měřil i přístrojem, ne jen dotazníkem. Všechny tři časy narušily spánek významně proti placebu."},
+    {"pro": "faq[2]", "citace": "Černá káva je energeticky zanedbatelná. Velké latte se sirupem už je svačina a v zápisu jídla obvykle chybí. Když si dáváš tři takové denně, bavíme se o stovkách kalorií, které nikdo nezapisuje a které samy o sobě dokážou sníst celý deficit. Nemusíš je rušit, stačí je zapsat a počítat s nimi."},
+    {"pro": "faq[3]", "citace": "Přehledový článek z Ochsner Journal (Mendoza a kolektiv, 2023, PMID 37323518) k tomu shrnuje, že vařená a nefiltrovaná káva je kvůli obsahu diterpenů aterogennější než filtrovaná. Je to narativní přehled, tedy slabší typ důkazu než metaanalýza"},
+    {"pro": "faq[3]", "citace": "Prakticky: pokud řešíš cholesterol, dává smysl dát přednost filtrované kávě před překapávanou přes kovové sítko, frenchpressem nebo tureckou."},
+    {"pro": "faq[3]", "citace": "Kontrolovaná studie na 121 zdravých lidech (Strandhagen a Thelle, 2003, PMID 12947437) měřila, co dělá 600 ml filtrované kávy denně, tedy asi čtyři šálky. Za čtyři týdny stoupl celkový cholesterol o 0,15 až 0,25 mmol/l"},
+    {"pro": "faq[4]", "citace": "Těhotenství je vedle zlomenin u žen jedna ze dvou oblastí, kde přehled v BMJ našel u kávy rizika, a je to otázka na tvého lékaře nebo gynekologa, ne na výživového kouče."}
+  ],
+  "nejiste": [
+    "Článek nedefinuje, kolik mililitrů nebo kofeinu má jeden „šálek“. Jen u dvou studií přepočítává (400 mg kofeinu je zhruba čtyři šálky filtrované, 600 ml asi čtyři šálky).",
+    "Výsledek pro nejvyšší kategorii (medián 5 šálků, RR 0,95, interval přes jedničku) jsem do odpovědí nedal. Článek výslovně říká, že tam není prokázaný efekt ani ochrana, jen že riziko nestoupalo.",
+    "Článek neříká, jaká konkrétní rizika přehled v BMJ u kávy v těhotenství našel ani jaký limit tam platí. Odkazuje na lékaře, a tak to zůstalo.",
+    "Studie o hubnutí se podle článku mezi sebou obrovsky rozcházely (I² 91 až 94 %) a autoři píší jen „kofein by mohl podporovat“, proto je efekt v odpovědi podán jako malý a nejistý."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o upozornění, že v těhotenství je káva otázka na lékaře nebo gynekologa (článek: těhotenství je jedna ze dvou oblastí, kde přehled v BMJ našel rizika), protože krátká odpověď uvádí pásmo 3 až 4 šálků denně",
+  "hlas": "upraveno: kratka_odpoved bez „ne předpis pro tebe“; faq[0] bez „ne kilogramy navíc“; faq[3] „aterogennější“ vysvětleno"
+}

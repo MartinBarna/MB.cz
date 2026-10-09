@@ -1,0 +1,55 @@
+{
+  "url": "https://martinbarna.cz/clanky/sarkopenie-svaly-po-50.html",
+  "titulek": "Sarkopenie: jak po padesátce nepřijít o svaly a sílu",
+  "hlavni_otazka": "Jak po padesátce nepřijít o svaly a sílu?",
+  "kratka_odpoved": "Dvěma pákami: silovým tréninkem 2 až 3krát týdně a dostatkem bílkovin, u starších lidí míří mnoho doporučení na zhruba 1,2 až 1,5 g na kilogram váhy denně. Nejúčinnější je obojí dohromady. Máš-li cukrovku, potíže se srdcem, klouby nebo ledvinami, nebo bereš léky, poraď se před změnou nejdřív s lékařem.",
+  "faq": [
+    {
+      "otazka": "Kolik svalů člověk s věkem ztrácí?",
+      "odpoved": "Odborný přehled z roku 2025 uvádí, že po čtvrté dekádě života ztrácíš zhruba 8 % svalové hmoty za dekádu a po sedmdesátce se to zrychlí na 15 % za dekádu. Síla přitom mizí ještě rychleji než samotná hmota."
+    },
+    {
+      "otazka": "Jak má vypadat silový trénink proti sarkopenii?",
+      "odpoved": "2 až 3krát týdně zapoj hlavní svalové skupiny, 2 až 3 série na svalovou skupinu, kolem 5 až 8 opakování s vyšší zátěží, nebo lehčí zátěž (50 až 80 % maxima) do únavy. Postupně přidávej, sval roste jen tehdy, když ho průběžně vyzýváš k víc."
+    },
+    {
+      "otazka": "Musím kvůli tomu chodit do posilovny?",
+      "odpoved": "Nemusíš. Kontrolovaná studie z roku 2024 ukázala, že i program cvičení vsedě u seniorů v pečovatelských zařízeních po 12 týdnech zlepšil svalovou hmotu, sílu i funkci, a stačí vlastní váha, gumy nebo lahve s vodou. Pokud začínáš po delší pauze nebo máš potíže s klouby či zády, nech si první zacvičení ukázat od trenéra nebo fyzioterapeuta."
+    },
+    {
+      "otazka": "Proč potřebují starší lidé víc bílkovin?",
+      "odpoved": "Se stárnutím vzniká anabolická rezistence: stárnoucí sval hůř reaguje na bílkovinu, proto je potřeba vyšší cíl a solidní dávka bílkoviny ke každému hlavnímu jídlu. Pokud máš onemocnění ledvin nebo ti lékař bílkoviny omezil, prober zvyšování napřed s ním."
+    },
+    {
+      "otazka": "Proč je úbytek svalů po padesátce nebezpečný?",
+      "odpoved": "Slabší svaly znamenají horší stabilitu. Přehled o sarkopenii a pádech uvádí pády jako třetí nejčastější příčinu dlouhodobého postižení u seniorů a zhruba každý desátý pád končí zlomeninou. Odborný přehled z roku 2025 spojuje sarkopenii s vyšší úmrtností, sníženou kvalitou života a fyzickou nesoběstačností."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Existují dvě páky, které fakt fungují, a obě máš plně ve svých rukou."},
+    {"pro": "kratka_odpoved", "citace": "2 až 3 krát týdně zapoj hlavní svalové skupiny."},
+    {"pro": "kratka_odpoved", "citace": "Mnoho odborných doporučení míří u starších lidí na zhruba 1,2 až 1,5 g bílkovin na kilogram váhy denně, tedy víc než klasické minimum pro mladé."},
+    {"pro": "kratka_odpoved", "citace": "Ukazuje to i největší přehled na tohle téma z roku 2025, síťová meta-analýza 96 studií a přes 7 500 účastníků: nejúčinnější strategií proti sarkopenii byl silový (a balanční) trénink kombinovaný s bílkovinovou výživou."},
+    {"pro": "kratka_odpoved", "citace": "Máš-li zdravotní potíže, užíváš léky nebo řešíš diagnózu (cukrovka, srdce, klouby, ledviny), poraď se před změnou tréninku nebo jídelníčku se svým lékařem."},
+    {"pro": "faq[0]", "citace": "Konkrétní čísla: odborný přehled z roku 2025 uvádí, že po čtvrté dekádě života ztrácíš zhruba 8 % svalové hmoty za dekádu a po sedmdesátce se to zrychlí na 15 % za dekádu."},
+    {"pro": "faq[0]", "citace": "A pozor, síla mizí ještě rychleji než samotná hmota."},
+    {"pro": "faq[1]", "citace": "2 až 3 krát týdně zapoj hlavní svalové skupiny."},
+    {"pro": "faq[1]", "citace": "2 až 3 série na svalovou skupinu, kolem 5 až 8 opakování s vyšší zátěží, nebo lehčí zátěž (50 až 80 % maxima) do únavy."},
+    {"pro": "faq[1]", "citace": "Postupně přidávej. Sval roste jen tehdy, když ho průběžně vyzýváš k víc."},
+    {"pro": "faq[2]", "citace": "Nemusíš do posilovny. Kontrolovaná studie z roku 2024 ukázala, že i program cvičení vsedě u seniorů v pečovatelských zařízeních po 12 týdnech zlepšil svalovou hmotu, sílu i funkci. Stačí vlastní váha, gumy nebo lahve s vodou."},
+    {"pro": "faq[2]", "citace": "Pokud začínáš po delší pauze nebo máš potíže s klouby či zády, nech si první zacvičení ukázat od trenéra nebo fyzioterapeuta."},
+    {"pro": "faq[3]", "citace": "se stárnutím vzniká takzvaná anabolická rezistence. Zjednodušeně, stárnoucí sval hůř reaguje na bílkovinu."},
+    {"pro": "faq[3]", "citace": "Řešení je logické: vyšší cíl bílkovin, aby se přes tu horší reakci sval pořád stavěl."},
+    {"pro": "faq[3]", "citace": "Solidní dávka bílkoviny ke každému hlavnímu jídlu funguje líp než všechno naházet do večeře."},
+    {"pro": "faq[3]", "citace": "Malá poznámka pro jistotu: pokud máš onemocnění ledvin nebo ti lékař bílkoviny z nějakého důvodu omezil, tohle zvyšování si napřed prober s ním, ne podle článku na netu."},
+    {"pro": "faq[4]", "citace": "Slabší svaly = horší stabilita. Přehled o sarkopenii a pádech uvádí, že pády jsou třetí nejčastější příčinou chronické disability u seniorů a zhruba každý desátý pád končí zlomeninou."},
+    {"pro": "faq[4]", "citace": "Odborný přehled z roku 2025 sarkopenii spojuje s vyšší úmrtností, sníženou kvalitou života a fyzickou nesoběstačností."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik gramů bílkoviny je „solidní dávka“ na jedno jídlo.",
+    "Článek v textu nepřiřazuje čísla (8 % a 15 % za dekádu, 1,2 až 1,5 g/kg) ke konkrétním položkám ze seznamu zdrojů; 1,2 až 1,5 g/kg přisuzuje „mnoha odborným doporučením“.",
+    "Článek neříká, kolik leucinu je potřeba ani jestli se vyplatí suplementace."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno upozornění ze závěru článku (cukrovka, srdce, klouby, ledviny, léky → poraď se s lékařem) a kvůli limitu slov zkrácena o detail meta-analýzy; faq[4] doplněno „podle přehledu o sarkopenii a pádech“; nejiste[1] opraveno (článek autory a názvy zdrojů uvádí)",
+  "hlas": "upraveno: faq[0] a faq[4] bez úvodního „Podle“; faq[4] „disability“ česky"
+}

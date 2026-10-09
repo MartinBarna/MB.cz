@@ -1,0 +1,41 @@
+{
+  "url": "https://martinbarna.cz/clanky/pitny-rezim.html",
+  "titulek": "Pitný režim a hubnutí: kolik pít a proč na tom záleží",
+  "hlavni_otazka": "Kolik vody denně pít, když hubnu?",
+  "kratka_odpoved": "Orientačně 30–35 ml na kilogram váhy za den, u člověka s 80 kg to vychází zhruba na 2,5–3 litry. Když sportuješ nebo je venku horko, přidej. Nejjednodušší kontrola je barva moči: světle žlutá je v pohodě, tmavá znamená, že máš doplnit.",
+  "faq": [
+    {
+      "otazka": "Pomáhá pití vody hubnout?",
+      "odpoved": "Zázraky od ní nečekej, pomáhá ale nepřímo a spolehlivě. Sklenice před jídlem tě trochu zasytí, takže sníš o něco míň, a když slazené nápoje vyměníš za vodu, ušetříš kalorie."
+    },
+    {
+      "otazka": "Proč jsou tekuté kalorie problém, když hubnu?",
+      "odpoved": "Slazené nápoje, džusy, slazená káva nebo alkohol do tebe dostanou stovky kalorií, které tě vůbec nezasytí. Sklenice limonády a k tomu malé pivo ti můžou vzít celý dnešní deficit, aniž bys cokoliv snědl."
+    },
+    {
+      "otazka": "Můžu si splést žízeň s hladem?",
+      "odpoved": "Ano, žízeň si často spleteš s hladem. Než sáhneš po svačině, dej si sklenici vody a chvíli počkej, jestli to nebyla jen žízeň."
+    },
+    {
+      "otazka": "Co se stane, když piju málo?",
+      "odpoved": "Když máš vody málo, přijde únava, hůř se soustředíš a trénink za moc nestojí."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Orientačně počítej 30–35 ml na kilogram váhy za den. U člověka s 80 kg to vychází zhruba na 2,5–3 litry. Když sportuješ nebo je venku horko, přidej."},
+    {"pro": "kratka_odpoved", "citace": "A nejjednodušší kontrola je barva moči. Světle žlutá je v pohodě, tmavá znamená, že máš zabrat a doplnit."},
+    {"pro": "faq[0]", "citace": "Zázraky od ní nečekej. Ale pomáhá, jen nepřímo a spolehlivě."},
+    {"pro": "faq[0]", "citace": "Sklenice před jídlem tě trochu zasytí, takže v klidu sníš o něco míň. A když slazené nápoje vyměníš za vodu, ušetříš kalorie, a na talíři přitom nemusíš nic obětovat."},
+    {"pro": "faq[1]", "citace": "Slazené nápoje, džusy, slazená káva nebo alkohol do tebe dostanou stovky kalorií, které tě vůbec nezasytí."},
+    {"pro": "faq[1]", "citace": "Stačí sklenice limonády a k tomu malé pivo a máš pryč celý dnešní deficit, aniž bys přitom cokoliv snědl."},
+    {"pro": "faq[2]", "citace": "žízeň si často spleteš s hladem. Takže než sáhneš po svačině, dej si sklenici vody a chvíli počkej, jestli to nebyla jen žízeň."},
+    {"pro": "faq[3]", "citace": "Když jí máš málo, přijde únava, hůř se soustředíš a trénink za moc nestojí."}
+  ],
+  "nejiste": [
+    "Článek neříká, o kolik víc pít, když sportuješ nebo je horko (jen „přidej“).",
+    "Článek neuvádí, odkud pochází orientační hodnota 30–35 ml na kilogram.",
+    "Věta „Hlídej kávu a alkohol. I ty se do pitného režimu počítají.“ je dvojznačná (nevysvětluje, proč je hlídat ani v jakém smyslu se alkohol „počítá“), proto z ní FAQ není."
+  ],
+  "kontrola": "opraveno: nejiste upraveno k vymazané položce; smazano: faq[4] o kávě a alkoholu v pitném režimu (odpověď „Ano … proto je hlídej“ domýšlela příčinnou vazbu, kterou článek nemá, a věta, že se alkohol počítá do pitného režimu, by citovaná samostatně mohla mást)",
+  "hlas": "beze změny"
+}

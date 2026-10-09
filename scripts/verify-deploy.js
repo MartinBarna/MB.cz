@@ -21,7 +21,7 @@ const NC = Date.now();
 //    Tyhle položky v `exclude:` workflow schválně NEJSOU a nemají tam být.
 const EXCL = [
   /^\.git/, /\/\.git/, /^\.github\//, /^clanky-fronta\//,
-  /^_import\//, /^_zaloha\//, /^_zdroje\//,
+  /^_import\//, /^_zaloha\//, /^_zdroje\//, /^_cloud\//, // [9. 10. 2026] podklady cloud sezení, na web nepatří
   /^Logo-rebrand\//, /^scripts\//, /^akademie\/_ai\//, /^akademie\/_pdf\//,
   /^akademie\/_supabase\//, /^akademie\/_videokurz\//, /\.md$/, /^CNAME$/, /^\.nojekyll$/,
   /^\.htaccess$/, // Apache ho přes HTTP záměrně nevydává (401) — zvenku neověřitelný

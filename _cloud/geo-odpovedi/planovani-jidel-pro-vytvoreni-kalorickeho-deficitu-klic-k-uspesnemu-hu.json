@@ -1,0 +1,81 @@
+{
+  "url": "https://martinbarna.cz/clanky/planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu.html",
+  "titulek": "Plánování jídel pro vytvoření kalorického deficitu: klíč k úspěšnému hubnutí",
+  "hlavni_otazka": "Jak si naplánovat jídla, abych byl v kalorickém deficitu a hubnul?",
+  "kratka_odpoved": "Zjisti si svůj kalorický výdej přes online kalkulačku nebo u odborníka a sniž denní příjem o 300–500 kalorií. Sázej na bílkoviny, vlákninu a zdravé tuky a naplánuj si týden dopředu, ať máš zdravou volbu pořád po ruce.",
+  "faq": [
+    {
+      "otazka": "Co znamená kalorický deficit?",
+      "odpoved": "Deficit znamená, že přijmeš míň kalorií, než tělo spotřebuje, a tělo pak sahá do zásob."
+    },
+    {
+      "otazka": "Proč si jídla plánovat dopředu?",
+      "odpoved": "Líp víš, co během dne sníš, a snáz se vyhneš nezdravým svačinám a přejídání ve spěchu nebo z hladu. Když plánuješ, spíš si pohlídáš i pestrost, takže ti ve stravě nechybí mikroživiny."
+    },
+    {
+      "otazka": "Jak velký kalorický deficit je rozumný?",
+      "odpoved": "Sniž denní příjem o 300–500 kalorií. To je rozumný deficit, který se dá dlouhodobě udržet."
+    },
+    {
+      "otazka": "Jak jíst během dne, aby mi plán vydržel?",
+      "odpoved": "Drž se pravidelného rytmu, třeba 3 hlavní jídla a 1–2 svačiny. Pij dost vody, protože dehydratace umí dělat falešný pocit hladu, a plán průběžně dolaďuj podle toho, jak se ti daří."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Zjisti si svůj kalorický výdej: použij online kalkulačku nebo se poraď s odborníkem, ať víš, kolik kalorií denně potřebuješ."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nastav si deficit: sniž denní příjem o 300–500 kalorií."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Vyber si jídla: sázej na bílkoviny, vlákninu a zdravé tuky (třeba kuřecí prsa, zelenina, avokádo)."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Připrav si jídla dopředu: naplánuj si týden a něco si nachystej, ať máš zdravou volbu vždycky po ruce."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Deficit jednoduše znamená, že přijmeš míň kalorií, než tělo spotřebuje, a tělo pak sahá do zásob."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Když máš jídla rozmyšlená dopředu, líp víš, co během dne sníš."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Snáz se vyhneš nezdravým svačinám a přejídání, na které člověk často sáhne ve spěchu nebo z hladu."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "A když plánuješ, spíš si pohlídáš i pestrost, takže ti ve stravě nechybí mikroživiny, které tělo potřebuje."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Nastav si deficit: sniž denní příjem o 300–500 kalorií. To je rozumný deficit, který se dá dlouhodobě udržet."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Drž se pravidelného rytmu, třeba 3 hlavní jídla a 1–2 svačiny."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Pij dost vody – dehydratace umí dělat falešný pocit hladu."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Sleduj, jak se ti daří, a plán podle toho průběžně dolaď."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, jakou konkrétní online kalkulačku použít ani jak výdej spočítat ručně.",
+    "Článek neříká, jak rychle se při deficitu 300–500 kalorií denně hubne.",
+    "Článek neuvádí konkrétní množství bílkovin, vlákniny ani vody na den."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „vždycky“"
+}

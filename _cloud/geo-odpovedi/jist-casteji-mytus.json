@@ -1,0 +1,54 @@
+{
+  "url": "https://martinbarna.cz/clanky/jist-casteji-mytus.html",
+  "titulek": "Musíš jíst 5–6× denně? Mýtus o časté stravě a metabolismu",
+  "hlavni_otazka": "Je potřeba jíst pětkrát až šestkrát denně, aby se nezpomalil metabolismus?",
+  "kratka_odpoved": "Ne, metabolismus se mezi jídly nevypíná. Termický efekt potravy se počítá z celkového množství jídla za den, takže tři velká jídla a šest malých se sečtou nastejno. Rozhodují celkové kalorie a bílkoviny.",
+  "faq": [
+    {
+      "otazka": "Co je termický efekt potravy a záleží na počtu jídel?",
+      "odpoved": "Je to energie, kterou tělo vydá na strávení, vstřebání a zpracování jídla. Tvoří zhruba desetinu celkového příjmu a počítá se z celkového množství jídla za den. Jestli energii rozdělíš na tři kusy nebo na šest, součet vyjde stejně."
+    },
+    {
+      "otazka": "Přejde tělo bez svačiny do úsporného režimu?",
+      "odpoved": "Tělo má zásoby na hodiny i dny dopředu a mezi jídly hospodaří v klidu. Při stejných kaloriích a bílkovinách hubneš nebo nabíráš při dvou, třech i šesti jídlech denně v podstatě stejně."
+    },
+    {
+      "otazka": "Odkud se vzal mýtus, že se má jíst každé tři hodiny?",
+      "odpoved": "Ze dvou zdrojů: z nedorozumění kolem termického efektu potravy a z marketingu. Pět šest jídel denně prodává proteinové tyčinky, svačinové produkty a shaky. Pořádně to ale nikdo nepodložil."
+    },
+    {
+      "otazka": "Hraje počet jídel nějakou roli u bílkovin?",
+      "odpoved": "Trochu ano. Pro budování a udržení svalů se zdá rozumné rozložit bílkoviny do tří až čtyř dávek přes den, místo nacpat všechno do jednoho obřího jídla. S „nakopnutím metabolismu“ to ale nesouvisí."
+    },
+    {
+      "otazka": "Kolik jídel denně je nejlepší?",
+      "odpoved": "Takový počet, který udržíš a u kterého se cítíš dobře. Tři jídla s většími porcemi líp zasytí, někomu zase pět menších jídel líp zvládá hlad. Celkové kalorie a bílkoviny jsou 90 % výsledku."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Ne. Metabolismus se mezi jídly nevypíná a termický efekt potravy se počítá z celkového množství jídla za den, ne z počtu porcí. Ať sníš tři velká jídla, nebo šest malých, sečte se to nastejno."},
+    {"pro": "kratka_odpoved", "citace": "Hlavně ať sedí kalorie a bílkoviny."},
+    {"pro": "faq[0]", "citace": "Termický efekt potravy (zkráceně TEF) je energie, kterou tělo vydá na to, aby jídlo strávilo, vstřebalo a zpracovalo. Tvoří zhruba desetinu celkového příjmu a tady je ta klíčová věc: počítá se z celkového množství jídla za den, ne z počtu porcí."},
+    {"pro": "faq[0]", "citace": "Je úplně jedno, jestli energii rozkrájíš na tři kusy nebo na šest. Celkový součet trávení je stejný."},
+    {"pro": "faq[1]", "citace": "Tělo má v sobě zásoby na hodiny i dny dopředu a mezi jídly hospodaří úplně v klidu."},
+    {"pro": "faq[1]", "citace": "Když dáš stejné kalorie a stejné bílkoviny, srovnání ukazují to samé pořád dokola: při dvou, třech i šesti jídlech denně hubneš nebo nabíráš v podstatě stejně."},
+    {"pro": "faq[1]", "citace": "Ignoruj hlášky o „úsporném režimu\". Tvůj metabolismus nestojí na tom, že stihneš svačinu v deset. Stojí na celkové bilanci."},
+    {"pro": "faq[2]", "citace": "Má dva zdroje a oba jsou pochopitelné. Ten první je nedorozumění kolem termického efektu potravy"},
+    {"pro": "faq[2]", "citace": "Ten druhý zdroj je obyčejný marketing. Pět šest jídel denně je skvělý příběh pro fitness průmysl. Prodává proteinové tyčinky, svačinové produkty, sáčky, krabičky a shaky „na svačinu mezi jídly\"."},
+    {"pro": "faq[2]", "citace": "Z opakování se stalo „pravidlo\", které ale nikdy nikdo pořádně nepodložil."},
+    {"pro": "faq[3]", "citace": "Aby to bylo fér: jedna nuance tu je, ale není o „rozjetí metabolismu\". Je o bílkovinách. Pro budování a udržení svalů se zdá rozumné rozložit bílkoviny do tří až čtyř dávek přes den místo nacpat všechno do jednoho obřího jídla a zbytek dne nic."},
+    {"pro": "faq[3]", "citace": "Ale pozor na ten rozdíl: tohle je věc bílkovin, ne počtu jídel obecně a rozhodně ne nějakého „nakopnutí metabolismu\"."},
+    {"pro": "faq[4]", "citace": "Takový počet, který dlouhodobě udržíš a u kterého se cítíš dobře."},
+    {"pro": "faq[4]", "citace": "Tobě sedí tři jídla a klid? Skvělé. Větší porce líp zasytí"},
+    {"pro": "faq[4]", "citace": "Někomu pět menších jídel líp zvládá hlad"},
+    {"pro": "faq[4]", "citace": "Nejdřív celkové kalorie a bílkoviny. Tohle je 90 % výsledku."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak velká dávka bílkovin na jedno jídlo je ještě dobře využitelná; říká jen „tři až čtyři dávky“ a formuluje to opatrně („se zdá rozumné“).",
+    "Srovnání frekvence jídel (2, 3, 6 jídel) článek popisuje obecně („srovnání ukazují“) bez konkrétních studií, autorů a počtu účastníků.",
+    "Tabulka s 2000 kcal a 150 g bílkovin je jen ilustrační příklad, ne doporučení, proto ji v odpovědích nepoužívám.",
+    "„Zhruba desetina celkového příjmu“ u TEF je v článku bez rozlišení podle složení stravy."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne z počtu porcí“; faq[1] bez úvodního „Ne,“ (druhé v řadě); faq[2] bez „Nikdy“; faq[3] bez „Tady je jedna nuance“ a bez „ne X a ne Y“"
+}

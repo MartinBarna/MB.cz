@@ -1,0 +1,44 @@
+{
+  "url": "https://martinbarna.cz/clanky/kolagen-vs-bilkoviny.html",
+  "titulek": "Kolagen na klouby, nebo prostě bílkovina?",
+  "hlavni_otazka": "Má smysl brát kolagen na klouby, když jím dost bílkovin?",
+  "kratka_odpoved": "Pokud denně sníš 1,6 až 2,2 g bílkovin na kilo a zvedáš činky, kolagen ti k tomu už nic nepřidá. Proti stejné dávce bílkoviny jeho výhoda mizí: 30 g syrovátky a 30 g kolagenu vyjdou na tvorbu vaziva nastejno.",
+  "faq": [
+    {
+      "otazka": "Proč tolik studií ukazuje, že kolagen na klouby funguje?",
+      "odpoved": "Většina pokusů ho neporovnávala s bílkovinou, ale s cukrem (maltodextrinem). Kolagenová skupina tak snědla víc bílkovin a nevíš, jestli pomohl kolagen, nebo prostě víc bílkovin."
+    },
+    {
+      "otazka": "Je kolagen lepší než syrovátka?",
+      "odpoved": "Na tvorbu vaziva vyjde 30 g syrovátky a 30 g kolagenu nastejno. Na sval je kolagen dokonce horší."
+    },
+    {
+      "otazka": "Co kloubům pomáhá víc než kolagen?",
+      "odpoved": "Udržená váha, silový trénink a zátěž, dost bílkovin a pohyb. Glukosamin a chondroitin jsou na tom ještě hůř než kolagen."
+    },
+    {
+      "otazka": "Komu může kolagen dávat smysl?",
+      "odpoved": "Tomu, kdo bílkoviny dlouhodobě nedojídá. I tam ale jen jako náhrada chybějící bílkoviny, zázrak na chrupavku to není."
+    },
+    {
+      "otazka": "Kdy jít s bolavým kloubem k lékaři?",
+      "odpoved": "Bolavý kloub může mít i jinou příčinu než opotřebení. Když otéká, budí tě ze spaní nebo blokuje, jdi na vyšetření."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Pokud denně dáš 1,6 až 2,2 g na kilo a zvedáš činky, kolagen ti k tomu už nepřidá."},
+    {"pro": "kratka_odpoved", "citace": "Postav ho proti stejné dávce bílkoviny a ta výhoda zmizí. 30 g syrovátky a 30 g kolagenu vyjdou na tvorbu vaziva nastejno."},
+    {"pro": "faq[0]", "citace": "Většina pokusů, co „dokazují\", že kolagen funguje, ho neporovnávala s bílkovinou, ale s cukrem. Skupina s kolagenem tím pádem snědla víc bílkovin, druhá dostala maltodextrin. Když pak kolagenová dopadne líp, nevíš, čím to je: jestli kolagenem, nebo prostě tím, že měli víc bílkovin"},
+    {"pro": "faq[1]", "citace": "30 g syrovátky a 30 g kolagenu vyjdou na tvorbu vaziva nastejno. Na sval je kolagen dokonce horší"},
+    {"pro": "faq[2]", "citace": "Co klouby fakt drží, je nuda a stojí to nula korun: udržená váha, silový trénink a zátěž, dost bílkovin, pohyb. Glukosamin a chondroitin jsou na tom ještě hůř než kolagen"},
+    {"pro": "faq[3]", "citace": "Komu to neplatí? Tomu, kdo bílkoviny dlouhodobě nedojídá. Tam kolagen klidně poslouží, ale jen jako náhrada té chybějící bílkoviny, ne jako zázrak na chrupavku"},
+    {"pro": "faq[4]", "citace": "Bolavý kloub může mít i jinou příčinu než opotřebení. Tohle není diagnóza, viz výše. Když to otéká, budí ze spaní nebo blokuje, jdi na vyšetření."}
+  ],
+  "nejiste": [
+    "Článek neříká, kolik kolagenu by měl brát člověk, který bílkoviny nedojídá, ani jak poznat, že je nedojídá.",
+    "Tvrzení o glukosaminu a chondroitinu („ještě hůř než kolagen“) článek nerozvádí, proto ho odpověď jen přebírá bez vysvětlení.",
+    "Článek neuvádí, která konkrétní studie srovnávala 30 g syrovátky s 30 g kolagenu (zdroje jsou jen vypsané na konci) ani na kom byla dělaná."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] otázka bez „opravdu“; faq[3] bez „ne jako zázrak“"
+}

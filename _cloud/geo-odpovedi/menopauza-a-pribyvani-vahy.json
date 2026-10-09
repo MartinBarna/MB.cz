@@ -1,0 +1,53 @@
+{
+  "url": "https://martinbarna.cz/clanky/menopauza-a-pribyvani-vahy.html",
+  "titulek": "Menopauza a přibývání na váze: proč se mění tělo a co s tím reálně funguje",
+  "hlavni_otazka": "Proč v menopauze přibírám a co s tím můžu dělat?",
+  "kratka_odpoved": "V přechodu klesá estrogen, tuk se přesouvá do břicha, klesá energetický výdej a ubývá svalu, takže stejné jídlo najednou přebývá. Je to fyziologie, se slabou vůlí to nesouvisí. Nejvíc pomáhá silový trénink, k tomu 1,2–1,6 g bílkovin na kilo denně a mírný kalorický deficit.",
+  "faq": [
+    {
+      "otazka": "Jaký pohyb je v menopauze nejlepší?",
+      "odpoved": "Silový trénink: činky, gumy nebo vlastní váha. Hodiny kardia ti tolik nedají. Systematický přehled 34 studií s více než 1 500 ženami po menopauze potvrdil, že posilování spolehlivě zlepšuje složení těla, sílu i hustotu kostí."
+    },
+    {
+      "otazka": "Jak má vypadat posilování v přechodu?",
+      "odpoved": "V přehledu tréninkových programů se nejčastěji používaly komplexní cviky na celé tělo (dřepy, leg press, tlaky na hrudník), typicky 3 série po 8–10 opakováních. Nemusíš trénovat jako kulturistka, ale pravidelně a s postupně rostoucí zátěží."
+    },
+    {
+      "otazka": "Kolik bílkovin jíst v menopauze?",
+      "odpoved": "Pokud posiluješ a chceš si udržet sval, miř zhruba na 1,2–1,6 g na kilo tělesné hmotnosti denně, při hubnutí spíš k horní hranici. Obecné minimum pro sedavé lidi 0,8 g/kg na udržení svalu při tréninku obvykle nestačí."
+    },
+    {
+      "otazka": "Jak velký kalorický deficit držet v přechodu?",
+      "odpoved": "Mírný, řádově 250–750 kcal denně. Podle systematického přehledu takový deficit navíc k posilování zesiluje úbytek tuku."
+    },
+    {
+      "otazka": "Pomůže na přibírání v menopauze hormonální terapie?",
+      "odpoved": "U řady žen dokáže HRT s příznaky přechodu i se složením těla hodně pomoct. Je to ale individuální rozhodnutí podle tvého zdraví, historie a rizik a patří výhradně do rukou tvojí lékařky nebo gynekologa. Léky si sama neupravuj."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "V perimenopauze a menopauze ti klesá estrogen."},
+    {"pro": "kratka_odpoved", "citace": "Tuk se přesouvá z boků a stehen do břicha."},
+    {"pro": "kratka_odpoved", "citace": "Pomalejší energetický výdej. Odborný přehled ukázal, že během přechodu klesá klidový i spánkový výdej energie a zároveň schopnost pálit tuk jako palivo."},
+    {"pro": "kratka_odpoved", "citace": "Ubývá svalu. Sval je metabolicky aktivní tkáň: čím ho máš víc, tím víc pálíš i v klidu."},
+    {"pro": "kratka_odpoved", "citace": "Sečteno: menší výdej + míň svalu = to samé jídlo najednou „přebývá“. To není selhání charakteru, ale fyziologie."},
+    {"pro": "kratka_odpoved", "citace": "Kdybys z celého článku měla vzít jednu věc, je to tahle: začni posilovat."},
+    {"pro": "kratka_odpoved", "citace": "Pokud posiluješ a chceš si sval udržet, miř zhruba na 1,2–1,6 g bílkovin na kilo tělesné hmotnosti denně, při hubnutí spíš k horní hranici."},
+    {"pro": "kratka_odpoved", "citace": "Kombinace síla + mírný deficit + dost bílkovin je jedno z nejlepších řešení: ubíráš tuk a přitom si držíš sval."},
+    {"pro": "faq[0]", "citace": "Ne kardio, ne hodiny na běžícím pásu. Činky, gumy, vlastní váha."},
+    {"pro": "faq[0]", "citace": "Systematický přehled 34 studií (celkem přes 1 500 žen po menopauze) potvrdil, že systematické posilování konzistentně zlepšuje složení těla, sílu i hustotu kostí."},
+    {"pro": "faq[1]", "citace": "Přehled tréninkových programů ukazuje, co se v praxi nejčastěji používalo: komplexní cviky na celé tělo (dřepy, leg press, tlaky na hrudník), typicky 3 série po 8–10 opakováních. Nemusíš do toho jít jako kulturistka. Musíš to dělat pravidelně a postupně přidávat zátěž."},
+    {"pro": "faq[2]", "citace": "Pokud posiluješ a chceš si sval udržet, miř zhruba na 1,2–1,6 g bílkovin na kilo tělesné hmotnosti denně, při hubnutí spíš k horní hranici. Klasických 0,8 g/kg je obecné minimum pro sedavé lidi a na udržení svalu při tréninku obvykle nestačí."},
+    {"pro": "faq[3]", "citace": "Systematický přehled uvádí, že mírný deficit (řádově 250–750 kcal/den) navíc k posilování zesiluje úbytek tuku."},
+    {"pro": "faq[4]", "citace": "Hormonální terapie (HRT) je legitimní téma a u řady žen dokáže s příznaky přechodu i s kompozicí těla hodně pomoct. Ale tohle patří výhradně do rukou tvojí lékařky nebo gynekologa. Je to individuální rozhodnutí, které závisí na tvém zdraví, historii a rizicích."},
+    {"pro": "faq[4]", "citace": "U hormonální terapie, léků a zdravotních potíží se poraď se svým lékařem a léky si sama neupravuj."}
+  ],
+  "nejiste": [
+    "Článek neříká, kolikrát týdně posilovat.",
+    "Rozsah 1,2–1,6 g bílkovin na kilo článek neopírá o konkrétní studii; přebírám ho tak, jak je napsaný, včetně podmínky „pokud posiluješ“.",
+    "Kreatin a vitamin D článek zmiňuje jen okrajově bez dávek („můžou trénink podpořit“), proto nejsou v odpovědích.",
+    "Účinek HRT na váhu článek nekvantifikuje a záměrně ho nechává na lékařce."
+  ],
+  "kontrola": "opraveno: faq[4] (HRT) doplněno „léky si sama neupravuj“ ze závěrečného upozornění a „podle tvého zdraví, historie a rizik“ z textu článku",
+  "hlas": "upraveno: kratka_odpoved bez „Není to o vůli, ale o fyziologii“; faq[0] bez „ne hodiny kardia“ a „konzistentně“ česky"
+}

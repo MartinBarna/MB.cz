@@ -1,0 +1,46 @@
+{
+  "url": "https://martinbarna.cz/clanky/bezlepkova-dieta-mytus.html",
+  "titulek": "Bezlepková dieta zhubne každého? Mýtus o bezlepkovém",
+  "hlavni_otazka": "Zhubnu, když vyřadím lepek?",
+  "kratka_odpoved": "Lepek za to nemůže: pokud nemáš celiakii ani prokázanou citlivost na lepek, lepek sám o sobě netloustne ani neškodí. Když po jeho vyřazení zhubneš, je to proto, že s pečivem, pizzou a koláči zmizela hromada kalorií. Je to obyčejný deficit.",
+  "faq": [
+    {
+      "otazka": "Jsou bezlepkové výrobky dietnější?",
+      "odpoved": "Ne. Výrobci musí lepek něčím nahradit, a tak přidají víc cukru, tuku nebo škrobu. Bezlepková verze bývá zpravidla dražší, často míň sytí a má klidně stejně i víc kalorií."
+    },
+    {
+      "otazka": "Kdy má bezlepková dieta smysl?",
+      "odpoved": "Při diagnostikované celiakii, kde je bezlepková strava jediná léčba a drží se striktně a celoživotně. A při prokázané intoleranci nebo citlivosti na lepek, kterou ti potvrdí lékař. Samodiagnóza z internetu nestačí."
+    },
+    {
+      "otazka": "Jsou celozrnné obiloviny s lepkem nezdravé?",
+      "odpoved": "Celozrnná pšenice, žito a další obiloviny s lepkem jsou běžný zdroj vlákniny, B-vitaminů a minerálů. Když je vyřadíš jen z módy, spíš si jídelníček ochudíš."
+    },
+    {
+      "otazka": "Existuje citlivost na lepek i bez celiakie?",
+      "odpoved": "Ve dvojitě zaslepeném pokusu s 28 lidmi s IBS, kteří věřili, že jim lepek škodí, nebyl mezi variantami statisticky významný rozdíl. Zhoršení nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu. Neceliakální citlivost na lepek přesto existuje a část lidí ji má, potíže si proto nech prověřit u lékaře."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jenže pokud nemáš celiakii ani prokázanou citlivost na lepek, je to omyl. Lepek sám o sobě netloustne ani neškodí."},
+    {"pro": "kratka_odpoved", "citace": "Když po vyřazení lepku zhubneš, nezhubl jsi z lepku. Zhubl jsi proto, že s pečivem, pizzou a koláči zmizela hromada kalorií. Rozhoduje deficit, ne nálepka."},
+    {"pro": "faq[0]", "citace": "Výrobci totiž musí lepek něčím nahradit, aby měl bezlepkový chleba nebo sušenka přijatelnou chuť a strukturu, a tak přidají víc cukru, tuku nebo škrobu."},
+    {"pro": "faq[0]", "citace": "Zpravidla výrazně dražší."},
+    {"pro": "faq[0]", "citace": "Často míň sytí. Sníš víc, než čekáš."},
+    {"pro": "faq[0]", "citace": "Klidně stejně i víc kalorií (přidaný cukr, tuk, škrob pro chuť)."},
+    {"pro": "faq[1]", "citace": "Diagnostikovaná celiakie. Autoimunitní onemocnění, kde lepek reálně poškozuje střevo. Tady je bezlepková strava jediná léčba a není o čem diskutovat. Drží se striktně, celoživotně."},
+    {"pro": "faq[1]", "citace": "Ale pozor, patří to k lékaři, který to potvrdí, ne k samodiagnóze z internetu nebo podle videa na sítích."},
+    {"pro": "faq[2]", "citace": "Celozrnná pšenice, žito a další obiloviny s lepkem jsou běžný zdroj vlákniny, B-vitaminů a minerálů."},
+    {"pro": "faq[2]", "citace": "Když je vyřadíš jen proto, že je „lepek zrovna v módě\", spíš si ochudíš jídelníček, než pomůžeš."},
+    {"pro": "faq[3]", "citace": "Vzali 28 lidí se syndromem dráždivého tračníku (IBS), kteří byli přesvědčení, že jim lepek dělá potíže"},
+    {"pro": "faq[3]", "citace": "Výsledek? Mezi variantami nebyl statisticky významný rozdíl. Zhoršení potíží nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu, které žádný lepek ani pšenici neobsahovalo."},
+    {"pro": "faq[3]", "citace": "Pozor, ať to nevyzní špatně: neceliakální citlivost na lepek (a citlivost na pšenici kvůli tzv. FODMAP, hůř stravitelné vláknině) reálně existuje a část lidí ji skutečně má."},
+    {"pro": "faq[3]", "citace": "O důvod víc nediagnostikovat se podle pocitu a nechat si potíže prověřit u lékaře."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak se celiakie nebo neceliakální citlivost na lepek diagnostikuje (jaké vyšetření).",
+    "Článek neuvádí, kolik kilo lidé po vyřazení lepku typicky shodí; píše jen „pár kilo“."
+  ],
+  "kontrola": "opraveno: faq[3] doplněno upozornění z článku, že neceliakální citlivost na lepek reálně existuje a potíže je třeba nechat prověřit u lékaře (bez něj studie zněla jako popření citlivosti)",
+  "hlas": "upraveno: kratka_odpoved a faq[1] bez „X, ne Y“; faq[2] bez úvodního „Ne.“ (třetí v řadě); faq[3] otázka jako dotaz člověka a bez „reálně/skutečně“"
+}

@@ -1,0 +1,57 @@
+{
+  "url": "https://martinbarna.cz/clanky/vzorovy-jidelnicek-na-hubnuti.html",
+  "titulek": "Vzorový jídelníček na hubnutí: ukázkový den kolem 1500–1700 kcal",
+  "hlavni_otazka": "Jak může vypadat jídelníček na hubnutí kolem 1500 kcal na jeden den?",
+  "kratka_odpoved": "Ukázkový den má kolem 1550 kcal a zhruba 110 g bílkovin: ovesná kaše s mlékem, banánem a proteinem, jogurt s borůvkami, kuře s rýží a zeleninou, jablko s mandlemi a tvaroh s celozrnným pečivem. Je to ukázka struktury, plán na míru vychází z tvé výšky, váhy, pohlaví, svalů a pohybu.",
+  "faq": [
+    {
+      "otazka": "Kolik kalorií mám jíst na hubnutí?",
+      "odpoved": "Univerzální číslo neexistuje, závisí na tvé výšce, váze, pohlaví a pohybu. Spočítej si odhad denní spotřeby v kalkulačce kalorií a odečti od něj rozumný deficit. Když se váha po dvou až třech týdnech nehne, příjem lehce uprav."
+    },
+    {
+      "otazka": "Jak si vzorový den upravit nahoru nebo dolů?",
+      "odpoved": "Nahoru na zhruba 1700–1800 kcal: přidej k obědu dalších 50 g rýže, k snídani lžíci arašídového másla, nebo večer kus ovoce. Dolů na zhruba 1400 kcal: vynech olej u oběda, zmenši porci rýže a mandle u svačiny nahraď zeleninou. Hýbej hlavně sacharidy a tuky, bílkoviny drž vysoko."
+    },
+    {
+      "otazka": "Hubnu pomalu, mám pomalý metabolismus?",
+      "odpoved": "Pomalé hubnutí neznamená, že máš pomalý metabolismus. Nejčastěji je reálný příjem vyšší, než si myslíš, kvůli okusování, pití kalorií a odhadu porcí od oka."
+    },
+    {
+      "otazka": "Na co si dát u jídelníčku na hubnutí pozor?",
+      "odpoved": "Na podceňování porcí od oka (rozdíl mezi 150 a 250 g rýže je klidně 150 kcal), kalorie v nápojích včetně alkoholu, málo bílkovin a přehnané tempo. Extrémně nízký příjem tě spíš vyčerpá, než že by zázračně zrychlil výsledek."
+    },
+    {
+      "otazka": "Je vzorový jídelníček 1500 kcal vhodný pro každého?",
+      "odpoved": "Ne, pro aktivnějšího nebo většího člověka může být 1500 kcal zbytečně málo. Pokud bereš léky, jsi těhotná nebo kojíš, řešíš nějakou nemoc nebo máš (i v minulosti) poruchu příjmu potravy, nastavení příjmu si nech projít s lékařem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Sečteno kolem 1550 kcal, zhruba 110 g bílkovin."},
+    {"pro": "kratka_odpoved", "citace": "Snídaně (~400 kcal): ovesná kaše z 60 g vloček, 200 ml polotučného mléka, 1 banán, 20 g proteinu."},
+    {"pro": "kratka_odpoved", "citace": "Dopolední svačina (~200 kcal): 150 g bílého jogurtu (3 %) a hrst borůvek."},
+    {"pro": "kratka_odpoved", "citace": "Oběd (~500 kcal): 130 g kuřecích prsou, 200 g vařené rýže, velká porce zeleniny, lžíce olivového oleje."},
+    {"pro": "kratka_odpoved", "citace": "Odpolední svačina (~150 kcal): jablko a 20 g mandlí."},
+    {"pro": "kratka_odpoved", "citace": "Večeře (~300 kcal): 120 g tvarohu (polotučný), 60 g celozrnného pečiva, plátky zeleniny."},
+    {"pro": "kratka_odpoved", "citace": "Tohle není plán, který bys měl otrocky kopírovat – je to ukázka struktury"},
+    {"pro": "kratka_odpoved", "citace": "Tvoje spotřeba závisí na výšce, váze, pohlaví, množství svalů a hlavně na tom, kolik se za den reálně hýbeš."},
+    {"pro": "faq[0]", "citace": "Univerzální číslo neexistuje – závisí na tvé výšce, váze, pohlaví a pohybu."},
+    {"pro": "faq[0]", "citace": "Nejlíp uděláš, když si spočítáš odhad denní spotřeby v kalkulačce kalorií a od něj odečteš rozumný deficit. Když se váha po dvou až třech týdnech nehne, příjem lehce upravíš."},
+    {"pro": "faq[1]", "citace": "Nahoru (na ~1700–1800 kcal): přidej k obědu dalších 50 g rýže, k snídani lžíci arašídového másla, nebo večer navíc kus ovoce."},
+    {"pro": "faq[1]", "citace": "Dolů (na ~1400 kcal): vynech olej u oběda, zmenši porci rýže a mandle u svačiny nahraď zeleninou."},
+    {"pro": "faq[1]", "citace": "Nejjednodušší je hýbat se sacharidy a tuky a bílkoviny držet vysoké."},
+    {"pro": "faq[2]", "citace": "A pozor na jeden mýtus: pomalé hubnutí neznamená, že máš „pomalý metabolismus\". Nejčastěji jde o to, že reálný příjem je vyšší, než si člověk myslí – malé okusování, pití kalorií, odhad porcí od oka."},
+    {"pro": "faq[3]", "citace": "Podceňování porcí od oka. Aspoň na začátku si jídlo zvaž. Rozdíl mezi 150 a 250 g rýže je klidně 150 kcal."},
+    {"pro": "faq[3]", "citace": "Kalorie v nápojích. Slazené nápoje, džusy, ale i alkohol se počítají"},
+    {"pro": "faq[3]", "citace": "Málo bílkovin. Drž je vysoko – zasytí a chrání svaly v deficitu."},
+    {"pro": "faq[3]", "citace": "Přehnané tempo. Extrémně nízký příjem tě spíš vyčerpá, než že by zázračně zrychlil výsledek."},
+    {"pro": "faq[4]", "citace": "Pro aktivnějšího nebo většího člověka může být 1500 kcal zbytečně málo."},
+    {"pro": "faq[4]", "citace": "Pokud bereš léky, jsi těhotná nebo kojíš, řešíš nějakou nemoc nebo máš (i v minulosti) poruchu příjmu potravy, neber tenhle obecný jídelníček jako doporučení pro sebe a nastavení příjmu si nech projít s lékařem."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak velký je „rozumný deficit“ v kcal ani v procentech.",
+    "U některých položek chybí přesné množství (hrst borůvek, velká porce zeleniny, plátky zeleniny), takže součet kolem 1550 kcal je jen orientační.",
+    "Článek neříká, od jakého příjmu nebo tempa hubnutí už jde o „přehnané tempo“."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ukázka struktury, ne plán na míru“; faq[2] bez „podle článku“"
+}

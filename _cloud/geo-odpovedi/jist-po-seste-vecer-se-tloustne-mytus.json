@@ -1,0 +1,44 @@
+{
+  "url": "https://martinbarna.cz/clanky/jist-po-seste-vecer-se-tloustne-mytus.html",
+  "titulek": "Jíst po šesté večer se tloustne? Mýtus o časování jídla",
+  "hlavni_otazka": "Tloustne se, když jím po šesté večer?",
+  "kratka_odpoved": "Ne, tvoje tuková tkáň nemá hodinky. Váha se řídí energetickou bilancí za dny a týdny, takže stejných 500 kcal z rýže s kuřetem ti udělá to samé v sedm ráno i v devět večer. Lidi, kteří jedí pozdě, často jen snědí za den víc.",
+  "faq": [
+    {
+      "otazka": "Proč se říká, že jídlo večer tloustí?",
+      "odpoved": "Mýtus má reálný základ: kdo jí pozdě večer, často sní za den víc. U telky jedou chipsy, víno, pivo a čokoláda z nudy, a nikdo to nepočítá. Pozdní jezení s přejídáním souvisí, ale není jeho příčinou."
+    },
+    {
+      "otazka": "Co říká výzkum o časování jídla a hubnutí?",
+      "odpoved": "Když skupiny snědí stejné kalorie rozložené jinak během dne, rozdíly v úbytku tuku jsou malé až žádné. Drobný rozdíl obvykle vysvětlí to, že lidé s těžkou snídaní mívají menší hlad a sní celkem míň."
+    },
+    {
+      "otazka": "Kdy má smysl večerní jídlo řešit?",
+      "odpoved": "Když ti těžké jídlo těsně před spaním rozhodí spánek a trávení. Pak poslední velké jídlo posuň o hodinu dvě dřív nebo ho udělej lehčí, pomůžeš tím spánku."
+    },
+    {
+      "otazka": "Můžu se najíst po večerním tréninku, i když je pozdě?",
+      "odpoved": "Ano. Dej si po tréninku jídlo s bílkovinami, i kdyby bylo v deset večer. Pomůže to regeneraci a neuškodí postavě."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Tvoje tuková tkáň nemá hodinky a nekouká na to, kolik je pryč."},
+    {"pro": "kratka_odpoved", "citace": "Ne. Váha se řídí energetickou bilancí za dny a týdny, ne hodinou na hodinkách."},
+    {"pro": "kratka_odpoved", "citace": "Stejných 500 kcal z rýže s kuřetem ti udělá v těle to samé v sedm ráno i v devět večer."},
+    {"pro": "kratka_odpoved", "citace": "Lidi, kteří jedí pozdě večer, totiž často sní za den víc. A nepřibírají z toho času, ale z toho množství."},
+    {"pro": "faq[0]", "citace": "Vyrostla z reálného pozorování, jen se špatně vyložilo. Lidi, kteří jedí pozdě večer, totiž často sní za den víc."},
+    {"pro": "faq[0]", "citace": "Sedíš u telky nebo u seriálu, ruka sama jede do pytlíku s chipsy, k tomu sklenka vína nebo dvě piva, čokoláda, něco slaného k tomu. Nejíš, protože máš hlad. Jíš z nudy, z únavy, ze zvyku. A tahle jídla se nepočítají"},
+    {"pro": "faq[0]", "citace": "Ve skutečnosti spolu jen souvisí pozdní jezení a přejídání: koreluje to, ale jedno není příčinou druhého."},
+    {"pro": "faq[1]", "citace": "Když výzkumníci porovnávají skupiny, které snědí stejné množství kalorií, ale rozložené jinak během dne, třeba větší porce ráno proti větší porci večer, rozdíly v úbytku tuku jsou malé až žádné, pokud je celkový příjem stejný. Tam, kde nějaký drobný rozdíl vyjde, ho obvykle vysvětlí to, že lidé s těžkou snídaní mívají přes den menší hlad a sní celkem míň."},
+    {"pro": "faq[2]", "citace": "Těžké jídlo těsně před spaním ti může rozhodit spánek a trávení."},
+    {"pro": "faq[2]", "citace": "Pokud ti těžká večeře kazí spánek, posuň poslední velké jídlo o hodinu dvě dřív nebo ho udělej lehčí. Kvůli spánku, ne kvůli váze."},
+    {"pro": "faq[3]", "citace": "Trénuješ navečer? V pohodě. Dej si po tréninku jídlo s bílkovinami, i kdyby bylo v deset večer. Pomůže to regeneraci, neuškodí postavě."}
+  ],
+  "nejiste": [
+    "Výzkum o časování jídla je v článku shrnutý obecně („když výzkumníci porovnávají skupiny“) bez konkrétních studií a čísel.",
+    "Článek neříká, jak dlouho před spaním je jídlo už „těsně před spaním“; dává jen radu posunout ho o hodinu dvě dřív.",
+    "Článek neřeší lidi na směny nebo s narušeným cirkadiánním rytmem, proto jsem odpověď na ně nerozšiřoval."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „skutečného“; faq[2] bez „kvůli spánku, ne kvůli váze“"
+}

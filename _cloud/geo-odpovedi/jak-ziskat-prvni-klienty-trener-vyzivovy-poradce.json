@@ -1,0 +1,55 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-ziskat-prvni-klienty-trener-vyzivovy-poradce.html",
+  "titulek": "Jak získat první klienty jako trenér nebo výživový poradce",
+  "hlavni_otazka": "Jak získat první klienty jako začínající trenér nebo výživový poradce?",
+  "kratka_odpoved": "Nečekej na další kurz, tvůj úkol číslo jedna je dostat se k co nejvíc prvním konzultacím. Sepiš si 20 jmen z okolí, pěti lidem pošli osobní zprávu s nabídkou vstupní konzultace zdarma, odveď ji jako profík a na konci řekni cenu. Pak každého popros o jedno doporučení.",
+  "faq": [
+    {
+      "otazka": "Komu mám jako začínající trenér nabídnout první konzultaci?",
+      "odpoved": "Sepiš si 20 jmen: lidi z fitka, z práce, z rodiny a ze sítí, o kterých víš, že chtějí zhubnout, nabrat, začít se hýbat nebo si srovnat jídlo. Zatím nikomu nic neprodáváš, jen mapuješ okolí. Z dvaceti jmen se při troše práce udělají první dva tři platící klienti."
+    },
+    {
+      "otazka": "Není nabízet konzultaci zdarma žebrání?",
+      "odpoved": "Není, je to ukázka práce, stejně jako ochutnávka v dobré restauraci. Kdo zažije, jak vedeš rozhovor, měříš výchozí stav a dáváš konkrétní kroky, pochopí rozdíl mezi tebou a radami z internetu."
+    },
+    {
+      "otazka": "Jak vést první konzultaci s klientem?",
+      "odpoved": "Pošli předem vstupní dotazník, na konzultaci nech mluvit hlavně klienta, změř výchozí stav (váha, míry) a dej mu dva tři konkrétní kroky na první týden. Na konci řekni cenu klidně, jednou větou a bez omlouvání, a pak buď zticha. Omlouvání ceny je nejrychlejší způsob, jak o klienta přijít."
+    },
+    {
+      "otazka": "Jak získat další klienty přes doporučení?",
+      "odpoved": "Každého, kdo projde konzultací, popros o jedno jméno, i toho, kdo spolupráci odmítl. Spokojené klienty požádej o recenzi na Google a o doporučení ve chvíli, kdy mají první výsledky a jsou nadšení. Za půl roku už je nadšení pryč."
+    },
+    {
+      "otazka": "Musím jako trenér točit obsah na sítě?",
+      "odpoved": "Tanečky na sítě točit nemusíš, stačí pravidelně ukazovat, že tvoji lidé mají výsledky. Materiálem je každý týdenní check-in s klientem, samozřejmě s jeho souhlasem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "To znamená, že tvým úkolem číslo jedna není učit se další teorii. Je to dostat se k co nejvíc prvním konzultacím."},
+    {"pro": "kratka_odpoved", "citace": "Krok 1: Sepiš si 20 jmen"},
+    {"pro": "kratka_odpoved", "citace": "Jen mapuješ, kdo v tvém okolí řeší přesně to, co umíš vyřešit."},
+    {"pro": "kratka_odpoved", "citace": "Vyber pět lidí ze seznamu a napiš jim. Ne kopírovaný text, osobní zprávu: jedna věta o nich, jedna o tom, že rozjíždíš praxi, a nabídka vstupní konzultace zdarma."},
+    {"pro": "kratka_odpoved", "citace": "Krok 3: Odveď konzultaci jako profík"},
+    {"pro": "kratka_odpoved", "citace": "A na konci řekni cenu."},
+    {"pro": "kratka_odpoved", "citace": "Každého, kdo projde konzultací, popros o jedno jméno."},
+    {"pro": "faq[0]", "citace": "Lidé z fitka, z práce, z rodiny, ze sítí. Každý, o kom víš, že chce zhubnout, nabrat, začít se hýbat nebo si srovnat jídlo. Nikoho nesoudíš a nikomu zatím nic neprodáváš. Jen mapuješ, kdo v tvém okolí řeší přesně to, co umíš vyřešit."},
+    {"pro": "faq[0]", "citace": "Dvacet jmen dá dohromady úplně každý. A z dvaceti jmen se při troše práce udělají první dva tři platící klienti."},
+    {"pro": "faq[1]", "citace": "Konzultace zdarma není žebrání. Je to ukázka práce, stejně jako ochutnávka v dobré restauraci. Kdo zažije, jak vedeš rozhovor, měříš výchozí stav a dáváš konkrétní kroky, ten pochopí rozdíl mezi tebou a radami z internetu."},
+    {"pro": "faq[2]", "citace": "Pošli předem vstupní dotazník, ať přicházíš připravený. Na konzultaci nech mluvit hlavně klienta, změř výchozí stav (váha, míry) a dej mu dva tři konkrétní kroky na první týden."},
+    {"pro": "faq[2]", "citace": "A na konci řekni cenu. Klidně, jednou větou, bez omlouvání."},
+    {"pro": "faq[2]", "citace": "Pak buď zticha a nech druhou stranu reagovat. Omlouvání ceny je nejrychlejší způsob, jak o klienta přijít."},
+    {"pro": "faq[3]", "citace": "Každého, kdo projde konzultací, popros o jedno jméno. I toho, kdo spolupráci odmítl:"},
+    {"pro": "faq[3]", "citace": "U spokojených klientů to později povýšíš: řekni si o recenzi na Google a o doporučení ve chvíli, kdy mají první výsledky a jsou nadšení. Ne za půl roku."},
+    {"pro": "faq[4]", "citace": "Každý týdenní check-in s klientem je materiál na obsah: „Klientka po čtyřech týdnech: minus 3 cm v pase, síla nahoru\" (samozřejmě se souhlasem). Nemusíš točit tanečky na sítě. Stačí pravidelně ukazovat, že tvoji lidé mají výsledky."}
+  ],
+  "nejiste": [
+    "Článek neříká, kolik si za spolupráci účtovat ani jak cenu nastavit, jen že ji máš říct bez omlouvání.",
+    "Neuvádí, jak dlouhá má být vstupní konzultace ani co dělat, když z pěti oslovených nikdo neodpoví.",
+    "„Z dvaceti jmen první dva tři platící klienti\" je autorova zkušenost, ne změřené číslo.",
+    "Souhlas klienta se zveřejněním výsledků článek zmiňuje jen v závorce, pravidla (forma souhlasu, GDPR) nerozebírá.",
+    "Závěrečnou nabídku startovacího kitu jsem vynechal, je to reklama, ne odpověď."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] bez „ne za půl roku“"
+}

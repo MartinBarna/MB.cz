@@ -1,0 +1,50 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-alkohol-hubnuti-a-spolecenske-udalos.html",
+  "titulek": "E-book Nejčastější dotazy klientů – ALKOHOL, HUBNUTÍ A SPOLEČENSKÉ UDÁLOSTI",
+  "hlavni_otazka": "Jak pít alkohol na oslavě a přitom dál hubnout?",
+  "kratka_odpoved": "Alkohol má 7 kcal na 1 g, takže se po něm dá přibrat. Čím vyšší voltáž, tím víc kalorií, proto sáhni spíš po desítce, znej svou míru, drž se jednoho druhu a pij najezený. Když si občas něco dáš a správně to zohledníš, hubnout můžeš dál.",
+  "faq": [
+    {
+      "otazka": "Kolik kalorií má pivo, víno a tvrdý alkohol?",
+      "odpoved": "Desítka má 185 kcal na půl litru, dvanáctka 237 kcal na půl litru. Panák vodky 5 cl má 110 kcal, 53% slivovice kolem 115 kcal na 4 cl a bílé suché víno zhruba 130 kcal za 2 dcl."
+    },
+    {
+      "otazka": "Proč se nevyplatí po tréninku opít?",
+      "odpoved": "Játra se podílí i na regeneraci a budování svalů. Když jdeš cvičit a pak se opiješ, tělo dá přednost odbourávání alkoholu z krve a svaly jdou na druhou kolej. Podle Dr. Layna Nortona trochu piva játra zdaleka tak nezatíží jako stav, kdy už začínáš být opilý."
+    },
+    {
+      "otazka": "Jak zmírnit kocovinu druhý den?",
+      "odpoved": "Část mizerného pocitu má na svědomí dehydratace, protože alkohol odvodňuje. Pij během akce hodně vody, doplň ji i doma a dej si k posteli naplněnou láhev."
+    },
+    {
+      "otazka": "Jak si na párty zapsat, co jsem vypil a snědl?",
+      "odpoved": "Vyfoť si každé jídlo nebo panáka a druhý den si to podle fotek v klidu přepiš. S přípravou předem vyjdeš ještě líp: v kalorických tabulkách si najdi, co máš rád a co nemá moc kcal."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Má 7 kcal na 1 g (bílkoviny a sacharidy mají 4 kcal na 1 g, tuky 9 kcal na 1 g)."},
+    {"pro": "kratka_odpoved", "citace": "Po alkoholu se proto dá i přibrat, protože je to taky forma energie pro tělo."},
+    {"pro": "kratka_odpoved", "citace": "čím vyšší voltáž, tím víc alkoholu a tím víc kalorií v dané flašce nebo panáku."},
+    {"pro": "kratka_odpoved", "citace": "doporučím spíš desítky. Prostě nižší voltáž, znát svou míru a nepřehnat to."},
+    {"pro": "kratka_odpoved", "citace": "S mícháním druhů opatrně, ideálně se drž jednoho a pij najezený."},
+    {"pro": "kratka_odpoved", "citace": "Říkám, že i když si občas něco dáš a správně to zohledníš, hubnout můžeš dál."},
+    {"pro": "faq[0]", "citace": "Desítka má 185 kcal na půl litru, dvanáctka už 237 kcal na půl litru."},
+    {"pro": "faq[0]", "citace": "Panák vodky 5 cl má 110 kcal, 53% slivovice kolem 115 kcal na 4 cl. Bílé suché víno vyjde zhruba na 130 kcal za 2 dcl."},
+    {"pro": "faq[1]", "citace": "Játra, která mají odbourávání hodně na starosti, se ale podílí taky na regeneraci a budování svalů"},
+    {"pro": "faq[1]", "citace": "Když jdeš cvičit a pak se opiješ, tělo logicky dá přednost odbourávání alkoholu z krve a svaly jdou pro něj na druhou kolej."},
+    {"pro": "faq[1]", "citace": "Vysvětloval to tak, že trochu piva játra zdaleka tak nezatíží jako stav, kdy už začínáš být opilý."},
+    {"pro": "faq[1]", "citace": "Dr. Layne Norton k tomu říká, že při přípravě na mistrovství světa v naturálním powerliftingu si občas dal i „desítku“."},
+    {"pro": "faq[2]", "citace": "Část toho mizerného pocitu po pití má na svědomí dehydratace. Pij proto během akce hodně vody, doplň ji i doma a třeba si dej k posteli naplněnou láhev."},
+    {"pro": "faq[2]", "citace": "Omezuje to dehydrataci, protože alkohol odvodňuje."},
+    {"pro": "faq[3]", "citace": "Vyfotit si každé jídlo nebo panáka je tím pádem míň divné. Druhý den si to podle fotek v klidu přepíšeš."},
+    {"pro": "faq[3]", "citace": "A s přípravou předem vyjdeš ještě líp."},
+    {"pro": "faq[3]", "citace": "Udělej si předem malý průzkum a najdi něco, co máš rád a zároveň to „nesežere“ moc kcal."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik alkoholu je ještě „pár“ nebo „míra“, jen příklad 2 piv za den oproti 8 (Layne Norton).",
+    "Kalorické hodnoty nápojů jsou v článku bez zdroje a mezi značkami se mohou lišit.",
+    "Zdravotní rizika alkoholu článek řeší jen okrajově (zátěž jater, „moc benefitů z něj nemá, spíš naopak“), hlavně se věnuje hubnutí a regeneraci."
+  ],
+  "kontrola": "opraveno: faq[1] otázka zúžena z „alkohol po tréninku“ na opití (článek mluví o opití) a tvrzení o „trochu piva“ přisouzeno Dr. Laynu Nortonovi; nejiste[2] opraveno (článek zátěž jater zmiňuje)",
+  "hlas": "upraveno: skloňování „Layna Nortona“"
+}

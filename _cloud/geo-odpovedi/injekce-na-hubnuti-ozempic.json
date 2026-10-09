@@ -1,0 +1,67 @@
+{
+  "url": "https://martinbarna.cz/clanky/injekce-na-hubnuti-ozempic.html",
+  "titulek": "Injekce na hubnutí (Ozempic, Wegovy): co o nich vědět",
+  "hlavni_otazka": "Fungují injekce na hubnutí jako Ozempic a co se stane, když je přestanu brát?",
+  "kratka_odpoved": "Ozempic, Wegovy a Mounjaro jsou léky na předpis, které tlumí hlad, takže sníš méně a vznikne kalorický deficit. Ve studii STEP 1 u lidí s obezitou, nebo s nadváhou a nemocí, klesla váha za 68 týdnů v průměru o 14,9 % na léku a o 2,4 % na placebu. Rok po vysazení se ale vrátily zhruba dvě třetiny úbytku.",
+  "faq": [
+    {
+      "otazka": "Jaký je rozdíl mezi Ozempicem, Wegovy a Mounjarem?",
+      "odpoved": "Ozempic i Wegovy obsahují semaglutid, Mounjaro tirzepatid. Wegovy a Mounjaro jsou v EU registrované na léčbu obezity od BMI 30, nebo od BMI 27 s nemocí, kterou váha zhoršuje. Ozempic je registrovaný na cukrovku druhého typu a kdo ho bere jen kvůli váze, bere ho mimo registraci."
+    },
+    {
+      "otazka": "Komu injekce na hubnutí patří a komu ne?",
+      "odpoved": "U člověka s výraznou obezitou a cukrovkou, vysokým tlakem nebo nemocným srdcem je to léčba. Pro člověka s pár kily navíc a bez nemoci to lék není: rizika má stejná, doložený přínos pro zdraví ne. Rozhoduje o tom lékař a lék patří do lékárny na recept, nikdy z internetu."
+    },
+    {
+      "otazka": "Přijdu na injekcích na hubnutí o svaly?",
+      "odpoved": "Ve studiích s těmito léky tvoří beztuková hmota zhruba čtvrtinu až třetinu úbytku, u tirzepatidu asi 25 %, u semaglutidu asi 35 %, a samotné svaly jsou z toho zhruba polovina. Proto k léku patří od prvního týdne silový trénink 2 až 3× týdně (kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře) a bílkovina v každém jídle. Odborné společnosti u lidí na léku uvádějí zhruba 1,2 až 1,6 g bílkovin na kilo, u velké nadváhy počítáno z cílové váhy."
+    },
+    {
+      "otazka": "Co se stane s váhou, když injekce vysadím?",
+      "odpoved": "Ve studii SURMOUNT-4 nabrali lidé, kteří po 36 týdnech tirzepatidu přešli na placebo, za rok 14 % váhy zpět, přestože dál dostávali poradenství ke stravě a pohybu. Souhrn 37 studií udává po vysazení novějších léků návrat zhruba 0,8 kg za měsíc. Jestli, kdy a jak lék vysadit, rozhoduje lékař, u části lidí místo vysazení volí nižší udržovací dávku."
+    },
+    {
+      "otazka": "Jaké nežádoucí účinky mají injekce na hubnutí?",
+      "odpoved": "Nejčastější jsou trávicí potíže (ve STEP 1 je mělo 74 lidí ze 100 na léku a 48 ze 100 na placebu), většinou nevolnost, průjem, zácpa nebo pálení žáhy, hlavně na začátku a při zvyšování dávky, a většinou mírné a přechodné. Když potíže neodezní, patří to k lékaři. Pokud bereš jiné léky, jsi těhotná, máš zkušenost s poruchou příjmu potravy nebo řešíš jakoukoli nemoc, o léku rozhoduje výhradně tvůj lékař."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jsou to léky na předpis."},
+    {"pro": "kratka_odpoved", "citace": "Tyhle léky tuk přímo nespalují, fungují tak, že díky utlumenému hladu sníš méně a vznikne kalorický deficit."},
+    {"pro": "kratka_odpoved", "citace": "Studie STEP 1 (Wilding a kol., 2021) dala 1 961 dospělým s obezitou, nebo s nadváhou a nemocí, bez cukrovky, semaglutid nebo placebo."},
+    {"pro": "kratka_odpoved", "citace": "Za 68 týdnů klesla váha v průměru o 14,9 % na léku a o 2,4 % na placebu."},
+    {"pro": "kratka_odpoved", "citace": "Rok po vysazení nabrala 11,6 procentního bodu zpět. Autoři píší, že se za rok vrátily zhruba dvě třetiny úbytku."},
+    {"pro": "faq[0]", "citace": "Ozempic i Wegovy obsahují stejnou účinnou látku, semaglutid. Mounjaro obsahuje tirzepatid."},
+    {"pro": "faq[0]", "citace": "Wegovy a Mounjaro jsou v EU registrované na léčbu obezity: od BMI 30, nebo od BMI 27 s nemocí, kterou váha zhoršuje (cukrovka, vysoký tlak, spánková apnoe a další)."},
+    {"pro": "faq[0]", "citace": "Ozempic je registrovaný na cukrovku 2. typu. Kdo ho bere jen kvůli váze, bere ho mimo registraci."},
+    {"pro": "faq[1]", "citace": "U člověka s výraznou obezitou a cukrovkou, vysokým tlakem nebo nemocným srdcem je lék léčba, ne kosmetika."},
+    {"pro": "faq[1]", "citace": "Pro člověka s pár kily navíc, bez nemoci a bez lékaře, to lék není. Rizika má stejná, doložený přínos pro zdraví ne."},
+    {"pro": "faq[1]", "citace": "O tom všem rozhoduje lékař."},
+    {"pro": "faq[1]", "citace": "A z internetu nikdy."},
+    {"pro": "faq[1]", "citace": "Lék patří do lékárny na recept."},
+    {"pro": "faq[2]", "citace": "Ve studiích s těmito léky tvoří beztuková hmota (svaly, voda, orgány) zhruba čtvrtinu až třetinu úbytku: u tirzepatidu asi 25 %, u semaglutidu asi 35 % (souhrn 20 studií, Eisa a kol., 2026). Samotné svaly jsou z toho zhruba polovina, tedy u semaglutidu asi pětina shozených kil."},
+    {"pro": "faq[2]", "citace": "Proto k léku patří od prvního týdne silový trénink a bílkoviny v každém jídle."},
+    {"pro": "faq[2]", "citace": "Silový trénink 2 až 3× týdně, aby tělo mělo důvod si svaly a kosti nechat."},
+    {"pro": "faq[2]", "citace": "Kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře."},
+    {"pro": "faq[2]", "citace": "Odborné společnosti u lidí na léku uvádějí zhruba 1,2 až 1,6 g na kilo; u velké nadváhy počítej z cílové váhy."},
+    {"pro": "faq[3]", "citace": "SURMOUNT-4 (Aronne a kol., 2024): po 36 týdnech tirzepatidu průměrný úbytek 20,9 %. Kdo pak dostal placebo, nabral za rok 14 % váhy zpět."},
+    {"pro": "faq[3]", "citace": "Všichni přitom dál dostávali poradenství ke stravě a pohybu."},
+    {"pro": "faq[3]", "citace": "Souhrn 37 studií (West a kol., 2026) to shrnuje: po vysazení novějších léků se vrací zhruba 0,8 kg za měsíc a autoři nenašli důkaz, že by intenzivnější podpora během léčby návrat zpomalila."},
+    {"pro": "faq[3]", "citace": "Co s tím dělají lékaři: u části lidí místo vysazení volí nižší udržovací dávku."},
+    {"pro": "faq[3]", "citace": "Jestli, kdy a jak lék vysadit, rozhoduje lékař."},
+    {"pro": "faq[4]", "citace": "Nejčastější potíže jsou trávicí: ve STEP 1 je mělo 74 lidí ze 100 na léku a 48 ze 100 na placebu."},
+    {"pro": "faq[4]", "citace": "Většinou šlo o nevolnost, průjem, zácpu nebo pálení žáhy, hlavně na začátku a při zvyšování dávky, a většinou byly mírné a přechodné."},
+    {"pro": "faq[4]", "citace": "Když potíže neodezní, patří to k lékaři."},
+    {"pro": "faq[4]", "citace": "Pokud bereš jiné léky, jsi těhotná, máš zkušenost s poruchou příjmu potravy nebo řešíš jakoukoli nemoc, o léku rozhoduje výhradně tvůj lékař."}
+  ],
+  "nejiste": [
+    "Článek neříká, jak dlouho se lék má brát, kolik stojí, ani jestli ho hradí pojišťovna.",
+    "Čísla ze STEP 1 a SURMOUNT platí pro pacienty s obezitou, s lékařem a s režimem vedle léku; článek sám říká, že se nedají přenést na člověka, který chce shodit pár kil. Proto jsou v odpovědi podaná jako výsledek studie, ne jako slib.",
+    "Vzácnější komplikace článek nejmenuje, jen říká, že existují a řeší je lékař.",
+    "Údaje o kostech jsou smíšené (pokles hustoty v jedné malé studii, žádné zvýšení zlomenin v souhrnu 60 studií), do FAQ jsem je nedával.",
+    "Přínosy pro srdce (SELECT) a prevenci cukrovky u prediabetu jsem vynechal: článek je váže na lidi s nemocí a na rozhodnutí lékaře a vytržené by zněly jako doporučení léku.",
+    "„14 % váhy zpět\" v SURMOUNT-4 přebírám doslova; článek nevysvětluje, jestli jde o procento původní váhy, nebo o procentní body."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněno, pro koho platí čísla STEP 1 (lidé s obezitou, nebo s nadváhou a nemocí); faq[2] doplněno ‚kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře‘ a že 1,2–1,6 g/kg se u velké nadváhy počítá z cílové váhy; faq[4] doplněna chybějící porucha příjmu potravy a jakákoli nemoc mezi situace, kdy rozhoduje výhradně lékař",
+  "hlas": "upraveno: faq[1] bez „léčba, ne kosmetika“ (varování zůstávají)"
+}

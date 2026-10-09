@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/melatonin-na-spanek.html",
+  "titulek": "Je melatonin prášek na spaní? Není. A v tom je háček",
+  "hlavni_otazka": "Pomáhá melatonin na spaní a kolik ho brát?",
+  "kratka_odpoved": "Melatonin není prášek na spaní: netlumí nervový systém, jen tělu dá vědět, že je noc. Usneš s ním zhruba o 7 minut dřív než po placebu a pomáhá hlavně při rozhozeném vnitřním čase, třeba při jet lagu. Tělu stačí 0,5–1 mg, u dětí jen po domluvě s pediatrem.",
+  "faq": [
+    {
+      "otazka": "Je melatonin návykový?",
+      "odpoved": "Není. Nevzniká na něj tolerance, fyzická závislost ani absťák. Lékaři ho dávají i lidem, co slézají ze silných prášků."
+    },
+    {
+      "otazka": "Pomůže víc miligramů melatoninu líp?",
+      "odpoved": "Ne. Tělu stačí 0,5–1 mg a nad 5 mg už spánku nic nepřidáš, akorát si koleduješ o ranní opici."
+    },
+    {
+      "otazka": "Komu melatonin pomáhá?",
+      "odpoved": "Hlavně tam, kde máš rozhozený vnitřní čas: při jet lagu, sovám se zpožděnou fází, starším lidem, co si ho sami vyrábějí míň, a při návratu do režimu po cestách. Na klasickou nespavost ale nezabírá."
+    },
+    {
+      "otazka": "Kdy mi melatonin nepomůže?",
+      "odpoved": "Když ti spánek kazí kofein nebo alkohol pozdě večer, světlo a obrazovky, stres nebo nepoznaná apnoe. To melatonin nevyřeší, jen to překryje, takže nejdřív zjisti, proč nespíš."
+    },
+    {
+      "otazka": "Na co si dát u melatoninu pozor?",
+      "odpoved": "Je to hormon, podle toho s ním zacházej: u dětí jen po domluvě s pediatrem a pozor na kombinaci s léky. A v testech 71 % produktů nesedělo s etiketou, takže nevíš, kolik ho doopravdy bereš."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Klasické prášky na spaní tlumí nervový systém. Melatonin netlumí nic, jen tělu dá vědět, že je noc. Proto pomáhá hlavně tam, kde máš rozhozený vnitřní čas: jet lag, sovy se zpožděnou fází, starší lidi, co si ho sami vyrábějí míň, návrat do režimu po cestách"},
+    {"pro": "kratka_odpoved", "citace": "Usneš zhruba o 7 minut dřív než po placebu. Efekt to je, zázrak ne."},
+    {"pro": "kratka_odpoved", "citace": "Víc miligramů nefunguje líp. Tělu stačí 0,5–1 mg."},
+    {"pro": "kratka_odpoved", "citace": "Je to hormon, ne bonbon. U dětí jen po domluvě s pediatrem a pozor na kombinaci s léky"},
+    {"pro": "faq[0]", "citace": "Návykový není. Žádná tolerance, fyzická závislost ani absťák. Lékaři ho dávají i lidem, co slézají ze silných prášků"},
+    {"pro": "faq[1]", "citace": "Víc miligramů nefunguje líp. Tělu stačí 0,5–1 mg. Nad 5 mg už spánku nic nepřidáš, akorát si koleduješ o ranní opici"},
+    {"pro": "faq[2]", "citace": "Proto pomáhá hlavně tam, kde máš rozhozený vnitřní čas: jet lag, sovy se zpožděnou fází, starší lidi, co si ho sami vyrábějí míň, návrat do režimu po cestách"},
+    {"pro": "faq[2]", "citace": "Funguje hlavně na rozhozený čas, ne na klasickou nespavost"},
+    {"pro": "faq[3]", "citace": "A kdy si od něj moc neslibuj: když ti spánek kazí kofein nebo alkohol pozdě večer, světlo a obrazovky, stres nebo nepoznaná apnoe. Tohle melatonin nevyřeší, jen to překryje. Nejdřív zjisti, proč nespíš"},
+    {"pro": "faq[4]", "citace": "Je to hormon, ne bonbon. U dětí jen po domluvě s pediatrem a pozor na kombinaci s léky"},
+    {"pro": "faq[4]", "citace": "Nevíš, kolik ho doopravdy bereš. V testech 71 % produktů nesedělo s etiketou"}
+  ],
+  "nejiste": [
+    "Článek neříká, kdy večer melatonin brát ani jak dlouho ho lze užívat.",
+    "Článek neuvádí, se kterými léky se melatonin nekombinuje, jen obecně varuje; konkrétní léky si nedomýšlím.",
+    "U chronické nespavosti se článek nestaví jednoznačně (EU regulátor rychlejší usínání uznává, americká spánková akademie ho jako první volbu nedoporučuje, „pravda leží někde mezi“), proto tvrdím jen, že funguje hlavně na rozhozený čas.",
+    "Údaj 7 minut pochází z meta-analýzy 19 studií; článek neuvádí, pro jakou skupinu lidí a dávku platí."
+  ],
+  "kontrola": "opraveno: kratka_odpoved, která odpovídá i na ‚kolik ho brát‘, doplněna o upozornění z článku ‚u dětí jen po domluvě s pediatrem‘",
+  "hlas": "upraveno: faq[2] bez „ne na klasickou nespavost“; faq[4] bez „hormon, ne bonbon“"
+}

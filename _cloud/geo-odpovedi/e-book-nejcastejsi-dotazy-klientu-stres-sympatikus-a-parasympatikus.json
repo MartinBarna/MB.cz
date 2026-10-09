@@ -1,0 +1,108 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-stres-sympatikus-a-parasympatikus.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Stres – sympatikus a parasympatikus",
+  "hlavni_otazka": "Jak stres ovlivňuje chuť k jídlu a nabírání svalů?",
+  "kratka_odpoved": "Při chronickém stresu jsi skoro pořád v bojovém režimu sympatiku, a to může oslabovat imunitu, brát ti chuť k jídlu a zpomalovat trávení. Sympatikus navíc nutí tělo rozkládat tkáně, a když ho parasympatikus dost často nevyvažuje, má tělo těžší pozici ukládat a růst. Akutní stres, třeba sportovní zátěž, je ale v pořádku.",
+  "faq": [
+    {
+      "otazka": "Jaký je rozdíl mezi sympatikem a parasympatikem?",
+      "odpoved": "Sympatikus je režim boj nebo útěk: zrychluje tep a dech, potlačuje trávení a vyplavuje adrenalin. Parasympatikus je režim odpočinek a trávení: uvolňuje svaly, zpomaluje tep a zklidňuje dech. Vždycky je jeden jen v převaze, nikdy není jeden úplně vypnutý."
+    },
+    {
+      "otazka": "Je každý stres špatný?",
+      "odpoved": "Ne. Akutní stres, třeba sportovní zátěž, je v pořádku, tělo na něj reaguje adaptací, podobně jako na očkování. Horší je chronický stres."
+    },
+    {
+      "otazka": "Jak snížit stres?",
+      "odpoved": "Sjednoť si časy, kdy chodíš spát a kdy vstáváš. Uč se odpočívat aktivně, třeba procházkami a výlety, a někdy i pasivně: zdřímnout si, relaxovat, zajít na masáž nebo do wellness."
+    },
+    {
+      "otazka": "Proč ektomorfové těžko nabírají svaly?",
+      "odpoved": "U spousty ektomorfů bývá problém v poměru sympatiku a parasympatiku a v citlivosti na stres. V neustálém stresu a se sníženou chutí k jídlu spálí hodně energie a sní jí míň, takže si štíhlou postavu udrží snáz, ale svaly budují hůř."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Horší je chronický stres. To jsi totiž skoro pořád v „bojovém režimu sympatiku“, a to může oslabovat imunitu, brát ti chuť k jídlu a zpomalovat trávení."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Sympatikus nutí tělo rozkládat tkáně a uvolňovat energii do krve, aby ji mělo k dispozici pro boj nebo útěk."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když to parasympatikus dost často nevyvažuje, má tělo těžší pozici „ukládat a růst“."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Akutní stres je v pořádku. Může to být třeba sportovní zátěž, na kterou tělo reaguje adaptací a přizpůsobením."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tvoje tělo má dvě části autonomního nervového systému – sympatikus (boj nebo útěk) a parasympatikus (odpočinek a trávení)."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "zrychluje tepovou frekvenci,"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "zrychluje dech,"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "potlačuje trávení,"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "vyplavuje adrenalin apod."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "uvolňuje svaly,"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "zpomaluje tepovou frekvenci,"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "zklidňuje dech,"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Vždycky je jeden z nich jen v převaze, nikdy není jeden „vypnutý“ a druhý „zapnutý“."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Akutní stres je v pořádku. Může to být třeba sportovní zátěž, na kterou tělo reaguje adaptací a přizpůsobením. Je to něco jako očkování."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Horší je chronický stres."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Začni tím, že si sjednotíš časy, kdy chodíš spát a kdy vstáváš."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Uč se odpočívat aktivně, choď na procházky nebo výlety. Někdy je potřeba odpočívat i pasivně, prostě si zdřímnout, jen tak relaxovat nebo si zajít na masáž a wellness."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "U spousty ektomorfů bývá problém právě tady. V poměru sympatiku a parasympatiku, v práci se stresem a v citlivosti na něj."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "V neustálém stresu a se sníženou chutí k jídlu spálí hodně energie a sní jí míň. Štíhlou postavu si proto udrží snáz, ale budovat svaly je pro ně těžší."
+    }
+  ],
+  "nejiste": [
+    "Článek nedefinuje, kdy už je stres chronický, ani kdy s ním vyhledat odbornou pomoc.",
+    "Článek neuvádí zdroje."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna podmínka „když ho parasympatikus dost často nevyvažuje“ (článek rozklad tkání nespojuje s horší stavbou svalu bezpodmínečně); faq[3] „udrží“ → „udrží snáz“ podle článku",
+  "hlas": "beze změny"
+}

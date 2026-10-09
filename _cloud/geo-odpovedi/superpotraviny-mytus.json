@@ -1,0 +1,100 @@
+{
+  "url": "https://martinbarna.cz/clanky/superpotraviny-mytus.html",
+  "titulek": "Superpotraviny tě zachrání? Mýtus o superfoods",
+  "hlavni_otazka": "Vyplatí se jíst superpotraviny jako chia, spirulina nebo goji?",
+  "kratka_odpoved": "Kvůli zdraví nebo postavě moc ne: „superpotravina“ je nálepka z reklamy a žádné jediné jídlo nevyruší jinak špatný jídelníček. Borůvky, mrkev, zelí, luštěniny a ovesné vločky dodají to samé co drahá exotika, za zlomek ceny. Chia nebo matchu si klidně dej, jen kvůli chuti.",
+  "faq": [
+    {
+      "otazka": "Čím nahradit drahé superfoods?",
+      "odpoved": "Goji borůvkami, paprikou, mrkví nebo zelím, acai tmavým ovocem, červeným zelím nebo řepou, matchu obyčejným kvalitním čajem nebo kávou, spirulinu luštěninami, vejci a listovou zeleninou a chia ovesnými vločkami, lněným semínkem nebo rybou."
+    },
+    {
+      "otazka": "Mají superpotraviny vůbec nějaký přínos?",
+      "odpoved": "Některé mají objektivně pěkný profil živin: chia a lněné semínko mají vlákninu a omega-3, matcha má antioxidanty. Lžička chia v kaši nebo špetka spiruliny ve smoothie ale celkový obraz dne nezvrátí."
+    },
+    {
+      "otazka": "Co tedy rozhoduje o zdravé stravě a hubnutí?",
+      "odpoved": "Celkový obraz: jak pestře jíš, kolik máš zeleniny a ovoce, jestli máš dost bílkovin, jestli sedíš v kalorickém deficitu nebo udržení a jestli se hýbeš."
+    },
+    {
+      "otazka": "V čem je u superfoods největší past?",
+      "odpoved": "V pocitu, který vyvolají: člověk zamíchá drahý prášek do snídaně, má pocit, že pro zdraví dělá dost, a přestane řešit základ. Klidnější svědomí za prášek je horší než žádný prášek, protože tě uspí."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "ale nálepka z reklamy."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Žádné jediné jídlo nedělá zázraky a hlavně: nevyruší jinak špatný jídelníček."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Borůvky, mrkev, zelí, luštěniny a ovesné vločky dodají to samé co drahá exotika, za zlomek ceny a v množství, které reálně sníš."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Jen to dělej kvůli chuti, ne kvůli mýtu"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Levná běžná: dodá to samé (i víc)"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Borůvky, paprika, mrkev, zelí"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Tmavé ovoce, červené zelí, řepa"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Obyčejný kvalitní čaj nebo káva"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Luštěniny, vejce, listová zelenina"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Ovesné vločky, lněné semínko, ryba"
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Některé z těch potravin mají objektivně pěkný profil živin. Chia má vlákninu a omega-3, lněné semínko taky, matcha má antioxidanty."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Lžička chia v kaši nebo špetka spiruliny v smoothie celkový obraz dne nezvrátí"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Rozhoduje celkový obraz: jak pestře jíš, kolik máš zeleniny a ovoce, jestli máš dost bílkovin, jestli sedíš v kalorickém deficitu nebo udržení, jestli se hýbeš."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Nejnebezpečnější na superfoods není ten prášek sám, ale pocit, který vyvolá."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Člověk koupí drahý balíček, zamíchá ho do snídaně a má pocit, že"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Tím se vnitřně uklidní a přestane řešit základ."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Klidnější svědomí za prášek je horší než žádný prášek, protože tě uspí."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí žádné studie ani konkrétní čísla o obsahu živin ve srovnávaných potravinách.",
+    "Tvrzení, že základy jsou „95 % výsledku“, článek ničím nedokládá."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „není vědecký pojem, ale nálepka“"
+}

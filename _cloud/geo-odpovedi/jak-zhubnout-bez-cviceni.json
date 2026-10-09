@@ -1,0 +1,58 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-zhubnout-bez-cviceni.html",
+  "titulek": "Jak zhubnout bez cvičení: co to opravdu vyžaduje",
+  "hlavni_otazka": "Dá se zhubnout bez cvičení?",
+  "kratka_odpoved": "Ano, jde to: hubne se z jídla a trénink je pojistka na svaly a kondici. V dánské studii u lidí s obezitou zhubly skupiny s upraveným jídelníčkem za dvanáct týdnů 12 kg, ať cvičily, nebo ne, samotné cvičení dalo 3,5 kg. Bez tréninku ale musí jídlo sedět přesněji.",
+  "faq": [
+    {
+      "otazka": "Proč nehubnu, i když jím pod 1200 kcal?",
+      "odpoved": "Ve studii s lidmi s obezitou, kteří uváděli příjem pod 1200 kcal denně, vyšel výdej i klidový metabolismus do 5 % toho, co odpovídalo jejich složení těla. Svůj příjem ale podhodnotili v průměru o 47 % a pohyb nadhodnotili o 51 %. Rozdíl se schová v oleji na pánvi, soustech při vaření, kávě s mlékem a víkendech."
+    },
+    {
+      "otazka": "Jak hlídat jídlo, když necvičím?",
+      "odpoved": "Važ si jídlo aspoň dva týdny, ať víš, jak vypadá tvoje běžná porce v gramech. Zapisuj i víkend, protože pět dnů v deficitu a dva dny o 1500 kcal nad ním dá průměr kolem nuly. Zapisuj to hned, zpětně po paměti to nedoženeš."
+    },
+    {
+      "otazka": "Kolik kroků denně, když necvičím?",
+      "odpoved": "Rozumný cíl bývá 8 000 až 10 000, ale důležitější je posun proti tomu, kde jsi teď. Když děláš 3 000, cíl 6 000 udělá víc než nesplnitelných 12 000. Běžný pohyb mimo sport je u výdeje velká položka a dá se ovlivnit i bez tréninku."
+    },
+    {
+      "otazka": "Jak si bez posilovny udržet svaly při hubnutí?",
+      "odpoved": "Zbývá ti bílkovina, je slabší než silový trénink, ale funguje: drž se 1,6 až 2,2 g na kilo tělesné hmotnosti, při 70 kg zhruba 112 až 154 g denně, rozložených do jídel. Metaanalýza 24 studií ukázala, že vyšší příjem bílkovin zmírnil pokles beztukové hmoty o 0,43 kg. Autoři sami ten přínos označují za mírný."
+    },
+    {
+      "otazka": "O co přijdu, když budu hubnout bez cvičení?",
+      "odpoved": "Větší podíl úbytku půjde ze svalu, bílkovina to zmírní, ale nenahradí. Kondici nezlepšíš, protože VO2max se ve studii hnul jen u těch, kdo trénovali. A chybí ti rezerva na udržení, protože kdo se hýbe, má širší prostor mezi příjmem a výdejem."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Krátká odpověď zní ano, jde to."},
+    {"pro": "kratka_odpoved", "citace": "Hubne se z jídla. Trénink je pojistka na svaly a kondici, ne motor hubnutí."},
+    {"pro": "kratka_odpoved", "citace": "Dánská studie z roku 2010 (Christiansen a kolektiv, American Journal of Physiology, PMID 20086201) rozdělila 79 lidí s obezitou na dvanáct týdnů do tří skupin: jen cvičení, jen úprava jídla, a obojí dohromady. Skupina, která pouze trénovala, zhubla 3,5 kg. Obě skupiny s upraveným jídelníčkem zhubly 12 kg, ať už k tomu cvičily, nebo ne."},
+    {"pro": "kratka_odpoved", "citace": "Bez tréninku musí jídlo sedět přesněji"},
+    {"pro": "faq[0]", "citace": "V klasické práci z New England Journal of Medicine (Lichtman a kolektiv, 1992, PMID 1454084) vzali lidi s obezitou, kteří sami uváděli, že jedí pod 1200 kcal denně a přesto nehubnou."},
+    {"pro": "faq[0]", "citace": "Celkový výdej i klidový metabolismus vyšly do 5 % toho, co odpovídalo jejich složení těla, takže vysvětlení „mám pomalý metabolismus\" odpadlo. Zato svůj příjem podhodnotili v průměru o 47 % a pohyb nadhodnotili o 51 %."},
+    {"pro": "faq[0]", "citace": "Ta čísla vznikají z oleje na pánvi, ze soust při vaření, z kávy s mlékem a z víkendu, který se do týdenního průměru nezapočítá."},
+    {"pro": "faq[1]", "citace": "Važ si jídlo aspoň dva týdny, ať víš, jak vypadá tvoje běžná porce v gramech."},
+    {"pro": "faq[1]", "citace": "Zapisuj i víkend. Pět dnů v deficitu a dva dny o 1500 kcal nad ním dá průměr kolem nuly."},
+    {"pro": "faq[1]", "citace": "Piš to hned, ne večer po paměti."},
+    {"pro": "faq[2]", "citace": "Rozumný cíl bývá 8 000 až 10 000, ale důležitější než konkrétní číslo je posun proti tomu, kde jsi teď. Když děláš 3 000, cíl 6 000 udělá víc než nesplnitelných 12 000."},
+    {"pro": "faq[2]", "citace": "Plyne z ní, že běžný pohyb je u výdeje velká položka a dá se ovlivnit i bez tréninku."},
+    {"pro": "faq[3]", "citace": "Když ho nemáš, zbývá ti bílkovina a je slabší, ale funguje."},
+    {"pro": "faq[3]", "citace": "Prakticky: drž se 1,6 až 2,2 g bílkovin na kilo tělesné hmotnosti, tedy při 70 kg zhruba 112 až 154 g denně, a rozlož je do jídel."},
+    {"pro": "faq[3]", "citace": "Metaanalýza 24 studií s 1063 lidmi (Wycherley a kolektiv, American Journal of Clinical Nutrition 2012, PMID 23097268) porovnala jídelníčky se stejnými kaloriemi a stejným tukem, lišící se jen podílem bílkovin."},
+    {"pro": "faq[3]", "citace": "Vyšší příjem bílkovin vedl k úbytku hmotnosti o 0,79 kg většímu, k úbytku tuku o 0,87 kg většímu a zmírnil pokles beztukové hmoty o 0,43 kg i pokles klidového výdeje o 595 kJ za den, tedy asi 142 kcal. Autoři sami ten přínos označují za mírný, takže to neber jako zázrak, spíš jako pojistku zadarmo."},
+    {"pro": "faq[4]", "citace": "Větší podíl úbytku ze svalu. Bílkovina to zmírní, nenahradí."},
+    {"pro": "faq[4]", "citace": "Kondici. Ve studii výš se VO2max hnul jen u těch, kdo trénovali."},
+    {"pro": "faq[4]", "citace": "Rezervu na udržení. Kdo se hýbe, má širší prostor mezi příjmem a výdejem, takže ho jeden špatný týden nevyhodí ze hry."}
+  ],
+  "nejiste": [
+    "Jak velký deficit zvolit, když necvičíš, článek neříká, odkazuje na jiný článek.",
+    "Studii o NEAT (Levine 1999) článek sám popisuje jako studii o přejídání, ze které neplyne, že chůzí zhubneš; její čísla jsem proto nepoužil.",
+    "Cíl 8 000 až 10 000 kroků je v článku bez zdroje („rozumný cíl bývá\").",
+    "Lidem, kteří se kvůli zranění nebo nemoci nemůžou hýbat vůbec, článek jen doporučuje nechat si rozsah pohybu potvrdit u lékaře nebo fyzioterapeuta; do FAQ jsem to nerozváděl.",
+    "Příklad „zapsaný den 1600 kcal, po dovážení 2200\" je Martinova zkušenost s klienty, ne měření, proto ho v odpovědích nemám."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne motor hubnutí“; faq[1] bez „ne večer po paměti“"
+}

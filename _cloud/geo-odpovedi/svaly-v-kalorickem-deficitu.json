@@ -1,0 +1,72 @@
+{
+  "url": "https://martinbarna.cz/clanky/svaly-v-kalorickem-deficitu.html",
+  "titulek": "Jde nabírat svaly v kalorickém deficitu? Ano, jde",
+  "hlavni_otazka": "Dá se nabírat svaly a zároveň hubnout v kalorickém deficitu?",
+  "kratka_odpoved": "Ano, u většiny lidí, co chodí do posilovny, to jde, i když ne u každého a ne stejně rychle. Ve studii Vargas-Molina 2026 (30 trénovaných cvičenců, 10 týdnů, měřeno DXA) skupina v deficitu −250 kcal ztratila 2,94 kg tuku a přibrala 1,04 kg svalů.",
+  "faq": [
+    {
+      "otazka": "Za jakých podmínek to funguje?",
+      "odpoved": "Jen za pár podmínek: silový trénink s progresivním přetížením tak 3 až 5krát týdně, bílkoviny 1,6 až 2,2 g/kg, mírný deficit kolem 10 až 20 % a spánek aspoň sedm hodin. Horní hranice bílkovin je spíš pojistka než stavební materiál navíc."
+    },
+    {
+      "otazka": "Komu jde nabírání svalů v deficitu nejrychleji?",
+      "odpoved": "Nováčkům, lidem, co se po pauze vrací, a těm s vyšším procentem tuku. Pokročilý cvičenec blízko svého stropu většinou líp pojede klasické cyklování nabírání a hubnutí."
+    },
+    {
+      "otazka": "Jak může tělo stavět sval, když mu chybí energie?",
+      "odpoved": "V každém kilu tuku má tělo schované zhruba 7 700 kcal a v mírném deficitu si energii bere odtud. Když k tomu dostane silový podnět a dost bílkovin, použije ji na stavbu svalu."
+    },
+    {
+      "otazka": "Jak poznám, že rekompozice funguje?",
+      "odpoved": "Neřiď se číslem na váze, protože glykogen, voda a sůl s ní zahýbou o kilo dvě ze dne na den. Sleduj obvody, fotky a výkon v posilovně."
+    },
+    {
+      "otazka": "Jak dopadly ostatní skupiny ve studii?",
+      "odpoved": "Skupina na udržovačce ztratila 1,41 kg tuku a přibrala 0,97 kg svalů. Kontrolní skupina se stejným tréninkem, ale bez dohledu nad jídlem, zůstala beze změny."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pro většinu lidí, co chodí do posilovny, to dnes ale neplatí."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nefunguje to u každého a ne stejně rychle. Ale jde to."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Vargas-Molina 2026: 30 trénovaných cvičenců, 10 týdnů, měřeno DXA. Skupina v deficitu (−250 kcal) ztratila 2,94 kg tuku a přibrala 1,04 kg svalů."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Abych byl férový, funguje to jen za pár podmínek. Silový trénink s progresivním přetížením, tak 3 až 5krát týdně. Bílkoviny 1,6 až 2,2 g/kg, horní hranice spíš jako pojistka než jako stavební materiál navíc. Mírný deficit kolem 10 až 20 %, ne agresivní. A spánek aspoň sedm hodin."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Komu to jde nejrychleji? Nováčkům, lidem, co se po pauze vrací, a těm s vyšším procentem tuku. Pokročilý cvičenec blízko svého stropu většinou líp pojede klasické cyklování nabírání a hubnutí."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "V každém kilu tuku má tělo schované zhruba 7 700 kcal. V mírném deficitu si energii bere odtud. Když k tomu dostane silový podnět a dost bílkovin, použije ji na stavbu svalu."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Glykogen, voda a sůl s ní zahýbou o kilo dvě ze dne na den. Při rekompozici se proto neřiď číslem na váze. Sleduj obvody, fotky a výkon v posilovně."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Udržovačka: −1,41 kg tuku, +0,97 kg svalů"
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Kontrolní skupina (stejný trénink, žádný dohled nad jídlem): beze změny"
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik lidí bylo v jednotlivých skupinách studie Vargas-Molina 2026.",
+    "Další uvedené zdroje (Slater et al. 2019, Longland et al. 2016, Murphy & Koehler 2022) článek obsahově nepopisuje; podmínky a čtyři studie odkazuje do carouselu na IG."
+  ],
+  "kontrola": "opraveno: faq[0] stylisticky odstraněno „Podle článku“ (text visí přímo u článku), fakta beze změny",
+  "hlas": "beze změny"
+}

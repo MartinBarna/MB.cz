@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/soja-a-hormony-mytus.html",
+  "titulek": "Sója zvyšuje estrogen a škodí mužům? Mýtus o sóji",
+  "hlavni_otazka": "Zvyšuje sója estrogen a snižuje mužům testosteron?",
+  "kratka_odpoved": "Ne, u mužů běžná konzumace sóji prokazatelně nesnižuje testosteron ani nezvedá estrogen na úroveň, která by reálně něco dělala s postavou nebo plodností. Izoflavony v sóji jsou rostlinné fytoestrogeny, které se na stejná místa v těle vážou mnohem slaběji než lidský hormon. V množstvích, co reálně sníš z tofu nebo edamame, žádnou feminizaci nespustí.",
+  "faq": [
+    {
+      "otazka": "Jaký je rozdíl mezi fytoestrogenem a lidským estrogenem?",
+      "odpoved": "Lidský estrogen je vlastní hormon těla, silný a cílený. Fytoestrogen (izoflavon) je rostlinná látka ze sóji, která se na stejná místa váže mnohem hůř, působí mnohonásobně slaběji a místy i jinak."
+    },
+    {
+      "otazka": "Je sója dobrý zdroj bílkovin?",
+      "odpoved": "Ano, sója je jedna z mála rostlinných bílkovin s kompletním aminospektrem, takže obsahuje všechny stavební kameny, které tělo na svaly potřebuje. Zvlášť cenná je pro lidi, co jedí rostlinně nebo omezují maso, a stavbě svalů rozhodně neškodí."
+    },
+    {
+      "otazka": "Kdy je se sójou namístě opatrnost?",
+      "odpoved": "Při alergii na sóju, při konkrétním zdravotním stavu nebo lécích, kde sója hraje roli (to probereš s lékařem), a u vysokých dávek koncentrovaných sójových izoflavonů z doplňků. Pro běžného zdravého člověka, který jí tofu, sójové maso nebo edamame v normálním jídelníčku, je sója úplně v pohodě."
+    },
+    {
+      "otazka": "Odkud se berou příběhy o mužích, kterým ze sóji narostla prsa?",
+      "odpoved": "Skoro vždy jde o ojedinělé extrémní případy, kdy si někdo denně dával nesmyslně obří dávky sójových izoflavonů, nebo měl specifický zdravotní stav. Tyhle krajnosti se pak vydávají za běžnou realitu."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "U mužů běžná konzumace sóji prokazatelně nesnižuje testosteron ani nezvedá estrogen na úroveň, která by reálně něco dělala s postavou nebo plodností."},
+    {"pro": "kratka_odpoved", "citace": "Sója obsahuje látky, kterým se říká izoflavony. To jsou ty pověstné fytoestrogeny."},
+    {"pro": "kratka_odpoved", "citace": "Fytoestrogeny jsou rostlinné látky, ne lidský hormon."},
+    {"pro": "kratka_odpoved", "citace": "Na stejná místa se váže mnohem slaběji a působí jinak."},
+    {"pro": "kratka_odpoved", "citace": "V množstvích, co reálně sníš z tofu nebo edamame, žádnou „feminizaci\" muže nespustí."},
+    {"pro": "faq[0]", "citace": "Vlastní hormon těla. Silný, cílený, reálně řídí spoustu pochodů."},
+    {"pro": "faq[0]", "citace": "Rostlinná látka ze sóji. Na stejná místa se váže mnohem slaběji a působí jinak."},
+    {"pro": "faq[0]", "citace": "Fytoestrogen je proti němu chudý příbuzný: váže se mnohem hůř, působí mnohonásobně slaběji a místy i jinak."},
+    {"pro": "faq[1]", "citace": "Sója je jedna z mála rostlinných bílkovin s kompletním aminospektrem, tedy obsahuje všechny stavební kameny, co tělo na svaly potřebuje, a to není u rostlin samozřejmost."},
+    {"pro": "faq[1]", "citace": "Zvlášť cenná je sója pro lidi, co jedí rostlinně nebo omezují maso."},
+    {"pro": "faq[1]", "citace": "Stavbě svalů sója rozhodně neškodí, naopak ti s ní může pomoct."},
+    {"pro": "faq[2]", "citace": "Alergie na sóju. Individuální alergie je reálná věc. Pokud ji máš, sóji se vyhni, ale to je o alergii, ne o hormonech."},
+    {"pro": "faq[2]", "citace": "Pokud řešíš nějaké specifické onemocnění nebo bereš léky, kde sója hraje roli, neřeš to podle internetu, probereš to s lékařem."},
+    {"pro": "faq[2]", "citace": "Jedna věc je tofu v jídle, druhá vysoké dávky koncentrovaných sójových izoflavonů z prášku."},
+    {"pro": "faq[2]", "citace": "Pro běžného zdravého člověka, který si dá tofu, sójové maso nebo edamame jako součást normálního jídelníčku, je ale sója úplně v pohodě."},
+    {"pro": "faq[3]", "citace": "Skoro vždy jde ale o ojedinělé extrémní případy: někdo, kdo do sebe denně cpal nesmyslně obří dávky sójových izoflavonů, nebo měl specifický zdravotní stav."},
+    {"pro": "faq[3]", "citace": "Tyhle krajnosti se pak vydávají za běžnou realitu, kterou zažiješ od porce tofu k obědu."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, od jaké dávky izoflavonů nebo kolika porcí sóji denně začíná „extrémní“ množství.",
+    "Článek necituje konkrétní studie, o které opírá tvrzení, že běžná konzumace sóji prokazatelně nesnižuje testosteron."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „fytoestrogeny, ne lidský hormon“"
+}

@@ -1,0 +1,81 @@
+{
+  "url": "https://martinbarna.cz/clanky/probiotika-co-funguje.html",
+  "titulek": "Probiotika: co reálně funguje a co je hype",
+  "hlavni_otazka": "Fungují probiotika v kapslích pro zdravé střevo?",
+  "kratka_odpoved": "Pro zdravého člověka je opora slabá: ve studii, která zkoumala přímo střevní sliznici, se bakterie z kapsle většinou neusadily a u zhruba dvou třetin lidí se nezachytily vůbec. Pro běžné zdraví střev udělá víc pestrost na talíři, tedy rozmanitost rostlin a fermentované jídlo.",
+  "faq": [
+    {
+      "otazka": "Kolik druhů rostlin týdně jíst pro zdravé střevo?",
+      "odpoved": "Cíl je 30+ druhů týdně, protože každý druh nese jiný typ vlákniny a krmí jiné bakterie. Počítá se všechno: zelenina, ovoce, luštěniny, ořechy, semínka, bylinky, koření."
+    },
+    {
+      "otazka": "Pomáhá střevu fermentované jídlo?",
+      "odpoved": "Ve studii ze Stanfordu fermentované jídlo zvedlo pestrost mikrobiomu a snížilo 19 zánětlivých markerů. Patří sem kefír, jogurt s živými kulturami, kysané zelí, kvašáky nebo podmáslí."
+    },
+    {
+      "otazka": "Kdy mají probiotika smysl?",
+      "odpoved": "Americká gastro asociace prošla 8 trávicích stavů a dost důkazů našla u 3 z nich (kolem antibiotik, kde jde o snížení rizika průjmu, předčasně narozené děti, pouchitida), všechny jsou medicínské. U části lidí s IBS některé kmeny pomáhají taky. Bez rizika ale probiotika nejsou u každého: u těžkého zánětu slinivky zvýšila úmrtnost."
+    },
+    {
+      "otazka": "Je jedno, jaké probiotikum si koupím?",
+      "odpoved": "Není, rozhoduje konkrétní kmen, žádné „širokospektrum na všechno“. Výsledek z jedné studie proto nepřeneseš na jiný produkt z pultu."
+    },
+    {
+      "otazka": "Kdy jít se střevními potížemi k lékaři?",
+      "odpoved": "Krev ve stolici, hubnutí bez příčiny, silná nebo dlouhá bolest břicha nebo náhlá změna vyprazdňování patří k lékaři."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Už ti to napoví, jak slabá ta opora pro zdravého člověka je."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ve studii, kde lidem sahali rovnou do střevní sliznice (ne jen do stolice), se bakterie z kapsle většinou neusadily. U zhruba dvou třetin lidí se nezachytily vůbec."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Pestrost na talíři udělá pro běžné „zdraví střev\" víc než kapsle navrch."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Tak co střevo opravdu drží v kondici? Dvě věci, obě máš na talíři."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Cíl je 30+ druhů týdně. Každý druh nese jiný typ vlákniny a tím krmí jiné bakterie. Počítá se vážně všechno: zelenina, ovoce, luštěniny, ořechy, semínka, bylinky, koření."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Ve studii ze Stanfordu zvedlo pestrost mikrobiomu a snížilo 19 zánětlivých markerů. Kefír, jogurt s živými kulturami, kysané zelí, kvašáky, podmáslí."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Americká gastro asociace prošla 8 trávicích stavů a dost důkazů našla u 3 z nich (kolem antibiotik, předčasně narozené děti, pouchitida). Všechny jsou medicínské. U části lidí s IBS některé kmeny pomáhají taky."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Kolem antibiotik (snížení rizika průjmu): Goldenberg et al., Cochrane 2017, CD006095."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Bezpečnost u vážně nemocných: u těžkého zánětu slinivky probiotika zvýšila úmrtnost (PROPATRIA, Besselink et al., Lancet 2008). Není to bez rizika u každého."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Za prvé rozhoduje konkrétní kmen, ne „širokospektrum na všechno\". Výsledek z jedné studie tak nepřeneseš na jiný produkt z pultu."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Krev ve stolici, hubnutí bez příčiny, silná nebo dlouhá bolest břicha, náhlá změna vyprazdňování? To patří k lékaři, ne na Instagram."
+    }
+  ],
+  "nejiste": [
+    "Článek neříká, jak dlouho přesně se bakterie z kapsle udržely tam, kde se uchytily (jen „na chvíli“).",
+    "Článek neuvádí, kolik fermentovaného jídla lidé ve studii ze Stanfordu jedli a jak dlouho.",
+    "Článek nevysvětluje, jak počítat „druhy“ rostlin (například jestli se různé odrůdy téže plodiny počítají zvlášť)."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] bez „X, ne Y“"
+}

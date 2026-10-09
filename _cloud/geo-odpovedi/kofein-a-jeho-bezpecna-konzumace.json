@@ -1,0 +1,52 @@
+{
+  "url": "https://martinbarna.cz/clanky/kofein-a-jeho-bezpecna-konzumace.html",
+  "titulek": "Kofein a jeho bezpečná konzumace",
+  "hlavni_otazka": "Kolik kofeinu denně je bezpečné?",
+  "kratka_odpoved": "Zdravý dospělý člověk zvládne podle EFSA i FDA až 400 mg kofeinu denně a jedna dávka by neměla přesáhnout 200 mg, jinak se snáz dostaví nervozita, třes nebo problémy se spánkem. Šálek filtrované kávy (240 ml) má přibližně 95 mg. Těhotné a kojící ženy by měly příjem omezit na 200 mg denně a poradit se s lékařem.",
+  "faq": [
+    {
+      "otazka": "Kolik kofeinu je v Kofole bez cukru?",
+      "odpoved": "Až 15 mg na 100 ml. Půllitrová lahev má přibližně 75 mg a 2 litry až 300 mg, což je blízko dennímu limitu."
+    },
+    {
+      "otazka": "Co mi kofein může přinést?",
+      "odpoved": "Dávky 100–200 mg podle studií zlepšují rychlost reakce a kognitivní funkce. Kofein umí zvednout vytrvalost i sílu a může mírně zrychlit metabolismus, žádný zázrak na hubnutí to ale není."
+    },
+    {
+      "otazka": "Kolik kofeinu můžu v těhotenství nebo při kojení?",
+      "odpoved": "Omez příjem na 200 mg denně a poraď se s lékařem."
+    },
+    {
+      "otazka": "Kolik kofeinu je bezpečné pro děti a dospívající?",
+      "odpoved": "Doporučuje se maximálně 3 mg na kilo tělesné hmotnosti denně, ale data jsou omezená."
+    },
+    {
+      "otazka": "Jak začít, když nevím, jak kofein snáším?",
+      "odpoved": "Začni s nižšími dávkami, třeba 40–75 mg (250 ml Kofoly bez cukru nebo půl šálku kávy), a sleduj, jak tělo reaguje. Pozdě odpoledne se kofeinu vyhni, protože 100 mg blízko spánku může narušit jeho kvalitu."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Evropský úřad pro bezpečnost potravin (EFSA) i americký FDA se shodují: zdravý dospělý člověk zvládne v pohodě až 400 mg kofeinu denně. Jedna dávka by neměla přesáhnout 200 mg, jinak se snáz dostaví nervozita, třes nebo problémy se spánkem."},
+    {"pro": "kratka_odpoved", "citace": "Šálek filtrované kávy (240 ml) obsahuje přibližně 95 mg kofeinu."},
+    {"pro": "kratka_odpoved", "citace": "Těhotné a kojící ženy: Omezte příjem na 200 mg denně a konzultujte s lékařem."},
+    {"pro": "faq[0]", "citace": "Háček je v tom, že kofein v sobě má: až 15 mg na 100 ml."},
+    {"pro": "faq[0]", "citace": "500 ml lahev obsahuje přibližně 75 mg kofeinu."},
+    {"pro": "faq[0]", "citace": "2 litry obsahují až 300 mg kofeinu, což je blízko dennímu limitu."},
+    {"pro": "faq[1]", "citace": "Bdělost a pozornost: Studie ukazují, že dávky 100–200 mg kofeinu zlepšují rychlost reakce a kognitivní funkce, což je ideální před tréninkem nebo náročným pracovním úkolem."},
+    {"pro": "faq[1]", "citace": "Fyzický výkon: Kofein umí zvednout vytrvalost i sílu, takže ho ocení hlavně sportovci."},
+    {"pro": "faq[1]", "citace": "Metabolismus: Kofein může mírně zrychlit metabolismus a podpořit spalování tuků. Žádný zázrak na hubnutí to ale není."},
+    {"pro": "faq[2]", "citace": "Těhotné a kojící ženy: Omezte příjem na 200 mg denně a konzultujte s lékařem."},
+    {"pro": "faq[3]", "citace": "Děti a adolescenti: Doporučuje se maximálně 3 mg/kg tělesné hmotnosti denně, ale data jsou omezená."},
+    {"pro": "faq[4]", "citace": "Začít s nižšími dávkami, například 40–75 mg (ekvivalent 250 ml Kofoly bez cukru nebo půl šálku kávy)."},
+    {"pro": "faq[4]", "citace": "Sledovat reakce svého těla a případně dávky upravit."},
+    {"pro": "faq[4]", "citace": "Vyhnout se konzumaci kofeinu pozdě odpoledne, protože dávka 100 mg blízko spánku může narušit jeho kvalitu."}
+  ],
+  "nejiste": [
+    "Doporučení „nekonzumujte dávku méně než 2 hodiny před intenzivním cvičením, aby se minimalizovala zátěž na srdce“ jsem nepoužil: článek ho nezdůvodňuje ani neopírá o konkrétní zdroj a ve stejné větě zároveň dávku před tréninkem doporučuje, takže není jasné, jak ho myslí.",
+    "Článek neříká, jak přesně definovat „pozdě odpoledne“ ani kolik hodin před spaním kofein vynechat.",
+    "U těhotných se tabulka a text mírně liší (u kojících uvádí i jednotlivou dávku 200 mg, u těhotných ne). Odpověď drží jen společný denní limit 200 mg a odkaz na lékaře.",
+    "Obsah kofeinu v energetických nápojích (80–100 mg na 250 ml) je jen v tabulce a nepoužil jsem ho."
+  ],
+  "kontrola": "opraveno: kratka_odpoved doplněna o limit 200 mg denně a konzultaci s lékařem pro těhotné a kojící ženy, protože krátká odpověď uvádí bezpečný denní limit",
+  "hlas": "upraveno: faq[2] bez „Článek doporučuje“ (varování zůstává)"
+}

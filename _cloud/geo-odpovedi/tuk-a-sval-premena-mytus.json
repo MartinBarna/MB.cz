@@ -1,0 +1,49 @@
+{
+  "url": "https://martinbarna.cz/clanky/tuk-a-sval-premena-mytus.html",
+  "titulek": "Tuk se mění ve sval? Mýtus o přeměně tuku a svalů",
+  "hlavni_otazka": "Může se tuk přeměnit ve sval?",
+  "kratka_odpoved": "Nemůže, tuk a sval jsou dvě úplně různé tkáně a jedna se v druhou přeměnit nedokáže. Když nabíráš formu, běží vedle sebe dva oddělené procesy: v deficitu ubývá tuk a díky silovému tréninku a bílkovinám se staví sval.",
+  "faq": [
+    {
+      "otazka": "Změní se sval v tuk, když přestanu cvičit?",
+      "odpoved": "Nezmění. Když sval přestaneš zatěžovat, postupně atrofuje, tedy se zmenší a zeslábne, a když zároveň jíš nad svůj výdej, přibývá ti tuk. Svalu ubude a tuku přibude, ale jedno se v druhé nepřemění."
+    },
+    {
+      "otazka": "Co je recomp a proč vypadá jako přeměna tuku ve sval?",
+      "odpoved": "Recomp (body recomposition) znamená, že zároveň jdeš dolů s tukem a nahoru, nebo aspoň udržíš, se svalem. Na váze se skoro nic nehne, ale postava se mění před očima, a proto to vypadá jako přeměna."
+    },
+    {
+      "otazka": "Komu jde recomp nejlíp?",
+      "odpoved": "Nejlíp jde u začátečníků, u lidí s nadváhou a u návratu po delší pauze. U pokročilých je pomalejší a obvykle se vyplatí oddělit fáze, chvíli stavět a chvíli rýsovat."
+    },
+    {
+      "otazka": "Shodím tuk tím, že procvičím sval pod ním?",
+      "odpoved": "Ne, tuk neshodíš cvičením svalu pod ním. Tuk shazuje deficit, sval staví trénink a bílkoviny."
+    },
+    {
+      "otazka": "Jak neztratit sval, když na trénink nemám čas?",
+      "odpoved": "Nepřestávej úplně: i málo síly, pár tréninků týdně, klidně kratších, stačí na to, abys sval udržel a nenechal ho atrofovat. Udržet je levnější než stavět znovu od nuly."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Tuk a sval jsou dvě úplně různé tkáně a jedna se v druhou přeměnit nedokáže."},
+    {"pro": "kratka_odpoved", "citace": "Vypadá to jako přeměna, ale ve skutečnosti běží dva procesy najednou: v deficitu ubývá tuk, díky činkám a bílkovinám se staví sval. Dvě tkáně, dvě oddělené cesty."},
+    {"pro": "kratka_odpoved", "citace": "Stavíš nebo držíš sval, protože ho zatěžuješ silovým tréninkem a dodáváš dost bílkovin, aby měl z čeho stavět."},
+    {"pro": "faq[0]", "citace": "Když přestaneš zatěžovat sval, tělo nemá důvod ho dál držet, tak ho postupně nechá atrofovat: sval se zmenší a zeslábne."},
+    {"pro": "faq[0]", "citace": "A když k tomu zároveň začneš jíst nad svůj výdej, což se po vysazení tréninku stává běžně, protože vydáváš míň, ale jíš dál stejně, přibývá ti tuk."},
+    {"pro": "faq[0]", "citace": "Sval atrofuje (zmenší se) a při nadbytku jídla zároveň přibývá tuk. Sval se v tuk nepřeměňuje, jen ho ubude a tuku přibude."},
+    {"pro": "faq[1]", "citace": "Recomp znamená, že zároveň jdeš dolů s tukem a nahoru (nebo aspoň udržíš) se svalem. Na váze se skoro nic nehne, ale postava se mění před očima."},
+    {"pro": "faq[1]", "citace": "Pro nezasvěceného to vypadá jako kouzelná přeměna."},
+    {"pro": "faq[2]", "citace": "Recomp jde nejlíp u začátečníků, u lidí s nadváhou a u návratu po delší pauze"},
+    {"pro": "faq[2]", "citace": "U pokročilých, co už mají roky tréninku za sebou, je recomp pomalejší a obvykle se vyplatí oddělit fáze (chvíli stavět, chvíli rýsovat)."},
+    {"pro": "faq[3]", "citace": "Tuk neshodíš cvičením svalu pod ním: tuk shazuje deficit, sval staví trénink a bílkoviny."},
+    {"pro": "faq[4]", "citace": "Když víš, že přijde rušnější období, nepřestávej úplně. I málo síly (pár tréninků týdně, klidně kratších) stačí na to, abys sval udržel a nenechal ho atrofovat. Udržet je vždycky levnější než stavět znovu od nuly."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak rychle sval po vysazení tréninku ubývá.",
+    "Článek neříká, kolik bílkovin je „dost“ ani jak velký má být deficit.",
+    "Článek nepřesně vymezuje, kolik je „pár tréninků týdně“, které stačí na udržení svalu."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[4] bez „vždycky“"
+}

@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/co-kdybych-musel-vybrat-jen-3-suplementy-ktere-se-opravdu-vyplati-vets.html",
+  "titulek": "💊 Co kdybych musel vybrat jen 3 suplementy, které se opravdu vyplatí většině lidí?",
+  "hlavni_otazka": "Které doplňky stravy se vyplatí běžnému člověku?",
+  "kratka_odpoved": "Kdybych měl vybrat jen tři, sáhnu po kreatin monohydrátu, vitaminu D a omega-3 (EPA + DHA). U nich mi pro běžného člověka nejlíp sedí poměr ceny a účinku. Většina ostatních suplementů z regálů za ty peníze nestojí.",
+  "faq": [
+    {
+      "otazka": "Funguje kreatin u každého?",
+      "odpoved": "Ne. Účinek má za sebou víc než 20 let studií, ale zhruba třetina lidí na něj nereaguje (takzvaní non-responders), zbylé dvě třetiny z něj vytěží hodně. Z běžné stravy přitom dostatečné množství získáš jen těžko."
+    },
+    {
+      "otazka": "Proč doplňovat vitamin D?",
+      "odpoved": "Pokud nejsi celoročně opálený, máš ho s velkou pravděpodobností málo, a tak je na tom u nás skoro každý. Naskákat tolik vitaminu D ze slunce v našich podmínkách v podstatě nejde. Než začneš, nejlíp si nech udělat krevní testy."
+    },
+    {
+      "otazka": "Na co si dát pozor u omega-3?",
+      "odpoved": "Vyber si kvalitního výrobce. Spousta produktů neobsahuje deklarované množství nebo jsou oxidované, a pak působí spíš prozánětlivě."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Kdybych si měl vybrat jen tři, které dávají smysl pro běžného člověka a kde nejlépe sedí poměr cena/účinek, sáhl bych po těchhle"},
+    {"pro": "kratka_odpoved", "citace": "Kreatin monohydrát"},
+    {"pro": "kratka_odpoved", "citace": "Vitamin D"},
+    {"pro": "kratka_odpoved", "citace": "Omega-3 (EPA + DHA)"},
+    {"pro": "kratka_odpoved", "citace": "Suplementů jsou plné regály a většina z nich za ty peníze nestojí."},
+    {"pro": "faq[0]", "citace": "Účinek má za sebou víc než 20 let studií. Zhruba třetina lidí jsou „non-responders“ a efekt u nich nepřijde, ale ty zbylé dvě třetiny z toho vytěží opravdu hodně"},
+    {"pro": "faq[0]", "citace": "Z běžné stravy přitom dostatečné množství získáš jen těžko, na to bys musel jíst hodně masa."},
+    {"pro": "faq[1]", "citace": "Pokud nejsi celoročně pěkně opálený, máš ho s velkou pravděpodobností málo. A tak je na tom u nás skoro každý."},
+    {"pro": "faq[1]", "citace": "Naskákat tolik vitaminu D ze slunce v našich podmínkách v podstatě nejde."},
+    {"pro": "faq[1]", "citace": "Začni na 2000 IU, ale nejlíp si nech udělat krevní testy."},
+    {"pro": "faq[2]", "citace": "Tady je háček: musíš najít opravdu kvalitního výrobce. Cena bývá vyšší a spousta produktů na trhu navíc neobsahuje deklarované množství, nebo jsou oxidované. Tím pádem působí spíš prozánětlivě"}
+  ],
+  "nejiste": [
+    "Článek neuvádí dávkování kreatinu ani omega-3.",
+    "Článek neuvádí žádné zdroje ani studie; dávky vitaminu D (2000, 4000 a 8000 IU) jsou Martinovo doporučení bez odkazu. Před zveřejněním jako citovatelné odpovědi doporučuji, aby je Martin potvrdil, protože jde o konkrétní dávkování.",
+    "Účinky omega-3 na hubnutí, mozek, kůži a klouby článek jen vyjmenovává bez čísel a zdrojů, proto jsem z nich samostatnou otázku nedělal.",
+    "Článek nedefinuje, co je slušná hladina vitaminu D v krvi.",
+    "Smazaná FAQ „Kolik vitaminu D brát?“ (2000 IU, „spoustě lidí až 4000 IU, někomu i 8000 IU denně“) čeká na Martinovo potvrzení dávek; článek vitamin-d-na-co-ma-smysl uvádí u dospělých 600 až 2000 IU a dávkování nechává na lékaři."
+  ],
+  "kontrola": "smazano: faq[1] o dávce vitaminu D (až 8000 IU denně bez zdroje a bez odkazu na lékaře, nad horní hranicí 4000 IU; rozpor s článkem vitamin-d-na-co-ma-smysl), dokud Martin dávky nepotvrdí; opraveno: faq[1] doplněno „nejlíp si nech udělat krevní testy“ z článku",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; kratka_odpoved z 3. osoby („Martin“) do 1. osoby; faq[0] „non-responders“ vysvětleno, bez „opravdu“; faq[2] bez „Musíš“ a „opravdu“"
+}

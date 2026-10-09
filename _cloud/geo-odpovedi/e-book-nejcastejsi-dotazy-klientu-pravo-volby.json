@@ -1,0 +1,39 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-pravo-volby.html",
+  "titulek": "E-book Nejčastější dotazy klientů – PRÁVO VOLBY",
+  "hlavni_otazka": "Má mi trenér určovat, jak mám vypadat?",
+  "kratka_odpoved": "Ne. Jak si dospělý člověk zvolí vypadat, je čistě jeho věc. Dobrý kouč tě má naučit kontrolu nad postavou, jídlem a tréninkem a dát ti nástroje pro tvoje vlastní cíle, ne ti diktovat, jak bys měl vypadat podle něj nebo podle společnosti.",
+  "faq": [
+    {
+      "otazka": "Je nadváha vlastní volba?",
+      "odpoved": "Často není, i když to společnost předpokládá. Já chci lidem tu volbu dát. Když někdo s obezitou přijde do fitka, znamená to, že s tím už něco dělá."
+    },
+    {
+      "otazka": "Je nadváha zdravotní riziko?",
+      "odpoved": "Ano. Až na metabolicky benigní obezitu, která se týká extrémně malého procenta populace a je jen přechodným stavem, je nadváha spojena s vyšším rizikem cukrovky, srdečních onemocnění, vysokého cholesterolu a vysokého tlaku."
+    },
+    {
+      "otazka": "Jak rychle se dá změnit postava?",
+      "odpoved": "Pár týdnů v posilovně nezmění 5, 10 nebo 20 let nicnedělání a špatných návyků. Kdy do cíle dorazíš, záleží na tom, jak dlouhodobě svůj progres udržíš a kolik tomu sám dáš."
+    },
+    {
+      "otazka": "Co většina lidí od své postavy chce?",
+      "odpoved": "Něco mezi extrémy. Tedy vykompenzovat přejídání pohybem, což je pro ně dlouhodobě udržitelné."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jak si dospělý člověk zvolí vypadat, je čistě jeho věc."},
+    {"pro": "kratka_odpoved", "citace": "Vedu lidi k tomu, aby uměli volit a měli KONTROLU nad svou postavou, jídlem a tréninkem. Radši je naučím tu kontrolu a know how pro jejich vlastní cíle, než abych jim diktoval, jak by podle mě nebo podle společnosti měli vypadat."},
+    {"pro": "faq[0]", "citace": "Trápí mě, že nadváha často není volba (jak předpokládá společenský konsensus), a tu volbu chci lidem dát. Když vidíš někoho obézního vejít do fitka, znamená to, že s tím už něco dělá."},
+    {"pro": "faq[1]", "citace": "Nadváha je, až na případ metabolické benigní obezity (což je extrémně malé procento populace a je to pouze přechodný stav), kde obezita neobnáší žádné metabolické problémy s ní jinak spojené, spojena s vyšším rizikem cukrovky, srdečními onemocněními, vysokým cholesterolem, vysokým tlakem atd."},
+    {"pro": "faq[2]", "citace": "A ani u tebe nezmění pár týdnů v posilovně těch 5, 10, 20 let nicnedělání a špatných návyků."},
+    {"pro": "faq[2]", "citace": "A kdy do cíle dorazíš, závisí na tom, jak dlouhodobě svůj progres udržíš a kolik tomu sám dáš."},
+    {"pro": "faq[3]", "citace": "A většina lidí chce něco mezi. Tedy vykompenzovat přejídání pohybem, což je pro ně dlouhodobě udržitelné."}
+  ],
+  "nejiste": [
+    "Článek je úvaha o přístupu koučů, ne návod; neobsahuje konkrétní čísla ani postup.",
+    "Článek místy říká, že vzhled je volba, a jinde, že nadváha často volbou není. Odpovědi drží obě věty tak, jak v článku stojí, a rozpor nerozhodují."
+  ],
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] z 3. osoby („Martin chce“) do 1. osoby"
+}
