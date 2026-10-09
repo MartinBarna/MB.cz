@@ -1,0 +1,41 @@
+{
+  "url": "https://martinbarna.cz/clanky/flexibilni-stravovani.html",
+  "titulek": "Flexibilní stravování: jez i oblíbená jídla a hubni",
+  "hlavni_otazka": "Co je flexibilní stravování a dá se při něm hubnout?",
+  "kratka_odpoved": "Je to způsob jídla, kdy nedělíš jídla na povolená a zakázaná, ale koukáš na celý den, hlavně na kalorie a bílkoviny. Když se vejdeš do svých čísel, žádné jedno jídlo tě nerozhodí, takže můžeš hubnout a občas si dát i pizzu nebo zmrzlinu.",
+  "faq": [
+    {
+      "otazka": "Co znamená IIFYM?",
+      "odpoved": "If It Fits Your Macros, tedy pokud se to vejde do tvých maker. Je to anglický název pro flexibilní stravování."
+    },
+    {
+      "otazka": "Co je pravidlo 80/20?",
+      "odpoved": "80 % jídla tvoří výživný základ: dost bílkovin v každém jídle a hodně zeleniny a vlákniny. Zbylý prostor, klidně 10–20 % kalorií, necháš na to, co tě baví."
+    },
+    {
+      "otazka": "Proč funguje flexibilní stravování líp než zákazy?",
+      "odpoved": "Vydržíš u něj, protože co si nezakazuješ, po tom tak netoužíš a nepřejídáš se. Jeden zákusek není porušení diety, počítáš s ním, a oslavu, restauraci i návštěvu zvládneš v klidu."
+    },
+    {
+      "otazka": "Znamená flexibilní stravování, že můžu jíst jen sladké?",
+      "odpoved": "Ne. Flexibilní neznamená cpát se celý den sladkým. Funguje to, když většinu jídla tvoří kvalitní základ."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Nedělíš jídla na „povolená\" a „zakázaná\". Koukáš na celý den, hlavně na kalorie a bílkoviny. Když se vejdeš do svých čísel, žádné jedno jídlo tě nerozhodí."},
+    {"pro": "kratka_odpoved", "citace": "Můžeš hubnout a přitom si občas dát pizzu nebo zmrzlinu."},
+    {"pro": "faq[0]", "citace": "Anglicky se tomu říká IIFYM (If It Fits Your Macros, tedy pokud se to vejde do tvých maker)."},
+    {"pro": "faq[1]", "citace": "Dost bílkovin v každém jídle (sytost + svaly)."},
+    {"pro": "faq[1]", "citace": "Hodně zeleniny a vlákniny pro objem a trávení."},
+    {"pro": "faq[1]", "citace": "A pak prostor, klidně 10–20 % kalorií, na to, co tě baví."},
+    {"pro": "faq[1]", "citace": "Tomu se říká pravidlo „80/20\": 80 % výživný základ, 20 % radost."},
+    {"pro": "faq[2]", "citace": "Vydržíš u toho: co si nezakazuješ, po tom tak netoužíš a nepřejídáš se."},
+    {"pro": "faq[2]", "citace": "Žádný pocit selhání: jeden zákusek není „porušení diety\", počítáš s ním."},
+    {"pro": "faq[2]", "citace": "Funguje v reálu: oslavu, restauraci i návštěvu zvládneš v klidu."},
+    {"pro": "faq[3]", "citace": "Flexibilní neznamená cpát se celý den sladkým. Funguje to, když většinu jídla tvoří kvalitní základ"}
+  ],
+  "nejiste": [
+    "Článek neuvádí, jak si spočítat svá čísla (kalorie a bílkoviny).",
+    "Článek píše o prostoru „klidně 10–20 % kalorií“ a zároveň o pravidle 80/20 (20 % radost); horní hranice je v obou případech 20 %, dolní hranici 10 % uvádí jen první formulace."
+  ]
+}

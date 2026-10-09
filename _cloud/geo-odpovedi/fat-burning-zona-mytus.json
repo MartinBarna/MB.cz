@@ -1,0 +1,42 @@
+{
+  "url": "https://martinbarna.cz/clanky/fat-burning-zona-mytus.html",
+  "titulek": "Spalovací tepová zóna na hubnutí? Mýtus o „fat burning zone“",
+  "hlavni_otazka": "Zhubnu víc, když budu cvičit ve spalovací tepové zóně?",
+  "kratka_odpoved": "Ne: při nízké intenzitě pálíš vyšší podíl tuku jako palivo, ale celkově míň kalorií, kdežto vyšší intenzita pálí nižší podíl tuku, zato celkově víc. Za 24 hodin se palivo srovná. O úbytku tuku rozhoduje týdenní energetická bilance, ne tepová zóna.",
+  "faq": [
+    {
+      "otazka": "Má klidné kardio vůbec smysl?",
+      "odpoved": "Ano, jen ne kvůli magickému spalování tuku. Pomáhá regeneraci, je skvělé pro srdce a kondici, zvládneš ho dlouhodobě a často a nabereš s ním hodně výdeje bez velké únavy."
+    },
+    {
+      "otazka": "Co reálně rozhoduje o úbytku tuku?",
+      "odpoved": "Kalorický deficit, dost bílkovin a silový trénink. Kardio, klidné i svižné, je v tom doplněk výdeje, ne motor."
+    },
+    {
+      "otazka": "Jakou intenzitu kardia si mám vybrat?",
+      "odpoved": "Chceš spálit víc za méně času, přidej intenzitu nebo intervaly. Chceš objem a regeneraci, jeď v pohodovém tempu. Klidné kardio, které opravdu děláš, vždycky přebije skvělou intenzitu, kterou neuděláš."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "„Spalovací zóna\" pálí vyšší podíl tuku, ale celkově míň kalorií. Vyšší intenzita pálí nižší podíl tuku, ale celkově víc. Pro hubnutí se počítá celkový výdej, ne podíl paliva."},
+    {"pro": "kratka_odpoved", "citace": "Sečteš-li to za 24 hodin, palivo se vyrovná. To, co reálně rozhoduje o tom, jestli z tebe ubyde tuk, je týdenní energetická bilance"},
+    {"pro": "faq[0]", "citace": "Klidné kardio má spoustu reálných výhod"},
+    {"pro": "faq[0]", "citace": "Regenerace. Lehčí tempo tě neutahá"},
+    {"pro": "faq[0]", "citace": "Srdce a kondice. Pravidelný pohyb v klidném pásmu je skvělý pro srdce, cévy a celkové zdraví."},
+    {"pro": "faq[0]", "citace": "Udržitelnost. Klidné kardio zvládneš dělat dlouhodobě a často, aniž by tě to položilo."},
+    {"pro": "faq[0]", "citace": "Hodně objemu bez velké únavy."},
+    {"pro": "faq[0]", "citace": "„Pálí magicky víc tuku\" mezi nimi ale není."},
+    {"pro": "faq[1]", "citace": "Kalorický deficit. Základ všeho."},
+    {"pro": "faq[1]", "citace": "Dost bílkovin."},
+    {"pro": "faq[1]", "citace": "Silový trénink."},
+    {"pro": "faq[1]", "citace": "Kardio, ať už klidné, nebo svižné, je v tomhle doplněk výdeje. Užitečný, ale doplněk."},
+    {"pro": "faq[2]", "citace": "Chceš spálit víc za méně času? Přidej intenzitu: svižnější tempo, intervaly."},
+    {"pro": "faq[2]", "citace": "Chceš hodně objemu a regeneraci? Jeď klidné kardio v pohodovém tempu."},
+    {"pro": "faq[2]", "citace": "Klidné kardio, které opravdu děláš, vždycky přebije skvělou intenzitu, kterou neuděláš."}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní tepové frekvence ani hranice zón.",
+    "Článek nevyčísluje, o kolik víc kalorií spálí vyšší intenzita za stejný čas.",
+    "Článek neuvádí zdroje."
+  ]
+}

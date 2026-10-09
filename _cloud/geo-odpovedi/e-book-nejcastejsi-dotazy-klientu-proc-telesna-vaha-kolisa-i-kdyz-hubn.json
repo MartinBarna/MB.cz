@@ -1,0 +1,43 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-proc-telesna-vaha-kolisa-i-kdyz-hubn.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Proč tělesná váha kolísá, i když hubnete",
+  "hlavni_otazka": "Proč mi kolísá váha, i když hubnu?",
+  "kratka_odpoved": "Hlavně kvůli glykogenu, zásobním sacharidům ve svalech a játrech. Na každý gram glykogenu si tělo ukládá 3 gramy vody, takže plnění a vyprazdňování zásob pohne váhou bez ohledu na tuk. Važ se každé ráno za stejných podmínek, porovnávej týdenní průměry a měř si i tělesné míry.",
+  "faq": [
+    {
+      "otazka": "Kolik glykogenu má člověk ve svalech?",
+      "odpoved": "Netrénovaný člověk má na 100 g svalů zhruba 12 g glykogenu, trénovaný atlet až 33 g, tedy téměř třikrát víc. Průměrný netrénovaný člověk má v těle podle většiny zdrojů kolem 500 g glykogenu."
+    },
+    {
+      "otazka": "O kolik může váha kolísat jen kvůli glykogenu?",
+      "odpoved": "U atletů může tělesná váha běžně kolísat o několik kilogramů čistě kvůli plnění a vyprazdňování glykogenových zásob, bez ohledu na to, kolik mají tuku nebo jestli zrovna hubnou."
+    },
+    {
+      "otazka": "Jak se správně vážit, když váha skáče?",
+      "odpoved": "Važ se každé ráno za stejných podmínek a porovnávej mezi sebou týdenní průměry, ne jednotlivá čísla z různých dní. Ještě líp je pravidelně měřit tělesné míry a nespoléhat na jedno vážení."
+    },
+    {
+      "otazka": "Proč může trénovaný člověk jíst víc a nepřibírat?",
+      "odpoved": "Silnější svaly a delší a těžší tréninky znamenají vyšší spotřebu energie, hlavně sacharidů. Hodně trénovaný atlet za trénink spálí víc energie a větší část energie z jídla využije na samotný výkon."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Glykogen je forma sacharidů, které si tělo ukládá hlavně pro regulaci hladiny krevního cukru (glukózy), na pohyb a fungování ve vyšší intenzitě"},
+    {"pro": "kratka_odpoved", "citace": "Také proto, že na každý 1 gram glykogenu tělo ukládá vždy 3 gramy vody spolu s tím."},
+    {"pro": "kratka_odpoved", "citace": "Kolísání váhy tedy samo o sobě nic neříká o tom, jestli přibíráš nebo hubneš tuk."},
+    {"pro": "kratka_odpoved", "citace": "Teď už je asi jasnější, proč s klienty pravidelně měříme tělesné míry a nespoléháme na jedno vážení. Pokud se přesto jen vážíš, važ se aspoň každé ráno za stejných podmínek a porovnávej týdenní průměry mezi sebou, ne jednotlivá čísla z různých dní."},
+    {"pro": "faq[0]", "citace": "Netrénovaný člověk má na 100 g svalů v zásobě zhruba 12 g glykogenu."},
+    {"pro": "faq[0]", "citace": "Trénovaný atlet může mít v zásobě až 33 g glykogenu na 100 g svaloviny, což je téměř 3x více než netrénovaný člověk."},
+    {"pro": "faq[0]", "citace": "Průměrný netrénovaný člověk má podle většiny zdrojů v těle kolem 500 g glykogenu"},
+    {"pro": "faq[1]", "citace": "u atletů může tělesná váha běžně kolísat o několik kilogramů, a to čistě kvůli plnění a vyprazdňování glykogenových zásob, bez ohledu na to, kolik mají v těle tuku nebo jestli zrovna hubnou."},
+    {"pro": "faq[2]", "citace": "važ se aspoň každé ráno za stejných podmínek a porovnávej týdenní průměry mezi sebou, ne jednotlivá čísla z různých dní."},
+    {"pro": "faq[2]", "citace": "proč s klienty pravidelně měříme tělesné míry a nespoléháme na jedno vážení."},
+    {"pro": "faq[3]", "citace": "Silnější svaly a delší a těžší tréninky znamenají i vyšší spotřebu energie, hlavně sacharidů, takže můžeš a nejspíš bys i měl jíst víc kalorií, hlavně ze sacharidů."},
+    {"pro": "faq[3]", "citace": "Hodně trénovaný atlet podá intenzivnější a delší výkon a za trénink spálí víc energie než někdo netrénovaný. Proto může a měl by jíst víc kalorií a tolik tuku nepřibírá. Větší část té energie z jídla totiž využije na samotný výkon."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, o kolik kilogramů může kolísat váha u netrénovaného člověka, jen u atletů („o několik kilogramů“).",
+    "Článek neuvádí zdroj čísel 12 g, 33 g a 500 g glykogenu („podle většiny zdrojů“).",
+    "Kromě glykogenu článek zmiňuje „tisíce metabolických procesů“ s tekutinami, ale konkrétně je nerozebírá."
+  ]
+}

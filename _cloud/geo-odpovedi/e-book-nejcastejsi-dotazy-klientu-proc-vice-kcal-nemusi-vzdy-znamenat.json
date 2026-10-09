@@ -1,0 +1,43 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-proc-vice-kcal-nemusi-vzdy-znamenat.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Proč více kcal nemusí vždy znamenat, že přiberu tuk",
+  "hlavni_otazka": "Přiberu tuk, když si zvýším kalorie?",
+  "kratka_odpoved": "Nemusíš: když na 1400 kcal hubneš 2 cm týdně v pase, na 1500 nebo 1600 kcal nejspíš jen hubneš pomaleji nebo se hubnutí zastaví. Záleží na tom, kolik máš denně kroků a kolik odcvičíš. Kdo přidané jídlo využije na trénink nebo víc chodí, přibrat nemusí.",
+  "faq": [
+    {
+      "otazka": "Proč fungují reverzní diety?",
+      "odpoved": "Hlavně proto, že je člověk postupně aktivnější a míň unavený, takže se mu po dietě zvyšuje spalování. Když se jídlo přidává pomalu a po troškách, klient někdy přibírat nemusí, nebo aspoň prvních pár týdnů nepřibere."
+    },
+    {
+      "otazka": "Jak se tělo brání hubnutí?",
+      "odpoved": "Sníží výdej energie, takže jsi unavený a míň se hýbeš během dne (nižší NEAT), a zvýší příjem přes hlad a chutě. Čím míň tuku máš, čím rychleji hubneš a čím větší deficit děláš, tím víc se tělo brání a šetří."
+    },
+    {
+      "otazka": "Proč mi po přidání jídla stoupne váha, i když nepřibírám tuk?",
+      "odpoved": "Tělo může nabrat jen glykogen do svalů spolu s vodou. Váha pak stoupne, ale nemusí to být všechno tuk."
+    },
+    {
+      "otazka": "Co je svalová proteinová syntéza (MPS) a proč pomáhá hubnout?",
+      "odpoved": "Je to proces regenerace svalové tkáně, který dočasně roste po jídle s bílkovinami a po pár hodinách zase klesne. Je energeticky náročný, takže s ním roste i výdej energie, a proto se vyplatí pravidelně a intenzivně cvičit."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Řekněme, že na 1400 kcal bys hubl 2 cm týdně v pase. Neznamená to, že na 1500 nebo 1600 kcal najednou začneš přibírat tuk. Nejspíš bys jen hubl pomaleji, nebo by se hubnutí zastavilo. Záleží na tom, kolik máš denně kroků a kolik odcvičíš minut."},
+    {"pro": "kratka_odpoved", "citace": "Jinému klientovi přidám sacharidy a on je využije na trénink navíc nebo obecně hodně sportuje."},
+    {"pro": "kratka_odpoved", "citace": "Někdo začne sám od sebe víc chodit a být přes den aktivnější. Ten přibrat nemusí"},
+    {"pro": "faq[0]", "citace": "Třeba reverzní diety fungují hlavně proto, že je člověk postupně aktivnější a míň unavený, takže se mu po dietě zvyšuje spalování. Když jídlo přidáváme pomalu a po troškách, někdy klient přibírat nemusí, nebo aspoň prvních pár týdnů nepřibere."},
+    {"pro": "faq[1]", "citace": "Sníží výdej energie (únava/lenost/letargie, nižší NEAT, tedy pohyb během dne)."},
+    {"pro": "faq[1]", "citace": "Zvýší příjem energie (hlad/chutě)."},
+    {"pro": "faq[1]", "citace": "Čím míň tělesného tuku máš, čím rychleji hubneš a čím větší děláš kalorický deficit, tím víc se tělo brání a šetří."},
+    {"pro": "faq[2]", "citace": "Pokud jen z části, nabere třeba jen glykogen do svalů spolu s vodou. Váha pak stoupne, ale nemusí to být všechno tuk."},
+    {"pro": "faq[3]", "citace": "Je proces regenerace svalové tkáně kosterního svalstva."},
+    {"pro": "faq[3]", "citace": "Roste dočasně, kvůli bílkovinám a aminokyselinám z jídla, a po pár hodinách zase klesne."},
+    {"pro": "faq[3]", "citace": "A protože je celý proces energeticky náročný, roste s ním i výdej energie. Tím si podpoříš tempo hubnutí. Proto se vyplatí pravidelně a intenzivně cvičit."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, o kolik kalorií a jak rychle při reverzní dietě přidávat.",
+    "Článek tvrdí, že si tělo tvoří nové tukové buňky a mění se „bodyfat set point“, a zmiňuje pokusy na vězních bez konkrétního zdroje, proto jsem z toho otázku nedělal.",
+    "Článek sám upozorňuje, že studie z roku 2021 zpochybňují důležitost leucinu; výklad o leucinu a MPS je tedy podle článku nejistý.",
+    "Role hormonů štítné žlázy (T3, T4) je v článku popsaná jen obecně."
+  ]
+}

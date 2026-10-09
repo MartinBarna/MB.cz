@@ -1,0 +1,50 @@
+{
+  "url": "https://martinbarna.cz/clanky/hydratace-deti-sport.html",
+  "titulek": "Hydratace dětí ve sportu: kdy stačí voda a kdy ne (a jak na domácí iontový nápoj)",
+  "hlavni_otazka": "Stačí dítěti při sportu voda, nebo potřebuje iontový nápoj?",
+  "kratka_odpoved": "Na běžný trénink do 60 minut je čistá voda naprosto dostačující. Když dítě sportuje déle než hodinu, vysokou intenzitou nebo ve velkém horku, ztrácí potem i sodík a energii a vyplatí se nápoj se 4–8 % sacharidů a 0,5–0,7 g sodíku na litr.",
+  "faq": [
+    {
+      "otazka": "Jak udělat domácí iontový nápoj pro dítě?",
+      "odpoved": "Sportovní verze na delší zátěž nebo horko: 1 litr vody, asi 40–60 g cukru (nebo asi 500 ml 100% džusu doplnit vodou do litru) a 1,3–1,8 g soli, k tomu kapka citronu. Mírná verze: 1 litr vody, asi 30 g cukru nebo trochu sirupu a špetka soli (asi 0,5 g)."
+    },
+    {
+      "otazka": "Jak často má dítě při sportu pít?",
+      "odpoved": "Před zátěží se napít, během zátěže malé doušky každých 15–20 minut, orientačně 150–250 ml podle velikosti dítěte, vedra a intenzity, a po zátěži doplnit tekutiny i s trochou sodíku. Nečekej na žízeň, ale ani nelij do dítěte litry do zásoby."
+    },
+    {
+      "otazka": "Proč nesmí být sportovní nápoj moc sladký?",
+      "odpoved": "Nad zhruba 8 % cukru, tedy víc než 8 g na 100 ml, se nápoj stává hypertonickým a zpomaluje vyprazdňování žaludku klidně o 30–50 %. Výsledkem je tíha v břiše, nadýmání, někdy křeče. Sladké nápoje a koncentráty se proto během sportu ředí."
+    },
+    {
+      "otazka": "Proč jsou děti na dehydrataci citlivější než dospělí?",
+      "odpoved": "Mají větší povrch těla vzhledem k hmotnosti, takže se v horku zahřejí rychleji, potí se později a méně efektivně a hůř rozpoznají žízeň."
+    },
+    {
+      "otazka": "Kdy s dítětem po sportu k lékaři?",
+      "odpoved": "Když je po zátěži zmatené, má závrať, přestane se potit, zvrací nebo má opakované křeče. To může být úpal nebo přehřátí: okamžitě chládek, tekutiny a lékař."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "na běžný trénink do 60 minut je čistá voda naprosto dostačující."},
+    {"pro": "kratka_odpoved", "citace": "sportuje déle než hodinu, jede vysokou intenzitou, nebo trénuje ve velkém horku. Tehdy tělo potem neztrácí jen vodu, ztrácí i sodík a energii."},
+    {"pro": "kratka_odpoved", "citace": "Ideál nápoje: 4–8 % cukru (~6 %) + 0,5–0,7 g sodíku na litr."},
+    {"pro": "faq[0]", "citace": "Sportovní verze (delší zátěž, horko, hodně potu) 1 litr vody ~40–60 g cukru (nebo ~500 ml 100% džusu doplnit vodou do 1 litru ≈ 5 %) ~1,3–1,8 g soli (to je těch 0,5–0,7 g sodíku) kapka citronu na chuť"},
+    {"pro": "faq[0]", "citace": "Mírná dětská verze (na chuť a „aby pilo\") 1 litr vody ~30 g cukru nebo trochu sirupu (jemně, ~3 %) špetka soli (~0,5 g)"},
+    {"pro": "faq[1]", "citace": "Před zátěží se napít (ne nasávat litry, jen slušně)."},
+    {"pro": "faq[1]", "citace": "Během zátěže malé doušky každých 15–20 minut, orientačně ~150–250 ml podle velikosti dítěte, vedra a intenzity."},
+    {"pro": "faq[1]", "citace": "Po zátěži doplnit tekutiny i s trochou sodíku (klidně normální jídlo + pití)."},
+    {"pro": "faq[1]", "citace": "Pít průběžně po malých dávkách, nečekat na žízeň, ale ani nepřehánět."},
+    {"pro": "faq[1]", "citace": "nelít do dítěte litry „do zásoby\"."},
+    {"pro": "faq[2]", "citace": "Nad ~8 % cukru (víc než 8 g na 100 ml) se nápoj stává „hustým\" (hypertonickým) a zpomaluje vyprazdňování žaludku klidně o 30–50 %. Výsledek? Tíha v břiše, nadýmání, někdy křeče. Proto se sladké nápoje a koncentráty během sportu ředí, nepijí se naplno."},
+    {"pro": "faq[3]", "citace": "mají větší povrch těla vzhledem k hmotnosti, takže se v horku zahřejí rychleji,"},
+    {"pro": "faq[3]", "citace": "potí se později a méně efektivně,"},
+    {"pro": "faq[3]", "citace": "a hůř rozpoznají žízeň: než se ozve, bývají už mírně dehydratované."},
+    {"pro": "faq[4]", "citace": "Když je dítě po zátěži zmatené, má závrať, přestane se potit, zvrací nebo má opakované křeče: to už nejsou „žízeň a únava\", ale možný úpal/přehřátí. Okamžitě chládek, tekutiny a lékař."}
+  ],
+  "nejiste": [
+    "Článek výslovně říká, že autor není dětský lékař a nejde o lékařské doporučení; odpovědi to nesmí prezentovat jako lékařskou radu.",
+    "Článek neuvádí rozdíly podle věku dítěte (předškolák vs. teenager), jen „podle velikosti dítěte“.",
+    "Mírná dětská verze nápoje (asi 3 % cukru) je pod hranicí 4–8 %, kterou článek uvádí jako ideál; článek ji uvádí jako verzi „na chuť a aby pilo“, ne jako sportovní."
+  ]
+}

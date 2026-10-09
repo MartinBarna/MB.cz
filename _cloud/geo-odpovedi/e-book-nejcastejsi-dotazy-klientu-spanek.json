@@ -1,0 +1,46 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-spanek.html",
+  "titulek": "E-book Nejčastější dotazy klientů – Spánek",
+  "hlavni_otazka": "Kolik hodin spánku potřebuju a jak spát líp?",
+  "kratka_odpoved": "Spi aspoň 7–8 hodin denně, většina studií se shodne, že spánek pod 7 hodin v průměru může dlouhodobě škodit zdraví. Choď spát každý den ve stejný čas, aspoň 20 minut před spaním odlož elektroniku a měj v ložnici tmu a chládek.",
+  "faq": [
+    {
+      "otazka": "Zhoršuje nedostatek spánku hubnutí?",
+      "odpoved": "Ano. Když se nevyspíš, budeš unavenější a hladovější, a to ti udržení štíhlé postavy rozhodně neusnadní."
+    },
+    {
+      "otazka": "Kdy je nejlepší chodit spát?",
+      "odpoved": "V rámci cirkadiánních cyklů ti nejspíš nejvíc sedne spánek zhruba od 22. do 6. hodiny. Když to nejde, nastav si jiné pevné rozmezí a drž ho i o víkendech."
+    },
+    {
+      "otazka": "Proč nekoukat večer do mobilu?",
+      "odpoved": "Tělo si při usínání potřebuje vytvořit melatonin a umělé světlo z obrazovek jeho tvorbu brzdí. Nech elektroniku být aspoň 20 minut před spaním."
+    },
+    {
+      "otazka": "Je dobré si přes den zdřímnout?",
+      "odpoved": "Šlofík do 20 minut během dne tě dokáže příjemně nakopnout, a to bez stimulantů."
+    },
+    {
+      "otazka": "Můžu brát melatonin, když nemůžu usnout?",
+      "odpoved": "Můžeš po něm sáhnout jako po dočasné pomůcce, než si srovnáš spánkové návyky. Nechceš ale, aby si na něm tvůj spánek vypěstoval závislost."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Doporučuju spát aspoň 7 – 8 hodin denně."},
+    {"pro": "kratka_odpoved", "citace": "Většina studií se shodne na tom, že spánek pod 7 hodin denně v průměru může dlouhodobě škodit zdraví."},
+    {"pro": "kratka_odpoved", "citace": "Urči si čas, kdy budeš každý den chodit spát."},
+    {"pro": "kratka_odpoved", "citace": "Aspoň 20 minut před spaním nech elektroniku být."},
+    {"pro": "kratka_odpoved", "citace": "Ložnice by měla být co nejvíc tmavá a měl bys v ní mít chládek."},
+    {"pro": "faq[0]", "citace": "Když se nevyspíš, budeš navíc unavenější a hladovější, a to ti udržení štíhlé postavy rozhodně neusnadní."},
+    {"pro": "faq[1]", "citace": "V rámci cirkadiánních cyklů ti nejspíš nejvíc sedne spánek zhruba od 22. do 6. hodiny. Pokud v téhle době spát nemůžeš, nastav si jiné pevné rozmezí a snaž se ho co nejmíň porušovat. Platí to i o víkendech."},
+    {"pro": "faq[2]", "citace": "Tělo si při usínání potřebuje vytvořit melatonin a umělé světlo z těchhle přístrojů jeho tvorbu brzdí."},
+    {"pro": "faq[2]", "citace": "Aspoň 20 minut před spaním nech elektroniku být."},
+    {"pro": "faq[3]", "citace": "Šlofík do 20 minut během dne tě dokáže příjemně nakopnout, a to bez stimulantů."},
+    {"pro": "faq[4]", "citace": "Když máš i tak problém usnout, můžeš sáhnout po melatoninovém suplementu."},
+    {"pro": "faq[4]", "citace": "Nechceš ale, aby si na něm tvůj spánek vypěstoval závislost. Ber ho jako dočasnou pomůcku, než si spánkové návyky srovnáš."}
+  ],
+  "nejiste": [
+    "Článek neuvádí dávkování melatoninu a nezmiňuje, kdy jít se spánkem k lékaři.",
+    "Tvrzení, že ektomorf bývá unavenější a měl by spát déle, je v článku bez zdroje, proto jsem ho do odpovědí nedal."
+  ]
+}

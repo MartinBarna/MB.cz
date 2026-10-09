@@ -1,0 +1,41 @@
+{
+  "url": "https://martinbarna.cz/clanky/funguje-wobenzym.html",
+  "titulek": "Funguje Wobenzym?",
+  "hlavni_otazka": "Funguje Wobenzym na záněty a bolest kloubů?",
+  "kratka_odpoved": "Podle článku přesvědčivě ne: nejlepší data má u bolesti kloubů a urologických zánětů, jenže velkou část studií financoval výrobce a jsou staršího data. Do doporučených postupů odborných společností se nedostal a mechanismus účinku je sporný. Efekt srovnatelný s lékem nečekej a kvůli němu neodkládej návštěvu lékaře.",
+  "faq": [
+    {
+      "otazka": "Co je Wobenzym?",
+      "odpoved": "Směs enzymů (trypsín, chymotrypsín, bromelain, papain) a rutinu. V Česku je to registrovaný lék dostupný bez receptu, který se prodává jako podpora při zánětech, otocích, bolestech a imunitě."
+    },
+    {
+      "otazka": "Proč jsou odborníci k Wobenzymu skeptičtí?",
+      "odpoved": "Enzymy jsou bílkoviny a trávení je z větší části rozloží, takže se do krve dostane jen malá část. Část studií je navíc starších nebo placených výrobcem a výsledky nejsou konzistentní."
+    },
+    {
+      "otazka": "Co pomůže na bolavé klouby víc než Wobenzym?",
+      "odpoved": "Silový trénink, úprava váhy a spánek. Tyhle tři věci mají za sebou výrazně víc důkazů a nestojí nic."
+    },
+    {
+      "otazka": "Je Wobenzym bezpečný?",
+      "odpoved": "Vážné vedlejší účinky se popisují jen výjimečně. Podle výrobce stojí za přípravkem víc než 200 studií bez vážných vedlejších účinků."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Můj názor po přečtení podkladů: přesvědčivé to není. Nejlepší data má u bolesti kloubů a u urologických zánětů, jenže právě tam stojí velká část studií na penězích výrobce a jsou staršího data. Do doporučených postupů odborných společností se přípravek nedostal a mechanismus účinku je sporný."},
+    {"pro": "kratka_odpoved", "citace": "Čekat od něj efekt srovnatelný s lékem bych ale nedoporučoval a rozhodně kvůli němu neodkládej návštěvu lékaře."},
+    {"pro": "faq[0]", "citace": "jde o směs enzymů (trypsín, chymotrypsín, bromelain, papain a rutin)"},
+    {"pro": "faq[0]", "citace": "V Česku je to registrovaný lék, dostupný bez receptu."},
+    {"pro": "faq[0]", "citace": "který se prodává jako podpora při zánětech, otocích, bolestech a imunitě"},
+    {"pro": "faq[1]", "citace": "Sporný mechanismus: enzymy jsou bílkoviny a trávení je z větší části rozloží. Do krve se jich dostane jen malá část, což je hlavní důvod, proč je řada odborníků k systémové enzymoterapii skeptická."},
+    {"pro": "faq[1]", "citace": "Argumentují tím, že část studií je starších nebo placených výrobcem a že výsledky nejsou konzistentní."},
+    {"pro": "faq[2]", "citace": "U bolavých kloubů toho víc udělá silový trénink, úprava váhy a spánek. Tyhle tři věci mají za sebou výrazně víc důkazů a nestojí nic."},
+    {"pro": "faq[3]", "citace": "vážné vedlejší účinky se popisují jen výjimečně"},
+    {"pro": "faq[3]", "citace": "Co se bezpečnosti týče, podle výrobce stojí za přípravkem víc než 200 studií a bez vážných vedlejších účinků."}
+  ],
+  "nejiste": [
+    "Článek neuvádí dávkování ani kontraindikace (léky na ředění krve, alergie); jde o lék, takže to patří k lékaři nebo lékárníkovi.",
+    "Článek nejmenuje konkrétní studie (autory, časopisy), jen roky a typy studií.",
+    "Údaj o 200 studiích bez vážných vedlejších účinků pochází od výrobce, ne z nezávislého zdroje; v odpovědi je to tak označené."
+  ]
+}

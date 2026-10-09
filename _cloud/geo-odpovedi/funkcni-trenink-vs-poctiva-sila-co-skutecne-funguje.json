@@ -1,0 +1,44 @@
+{
+  "url": "https://martinbarna.cz/clanky/funkcni-trenink-vs-poctiva-sila-co-skutecne-funguje.html",
+  "titulek": "🔥 FUNKČNÍ TRÉNINK VS. POCTIVÁ SÍLA – CO SKUTEČNĚ FUNGUJE?",
+  "hlavni_otazka": "Je lepší funkční trénink, nebo klasický silový trénink s činkami?",
+  "kratka_odpoved": "Klasický silový trénink. Ve studii Keiner et al. (2022) se 48 fotbalisty ve věku 15–17 let, kteří k běžnému tréninku přidali 10 měsíců po 2 hodinách týdně, vyhrála skupina s dřepy, mrtvými tahy a benchem. Funkční skupina s TRX, bosu a gumami se zlepšila ze všech nejmíň.",
+  "faq": [
+    {
+      "otazka": "O kolik se fotbalisté v silové skupině zlepšili?",
+      "odpoved": "Po 10 měsících měli o 35–40 % víc v dřepu, o 15–20 % vyšší výskok, o 5–7 % rychlejší sprint na 20 m a o 8–10 % rychlejší změnu směru."
+    },
+    {
+      "otazka": "Dělá posilovna nefunkční svaly?",
+      "odpoved": "Ne. Posilovna ti dává potenciál a tvůj sport ho promění ve skutečný výkon. Nejlepší funkční trénink je trénink tvého sportu."
+    },
+    {
+      "otazka": "Jak silní byli fotbalisté ve studii?",
+      "odpoved": "Už na startu dřepovali 1,4násobek vlastní váhy. U českých mládežnických fotbalistů v kategoriích U15–U18 se podle článku průměrná relativní síla v dřepu pohybuje kolem 1,0–1,3násobku tělesné váhy."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Klasická síla drtivě vyhrála"},
+    {"pro": "kratka_odpoved", "citace": "(Zdroj: Journal of Strength & Conditioning Research 2022, Keiner et al.)"},
+    {"pro": "kratka_odpoved", "citace": "Vezmi si 48 profi fotbalistů ve věku 15–17 let."},
+    {"pro": "kratka_odpoved", "citace": "K běžnému fotbalovému tréninku jim na 10 měsíců přidali jen 2 hodiny týdně navíc a rozdělili je do tří skupin"},
+    {"pro": "kratka_odpoved", "citace": "dřepy, mrtvé tahy, bench, tahy – pořádné činky, progresivní zatížení"},
+    {"pro": "kratka_odpoved", "citace": "monster band walks, TRX, medicinbal Russian twist, bosu…"},
+    {"pro": "kratka_odpoved", "citace": "„Funkční“ skupina? Ta se zlepšila ze všech nejmíň."},
+    {"pro": "faq[0]", "citace": "+35–40 % v dřepu"},
+    {"pro": "faq[0]", "citace": "+15–20 % ve výskoku"},
+    {"pro": "faq[0]", "citace": "o 5–7 % rychlejší sprint na 20 m"},
+    {"pro": "faq[0]", "citace": "o 8–10 % rychlejší změna směru"},
+    {"pro": "faq[1]", "citace": "Posilovna ti nedělá „nefunkční svaly“. Dává ti potenciál."},
+    {"pro": "faq[1]", "citace": "A tvůj sport (fotbal, hokej, basket, běhání za dětmi…) ten potenciál promění ve skutečný výkon."},
+    {"pro": "faq[1]", "citace": "Nejlepší „funkční trénink“ je trénink tvého sportu."},
+    {"pro": "faq[2]", "citace": "Už na startu dřepovali 1,4× vlastní váhu."},
+    {"pro": "faq[2]", "citace": "Průměrná relativní síla v dřepu se v kategoriích U15–U18 pohybuje kolem 1,0–1,3× tělesné váhy."}
+  ],
+  "nejiste": [
+    "Studie se týkala mladých elitních fotbalistů; článek nepíše, jestli stejné výsledky platí pro dospělé rekreační cvičence nebo pro hubnutí.",
+    "Článek neuvádí výsledky skupiny s plyometrií a sprinty v číslech.",
+    "Údaje o síle českých mládežnických fotbalistů jsou připsané „expertům z FAČR a českých akademií“ bez konkrétního zdroje.",
+    "Tvrzení na konci (méně zranění, lepší hubnutí, víc energie) článek neopírá o studii, proto je v odpovědích nemám. Doporučuji ověřit údaje o studii (Keiner et al. 2022) proti originálu před použitím."
+  ]
+}

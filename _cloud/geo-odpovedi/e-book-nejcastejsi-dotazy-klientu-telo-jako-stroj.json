@@ -1,0 +1,36 @@
+{
+  "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-telo-jako-stroj.html",
+  "titulek": "E-book Nejčastější dotazy klientů – TĚLO JAKO STROJ",
+  "hlavni_otazka": "Funguje tělo jako stroj, kde stejný vstup dá vždy stejný výsledek?",
+  "kratka_odpoved": "Ne, tělo není kávovar, do kterého vložíš kapsli a pokaždé dostaneš totéž. Spíš se podobá hodinám: tikají vlastním rytmem, musí být seřízené tak akorát a každý díl má smysl pro celek. Na rozdíl od hodin se ale tělo umí samo regenerovat.",
+  "faq": [
+    {
+      "otazka": "Co se stane, když do chodu těla nevhodně zasáhnu?",
+      "odpoved": "Stejně jako u hodin: když do jejich rytmu nevhodně zasáhneš, začnou jít nepřesně, nebo se rovnou poškodí. Aby šly dobře, musí být seřízené ne víc, ne míň, ale tak akorát."
+    },
+    {
+      "otazka": "Řekne mi věda přesnou cestu k výsledku?",
+      "odpoved": "Některým procesům v těle pořád úplně nerozumíme. Věda tě může nasměrovat k cíli, ale optimální cestu k němu si musíš najít sám."
+    },
+    {
+      "otazka": "Proč nemám tělo škatulkovat?",
+      "odpoved": "Škatulkuje se snadno, dívat se bez předsudků je mnohem těžší. Když to nezvládneš, uvidíš vždycky nanejvýš půlku pravdy."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Vložíš kapsli a podle toho dostaneš čokoládu nebo kávu. Pokaždé stejně. Tělo ale takhle nefunguje."},
+    {"pro": "kratka_odpoved", "citace": "Kdybych měl tělo k nějakému stroji přirovnat já, byly by to hodiny."},
+    {"pro": "kratka_odpoved", "citace": "Tikají si svým vlastním rytmem, ať se kolem děje cokoliv."},
+    {"pro": "kratka_odpoved", "citace": "Aby šly dobře, musí být přesně seřízené. Ne víc, ne míň, ale tak akorát pro daný typ a velikost hodin."},
+    {"pro": "kratka_odpoved", "citace": "Každý díl má svůj smysl pro chod celku."},
+    {"pro": "kratka_odpoved", "citace": "Hodiny se samy neumí regenerovat."},
+    {"pro": "faq[0]", "citace": "Když do toho rytmu nevhodně zasáhneš, hodiny začnou jít nepřesně, nebo se rovnou poškodí."},
+    {"pro": "faq[0]", "citace": "Aby šly dobře, musí být přesně seřízené. Ne víc, ne míň, ale tak akorát pro daný typ a velikost hodin."},
+    {"pro": "faq[1]", "citace": "Některým procesům v těle pořád úplně nerozumíme, na rozdíl od toho, jak fungují hodiny. Věda nás může nasměrovat k cíli, ale optimální cestu k němu si musíme najít sami."},
+    {"pro": "faq[2]", "citace": "Škatulkuje se snadno, dívat se bez předsudků je mnohem těžší. A když to nezvládneš, uvidíš vždycky nanejvýš půlku pravdy."}
+  ],
+  "nejiste": [
+    "Článek je krátká úvaha bez konkrétních rad k výživě nebo tréninku; neříká, co konkrétně v těle „seřídit“.",
+    "Že se tělo umí regenerovat, článek vyvozuje z věty „Hodiny se samy neumí regenerovat“ uvedené jako rozdíl mezi tělem a hodinami."
+  ]
+}

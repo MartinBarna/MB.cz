@@ -1,0 +1,41 @@
+{
+  "url": "https://martinbarna.cz/clanky/hnedy-cukr-med-mytus.html",
+  "titulek": "Hnědý cukr a med zdravější než bílý? Mýtus o „přírodních“ sladidlech",
+  "hlavni_otazka": "Je med nebo hnědý cukr zdravější než bílý cukr?",
+  "kratka_odpoved": "V praxi ne: med, hnědý cukr, kokosový cukr, agáve i javorový sirup jsou z drtivé většiny cukry, tedy kalorie navíc. Hnědý cukr je z velké části bílý cukr s melasou a med je kaloricky srovnatelný s cukrem. O postavě rozhoduje celkový příjem cukru a kalorií, ne forma sladidla.",
+  "faq": [
+    {
+      "otazka": "Má hnědý cukr víc minerálů?",
+      "odpoved": "V melase je špetka železa, vápníku a draslíku, ale tak málo, že bys musel sníst kila hnědého cukru, abys z ní pokryl něco smysluplného. Rozdíl oproti bílému cukru je v praxi zanedbatelný."
+    },
+    {
+      "otazka": "Je agáve sirup vhodný na hubnutí?",
+      "odpoved": "Ne. Nízký glykemický index má proto, že je z velké části fruktóza, a ten ti nepomůže, když celkově sníš cukru moc. Navíc je tekutý, takže ho snadno přeženeš."
+    },
+    {
+      "otazka": "Můžu si dávat med?",
+      "odpoved": "Klidně, kvůli chuti. Lžíce medu do ovesky je v pohodě, jen ji započítej do dne jako každý jiný cukr."
+    },
+    {
+      "otazka": "Kde v jídelníčku škrtat cukr nejdřív?",
+      "odpoved": "U nápojů. Slazené limonády, džusy, slazené kávy a energeťáky jsou největší tichý příjem cukru, tam se vyplatí škrtat dřív, než řešíš bílý nebo třtinový cukr v čaji."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Med, hnědý cukr, kokosový cukr, agáve i javorový sirup mají jedno společné: jsou to z drtivé většiny cukry, a tedy kalorie navíc."},
+    {"pro": "kratka_odpoved", "citace": "Je to z velké části bílý cukr s přidanou (nebo nedoodstraněnou) melasou."},
+    {"pro": "kratka_odpoved", "citace": "Jenže kaloricky je srovnatelný s cukrem."},
+    {"pro": "kratka_odpoved", "citace": "O tom, jestli zhubneš nebo přibereš, nerozhoduje forma sladidla, ale celkový příjem cukru a kalorií."},
+    {"pro": "faq[0]", "citace": "Ano, v melase je špetka minerálů: trochu železa, vápníku, draslíku. Jenže je toho tak málo, že abys z těch stop pokryl něco smysluplného, musel bys hnědého cukru sníst kila."},
+    {"pro": "faq[0]", "citace": "Rozdíl oproti bílému cukru je v praxi zanedbatelný."},
+    {"pro": "faq[1]", "citace": "Bývá vychvalovaná za „nízký glykemický index\", jenže to je proto, že je z velké části fruktóza. Nízký glykemák ti nepomůže, když celkově sníš cukru moc."},
+    {"pro": "faq[1]", "citace": "Nízký glykemák, ale pořád cukr a kalorie. Tekuté = snadno přeženeš."},
+    {"pro": "faq[2]", "citace": "Med klidně pro chuť, ale počítej ho jako cukr. Lžíce medu do ovesky? V pohodě, jen ji zahrň do dne jako každý jiný cukr."},
+    {"pro": "faq[3]", "citace": "Největší cukr stejně chodí z nápojů. Slazené limonády, džusy, slazené kávy, energeťáky, tam se schovává největší tichý příjem. Tam se vyplatí škrtat dřív než řešit, jestli máš v čaji bílý nebo třtinový."}
+  ],
+  "nejiste": [
+    "Článek neuvádí konkrétní kalorické hodnoty jednotlivých sladidel.",
+    "Článek neříká, kolik přidaného cukru denně je v pořádku.",
+    "Pár živin navíc u medu článek zmiňuje, ale nevyjmenovává je."
+  ]
+}
