@@ -1,0 +1,40 @@
+{
+  "url": "https://martinbarna.cz/clanky/spankova-apnoe-a-hubnuti.html",
+  "titulek": "Děláš všechno správně a váha stojí? Možná je to spánková apnoe",
+  "hlavni_otazka": "Může za to, že mi stojí váha, spánková apnoe?",
+  "kratka_odpoved": "Může to být jeden z důvodů: apnoe tě unaví, pak se míň hýbeš a víc jíš, přibereš a apnoe se zhorší. Podle klinických odhadů o ní až 85 % lidí, kteří ji mají, vůbec neví. Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi.",
+  "faq": [
+    {
+      "otazka": "Mají spánkovou apnoi jen lidé s obezitou?",
+      "odpoved": "Ne. Meta-analýza na 12 860 dospělých ukázala, že 44 % lidí s apnoí má jen nadváhu a 23 % váhu úplně normální (Esmaeili 2025)."
+    },
+    {
+      "otazka": "Pomůže hubnutí na spánkovou apnoi?",
+      "odpoved": "Hubnutí ten začarovaný kruh prokazatelně obrací: podle Malhotry 2024 znamenala o 20 % nižší váha o 57 % méně apnoí. Není to ale přímá úměra, za dvacetiprocentní hranicí přidá každé další kilo už menší efekt."
+    },
+    {
+      "otazka": "Přestává se spánkovou apnoí platit kalorický deficit?",
+      "odpoved": "Nepřestává, CICO platí dál. Apnoe ti nemění termodynamiku, jen ti ztěžuje, abys deficit dlouhodobě udržel."
+    },
+    {
+      "otazka": "Jak zjistím, jestli mám spánkovou apnoi?",
+      "odpoved": "Sám si ji podle Instagramu nediagnostikuješ, apnoe patří do rukou lékaře. Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi, vyšetření je běžně dostupné."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Jedním z důvodů může být obstrukční spánková apnoe. Tu má dost lidí, a podle klinických odhadů až 85 % z nich o ní vůbec neví."},
+    {"pro": "kratka_odpoved", "citace": "Apnoe tě unaví. Když jsi unavený, míň se hýbeš a víc jíš. Přibereš a apnoe se zhorší."},
+    {"pro": "kratka_odpoved", "citace": "Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi."},
+    {"pro": "faq[0]", "citace": "A netýká se to jen lidí s obezitou. Meta-analýza na 12 860 dospělých ukázala, že 44 % lidí s apnoí má jen nadváhu a 23 % váhu úplně normální (Esmaeili 2025)."},
+    {"pro": "faq[1]", "citace": "To dobré na tom je, že hubnutí ten kruh prokazatelně obrací. Malhotra 2024: o 20 % nižší váha znamenala o 57 % méně apnoí."},
+    {"pro": "faq[1]", "citace": "Není to ale přímá úměra. Za tou dvacetiprocentní hranicí přidá každé další kilo na apnoi už menší efekt."},
+    {"pro": "faq[2]", "citace": "CICO tím nepřestává platit. Apnoe ti nemění termodynamiku, jen ti ztěžuje, abys deficit dlouhodobě udržel."},
+    {"pro": "faq[3]", "citace": "Jen pozor, tohle si nediagnostikuješ podle Instagramu. Apnoe patří do rukou lékaře."},
+    {"pro": "faq[3]", "citace": "Když chrápeš, jsi přes den vyčerpaný a hubnutí ti stojí, řekni o tom praktikovi. Vyšetření je běžně dostupné."}
+  ],
+  "nejiste": [
+    "Článek neuvádí zdroj odhadu, že až 85 % lidí s apnoí o ní neví (jen „podle klinických odhadů“).",
+    "Článek nepopisuje, jaké vyšetření na apnoi se dělá a jak probíhá, ani další příznaky kromě chrápání a denní únavy.",
+    "Článek neříká, jak se apnoe léčí, pokud ji lékař potvrdí."
+  ]
+}

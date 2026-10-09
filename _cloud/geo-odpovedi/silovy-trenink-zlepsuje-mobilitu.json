@@ -1,0 +1,54 @@
+{
+  "url": "https://martinbarna.cz/clanky/silovy-trenink-zlepsuje-mobilitu.html",
+  "titulek": "Chceš být pružnější? Posiluj v plném rozsahu: funguje jako strečink (a přidá sílu)",
+  "hlavni_otazka": "Zlepší posilování pohyblivost stejně jako strečink?",
+  "kratka_odpoved": "Ano, pokud posiluješ přes plný rozsah pohybu. Meta-analýza 55 studií ze Sports Medicine (2023) ukázala, že silový trénink zvyšuje rozsah pohybu srovnatelně se strečinkem. Na rozdíl od protahování ti k tomu přidá i sílu a svaly.",
+  "faq": [
+    {
+      "otazka": "Jaký je rozdíl mezi mobilitou a flexibilitou?",
+      "odpoved": "Flexibilita je schopnost svalu nechat se protáhnout, tedy jak daleko se dostaneš do krajní polohy. Mobilita je rozsah pohybu v kloubu, který navíc umíš aktivně ovládat a udržet pod kontrolou."
+    },
+    {
+      "otazka": "Proč posilování v plném rozsahu zlepšuje pohyblivost?",
+      "odpoved": "Trénuješ sval i v jeho protažené, dlouhé pozici, takže se učí produkovat sílu i v krajní poloze. Excentrická (brzdící) fáze pod zátěží prodlužuje svalové snopce a klouby, šlachy i nervový systém si zvyknou na plný rozsah jako na normál."
+    },
+    {
+      "otazka": "Které cviky dělat, aby posilování zlepšilo mobilitu?",
+      "odpoved": "Dřep do hloubky, rumunský mrtvý tah a mrtvý tah s pořádným protažením hamstringů, výpady a bulharský split dřep do plné hloubky, tlaky a kliky s plným rozsahem a shyby a přítahy z plného visu. Ke všemu přidej kontrolovanou excentriku: váhu aktivně brzdi 2–3 vteřiny."
+    },
+    {
+      "otazka": "Ztuhnu z posilování?",
+      "odpoved": "Ztuhlý se můžeš cítit, když v posilovně jedeš všechno na půl, třeba půlené dřepy, protože svaly v protažení nikdy pořádně nezatížíš. Není to posilováním, je to osekaným rozsahem."
+    },
+    {
+      "otazka": "Je tedy strečink zbytečný?",
+      "odpoved": "Není, když máš někde rozsah opravdu omezený, strečink ti ho pomůže otevřít. Jen si nemusíš přidávat hodiny protahování, abys byl pohyblivý, když posiluješ přes plný rozsah."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Silový trénink vedený přes plný rozsah pohybu zlepšuje pohyblivost zhruba stejně dobře jako strečink. A k tomu ti na rozdíl od protahování přidá i sílu a svaly."},
+    {"pro": "kratka_odpoved", "citace": "Velká systematická přehledová studie a meta-analýza z roku 2023 (Sports Medicine) posbírala 55 studií a došla k jednoduchému závěru: silový trénink zvyšuje rozsah pohybu ve středně velké míře."},
+    {"pro": "kratka_odpoved", "citace": "Jinými slovy: na rozsah pohybu funguje posilování srovnatelně jako strečink [1]."},
+    {"pro": "kratka_odpoved", "citace": "Ne každé posilování zlepší mobilitu: rozhoduje rozsah, ve kterém cvičíš. Half-repky ti pohyblivost nedají. Plný, kontrolovaný rozsah ano."},
+    {"pro": "faq[0]", "citace": "Flexibilita je schopnost svalu nechat se protáhnout: jak daleko se dostaneš do krajní polohy. Mobilita je o kousek víc: je to rozsah pohybu v kloubu, který navíc umíš aktivně ovládat a udržet pod kontrolou."},
+    {"pro": "faq[1]", "citace": "trénuješ sval i v jeho protažené, dlouhé pozici."},
+    {"pro": "faq[1]", "citace": "Sval se učí produkovat sílu i v krajní poloze."},
+    {"pro": "faq[1]", "citace": "Excentrická (brzdící) fáze pod zátěží prodlužuje svalové snopce."},
+    {"pro": "faq[1]", "citace": "Klouby, šlachy i nervový systém si zvyknou na plný rozsah jako na normál."},
+    {"pro": "faq[2]", "citace": "Dřep do hloubky (jak ti dovolí kyčel a technika) místo zastavení nad paralelou."},
+    {"pro": "faq[2]", "citace": "Rumunský mrtvý tah a mrtvý tah s pořádným protažením hamstringů dole."},
+    {"pro": "faq[2]", "citace": "Výpady a bulharský split dřep do plné hloubky."},
+    {"pro": "faq[2]", "citace": "Tlaky a kliky s plným rozsahem: hruď až dolů, ne jen „ťuknout a zpět\"."},
+    {"pro": "faq[2]", "citace": "Shyby a přítahy z plného visu: nataž se úplně dole, otevři ramena."},
+    {"pro": "faq[2]", "citace": "A ke všemu přidej kontrolovanou excentriku: nespouštěj váhu volným pádem, ale aktivně ji brzdi 2–3 vteřiny."},
+    {"pro": "faq[3]", "citace": "Naopak když v posilovně jedeš všechno na půl (půlené dřepy, tlaky, které nedotáhneš, bicepsy v malé výseči), svaly v protažení nikdy pořádně nezatížíš."},
+    {"pro": "faq[3]", "citace": "Není to posilováním. Je to osekaným rozsahem."},
+    {"pro": "faq[4]", "citace": "Ne. Protahování má svoje místo: když máš někde rozsah opravdu omezený, po tréninku nebo v jiný čas ti pomůže ho otevřít, a spoustě lidí prostě dělá dobře."},
+    {"pro": "faq[4]", "citace": "nemusíš si přidávat hodiny protahování, abys byl pohyblivý. Když posiluješ přes plný rozsah, mobilitu si buduješ rovnou u toho, spolu se silou a svaly."}
+  ],
+  "nejiste": [
+    "Článek neuvádí doporučený počet sérií, opakování ani kolikrát týdně takhle trénovat.",
+    "Článek neříká, jak velký je „středně velký“ efekt v konkrétních číslech, ani za jak dlouho se pohyblivost zlepší (kromě osmi týdnů v jedné studii).",
+    "Článek neřeší, jak postupovat při zranění nebo bolesti kloubů."
+  ]
+}

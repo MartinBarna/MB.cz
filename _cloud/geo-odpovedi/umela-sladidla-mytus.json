@@ -1,0 +1,79 @@
+{
+  "url": "https://martinbarna.cz/clanky/umela-sladidla-mytus.html",
+  "titulek": "Umělá sladidla: kolik je vlastně moc?",
+  "hlavni_otazka": "Jsou umělá sladidla škodlivá a kolik je moc?",
+  "kratka_odpoved": "Panikařit nemusíš: aby ti aspartam v light cole uškodil, musel bys jí vypít 9 až 14 plechovek denně, každý den, celý život. Meta-analýza 9 randomizovaných studií (1 457 lidí, Qin 2025) nenašla mezi uměle slazenými nápoji a vodou žádný rozdíl ve váze, pase, krevním cukru, inzulinu, cholesterolu ani tlaku.",
+  "faq": [
+    {
+      "otazka": "Proč mají umělá sladidla tak špatnou pověst?",
+      "odpoved": "Skoro celá panika stojí na pokusech na zvířatech, která dostávala extrémní dávky, a na pozorovacích studiích u lidí, kde se plete příčina s následkem. Kdo už přibírá, sáhne častěji po light verzi, a ve statistice to pak vypadá, že za to může sladidlo."
+    },
+    {
+      "otazka": "Není aspartam podle IARC možný karcinogen?",
+      "odpoved": "IARC hodnotí sílu důkazu, ne riziko z reálné dávky. Aspartam je ve stejné kategorii jako mobil nebo aloe vera a ranní čaj nad 65 °C spadá dokonce do přísnější."
+    },
+    {
+      "otazka": "Pomáhají sladidla hubnout?",
+      "odpoved": "Sladidlo samo o sobě nehubne, hubne pořád deficit. Pomůže ti ale zahnat chuť na sladké bez kalorií, a když si dáš light místo coly s cukrem, ušetříš zhruba 140 kalorií."
+    },
+    {
+      "otazka": "Pro koho umělá sladidla nejsou?",
+      "odpoved": "Lidé s fenylketonurií se aspartamu vyhýbají. Není to ani svolení vyměnit vodu za dva litry light coly denně."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Panikařit nemusíš."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Aby ti aspartam v light cole uškodil, musel bys jí vypít 9 až 14 plechovek denně. Každý den. Celý život."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Meta-analýza 9 randomizovaných studií (1 457 lidí, Qin 2025) nenašla mezi uměle slazenými nápoji a vodou žádný rozdíl ve váze, pase, krevním cukru, inzulinu, cholesterolu ani tlaku."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Skoro celá ta panika ale stojí na dvou věcech. Na zvířatech, která v pokusech dostávala extrémní dávky, a na pozorovacích studiích u lidí, kde se plete příčina s následkem."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Kdo už přibírá, sáhne častěji po light verzi. Ve statistice to pak vypadá, že za to může sladidlo."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "IARC hodnotí sílu důkazu, ne riziko z reálné dávky."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Aspartam je ve stejné kategorii jako tvůj mobil nebo aloe vera. Tvůj ranní čaj nad 65 °C dokonce spadá do přísnější."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "sladidlo samo o sobě nehubne."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Pomůže ti zahnat chuť na sladké bez kalorií, takže se ti snáz drží deficit."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "A těch zhruba 140 kalorií, co ušetříš, když si dáš light místo coly s cukrem"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Hubne pořád ten deficit."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Pro koho to neplatí: lidé s fenylketonurií se aspartamu vyhýbají. A taky to neber jako svolení vyměnit vodu za dva litry light coly denně."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, z jakého limitu a pro jakou tělesnou hmotnost vychází přepočet na 9 až 14 plechovek denně.",
+    "Článek odkazuje na podrobnější rozbor WHO a IARC „výš“, který v textu článku není.",
+    "Konkrétní hranici dávky uvádí jen pro aspartam, u jiných sladidel ne."
+  ]
+}

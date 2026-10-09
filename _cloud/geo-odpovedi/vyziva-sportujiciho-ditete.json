@@ -1,0 +1,152 @@
+{
+  "url": "https://martinbarna.cz/clanky/vyziva-sportujiciho-ditete.html",
+  "titulek": "Výživa sportujícího dítěte: proč nemůže jíst jako jeho nesportující sourozenec",
+  "hlavni_otazka": "Co a kolik má jíst dítě, které sportuje skoro každý den?",
+  "kratka_odpoved": "Hlavně dost jídla: u aktivních dětí málokdy chybí vitamíny, mnohem častěji prostě nesní dost energie. Dej ke každému jídlu sacharidovou přílohu, jídlo navíc kolem tréninku, svačiny a do každého jídla zdroj bílkoviny. Jediný doplněk s plošnou oporou je u dětí vitamin D, jakékoli další konzultuj s lékařem.",
+  "faq": [
+    {
+      "otazka": "Jak poznám, že sportující dítě dlouhodobě nejí dost?",
+      "odpoved": "Varovné signály jsou častější zranění, únavové zlomeniny, pomalá regenerace, vyšší nemocnost, stagnace výkonu i růstu, podrážděnost, únava, zhoršené soustředění a u dospívajících dívek opožděná nebo vynechaná menstruace. Když je vidíš, neřeš to doplňkem a jdi s dítětem za dětským lékařem."
+    },
+    {
+      "otazka": "Kolik bílkovin potřebuje sportující dítě a potřebuje protein?",
+      "odpoved": "U pravidelně trénujících dospívajících se odborná literatura pohybuje kolem 1,3 až 1,8 g bílkovin na kilogram tělesné hmotnosti denně a dá se to pohodlně pokrýt z normálního jídla. Proteinové nápoje pro děti nejsou nutnost, běžné jídlo bohatě stačí."
+    },
+    {
+      "otazka": "Co dát dítěti k jídlu po tréninku?",
+      "odpoved": "V první zhruba hodině po zátěži sacharid + bílkovinu, třeba kefír + banán, tvaroh s ovocem, jogurt s vločkami nebo rohlík se šunkou a mléko."
+    },
+    {
+      "otazka": "Kolik vitaminu D dávat sportujícímu dítěti?",
+      "odpoved": "Běžné doporučení pro děti je 600–1000 IU/den v zimě (Česká pediatrická společnost), u aktivních jedinců se jako udržovací běžně uvádí 1000–2000 IU/den. Bezpečný horní limit je u dětí 1–10 let 2000 IU/den a u dospívajících 4000 IU/den. Dávkuj individuálně, ideálně podle krevního testu (25-OH-D) a vždy s lékařem, ne od oka."
+    },
+    {
+      "otazka": "Pomáhá dětem hořčík na svalové křeče?",
+      "odpoved": "Kvalitní studie (Cochrane) nepotvrzují, že by hořčík spolehlivě zabíral na svalové křeče. Je důležitý pro normální funkci svalů a nervů, ale ber ho z jídla, třeba z ořechů, luštěnin, celozrnných potravin a listové zeleniny."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "U aktivních dětí málokdy řešíme deficit vitamínů. Mnohem častěji řešíme to, že dítě prostě nesní dost energie."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ke každému jídlu sacharidovou přílohu: rýže, brambory, těstoviny, pečivo, kaše, ovoce."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Kolem tréninku navíc."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "u tří jídel, potřebuje svačiny a klidně druhou večeři."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "do každého jídla a svačiny jeden zdroj"
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "jediný doplněk s plošnou oporou je u dětí vitamin D."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Jakékoli doplňky nad rámec vitaminu D konzultujte s lékařem."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Podle přehledů o mladých sportovcích se dlouhodobý nedostatek energie projevuje takhle:"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "častější zranění, natažené svaly a šlachy"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "únavové zlomeniny"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "pomalá regenerace"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "vyšší nemocnost"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "stagnace výkonu i růstu"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "podrážděnost, únava, zhoršené soustředění"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "u dospívajících dívek opožděná nebo vynechaná menstruace"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Když tyhle signály vidíte, neřešte to doplňkem. Jděte s dítětem za dětským lékařem."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "U pravidelně trénujících dospívajících se v odborné literatuře pohybujeme kolem 1,3 až 1,8 g bílkovin na kilogram tělesné hmotnosti denně."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "ale pořád se to dá pohodlně pokrýt z normálního jídla."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Proteinové nápoje pro děti nejsou nutnost."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Děti a dospívající bílkovinové doplňky nepotřebují, běžné jídlo bohatě stačí."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "V první zhruba hodině po zátěži dej sacharid + bílkovinu. České a jednoduché: kefír + banán, tvaroh s ovocem, jogurt s vločkami, rohlík se šunkou a mléko."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Běžné doporučení pro děti je 600–1000 IU/den v zimě (Česká pediatrická společnost)"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "U aktivních jedinců se jako udržovací běžně uvádí 1000–2000 IU/den, při prokázaném deficitu krátkodobě víc."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "bezpečný horní limit je u dětí 1–10 let 2000 IU/den, u dospívajících 4000 IU/den"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Dávkuj ale individuálně, ideálně podle krevního testu (25-OH-D)"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Vždy s lékařem, ne od oka."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Ale pozor na mýtus: kvalitní studie (Cochrane) nepotvrzují, že by hořčík spolehlivě zabíral na svalové křeče."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Je důležitý pro normální funkci svalů a nervů."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Takže ano, hořčík v jídle (ořechy, luštěniny, celozrnné, listová zelenina), ne jako zaručený lék na křeče."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik kalorií sportující dítě denně potřebuje; podle něj množství nejde napsat univerzálně.",
+    "Rozmezí 1,3 až 1,8 g bílkovin na kilogram platí pro pravidelně trénující dospívající, pro mladší děti článek číslo neuvádí.",
+    "U doplňku omega-3 (EPA/DHA) článek neuvádí žádnou dávku.",
+    "Není vysvětleno, z čeho vychází tvrzení, že podchycením množství jídla je „z kola ven zhruba 80 % problému“."
+  ]
+}

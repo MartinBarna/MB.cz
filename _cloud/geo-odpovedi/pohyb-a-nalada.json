@@ -1,0 +1,71 @@
+{
+  "url": "https://martinbarna.cz/clanky/pohyb-a-nalada.html",
+  "titulek": "Pohyb a nálada: co říká velká Cochrane meta-analýza",
+  "hlavni_otazka": "Pomáhá cvičení proti depresi?",
+  "kratka_odpoved": "Ano, nová Cochrane meta-analýza ze 73 randomizovaných studií potvrdila, že pravidelné cvičení výrazně snižuje příznaky deprese, znatelně víc než placebo. V pěti studiích, které ho srovnávaly přímo s antidepresivy, nevyšel v účinnosti významný rozdíl. Léky ale kvůli tomu nevysazuj, pokud je bereš, vždycky to řeš s lékařem.",
+  "faq": [
+    {
+      "otazka": "Můžu místo antidepresiv jen cvičit?",
+      "odpoved": "To, že v pěti studiích nevyšel mezi cvičením a antidepresivy v účinnosti významný rozdíl, neber jako návod vysadit léky. Pokud je bereš, vždycky to řeš s lékařem."
+    },
+    {
+      "otazka": "Pomáhá pohyb s náladou i dětem s nadváhou?",
+      "odpoved": "Druhá meta-analýza sledovala 19 studií u dětí s nadváhou. Výsledkem byla lepší nálada, míň úzkosti a vyšší sebevědomí."
+    },
+    {
+      "otazka": "Nepřestane mě pohyb časem bavit, jako se to stane s novými věcmi?",
+      "odpoved": "Na nové auto, vyšší plat nebo lepší telefon si po pár týdnech zvykneš, mozek tomu říká hédonická adaptace. Pohyb je jedna z mála výjimek, na ten si tělo nezvykne tak, aby tě přestal bavit."
+    },
+    {
+      "otazka": "Vyřeší cvičení každý smutek?",
+      "odpoved": "Ne, cvičení nespraví vztahy ani nedá životu smysl a jasný důvod ke smutku je potřeba řešit přímo, třeba s terapeutem nebo změnou situace. Při dlouhodobém smutku nebo myšlenkách na sebepoškození nečekej a zavolej na Linku první psychické pomoci 116 123 (zdarma, nonstop, anonymně)."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Nová Cochrane meta-analýza ze 73 randomizovaných studií (u tohohle typu výzkumu zlatý standard) potvrdila, že pravidelné cvičení výrazně snižuje příznaky deprese. Znatelně víc než placebo."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "V pěti studiích, které cvičení srovnávaly přímo s antidepresivy, nevyšel v účinnosti významný rozdíl."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Neber to ale jako návod vysadit léky. Pokud je bereš, vždycky to řeš s lékařem."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "V pěti studiích, které cvičení srovnávaly přímo s antidepresivy, nevyšel v účinnosti významný rozdíl."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Neber to ale jako návod vysadit léky. Pokud je bereš, vždycky to řeš s lékařem."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Druhá meta-analýza sledovala 19 studií u dětí s nadváhou. Výsledek: lepší nálada, míň úzkosti, vyšší sebevědomí."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Nové auto, vyšší plat, lepší telefon. Po pár týdnech si zvykneš a jedeš dál jako předtím. Mozek tomu říká hédonická adaptace."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Pohyb je jedna z mála výjimek. Na ten si tělo nezvykne tak, aby tě přestal bavit, jako na věci, co si koupíš."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Cvičení nespraví vztahy ani nedá životu smysl. Když máš jasný důvod ke smutku, řeš ho přímo. Terapeut, odborník, změna situace."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "A pokud máš dlouhodobý smutek nebo myšlenky na sebepoškození, nečekej. Linka první psychické pomoci: 116 123 (zdarma, nonstop, anonymně)."
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí, jaký typ pohybu, jakou intenzitu ani kolik minut týdně studie používaly.",
+    "Článek neuvádí velikost účinku, jen že cvičení snižuje příznaky deprese výrazně a znatelně víc než placebo.",
+    "U druhé meta-analýzy u dětí s nadváhou není uveden zdroj ani rok."
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "url": "https://martinbarna.cz/clanky/zeny-a-posilovani-zmohutni.html",
+  "titulek": "Ženy a posilování: „zmohutním od činek jako kulturistka\"? Tohle je realita",
+  "hlavni_otazka": "Zmohutním jako žena, když budu zvedat těžké činky?",
+  "kratka_odpoved": "Ne. Svaly do objemu rostou hlavně díky testosteronu a žena ho má řádově míň než muž, jen v jednotkách procent mužských hodnot. Svaly proto nabíráš pomaleji a v menším objemu, omylem to nejde.",
+  "faq": [
+    {
+      "otazka": "Jak získám zpevněnou, vyrýsovanou postavu?",
+      "odpoved": "Vysněný „tonus“ je doslova trochu svalu a málo tuku nad ním. Sval postavíš jedině zátěží, tuk shodíš jídlem v mírném deficitu. Kardio samo tvar nedá, protože sval nepostaví."
+    },
+    {
+      "otazka": "Zhubne mi břicho z cvičení břicha?",
+      "odpoved": "Ne, lokální spalování tuku neexistuje. Tělo ubírá tuk plošně z celého těla, ne z místa, které zrovna zatížíš."
+    },
+    {
+      "otazka": "Jak mám jako žena v posilovně trénovat?",
+      "odpoved": "Zvedej těžké, klidně 5–10 opakování, a postupně přidávej váhu nebo opakování. K tomu dost bílkovin, cca 1,6–2,2 g/kg, a trpělivost v měsících."
+    },
+    {
+      "otazka": "Co ženskému tělu těžké činky reálně dají?",
+      "odpoved": "Tvar a pevnost zadku, nohou a zad, silnější kosti, lepší metabolismus a sílu do běžného dne. Zátěž patří k nejlepší prevenci řídnutí kostí, což je u žen po čtyřicítce naprosto zásadní věc."
+    },
+    {
+      "otazka": "Proč jsou tedy některé ženy tak svalnaté?",
+      "odpoved": "Za tím vzhledem jsou roky cílené, brutálně objemové dřiny, často velmi specifická strava na maximální nabírání a u soutěžních kulturistek nezřídka i hormony zvenčí. Do takového objemu nikdo nespadne omylem."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Ne. Svaly do objemu rostou hlavně díky testosteronu a žena ho má řádově míň než muž, jen v jednotkách procent mužských hodnot."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Svaly nabíráš pomaleji a v menším objemu"
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "je doslova trochu svalu + málo tuku nad ním. Sval postavíš jedině zátěží, tuk shodíš jídlem v mírném deficitu. Kardio samo tvar nedá, protože sval nepostaví."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Ne, lokální spalování tuku neexistuje. Tělo ubírá tuk plošně z celého těla, ne z místa, které zrovna zatížíš."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Zvedat těžké (klidně 5–10 opakování)"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Postupně přidávat váhu nebo opakování. Bez progrese se nic nemění."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Dost bílkovin (cca 1,6–2,2 g/kg)"
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Trpělivost v měsících"
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Tvar a pevnost. Zadek, nohy, záda dostanou tvar, který kardio nedá."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Silnější kosti. Zátěž patří k nejlepší prevenci řídnutí kostí, u žen po čtyřicítce naprosto zásadní věc."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Lepší metabolismus. Víc svalu znamená víc spáleného i v klidu a snazší držení váhy dlouhodobě."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Síla do života."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Za tím vzhledem jsou roky cílené, brutálně objemové dřiny, často velmi specifická strava na maximální nabírání, a u soutěžních kulturistek nezřídka i farmakologie, tedy hormony zvenčí."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Nikdo do takového objemu"
+    }
+  ],
+  "nejiste": [
+    "Článek neuvádí přesné hodnoty testosteronu u žen a mužů ani zdroj údaje o „jednotkách procent“.",
+    "Článek neříká, kolik sérií a kolikrát týdně trénovat, „dvakrát“ a „třikrát týdně“ zmiňuje jen v příkladech.",
+    "Článek neuvádí, jak velký má být „mírný deficit“."
+  ]
+}

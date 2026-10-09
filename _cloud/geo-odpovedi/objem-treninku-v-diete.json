@@ -1,0 +1,43 @@
+{
+  "url": "https://martinbarna.cz/clanky/objem-treninku-v-diete.html",
+  "titulek": "V dietě: hodně sérií, nebo míň? Nová studie překvapí",
+  "hlavni_otazka": "Mám v dietě ubrat počet sérií v tréninku, abych nepřišel o svaly?",
+  "kratka_odpoved": "Ne jen ze zvyku: v čerstvé studii si pokročilí cvičenci ve 40% deficitu za čtyři týdny udrželi beztukovou hmotu s 12 i s 30 sériemi týdně na partii. Víc sérií přidalo víc síly. Jde ale zatím o preprint před recenzí, takže je to spíš zajímavý signál.",
+  "faq": [
+    {
+      "otazka": "Jak studie o objemu tréninku v dietě probíhala?",
+      "odpoved": "Pokročilí cvičenci měli 40% deficit, hodně bílkovin a sledovali je čtyři týdny. Půlka trénovala 12 sérií týdně na partii, druhá půlka 30 sérií."
+    },
+    {
+      "otazka": "Byl rozdíl ve složení těla mezi 12 a 30 sériemi týdně?",
+      "odpoved": "Podle DXA scanů nebyl ve složení těla mezi skupinami žádný statisticky významný rozdíl. Obě skupiny shodily slušně tuku a beztukovou hmotu si udržely."
+    },
+    {
+      "otazka": "O kolik víc síly přidalo 30 sérií týdně?",
+      "odpoved": "Skupina s 30 sériemi přidala v silových testech 15 až 27 %, skupina s 12 sériemi 7 až 14 %. Jestli za tím stojí čistý růst svalu, nebo neurální adaptace, se za čtyři týdny a přes DXA rozlišit nedá."
+    },
+    {
+      "otazka": "Co si z té studie vzít do praxe?",
+      "odpoved": "V dietě neubírej objem jen ze zvyku, svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "V dietě neubírej objem jen ze zvyku."},
+    {"pro": "kratka_odpoved", "citace": "Vzali pokročilé cvičence, dali jim 40% deficit, hodně bílkovin a čtyři týdny je sledovali."},
+    {"pro": "kratka_odpoved", "citace": "Půlka trénovala 12 sérií týdně na partii, tedy střední objem. Druhá půlka 30 sérií, to už je pořádná porce."},
+    {"pro": "kratka_odpoved", "citace": "Obě shodily slušně tuku a beztukovou hmotu si udržely."},
+    {"pro": "kratka_odpoved", "citace": "Kde se to rozešlo, byla síla. Skupina s 30 sériemi přidala v silových testech 15 až 27 %, skupina s 12 sériemi 7 až 14 %."},
+    {"pro": "kratka_odpoved", "citace": "A pozor, pořád mluvíme o preprintu, který čeká na recenzi. Beru to jako zajímavý signál, ne hotovou věc."},
+    {"pro": "faq[0]", "citace": "Vzali pokročilé cvičence, dali jim 40% deficit, hodně bílkovin a čtyři týdny je sledovali."},
+    {"pro": "faq[0]", "citace": "Půlka trénovala 12 sérií týdně na partii, tedy střední objem. Druhá půlka 30 sérií, to už je pořádná porce."},
+    {"pro": "faq[1]", "citace": "Pak přišly DXA scany a ve složení těla mezi skupinami žádný statisticky významný rozdíl nebyl. Obě shodily slušně tuku a beztukovou hmotu si udržely."},
+    {"pro": "faq[2]", "citace": "Skupina s 30 sériemi přidala v silových testech 15 až 27 %, skupina s 12 sériemi 7 až 14 %."},
+    {"pro": "faq[2]", "citace": "Zůstává otázka, jestli za tím stojí čistý růst svalu, nebo se tělo jen líp naučilo pohyb (neurální adaptace). Za čtyři týdny a přes DXA to nerozlišíš."},
+    {"pro": "faq[3]", "citace": "V dietě neubírej objem jen ze zvyku. Svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů."}
+  ],
+  "nejiste": [
+    "Článek neuvádí, kolik lidí ve studii bylo, ani zda šlo o muže, ženy, nebo obojí.",
+    "Článek neříká, kolik bílkovin přesně účastníci jedli (jen „hodně bílkovin“).",
+    "Studie trvala jen čtyři týdny, článek neříká nic o tom, jestli by výsledek platil i při delší dietě, a jde o preprint, který ještě neprošel recenzí."
+  ]
+}
