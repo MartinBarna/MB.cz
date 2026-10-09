@@ -73,6 +73,7 @@
     h1,.tcard b{color:#161616!important;}
   }
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}@media(max-width:480px){.ba .top .in{row-gap:14px}.ba .topr{row-gap:14px}}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}@media (max-width:767px){input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),select,textarea{font-size:16px!important}}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -89,27 +90,27 @@
 
     <div class="panel" id="form">
       <div class="grid">
-        <div><label>Pohlaví</label><select id="sex"><option value="muz">Muž</option><option value="zena">Žena</option></select></div>
-        <div><label>Věk</label><input id="age" type="number" value="32" min="14" max="100"></div>
-        <div><label>Váha (kg)</label><input id="weight" type="text" inputmode="decimal" value="80" min="35" max="250"></div>
-        <div><label>Výška (cm)</label><input id="height" type="number" value="180" min="130" max="220"></div>
-        <div><label>Aktivita</label><select id="activity">
+        <div><label for="sex">Pohlaví</label><select id="sex"><option value="muz">Muž</option><option value="zena">Žena</option></select></div>
+        <div><label for="age">Věk</label><input id="age" type="number" value="32" min="14" max="100"></div>
+        <div><label for="weight">Váha (kg)</label><input id="weight" type="text" inputmode="decimal" value="80" min="35" max="250"></div>
+        <div><label for="height">Výška (cm)</label><input id="height" type="number" value="180" min="130" max="220"></div>
+        <div><label for="activity">Aktivita</label><select id="activity">
           <option value="sedavy">Sedavá (málo pohybu)</option>
           <option value="lehka" selected>Lehká (1–3× týdně)</option>
           <option value="stredni">Střední (3–5× týdně)</option>
           <option value="vysoka">Vysoká (6–7× týdně)</option>
           <option value="extremni">Extrémní (fyzická práce / 2× denně)</option>
         </select></div>
-        <div><label>Cíl</label><select id="goal">
+        <div><label for="goal">Cíl</label><select id="goal">
           <option value="hubnuti">Hubnutí</option>
           <option value="mirne_hubnuti" selected>Mírné hubnutí</option>
           <option value="udrzeni">Udržení</option>
           <option value="mirny_narust">Mírný nárůst svalů</option>
           <option value="narust">Nabírání svalů</option>
         </select></div>
-        <div><label>Počet jídel</label><select id="mealsCount"><option value="2">2 (přerušovaný půst)</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6 (menší porce)</option></select></div>
-        <div><label>Rozsah</label><select id="range"><option value="den" selected>1 den</option><option value="tyden">Celý týden + nákupní seznam</option></select></div>
-        <div><label>Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Jana"></div>
+        <div><label for="mealsCount">Počet jídel</label><select id="mealsCount"><option value="2">2 (přerušovaný půst)</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6 (menší porce)</option></select></div>
+        <div><label for="range">Rozsah</label><select id="range"><option value="den" selected>1 den</option><option value="tyden">Celý týden + nákupní seznam</option></select></div>
+        <div><label for="client">Jméno klienta (volitelné)</label><input id="client" type="text" placeholder="např. Jana"></div>
       </div>
       <div class="chips">
         <label class="chip"><input type="checkbox" id="vegetarian"> Vegetariánský</label>
@@ -127,15 +128,15 @@
       <details class="brandbox" id="brandbox">
         <summary>🎨 Moje značka <span style="color:var(--muted);font-weight:400;">projeví se ve výstupu i v PDF (uloží se ti)</span></summary>
         <div class="grid" style="margin-top:12px;">
-          <div><label>Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková - výživa"></div>
+          <div><label for="trainer">Tvoje jméno / značka</label><input id="trainer" type="text" placeholder="např. Jana Nováková - výživa"></div>
           <div><label>Akcentová barva</label>
-            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="accent" aria-label="Barva značky" type="color" value="#EBB12C" style="flex:none;width:46px;height:34px;padding:2px;">
             <span id="swatches" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
           </div>
           <div><label>Logo (nahraj soubor nebo URL)</label>
-            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="logofile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="logoclear" class="ghost no-print" style="display:none;font-size:.82rem">✕ odebrat logo</button></div>
-            <input id="logo" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
-          <div><label>Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
+            <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap"><input id="logofile" aria-label="Logo, soubor" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:120px;font-size:.85rem"><button type="button" id="logoclear" class="ghost no-print" style="display:none;font-size:.82rem">✕ odebrat logo</button></div>
+            <input id="logo" aria-label="Logo, URL" type="url" placeholder="…nebo URL: https://…/logo.png" style="margin-top:7px"></div>
+          <div><label for="contact">Kontakt (web / e-mail, volitelné)</label><input id="contact" type="text" placeholder="jana@example.cz"></div>
         </div>
       </details>
       <div class="actions">

@@ -65,6 +65,7 @@
   .foot{color:var(--muted);font-size:.82rem;margin-top:2rem;text-align:center;}
   .foot a{color:var(--gold-soft);}
 </style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}@media(max-width:480px){.ba .top .in{row-gap:14px}.ba .topr{row-gap:14px}}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}@media (max-width:767px){input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color]):not([type=file]),select,textarea{font-size:16px!important}}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -79,10 +80,10 @@
 
     <div class="tools">
       <div class="searchrow">
-        <input type="search" id="q" placeholder="Hledat cvik podle názvu nebo popisu…" autocomplete="off">
-        <select id="fEquip"><option value="">Vybavení: vše</option></select>
-        <select id="fLevel"><option value="">Úroveň: vše</option></select>
-        <select id="fLoc"><option value="">Místo: vše</option></select>
+        <input type="search" id="q" aria-label="Hledat cvik" placeholder="Hledat cvik podle názvu nebo popisu…" autocomplete="off">
+        <select id="fEquip" aria-label="Vybavení"><option value="">Vybavení: vše</option></select>
+        <select id="fLevel" aria-label="Úroveň"><option value="">Úroveň: vše</option></select>
+        <select id="fLoc" aria-label="Místo"><option value="">Místo: vše</option></select>
       </div>
       <div class="chips" id="chips"></div>
     </div>

@@ -25,7 +25,7 @@
   h1 { font-size:1.7rem; margin:.6rem 0 .3rem; color:#fff; }
   p.sub { color:#b9b2a6; font-size:.95rem; margin-bottom:1.4rem; }
   .row { display:flex; gap:8px; }
-  input { flex:1; border:1px solid #3a3542; background:#0f0e12; color:#F0EADF; border-radius:2px; padding:13px 20px; font-size:1rem; font-family:inherit; outline:none; }
+  input { flex:1; min-width:0; border:1px solid #3a3542; background:#0f0e12; color:#F0EADF; border-radius:2px; padding:13px 20px; font-size:1rem; font-family:inherit; outline:none; }
   input:focus { border-color:var(--gold); }
   button { background:var(--gold); color:#161616; border:none; font-weight:700; padding:13px 26px; border-radius:0; clip-path:polygon(0 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%); cursor:pointer; font-size:1rem; font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif; text-transform:uppercase; letter-spacing:.07em; }
   button:hover { filter:brightness(1.07); }
@@ -39,6 +39,7 @@
   .result a { display:inline-block; margin-top:.8rem; color:var(--gold); font-weight:700; text-decoration:none; }
   .foot { margin-top:1.4rem; font-size:.85rem; color:#8d8677; }
   .foot a { color:var(--gold); }
+  @media (max-width:480px){ body{padding:16px} .card{padding:28px 18px} .row{flex-direction:column} button{min-height:48px} }
 </style>
 </head>
 <body>

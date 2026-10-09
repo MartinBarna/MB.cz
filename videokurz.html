@@ -309,6 +309,7 @@
     <script defer src="/assets/lead-popup.js?v=r4"></script>
     <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
     <link rel="stylesheet" href="/assets/theme-light.css?v=w12">
+<style id="a11y-fix">a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}body .btn:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body>
     <!-- SVG ikony (sprite) -->
@@ -609,7 +610,7 @@
         <button type="button" id="vkGateX" aria-label="Zavřít" style="position:absolute;top:8px;right:14px;background:none;border:none;color:#8F8A99;font-size:24px;cursor:pointer;line-height:1;">×</button>
         <h3 style="margin:0 0 6px;color:#fff;font-weight:800;">🎁 11 lekcí zdarma</h3>
         <p style="margin:0 0 14px;color:#cfc9d6;font-size:.95rem;">Napiš mi e-mail a hned tě pustím dovnitř, karta není potřeba.</p>
-        <input type="email" id="vkGateEmail" placeholder="tvuj@email.cz" autocomplete="email" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.4);color:#fff;margin-bottom:10px;font-size:1rem;">
+        <input type="email" id="vkGateEmail" aria-label="Tvůj e-mail" placeholder="tvuj@email.cz" autocomplete="email" style="width:100%;box-sizing:border-box;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(0,0,0,.4);color:#fff;margin-bottom:10px;font-size:1rem;">
         <button type="button" id="vkGateGo" style="width:100%;background:#EBB12C;color:#1A1222;font-weight:700;border:none;border-radius:50px;padding:13px;cursor:pointer;font-size:1rem;">Pustit lekce zdarma →</button>
         <p id="vkGateMsg" style="margin:10px 0 0;font-size:.83rem;color:#8F8A99;">Sem tam pošlu i praktické tipy k hubnutí, odhlásíš se jedním klikem.</p>
       </div>
