@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/superpotraviny-mytus.html",
   "titulek": "Superpotraviny tě zachrání? Mýtus o superfoods",
   "hlavni_otazka": "Vyplatí se jíst superpotraviny jako chia, spirulina nebo goji?",
-  "kratka_odpoved": "Kvůli zdraví nebo postavě moc ne: „superpotravina“ není vědecký pojem, ale nálepka z reklamy, a žádné jediné jídlo nevyruší jinak špatný jídelníček. Borůvky, mrkev, zelí, luštěniny a ovesné vločky dodají to samé co drahá exotika, za zlomek ceny. Chia nebo matchu si klidně dej, jen kvůli chuti.",
+  "kratka_odpoved": "Kvůli zdraví nebo postavě moc ne: „superpotravina“ je nálepka z reklamy a žádné jediné jídlo nevyruší jinak špatný jídelníček. Borůvky, mrkev, zelí, luštěniny a ovesné vločky dodají to samé co drahá exotika, za zlomek ceny. Chia nebo matchu si klidně dej, jen kvůli chuti.",
   "faq": [
     {
       "otazka": "Čím nahradit drahé superfoods?",
@@ -95,5 +95,6 @@
     "Článek neuvádí žádné studie ani konkrétní čísla o obsahu živin ve srovnávaných potravinách.",
     "Tvrzení, že základy jsou „95 % výsledku“, článek ničím nedokládá."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „není vědecký pojem, ale nálepka“"
 }

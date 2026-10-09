@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Jak získat další klienty přes doporučení?",
-      "odpoved": "Každého, kdo projde konzultací, popros o jedno jméno, i toho, kdo spolupráci odmítl. Spokojené klienty požádej o recenzi na Google a o doporučení ve chvíli, kdy mají první výsledky a jsou nadšení, ne za půl roku."
+      "odpoved": "Každého, kdo projde konzultací, popros o jedno jméno, i toho, kdo spolupráci odmítl. Spokojené klienty požádej o recenzi na Google a o doporučení ve chvíli, kdy mají první výsledky a jsou nadšení. Za půl roku už je nadšení pryč."
     },
     {
       "otazka": "Musím jako trenér točit obsah na sítě?",
@@ -50,5 +50,6 @@
     "Souhlas klienta se zveřejněním výsledků článek zmiňuje jen v závorce, pravidla (forma souhlasu, GDPR) nerozebírá.",
     "Závěrečnou nabídku startovacího kitu jsem vynechal, je to reklama, ne odpověď."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] bez „ne za půl roku“"
 }

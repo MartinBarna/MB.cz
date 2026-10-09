@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/menopauza-a-pribyvani-vahy.html",
   "titulek": "Menopauza a přibývání na váze: proč se mění tělo a co s tím reálně funguje",
   "hlavni_otazka": "Proč v menopauze přibírám a co s tím můžu dělat?",
-  "kratka_odpoved": "V přechodu klesá estrogen, tuk se přesouvá do břicha, klesá energetický výdej a ubývá svalu, takže stejné jídlo najednou přebývá. Není to o vůli, ale o fyziologii. Nejvíc pomáhá silový trénink, k tomu 1,2–1,6 g bílkovin na kilo denně a mírný kalorický deficit.",
+  "kratka_odpoved": "V přechodu klesá estrogen, tuk se přesouvá do břicha, klesá energetický výdej a ubývá svalu, takže stejné jídlo najednou přebývá. Je to fyziologie, se slabou vůlí to nesouvisí. Nejvíc pomáhá silový trénink, k tomu 1,2–1,6 g bílkovin na kilo denně a mírný kalorický deficit.",
   "faq": [
     {
       "otazka": "Jaký pohyb je v menopauze nejlepší?",
-      "odpoved": "Silový trénink: činky, gumy nebo vlastní váha, ne hodiny kardia. Systematický přehled 34 studií s více než 1 500 ženami po menopauze potvrdil, že posilování konzistentně zlepšuje složení těla, sílu i hustotu kostí."
+      "odpoved": "Silový trénink: činky, gumy nebo vlastní váha. Hodiny kardia ti tolik nedají. Systematický přehled 34 studií s více než 1 500 ženami po menopauze potvrdil, že posilování spolehlivě zlepšuje složení těla, sílu i hustotu kostí."
     },
     {
       "otazka": "Jak má vypadat posilování v přechodu?",
@@ -48,5 +48,6 @@
     "Kreatin a vitamin D článek zmiňuje jen okrajově bez dávek („můžou trénink podpořit“), proto nejsou v odpovědích.",
     "Účinek HRT na váhu článek nekvantifikuje a záměrně ho nechává na lékařce."
   ],
-  "kontrola": "opraveno: faq[4] (HRT) doplněno „léky si sama neupravuj“ ze závěrečného upozornění a „podle tvého zdraví, historie a rizik“ z textu článku"
+  "kontrola": "opraveno: faq[4] (HRT) doplněno „léky si sama neupravuj“ ze závěrečného upozornění a „podle tvého zdraví, historie a rizik“ z textu článku",
+  "hlas": "upraveno: kratka_odpoved bez „Není to o vůli, ale o fyziologii“; faq[0] bez „ne hodiny kardia“ a „konzistentně“ česky"
 }

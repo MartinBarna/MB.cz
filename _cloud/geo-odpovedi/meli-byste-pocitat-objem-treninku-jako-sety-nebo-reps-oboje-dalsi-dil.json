@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/meli-byste-pocitat-objem-treninku-jako-sety-nebo-reps-oboje-dalsi-dil.html",
   "titulek": "Měli byste počítat objem tréninku jako sety nebo opakování? Oboje! Další díl série Věda vs. Mýty v Tréninku.",
   "hlavni_otazka": "Mám objem tréninku na svaly počítat podle setů, nebo podle opakování?",
-  "kratka_odpoved": "Oboje, píše Menno Henselmans, expert na evidence-based fitness. Většinu stimulu k růstu podle něj udává počet setů na svalovou skupinu za týden, ale kolik opakování v každém setu uděláš se stejnou váhou a tempem, se taky počítá. Na opakováních záleží, pokud kvůli nim neobětuješ tenzi.",
+  "kratka_odpoved": "Oboje, píše Menno Henselmans, expert na fitness postavené na důkazech. Většinu stimulu k růstu podle něj udává počet setů na svalovou skupinu za týden, ale kolik opakování v každém setu uděláš se stejnou váhou a tempem, se taky počítá. Na opakováních záleží, pokud kvůli nim neobětuješ tenzi.",
   "faq": [
     {
       "otazka": "Kolik opakování je nejlepší na růst svalů?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Je lepší zvednout váhu, nebo udělat víc opakování?",
-      "odpoved": "Podle Menna Henselmanse když zvedneš intenzitu, tenze stoupne, ale TUT klesne. Na stimul růstu to ve výsledku vyjde víceméně nastejno."
+      "odpoved": "Henselmans to počítá tak, že když zvedneš intenzitu, tenze stoupne, ale TUT klesne. Na stimul růstu to ve výsledku vyjde víceméně nastejno."
     }
   ],
   "opory": [
@@ -40,5 +40,6 @@
     "Konkrétní studie, o které se tvrzení opírá, článek nejmenuje (jde o překlad příspěvku Menna Henselmanse).",
     "Zdravotní přínosy ze shrnutí (inzulin, libido, hustota kostí, mozek) článek nijak nedokládá, proto nejsou použity."
   ],
-  "kontrola": "opraveno: článek je překlad příspěvku Menna Henselmanse, tvrzení v kratka_odpoved, faq[1] (model plochy pod křivkou), faq[2] a faq[3] přisouzena jemu"
+  "kontrola": "opraveno: článek je překlad příspěvku Menna Henselmanse, tvrzení v kratka_odpoved, faq[1] (model plochy pod křivkou), faq[2] a faq[3] přisouzena jemu",
+  "hlas": "upraveno: kratka_odpoved „evidence-based“ česky; faq[3] bez třetího „Podle Menna Henselmanse“ v řadě"
 }

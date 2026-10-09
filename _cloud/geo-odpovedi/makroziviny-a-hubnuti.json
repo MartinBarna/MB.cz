@@ -5,7 +5,7 @@
   "kratka_odpoved": "Nemusíš počítat všechna makra. Stačí hlídat kalorie a bílkoviny, k tomu vlákninu pro sytost a zdraví. Když máš dané kalorie a bílkoviny, poměr sacharidů a tuků s výsledkem skoro nehne, takže si je rozděl podle chuti a tréninku.",
   "faq": [
     {
-      "otazka": "Hubne se líp na low-carb, nebo na nízkotučné dietě?",
+      "otazka": "Hubne se líp na nízkosacharidové, nebo na nízkotučné dietě?",
       "odpoved": "Při stejné bílkovině skoro stejně. Hall a Guo prošli 32 přísně kontrolovaných studií a rozdíl v úbytku tuku vyšel asi na 16 gramů za den, navíc ve prospěch nízkotučných diet. Sacks dva roky sledoval 811 lidí na čtyřech různých poměrech a zhubli zhruba stejně."
     },
     {
@@ -37,5 +37,6 @@
     "„Protože chrání svaly\" ve faq[1] je shrnutí věty o Leidy; obecný mechanismus článek dál nerozvádí.",
     "Článek je krátký post k infografice, studie cituje jen jménem autora bez roku."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] otázka „low-carb“ česky"
 }

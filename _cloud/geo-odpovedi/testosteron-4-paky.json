@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/testosteron-4-paky.html",
   "titulek": "Testosteron po čtyřicítce: 4 páky, co nestojí ani korunu",
   "hlavni_otazka": "Mám po čtyřicítce řešit testosteron doplňky?",
-  "kratka_odpoved": "Podle článku ne jako první krok: čtyři páky, co s testosteronem hýbou nejvíc, leží jinde než zinek, ashwagandha nebo injekce, a žádná tě nestojí ani korunu. Nejdřív si srovnej základy. Jestli máš nízký testosteron, ukáže to jedině krevní test a posoudí lékař.",
+  "kratka_odpoved": "Ne jako první krok: čtyři páky, co s testosteronem hýbou nejvíc, leží jinde než zinek, ashwagandha nebo injekce, a žádná tě nestojí ani korunu. Nejdřív si srovnej základy. Jestli máš nízký testosteron, ukáže to jedině krevní test a posoudí lékař.",
   "faq": [
     {
       "otazka": "Jak zjistím, jestli mám nízký testosteron?",
-      "odpoved": "Jedině krevním testem, který posoudí lékař. Článek sám zdůrazňuje, že není diagnóza a doktora nenahradí."
+      "odpoved": "Jedině krevním testem, který posoudí lékař. Tenhle článek není diagnóza a doktora nenahradí."
     },
     {
       "otazka": "Je testosteronová terapie (TRT) dobré řešení?",
-      "odpoved": "Článek proti TRT není, ale je to rozhodnutí, které patří doktorovi po vyšetření, ne na první místo. Nejdřív si srovnej základy."
+      "odpoved": "Proti TRT nic nemám, je to ale rozhodnutí, které patří doktorovi po vyšetření, a na první místo nepatří. Nejdřív si srovnej základy."
     },
     {
       "otazka": "Kdy jít s testosteronem k lékaři?",
@@ -33,5 +33,6 @@
     "Článek neuvádí, jaké hodnoty testosteronu se považují za nízké.",
     "Článek neříká, jestli doplňky jako zinek nebo ashwagandha nefungují vůbec, nebo jen méně než ty čtyři páky."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0] a faq[1] bez „Podle článku / Článek sám / Článek proti“ (varování zůstávají); faq[1] bez „ne na první místo“"
 }

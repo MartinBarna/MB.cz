@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kolik-kroku-denne-chuze-na-hubnuti.html",
   "titulek": "Kolik kroků denně? Chůze je podceňovaný nástroj na hubnutí",
   "hlavni_otazka": "Kolik kroků denně bych měl ujít, abych zhubl?",
-  "kratka_odpoved": "Zjisti svůj současný průměr a přidej k němu 2 000 až 3 000 kroků. Dlouhodobý rozumný cíl pro většinu aktivních lidí je někde v pásmu 7 000–10 000 kroků denně, ber to jako vodítko, ne dogma. Většina zdravotních přínosů chůze se často objevuje už mezi 7 000 a 8 000 kroky.",
+  "kratka_odpoved": "Zjisti svůj současný průměr a přidej k němu 2 000 až 3 000 kroků. Dlouhodobý rozumný cíl pro většinu aktivních lidí je někde v pásmu 7 000–10 000 kroků denně, ber to jako vodítko. Většina zdravotních přínosů chůze se často objevuje už mezi 7 000 a 8 000 kroky.",
   "faq": [
     {
       "otazka": "Musím chodit 10 000 kroků denně?",
@@ -14,11 +14,11 @@
     },
     {
       "otazka": "Proč chůze na hubnutí tak dobře funguje?",
-      "odpoved": "Zvedá denní výdej, a přitom tě nezničí. Po chůzi nemáš vlčí hlad jako po intervalech a skoro nepotřebuje regeneraci. Je udržitelná, a nástroj, který zvládneš dělat roky, vždycky porazí ten, co vydržíš dva týdny."
+      "odpoved": "Zvedá denní výdej, a přitom tě nezničí. Po chůzi nemáš vlčí hlad jako po intervalech a skoro nepotřebuje regeneraci. Je udržitelná, a nástroj, který zvládneš dělat roky, porazí ten, co vydržíš dva týdny."
     },
     {
       "otazka": "Je lepší chodit trochu každý den, nebo hodně jednou týdně?",
-      "odpoved": "Lepší je dělat 7 000 kroků každý den po celý rok než si jednou za týden dát 20 000 a zbytek dní prosedět. Vyhrává konzistence."
+      "odpoved": "Lepší je dělat 7 000 kroků každý den po celý rok než si jednou za týden dát 20 000 a zbytek dní prosedět. Vyhrává pravidelnost."
     },
     {
       "otazka": "Může chůze nahradit kardio?",
@@ -47,5 +47,6 @@
     "Článek neříká, kolik kalorií chůze nebo 1 000 kroků spálí, ani kolik váhy se dá chůzí zhubnout.",
     "Pásmo 7 000–10 000 kroků článek vztahuje k „většině aktivních lidí“, pro málo aktivní nebo starší lidi zvlášť nic neříká."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „vodítko, ne dogma“; faq[2] bez „vždycky“; faq[3] „konzistence“ česky"
 }

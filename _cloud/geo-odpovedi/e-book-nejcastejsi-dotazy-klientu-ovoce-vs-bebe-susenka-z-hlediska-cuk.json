@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Jak zjistím, jestli mi chybí vitaminy a minerály?",
-      "odpoved": "Jen krevními testy. Ne tím, že ti výživový poradce podle kruhů pod očima doporučí multivitamin."
+      "odpoved": "Jen krevními testy. Výživový poradce, který ti podle kruhů pod očima doporučí multivitamin, hádá."
     }
   ],
   "opory": [
@@ -40,5 +40,6 @@
     "Pasáž o cukrovce a inzulinu (včetně věty, že jednotka inzulinu přenáší asi 10–15 jednotek glukózy) je zjednodušená a nepřesná, proto jsem z ní do odpovědí nic nebral. Doporučuji ji odborně zkontrolovat.",
     "Článek tvrdí, že po dvou oplatkách máš srovnatelné kalorie jako po ovoci, ale neuvádí, s jakým množstvím ovoce srovnává."
   ],
-  "kontrola": "opraveno: kratka_odpoved z „Pro většinu lidí ano, ale ne kvůli cukru samotnému“ na „může být vhodnější“, článek to formuluje opatrně („může být ovoce všeobecně vhodnější“) a rozdíl v cukrech sám uvádí"
+  "kontrola": "opraveno: kratka_odpoved z „Pro většinu lidí ano, ale ne kvůli cukru samotnému“ na „může být vhodnější“, článek to formuluje opatrně („může být ovoce všeobecně vhodnější“) a rozdíl v cukrech sám uvádí",
+  "hlas": "upraveno: faq[3] bez „Ne tím, že…“"
 }

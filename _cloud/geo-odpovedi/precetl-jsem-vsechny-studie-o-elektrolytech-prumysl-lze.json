@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/precetl-jsem-vsechny-studie-o-elektrolytech-prumysl-lze.html",
   "titulek": "🔥 „Přečetl jsem VŠECHNY studie o elektrolytech. Průmysl lže.“",
   "hlavni_otazka": "Mají elektrolytové doplňky smysl, nebo jsou zbytečné?",
-  "kratka_odpoved": "Podle Menno Henselmanse, který prošel všechny dostupné studie o elektrolytech, jsou pro 95 % lidí zbytečné, drahé a můžou i škodit. Pro běžné lidi a většinu sportovců nemají prokázaný přínos pro výkon, hydrataci ani prevenci křečí. Stačí normálně solit jídlo podle chuti.",
+  "kratka_odpoved": "Menno Henselmans, který prošel všechny dostupné studie o elektrolytech, došel k tomu, že pro 95 % lidí jsou zbytečné, drahé a můžou i škodit. Pro běžné lidi a většinu sportovců nemají prokázaný přínos pro výkon, hydrataci ani prevenci křečí. Stačí normálně solit jídlo podle chuti.",
   "faq": [
     {
-      "otazka": "Co je ve skutečnosti v elektrolytových prášcích jako LMNT nebo Liquid IV?",
-      "odpoved": "Podle Henselmanse je většina v podstatě jen drahý chlorid sodný, tedy běžná sůl, s trochou draslíku a hořčíku."
+      "otazka": "Co je v elektrolytových prášcích jako LMNT nebo Liquid IV?",
+      "odpoved": "Většinou drahý chlorid sodný, tedy běžná sůl, s trochou draslíku a hořčíku, říká Henselmans."
     },
     {
       "otazka": "Může přebytek sodíku škodit?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Kdy mají elektrolyty smysl?",
-      "odpoved": "Podle Henselmanse pouze v extrémních případech: při ultra-vytrvalostních závodech 4+ hodiny v horku, při keto nebo nízkosacharidové dietě (vyšší ztráty sodíku) a u některých zdravotních stavů s rizikem hyponatremie."
+      "odpoved": "Henselmans je připouští jen v extrémních případech: při ultra-vytrvalostních závodech 4+ hodiny v horku, při keto nebo nízkosacharidové dietě (vyšší ztráty sodíku) a u některých zdravotních stavů s rizikem hyponatremie."
     },
     {
       "otazka": "Jak vzniká hyponatremie?",
@@ -89,5 +89,6 @@
     "Článek nejmenuje, o jaké zdravotní stavy s rizikem hyponatremie jde, ani kolik sodíku tělo skutečně potřebuje.",
     "Věta o hyponatremii („z přílišného pití vody bez dostatku sodíku, ne z jeho nedostatku“) je formulovaná nejasně."
   ],
-  "kontrola": "opraveno: článek je shrnutí videa Menno Henselmanse, tvrzení ve faq[0], faq[2] a faq[3] nově přisouzena jemu (faq[3] místo vágního ‚podle shrnutí‘); z faq[3] vypuštěn nejasný dovětek ‚ne z jeho nedostatku‘, který odpovědi protiřečil"
+  "kontrola": "opraveno: článek je shrnutí videa Menno Henselmanse, tvrzení ve faq[0], faq[2] a faq[3] nově přisouzena jemu (faq[3] místo vágního ‚podle shrnutí‘); z faq[3] vypuštěn nejasný dovětek ‚ne z jeho nedostatku‘, který odpovědi protiřečil",
+  "hlas": "upraveno: kratka_odpoved, faq[0] a faq[2] bez čtyř „Podle Henselmanse“ za sebou; faq[0] otázka bez „ve skutečnosti“"
 }

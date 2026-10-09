@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Proč nehubnout rychle na 800 kaloriích denně?",
-      "odpoved": "Výsledek bývá pokaždé stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt. Pomalejší hubnutí zachová víc svalů a dává větší šanci, že ti výsledek vydrží."
+      "odpoved": "Výsledek bývá stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt. Pomalejší hubnutí zachová víc svalů a dává větší šanci, že ti výsledek vydrží."
     },
     {
       "otazka": "Jak v deficitu neztratit svaly?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Proč nehubnu, i když se snažím jíst míň?",
-      "odpoved": "Častá chyba jsou „neviditelné“ kalorie: olej, máslo, slazené nápoje a ujídání při vaření. Pět dní v deficitu a dva dny nadbytek o víkendu dají stagnaci. A váhu ovlivňuje voda, sleduj trend za týdny, ne jedno ráno."
+      "odpoved": "Častá chyba jsou „neviditelné“ kalorie: olej, máslo, slazené nápoje a ujídání při vaření. Pět dní v deficitu a dva dny nadbytek o víkendu dají stagnaci. A váhu ovlivňuje voda, sleduj trend za týdny."
     }
   ],
   "opory": [
@@ -40,5 +40,6 @@
     "Rozmezí 0,3–0,7 kg týdně článek neváže na výchozí váhu, takže není jasné, pro koho platí spodní a pro koho horní hranice.",
     "Článek neuvádí, jak dlouho v deficitu zůstat ani jestli dělat pauzy."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „pokaždé“; faq[3] bez „ne jedno ráno“"
 }

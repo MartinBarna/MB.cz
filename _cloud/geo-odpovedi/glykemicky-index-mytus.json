@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/glykemicky-index-mytus.html",
   "titulek": "Glykemický index a hubnutí? Mýtus o GI potravin",
   "hlavni_otazka": "Pomáhá při hubnutí jíst potraviny s nízkým glykemickým indexem?",
-  "kratka_odpoved": "Moc ne: glykemický index měří jen to, jak rychle ti stoupne cukr v krvi po samotné potravině na lačno, ne kalorie ani tloustnoucí potenciál. O hubnutí rozhoduje kalorická bilance, bílá rýže s vysokým GI tě v deficitu nezastaví. U diabetu má rychlost cukru reálný smysl a tam ať to řeší lékař.",
+  "kratka_odpoved": "Moc ne: glykemický index měří jen to, jak rychle ti stoupne cukr v krvi po samotné potravině na lačno. O kaloriích a o tom, jestli ztloustneš, neříká nic. O hubnutí rozhoduje kalorická bilance, bílá rýže s vysokým GI tě v deficitu nezastaví. U diabetu má rychlost cukru smysl a tam ať to řeší lékař.",
   "faq": [
     {
       "otazka": "Proč GI z tabulky nesedí na moje jídlo?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Je bílá rýže nebo brambor tučnící?",
-      "odpoved": "Ne. Záleží na množství a kontextu celého dne, ne na čísle z GI tabulky."
+      "odpoved": "Ne. Rozhoduje množství a celý den kolem něj."
     }
   ],
   "opory": [
@@ -44,5 +44,6 @@
     "Článek neuvádí konkrétní hodnoty GI potravin ani hranice pro nízký a vysoký GI.",
     "Článek neuvádí zdroje."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněna o výjimku pro diabetes („tam ať to řeší lékař“) z článku a závěrečného upozornění, věta o nízkém GI v přebytku vypuštěna kvůli délce"
+  "kontrola": "opraveno: kratka_odpoved doplněna o výjimku pro diabetes („tam ať to řeší lékař“) z článku a závěrečného upozornění, věta o nízkém GI v přebytku vypuštěna kvůli délce",
+  "hlas": "upraveno: kratka_odpoved bez „ne kalorie ani tloustnoucí potenciál“ a bez „reálný“; faq[3] bez „X, ne Y“"
 }

@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/protein-po-treninku.html",
   "titulek": "Protein hned po tréninku: musí to být?",
   "hlavni_otazka": "Kolik bílkovin denně potřebuju, když posiluju?",
-  "kratka_odpoved": "Martin doporučuje 1,6 až 2,2 g bílkovin na kilo celkové váhy, na spodní hranici panuje shoda. Phillips tvrdí, že 1,6 g na kilo stačí pro 97 až 98 % lidí, a Refalova spodní hranice vyjde po přepočtu na celkovou váhu u běžného cvičence zhruba na 1,4 až 1,6 g/kg. O horní hranici se mezi vědci pořád diskutuje.",
+  "kratka_odpoved": "Doporučuju 1,6 až 2,2 g bílkovin na kilo celkové váhy, na spodní hranici panuje shoda. Phillips tvrdí, že 1,6 g na kilo stačí pro 97 až 98 % lidí, a Refalova spodní hranice vyjde po přepočtu na celkovou váhu u běžného cvičence zhruba na 1,4 až 1,6 g/kg. O horní hranici se mezi vědci pořád diskutuje.",
   "faq": [
     {
       "otazka": "Proč Refalo a Helms uvádějí 1,9 až 3,2 g/kg?",
-      "odpoved": "Jejich doporučení je měřené na beztukovou hmotu, ne na celkovou váhu. Po přepočtu u běžného cvičence s 18 až 28 % tuku vyjde spodní hranice zhruba na 1,4 až 1,6 g/kg celkové váhy, takže se s Phillipsem potkávají a rozdíl zůstává jen v horní hranici."
+      "odpoved": "Jejich doporučení je počítané na beztukovou hmotu. Po přepočtu u běžného cvičence s 18 až 28 % tuku vyjde spodní hranice zhruba na 1,4 až 1,6 g/kg celkové váhy, takže se s Phillipsem potkávají a rozdíl zůstává jen v horní hranici."
     },
     {
       "otazka": "Kdy dává smysl jít až na 2,2 g/kg?",
-      "odpoved": "Martin jde do 2,2 g/kg jako pojistku ve třech situacích: když nemáš tracking úplně přesný (nepřesnost bývá 20 až 50 %), při tvrdém hubnutí a u žen, které podle Refalovy podanalýzy možná jedou spíš při spodní hranici."
+      "odpoved": "Do 2,2 g/kg jdu jako na pojistku ve třech situacích: když nemáš zápis jídla úplně přesný (nepřesnost bývá 20 až 50 %), při tvrdém hubnutí a u žen, které podle Refalovy podanalýzy možná jedou spíš při spodní hranici."
     },
     {
       "otazka": "Pomůže víc bílkovin v kalorickém deficitu?",
@@ -47,5 +47,6 @@
     "Článek nevysvětluje, proč je u žen, které podle Refalovy podanalýzy možná jedou spíš při spodní hranici, důvod jít jako pojistku až do 2,2 g/kg.",
     "Není uvedeno, jak si přepočet z beztukové hmoty na celkovou váhu spočítat pro sebe."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved a faq[1] z 3. osoby („Martin doporučuje“, „Martin jde“) do 1. osoby; faq[0] bez „X, ne Y“; faq[1] „tracking“ česky"
 }

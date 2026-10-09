@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kardio-na-lacno-mytus.html",
   "titulek": "Kardio na lačno spaluje víc tuku? Mýtus o fasted cardio",
   "hlavni_otazka": "Spálím víc tuku, když budu dělat kardio ráno nalačno?",
-  "kratka_odpoved": "Ne. Nalačno v tu chvíli pálíš vyšší podíl tuku jako palivo, ale za 24 hodin se to vyrovná, protože po jídle zase pálíš víc sacharidů a tuk šetříš. O ztrátě tuku rozhoduje celková bilance, ne jedno ranní okénko.",
+  "kratka_odpoved": "Ne. Nalačno v tu chvíli pálíš vyšší podíl tuku jako palivo, ale za 24 hodin se to vyrovná, protože po jídle zase pálíš víc sacharidů a tuk šetříš. O ztrátě tuku rozhoduje celková bilance.",
   "faq": [
     {
       "otazka": "Jaký je rozdíl mezi oxidací tuku a ztrátou tuku?",
@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Co ukazují srovnání kardia nalačno a po jídle?",
-      "odpoved": "Podle článku existují přímá srovnání, kde jedna skupina dělala stejné kardio nalačno a druhá po jídle. Za pár týdnů při stejném deficitu shodily v podstatě stejně tuku a žádná spalovací výhoda rána se neukázala."
+      "odpoved": "Existují přímá srovnání, kde jedna skupina dělala stejné kardio nalačno a druhá po jídle. Za pár týdnů při stejném deficitu shodily v podstatě stejně tuku a žádná spalovací výhoda rána se neukázala."
     },
     {
       "otazka": "Může kardio nalačno uškodit?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Nespálím víc díky dospalování po tréninku (EPOC)?",
-      "odpoved": "EPOC je reálná věc, ale řádově jsou to desítky kalorií navíc, ne stovky. Řídí ho intenzita, ne to, jestli máš v sobě snídani, takže s otázkou nalačno nebo po jídle nesouvisí."
+      "odpoved": "EPOC je reálná věc, ale řádově jde o desítky kalorií navíc. Řídí ho intenzita tréninku, takže s otázkou nalačno nebo po jídle nesouvisí."
     }
   ],
   "opory": [
@@ -45,5 +45,6 @@
     "Článek neříká, od jaké délky nebo intenzity začíná riziko ztráty svalů nalačno; dává jen dva krajní příklady (svižná dvacetiminutovka vs. hodinový tvrdý výjezd).",
     "Článek neuvádí, co konkrétně a kolik sníst před tvrdým tréninkem, jen „pár soust sacharidů a bílkovin“."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne jedno ranní okénko“; faq[1] bez „Podle článku“; faq[4] bez dvojího „X, ne Y“"
 }

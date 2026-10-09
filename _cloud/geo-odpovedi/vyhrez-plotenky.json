@@ -17,7 +17,7 @@
       "odpoved": "Ano, operace uvolní nerv, ale sílu, stabilitu a pohyblivost zad za tebe neudělá. Podle přehledu studií (Oosterhuis 2014) cvičení zahájené pár týdnů po operaci zrychluje úbytek bolesti i omezení oproti tomu nedělat nic a je bezpečné, i když důkazy jsou slabší."
     },
     {
-      "otazka": "Co záda s výhřezem opravdu potřebují?",
+      "otazka": "Co záda s výhřezem potřebují?",
       "odpoved": "Když odhlédneš od malé části vážných případů: dát tomu čas v řádu týdnů, začít se hýbat brzy, postupně posilovat hlavně střed těla, hýždě a celá záda a nenechat se vyděsit nálezem. Klid na lůžku zotavení spíš brzdí."
     },
     {
@@ -132,5 +132,6 @@
     "Článek neupřesňuje, jak silná a jak dlouho trvající bolest už je „silná, neustupující bolest“, u které je operace legitimní volba.",
     "Článek neuvádí konkrétní cviky, počet opakování ani frekvenci cvičení a citované studie se týkají bederní páteře, u krční to článek zvlášť neřeší."
   ],
-  "kontrola": "opraveno: kratka_odpoved ‚výhřez se často sám vstřebá‘ → ‚může sám vstřebat, a čím hůř nález zní, tím spíš‘ (u vyklenutí jen 13 %); faq[2] doplněn zdroj Oosterhuis 2014 a srovnání ‚oproti tomu nedělat nic‘; faq[3] doplněna podmínka článku ‚když odhlédneš od malé části vážných případů‘"
+  "kontrola": "opraveno: kratka_odpoved ‚výhřez se často sám vstřebá‘ → ‚může sám vstřebat, a čím hůř nález zní, tím spíš‘ (u vyklenutí jen 13 %); faq[2] doplněn zdroj Oosterhuis 2014 a srovnání ‚oproti tomu nedělat nic‘; faq[3] doplněna podmínka článku ‚když odhlédneš od malé části vážných případů‘",
+  "hlas": "upraveno: faq[3] otázka bez „opravdu“"
 }

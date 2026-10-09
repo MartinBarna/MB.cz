@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/jeden-z-vas-mi-poslal-tohle-video-s-dotazem-zda-je-to-pravda-a-mozna-i.html",
   "titulek": "Jeden z Vás mi poslal tohle video s dotazem, zda je to pravda a možná i jestli teda má fakt jíst rýži z lednice „aby lépe hubnul“.",
   "hlavni_otazka": "Zhubnu líp, když budu jíst rýži vychlazenou z lednice?",
-  "kratka_odpoved": "Ne, na tempu hubnutí ani na kaloriích se tím nic nemění. Rýže z lednice má jen lehce nižší glykemický index i nálož: nálož 100 g bílé rýže klesne zhruba z 25 na 21, tedy asi o 15 %. Hubneš nebo stagnuješ podle průměrného příjmu kcal za týden versus spalování.",
+  "kratka_odpoved": "Ne, na tempu hubnutí ani na kaloriích se tím nic nemění. Rýže z lednice má jen lehce nižší glykemický index i nálož: nálož 100 g bílé rýže klesne zhruba z 25 na 21, tedy asi o 15 %. Hubneš nebo stagnuješ podle průměrného příjmu kcal za týden proti spalování.",
   "faq": [
     {
       "otazka": "Proč má rýže z lednice nižší glykemickou nálož?",
-      "odpoved": "V Martinově přehledu je u rýže po 12 hodinách v lednici uvedený mírně rezistentní škrob a pomalejší trávení. Mění se jen rychlost, jak se dané množství kcal dostane do těla, ne kalorie samotné."
+      "odpoved": "V mém přehledu má rýže po 12 hodinách v lednici mírně rezistentní škrob a pomalejší trávení. Mění se jen rychlost, jakou se dané množství kcal dostane do těla, kalorie zůstávají stejné."
     },
     {
       "otazka": "Co sníží glykemickou nálož rýže víc než lednice?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Má smysl řešit glykemický index, když chci zhubnout?",
-      "odpoved": "Pro většinu lidí je cílem zhubnout a to rozhoduje průměrný příjem kcal za týden versus spalování. Snížení glykemické nálože lednicí je podle Martina okrajové téma, tyhle věci jsou volitelné a nastavují se klientům na míru."
+      "odpoved": "Většina lidí chce zhubnout a o tom rozhoduje průměrný příjem kcal za týden proti spalování. Snížení glykemické nálože lednicí beru jako okrajové téma, tyhle věci jsou volitelné a nastavuju je klientům na míru."
     }
   ],
   "opory": [
@@ -35,5 +35,6 @@
     "Článek nedefinuje, pro koho by snížení GN v praxi smysl mělo (otázku „A pro koho vlastně?“ nechává otevřenou), proto to v odpovědích není.",
     "Definici glykemické nálože z článku („jak dlouho se to bude trávit / jak rychle to prostupuje do krve“) jsem jako samostatnou FAQ nepoužil, je jen v závorce a hodně zjednodušená."
   ],
-  "kontrola": "opraveno: kratka_odpoved upřesněna, čísla 25 → 21 jsou glykemická nálož, ne GI; faq[2] „GI a GN jsou okrajové téma“ zúženo na snížení nálože lednicí, o kterém článek jako o okrajovém tématu mluví"
+  "kontrola": "opraveno: kratka_odpoved upřesněna, čísla 25 → 21 jsou glykemická nálož, ne GI; faq[2] „GI a GN jsou okrajové téma“ zúženo na snížení nálože lednicí, o kterém článek jako o okrajovém tématu mluví",
+  "hlas": "upraveno: kratka_odpoved „versus“ česky; faq[0] a faq[2] z 3. osoby („Martinův přehled“, „podle Martina“) do 1. osoby, bez „X, ne Y“"
 }

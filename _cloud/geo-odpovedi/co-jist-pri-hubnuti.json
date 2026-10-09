@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Musím si při hubnutí zakázat sladké a přílohy?",
-      "odpoved": "Nemusíš. Sacharidy ani sladkosti nejsou nepřítel, stačí je vejít do svého denního rámce kalorií. Doživotní zákazy nejčastěji končí sjetím z diety a jojo efektem."
+      "odpoved": "Nemusíš. Sacharidy ani sladkosti nejsou nepřítel, stačí, aby se vešly do tvého denního rámce kalorií. Doživotní zákazy nejčastěji končí sjetím z diety a jojo efektem."
     },
     {
       "otazka": "Počítají se při hubnutí i nápoje?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Můžu při hubnutí jíst ovoce?",
-      "odpoved": "Ano. Ovoce je normální potravina, ne cukr, který kazí dietu. Jen se počítá do celkového příjmu jako všechno ostatní."
+      "odpoved": "Klidně. Ovoce je normální potravina a do diety patří. Jen se počítá do celkového příjmu jako všechno ostatní."
     }
   ],
   "opory": [
@@ -45,5 +45,6 @@
     "Článek neuvádí konkrétní množství bílkovin na kilo; odkazuje na samostatný článek o bílkovinách.",
     "Článek neuvádí, kolik vlákniny denně jíst, říká jen „mít ji v každém hlavním jídle“."
   ],
-  "kontrola": "opraveno: kratka_odpoved „kvalitní příloha“ → „kvalitní sacharid“ (šablona v článku řadí do čtvrtiny i ovoce, ne jen přílohu)"
+  "kontrola": "opraveno: kratka_odpoved „kvalitní příloha“ → „kvalitní sacharid“ (šablona v článku řadí do čtvrtiny i ovoce, ne jen přílohu)",
+  "hlas": "upraveno: faq[2] „vejít do rámce“ → „vešly se“; faq[4] bez „ne cukr, který kazí dietu“ a bez čtvrtého „Ano./Ne.“ v řadě"
 }

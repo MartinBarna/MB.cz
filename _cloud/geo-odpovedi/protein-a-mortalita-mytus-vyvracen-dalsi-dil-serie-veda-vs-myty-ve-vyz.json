@@ -2,19 +2,19 @@
   "url": "https://martinbarna.cz/clanky/protein-a-mortalita-mytus-vyvracen-dalsi-dil-serie-veda-vs-myty-ve-vyz.html",
   "titulek": "Protein a mortalita: Mýtus vyvrácen! Další díl série Věda vs. Mýty ve Výživě.",
   "hlavni_otazka": "Zvyšuje vysoký příjem bílkovin riziko úmrtí?",
-  "kratka_odpoved": "Podle nové analýzy, na které se podílel Stuart Phillips, Ph.D., to data neukazují. Jeho studie v časopise Applied Physiology, Nutrition, and Metabolism nenašla žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou. Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu.",
+  "kratka_odpoved": "Data to neukazují. Nová analýza, na které se podílel Stuart Phillips, Ph.D., v časopise Applied Physiology, Nutrition, and Metabolism nenašla žádnou souvislost mezi celkovým, živočišným ani rostlinným příjmem bílkovin a úmrtností ze všech příčin, kardiovaskulární ani rakovinovou. Vyšší příjem živočišných bílkovin byl dokonce mírně ochranný proti úmrtnosti na rakovinu.",
   "faq": [
     {
       "otazka": "Odkud se vzal mýtus, že protein škodí stejně jako kouření?",
-      "odpoved": "Z analýzy dat NHANES, ze které vznikly titulky „Protein je pro tebe stejně špatný jako kouření“ v amerických a britských bulvárech. Podle Stuarta Phillipse, jehož příspěvek článek překládá, byla tahle analýza provedená opravdu špatně, přesto se její data dodnes citují jako fakt."
+      "odpoved": "Z analýzy dat NHANES, ze které vznikly titulky „Protein je pro tebe stejně špatný jako kouření“ v amerických a britských bulvárech. Stuart Phillips, jehož příspěvek tady překládám, ji považuje za špatně provedenou, přesto se její data dodnes citují jako fakt."
     },
     {
       "otazka": "Kolik bílkovin mám jíst na jedno jídlo, když hubnu?",
-      "odpoved": "Martin doporučuje cíl 30–50 g na jídlo: spočítej si bílkoviny na celý den a vyděl je počtem jídel. Vyšší protein podle něj tlumí chuť k jídlu, chrání svaly a zvedá TDEE, tedy celkový výdej energie."
+      "odpoved": "Doporučuju cíl 30–50 g na jídlo: spočítej si bílkoviny na celý den a vyděl je počtem jídel. Vyšší protein tlumí chuť k jídlu, chrání svaly a zvedá TDEE, tedy celkový výdej energie."
     },
     {
       "otazka": "Mám se bát IGF-1?",
-      "odpoved": "Podle Martina IGF-1 není žádný ďábel. Místo strachu z proteinu řeš celkovou stravu."
+      "odpoved": "IGF-1 žádný ďábel není. Strach z proteinu odlož a řeš celkovou stravu."
     }
   ],
   "opory": [
@@ -64,5 +64,6 @@
     "Zlepšení trávení, libida, kostní hustoty a dalších věcí při 1.6-2.2 g/kg i věta „Bez rizik“ jsou Martinova zkušenost z praxe bez dat a bez výjimek pro nemoci (např. ledvin), ne výsledek citované studie; proto z nich FAQ není.",
     "Článek neříká, pro koho vyšší příjem bílkovin vhodný není; uvádí jen podmínku, že strava má být vyvážená a sedět konkrétnímu člověku."
   ],
-  "kontrola": "opraveno: kratka_odpoved místo kategorického „ne“ formulace „data to neukazují“ (pozorovací analýza ukazuje jen nepřítomnost souvislosti); nejiste upraveno; smazano: faq[2] o zlepšení trávení, libida, kostní hustoty a mozku při 1,6–2,2 g/kg „bez rizik“ (jen Martinova zkušenost z praxe, zdravotní tvrzení bez dat a bez výjimky pro nemoci ledvin), faq[3] přečíslováno na faq[2]"
+  "kontrola": "opraveno: kratka_odpoved místo kategorického „ne“ formulace „data to neukazují“ (pozorovací analýza ukazuje jen nepřítomnost souvislosti); nejiste upraveno; smazano: faq[2] o zlepšení trávení, libida, kostní hustoty a mozku při 1,6–2,2 g/kg „bez rizik“ (jen Martinova zkušenost z praxe, zdravotní tvrzení bez dat a bez výjimky pro nemoci ledvin), faq[3] přečíslováno na faq[2]",
+  "hlas": "upraveno: kratka_odpoved odpověď napřed, bez úvodního „Podle“; faq[0] přisouzení Phillipsovi v 1. osobě („tady překládám“), bez „opravdu“; faq[1] a faq[2] z 3. osoby („Martin doporučuje“, „Podle Martina“) do 1. osoby"
 }

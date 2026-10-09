@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/jak-zhubnout-bricho.html",
   "titulek": "Jak zhubnout břicho: co reálně funguje (a co je jen mýtus)",
   "hlavni_otazka": "Jak zhubnout břicho, pomůžou na to sklapovačky?",
-  "kratka_odpoved": "Lokální hubnutí neexistuje, žádný cvik ani potravina nespálí tuk konkrétně na břiše. Břicho zmizí, až ubereš tuk z celého těla mírným, udržitelným kalorickým deficitem. K tomu posiluj 2–4× týdně a jez zhruba 1,6–2,2 g bílkovin na kilo, ať ztrácíš tuk, ne svaly.",
+  "kratka_odpoved": "Lokální hubnutí neexistuje, žádný cvik ani potravina nespálí tuk konkrétně na břiše. Břicho zmizí, až ubereš tuk z celého těla mírným, udržitelným kalorickým deficitem. K tomu posiluj 2–4× týdně a jez zhruba 1,6–2,2 g bílkovin na kilo, ať ti zůstanou svaly a jde dolů tuk.",
   "faq": [
     {
       "otazka": "Pomůžou cviky na břicho zhubnout pupek?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Existuje hormonální břicho?",
-      "odpoved": "Chronický stres a málo spánku opravdu můžou hubnutí zpomalit a přispět k ukládání tuku v oblasti břicha. Hormony ale nedělají břicho navzdory kalorickému deficitu, spíš deficit ztěžují. Pokud máš podezření na hormonální poruchu nebo bereš léky, řeš to s lékařem."
+      "odpoved": "Chronický stres a málo spánku můžou hubnutí zpomalit a přispět k ukládání tuku v oblasti břicha. Hormony ale nedělají břicho navzdory kalorickému deficitu, spíš deficit ztěžují. Pokud máš podezření na hormonální poruchu nebo bereš léky, řeš to s lékařem."
     },
     {
       "otazka": "Musím kvůli břichu vyřadit nějaká jídla?",
@@ -45,5 +45,6 @@
     "Zmínku o viscerálním tuku a zdraví metabolismu článek podává obecně a bez čísel, proto jsem z ní nedělal FAQ.",
     "Kroky článek doporučuje jako spojence, ale počet neuvádí."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „tuk, ne svaly“; faq[3] bez „opravdu“"
 }

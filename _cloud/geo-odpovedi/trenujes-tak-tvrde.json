@@ -1,7 +1,7 @@
 {
   "url": "https://martinbarna.cz/clanky/trenujes-tak-tvrde.html",
   "titulek": "Trénuješ tak tvrdě, jak si myslíš? 160 sportovců napovídá",
-  "hlavni_otazka": "Trénuju v posilovně opravdu tak tvrdě, jak si myslím?",
+  "hlavni_otazka": "Trénuju v posilovně tak tvrdě, jak si myslím?",
   "kratka_odpoved": "Nejspíš ne. Ve studii Barbosa-Netto (2021) zvládlo 160 silových sportovců se svou obvyklou váhou na 10 opakování na benči v průměru 16 opakování a jen 22 % se trefilo blízko svého odhadu. Většinu sérií proto drž na nule až třech opakováních v rezervě.",
   "faq": [
     {
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Ovlivní blízkost selhání přírůstky síly?",
-      "odpoved": "Podle Ruple 2023 měla skupina s nulou až jedním opakováním v rezervě stejné přírůstky síly jako skupina se třemi až čtyřmi, jen se hůř zotavovala."
+      "odpoved": "V práci Ruple 2023 měla skupina s nulou až jedním opakováním v rezervě stejné přírůstky síly jako skupina se třemi až čtyřmi, jen se hůř zotavovala."
     },
     {
       "otazka": "Jak často jít až do selhání?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Jak se v tréninku posouvat dál?",
-      "odpoved": "Progresivním přetížením: přidávej opakování nebo půl kila každý trénink a piš si to. Bez čísel je intenzita jen pocit, ne data."
+      "odpoved": "Progresivním přetížením: přidávej opakování nebo půl kila každý trénink a piš si to. Bez čísel je intenzita jen pocit."
     }
   ],
   "opory": [
@@ -91,5 +91,6 @@
     "Článek neříká, jestli výsledky studie Barbosa-Netto platí i pro jiné cviky než bench press.",
     "Článek neupřesňuje, jak dlouho a u kterých cviků jde přidávat opakování nebo půl kila každý trénink."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; faq[2] bez úvodního „Podle“; faq[4] bez „pocit, ne data“"
 }

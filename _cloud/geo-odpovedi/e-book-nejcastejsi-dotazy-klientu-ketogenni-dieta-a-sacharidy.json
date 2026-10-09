@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Je pravda, že naši předci nejedli sacharidy?",
-      "odpoved": "Ne. Podle zubní analýzy pravěkých pozůstatků jedli pravěcí lidé vlákninu, a vláknina je sacharid sama o sobě."
+      "odpoved": "Jedli. Zubní analýza pravěkých pozůstatků ukázala, že pravěcí lidé jedli vlákninu, a vláknina je sacharid sama o sobě."
     }
   ],
   "opory": [
@@ -48,5 +48,6 @@
     "Článek nepíše, jestli má keto smysl z jiných než hubnoucích důvodů (například při nemoci).",
     "Sacharidové vlny článek zmiňuje jen jednou větou (smysl hlavně u lidí s nízkým tělesným tukem, kteří hodně trénují) a nevysvětluje je."
   ],
-  "kontrola": "opraveno: faq[2] otázka „Potřebuju sacharidy“ změněna na „Jsou sacharidy užitečné“ (článek říká „hodně užitečné“, ne nutné); faq[3] vypuštěna čísla 12 g a 32 g glykogenu na 100 g svaloviny (podezření na chybu jednotek v článku), ponecháno „skoro 3x tolik“"
+  "kontrola": "opraveno: faq[2] otázka „Potřebuju sacharidy“ změněna na „Jsou sacharidy užitečné“ (článek říká „hodně užitečné“, ne nutné); faq[3] vypuštěna čísla 12 g a 32 g glykogenu na 100 g svaloviny (podezření na chybu jednotek v článku), ponecháno „skoro 3x tolik“",
+  "hlas": "upraveno: faq[4] bez třetího „Ne.“ v řadě"
 }

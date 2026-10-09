@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/pomaly-metabolismus-mytus.html",
   "titulek": "Za to může pomalý metabolismus? Mýtus o zpomaleném metabolismu",
   "hlavni_otazka": "Může za to, že nehubnu, pomalý metabolismus?",
-  "kratka_odpoved": "Málokdy. Klidový výdej lidí stejné výšky, váhy a svalové hmoty je většinou hodně podobný. Skutečný viník bývá podceněný příjem a nadhodnocený výdej: jíš víc, než si myslíš, a vydáš míň, než si myslíš.",
+  "kratka_odpoved": "Málokdy. Klidový výdej lidí stejné výšky, váhy a svalové hmoty je většinou hodně podobný. Viník bývá podceněný příjem a nadhodnocený výdej: jíš víc, než si myslíš, a vydáš míň, než si myslíš.",
   "faq": [
     {
       "otazka": "Proč skoro nic nejím, a stejně nehubnu?",
-      "odpoved": "Když si lidé, co skoro nic nejedí, začnou přesně zapisovat, co snědí, výsledek bývá pokaždé stejný: snědí výrazně víc, než si mysleli. Typická slepá místa jsou podhodnocené porce, dojídání po dětech a ze servíru, volné víkendy, tekuté kalorie a ujídání při vaření."
+      "odpoved": "Když si lidé, co skoro nic nejedí, začnou přesně zapisovat, co snědí, výsledek bývá stejný: snědí výrazně víc, než si mysleli. Typická slepá místa jsou podhodnocené porce, dojídání po dětech a ze servíru, volné víkendy, tekuté kalorie a ujídání při vaření."
     },
     {
       "otazka": "Zpomalí se metabolismus při dietě?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Kdy jít s problémy s hubnutím k lékaři?",
-      "odpoved": "U menšiny lidí stojí za potížemi s hmotností reálná zdravotní příčina, třeba snížená funkce štítné žlázy. Když po poctivém týdnu přesného zapisování pořád něco nesedí, nebo máš pocit, že je něco vážně mimo (výrazná únava, zima, vypadávání vlasů, suchá kůže, otoky, nálada na dně), jdi na vyšetření a krevní testy, ne na fórum."
+      "odpoved": "U menšiny lidí stojí za potížemi s hmotností reálná zdravotní příčina, třeba snížená funkce štítné žlázy. Když po poctivém týdnu přesného zapisování pořád něco nesedí, nebo máš pocit, že je něco vážně mimo (výrazná únava, zima, vypadávání vlasů, suchá kůže, otoky, nálada na dně), jdi na vyšetření a krevní testy, fórum to nevyřeší."
     }
   ],
   "opory": [
@@ -115,5 +115,6 @@
     "Článek neuvádí čísla, jak velké jsou rozdíly v klidovém výdeji mezi lidmi ani o kolik kalorií adaptivní termogeneze výdej sníží.",
     "Článek neříká, jak dlouhá dieta už je „delší doba“, ani jak dlouhou pauzu na udržovacím příjmu dát."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „Skutečný“; faq[0] bez „pokaždé“; faq[3] bez „ne na fórum“"
 }

@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/kolik-let-pridava-zdravy-zivot.html",
   "titulek": "Zdravý život ti přidá skoro deset let (a nemusíš být dokonalý)",
   "hlavni_otazka": "O kolik let může zdravý životní styl prodloužit život?",
-  "kratka_odpoved": "Skoro o deset let. Ve studii na skoro 60 000 lidech z UK Biobank žila nejzdravější třetina skoro o dekádu déle než ta nejméně zdravá a přibyly i roky bez infarktu, cukrovky, rakoviny nebo demence. Jde ale o pozorovací studii a modelové odhady, ne garanci.",
+  "kratka_odpoved": "Skoro o deset let. Ve studii na skoro 60 000 lidech z UK Biobank žila nejzdravější třetina skoro o dekádu déle než ta nejméně zdravá a přibyly i roky bez infarktu, cukrovky, rakoviny nebo demence. Jde ale o pozorovací studii a modelové odhady, žádná záruka.",
   "faq": [
     {
       "otazka": "Jak žila ta nejzdravější třetina lidí?",
-      "odpoved": "Spala zhruba 7 až 8 hodin, měla přes 40 minut svižného pohybu denně a dobrou stravu, ne stoprocentně perfektní. Žádní askety, jejich profil zvládneš v běžném životě."
+      "odpoved": "Spala zhruba 7 až 8 hodin, měla přes 40 minut svižného pohybu denně a dobrou stravu bez stoprocentní dokonalosti. Žádní askety, jejich profil zvládneš v běžném životě."
     },
     {
       "otazka": "Má smysl začít s malými změnami?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Jak moc se dá těm číslům věřit?",
-      "odpoved": "Je to pozorovací studie, takže ukazuje souvislost, ne stoprocentní příčinu. Kvalitu stravy zjišťovali jen dotazníkem a roky navíc jsou modelové odhady, pro tebe nejsou žádná garance."
+      "odpoved": "Je to pozorovací studie, takže ukazuje souvislost, příčinu z ní s jistotou nevyčteš. Kvalitu stravy zjišťovali jen dotazníkem a roky navíc jsou modelové odhady, pro tebe nejsou žádná garance."
     }
   ],
   "opory": [
@@ -47,5 +47,6 @@
     "Údaj o ~10 % nižší úmrtnosti z doprovodné studie je jen v seznamu zdrojů, ne ve výkladu, proto ho odpovědi nepoužívají.",
     "Článek nepíše, kolik let navíc přinesou malé změny lidem, kteří už jsou na tom průměrně nebo dobře. Údaj „zhruba rok“ platí od úplného dna."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0] a faq[4] bez „X, ne Y“"
 }

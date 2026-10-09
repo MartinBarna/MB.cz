@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/musis-snidat-abys-zhubl-mytus.html",
   "titulek": "Musíš snídat, abys zhubl? Mýtus o nejdůležitějším jídle dne",
   "hlavni_otazka": "Musím snídat, abych zhubl?",
-  "kratka_odpoved": "Nemusíš. O hubnutí rozhoduje celkový příjem za den, ne hodina prvního jídla. Randomizovaná studie z roku 2014 ani meta-analýza z BMJ 2019 žádný klinicky významný efekt snídaně na váhu nenašly.",
+  "kratka_odpoved": "Nemusíš. O hubnutí rozhoduje celkový příjem za den. Randomizovaná studie z roku 2014 ani meta-analýza z BMJ 2019 žádný klinicky významný efekt snídaně na váhu nenašly.",
   "faq": [
     {
       "otazka": "Zpomalí vynechaná snídaně metabolismus?",
-      "odpoved": "Nezpomalí. Termický efekt potravy se počítá z toho, kolik za den sníš, ne z toho, kdy začneš. Když sníš svůj příjem ve dvou jídlech místo čtyř, celkový efekt vyjde zhruba nastejno."
+      "odpoved": "Nezpomalí. Termický efekt potravy se počítá z toho, kolik za den sníš. Když sníš svůj příjem ve dvou jídlech místo čtyř, celkový efekt vyjde zhruba nastejno."
     },
     {
       "otazka": "Pomáhá snídaně hubnout?",
-      "odpoved": "Spolehlivě ne. Podle meta-analýzy v BMJ z roku 2019 měli lidé, kteří snídani přidali, spíš tendenci přijmout za den o něco víc energie, ne míň. Autoři sami varovali, aby se snídaně jako hubnoucí nástroj nedoporučovala."
+      "odpoved": "Spolehlivě ne. Podle meta-analýzy v BMJ z roku 2019 měli lidé, kteří snídani přidali, spíš tendenci přijmout za den o něco víc energie. Autoři sami varovali, aby se snídaně jako hubnoucí nástroj nedoporučovala."
     },
     {
       "otazka": "Komu se snídaně vyplatí a kdo ji může vynechat?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Odkud se vzalo, že snídaně je nejdůležitější jídlo dne?",
-      "odpoved": "Z reklamy, ne z výzkumu metabolismu. Ve dvacátých letech 20. století stál Edward Bernays za kampaní, která měla Američanům prodat víc slaniny a vajec k snídani, a později na to navázaly firmy s cereáliemi."
+      "odpoved": "Z reklamy. Ve dvacátých letech 20. století stál Edward Bernays za kampaní, která měla Američanům prodat víc slaniny a vajec k snídani, a později na to navázaly firmy s cereáliemi."
     }
   ],
   "opory": [
@@ -46,5 +46,6 @@
     "Článek neřeší lidi s cukrovkou nebo jinými zdravotními stavy, u kterých může načasování jídla hrát roli.",
     "Článek neříká, co konkrétně snídat, kromě obecné rady dát si dost bílkovin."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[1], faq[4] bez „X, ne Y“"
 }

@@ -1,15 +1,15 @@
 {
   "url": "https://martinbarna.cz/clanky/cukr-je-jed-mytus.html",
   "titulek": "Cukr je jed? Mýtus o cukru, tloustnutí a cukrovce",
-  "hlavni_otazka": "Je cukr opravdu jed a tloustne se z něj?",
-  "kratka_odpoved": "Není, jed dělá dávka, ne látka, a lžíce cukru v kávě má kolem 20 kalorií. Tloustne se z dlouhodobého kalorického nadbytku a je jedno, jestli přišel z cukru, másla nebo rýže. Problém je, kolik cukru se nasčítá za celý den, hlavně ve slazených nápojích.",
+  "hlavni_otazka": "Je cukr jed a tloustne se z něj?",
+  "kratka_odpoved": "Není. Jed dělá dávka a lžíce cukru v kávě má kolem 20 kalorií. Tloustne se z dlouhodobého kalorického nadbytku a je jedno, jestli přišel z cukru, másla nebo rýže. Problém je, kolik cukru se nasčítá za celý den, hlavně ve slazených nápojích.",
   "faq": [
     {
       "otazka": "Způsobuje cukr cukrovku 2. typu?",
       "odpoved": "Přímo ne. Cukrovka 2. typu stojí hlavně na inzulinové rezistenci, kterou nejvíc žene nadváha a viscerální tuk, nedostatek pohybu, slabá svalovina, genetika a věk. Cukr s tím souvisí nepřímo, přes přejídání a tloustnutí."
     },
     {
-      "otazka": "Proč jsou slazené nápoje u cukru reálný problém?",
+      "otazka": "Proč vadí hlavně slazené nápoje?",
       "odpoved": "Jsou to tekuté kalorie, které tě nezasytí. Půl litru koly má zhruba 200 kalorií a tělo to skoro nezaregistruje jako jídlo. Proto je u hubnutí jedna z prvních věcí omezit slazené pití."
     },
     {
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Jak nejlíp předejít cukrovce 2. typu?",
-      "odpoved": "Nejsilnější páky nejsou zákaz cukru, ale udržení rozumné hmotnosti, pravidelný pohyb, silový trénink a víc svalů. Sval je metabolicky aktivní tkáň, která glukózu zpracovává. Pokud už máš diagnostikovanou cukrovku, poraď se s lékařem."
+      "odpoved": "Nejsilnější páky jsou rozumná hmotnost, pravidelný pohyb, silový trénink a víc svalů. Zákaz cukru mezi nimi není. Sval je metabolicky aktivní tkáň, která glukózu zpracovává. Pokud už máš diagnostikovanou cukrovku, poraď se s lékařem."
     }
   ],
   "opory": [
@@ -48,5 +48,6 @@
     "Článek nepřevádí 10 % energie na gramy cukru; to by se muselo dopočítat a nedopočítával jsem to.",
     "U návykovosti cukru článek říká, že přirovnání ke kokainu pochází hlavně z pokusů na krysách; neuvádí, jestli a jak moc je cukr návykový u lidí."
   ],
-  "kontrola": "opraveno: faq[4] doplněno „pokud už máš diagnostikovanou cukrovku, poraď se s lékařem“ ze závěrečného upozornění; faq[1] otázka bez srovnání se sladkým jídlem, které článek nedělá"
+  "kontrola": "opraveno: faq[4] doplněno „pokud už máš diagnostikovanou cukrovku, poraď se s lékařem“ ze závěrečného upozornění; faq[1] otázka bez srovnání se sladkým jídlem, které článek nedělá",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; kratka_odpoved bez „dávka, ne látka“; faq[1] otázka přirozeněji; faq[4] bez „nejsou X, ale Y“"
 }

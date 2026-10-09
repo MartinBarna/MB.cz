@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kreatin-pro-zeny.html",
   "titulek": "Kreatin pro ženy: nejen na svaly",
   "hlavni_otazka": "Má smysl, aby ženy braly kreatin?",
-  "kratka_odpoved": "Ano, hlavně když posiluješ: podle přehledu z roku 2025 kreatin u žen prospívá síle, výkonu a složení těla, hlavně se silovým tréninkem. Ber 3–5 g monohydrátu denně, každý den, jako doplněk k základu (bílkoviny, silový trénink, spánek, konzistence), ne jeho náhradu. V těhotenství, při kojení nebo onemocnění ledvin se před užíváním poraď s lékařem.",
+  "kratka_odpoved": "Ano, hlavně když posiluješ: podle přehledu z roku 2025 kreatin u žen prospívá síle, výkonu a složení těla, hlavně se silovým tréninkem. Ber 3–5 g monohydrátu denně, každý den, jako doplněk k základu (bílkoviny, silový trénink, spánek, pravidelnost). V těhotenství, při kojení nebo onemocnění ledvin se před užíváním poraď s lékařem.",
   "faq": [
     {
       "otazka": "Zbytní mě kreatin?",
@@ -10,11 +10,11 @@
     },
     {
       "otazka": "Zadržuje kreatin vodu a nafukuje?",
-      "odpoved": "Trochu vody navíc je uvnitř svalu, ne „nafouknutí“. U většiny žen je to nepodstatné a s nafouklým bříškem to nemá nic společného."
+      "odpoved": "Trochu vody navíc se drží uvnitř svalu. U většiny žen je to nepodstatné a s nafouklým bříškem to nemá nic společného."
     },
     {
       "otazka": "Jak mám kreatin brát?",
-      "odpoved": "Kreatin monohydrát, 3–5 g denně, každý den, i v den bez tréninku. Nasycovací fáze není nutná, jen to trvá o pár týdnů dýl, než se zásoby naplní. Načasování neřeš, klidně kdykoliv během dne s jídlem."
+      "odpoved": "Kreatin monohydrát, 3–5 g denně, každý den, i v den bez tréninku. Nasycovací fáze není nutná, jen to trvá o pár týdnů déle, než se zásoby naplní. Načasování neřeš, klidně kdykoliv během dne s jídlem."
     },
     {
       "otazka": "Pomáhá kreatin ženám po menopauze?",
@@ -49,5 +49,6 @@
     "Údaj o bezpečnosti jater a ledvin pochází ze studií u lidí 57–70 let (Chilibeck 2017), ne konkrétně u mladých žen; FAQ to tak uvádí.",
     "Článek neříká, jak rychle se po vysazení zásoby vyprázdní ani jestli dělat pauzy."
   ],
-  "kontrola": "opraveno: kratka_odpoved a faq[4] doplněny o „v těhotenství, při kojení nebo onemocnění ledvin se před užíváním poraď s lékařem“ ze závěrečného upozornění; z krátké odpovědi kvůli délce vypuštěna věta o nižších zásobách kreatinu u žen i s oporou; nejiste[1] opraveno (tvrdilo, že článek těhotenství, kojení a ledviny neřeší)"
+  "kontrola": "opraveno: kratka_odpoved a faq[4] doplněny o „v těhotenství, při kojení nebo onemocnění ledvin se před užíváním poraď s lékařem“ ze závěrečného upozornění; z krátké odpovědi kvůli délce vypuštěna věta o nižších zásobách kreatinu u žen i s oporou; nejiste[1] opraveno (tvrdilo, že článek těhotenství, kojení a ledviny neřeší)",
+  "hlas": "upraveno: kratka_odpoved bez „ne jeho náhradu“ a „konzistence“ česky; faq[1] bez „ne nafouknutí“; faq[2] slang „dýl“ → „déle“"
 }

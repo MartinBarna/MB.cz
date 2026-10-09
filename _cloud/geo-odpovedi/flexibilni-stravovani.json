@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/flexibilni-stravovani.html",
   "titulek": "Flexibilní stravování: jez i oblíbená jídla a hubni",
   "hlavni_otazka": "Co je flexibilní stravování a dá se při něm hubnout?",
-  "kratka_odpoved": "Je to způsob jídla, kdy nedělíš jídla na povolená a zakázaná, ale koukáš na celý den, hlavně na kalorie a bílkoviny. Když se vejdeš do svých čísel, žádné jedno jídlo tě nerozhodí, takže můžeš hubnout a občas si dát i pizzu nebo zmrzlinu.",
+  "kratka_odpoved": "Je to způsob jídla, kdy koukáš na celý den, hlavně na kalorie a bílkoviny, místo dělení jídel na povolená a zakázaná. Když se vejdeš do svých čísel, žádné jedno jídlo tě nerozhodí, takže můžeš hubnout a občas si dát i pizzu nebo zmrzlinu.",
   "faq": [
     {
       "otazka": "Co znamená IIFYM?",
@@ -38,5 +38,6 @@
     "Článek neuvádí, jak si spočítat svá čísla (kalorie a bílkoviny).",
     "Článek píše o prostoru „klidně 10–20 % kalorií“ a zároveň o pravidle 80/20 (20 % radost); horní hranice je v obou případech 20 %, dolní hranici 10 % uvádí jen první formulace."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „nedělíš X, ale Y“"
 }

@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/je-cola-zero-horsi-nez-obycejna-cola.html",
   "titulek": "Je Cola Zero horší než obyčejná Cola? 🤔",
   "hlavni_otazka": "Je Cola Zero zdravější než normální Cola, nebo je horší?",
-  "kratka_odpoved": "Podle Layne Nortona, jehož příspěvek článek překládá, Cola Zero horší není, naopak je na tom líp. Když dietní sody nahradí slazené nápoje, lidi zhubnou a zlepší se jim metabolické zdraví. Že Cola Zero ničí střevní mikrobiom nebo žene chutě nahoru, na lidech nikdo nepotvrdil.",
+  "kratka_odpoved": "Layne Norton, jehož příspěvek tady překládám, říká, že Cola Zero horší není, naopak je na tom líp. Když dietní sody nahradí slazené nápoje, lidi zhubnou a zlepší se jim metabolické zdraví. Že Cola Zero ničí střevní mikrobiom nebo žene chutě nahoru, na lidech nikdo nepotvrdil.",
   "faq": [
     {
       "otazka": "Ničí aspartam v Cole Zero střevní mikrobiom?",
-      "odpoved": "Podle článku to nic nepotvrzuje. Randomizovaná, dvojitě zaslepená překřížená studie u aspartamu žádnou změnu nenašla. Nedávný přehled studií došel ke stejnému: aspartam ani Ace-K mikrobiom u lidí běžně neovlivňují."
+      "odpoved": "Podle Nortona to nic nepotvrzuje. Randomizovaná, dvojitě zaslepená překřížená studie u aspartamu žádnou změnu nenašla. Nedávný přehled studií došel ke stejnému: aspartam ani Ace-K mikrobiom u lidí běžně neovlivňují."
     },
     {
       "otazka": "Zvyšují dietní limonády chuť na sladké?",
@@ -14,11 +14,11 @@
     },
     {
       "otazka": "Je lepší vyměnit slazenou limonádu za dietní, nebo za vodu?",
-      "odpoved": "Podle meta-analýzy, kterou článek cituje, zhubne ten, kdo přejde ze slazených nápojů na dietní, dokonce víc než ten, kdo přejde na vodu."
+      "odpoved": "V meta-analýze, kterou Norton cituje, zhubl ten, kdo přešel ze slazených nápojů na dietní, dokonce víc než ten, kdo přešel na vodu."
     },
     {
       "otazka": "Pomůže mi při hubnutí pít Colu Zero místo obyčejné?",
-      "odpoved": "Ano, vyměň slazené nápoje za dietní, studie ukazují méně chutí a lepší kontrolu kalorií. Martin dodává, že dietní varianta nasazená s hlavou, typicky místo slazené sody, pomůže shodit tuk. Žádné riziko v tom podle něj není, pokud to sedí do celé stravy s dostatkem bílkovin a zeleniny."
+      "odpoved": "Ano, vyměň slazené nápoje za dietní, studie ukazují méně chutí a lepší kontrolu kalorií. Já k tomu dodám: dietní varianta nasazená s hlavou, typicky místo slazené sody, pomůže shodit tuk. Žádné riziko v tom nevidím, pokud to sedí do celé stravy s dostatkem bílkovin a zeleniny."
     }
   ],
   "opory": [
@@ -39,5 +39,6 @@
     "Tvrzení o inzulinu, energii a trávení („držet inzulin, energii i trávení v klidu“, „inzulin máš v klidu“) jsou Martinův komentář z praxe a citované studie je v článku nedokládají, proto nejsou použita v odpovědích.",
     "Jádro článku je překlad příspěvku Layne Nortona; studie jsou uvedené jen odkazem PMID bez velikosti vzorku a délky trvání."
   ],
-  "kontrola": "opraveno: kratka_odpoved přisouzena Layne Nortonovi (článek je překlad jeho příspěvku); první opora kratka_odpoved přecházela přes CTA box, zkrácena na větu z jednoho řádku"
+  "kontrola": "opraveno: kratka_odpoved přisouzena Layne Nortonovi (článek je překlad jeho příspěvku); první opora kratka_odpoved přecházela přes CTA box, zkrácena na větu z jednoho řádku",
+  "hlas": "upraveno: kratka_odpoved přisouzení Nortonovi v 1. osobě („tady překládám“); faq[0] a faq[2] bez „podle článku“; faq[3] z 3. osoby („Martin dodává“) do 1. osoby"
 }

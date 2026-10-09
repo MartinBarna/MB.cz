@@ -5,20 +5,20 @@
   "kratka_odpoved": "Pro většinu lidí, co trénují najezení, jsou sacharidy před tréninkem zbytečné. Přehled 49 studií z roku 2022 (Henselmans et al., Nutrients) došel k tomu, že u silového tréninku v najezeném stavu sacharidy před cvičením výkon neovlivní. Reálně pomůžou po osmi a víc hodinách nalačno, při hodně objemovém tréninku nebo u tréninků delších než 45 minut.",
   "faq": [
     {
-      "otazka": "Co ukázala studie se sladkým nápojem?",
-      "odpoved": "Ve studii z roku 2025 (Lee et al., Physiology & Behavior) dostali silově trénující sportovci sladký nápoj, který byl ve skutečnosti placebo, a k tomu povídání o tom, jak sacharidy pomáhají. Žádné sacharidy ve hře nebyly, a síla šla i tak nahoru. Čím víc tomu lidé věřili, tím byl efekt větší."
+      "otazka": "Je efekt banánu před tréninkem jen v hlavě?",
+      "odpoved": "Ve studii z roku 2025 (Lee et al., Physiology & Behavior) dostali silově trénující sportovci sladký nápoj, který byl placebo, a k tomu povídání o tom, jak sacharidy pomáhají. Žádné sacharidy ve hře nebyly, a síla šla i tak nahoru. Čím víc tomu lidé věřili, tím byl efekt větší."
     },
     {
-      "otazka": "Proč článek mluví o placebu?",
+      "otazka": "Jak se pozná, že jde o placebo?",
       "odpoved": "Kromě studie s falešným nápojem přehled 49 studií nenašel ani dávkový efekt sacharidů před silovým tréninkem. A to bývá typický znak placeba."
     },
     {
-      "otazka": "Kdy sacharidy před tréninkem opravdu pomůžou?",
+      "otazka": "Kdy sacharidy před tréninkem pomůžou?",
       "odpoved": "Ve třech situacích: když jdeš cvičit po osmi a víc hodinách nalačno, při hodně objemovém tréninku, tedy deset a víc sérií na partii, a u tréninků delších než 45 minut."
     },
     {
       "otazka": "Co když bez banánu před tréninkem nemůžu?",
-      "odpoved": "Když si zafixuješ, že bez sacharidů trénovat nejde, uděláš si na nich závislost v hlavě. Den bez banánu je pak horší, ale ne kvůli energii, kvůli tomu, co máš v hlavě."
+      "odpoved": "Když si zafixuješ, že bez sacharidů trénovat nejde, uděláš si na nich závislost v hlavě. Den bez banánu je pak horší, jenže kvůli hlavě, energie ti nechybí."
     }
   ],
   "opory": [
@@ -68,5 +68,6 @@
     "Článek mluví o silovém tréninku; neříká, jak je to u jiných druhů sportu.",
     "Zdroje uvedené na konci (King et al. 2022, Hamidvand et al. 2025) článek v textu nijak nerozebírá."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněn chybějící podmět („sacharidy před cvičením“), bez něj věta nedávala jasný smysl"
+  "kontrola": "opraveno: kratka_odpoved doplněn chybějící podmět („sacharidy před cvičením“), bez něj věta nedávala jasný smysl",
+  "hlas": "upraveno: faq[0], faq[1], faq[2] otázky jako dotaz člověka (bez „co ukázala studie“, „proč článek“, „opravdu“); faq[0] bez „ve skutečnosti“; faq[3] bez „ne kvůli energii, kvůli“"
 }

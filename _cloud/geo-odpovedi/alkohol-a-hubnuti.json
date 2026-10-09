@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/alkohol-a-hubnuti.html",
   "titulek": "Zhubneš i s alkoholem? Co na to věda",
   "hlavni_otazka": "Můžu hubnout, když piju alkohol?",
-  "kratka_odpoved": "Ano, na hubnutí rozhoduje kalorický deficit, ne pivo samo o sobě, a lehká až střední konzumace se podle velkých přehledů studií s přibíráním nepojí. Pár sklenek za týden, započítaných do dne, ti hubnutí nerozbije. Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu.",
+  "kratka_odpoved": "Ano. O hubnutí rozhoduje kalorický deficit a lehká až střední konzumace se podle velkých přehledů studií s přibíráním nepojí. Pár sklenek za týden, započítaných do dne, ti hubnutí nerozbije. Pravidelné popíjení ale brzdí kalorie, chuť, spánek i růst svalu.",
   "faq": [
     {
       "otazka": "Proč se po alkoholu hůř hubne, když drink sám tolik nevadí?",
@@ -10,7 +10,7 @@
     },
     {
       "otazka": "O kolik víc sním, když piju alkohol?",
-      "odpoved": "Meta-analýza 22 studií, kterou článek uvádí ve zdrojích, ukázala, že po alkoholu sníš víc a nekompenzuješ to. Jídla navíc bylo v průměru +343 kJ, tedy asi +82 kcal."
+      "odpoved": "Meta-analýza 22 studií ukázala, že po alkoholu sníš víc a nekompenzuješ to. Jídla navíc bylo v průměru +343 kJ, tedy asi +82 kcal."
     },
     {
       "otazka": "Je nějaká dávka alkoholu pro zdraví bezpečná?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Brzdí alkohol růst svalů?",
-      "odpoved": "Pravidelné popíjení ano. Studie ve zdrojích článku naměřila tlumení stavby svalů o 24 % i s proteinem, dávka ale byla asi 12 drinků, tedy opíjení, ne sklenka."
+      "odpoved": "Pravidelné popíjení ano. Studie naměřila tlumení stavby svalů o 24 % i s proteinem, dávka ale odpovídala asi 12 drinkům, tedy pořádnému opití."
     }
   ],
   "opory": [
@@ -37,5 +37,6 @@
     "Článek neuvádí kalorickou hodnotu konkrétních nápojů (pivo, víno, panák).",
     "Vliv na spánek je jen ve zdrojích (potlačení REM a fragmentace spánku, hlavně v druhé půlce noci), hlavní text ho dál nerozvádí, proto jsem z něj samostatnou otázku nedělal."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno ‚podle velkých přehledů studií‘, na nich tvrzení o lehké až střední konzumaci stojí; faq[3] doplněna opora pro větu o pravidelném popíjení"
+  "kontrola": "opraveno: kratka_odpoved doplněno ‚podle velkých přehledů studií‘, na nich tvrzení o lehké až střední konzumaci stojí; faq[3] doplněna opora pro větu o pravidelném popíjení",
+  "hlas": "upraveno: kratka_odpoved bez „X, ne Y“; faq[1] a faq[3] bez odkazu na „zdroje článku“ a bez „ne sklenka“"
 }

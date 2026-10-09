@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/silovy-trenink-zlepsuje-mozkove-funkce-studie.html",
   "titulek": "Silový trénink zlepšuje mozkové funkce – studie",
   "hlavni_otazka": "Zlepšuje silový trénink fungování mozku?",
-  "kratka_odpoved": "Ano, podle meta-analýzy 58 randomizovaných studií, kterou shrnuje Menno Henselmans, byl odporový trénink nejefektivnější intervencí pro zlepšení globální kognitivní funkce u kognitivně zdravých starších dospělých, s velikostním efektem 0,55. Zlepšila se paměť, inhibiční kontrola i výkonná funkce. Nejvíc těžili starší lidé, ale efekt byl jasně průkazný i u zdravých dospělých pod 65 let.",
+  "kratka_odpoved": "Ano. Meta-analýza 58 randomizovaných studií, kterou shrnuje Menno Henselmans, našla odporový trénink jako nejúčinnější intervenci pro zlepšení globální kognitivní funkce u kognitivně zdravých starších dospělých, s velikostním efektem 0,55. Zlepšila se paměť, inhibiční kontrola i výkonná funkce. Nejvíc těžili starší lidé, ale efekt byl jasně průkazný i u zdravých dospělých pod 65 let.",
   "faq": [
     {
       "otazka": "Proč posilování pomáhá mozku?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Jak začít, když chci posilovat i kvůli hlavě?",
-      "odpoved": "Martin radí začít 3 sériemi dřepů, tahů a tlaků 3x týdně. Po měsíci si všímej, jak na tom jsi s pamětí a energií."
+      "odpoved": "Začni 3 sériemi dřepů, tahů a tlaků 3x týdně. Po měsíci si všímej, jak na tom jsi s pamětí a energií."
     }
   ],
   "opory": [
@@ -68,5 +68,6 @@
     "Článek neříká, jak dlouho, jak často a s jakým objemem trénovali účastníci zahrnutých studií.",
     "České údaje (nedostatek pohybu u 70 % dospělých podle MZ ČR, 60 % nadváhy podle ČSÚ) jsou v článku bez roku a přesného zdroje."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „Ano, podle“ na začátku; faq[3] z 3. osoby („Martin radí“) do 1. osoby"
 }

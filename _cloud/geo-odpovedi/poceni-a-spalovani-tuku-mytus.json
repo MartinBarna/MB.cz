@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Proč po sauně vážím míň?",
-      "odpoved": "Protože jsi ztratil vodu, ne tuk. Váha v tu chvíli měří stav hydratace, ne množství tuku, a po prvním pití a jídle je číslo zpátky."
+      "odpoved": "Protože jsi vypotil vodu. Váha v tu chvíli měří stav hydratace a po prvním pití a jídle je číslo zpátky."
     },
     {
       "otazka": "Funguje neoprenový pás nebo zábal na břicho?",
@@ -18,10 +18,10 @@
     },
     {
       "otazka": "Má sauna vůbec nějaký smysl?",
-      "odpoved": "Má, jen ne na hubnutí tuku. Má svoje benefity: regenerace po tréninku, uvolnění, příjemné prohřátí a podpora kardiovaskulárního systému."
+      "odpoved": "Má, jen ne na hubnutí tuku. Pomůže s regenerací po tréninku, uvolní tě, příjemně prohřeje a podpoří kardiovaskulární systém."
     },
     {
-      "otazka": "Co na tuk opravdu funguje?",
+      "otazka": "Co na tuk funguje místo sauny?",
       "odpoved": "Kalorický deficit, tedy jíst o něco míň, než vydáš. K tomu dost bílkovin, silový trénink na udržení svalů a chůze a běžný pohyb, které zvednou výdej líp a udržitelněji než hodina v sauně."
     }
   ],
@@ -96,5 +96,6 @@
     "Článek neříká, jak dlouhé a časté saunování je bezpečné ani kolik u něj pít.",
     "U benefitů sauny (například podpora kardiovaskulárního systému) článek neuvádí žádný zdroj ani míru účinku."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez dvojího „X, ne Y“; faq[3] „benefity“ česky; faq[4] otázka bez „opravdu“"
 }

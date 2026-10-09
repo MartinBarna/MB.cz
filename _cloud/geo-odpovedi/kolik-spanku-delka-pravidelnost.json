@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/kolik-spanku-delka-pravidelnost.html",
   "titulek": "Kolik hodin spát? Délka vs. pravidelnost",
   "hlavni_otazka": "Kolik hodin denně bych měl spát?",
-  "kratka_odpoved": "Podle velkých přehledů vychází pro běžného dospělého nejnižší úmrtnost i riziko srdečních chorob kolem 7 hodin denně, pod sedmičkou riziko roste zhruba o 6 % za každou ubranou hodinu. Když trénuješ, potřebuješ víc, často 8–10 hodin. Jakmile máš sedm hodin zajištěných, je důležitější chodit spát a vstávat pořád stejně než honit osmou hodinu.",
+  "kratka_odpoved": "Velké přehledy ukazují pro běžného dospělého nejnižší úmrtnost i riziko srdečních chorob kolem 7 hodin denně, pod sedmičkou riziko roste zhruba o 6 % za každou ubranou hodinu. Když trénuješ, potřebuješ víc, často 8–10 hodin. Jakmile máš sedm hodin zajištěných, je důležitější chodit spát a vstávat pořád stejně než honit osmou hodinu.",
   "faq": [
     {
       "otazka": "Škodí spát 9 hodin a víc?",
-      "odpoved": "Podle metaanalýzy Yin 2017 každá hodina nad sedmičkou přidává zhruba 13 % rizika úmrtí. Z velké části je to ale značka skryté nemoci, ne příčina. Zdravému, tvrdě trénujícímu člověku 9 hodin neublíží."
+      "odpoved": "V metaanalýze Yin 2017 přidávala každá hodina nad sedmičkou zhruba 13 % rizika úmrtí. Z velké části je to ale příznak skryté nemoci. Zdravému, tvrdě trénujícímu člověku 9 hodin neublíží."
     },
     {
       "otazka": "Kolik spánku potřebuje sportovec?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co je důležitější, délka spánku, nebo pravidelnost?",
-      "odpoved": "Když spíš pod 6 hodin, prioritou je délka. Když spíš 7 hodin a víc, vyhrává pravidelnost. Vždycky fixuj čas vstávání, i o víkendu s odchylkou do hodiny."
+      "odpoved": "Když spíš pod 6 hodin, prioritou je délka. Když spíš 7 hodin a víc, vyhrává pravidelnost. Čas vstávání drž pevně, i o víkendu s odchylkou do hodiny."
     },
     {
       "otazka": "Proč záleží na tom, chodit spát pořád ve stejnou dobu?",
@@ -50,5 +50,6 @@
     "Dopočítaná čísla (~12 % u pěti hodin, ~28 % u devíti) nejsou v odpovědích použita samostatně, jsou jen v citaci; článek je uvádí jako řádový odhad.",
     "Článek nedává praktické rady, jak spánek prodloužit nebo zlepšit (to odkazuje do placené lekce)."
   ],
-  "kontrola": "opraveno: faq[2] doplněno ze závěrečného upozornění, že trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (spánková apnoe) a při potížích se poradit s lékařem; kratka_odpoved doplněno ‚podle velkých přehledů‘; faq[0] ‚ve studiích‘ → ‚podle metaanalýzy Yin 2017‘ (čísla jsou z jedné metaanalýzy)"
+  "kontrola": "opraveno: faq[2] doplněno ze závěrečného upozornění, že trvale krátký nebo nekvalitní spánek může mít zdravotní příčinu (spánková apnoe) a při potížích se poradit s lékařem; kratka_odpoved doplněno ‚podle velkých přehledů‘; faq[0] ‚ve studiích‘ → ‚podle metaanalýzy Yin 2017‘ (čísla jsou z jedné metaanalýzy)",
+  "hlas": "upraveno: kratka_odpoved a faq[0] bez úvodního „Podle“; faq[0] bez „značka nemoci, ne příčina“; faq[3] bez „Vždycky“"
 }

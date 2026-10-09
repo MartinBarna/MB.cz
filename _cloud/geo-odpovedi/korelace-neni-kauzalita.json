@@ -2,19 +2,19 @@
   "url": "https://martinbarna.cz/clanky/korelace-neni-kauzalita.html",
   "titulek": "Korelace není kauzalita",
   "hlavni_otazka": "Jaký je rozdíl mezi korelací a kauzalitou?",
-  "kratka_odpoved": "Korelace znamená, že se dvě věci dějí ve stejnou dobu nebo se hýbou společně, kauzalita je, když jedna věc tu druhou opravdu způsobuje. Prodeje zmrzliny a utonutí v bazénech stoupají spolu, ale za obojím stojí horké počasí. Ve výživě ze souvislosti bez pořádného experimentu, třeba randomizované kontrolované studie, ještě nevyplývá příčina.",
+  "kratka_odpoved": "Korelace znamená, že se dvě věci dějí ve stejnou dobu nebo se hýbou společně, kauzalita je, když jedna věc tu druhou způsobuje. Prodeje zmrzliny a utonutí v bazénech stoupají spolu, ale za obojím stojí horké počasí. Ve výživě ze souvislosti bez pořádného experimentu, třeba randomizované kontrolované studie, ještě nevyplývá příčina.",
   "faq": [
     {
       "otazka": "Způsobují umělá sladidla obezitu nebo rakovinu?",
-      "odpoved": "Většina studií, které tím straší, ukazuje jen souvislost, ne příčinu. Přehled NCI z roku 2023 shrnuje, že u lidí není důkaz, že by umělá sladidla rakovinu způsobovala. Práce v BMJ z roku 2022 našla souvislost s kardiovaskulárními riziky, ale sama upozorňuje, že to není důkaz příčiny."
+      "odpoved": "Studie, které tím straší, ukazují většinou jen souvislost. Přehled NCI z roku 2023 shrnuje, že u lidí není důkaz, že by umělá sladidla rakovinu způsobovala. Práce v BMJ z roku 2022 našla souvislost s kardiovaskulárními riziky, ale sama upozorňuje, že to není důkaz příčiny."
     },
     {
       "otazka": "Co je reverzní kauzalita?",
-      "odpoved": "Článek ji ukazuje na sladidlech: lidé s nadváhou často sahají po dietních nápojích, takže to vypadá, že sladidla „dělají“ obezitu. Ono je to ale obráceně a tomu se říká reverzní kauzalita."
+      "odpoved": "Ukážu ti ji na sladidlech: lidé s nadváhou často sahají po dietních nápojích, takže to vypadá, že sladidla „dělají“ obezitu. Ono je to ale obráceně a tomu se říká reverzní kauzalita."
     },
     {
       "otazka": "Jsou lidé, co snídají, štíhlejší díky snídani?",
-      "odpoved": "Souvislost tam je, příčina spíš ne. Spíš platí, že zdravěji žijící lidé prostě snídají pravidelně, ne že by samotná snídaně hubla za tebe."
+      "odpoved": "Souvislost tam je, příčina spíš ne. Zdravěji žijící lidé prostě snídají pravidelně a snídaně sama za tebe nehubne."
     },
     {
       "otazka": "Jsou chemikálie v jídle nebezpečné?",
@@ -68,5 +68,6 @@
     "U mléka a rakoviny článek říká jen, že souvislost je často kvůli jiným věcem, jako je životní styl. Bez dalšího vysvětlení jsem to jako samostatnou FAQ nepoužil.",
     "Reverzní kauzalitu článek obecně nedefinuje, vysvětluje ji jen na příkladu se sladidly, proto je tak podaná i v odpovědi."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „opravdu“; faq[0] bez „souvislost, ne příčinu“; faq[1] bez „Článek ji ukazuje“; faq[2] bez „ne že by“"
 }

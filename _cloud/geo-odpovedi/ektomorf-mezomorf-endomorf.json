@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Můžu jako endomorf zhubnout a vypadat atleticky?",
-      "odpoved": "Ano. Když začneš silově trénovat, jíst dost bílkovin a hlídat kalorie, za rok z tebe může být ten mezomorf, o kterém sis myslel, že se tak prostě nenarodil. Nezmění se ti geny, změní se chování."
+      "odpoved": "Ano. Když začneš silově trénovat, jíst dost bílkovin a hlídat kalorie, za rok z tebe může být ten mezomorf, o kterém sis myslel, že se tak prostě nenarodil. Geny si neseš stejné, výsledek udělá chování."
     },
     {
       "otazka": "Potřebuju speciální dietu podle svého typu postavy?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Hrají geny při stavbě postavy roli?",
-      "odpoved": "Ano, ovlivňují výšku, šířku ramen, délku kostí, kam se ukládá tuk nebo jak rychle nabíráš svaly. Tyhle rozdíly jsou ale spektrum, ne tři přihrádky, a nevyplývá z nich, že bys měl jíst a trénovat úplně jinak."
+      "odpoved": "Ano, ovlivňují výšku, šířku ramen, délku kostí, kam se ukládá tuk nebo jak rychle nabíráš svaly. Tyhle rozdíly jsou ale plynulá škála bez tří přihrádek a nevyplývá z nich, že bys měl jíst a trénovat úplně jinak."
     },
     {
       "otazka": "Proč škodí říkat si „jsem endomorf“?",
@@ -44,5 +44,6 @@
     "Článek neuvádí, jak velký deficit nebo přebytek kalorií zvolit (jen „mírný“).",
     "Článek neuvádí zdroje k historii Sheldonovy teorie."
   ],
-  "kontrola": "opraveno: faq[2] zakázané slovo z výčtu AI frází nahrazeno „úplně jinak“ (význam beze změny)"
+  "kontrola": "opraveno: faq[2] zakázané slovo z výčtu AI frází nahrazeno „úplně jinak“ (význam beze změny)",
+  "hlas": "upraveno: faq[0] bez „Nezmění se X, změní se Y“; faq[2] bez „spektrum, ne tři přihrádky“"
 }

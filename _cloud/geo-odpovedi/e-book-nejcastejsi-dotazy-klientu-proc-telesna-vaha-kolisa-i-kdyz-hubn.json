@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Jak se správně vážit, když váha skáče?",
-      "odpoved": "Važ se každé ráno za stejných podmínek a porovnávej mezi sebou týdenní průměry, ne jednotlivá čísla z různých dní. Ještě líp je pravidelně měřit tělesné míry a nespoléhat na jedno vážení."
+      "odpoved": "Važ se každé ráno za stejných podmínek a porovnávej mezi sebou týdenní průměry. Jedno číslo z jednoho rána ti o tuku nic neřekne. Ještě líp je pravidelně měřit tělesné míry a nespoléhat na jedno vážení."
     },
     {
       "otazka": "Proč může trénovaný člověk jíst víc a nepřibírat?",
@@ -41,5 +41,6 @@
     "Kromě glykogenu článek zmiňuje „tisíce metabolických procesů“ s tekutinami, ale konkrétně je nerozebírá.",
     "Údaje „12 g“ a „33 g glykogenu na 100 g svaloviny“ revize z odpovědi vypustila: jednotka je podle všeho chybně (běžně uváděné hodnoty odpovídají spíš gramům na kilogram svalu). Stejně se postupovalo u keto e-booku. Doporučuji opravit v článku."
   ],
-  "kontrola": "opraveno: kratka_odpoved „Hlavně kvůli glykogenu“ → „Jedním z důvodů je glykogen“, článek glykogen neoznačuje za hlavní příčinu a zmiňuje i další procesy s tekutinami; opraveno: faq[0] vypuštěna čísla 12 g a 33 g glykogenu na 100 g svalu (podezření na chybu jednotek v článku, sjednoceno s keto e-bookem), ponecháno „téměř 3x víc“"
+  "kontrola": "opraveno: kratka_odpoved „Hlavně kvůli glykogenu“ → „Jedním z důvodů je glykogen“, článek glykogen neoznačuje za hlavní příčinu a zmiňuje i další procesy s tekutinami; opraveno: faq[0] vypuštěna čísla 12 g a 33 g glykogenu na 100 g svalu (podezření na chybu jednotek v článku, sjednoceno s keto e-bookem), ponecháno „téměř 3x víc“",
+  "hlas": "upraveno: faq[2] bez „X, ne Y“"
 }

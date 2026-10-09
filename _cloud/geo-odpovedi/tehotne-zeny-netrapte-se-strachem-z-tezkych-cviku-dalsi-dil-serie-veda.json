@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/tehotne-zeny-netrapte-se-strachem-z-tezkych-cviku-dalsi-dil-serie-veda.html",
   "titulek": "Těhotné ženy, netrapte se strachem z těžkých cviků! Další díl série Věda vs. Mýty v Tréninku. 😊",
   "hlavni_otazka": "Je bezpečné v těhotenství zvedat těžké činky?",
-  "kratka_odpoved": "Podle studie týmu Emilie Mass Dalhaug ve zdravém těhotenství těžký silový trénink, včetně cviků vleže na zádech, plod neohrožuje. U 48 zdravých aktivních těhotných žen zůstala při sumo deadliftu a bench pressu 3×8 s 1 RIR tepová frekvence plodu v normálu a krevní tok k placentě se nezměnil. Trénink ale prober i se svým lékařem.",
+  "kratka_odpoved": "Podle studie týmu Emilie Mass Dalhaug ve zdravém těhotenství těžký silový trénink, včetně cviků vleže na zádech, plod neohrožuje. U 48 zdravých aktivních těhotných žen zůstala při sumo deadliftu a bench pressu 3×8 s 1 RIR (opakováním v rezervě) tepová frekvence plodu v normálu a krevní tok k placentě se nezměnil. Trénink ale prober i se svým lékařem.",
   "faq": [
     {
       "otazka": "Vadí v těhotenství zadržování dechu při zvedání?",
@@ -82,5 +82,6 @@
     "Rada „hlídej si tepovou frekvenci plodu (FHR)“ není vysvětlená, není jasné, jak to má žena při běžném tréninku dělat.",
     "Článek je až na Martinův komentář a shrnutí překlad příspěvku Menna Henselmanse; tvrzení o bezpečnosti jsou v odpovědích přisouzená studii, ne Martinovi."
   ],
-  "kontrola": "opraveno: faq[0] doplněno, že šlo o 48 zdravých aktivních těhotných žen; faq[2] doplněna podmínka ‚ve zdravém těhotenství‘ a ‚prober i se svým lékařem‘; nejiste doplněno o přisouzení; smazano: faq[3] (‚Jak s těžkým tréninkem v těhotenství začít?‘ s radou sumo deadlift 3×8 blízko selhání), otázka zve i těhotné, které dosud necvičily, na které se studie nevztahuje, a jako tréninkový předpis v těhotenství by mohla uškodit"
+  "kontrola": "opraveno: faq[0] doplněno, že šlo o 48 zdravých aktivních těhotných žen; faq[2] doplněna podmínka ‚ve zdravém těhotenství‘ a ‚prober i se svým lékařem‘; nejiste doplněno o přisouzení; smazano: faq[3] (‚Jak s těžkým tréninkem v těhotenství začít?‘ s radou sumo deadlift 3×8 blízko selhání), otázka zve i těhotné, které dosud necvičily, na které se studie nevztahuje, a jako tréninkový předpis v těhotenství by mohla uškodit",
+  "hlas": "upraveno: kratka_odpoved zkratka RIR vysvětlena (varování zůstává)"
 }

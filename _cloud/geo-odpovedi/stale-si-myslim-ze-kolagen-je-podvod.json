@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/stale-si-myslim-ze-kolagen-je-podvod.html",
   "titulek": "Stále si myslím, že kolagen je PODVOD 👀 😅",
   "hlavni_otazka": "Má smysl brát kolagen jako doplněk stravy?",
-  "kratka_odpoved": "Podle Layne Nortona, PhD, jehož příspěvek článek překládá, spíš ne: u suplementace kolagenu podle něj pořád chybí důkaz jasných přínosů. Ve studii PMID 40523226 nezvýšilo 30 g hydrolyzovaného kolagenu zdravým dospělým po tréninku tvorbu svalových proteinů, proteinů pojivové tkáně ani proteinů kůže. Stejných, nebo lepších výsledků podle něj dosáhneš se syrovátkou a opalovacím krémem.",
+  "kratka_odpoved": "Layne Norton, PhD, jehož příspěvek tady překládám, říká spíš ne: u suplementace kolagenu pořád chybí důkaz jasných přínosů. Ve studii PMID 40523226 nezvýšilo 30 g hydrolyzovaného kolagenu zdravým dospělým po tréninku tvorbu svalových proteinů, proteinů pojivové tkáně ani proteinů kůže. Stejných, nebo lepších výsledků podle něj dosáhneš se syrovátkou a opalovacím krémem.",
   "faq": [
     {
       "otazka": "Nepomáhá kolagen aspoň na stárnutí kůže?",
@@ -10,11 +10,11 @@
     },
     {
       "otazka": "Je kolagen pro pojivovou tkáň lepší než syrovátka?",
-      "odpoved": "Podle Layne Nortona ne. Jiné studie ukázaly, že kolagen nezvedne tvorbu proteinů pojivové tkáně (CPS) o nic víc než obyčejná syrovátka (PMID 37202878 a 39086044)."
+      "odpoved": "Podle Nortona ne. Jiné studie ukázaly, že kolagen nezvedne tvorbu proteinů pojivové tkáně (CPS) o nic víc než obyčejná syrovátka (PMID 37202878 a 39086044)."
     },
     {
       "otazka": "Je kolagen kvalitní zdroj bílkovin?",
-      "odpoved": "Podle Layne Nortona ne: kolagen má podle něj příšerný profil aminokyselin, horší než kterýkoli rostlinný protein. A ani vysoké dávky nezvednou tvorbu svalových proteinů ani proteinů pojivové tkáně."
+      "odpoved": "Ne, říká Norton: kolagen má podle něj příšerný profil aminokyselin, horší než kterýkoli rostlinný protein. A ani vysoké dávky nezvednou tvorbu svalových proteinů ani proteinů pojivové tkáně."
     }
   ],
   "opory": [
@@ -71,5 +71,6 @@
     "Článek se ptá i na studie o lepším hojení ran a pružnosti kůže, ale meta-analýzu rozebírá jen pro stárnutí kůže; k hojení ran závěr neuvádí.",
     "Článek neuvádí, kolik studií bylo placených prodejci a kolik nezávislých, ani jak dlouho a v jakých dávkách se v nich kolagen užíval."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno „zdravým dospělým“ (populace studie); faq[1] „Podle článku“ → „Podle Layne Nortona“ a faq[0] výklad o zkreslení přisouzen Nortonovi (článek je překlad jeho příspěvku), doplněna opora"
+  "kontrola": "opraveno: kratka_odpoved doplněno „zdravým dospělým“ (populace studie); faq[1] „Podle článku“ → „Podle Layne Nortona“ a faq[0] výklad o zkreslení přisouzen Nortonovi (článek je překlad jeho příspěvku), doplněna opora",
+  "hlas": "upraveno: kratka_odpoved přisouzení Nortonovi v 1. osobě („tady překládám“), bez dvojího „podle něj“; faq[1] a faq[2] bez tří „Podle Layne Nortona“ za sebou"
 }

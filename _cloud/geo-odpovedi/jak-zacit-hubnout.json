@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/jak-zacit-hubnout.html",
   "titulek": "Jak začít hubnout: první 4 týdny bez drastické diety",
   "hlavni_otazka": "Jak mám začít hubnout, aby to tentokrát vydrželo?",
-  "kratka_odpoved": "Začni jednou změnou týdně, ne vším naráz. První týden jen zapisuj, co jíš, a jez jako obvykle, ve druhém nastav deficit zhruba 15 až 20 procent pod výdejem, ve třetím postav jídla kolem bílkovin a ve čtvrtém přidej dva silové tréninky týdně a chůzi.",
+  "kratka_odpoved": "Začni jednou změnou týdně. První týden jen zapisuj, co jíš, a jez jako obvykle, ve druhém nastav deficit zhruba 15 až 20 procent pod výdejem, ve třetím postav jídla kolem bílkovin a ve čtvrtém přidej dva silové tréninky týdně a chůzi.",
   "faq": [
     {
       "otazka": "Proč si mám na začátku zapisovat jídlo?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co dělat, když se váha za týden nehne?",
-      "odpoved": "Váha ukazuje i vodu, obsah střev a u žen fázi cyklu, takže dva kilogramy nahoru a dolů za týden o tuku nic neříkají. Važ se každé ráno po záchodě a porovnávej týdenní průměry. Když se průměr nehne dva týdny po sobě a poctivě zapisuješ, uber zhruba 10 procent kalorií nebo přidej 2 000 kroků denně, jedno z toho, ne obojí."
+      "odpoved": "Váha ukazuje i vodu, obsah střev a u žen fázi cyklu, takže dva kilogramy nahoru a dolů za týden o tuku nic neříkají. Važ se každé ráno po záchodě a porovnávej týdenní průměry. Když se průměr nehne dva týdny po sobě a poctivě zapisuješ, uber zhruba 10 procent kalorií, nebo přidej 2 000 kroků denně. Vyber jedno z toho."
     },
     {
       "otazka": "Kolik kilo za měsíc je rozumné zhubnout?",
@@ -50,5 +50,6 @@
     "Kolik kroků denně chodit, článek nestanovuje, jen přidání 2 000 kroků při stagnaci.",
     "Čísla z meta-analýzy silového tréninku (úbytek tuku 1,6 kg, nárůst svalů 0,8 kg) jsem nepoužil: platí pro silové programy obecně a článek sám píše, že v kombinaci s deficitem svalová hmota přesto klesala."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne vším naráz“; faq[3] bez „jedno z toho, ne obojí“"
 }

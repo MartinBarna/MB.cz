@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-pohybove-aktivity.html",
   "titulek": "E-book Nejčastější dotazy klientů – POHYBOVÉ AKTIVITY",
   "hlavni_otazka": "Jaký pohyb je nejlepší, když chci hubnout a mám nadváhu?",
-  "kratka_odpoved": "Při nadváze Martin výrazně doporučuje posilování nebo chůzi, běh rozhodně ne: při nárazech působí na klouby trojnásobek tvé váhy. Vyber si pravidelnou aktivitu, která tě baví, a stanov si standard, třeba 3x týdně fitko 60 minut nebo 3x týdně chůzi 7 000 kroků.",
+  "kratka_odpoved": "Při nadváze doporučuju posilování nebo chůzi, běh rozhodně ne: při nárazech působí na klouby trojnásobek tvé váhy. Vyber si pravidelnou aktivitu, která tě baví, a stanov si standard, třeba 3x týdně fitko 60 minut nebo 3x týdně chůzi 7 000 kroků.",
   "faq": [
     {
       "otazka": "Má smysl chodit, když na sport nemám?",
@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Jakou výhodu má silový trénink oproti kardiu?",
-      "odpoved": "Při kardiu sice spálíš víc energie, ale po silovém tréninku má tělo dalších 36–48 hodin potenciál regenerovat, a když mu dodáš dost bílkovin, regenerace sama pálí značné množství energie. U kardia ty následující dny regenerace nejsou."
+      "odpoved": "Při kardiu sice spálíš víc energie, ale po silovém tréninku může tělo dalších 36–48 hodin regenerovat, a když mu dodáš dost bílkovin, regenerace sama pálí značné množství energie. U kardia ty následující dny regenerace nejsou."
     },
     {
       "otazka": "Jak si nastavit kroky na týden?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Potřebuju na posilování trenéra?",
-      "odpoved": "Nejlepší je fitness centrum pod odborným dohledem, kde se naučíš správnou techniku, protože cvičení může být prospěšné i na škodu. Když nemáš na trenéra, stačí cvičit doma podle videí z YouTube, na workout hřišti nebo s kamarády, kteří mají zkušenosti."
+      "odpoved": "Nejlepší je fitness centrum pod odborným dohledem, kde se naučíš správnou techniku, protože cvičení může být prospěšné i na škodu. Když nemáš na trenéra, stačí cvičit doma podle videí z YouTube, na workoutovém hřišti nebo s kamarády, kteří mají zkušenosti."
     }
   ],
   "opory": [
@@ -44,5 +44,6 @@
     "Článek neuvádí zdroje k tvrzení o trojnásobném zatížení kloubů při běhu.",
     "Článek nedefinuje, od jaké nadváhy běh nedoporučuje."
   ],
-  "kontrola": "opraveno: otázka faq[1] ‚Proč je silový trénink lepší než kardio?‘ změněna na ‚Jakou výhodu má…‘, článek mluví o výhodě, ne o tom, že je silový trénink obecně lepší"
+  "kontrola": "opraveno: otázka faq[1] ‚Proč je silový trénink lepší než kardio?‘ změněna na ‚Jakou výhodu má…‘, článek mluví o výhodě, ne o tom, že je silový trénink obecně lepší",
+  "hlas": "upraveno: kratka_odpoved z 3. osoby („Martin doporučuje“) do 1. osoby; faq[1] bez „má potenciál regenerovat“; faq[3] „workout hřiště“ → „workoutové hřiště“"
 }

@@ -1,7 +1,7 @@
 {
   "url": "https://martinbarna.cz/clanky/rostliny-jsou-plne-jedu.html",
   "titulek": "🔥 „Rostliny jsou plné jedů!“",
-  "hlavni_otazka": "Jsou rostliny opravdu plné jedů a mám se bát zeleniny?",
+  "hlavni_otazka": "Jsou rostliny plné jedů a mám se bát zeleniny?",
   "kratka_odpoved": "Nemusíš. Rostliny sice obsahují lektiny, fytáty, oxaláty a polyfenoly, ale podle shrnutí Layna Nortona, PhD, fungují v normálním množství jako hormeze, tedy malá dávka stresu, po které je tělo silnější a odolnější. Lidi, co jedí víc ovoce a zeleniny, mají podle velkých meta-analýz nižší riziko úmrtí, srdečních chorob a rakoviny.",
   "faq": [
     {
@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Kolik ovoce a zeleniny jedí Češi?",
-      "odpoved": "Podle dat SZÚ a České obezitologické společnosti jí 80–85 % Čechů méně než 400 g ovoce a zeleniny denně, přitom se doporučuje aspoň 600–800 g. Většina lidí tak řeší spíš to, že zeleniny jí málo."
+      "odpoved": "Podle dat SZÚ a České obezitologické společnosti jí 80–85 % Čechů méně než 400 g ovoce a zeleniny denně, přitom se doporučuje aspoň 600–800 g. Problém Čechů je spíš to, že zeleniny jedí málo."
     },
     {
       "otazka": "Jsou toxické látky jen v rostlinách?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co dalšího spojují studie s vyšším příjmem ovoce a zeleniny?",
-      "odpoved": "Kromě nižšího rizika úmrtí, srdečních chorob a rakoviny i lepší metabolické zdraví a nižší inzulinovou rezistenci. Článek k tomu uvádí čísla PMID 37549644 a 29151369."
+      "odpoved": "Kromě nižšího rizika úmrtí, srdečních chorob a rakoviny i lepší metabolické zdraví a nižší inzulinovou rezistenci. Studie najdeš pod PMID 37549644 a 29151369."
     }
   ],
   "opory": [
@@ -40,5 +40,6 @@
     "Článek neříká, co přesně je „normální množství“ těchto rostlinných látek ani od jaké dávky by mohly škodit.",
     "Článek neuvádí, o kolik fytáty snižují vstřebávání železa a zinku."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; faq[1] bez „Většina lidí“; faq[3] bez „Článek k tomu uvádí“"
 }

@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Byl rozdíl ve složení těla mezi 12 a 30 sériemi týdně?",
-      "odpoved": "Podle DXA scanů nebyl ve složení těla mezi skupinami žádný statisticky významný rozdíl. Obě skupiny shodily slušně tuku a beztukovou hmotu si udržely."
+      "odpoved": "Na DXA scanech nebyl ve složení těla mezi skupinami žádný statisticky významný rozdíl. Obě skupiny shodily slušně tuku a beztukovou hmotu si udržely."
     },
     {
       "otazka": "O kolik víc síly přidalo 30 sérií týdně?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Co si z té studie vzít do praxe?",
-      "odpoved": "V dietě neubírej objem jen ze zvyku, svaly toho snesou víc, než si většina lidí myslí. Rozhoduje rozumný plán, ne strach ze ztráty svalů. Jde ale o preprint, který čeká na recenzi, takže je to zajímavý signál, ne hotová věc."
+      "odpoved": "V dietě neubírej objem jen ze zvyku, svaly toho snesou víc, než si myslíš. Rozhoduje rozumný plán. Jde ale o preprint, který čeká na recenzi, takže to ber jako zajímavý signál."
     }
   ],
   "opory": [
@@ -41,5 +41,6 @@
     "Článek neříká, kolik bílkovin přesně účastníci jedli (jen „hodně bílkovin“).",
     "Studie trvala jen čtyři týdny, článek neříká nic o tom, jestli by výsledek platil i při delší dietě, a jde o preprint, který ještě neprošel recenzí."
   ],
-  "kontrola": "opraveno: faq[3] (praktický závěr) doplněno upozornění, že jde o preprint před recenzí a zajímavý signál, ne hotovou věc, aby závěr z jedné nerecenzované studie nezněl jako jistota"
+  "kontrola": "opraveno: faq[3] (praktický závěr) doplněno upozornění, že jde o preprint před recenzí a zajímavý signál, ne hotovou věc, aby závěr z jedné nerecenzované studie nezněl jako jistota",
+  "hlas": "upraveno: faq[1] bez úvodního „Podle“; faq[3] bez „než si většina lidí myslí“, „plán, ne strach“ a „signál, ne hotová věc“"
 }

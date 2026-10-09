@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/hubnuti-a-vek-mozku.html",
   "titulek": "Omládne mozek, když zhubneš?",
   "hlavni_otazka": "Omládne mi mozek, když zhubnu?",
-  "kratka_odpoved": "Na snímku ano, v testech myšlení spolehlivě ne. Berlínská studie s 83 lidmi s nadváhou (Maurer 2026) ukázala, že po zhubnutí odhadovaný věk mozku z MRI klesl, ale z testů se spolehlivě zlepšila hlavně rychlost zpracování a pozornost. Hubni pro zdraví, ne pro IQ.",
+  "kratka_odpoved": "Na snímku ano, v testech myšlení spolehlivě ne. Berlínská studie s 83 lidmi s nadváhou (Maurer 2026) ukázala, že po zhubnutí odhadovaný věk mozku z MRI klesl, ale z testů se spolehlivě zlepšila hlavně rychlost zpracování a pozornost. Hubni kvůli zdraví, IQ z toho nečekej.",
   "faq": [
     {
       "otazka": "Proč by hubnutí mělo prospívat mozku?",
@@ -38,5 +38,6 @@
     "Článek neuvádí, o kolik let odhadovaný věk mozku po zhubnutí klesl ani kolik kilo lidé ve studii zhubli.",
     "Autoři studie podle článku sami volají po větších a lépe kontrolovaných studiích; výsledek je tedy předběžný."
   ],
-  "kontrola": "opraveno: faq[2] (nadváha a stárnutí mozku) doplněno, že data jsou z velké části pozorovací (souvislost, ne prokázaná příčina), ze závěrečného upozornění"
+  "kontrola": "opraveno: faq[2] (nadváha a stárnutí mozku) doplněno, že data jsou z velké části pozorovací (souvislost, ne prokázaná příčina), ze závěrečného upozornění",
+  "hlas": "upraveno: kratka_odpoved bez „pro zdraví, ne pro IQ“"
 }

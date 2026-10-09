@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/hnedy-cukr-med-mytus.html",
   "titulek": "Hnědý cukr a med zdravější než bílý? Mýtus o „přírodních“ sladidlech",
   "hlavni_otazka": "Je med nebo hnědý cukr zdravější než bílý cukr?",
-  "kratka_odpoved": "V praxi ne: med, hnědý cukr, kokosový cukr, agáve i javorový sirup jsou z drtivé většiny cukry, tedy kalorie navíc. Hnědý cukr je z velké části bílý cukr s melasou a med je kaloricky srovnatelný s cukrem. O postavě rozhoduje celkový příjem cukru a kalorií, ne forma sladidla.",
+  "kratka_odpoved": "V praxi ne: med, hnědý cukr, kokosový cukr, agáve i javorový sirup jsou z drtivé většiny cukry, tedy kalorie navíc. Hnědý cukr je z velké části bílý cukr s melasou a med je kaloricky srovnatelný s cukrem. O postavě rozhoduje celkový příjem cukru a kalorií, forma sladidla je vedlejší.",
   "faq": [
     {
       "otazka": "Má hnědý cukr víc minerálů?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Kde v jídelníčku škrtat cukr nejdřív?",
-      "odpoved": "U nápojů. Slazené limonády, džusy, slazené kávy a energeťáky jsou největší tichý příjem cukru, tam se vyplatí škrtat dřív, než řešíš bílý nebo třtinový cukr v čaji."
+      "odpoved": "U nápojů. Slazené limonády, džusy, slazené kávy a energeťáky jsou největší skrytý příjem cukru, tam se vyplatí škrtat dřív, než řešíš bílý nebo třtinový cukr v čaji."
     }
   ],
   "opory": [
@@ -39,5 +39,6 @@
     "Článek neříká, kolik přidaného cukru denně je v pořádku.",
     "Pár živin navíc u medu článek zmiňuje, ale nevyjmenovává je."
   ],
-  "kontrola": "opraveno: faq[1] kategorické ‚Ne.‘ na otázku, zda je agáve vhodné na hubnutí, nahrazeno slovy článku ‚Dietní zkratka to není.‘ (článek sladidla pro chuť připouští)"
+  "kontrola": "opraveno: faq[1] kategorické ‚Ne.‘ na otázku, zda je agáve vhodné na hubnutí, nahrazeno slovy článku ‚Dietní zkratka to není.‘ (článek sladidla pro chuť připouští)",
+  "hlas": "upraveno: kratka_odpoved bez „X, ne Y“; faq[3] „tichý příjem“ → „skrytý příjem“"
 }

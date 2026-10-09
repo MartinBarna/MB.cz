@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/jsou-umela-sladidla-zlo-pro-tvoje-streva.html",
   "titulek": "Jsou umělá sladidla zlo pro tvoje střeva? 😏",
   "hlavni_otazka": "Škodí umělá sladidla střevní mikroflóře?",
-  "kratka_odpoved": "Podle novější celoroční studie financované EU, jak ji shrnul Menno Henselmans, ne. Skupina, která nahradila cukr nízkokalorickými sladidly, skončila na nižší váze, s menším pasem a lepším složením střevní mikroflóry. Strašák pochází ze studie z roku 2014, kde byla většina dat z myší a lidská část trvala 7 dní se 7 lidmi.",
+  "kratka_odpoved": "Ne, podle novější celoroční studie financované EU, jak ji shrnul Menno Henselmans. Skupina, která nahradila cukr nízkokalorickými sladidly, skončila na nižší váze, s menším pasem a lepším složením střevní mikroflóry. Strašák pochází ze studie z roku 2014, kde byla většina dat z myší a lidská část trvala 7 dní se 7 lidmi.",
   "faq": [
     {
-      "otazka": "Co zjistila studie z Nature z roku 2014 o sladidlech?",
+      "otazka": "Odkud se vzal strach, že sladidla ničí střeva?",
       "odpoved": "Tvrdila, že běžná sladidla jako sacharin zhoršují toleranci glukózy tím, že škodí střevní mikroflóře. Většina dat ale byla z myší. Lidská část trvala 7 dní, měla 7 lidí, nereálně vysoké dávky sacharinu a žádnou kontrolní skupinu."
     },
     {
-      "otazka": "Jak vypadala novější studie o sladidlech?",
-      "odpoved": "Financovala ji EU a sledovala sladidla, která lidé opravdu jedí, celý rok. Dokončilo ji 225 lidí s nadváhou ze 4 zemí: po dvouměsíční dietě na hubnutí 10 měsíců udržovali váhu. Jedna skupina byla bez sladidel, druhá nahradila cukr sladidly, obě držely přidaný cukr pod 10 % energie."
+      "otazka": "Je nějaká novější studie o sladidlech a střevech?",
+      "odpoved": "Financovala ji EU a sledovala sladidla, která lidé běžně jedí, celý rok. Dokončilo ji 225 lidí s nadváhou ze 4 zemí: po dvouměsíční dietě na hubnutí 10 měsíců udržovali váhu. Jedna skupina byla bez sladidel, druhá nahradila cukr sladidly, obě držely přidaný cukr pod 10 % energie."
     },
     {
       "otazka": "Jak sladidla ve studii ovlivnila střeva?",
@@ -39,5 +39,6 @@
     "Studie z EU ani studie z Nature nejsou v článku dohledatelně citované (bez autorů a PMID).",
     "Rada kombinovat sladidla s vlákninou pro lepší trávení je Martinova poznámka z praxe bez opory ve studii, proto není v odpovědích."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno přisouzení Mennu Henselmansovi (článek je překlad jeho příspěvku)"
+  "kontrola": "opraveno: kratka_odpoved doplněno přisouzení Mennu Henselmansovi (článek je překlad jeho příspěvku)",
+  "hlas": "upraveno: kratka_odpoved odpověď napřed; faq[0] a faq[1] otázky jako dotaz člověka; faq[1] bez „opravdu“"
 }

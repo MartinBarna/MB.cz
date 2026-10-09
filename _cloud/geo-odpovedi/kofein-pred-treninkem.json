@@ -5,7 +5,7 @@
   "kratka_odpoved": "Kofein není pouhé placebo, funguje i farmakologicky: blokuje adenosin, pomáhá náboru svalových vláken a drží tě bdělejšího. Účinkuje ale slaběji, než si fitness scéna ráda namlouvá, a když ho piješ každý den, účinkuje ještě míň.",
   "faq": [
     {
-      "otazka": "Co ukázala studie z roku 2026 o kofeinu a skoku do výšky?",
+      "otazka": "Pomohl kofein ve studii se skokem do výšky?",
       "odpoved": "Vědci dali 34 ženám 6 mg kofeinu na kilo a řekli jim, že možná dostávají kofein, placebo, nebo laktát, který výkon zhorší. Ve skoku do výšky nevyšel oproti kontrolnímu dni žádný rozdíl. Co dostaly, uhodla jen třetina (33 %)."
     },
     {
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Kolik kofeinu si dát před tréninkem?",
-      "odpoved": "Článek uvádí dávkování 3 až 6 mg na kilo tělesné hmotnosti."
+      "odpoved": "Běžně se uvádí 3 až 6 mg na kilo tělesné hmotnosti."
     },
     {
       "otazka": "Funguje kofein, když ho piju každý den?",
@@ -38,5 +38,6 @@
     "Článek neříká, o kolik slaběji kofein u denních pijáků účinkuje, ani jestli pomáhá kofein na čas vysadit. Otázku na cyklování jen klade čtenáři.",
     "Studie byla na 34 ženách a měřila jen skok do výšky. Článek sám varuje, že jedna studie není věda, proto ji odpovědi nepodávají jako obecný závěr."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] otázka přirozeněji; faq[2] bez „Článek uvádí“"
 }

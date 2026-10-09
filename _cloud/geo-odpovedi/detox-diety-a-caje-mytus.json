@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/detox-diety-a-caje-mytus.html",
   "titulek": "Detox diety, čaje a šťávové očisty: proč jsou mýtus (a co tělo opravdu čistí)",
   "hlavni_otazka": "Fungují detox diety a detoxikační čaje?",
-  "kratka_odpoved": "Ne. Tělo má detox zabudovaný: játra a ledviny pracují čtyřiadvacet hodin denně a žádná šťáva, čaj ani prášek je nerozjede rychleji. Kila shozená na šťávové očistě jsou hlavně voda a zásobní cukr (glykogen), ne tuk, a po návratu k normálnímu jídlu se během pár dní vrátí.",
+  "kratka_odpoved": "Ne. Tělo má detox zabudovaný: játra a ledviny pracují čtyřiadvacet hodin denně a žádná šťáva, čaj ani prášek je nerozjede rychleji. Kila shozená na šťávové očistě jsou hlavně voda a zásobní cukr (glykogen) a po návratu k normálnímu jídlu se během pár dní vrátí. Tuk zůstal, kde byl.",
   "faq": [
     {
       "otazka": "Proč na šťávové očistě zhubnu dvě kila za tři dny?",
@@ -17,7 +17,7 @@
       "odpoved": "Často obsahují bylinky s projímavým účinkem (senna, řešetlák) nebo látky, co tě odvodní. Dráždivá projímadla braná pravidelně rozhodí elektrolyty, můžou způsobit křeče, dehydrataci a při dlouhodobém užívání i závislost střeva na nich."
     },
     {
-      "otazka": "Co játrům a ledvinám opravdu pomůže?",
+      "otazka": "Co játrům a ledvinám pomůže?",
       "odpoved": "Dost vody, bílkoviny a vláknina, zelenina každý den, míň alkoholu, spánek a pohyb. Nic z toho se nemusí kupovat."
     }
   ],
@@ -43,5 +43,6 @@
     "Článek nespecifikuje, kolik vody denně pít.",
     "Nálepky na chodidla článek zmiňuje v úvodu, ale samostatně je nevyvrací, proto k nim otázku nedávám."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne tuk“ uprostřed věty; faq[3] otázka bez „opravdu“"
 }

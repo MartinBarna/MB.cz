@@ -10,11 +10,11 @@
     },
     {
       "otazka": "O kolik sníží LDL výměna tuků?",
-      "odpoved": "Podle meta-analýzy z roku 2025 snížila strava s vyšším poměrem nenasycených ku nasyceným tukům LDL v průměru zhruba o 10 mg/dl. Tam, kde nenasycené tuky opravdu nahradily nasycené, to bylo kolem 16 mg/dl."
+      "odpoved": "Meta-analýza z roku 2025: strava s vyšším podílem nenasycených tuků oproti nasyceným srazila LDL v průměru zhruba o 10 mg/dl. Tam, kde nenasycené tuky nahradily nasycené, to bylo kolem 16 mg/dl."
     },
     {
       "otazka": "Jak pomáhá vláknina na cholesterol?",
-      "odpoved": "Rozpustná vláknina (oves a ovesné otruby, luštěniny, ječmen, jablka, hrušky, psyllium) naváže ve střevě část žlučových kyselin a cholesterolu a odnese je pryč. Tělo si pak vezme cholesterol z krve a LDL klesne, ne dramaticky, ale spolehlivě."
+      "odpoved": "Rozpustná vláknina (oves a ovesné otruby, luštěniny, ječmen, jablka, hrušky, psyllium) naváže ve střevě část žlučových kyselin a cholesterolu a odnese je pryč. Tělo si pak vezme cholesterol z krve a LDL klesne, mírně, ale spolehlivě."
     },
     {
       "otazka": "Zlepší keto dieta LDL?",
@@ -46,5 +46,6 @@
     "Článek neuvádí, o kolik konkrétně sníží LDL hubnutí nebo pohyb u běžné populace; studie o pohybu se týkala žen po menopauze.",
     "Článek nepíše, jak poznat familiární hypercholesterolémii."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno „u průměrného člověka“ (článek číslo omezuje na průměrného člověka, u dědičné formy neplatí)"
+  "kontrola": "opraveno: kratka_odpoved doplněno „u průměrného člověka“ (článek číslo omezuje na průměrného člověka, u dědičné formy neplatí)",
+  "hlas": "upraveno: faq[1] bez úvodního „Podle“ a bez „opravdu“; faq[2] bez „ne dramaticky, ale“"
 }

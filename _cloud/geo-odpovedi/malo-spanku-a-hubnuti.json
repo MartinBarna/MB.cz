@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Platí to i mimo laboratoř?",
-      "odpoved": "Podle článku je venku ten rozdíl spíš ještě větší. V běžném životě se přidá míň spontánního pohybu, větší únava a odhad příjmu, který lidi obvykle podcení."
+      "odpoved": "Venku je ten rozdíl spíš ještě větší. V běžném životě se přidá míň spontánního pohybu, větší únava a odhad příjmu, který lidi obvykle podcení."
     },
     {
       "otazka": "Jak důležitý je spánek pro hubnutí?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Nejsem jeden z lidí, kterým stačí málo spánku?",
-      "odpoved": "Lidé, kteří díky genetice vystačí s míň spánku, existují, ale jsou vzácní. Nejsou to procenta populace, ale jednotlivé rodiny, takže ty to skoro jistě nejsi."
+      "odpoved": "Lidé, kteří díky genetice vystačí s míň spánku, existují, ale jsou vzácní. Jde o jednotlivé rodiny, žádná procenta populace, takže ty to skoro jistě nejsi."
     }
   ],
   "opory": [
@@ -36,5 +36,6 @@
     "Výsledek pochází z jedné malé laboratorní studie (10 lidí, 14 dní); další studie (Wang 2018, Tasali 2022) jsou jen ve zdrojích bez popsaných výsledků, proto nejsou použité.",
     "Tvrzení, že venku je rozdíl větší, článek podává jako odhad („spíš ještě větší“), ne jako změřený výsledek."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „Podle článku“; faq[3] bez „Nejsou to X, ale Y“"
 }

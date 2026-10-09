@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/kardio-nici-svaly-mytus.html",
   "titulek": "Kardio ti sežere svaly? Mýtus o kardiu a síle",
   "hlavni_otazka": "Přijdu o svaly, když budu k posilování chodit i na kardio?",
-  "kratka_odpoved": "Rozumné množství kardia ti svaly nesežere. Sval drží silový trénink, dost bílkovin a ne moc agresivní deficit, kardio je v tom doplněk, ne nepřítel. Konflikt reálně nastává až při obrovském vytrvalostním objemu, třeba tréninku na maraton, souběžně s maximální snahou o sílu.",
+  "kratka_odpoved": "Rozumné množství kardia ti svaly nesežere. Sval drží silový trénink, dost bílkovin a ne moc agresivní deficit, kardio je v tom jen doplněk. Konflikt reálně nastává až při obrovském vytrvalostním objemu, třeba tréninku na maraton, souběžně s maximální snahou o sílu.",
   "faq": [
     {
       "otazka": "Co je interference efekt?",
       "odpoved": "Vytrvalostní a silový trénink táhnou tělo trochu jiným směrem. Když jich naskládáš obrovský objem vedle sebe, můžou si navzájem trochu brzdit pokrok v síle a růstu svalů. Pár kardií týdně vedle silového tréninku ho ale nespustí."
     },
     {
-      "otazka": "Co svaly v dietě opravdu ujídá?",
-      "odpoved": "Skoro nikdy to není kardio. Viníkem bývá moc velký deficit, málo bílkovin, žádný silový trénink nebo špatný spánek."
+      "otazka": "Co mi v dietě ujídá svaly?",
+      "odpoved": "Kardio málokdy. Viníkem bývá moc velký deficit, málo bílkovin, žádný silový trénink nebo špatný spánek."
     },
     {
       "otazka": "Může mi kardio pomoct svaly v dietě udržet?",
@@ -49,5 +49,6 @@
     "Článek neodkazuje na žádné konkrétní studie k interferenčnímu efektu, jde o shrnutí z praxe.",
     "Článek neříká, kolik času nechat mezi tvrdým kardiem a tréninkem nohou."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „doplněk, ne nepřítel“; faq[1] otázka bez „opravdu“ a odpověď bez „Skoro nikdy“"
 }

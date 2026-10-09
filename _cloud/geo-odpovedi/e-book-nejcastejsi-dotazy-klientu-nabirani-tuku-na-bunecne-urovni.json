@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-nabirani-tuku-na-bunecne-urovni.html",
   "titulek": "E-book Nejčastější dotazy klientů – NABÍRÁNÍ TUKŮ NA BUNĚČNÉ ÚROVNI",
   "hlavni_otazka": "Proč po dietě naberu víc tuku, než jsem měl předtím?",
-  "kratka_odpoved": "Podle studií MacLeana může tělo při hubnutí na hodně nízkém příjmu a rychlém nabrání zpátky začít vyrábět nové tukové buňky. Na stejném procentu tuku pak máš víc menších buněk, které snižují leptin, a jsi hladovější. Nedělají to diety samy, ale zpomalení metabolismu a energetická mezera.",
+  "kratka_odpoved": "Podle studií MacLeana může tělo při hubnutí na hodně nízkém příjmu a rychlém nabrání zpátky začít vyrábět nové tukové buňky. Na stejném procentu tuku pak máš víc menších buněk, které snižují leptin, a jsi hladovější. Stojí za tím zpomalení metabolismu a energetická mezera, které drastická dieta vytvoří.",
   "faq": [
     {
       "otazka": "Co se děje s tukovými buňkami při hubnutí a přibírání?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Proč lidé, kteří drželi hodně diet, snáz přibírají?",
-      "odpoved": "Ne proto, že by je diety dělaly tlustými, ale kvůli podmínkám, které typické diety vytvářejí: zpomalení metabolismu a energetické mezeře. Po drastické dietě a rychlém nabrání zpátky můžou mít víc tukových buněk a být hladovější na stejném procentu tuku."
+      "odpoved": "Kvůli podmínkám, které typické diety vytvářejí: zpomalení metabolismu a energetické mezeře. Po drastické dietě a rychlém nabrání zpátky můžou mít víc tukových buněk a být hladovější na stejném procentu tuku."
     }
   ],
   "opory": [
@@ -38,5 +38,6 @@
     "Studie MacLeana článek necituje konkrétně (rok, časopis) a jde zřejmě převážně o výzkum na zvířatech; to článek neříká. Doporučuji ověřit před použitím jako citovatelné odpovědi.",
     "Článek je psaný střídavě ve vykání a tykání; odpovědi jsem sjednotil do tykání."
   ],
-  "kontrola": "opraveno: faq[2] doplněna podmínka ‚po drastické dietě‘ (nové tukové buňky článek váže na drastickou dietu a rychlé nabrání, ne na jakékoli přibrání) a chybějící opora"
+  "kontrola": "opraveno: faq[2] doplněna podmínka ‚po drastické dietě‘ (nové tukové buňky článek váže na drastickou dietu a rychlé nabrání, ne na jakékoli přibrání) a chybějící opora",
+  "hlas": "upraveno: kratka_odpoved a faq[2] bez „Ne proto, že X, ale Y“"
 }

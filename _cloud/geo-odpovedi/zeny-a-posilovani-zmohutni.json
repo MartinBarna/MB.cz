@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Zhubne mi břicho z cvičení břicha?",
-      "odpoved": "Ne, lokální spalování tuku neexistuje. Tělo ubírá tuk plošně z celého těla, ne z místa, které zrovna zatížíš."
+      "odpoved": "Lokální spalování tuku neexistuje. Tělo ubírá tuk plošně z celého těla a na místo, které zrovna zatěžuješ, se neohlíží."
     },
     {
       "otazka": "Jak mám jako žena v posilovně trénovat?",
@@ -88,5 +88,6 @@
     "Článek neříká, kolik sérií a kolikrát týdně trénovat, „dvakrát“ a „třikrát týdně“ zmiňuje jen v příkladech.",
     "Článek neuvádí, jak velký má být „mírný deficit“."
   ],
-  "kontrola": "opraveno: faq[3] zakázané slovo ze seznamu AI frází (z citace článku) nahrazeno „obzvlášť důležité“, význam podle článku zachován"
+  "kontrola": "opraveno: faq[3] zakázané slovo ze seznamu AI frází (z citace článku) nahrazeno „obzvlášť důležité“, význam podle článku zachován",
+  "hlas": "upraveno: faq[1] bez úvodního „Ne,“ (druhé v řadě) a bez „ne z místa“"
 }

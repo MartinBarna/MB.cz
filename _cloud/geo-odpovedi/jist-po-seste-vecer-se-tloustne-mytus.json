@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Proč se říká, že jídlo večer tloustí?",
-      "odpoved": "Mýtus vyrostl ze skutečného pozorování: kdo jí pozdě večer, často sní za den víc. U telky jedou chipsy, víno, pivo a čokoláda z nudy, a nikdo to nepočítá. Pozdní jezení s přejídáním souvisí, ale není jeho příčinou."
+      "odpoved": "Mýtus má reálný základ: kdo jí pozdě večer, často sní za den víc. U telky jedou chipsy, víno, pivo a čokoláda z nudy, a nikdo to nepočítá. Pozdní jezení s přejídáním souvisí, ale není jeho příčinou."
     },
     {
       "otazka": "Co říká výzkum o časování jídla a hubnutí?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Kdy má smysl večerní jídlo řešit?",
-      "odpoved": "Když ti těžké jídlo těsně před spaním rozhodí spánek a trávení. Pak poslední velké jídlo posuň o hodinu dvě dřív nebo ho udělej lehčí, kvůli spánku, ne kvůli váze."
+      "odpoved": "Když ti těžké jídlo těsně před spaním rozhodí spánek a trávení. Pak poslední velké jídlo posuň o hodinu dvě dřív nebo ho udělej lehčí, pomůžeš tím spánku."
     },
     {
       "otazka": "Můžu se najíst po večerním tréninku, i když je pozdě?",
@@ -39,5 +39,6 @@
     "Článek neříká, jak dlouho před spaním je jídlo už „těsně před spaním“; dává jen radu posunout ho o hodinu dvě dřív.",
     "Článek neřeší lidi na směny nebo s narušeným cirkadiánním rytmem, proto jsem odpověď na ně nerozšiřoval."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „skutečného“; faq[2] bez „kvůli spánku, ne kvůli váze“"
 }

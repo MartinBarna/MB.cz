@@ -14,11 +14,11 @@
     },
     {
       "otazka": "Zvyšují ultra-zpracované potraviny riziko nemocí?",
-      "odpoved": "Souhrn 45 analýz v BMJ (Lane 2024) spojuje vyšší příjem s vyšším rizikem kardiovaskulární úmrtnosti (RR 1,50) a cukrovky 2. typu (RR 1,12). Jde ale o pozorovací data, tedy souvislost, ne prokázanou příčinu, a podle GRADE bylo 22 analýz nízké kvality, 19 velmi nízké a jen čtyři střední."
+      "odpoved": "Souhrn 45 analýz v BMJ (Lane 2024) spojuje vyšší příjem s vyšším rizikem kardiovaskulární úmrtnosti (RR 1,50) a cukrovky 2. typu (RR 1,12). Jde ale o pozorovací data, tedy souvislost bez prokázané příčiny, a podle GRADE bylo 22 analýz nízké kvality, 19 velmi nízké a jen čtyři střední."
     },
     {
       "otazka": "Zhubnu, když ultra-zpracované jídlo nevyřadím?",
-      "odpoved": "Ano, pokud udržíš kalorický deficit. S klienty se osvědčuje postavit zhruba 80 % kalorií na celistvém jídle a zbylých 20 % nechat na cokoli, co se vejde do denního příjmu."
+      "odpoved": "Ano, pokud udržíš kalorický deficit. U klientů se mi osvědčuje postavit zhruba 80 % kalorií na celistvém jídle a zbylých 20 % nechat na cokoli, co se vejde do denního příjmu."
     },
     {
       "otazka": "Jak se v praxi míň přejídat?",
@@ -112,5 +112,6 @@
     "Článek neuvádí, jak dlouho trvala studie se sendviči ve Wageningenu ani jaké přesně potraviny spadají do čtvrté skupiny NOVA.",
     "Autoři Fordeovy analýzy sami upozorňují, že NOVA sama o sobě žádný doložený mechanismus nenabízí, takže není jasné, nakolik je problém v samotném zpracování."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] bez „souvislost, ne prokázanou příčinu“; faq[3] „s klienty se osvědčuje“ → 1. osoba"
 }

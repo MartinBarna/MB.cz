@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Mám místo kapslí s rybím olejem radši jíst rybu?",
-      "odpoved": "Martin řeší kapsle většinou až jako třetí v pořadí, po jídelníčku a tréninku. Nejdřív se snaží dostat do jídelníčku tučnou rybu dvakrát týdně, třeba sardinky, makrelu nebo lososa."
+      "odpoved": "Kapsle řeším většinou až jako třetí v pořadí, po jídelníčku a tréninku. Nejdřív se snažím dostat do jídelníčku tučnou rybu dvakrát týdně, třeba sardinky, makrelu nebo lososa."
     },
     {
       "otazka": "Můžu brát omega-3, když beru léky na ředění krve?",
@@ -112,5 +112,6 @@
     "Článek neříká, jak při nákupu poznat nebo vybrat nezoxidovaný rybí olej.",
     "U Norska, Jižní Afriky a USA článek neuvádí, ze které studie číslo pochází. U Nového Zélandu a Kanady odkazuje na Albert et al. 2015 a Jackowski et al. 2015."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] z 3. osoby („Martin řeší“) do 1. osoby"
 }

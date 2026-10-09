@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/jak-nabrat-svaly/",
   "titulek": "Jak nabrat svaly: kompletní průvodce pro naturály",
   "hlavni_otazka": "Jak nabrat svaly bez steroidů?",
-  "kratka_odpoved": "Svaly rostou ze tří věcí: postupně zvedáš zátěž v posilovně, jíš dost bílkovin v mírném kalorickém přebytku a dopřeješ tělu čas a regeneraci. Bílkovin dej kolem 1,6–2,2 g/kg každý den. Jako naturál se to měří v letech, ne týdnech.",
+  "kratka_odpoved": "Svaly rostou ze tří věcí: postupně zvedáš zátěž v posilovně, jíš dost bílkovin v mírném kalorickém přebytku a dopřeješ tělu čas a regeneraci. Bílkovin dej kolem 1,6–2,2 g/kg každý den. Jako naturál počítej s roky.",
   "faq": [
     {
       "otazka": "Kolik bílkovin potřebuju na růst svalů?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Které suplementy na svaly mají smysl?",
-      "odpoved": "Nejdřív musíš mít srovnaný trénink, jídlo a spánek. Z doplňků vede kreatin, levný a jeden z nejlépe prozkoumaných. BCAA jsou při dostatku bílkovin pro většinu lidí vyhozené peníze a protein v prášku je jen pohodlný způsob, jak dohnat bílkoviny."
+      "odpoved": "Nejdřív si srovnej trénink, jídlo a spánek. Z doplňků vede kreatin, levný a jeden z nejlépe prozkoumaných. BCAA jsou při dostatku bílkovin pro většinu lidí vyhozené peníze a protein v prášku je jen pohodlný způsob, jak dohnat bílkoviny."
     }
   ],
   "opory": [
@@ -81,5 +81,6 @@
     "Článek nedává dávku kreatinu, proto v odpovědi není.",
     "FAQPage JSON-LD na stránce mluví o rychlosti nabírání za první rok bez čísla a o 2 g/kg „víc už extra svaly nepřidá“; viditelný text tu druhou větu nemá, do JSON se nepřebírala."
   ],
-  "kontrola": "opraveno: nově doplněno při revizi 10. 10. 2026 (dávky 1 až 3 pilíř vynechaly)"
+  "kontrola": "opraveno: nově doplněno při revizi 10. 10. 2026 (dávky 1 až 3 pilíř vynechaly)",
+  "hlas": "upraveno: kratka_odpoved bez „v letech, ne týdnech“; faq[4] bez „musíš“"
 }

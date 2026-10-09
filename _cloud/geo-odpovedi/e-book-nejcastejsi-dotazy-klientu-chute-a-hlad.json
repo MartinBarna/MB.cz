@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Proč mám chutě na sladké kolem periody?",
-      "odpoved": "Některé ženy mívají v tom období nižší krevní cukr a projeví se to většími chutěmi. Často stačí povolit si trochu sladkého a držet priority. Vyšší váha a míry kolem periody jsou jen dočasné zavodnění, které vždycky opadne."
+      "odpoved": "Některé ženy mívají v tom období nižší krevní cukr a projeví se to většími chutěmi. Často stačí povolit si trochu sladkého a držet priority. Vyšší váha a míry kolem periody jsou jen dočasné zavodnění, které zase opadne."
     }
   ],
   "opory": [
@@ -37,5 +37,6 @@
     "Jak diet break přesně funguje, článek nevysvětluje, odkazuje na samostatnou kapitolu.",
     "Článek nedefinuje, co je hubnutí „moc rychle“."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] bez „vždycky“"
 }
