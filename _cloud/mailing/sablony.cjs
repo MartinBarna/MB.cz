@@ -30,6 +30,15 @@ const PODPIS = p('<strong>Be Effective!</strong><br>Martin');
 const DAREK_VIP = '🎁 K první platbě VIP ti přidám svůj videokurz výživy: 182 videí, hodnota {{course_price}} Kč. Zůstane ti, i když předplatné zrušíš.';
 const ZARUKA = 'Zrušíš kdykoli v appce. Když ti to do 14 dnů nesedne, vrátím ti peníze.';
 
+// Revize R1 (9. 10. 2026, nezavisly revizor): opraveno
+//  - fotka NENI lek na podhodnoceny prijem (web /tvuj-coach/: „Fotka podcenuje olej a omacku")
+//  - „co si dat, kdyz zbyva 400 kcal" je funkce BASICU, ne VIP; VIP se prodava AI koucem, fotkou a hlasem
+//  - tlacitko „Vyzkouset VIP" slibovalo zkusebku, ktera od 20. 8. neexistuje
+//  - prepocet cilu a generatory ma uz Basic: VIP = „vsechno z Basicu a k tomu…"
+//  - mesic Academy k rocnimu VIP jen „pokud v ni jeste nejsi" (podminka z webu)
+//  - gramatika (stala cisla), neoverene pravidlo „malo dnu = cil se nehne" z P0 vypusteno,
+//    hovorove tvary (min, dneska), protikladove slogany, AI nevystupuje jako clovek
+
 // ============================================================================
 // TRAŤ 1: vip-free  (Free uživatelé appky, kteří zapisují a neplatí)
 // ============================================================================
@@ -38,13 +47,13 @@ const vipFree = [
   {
     track: VF, step: 0, key: 'vf-1-zapisujes', wait_days: 3,
     subject: 'Zapisuješ. Teď ať s tím appka něco udělá',
-    subject_b: 'Tvoje zápisy umí víc, než ti teď ukazují',
+    subject_b: 'Co appka udělá s tím, co už zapisuješ',
     preheader: 'Co se ve VIP stane s daty, která v appce už máš.',
     blocks: [
       AHOJ,
-      p('v appce už nějaký čas zapisuješ. To je ta těžší půlka a máš ji za sebou.'),
-      p('Druhá půlka je vědět, co s čísly udělat. Check-in si ve Free vyplníš a rozbor uvidíš. Ve <strong>VIP</strong> podle něj appka přepočítá kalorie a makra na další týden, podle toho, co jsi opravdu snědl[a], a podle toho, jak se hnula váha.'),
-      p('K tomu AI kouč, který tvoje zápisy vidí. Napíšeš mu „proč mi appka zvedla sacharidy?“ a odpoví nad tvými čísly. Čísla počítá engine, AI ti je vysvětlí.'),
+      p('v appce už nějaký čas zapisuješ. Tím máš data, ze kterých se dá počítat.'),
+      p('Ve Free si check-in vyplníš a rozbor uvidíš. <strong>VIP</strong> má všechno z Basicu: podle check-inu přepočítá kalorie a makra na další týden, podle toho, co jsi snědl[a] a jak se hnula váha, a poskládá ti jídelníček i trénink.'),
+      p('A k tomu AI kouč, který tvoje zápisy vidí. Napíšeš mu „proč mi appka zvedla sacharidy?“ a odpoví nad tvými čísly. Čísla počítá engine, AI ti je vysvětlí.'),
       p(DAREK_VIP),
       btn('Přejít na VIP za {{cena_vip_mesic}} Kč', PREDPLATNE_VIP(VF, 'vf-1')),
       p('Zrušíš kdykoli v Profilu. Když ti to do 14 dnů nesedne, vrátím ti peníze.'),
@@ -54,19 +63,19 @@ const vipFree = [
   },
   {
     track: VF, step: 1, key: 'vf-2-foto-hlas', wait_days: 4,
-    subject: 'Zapsat oběd za pět vteřin',
-    subject_b: 'Vyfoť talíř. Makra spočítá appka',
+    subject: 'Zapsat oběd za pár vteřin',
+    subject_b: 'Vyfoť talíř, appka odhadne makra',
     preheader: 'Foto a hlas ve VIP: zápis, který tě nezdrží.',
     blocks: [
       AHOJ,
       p('za třináct let s klienty vidím pořád totéž: kdo zápis vzdá, vzdá ho většinou proto, že ho zdržuje.'),
       p('Proto jsou ve VIP dvě zkratky:'),
       ul(
-        '<strong>Foto jídla.</strong> Vyfotíš talíř, klidně domácí kuchyni bez obalu. AI pozná i víc jídel na jedné fotce a odhadne kalorie a makra. Odhad vidíš a opravíš, než se zapíše.',
+        '<strong>Foto jídla.</strong> Vyfotíš talíř, klidně domácí kuchyni bez obalu. AI pozná i víc jídel na jedné fotce a odhadne kalorie a makra. Odhad vidíš a před zápisem opravíš. Olej a omáčku na fotce nepozná, ty doplň.',
         '<strong>Zápis hlasem.</strong> Řekneš „rohlík, tvaroh dvě stě gramů a tři deci vody“ a appka větu rozebere. Potvrdíš, nebo opravíš.',
       ),
       p('Snídani, kterou máš pětkrát týdně, zapíšeš i ve Free jedním ťuknutím ze šablony. Foto a hlas ti ušetří čas u všeho ostatního.'),
-      btn('Vyzkoušet VIP', PREDPLATNE_VIP(VF, 'vf-2')),
+      btn('Chci VIP', PREDPLATNE_VIP(VF, 'vf-2')),
       PODPIS,
       ps('P.S. K první platbě VIP dostaneš i videokurz výživy zdarma.'),
     ],
@@ -74,21 +83,20 @@ const vipFree = [
   {
     track: VF, step: 2, key: 'vf-3-ai-kouc', wait_days: 4,
     subject: 'Zeptej se ve dvě ráno',
-    subject_b: 'Kouč, který vidí tvoje čísla',
+    subject_b: 'AI kouč, který vidí tvoje čísla',
     preheader: 'AI kouč ve VIP odpovídá podle mojí metodiky a jídlo zapíše za tebe.',
     blocks: [
       AHOJ,
       p('otázky, které mi klienti léta posílají na WhatsApp, se opakují:'),
       ul(
         '„Váha se týden nehýbe. Mám ubrat?“',
-        '„Po tréninku mi zbývá 300 kcal. Co si dám?“',
+        '„Proč mi appka zvedla sacharidy?“',
         '„Jsem na oslavě. Jak to zapsat, ať si nezkazím týden?“',
       ),
       p('Ve VIP na ně odpovídá AI kouč. Vidí tvoje zápisy i vývoj váhy a odpovídá podle metodiky, se kterou pracuju s klienty od roku 2013. Když mu napíšeš, co jsi snědl[a], rovnou to zapíše.'),
-      p('Kalorie a makra počítá engine. AI ti je vysvětlí a pomůže s rozhodnutím na dnešek.'),
       btn('Napsat AI koučovi ve VIP', PREDPLATNE_VIP(VF, 'vf-3')),
       PODPIS,
-      ps('P.S. Basic za {{cena_basic_mesic}} Kč umí přepočet cílů a generátory, AI kouče, foto ani hlas ale nemá. Proto ti doporučuju VIP.'),
+      ps('P.S. Basic za {{cena_basic_mesic}} Kč umí přepočet cílů a generátory. AI kouče, foto ani hlas nemá, proto ti doporučuju VIP.'),
     ],
   },
   {
@@ -103,13 +111,13 @@ const vipFree = [
       p('tohle je poslední mail o předplatném z téhle řady. Shrnu ti to na jednu obrazovku:'),
       ul(
         '<strong>Free (zdarma, napořád):</strong> zápis jídla i tréninku, skener čárových kódů, přes {{pocet_potravin}} potravin, šablony a 14 dní historie.',
-        '<strong>Basic ({{cena_basic_mesic}} Kč měsíčně):</strong> navíc týdenní přepočet kalorií a maker, generátor jídelníčku i tréninku a celá historie.',
+        '<strong>Basic ({{cena_basic_mesic}} Kč měsíčně):</strong> navíc týdenní přepočet kalorií a maker, generátor jídelníčku i tréninku, „Co si můžu ještě dnes dát“ a celá historie.',
         '<strong>VIP ({{cena_vip_mesic}} Kč měsíčně):</strong> všechno z Basicu, k tomu AI kouč, foto jídla a zápis hlasem. A k první platbě videokurz výživy zdarma.',
       ),
       p('Když víš, že do toho jdeš na delší dobu, roční VIP vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma. K ročnímu VIP navíc přidávám měsíc Barna Academy na zkoušku.'),
       btn('Vybrat VIP', PREDPLATNE_VIP(VF, 'vf-4')),
       p('Zrušíš kdykoli v Profilu, zaplacené období doběhne a dál se nic nestrhne. Do 14 dnů od začátku ti vrátím celou částku, když ti to nesedne.'),
-      p('A když zůstaneš ve Free, taky dobře. Zapisuj dál, to je půlka práce.'),
+      p('A když zůstaneš ve Free, taky dobře. Zapisuj dál, bez zápisu se nedá nic spočítat.'),
       PODPIS,
       ps('P.S. Jestli tě od předplatného něco drží, odpověz mi jednou větou na tenhle mail. Čtu to sám.'),
     ],
@@ -124,13 +132,13 @@ const vipKupci = [
   {
     track: VK, step: 0, key: 'vk-1-v-pondeli', wait_days: 4,
     subject: 'Kurz máš v hlavě. Kdo ti to spočítá v pondělí?',
-    subject_b: 'Z videokurzu do praxe za minutu denně',
+    subject_b: 'Z videokurzu do praxe za pár minut týdně',
     preheader: 'Appka Tvůj Coach dělá s tvými čísly to, co učím ve videokurzu.',
     blocks: [
       AHOJ,
-      p('ve videokurzu jsi viděl[a], jak počítám kalorie a makra a proč mě zajímá vývoj váhy za týdny víc než jedno ranní vážení.'),
+      p('ve videokurzu jsi viděl[a], jak funguje kalorický deficit a kolik bílkovin, sacharidů a tuků jíst.'),
       p('V praxi to znamená každý týden sečíst, co jsi snědl[a], porovnat to s váhou a rozhodnout, jestli ubrat, přidat, nebo vydržet. Tohle za tebe dělá appka <strong>Tvůj Coach</strong>.'),
-      p('Ve <strong>VIP</strong> ti z tvých zápisů každý týden přepočítá kalorie a makra a poskládá jídelníček z běžných potravin i trénink podle toho, kde cvičíš. AI kouč ti odpoví na otázky podle stejné metodiky, jakou znáš z kurzu.'),
+      p('Ve <strong>VIP</strong> ti z tvých zápisů každý týden přepočítá kalorie a makra a poskládá jídelníček z běžných potravin i trénink podle toho, kde cvičíš. AI kouč ti k tomu odpoví na otázky podle stejné metodiky, jakou znáš z kurzu.'),
       btn('Chci VIP za {{cena_vip_mesic}} Kč měsíčně', KOUPIT_VIP(VK, 'vk-1')),
       p(ZARUKA),
       PODPIS,
@@ -138,34 +146,34 @@ const vipKupci = [
     ],
   },
   {
-    track: VK, step: 1, key: 'vk-2-zbyva', wait_days: 4,
-    subject: 'Kolik ti dneska ještě zbývá{{fn_suffix}}?',
-    subject_b: 'Vyfoť oběd. Zbytek spočítá appka',
-    preheader: 'Tři situace, kde ti VIP ušetří nejvíc času.',
+    track: VK, step: 1, key: 'vk-2-oslava', wait_days: 4,
+    subject: 'Oslava, oběd venku a zápis, který tě nezdrží',
+    subject_b: 'Tři situace, kde ti VIP ušetří nejvíc času',
+    preheader: 'AI kouč, foto a hlas: co VIP přidá k tomu, co znáš z kurzu.',
     blocks: [
       AHOJ,
-      p('z praxe vím, že přesnost zápisu rozhoduje víc než dokonale vyladěná makra. Lidi svůj příjem běžně podceňují o 20 až 50 %. Ve VIP na to máš tři zkratky:'),
+      p('z kurzu víš, že bez zápisu se nedá nic spočítat. Studie ukazují, že lidi svůj příjem klidně podhodnotí o 20 až 50 %, a u klientů vidím, že nejvíc chybí dny, kdy zápis vynechají. Ve VIP máš na takové dny tři zkratky:'),
       ul(
-        '<strong>Večer ti zbývá 400 kcal.</strong> Zeptáš se AI kouče, co si dát, a on ti to rovnou zapíše.',
-        '<strong>Oběd venku bez obalu.</strong> Vyfotíš talíř, AI odhadne jídla i makra a ty odhad před zápisem zkontroluješ.',
+        '<strong>Oslava.</strong> Napíšeš AI koučovi, co jsi snědl[a], a on to za tebe zapíše. Když nevíš, jak s tím naložit zbytek týdne, zeptáš se rovnou jeho.',
+        '<strong>Oběd venku bez obalu.</strong> Vyfotíš talíř, AI odhadne jídla i makra. Odhad před zápisem zkontroluješ a olej s omáčkou doplníš, ty fotka nepozná.',
         '<strong>Nechce se ti ťukat.</strong> Řekneš „rohlík, tvaroh dvě stě gramů“ a appka to rozebere sama.',
       ),
-      btn('Vyzkoušet VIP', KOUPIT_VIP(VK, 'vk-2')),
+      btn('Chci VIP', KOUPIT_VIP(VK, 'vk-2')),
       PODPIS,
-      ps('P.S. Teorii z kurzu máš. Appka ti pomůže udělat z ní zvyk.'),
+      ps('P.S. Zápis jídla i tréninku zůstává v appce zdarma i bez VIP.'),
     ],
   },
   {
     track: VK, step: 2, key: 'vk-3-basic-nebo-vip', wait_days: 5,
     subject: 'Basic, nebo VIP? Napíšu ti to narovinu',
     subject_b: 'Proč ti doporučuju dražší plán',
-    preheader: 'Rozdíl je v tom, kdo ti odpoví, když nevíš.',
+    preheader: 'Rozdíl je v AI koučovi, foto a hlasu.',
     blocks: [
       AHOJ,
       p('v appce jsou dva placené plány a chci, abys věděl[a], proč ti doporučuju ten dražší.'),
-      p('<strong>Basic</strong> za {{cena_basic_mesic}} Kč měsíčně ti každý týden přepočítá cíle a má generátor jídelníčku i tréninku. To je počítání.'),
-      p('<strong>VIP</strong> za {{cena_vip_mesic}} Kč měsíčně umí totéž a k tomu AI kouče, foto jídla a zápis hlasem. Teorii znáš z kurzu, takže ti nejvíc pomůže mít po ruce někoho, kdo ti ve chvíli zaváhání řekne, co s dnešním číslem.'),
-      p('Když víš, že u toho vydržíš, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku.'),
+      p('<strong>Basic</strong> za {{cena_basic_mesic}} Kč měsíčně ti každý týden přepočítá cíle a má generátor jídelníčku i tréninku.'),
+      p('<strong>VIP</strong> za {{cena_vip_mesic}} Kč měsíčně umí všechno z Basicu a k tomu AI kouče, foto jídla a zápis hlasem. Teorii znáš z kurzu. Nejvíc ti teď pomůže mít po ruce AI kouče, který ve chvíli zaváhání odpoví, co s dnešním číslem.'),
+      p('Když víš, že u toho vydržíš, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku, pokud v ní ještě nejsi.'),
       btn('Chci VIP', KOUPIT_VIP(VK, 'vk-3')),
       p('Zrušíš kdykoli. Do 14 dnů od začátku předplatného ti vrátím celou částku, když ti to nesedne.'),
       PODPIS,
@@ -177,12 +185,11 @@ const vipKupci = [
     //    (nebo evergreen-kupci, kdo uz longtail-kupci mel). Most neni potreba.
     subject: 'Poslední mail o appce z téhle řady',
     subject_b: 'Jedno rozhodnutí na tenhle měsíc',
-    preheader: 'Žádný odpočet. Jen shrnutí.',
+    preheader: 'Cena zítra platí stejně. Tady je shrnutí.',
     blocks: [
       AHOJ,
       p('tohle je poslední mail o appce z téhle řady. Cena zítra platí stejně, nikde neběží žádný odpočet.'),
-      p('Shrnu to jednou větou: videokurz ti dal pravidla a VIP ti je každý týden přepočítá na tvoje čísla, s AI koučem po ruce.'),
-      p('U klientů vidím, že teorie bez denní praxe vydrží pár týdnů. S týdenním přepočtem z ní je návyk.'),
+      p('Videokurz ti dal pravidla. Ve VIP podle nich appka každý týden přepočítá tvoje kalorie a makra a AI kouč ti je vysvětlí, kdykoli se zeptáš.'),
       btn('Vzít VIP za {{cena_vip_mesic}} Kč', KOUPIT_VIP(VK, 'vk-4')),
       p('Když teď není ta chvíle, nic se neděje. Dál ti budu psát o výživě jako dosud.'),
       PODPIS,
@@ -203,28 +210,27 @@ const vipLeady = [
     preheader: 'Appka, která z tvých zápisů každý týden přepočítá cíl. K první platbě VIP videokurz zdarma.',
     blocks: [
       AHOJ,
-      p('pár týdnů ti posílám tipy. Jestli sis podle nich spočítal[a] kalorie, máš za sebou první krok.'),
-      p('Pak přijde týden, kdy se váha nehne, a nikdo vedle tebe neřekne, jestli ubrat, přidat, nebo vydržet. U klientů vidím, že tady to lidi vzdávají nejčastěji.'),
+      p('jednou přijde týden, kdy se váha nehne, a nikdo vedle tebe neřekne, jestli ubrat, přidat, nebo vydržet. U klientů vidím, že tady to lidi vzdávají nejčastěji.'),
       p('Na tohle jsem postavil appku <strong>Tvůj Coach</strong>. Ve <strong>VIP</strong> ti každý týden z tvých zápisů a vážení přepočítá kalorie i makra, sestaví jídelníček z běžných potravin a trénink podle toho, kde cvičíš. K tomu AI kouč, který tvoje čísla vidí. Čísla počítá engine, AI ti je vysvětlí.'),
       p(DAREK_VIP),
       btn('Chci VIP za {{cena_vip_mesic}} Kč měsíčně', KOUPIT_VIP(VL, 'vl-1')),
       p(ZARUKA),
       PODPIS,
-      ps('P.S. Zapisovat jídlo i trénink můžeš v appce zdarma napořád a bez karty. VIP platíš za to, že s těmi čísly appka pracuje za tebe.'),
+      ps('P.S. Zapisovat jídlo i trénink můžeš v appce zdarma napořád a bez karty. Ve VIP platíš za to, že s těmi čísly appka pracuje za tebe.'),
     ],
   },
   {
-    track: VL, step: 1, key: 'vl-2-zbyva-400', wait_days: 3,
-    subject: 'Zbývá ti 400 kcal. Co si dáš?',
-    subject_b: 'Oběd venku a appka, která ví, kolik ti zbývá',
+    track: VL, step: 1, key: 'vl-2-oslava', wait_days: 3,
+    subject: 'Oslava v sobotu. Jak ji zapsat?',
+    subject_b: 'Oběd venku a zápis, který tě nezdrží',
     preheader: 'Dvě funkce z VIP, kvůli kterým lidi u zápisu vydrží.',
     blocks: [
       AHOJ,
       p('dvě situace, které znám od klientů nazpaměť.'),
-      p('<strong>Večer.</strong> Zbývá ti 400 kcal a 30 g bílkovin a v lednici je toho moc i málo zároveň. Ve VIP se zeptáš AI kouče, co si dát, a on ti to rovnou zapíše.'),
-      p('<strong>Oběd venku.</strong> Žádný obal, žádný čárový kód. Vyfotíš talíř, AI odhadne jídla i makra a ty odhad před zápisem zkontroluješ.'),
-      p('Proč na tom trvám: lidi svůj příjem běžně podceňují o 20 až 50 %. Čím míň tě zápis zdržuje, tím déle u něj vydržíš a tím víc ti čísla řeknou.'),
-      btn('Vyzkoušet VIP', KOUPIT_VIP(VL, 'vl-2')),
+      p('<strong>Oslava.</strong> Dort, chlebíčky, víno, a v hlavě „to už nemá cenu zapisovat“. Ve VIP napíšeš AI koučovi, co jsi snědl[a], on to zapíše a řekne ti, jak s tím naložit zbytek týdne.'),
+      p('<strong>Oběd venku.</strong> Žádný obal, žádný čárový kód. Vyfotíš talíř, AI odhadne jídla i makra. Odhad před zápisem zkontroluješ a olej s omáčkou doplníš, ty fotka nepozná.'),
+      p('Studie ukazují, že lidi svůj příjem klidně podhodnotí o 20 až 50 %. Nejvíc chybí právě dny, kdy se zápis vynechá. Čím méně tě zápis zdržuje, tím méně takových dnů bude.'),
+      btn('Chci VIP', KOUPIT_VIP(VL, 'vl-2')),
       PODPIS,
       ps('P.S. K první platbě VIP pořád platí videokurz výživy zdarma.'),
     ],
@@ -232,11 +238,11 @@ const vipLeady = [
   {
     track: VL, step: 2, key: 'vl-3-videokurz', wait_days: 4,
     subject: 'Proč k VIP přidávám celý videokurz',
-    subject_b: '182 videí k tomu, co v appce zapisuješ',
-    preheader: 'Appka počítá. Videokurz vysvětluje, proč počítá zrovna takhle.',
+    subject_b: '182 videí, která k VIP dostaneš zdarma',
+    preheader: 'Ať víš, proč appka počítá zrovna takhle.',
     blocks: [
       AHOJ,
-      p('appka ti každý den řekne, kolik jíst. Kdo ale neví, proč zrovna tolik, při první oslavě nebo dovolené to pustí.'),
+      p('appka ti každý den řekne, kolik jíst. U klientů vidím, že kdo neví, proč zrovna tolik, často to pustí při první oslavě nebo dovolené.'),
       p('Proto k první platbě VIP přidávám videokurz výživy. 182 videí o tom, jak funguje kalorický deficit, kolik bílkovin, sacharidů a tuků jíst a jak jíst flexibilně bez zakázaných jídel.'),
       p('Samostatně stojí {{course_price}} Kč. K VIP ho máš zdarma a zůstane ti, i když předplatné po měsíci zrušíš.'),
       btn('Chci VIP i s videokurzem', KOUPIT_VIP(VL, 'vl-3')),
@@ -253,7 +259,7 @@ const vipLeady = [
       AHOJ,
       p('když lidem nabídnu appku, slyším nejčastěji tři věci. Odpovím ti rovnou.'),
       p('<strong>„Nebaví mě zapisovat.“</strong> Proto je ve VIP zápis z fotky a hlasem. Řekneš „rohlík, tvaroh dvě stě gramů“ a appka to rozebere. Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím.'),
-      p('<strong>„Nechci další předplatné.“</strong> Zápis jídla i tréninku, skener a databáze potravin jsou zdarma napořád. Za VIP platíš týdenní přepočet cílů, generátory a AI kouče. Když AI nepotřebuješ, v appce je i Basic za {{cena_basic_mesic}} Kč, jen bez kouče a bez videokurzu.'),
+      p('<strong>„Nechci další předplatné.“</strong> Zápis jídla i tréninku, skener a databáze potravin jsou zdarma napořád. VIP má navíc týdenní přepočet cílů, generátory a AI kouče. Když AI nepotřebuješ, v appce je i Basic za {{cena_basic_mesic}} Kč s přepočtem a generátory, jen bez kouče a bez videokurzu.'),
       p('<strong>„Co když to nevydržím?“</strong> Zrušíš kdykoli v appce a zaplacené období doběhne. Když ti to do 14 dnů od začátku nesedne, napiš mi na martin@martinbarna.cz a vrátím ti celou částku. Videokurz při vrácení peněz odchází s nimi.'),
       btn('Vzít VIP za {{cena_vip_mesic}} Kč', KOUPIT_VIP(VL, 'vl-4')),
       PODPIS,
@@ -264,37 +270,41 @@ const vipLeady = [
     // ⛔ KONEC TRATI: po dojeti lead sebere `enroll_into_longtail` → longtail-consumer.
     subject: 'Poslední mail o appce z téhle řady',
     subject_b: 'Rok VIP za cenu deseti měsíců',
-    preheader: 'Žádný odpočet. Jen shrnutí, ať se rozhodneš v klidu.',
+    preheader: 'Cena zítra platí stejně. Tady je shrnutí, ať se rozhodneš v klidu.',
     blocks: [
       AHOJ,
       p('tohle je poslední mail o appce z téhle řady. Cena zítra platí stejně, takže se rozhoduj v klidu.'),
-      p('Shrnu to do jednoho odstavce. VIP je celá appka: týdenní přepočet kalorií a maker podle tvých zápisů, jídelníček i trénink, AI kouč, foto a hlas. K první platbě videokurz výživy zdarma.'),
-      p('Když víš, že to chceš dělat dlouhodobě, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku. Měsíční i roční variantu máš v pokladně vedle sebe.'),
+      p('VIP je celá appka: týdenní přepočet kalorií a maker podle tvých zápisů, jídelníček i trénink, AI kouč, foto a hlas. K první platbě videokurz výživy zdarma.'),
+      p('Když víš, že to chceš dělat dlouhodobě, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku. Roční variantu najdeš v ceníku appky.'),
       btn('Vybrat VIP', KOUPIT_VIP(VL, 'vl-5')),
       p('Když teď není ta chvíle, nic se neděje. Dál ti budu posílat tipy jako dosud.'),
       PODPIS,
-      ps('P.S. Zapisovat můžeš zdarma i bez předplatného. Kdo zapisuje, má půlku práce za sebou.'),
+      ps('P.S. Zapisovat můžeš zdarma i bez předplatného. Bez zápisu se nedá nic spočítat, takže kdo zapisuje, má náskok.'),
     ],
   },
 ];
 
 // ============================================================================
 // OPRAVA P0: rodina „basic249“ (4 existující kroky, dnes CTA na Basic + slib
-// videokurzu k Basicu, ktery od 30. 9. 2026 neplati). Stejne telo, jina UTM.
-// Track/step zustavaji, meni se key (puvodni klic slouzi jako zamek v SQL).
+// videokurzu k Basicu, ktery od 30. 9. 2026 neplati). Track/step zustavaji, meni se key
+// (puvodni klic slouzi jako zamek v SQL). Telo vychazi z ZIVEHO zneni lm-9 (23. 9.),
+// prepsane jsou jen veci tykajici se planu + gramatika (revize R1).
+// tc-start/2 ma vlastni uvod: prijde par dni po dotazniku, ne po „par tydnech tipu".
 // ============================================================================
-const vip499 = (track, step, puvodniKey, novyKey) => ({
+const UVOD_TIPY = 'pár týdnů ti posílám tipy. Dnes ti ukážu, kam s nimi jít, aby se z nich stala čísla na váze.';
+const UVOD_START = 'svoje čísla z dotazníku už máš. Dnes ti ukážu, kdo ti je bude každý týden upravovat.';
+const vip499 = (track, step, puvodniKey, novyKey, uvod) => ({
   track, step, key: novyKey, puvodni_key: puvodniKey, wait_days: 'BEZE ZMENY',
   subject: 'Cíle, jídelníček, trénink a AI kouč za {{cena_vip_mesic}} Kč měsíčně',
   subject_b: 'Appka, která za tebe přepočítá cíle. Videokurz dostaneš k ní',
   preheader: 'Co jsem s klienty dělal ručně v tabulkách, dělá appka sama. K VIP videokurz zdarma.',
   blocks: [
     AHOJ,
-    p('pár týdnů ti posílám tipy. Dnes ti ukážu, kam s nimi jít, aby se z nich staly čísla na váze.'),
-    p('Postavil jsem appku <strong>Tvůj Coach</strong>. Dělá to, co jsem s klienty roky dělal ručně v tabulkách: spočítá ti kalorie a makra, každý týden je upraví podle toho, co jsi skutečně jedl[a] a jak se hnula váha, a sestaví ti jídelníček z běžných potravin i trénink podle toho, kde cvičíš.'),
+    p(uvod),
+    p('Postavil jsem appku <strong>Tvůj Coach</strong>. Dělá to, co jsem s klienty roky dělal ručně v tabulkách: spočítá ti kalorie a makra, každý týden je upraví podle toho, co jsi jedl[a] a jak se hnula váha, a sestaví ti jídelníček z běžných potravin i trénink podle toho, kde cvičíš.'),
     p('Ve <strong>VIP za {{cena_vip_mesic}} Kč měsíčně</strong> máš:'),
     ul(
-      'týdenní check-in a automatickou úpravu cílů (když zapíšeš málo dnů, appka cíli nehne, radši než hádat)',
+      'týdenní check-in a automatickou úpravu cílů',
       'generátor jídelníčku z běžných potravin a generátor tréninku',
       'AI kouče, který vidí tvoje čísla a odpoví mým stylem, a zápis jídla z fotky i hlasem',
       '🎁 k první platbě můj videokurz výživy zdarma (182 videí, hodnota {{course_price}} Kč). Zůstane ti, i když předplatné zrušíš. Při vrácení peněz odchází s ním.',
@@ -307,10 +317,10 @@ const vip499 = (track, step, puvodniKey, novyKey) => ({
   ],
 });
 const opravaP0 = [
-  vip499('lead-magnet', 9, 'lm-9-basic249', 'lm-9-vip499'),
-  vip499('longtail-consumer', 5, 'lc-11-basic249', 'lc-11-vip499'),
-  vip499('nurture-videokurz', 8, 'nv-8-basic249', 'nv-8-vip499'),
-  vip499('tc-start', 2, 'tcs-2-basic249', 'tcs-2-vip499'),
+  vip499('lead-magnet', 9, 'lm-9-basic249', 'lm-9-vip499', UVOD_TIPY),
+  vip499('longtail-consumer', 5, 'lc-11-basic249', 'lc-11-vip499', UVOD_TIPY),
+  vip499('nurture-videokurz', 8, 'nv-8-basic249', 'nv-8-vip499', UVOD_TIPY),
+  vip499('tc-start', 2, 'tcs-2-basic249', 'tcs-2-vip499', UVOD_START),
 ];
 
 module.exports = { vipFree, vipKupci, vipLeady, opravaP0 };

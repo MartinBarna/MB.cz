@@ -42,6 +42,12 @@ Všechny podklady jsou v `_cloud/mailing/`. Co je co, popisuje `_cloud/mailing/C
   - scénář zápisu a návratu sedí na 11 smyšlených leadech (kap. 7.3);
   - testy patche jsou zelené: `pravidla` 118, `aktivace` 14, `preskoc` 21 kontrol;
   - `deno check` hlásí jen chybu TS2589, která je v repu i bez patche.
+- **Nezávislá revize textů (R1, 9. 10.) je zapracovaná.** Revizor proti webu `/tvuj-coach/`:
+  - našel tvrzení, že fotka řeší podhodnocený příjem, přitom web píše, že fotka olej a omáčku podceňuje;
+  - „co si dát, když zbývá 400 kcal" se prodávalo jako VIP, i když je to funkce Basicu;
+  - tlačítko „Vyzkoušet VIP" slibovalo zkušebku, která od 20. 8. neexistuje;
+  - plus gramatika a hovorové tvary.
+  - Všechno je opravené. Co zůstává k rozhodnutí, je v kap. 8.
 
 ## 2. Mapa: co dnes kdo dostane
 
@@ -177,7 +183,7 @@ Společné pro všechny tři:
 | Krok | Den | Téma | CTA |
 |---|---|---|---|
 | 0 | 0 | Zapisuješ, ať s tím appka něco udělá (přepočet + AI kouč + dárek) | Přejít na VIP |
-| 1 | 3 | Foto a hlas: zápis za pět vteřin | Vyzkoušet VIP |
+| 1 | 3 | Foto a hlas: zápis za pár vteřin | Chci VIP |
 | 2 | 7 | AI kouč ve dvě ráno | Napsat AI koučovi ve VIP |
 | 3 | 11 | Free, Basic, nebo VIP? Shrnutí, roční VIP | Vybrat VIP |
 
@@ -199,7 +205,7 @@ Společné pro všechny tři:
 | Krok | Den | Téma | CTA |
 |---|---|---|---|
 | 0 | 0 | Kurz máš v hlavě, kdo ti to spočítá v pondělí | Chci VIP |
-| 1 | 4 | Kolik ti zbývá: 400 kcal, oběd venku, hlas | Vyzkoušet VIP |
+| 1 | 4 | Oslava, oběd venku, hlas: zápis, který nezdrží | Chci VIP |
 | 2 | 8 | Basic, nebo VIP narovinu + roční VIP s měsícem Academy | Chci VIP |
 | 3 | 13 | Poslední mail o appce z téhle řady | Vzít VIP |
 
@@ -220,7 +226,7 @@ Společné pro všechny tři:
 | Krok | Den | Téma | CTA |
 |---|---|---|---|
 | 0 | 0 | Plán máš, kdo ti ho bude upravovat (+ dárek) | Chci VIP |
-| 1 | 3 | Zbývá ti 400 kcal / oběd venku | Vyzkoušet VIP |
+| 1 | 3 | Oslava v sobotu / oběd venku (AI kouč zapíše, foto) | Chci VIP |
 | 2 | 6 | Proč k VIP přidávám celý videokurz | Chci VIP i s videokurzem |
 | 3 | 10 | Tři námitky (zápis, předplatné, „co když to nevydržím") | Vzít VIP |
 | 4 | 14 | Poslední mail z téhle řady, roční VIP | Vybrat VIP |
@@ -262,18 +268,18 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 #### vip-free · krok 0 · den 0 · `vf-1-zapisujes`
 
 - **Předmět A:** Zapisuješ. Teď ať s tím appka něco udělá
-- **Předmět B:** Tvoje zápisy umí víc, než ti teď ukazují
+- **Předmět B:** Co appka udělá s tím, co už zapisuješ
 - **Náhledový text:** Co se ve VIP stane s daty, která v appce už máš.
 - **CTA:** „Přejít na VIP za {{cena_vip_mesic}} Kč" → `https://tvujcoach.cz/client/subscription?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-free&utm_content=vf-1`
 - **Čeká po odeslání:** 3 dny
 
 > Ahoj{{fn_space}},
 >
-> v appce už nějaký čas zapisuješ. To je ta těžší půlka a máš ji za sebou.
+> v appce už nějaký čas zapisuješ. Tím máš data, ze kterých se dá počítat.
 >
-> Druhá půlka je vědět, co s čísly udělat. Check-in si ve Free vyplníš a rozbor uvidíš. Ve **VIP** podle něj appka přepočítá kalorie a makra na další týden, podle toho, co jsi opravdu snědl, a podle toho, jak se hnula váha.
+> Ve Free si check-in vyplníš a rozbor uvidíš. **VIP** má všechno z Basicu: podle check-inu přepočítá kalorie a makra na další týden, podle toho, co jsi snědl a jak se hnula váha, a poskládá ti jídelníček i trénink.
 >
-> K tomu AI kouč, který tvoje zápisy vidí. Napíšeš mu „proč mi appka zvedla sacharidy?“ a odpoví nad tvými čísly. Čísla počítá engine, AI ti je vysvětlí.
+> A k tomu AI kouč, který tvoje zápisy vidí. Napíšeš mu „proč mi appka zvedla sacharidy?“ a odpoví nad tvými čísly. Čísla počítá engine, AI ti je vysvětlí.
 >
 > 🎁 K první platbě VIP ti přidám svůj videokurz výživy: 182 videí, hodnota {{course_price}} Kč. Zůstane ti, i když předplatné zrušíš.
 >
@@ -287,10 +293,10 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 
 #### vip-free · krok 1 · den 3 · `vf-2-foto-hlas`
 
-- **Předmět A:** Zapsat oběd za pět vteřin
-- **Předmět B:** Vyfoť talíř. Makra spočítá appka
+- **Předmět A:** Zapsat oběd za pár vteřin
+- **Předmět B:** Vyfoť talíř, appka odhadne makra
 - **Náhledový text:** Foto a hlas ve VIP: zápis, který tě nezdrží.
-- **CTA:** „Vyzkoušet VIP" → `https://tvujcoach.cz/client/subscription?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-free&utm_content=vf-2`
+- **CTA:** „Chci VIP" → `https://tvujcoach.cz/client/subscription?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-free&utm_content=vf-2`
 - **Čeká po odeslání:** 4 dny
 
 > Ahoj{{fn_space}},
@@ -299,12 +305,12 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > Proto jsou ve VIP dvě zkratky:
 >
-> - **Foto jídla.** Vyfotíš talíř, klidně domácí kuchyni bez obalu. AI pozná i víc jídel na jedné fotce a odhadne kalorie a makra. Odhad vidíš a opravíš, než se zapíše.
+> - **Foto jídla.** Vyfotíš talíř, klidně domácí kuchyni bez obalu. AI pozná i víc jídel na jedné fotce a odhadne kalorie a makra. Odhad vidíš a před zápisem opravíš. Olej a omáčku na fotce nepozná, ty doplň.
 > - **Zápis hlasem.** Řekneš „rohlík, tvaroh dvě stě gramů a tři deci vody“ a appka větu rozebere. Potvrdíš, nebo opravíš.
 >
 > Snídani, kterou máš pětkrát týdně, zapíšeš i ve Free jedním ťuknutím ze šablony. Foto a hlas ti ušetří čas u všeho ostatního.
 >
-> **[ Vyzkoušet VIP ]**
+> **[ Chci VIP ]**
 >
 > **Be Effective!** Martin
 >
@@ -313,7 +319,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 #### vip-free · krok 2 · den 7 · `vf-3-ai-kouc`
 
 - **Předmět A:** Zeptej se ve dvě ráno
-- **Předmět B:** Kouč, který vidí tvoje čísla
+- **Předmět B:** AI kouč, který vidí tvoje čísla
 - **Náhledový text:** AI kouč ve VIP odpovídá podle mojí metodiky a jídlo zapíše za tebe.
 - **CTA:** „Napsat AI koučovi ve VIP" → `https://tvujcoach.cz/client/subscription?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-free&utm_content=vf-3`
 - **Čeká po odeslání:** 4 dny
@@ -323,18 +329,16 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 > otázky, které mi klienti léta posílají na WhatsApp, se opakují:
 >
 > - „Váha se týden nehýbe. Mám ubrat?“
-> - „Po tréninku mi zbývá 300 kcal. Co si dám?“
+> - „Proč mi appka zvedla sacharidy?“
 > - „Jsem na oslavě. Jak to zapsat, ať si nezkazím týden?“
 >
 > Ve VIP na ně odpovídá AI kouč. Vidí tvoje zápisy i vývoj váhy a odpovídá podle metodiky, se kterou pracuju s klienty od roku 2013. Když mu napíšeš, co jsi snědl, rovnou to zapíše.
->
-> Kalorie a makra počítá engine. AI ti je vysvětlí a pomůže s rozhodnutím na dnešek.
 >
 > **[ Napsat AI koučovi ve VIP ]**
 >
 > **Be Effective!** Martin
 >
-> P.S. Basic za {{cena_basic_mesic}} Kč umí přepočet cílů a generátory, AI kouče, foto ani hlas ale nemá. Proto ti doporučuju VIP.
+> P.S. Basic za {{cena_basic_mesic}} Kč umí přepočet cílů a generátory. AI kouče, foto ani hlas nemá, proto ti doporučuju VIP.
 
 #### vip-free · krok 3 · den 11 · `vf-4-shrnuti`
 
@@ -349,7 +353,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 > tohle je poslední mail o předplatném z téhle řady. Shrnu ti to na jednu obrazovku:
 >
 > - **Free (zdarma, napořád):** zápis jídla i tréninku, skener čárových kódů, přes {{pocet_potravin}} potravin, šablony a 14 dní historie.
-> - **Basic ({{cena_basic_mesic}} Kč měsíčně):** navíc týdenní přepočet kalorií a maker, generátor jídelníčku i tréninku a celá historie.
+> - **Basic ({{cena_basic_mesic}} Kč měsíčně):** navíc týdenní přepočet kalorií a maker, generátor jídelníčku i tréninku, „Co si můžu ještě dnes dát“ a celá historie.
 > - **VIP ({{cena_vip_mesic}} Kč měsíčně):** všechno z Basicu, k tomu AI kouč, foto jídla a zápis hlasem. A k první platbě videokurz výživy zdarma.
 >
 > Když víš, že do toho jdeš na delší dobu, roční VIP vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma. K ročnímu VIP navíc přidávám měsíc Barna Academy na zkoušku.
@@ -358,7 +362,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > Zrušíš kdykoli v Profilu, zaplacené období doběhne a dál se nic nestrhne. Do 14 dnů od začátku ti vrátím celou částku, když ti to nesedne.
 >
-> A když zůstaneš ve Free, taky dobře. Zapisuj dál, to je půlka práce.
+> A když zůstaneš ve Free, taky dobře. Zapisuj dál, bez zápisu se nedá nic spočítat.
 >
 > **Be Effective!** Martin
 >
@@ -369,18 +373,18 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 #### vip-kupci · krok 0 · den 0 · `vk-1-v-pondeli`
 
 - **Předmět A:** Kurz máš v hlavě. Kdo ti to spočítá v pondělí?
-- **Předmět B:** Z videokurzu do praxe za minutu denně
+- **Předmět B:** Z videokurzu do praxe za pár minut týdně
 - **Náhledový text:** Appka Tvůj Coach dělá s tvými čísly to, co učím ve videokurzu.
 - **CTA:** „Chci VIP za {{cena_vip_mesic}} Kč měsíčně" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-kupci&utm_content=vk-1`
 - **Čeká po odeslání:** 4 dny
 
 > Ahoj{{fn_space}},
 >
-> ve videokurzu jsi viděl, jak počítám kalorie a makra a proč mě zajímá vývoj váhy za týdny víc než jedno ranní vážení.
+> ve videokurzu jsi viděl, jak funguje kalorický deficit a kolik bílkovin, sacharidů a tuků jíst.
 >
 > V praxi to znamená každý týden sečíst, co jsi snědl, porovnat to s váhou a rozhodnout, jestli ubrat, přidat, nebo vydržet. Tohle za tebe dělá appka **Tvůj Coach**.
 >
-> Ve **VIP** ti z tvých zápisů každý týden přepočítá kalorie a makra a poskládá jídelníček z běžných potravin i trénink podle toho, kde cvičíš. AI kouč ti odpoví na otázky podle stejné metodiky, jakou znáš z kurzu.
+> Ve **VIP** ti z tvých zápisů každý týden přepočítá kalorie a makra a poskládá jídelníček z běžných potravin i trénink podle toho, kde cvičíš. AI kouč ti k tomu odpoví na otázky podle stejné metodiky, jakou znáš z kurzu.
 >
 > **[ Chci VIP za {{cena_vip_mesic}} Kč měsíčně ]**
 >
@@ -390,33 +394,33 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > P.S. Zápis jídla i tréninku máš v appce zdarma napořád. Registruj se ideálně stejným e-mailem, jaký máš u videokurzu.
 
-#### vip-kupci · krok 1 · den 4 · `vk-2-zbyva`
+#### vip-kupci · krok 1 · den 4 · `vk-2-oslava`
 
-- **Předmět A:** Kolik ti dneska ještě zbývá{{fn_suffix}}?
-- **Předmět B:** Vyfoť oběd. Zbytek spočítá appka
-- **Náhledový text:** Tři situace, kde ti VIP ušetří nejvíc času.
-- **CTA:** „Vyzkoušet VIP" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-kupci&utm_content=vk-2`
+- **Předmět A:** Oslava, oběd venku a zápis, který tě nezdrží
+- **Předmět B:** Tři situace, kde ti VIP ušetří nejvíc času
+- **Náhledový text:** AI kouč, foto a hlas: co VIP přidá k tomu, co znáš z kurzu.
+- **CTA:** „Chci VIP" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-kupci&utm_content=vk-2`
 - **Čeká po odeslání:** 4 dny
 
 > Ahoj{{fn_space}},
 >
-> z praxe vím, že přesnost zápisu rozhoduje víc než dokonale vyladěná makra. Lidi svůj příjem běžně podceňují o 20 až 50 %. Ve VIP na to máš tři zkratky:
+> z kurzu víš, že bez zápisu se nedá nic spočítat. Studie ukazují, že lidi svůj příjem klidně podhodnotí o 20 až 50 %, a u klientů vidím, že nejvíc chybí dny, kdy zápis vynechají. Ve VIP máš na takové dny tři zkratky:
 >
-> - **Večer ti zbývá 400 kcal.** Zeptáš se AI kouče, co si dát, a on ti to rovnou zapíše.
-> - **Oběd venku bez obalu.** Vyfotíš talíř, AI odhadne jídla i makra a ty odhad před zápisem zkontroluješ.
+> - **Oslava.** Napíšeš AI koučovi, co jsi snědl, a on to za tebe zapíše. Když nevíš, jak s tím naložit zbytek týdne, zeptáš se rovnou jeho.
+> - **Oběd venku bez obalu.** Vyfotíš talíř, AI odhadne jídla i makra. Odhad před zápisem zkontroluješ a olej s omáčkou doplníš, ty fotka nepozná.
 > - **Nechce se ti ťukat.** Řekneš „rohlík, tvaroh dvě stě gramů“ a appka to rozebere sama.
 >
-> **[ Vyzkoušet VIP ]**
+> **[ Chci VIP ]**
 >
 > **Be Effective!** Martin
 >
-> P.S. Teorii z kurzu máš. Appka ti pomůže udělat z ní zvyk.
+> P.S. Zápis jídla i tréninku zůstává v appce zdarma i bez VIP.
 
 #### vip-kupci · krok 2 · den 8 · `vk-3-basic-nebo-vip`
 
 - **Předmět A:** Basic, nebo VIP? Napíšu ti to narovinu
 - **Předmět B:** Proč ti doporučuju dražší plán
-- **Náhledový text:** Rozdíl je v tom, kdo ti odpoví, když nevíš.
+- **Náhledový text:** Rozdíl je v AI koučovi, foto a hlasu.
 - **CTA:** „Chci VIP" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-kupci&utm_content=vk-3`
 - **Čeká po odeslání:** 5 dní
 
@@ -424,11 +428,11 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > v appce jsou dva placené plány a chci, abys věděl, proč ti doporučuju ten dražší.
 >
-> **Basic** za {{cena_basic_mesic}} Kč měsíčně ti každý týden přepočítá cíle a má generátor jídelníčku i tréninku. To je počítání.
+> **Basic** za {{cena_basic_mesic}} Kč měsíčně ti každý týden přepočítá cíle a má generátor jídelníčku i tréninku.
 >
-> **VIP** za {{cena_vip_mesic}} Kč měsíčně umí totéž a k tomu AI kouče, foto jídla a zápis hlasem. Teorii znáš z kurzu, takže ti nejvíc pomůže mít po ruce někoho, kdo ti ve chvíli zaváhání řekne, co s dnešním číslem.
+> **VIP** za {{cena_vip_mesic}} Kč měsíčně umí všechno z Basicu a k tomu AI kouče, foto jídla a zápis hlasem. Teorii znáš z kurzu. Nejvíc ti teď pomůže mít po ruce AI kouče, který ve chvíli zaváhání odpoví, co s dnešním číslem.
 >
-> Když víš, že u toho vydržíš, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku.
+> Když víš, že u toho vydržíš, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku, pokud v ní ještě nejsi.
 >
 > **[ Chci VIP ]**
 >
@@ -440,7 +444,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 
 - **Předmět A:** Poslední mail o appce z téhle řady
 - **Předmět B:** Jedno rozhodnutí na tenhle měsíc
-- **Náhledový text:** Žádný odpočet. Jen shrnutí.
+- **Náhledový text:** Cena zítra platí stejně. Tady je shrnutí.
 - **CTA:** „Vzít VIP za {{cena_vip_mesic}} Kč" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-kupci&utm_content=vk-4`
 - **Čeká po odeslání:** nic, konec trati
 
@@ -448,9 +452,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > tohle je poslední mail o appce z téhle řady. Cena zítra platí stejně, nikde neběží žádný odpočet.
 >
-> Shrnu to jednou větou: videokurz ti dal pravidla a VIP ti je každý týden přepočítá na tvoje čísla, s AI koučem po ruce.
->
-> U klientů vidím, že teorie bez denní praxe vydrží pár týdnů. S týdenním přepočtem z ní je návyk.
+> Videokurz ti dal pravidla. Ve VIP podle nich appka každý týden přepočítá tvoje kalorie a makra a AI kouč ti je vysvětlí, kdykoli se zeptáš.
 >
 > **[ Vzít VIP za {{cena_vip_mesic}} Kč ]**
 >
@@ -472,9 +474,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 
 > Ahoj{{fn_space}},
 >
-> pár týdnů ti posílám tipy. Jestli sis podle nich spočítal kalorie, máš za sebou první krok.
->
-> Pak přijde týden, kdy se váha nehne, a nikdo vedle tebe neřekne, jestli ubrat, přidat, nebo vydržet. U klientů vidím, že tady to lidi vzdávají nejčastěji.
+> jednou přijde týden, kdy se váha nehne, a nikdo vedle tebe neřekne, jestli ubrat, přidat, nebo vydržet. U klientů vidím, že tady to lidi vzdávají nejčastěji.
 >
 > Na tohle jsem postavil appku **Tvůj Coach**. Ve **VIP** ti každý týden z tvých zápisů a vážení přepočítá kalorie i makra, sestaví jídelníček z běžných potravin a trénink podle toho, kde cvičíš. K tomu AI kouč, který tvoje čísla vidí. Čísla počítá engine, AI ti je vysvětlí.
 >
@@ -486,27 +486,27 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > **Be Effective!** Martin
 >
-> P.S. Zapisovat jídlo i trénink můžeš v appce zdarma napořád a bez karty. VIP platíš za to, že s těmi čísly appka pracuje za tebe.
+> P.S. Zapisovat jídlo i trénink můžeš v appce zdarma napořád a bez karty. Ve VIP platíš za to, že s těmi čísly appka pracuje za tebe.
 
-#### vip-leady · krok 1 · den 3 · `vl-2-zbyva-400`
+#### vip-leady · krok 1 · den 3 · `vl-2-oslava`
 
-- **Předmět A:** Zbývá ti 400 kcal. Co si dáš?
-- **Předmět B:** Oběd venku a appka, která ví, kolik ti zbývá
+- **Předmět A:** Oslava v sobotu. Jak ji zapsat?
+- **Předmět B:** Oběd venku a zápis, který tě nezdrží
 - **Náhledový text:** Dvě funkce z VIP, kvůli kterým lidi u zápisu vydrží.
-- **CTA:** „Vyzkoušet VIP" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-leady&utm_content=vl-2`
+- **CTA:** „Chci VIP" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-leady&utm_content=vl-2`
 - **Čeká po odeslání:** 3 dny
 
 > Ahoj{{fn_space}},
 >
 > dvě situace, které znám od klientů nazpaměť.
 >
-> **Večer.** Zbývá ti 400 kcal a 30 g bílkovin a v lednici je toho moc i málo zároveň. Ve VIP se zeptáš AI kouče, co si dát, a on ti to rovnou zapíše.
+> **Oslava.** Dort, chlebíčky, víno, a v hlavě „to už nemá cenu zapisovat“. Ve VIP napíšeš AI koučovi, co jsi snědl, on to zapíše a řekne ti, jak s tím naložit zbytek týdne.
 >
-> **Oběd venku.** Žádný obal, žádný čárový kód. Vyfotíš talíř, AI odhadne jídla i makra a ty odhad před zápisem zkontroluješ.
+> **Oběd venku.** Žádný obal, žádný čárový kód. Vyfotíš talíř, AI odhadne jídla i makra. Odhad před zápisem zkontroluješ a olej s omáčkou doplníš, ty fotka nepozná.
 >
-> Proč na tom trvám: lidi svůj příjem běžně podceňují o 20 až 50 %. Čím míň tě zápis zdržuje, tím déle u něj vydržíš a tím víc ti čísla řeknou.
+> Studie ukazují, že lidi svůj příjem klidně podhodnotí o 20 až 50 %. Nejvíc chybí právě dny, kdy se zápis vynechá. Čím méně tě zápis zdržuje, tím méně takových dnů bude.
 >
-> **[ Vyzkoušet VIP ]**
+> **[ Chci VIP ]**
 >
 > **Be Effective!** Martin
 >
@@ -515,14 +515,14 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 #### vip-leady · krok 2 · den 6 · `vl-3-videokurz`
 
 - **Předmět A:** Proč k VIP přidávám celý videokurz
-- **Předmět B:** 182 videí k tomu, co v appce zapisuješ
-- **Náhledový text:** Appka počítá. Videokurz vysvětluje, proč počítá zrovna takhle.
+- **Předmět B:** 182 videí, která k VIP dostaneš zdarma
+- **Náhledový text:** Ať víš, proč appka počítá zrovna takhle.
 - **CTA:** „Chci VIP i s videokurzem" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-leady&utm_content=vl-3`
 - **Čeká po odeslání:** 4 dny
 
 > Ahoj{{fn_space}},
 >
-> appka ti každý den řekne, kolik jíst. Kdo ale neví, proč zrovna tolik, při první oslavě nebo dovolené to pustí.
+> appka ti každý den řekne, kolik jíst. U klientů vidím, že kdo neví, proč zrovna tolik, často to pustí při první oslavě nebo dovolené.
 >
 > Proto k první platbě VIP přidávám videokurz výživy. 182 videí o tom, jak funguje kalorický deficit, kolik bílkovin, sacharidů a tuků jíst a jak jíst flexibilně bez zakázaných jídel.
 >
@@ -548,7 +548,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > **„Nebaví mě zapisovat.“** Proto je ve VIP zápis z fotky a hlasem. Řekneš „rohlík, tvaroh dvě stě gramů“ a appka to rozebere. Snídani, kterou máš pětkrát týdně, zapíšeš jedním ťuknutím.
 >
-> **„Nechci další předplatné.“** Zápis jídla i tréninku, skener a databáze potravin jsou zdarma napořád. Za VIP platíš týdenní přepočet cílů, generátory a AI kouče. Když AI nepotřebuješ, v appce je i Basic za {{cena_basic_mesic}} Kč, jen bez kouče a bez videokurzu.
+> **„Nechci další předplatné.“** Zápis jídla i tréninku, skener a databáze potravin jsou zdarma napořád. VIP má navíc týdenní přepočet cílů, generátory a AI kouče. Když AI nepotřebuješ, v appce je i Basic za {{cena_basic_mesic}} Kč s přepočtem a generátory, jen bez kouče a bez videokurzu.
 >
 > **„Co když to nevydržím?“** Zrušíš kdykoli v appce a zaplacené období doběhne. Když ti to do 14 dnů od začátku nesedne, napiš mi na martin@martinbarna.cz a vrátím ti celou částku. Videokurz při vrácení peněz odchází s nimi.
 >
@@ -560,7 +560,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 
 - **Předmět A:** Poslední mail o appce z téhle řady
 - **Předmět B:** Rok VIP za cenu deseti měsíců
-- **Náhledový text:** Žádný odpočet. Jen shrnutí, ať se rozhodneš v klidu.
+- **Náhledový text:** Cena zítra platí stejně. Tady je shrnutí, ať se rozhodneš v klidu.
 - **CTA:** „Vybrat VIP" → `https://tvujcoach.cz/koupit?plan=vip&utm_source=email&utm_medium=drip&utm_campaign=vip-leady&utm_content=vl-5`
 - **Čeká po odeslání:** nic, konec trati
 
@@ -568,9 +568,9 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > tohle je poslední mail o appce z téhle řady. Cena zítra platí stejně, takže se rozhoduj v klidu.
 >
-> Shrnu to do jednoho odstavce. VIP je celá appka: týdenní přepočet kalorií a maker podle tvých zápisů, jídelníček i trénink, AI kouč, foto a hlas. K první platbě videokurz výživy zdarma.
+> VIP je celá appka: týdenní přepočet kalorií a maker podle tvých zápisů, jídelníček i trénink, AI kouč, foto a hlas. K první platbě videokurz výživy zdarma.
 >
-> Když víš, že to chceš dělat dlouhodobě, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku. Měsíční i roční variantu máš v pokladně vedle sebe.
+> Když víš, že to chceš dělat dlouhodobě, vezmi rovnou rok. Vyjde na {{cena_vip_rok}} Kč, tedy dva měsíce zdarma, a k ročnímu VIP přidávám měsíc Barna Academy na zkoušku. Roční variantu najdeš v ceníku appky.
 >
 > **[ Vybrat VIP ]**
 >
@@ -578,7 +578,7 @@ Všech 13 nových mailů a jednotné znění opravy P0. Každý mail má dva př
 >
 > **Be Effective!** Martin
 >
-> P.S. Zapisovat můžeš zdarma i bez předplatného. Kdo zapisuje, má půlku práce za sebou.
+> P.S. Zapisovat můžeš zdarma i bez předplatného. Bez zápisu se nedá nic spočítat, takže kdo zapisuje, má náskok.
 
 ### 6.4 Oprava P0: jednotné znění pro lead-magnet/9, longtail-consumer/5, nurture-videokurz/8, tc-start/2
 
@@ -594,13 +594,13 @@ Stejné tělo, liší se jen `utm_campaign` (= trať) a klíč (`lm-9-vip499`, `
 
 > Ahoj{{fn_space}},
 >
-> pár týdnů ti posílám tipy. Dnes ti ukážu, kam s nimi jít, aby se z nich staly čísla na váze.
+> pár týdnů ti posílám tipy. Dnes ti ukážu, kam s nimi jít, aby se z nich stala čísla na váze.
 >
-> Postavil jsem appku **Tvůj Coach**. Dělá to, co jsem s klienty roky dělal ručně v tabulkách: spočítá ti kalorie a makra, každý týden je upraví podle toho, co jsi skutečně jedl a jak se hnula váha, a sestaví ti jídelníček z běžných potravin i trénink podle toho, kde cvičíš.
+> Postavil jsem appku **Tvůj Coach**. Dělá to, co jsem s klienty roky dělal ručně v tabulkách: spočítá ti kalorie a makra, každý týden je upraví podle toho, co jsi jedl a jak se hnula váha, a sestaví ti jídelníček z běžných potravin i trénink podle toho, kde cvičíš.
 >
 > Ve **VIP za {{cena_vip_mesic}} Kč měsíčně** máš:
 >
-> - týdenní check-in a automatickou úpravu cílů (když zapíšeš málo dnů, appka cíli nehne, radši než hádat)
+> - týdenní check-in a automatickou úpravu cílů
 > - generátor jídelníčku z běžných potravin a generátor tréninku
 > - AI kouče, který vidí tvoje čísla a odpoví mým stylem, a zápis jídla z fotky i hlasem
 > - 🎁 k první platbě můj videokurz výživy zdarma (182 videí, hodnota {{course_price}} Kč). Zůstane ti, i když předplatné zrušíš. Při vrácení peněz odchází s ním.
