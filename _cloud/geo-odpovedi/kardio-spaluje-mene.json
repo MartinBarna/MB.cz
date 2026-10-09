@@ -18,11 +18,11 @@
     },
     {
       "otazka": "Je kardio na hubnutí k ničemu?",
-      "odpoved": "Kardio není špatné, pro srdce, hlavu i kondici je super. Jako hlavní nástroj na hubnutí je ale špatné."
+      "odpoved": "Pro srdce, hlavu i kondici je kardio super. Jako hlavní nástroj na hubnutí je ale slabé."
     },
     {
       "otazka": "Na co se při hubnutí zaměřit místo kardia?",
-      "odpoved": "Nahoře je strava, tedy kalorický deficit. Pak silový trénink, který drží svaly a líp odolává kompenzaci. Kardio ber jako bonus, ne jako základ."
+      "odpoved": "Nahoře je strava, tedy kalorický deficit. Pak silový trénink, který drží svaly a líp odolává kompenzaci. Kardio ber jako bonus navrch."
     }
   ],
   "opory": [
@@ -41,5 +41,6 @@
     "Pár 600 kcal na hodinkách a 180 kcal reálně je v článku ilustrační příklad („třeba“, „často“), ne pevné pravidlo pro každého. Proto je v odpovědi podán stejně opatrně.",
     "Článek neříká nic o tom, kdo byl ve studiích (pohlaví, věk, výchozí váha) ani jak dlouho intervence trvaly."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] bez „Není X, je Y“; faq[4] bez „bonus, ne základ“"
 }

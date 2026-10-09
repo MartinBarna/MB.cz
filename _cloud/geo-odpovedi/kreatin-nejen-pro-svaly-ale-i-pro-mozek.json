@@ -6,11 +6,11 @@
   "faq": [
     {
       "otazka": "Pomáhá kreatin, když málo spím?",
-      "odpoved": "Možná. Studie z roku 2006 zjistila, že kreatin dokáže zmírnit negativní dopady nedostatku spánku na pozornost, reakce i přemýšlení. Přehled z roku 2026 vidí pozitivní trend, ale studie jsou zatím jen pětka a efekt se liší podle typu úkolu, takže je to slibné, ne dokázané."
+      "odpoved": "Možná. Studie z roku 2006 zjistila, že kreatin dokáže zmírnit negativní dopady nedostatku spánku na pozornost, reakce i přemýšlení. Přehled z roku 2026 vidí pozitivní trend, ale studie jsou zatím jen pětka a efekt se liší podle typu úkolu, takže zatím jde o slibný signál bez důkazu."
     },
     {
       "otazka": "Zlepší kreatin myšlení zdravému a vyspalému člověku?",
-      "odpoved": "Podle studie z roku 2026 ne. 40 zdravých dobrovolníků bralo týden 20 g kreatinu denně a výkon na kole se zlepšil, ale na kognitivních testech nic. Autoři dodávají, že se účastníci testy „naučili“, což mohlo případný efekt zamaskovat."
+      "odpoved": "Ve studii z roku 2026 ne: 40 zdravých dobrovolníků bralo týden 20 g kreatinu denně a výkon na kole se zlepšil, ale na kognitivních testech nic. Autoři dodávají, že se účastníci testy „naučili“, což mohlo případný efekt zamaskovat."
     },
     {
       "otazka": "Kolik kreatinu denně brát kvůli mozku?",
@@ -48,5 +48,6 @@
     "Alzheimerovu chorobu (pilot s 20 pacienty, o 11 % vyšší kreatin v mozku) jsem do FAQ nedal: článek sám říká, že je to teprve začátek, a jde o nemoc, kde se nemá radit.",
     "Článek neříká, jak dlouho kreatin brát, než by se mohl projevit efekt na mozek, ani zda ho brát nárazově před nevyspalým dnem."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněna o radu poradit se před užíváním s lékařem (článek ji má v závěru i v části o bezpečnosti), protože uvádí dávkování; věta o nevyspání vypuštěna kvůli délce (zůstává ve faq[0]) a s ní její opora"
+  "kontrola": "opraveno: kratka_odpoved doplněna o radu poradit se před užíváním s lékařem (článek ji má v závěru i v části o bezpečnosti), protože uvádí dávkování; věta o nevyspání vypuštěna kvůli délce (zůstává ve faq[0]) a s ní její opora",
+  "hlas": "upraveno: faq[0] bez „slibné, ne dokázané“; faq[1] bez úvodního „Podle“"
 }

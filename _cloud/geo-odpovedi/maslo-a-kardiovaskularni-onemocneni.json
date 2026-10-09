@@ -2,23 +2,23 @@
   "url": "https://martinbarna.cz/clanky/maslo-a-kardiovaskularni-onemocneni.html",
   "titulek": "Máslo a kardiovaskulární onemocnění",
   "hlavni_otazka": "Je máslo zdravé, nebo škodí srdci?",
-  "kratka_odpoved": "Podle Layne Nortona, jehož příspěvek článek překládá, máslo není superpotravina. Literatura u něj ukazuje neutrální až mírně vyšší celkovou úmrtnost a žádný ochranný efekt proti srdečním a cévním onemocněním, a jako koncentrovaný nasycený tuk spolehlivě zvyšuje LDL cholesterol. Do vyvážené stravy se vejde, ale nazývat ho zdravým jídlem je přehnané.",
+  "kratka_odpoved": "Layne Norton, jehož příspěvek tady překládám, máslo za superpotravinu nepovažuje. Literatura u něj ukazuje neutrální až mírně vyšší celkovou úmrtnost a žádný ochranný efekt proti srdečním a cévním onemocněním, a jako koncentrovaný nasycený tuk spolehlivě zvyšuje LDL cholesterol. Do vyvážené stravy se vejde, ale nazývat ho zdravým jídlem je přehnané.",
   "faq": [
     {
       "otazka": "Proč vadí, že máslo zvyšuje LDL cholesterol?",
-      "odpoved": "Podle Layne Nortona LDL není jen marker, je to kauzální hnací síla zúžení cév (aterosklerotického CVD). Čím víc LDL jsi za život vystaven, tím větší je riziko kardiovaskulární události i úmrtí na ni."
+      "odpoved": "Podle Layna Nortona LDL zúžení cév (aterosklerotické CVD) přímo způsobuje. Čím víc LDL jsi za život vystaven, tím větší je riziko kardiovaskulární události i úmrtí na ni."
     },
     {
       "otazka": "Čím máslo nahradit, když chci chránit srdce?",
-      "odpoved": "Nenasycenými tuky. Podle Layne Nortona při náhradě nasycených tuků za PUFA klesají v randomizovaných studiích události ischemického srdečního onemocnění, v meta-analýze zhruba o 19 %. Prakticky třeba olivový olej do salátu místo másla, nebo avokádo na chleba."
+      "odpoved": "Nenasycenými tuky. Podle Layna Nortona při náhradě nasycených tuků za vícenenasycené (PUFA) klesají v randomizovaných studiích události ischemického srdečního onemocnění, v meta-analýze zhruba o 19 %. Prakticky třeba olivový olej do salátu místo másla, nebo avokádo na chleba."
     },
     {
       "otazka": "Kolik nasycených tuků je v pořádku?",
-      "odpoved": "V části o hubnutí článek doporučuje držet nasycené tuky, jako jsou v másle, nejvýš na 10 % kalorií a nahrazovat je nenasycenými, třeba z olivového oleje."
+      "odpoved": "V části o hubnutí doporučuju držet nasycené tuky, jako jsou v másle, nejvýš na 10 % kalorií a nahrazovat je nenasycenými, třeba z olivového oleje."
     },
     {
       "otazka": "Zvyšuje sýr cholesterol stejně jako máslo?",
-      "odpoved": "Ne stejně. Podle Layne Nortona randomizované studie ukazují, že máslo zvyšuje LDL víc než sýr, což se přičítá vlivu celkové struktury jídla (food-matrix efekt)."
+      "odpoved": "Ne stejně. Podle Layna Nortona randomizované studie ukazují, že máslo zvyšuje LDL víc než sýr, což se přičítá vlivu celkové struktury jídla (food-matrix efekt)."
     },
     {
       "otazka": "Co jíst pro zdravé srdce?",
@@ -105,5 +105,6 @@
     "Česká čísla v závěru (40 % lidí s vysokým LDL-C, 60 % nadváhy, MZ ČR, ČSÚ, NÚDZ) nemají v článku dohledatelný zdroj, proto nejsou použita. Stejně tak tvrzení „míň chutí“ a výpočet „ušetříš 5 g SFA a přidáš 10 g PUFA“ bez udaného množství.",
     "Článek je převážně překlad příspěvku Layne Nortona; neuvádí, jestli totéž platí pro přepuštěné máslo nebo ghí."
   ],
-  "kontrola": "opraveno: článek je (kromě závěrečného shrnutí) překlad příspěvku Layne Nortona, tvrzení z překladu v kratka_odpoved, faq[0], faq[1], faq[3] a faq[4] jsou nově přisouzena jemu; faq[1] přesněji ‚události ischemického srdečního onemocnění‘ místo ‚klesají ischemická srdeční onemocnění‘"
+  "kontrola": "opraveno: článek je (kromě závěrečného shrnutí) překlad příspěvku Layne Nortona, tvrzení z překladu v kratka_odpoved, faq[0], faq[1], faq[3] a faq[4] jsou nově přisouzena jemu; faq[1] přesněji ‚události ischemického srdečního onemocnění‘ místo ‚klesají ischemická srdeční onemocnění‘",
+  "hlas": "upraveno: kratka_odpoved přisouzení Nortonovi v 1. osobě („tady překládám“); faq[0] bez „není jen marker, je to“; faq[1] PUFA vysvětleno; faq[2] „článek doporučuje“ → 1. osoba (část o hubnutí je moje); skloňování „Layna Nortona“"
 }

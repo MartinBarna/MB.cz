@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Mají smysl testy potravinové intolerance z krve (IgG)?",
-      "odpoved": "Ne. Protilátky IgG ti v krvi ukazují, co normálně jíš, ne co nesnášíš. Proto je tři velké alergologické společnosti odmítají."
+      "odpoved": "Protilátky IgG v krvi ukazují jen to, co normálně jíš, o nesnášenlivosti neříkají nic. Proto je tři velké alergologické společnosti odmítají."
     },
     {
       "otazka": "Pomůže mi při hubnutí senzor nebo appka na hlídání cukru?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Které krevní testy mají smysl?",
-      "odpoved": "Štítná žláza, vitamin D nebo krevní obraz. Ty ale řeší zdraví, ne hubnutí, a patří k lékaři, ne do laboratoře z reklamy. Když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři."
+      "odpoved": "Štítná žláza, vitamin D nebo krevní obraz. Ty ale řeší zdraví a patří k lékaři, laboratoř z reklamy přeskoč. Když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři."
     },
     {
       "otazka": "Reaguje každý na jídlo jinak?",
@@ -38,5 +38,6 @@
     "Článek neuvádí, o kolik lidé ve studiích zhubli.",
     "Velká část tématu je v infografikách (obrázcích); text obrázků jsem nepoužil."
   ],
-  "kontrola": "opraveno: faq[2] doplněno „když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři“ z poznámky pod zdroji"
+  "kontrola": "opraveno: faq[2] doplněno „když dlouho nehubneš a děláš věci správně, nebo cítíš únavu, zajdi na vyšetření k lékaři“ z poznámky pod zdroji",
+  "hlas": "upraveno: faq[0] bez úvodního „Ne.“ a bez „X, ne Y“; faq[2] bez dvojího „X, ne Y“"
 }

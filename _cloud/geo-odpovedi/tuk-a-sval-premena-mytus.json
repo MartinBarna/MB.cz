@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Jak neztratit sval, když na trénink nemám čas?",
-      "odpoved": "Nepřestávej úplně: i málo síly, pár tréninků týdně, klidně kratších, stačí na to, abys sval udržel a nenechal ho atrofovat. Udržet je vždycky levnější než stavět znovu od nuly."
+      "odpoved": "Nepřestávej úplně: i málo síly, pár tréninků týdně, klidně kratších, stačí na to, abys sval udržel a nenechal ho atrofovat. Udržet je levnější než stavět znovu od nuly."
     }
   ],
   "opory": [
@@ -44,5 +44,6 @@
     "Článek neříká, kolik bílkovin je „dost“ ani jak velký má být deficit.",
     "Článek nepřesně vymezuje, kolik je „pár tréninků týdně“, které stačí na udržení svalu."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[4] bez „vždycky“"
 }

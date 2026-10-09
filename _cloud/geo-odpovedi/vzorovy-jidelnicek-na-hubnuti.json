@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/vzorovy-jidelnicek-na-hubnuti.html",
   "titulek": "Vzorový jídelníček na hubnutí: ukázkový den kolem 1500–1700 kcal",
   "hlavni_otazka": "Jak může vypadat jídelníček na hubnutí kolem 1500 kcal na jeden den?",
-  "kratka_odpoved": "Ukázkový den má kolem 1550 kcal a zhruba 110 g bílkovin: ovesná kaše s mlékem, banánem a proteinem, jogurt s borůvkami, kuře s rýží a zeleninou, jablko s mandlemi a tvaroh s celozrnným pečivem. Je to ukázka struktury, ne plán na míru, protože tvoje spotřeba závisí na výšce, váze, pohlaví, svalech a pohybu.",
+  "kratka_odpoved": "Ukázkový den má kolem 1550 kcal a zhruba 110 g bílkovin: ovesná kaše s mlékem, banánem a proteinem, jogurt s borůvkami, kuře s rýží a zeleninou, jablko s mandlemi a tvaroh s celozrnným pečivem. Je to ukázka struktury, plán na míru vychází z tvé výšky, váhy, pohlaví, svalů a pohybu.",
   "faq": [
     {
       "otazka": "Kolik kalorií mám jíst na hubnutí?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Hubnu pomalu, mám pomalý metabolismus?",
-      "odpoved": "Pomalé hubnutí podle článku neznamená, že máš pomalý metabolismus. Nejčastěji je reálný příjem vyšší, než si myslíš, kvůli okusování, pití kalorií a odhadu porcí od oka."
+      "odpoved": "Pomalé hubnutí neznamená, že máš pomalý metabolismus. Nejčastěji je reálný příjem vyšší, než si myslíš, kvůli okusování, pití kalorií a odhadu porcí od oka."
     },
     {
       "otazka": "Na co si dát u jídelníčku na hubnutí pozor?",
@@ -52,5 +52,6 @@
     "U některých položek chybí přesné množství (hrst borůvek, velká porce zeleniny, plátky zeleniny), takže součet kolem 1550 kcal je jen orientační.",
     "Článek neříká, od jakého příjmu nebo tempa hubnutí už jde o „přehnané tempo“."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ukázka struktury, ne plán na míru“; faq[2] bez „podle článku“"
 }

@@ -2,19 +2,19 @@
   "url": "https://martinbarna.cz/clanky/fat-burning-zona-mytus.html",
   "titulek": "Spalovací tepová zóna na hubnutí? Mýtus o „fat burning zone“",
   "hlavni_otazka": "Zhubnu víc, když budu cvičit ve spalovací tepové zóně?",
-  "kratka_odpoved": "Ne: při nízké intenzitě pálíš vyšší podíl tuku jako palivo, ale celkově míň kalorií, kdežto vyšší intenzita pálí nižší podíl tuku, zato celkově víc. Za 24 hodin se palivo srovná. O úbytku tuku rozhoduje týdenní energetická bilance, ne tepová zóna.",
+  "kratka_odpoved": "Ne: při nízké intenzitě pálíš vyšší podíl tuku jako palivo, ale celkově míň kalorií, kdežto vyšší intenzita pálí nižší podíl tuku, zato celkově víc. Za 24 hodin se palivo srovná. O úbytku tuku rozhoduje týdenní energetická bilance.",
   "faq": [
     {
       "otazka": "Má klidné kardio vůbec smysl?",
       "odpoved": "Ano, jen ne kvůli magickému spalování tuku. Pomáhá regeneraci, je skvělé pro srdce a kondici, zvládneš ho dlouhodobě a často a nabereš s ním hodně výdeje bez velké únavy."
     },
     {
-      "otazka": "Co reálně rozhoduje o úbytku tuku?",
-      "odpoved": "Kalorický deficit, dost bílkovin a silový trénink. Kardio, klidné i svižné, je v tom doplněk výdeje, ne motor."
+      "otazka": "Co rozhoduje o úbytku tuku?",
+      "odpoved": "Kalorický deficit, dost bílkovin a silový trénink. Kardio, klidné i svižné, je v tom jen doplněk výdeje."
     },
     {
       "otazka": "Jakou intenzitu kardia si mám vybrat?",
-      "odpoved": "Chceš spálit víc za méně času, přidej intenzitu nebo intervaly. Chceš objem a regeneraci, jeď v pohodovém tempu. Klidné kardio, které opravdu děláš, vždycky přebije skvělou intenzitu, kterou neuděláš."
+      "odpoved": "Chceš spálit víc za méně času, přidej intenzitu nebo intervaly. Chceš objem a regeneraci, jeď v pohodovém tempu. Klidné kardio, které děláš, přebije skvělou intenzitu, kterou neuděláš."
     }
   ],
   "opory": [
@@ -39,5 +39,6 @@
     "Článek nevyčísluje, o kolik víc kalorií spálí vyšší intenzita za stejný čas.",
     "Článek neuvádí zdroje."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved a faq[1] bez „X, ne Y“ na konci; faq[1] otázka bez „reálně“; faq[2] bez „opravdu“ a „vždycky“"
 }

@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/soja-a-hormony-mytus.html",
   "titulek": "Sója zvyšuje estrogen a škodí mužům? Mýtus o sóji",
   "hlavni_otazka": "Zvyšuje sója estrogen a snižuje mužům testosteron?",
-  "kratka_odpoved": "Ne, u mužů běžná konzumace sóji prokazatelně nesnižuje testosteron ani nezvedá estrogen na úroveň, která by reálně něco dělala s postavou nebo plodností. Izoflavony v sóji jsou rostlinné fytoestrogeny, ne lidský hormon, a na stejná místa v těle se vážou mnohem slaběji. V množstvích, co reálně sníš z tofu nebo edamame, žádnou feminizaci nespustí.",
+  "kratka_odpoved": "Ne, u mužů běžná konzumace sóji prokazatelně nesnižuje testosteron ani nezvedá estrogen na úroveň, která by reálně něco dělala s postavou nebo plodností. Izoflavony v sóji jsou rostlinné fytoestrogeny, které se na stejná místa v těle vážou mnohem slaběji než lidský hormon. V množstvích, co reálně sníš z tofu nebo edamame, žádnou feminizaci nespustí.",
   "faq": [
     {
       "otazka": "Jaký je rozdíl mezi fytoestrogenem a lidským estrogenem?",
@@ -44,5 +44,6 @@
     "Článek neuvádí, od jaké dávky izoflavonů nebo kolika porcí sóji denně začíná „extrémní“ množství.",
     "Článek necituje konkrétní studie, o které opírá tvrzení, že běžná konzumace sóji prokazatelně nesnižuje testosteron."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „fytoestrogeny, ne lidský hormon“"
 }

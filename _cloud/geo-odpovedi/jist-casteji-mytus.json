@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/jist-casteji-mytus.html",
   "titulek": "Musíš jíst 5–6× denně? Mýtus o časté stravě a metabolismu",
   "hlavni_otazka": "Je potřeba jíst pětkrát až šestkrát denně, aby se nezpomalil metabolismus?",
-  "kratka_odpoved": "Ne, metabolismus se mezi jídly nevypíná. Termický efekt potravy se počítá z celkového množství jídla za den, ne z počtu porcí, takže tři velká jídla a šest malých se sečtou nastejno. Rozhodují celkové kalorie a bílkoviny.",
+  "kratka_odpoved": "Ne, metabolismus se mezi jídly nevypíná. Termický efekt potravy se počítá z celkového množství jídla za den, takže tři velká jídla a šest malých se sečtou nastejno. Rozhodují celkové kalorie a bílkoviny.",
   "faq": [
     {
       "otazka": "Co je termický efekt potravy a záleží na počtu jídel?",
@@ -10,15 +10,15 @@
     },
     {
       "otazka": "Přejde tělo bez svačiny do úsporného režimu?",
-      "odpoved": "Ne, tělo má zásoby na hodiny i dny dopředu a mezi jídly hospodaří v klidu. Při stejných kaloriích a bílkovinách hubneš nebo nabíráš při dvou, třech i šesti jídlech denně v podstatě stejně."
+      "odpoved": "Tělo má zásoby na hodiny i dny dopředu a mezi jídly hospodaří v klidu. Při stejných kaloriích a bílkovinách hubneš nebo nabíráš při dvou, třech i šesti jídlech denně v podstatě stejně."
     },
     {
       "otazka": "Odkud se vzal mýtus, že se má jíst každé tři hodiny?",
-      "odpoved": "Ze dvou zdrojů: z nedorozumění kolem termického efektu potravy a z marketingu. Pět šest jídel denně prodává proteinové tyčinky, svačinové produkty a shaky. Nikdy to ale nikdo pořádně nepodložil."
+      "odpoved": "Ze dvou zdrojů: z nedorozumění kolem termického efektu potravy a z marketingu. Pět šest jídel denně prodává proteinové tyčinky, svačinové produkty a shaky. Pořádně to ale nikdo nepodložil."
     },
     {
       "otazka": "Hraje počet jídel nějakou roli u bílkovin?",
-      "odpoved": "Tady je jedna nuance. Pro budování a udržení svalů se zdá rozumné rozložit bílkoviny do tří až čtyř dávek přes den, místo nacpat všechno do jednoho obřího jídla. Je to věc bílkovin, ne počtu jídel obecně a ne „nakopnutí metabolismu“."
+      "odpoved": "Trochu ano. Pro budování a udržení svalů se zdá rozumné rozložit bílkoviny do tří až čtyř dávek přes den, místo nacpat všechno do jednoho obřího jídla. S „nakopnutím metabolismu“ to ale nesouvisí."
     },
     {
       "otazka": "Kolik jídel denně je nejlepší?",
@@ -49,5 +49,6 @@
     "Tabulka s 2000 kcal a 150 g bílkovin je jen ilustrační příklad, ne doporučení, proto ji v odpovědích nepoužívám.",
     "„Zhruba desetina celkového příjmu“ u TEF je v článku bez rozlišení podle složení stravy."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne z počtu porcí“; faq[1] bez úvodního „Ne,“ (druhé v řadě); faq[2] bez „Nikdy“; faq[3] bez „Tady je jedna nuance“ a bez „ne X a ne Y“"
 }

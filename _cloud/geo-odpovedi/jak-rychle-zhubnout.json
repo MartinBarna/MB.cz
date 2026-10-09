@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/jak-rychle-zhubnout.html",
   "titulek": "Jak rychle zhubnout (a proč to většinou nevydrží)",
   "hlavni_otazka": "Jak rychle zhubnout a dá se shodit 5 kg za týden?",
-  "kratka_odpoved": "Váha umí spadnout o několik kilo během pár dní, ale naprostá většina toho úbytku je voda a glykogen, ne tuk, a po návratu k normálnímu jídlu se vrátí. Kilo tuku má zhruba 7 700 kcal, takže reálně jde o stovky gramů tuku týdně. Rozumné tempo je pro většinu lidí zhruba 0,3 až 0,7 kg týdně.",
+  "kratka_odpoved": "Váha umí spadnout o několik kilo během pár dní, ale naprostá většina toho úbytku je voda a glykogen a po návratu k normálnímu jídlu se vrátí. Kilo tuku má zhruba 7 700 kcal, takže reálně jde o stovky gramů tuku týdně. Rozumné tempo je pro většinu lidí zhruba 0,3 až 0,7 kg týdně.",
   "faq": [
     {
       "otazka": "Proč váha při rychlé dietě klesne tak rychle?",
@@ -10,11 +10,11 @@
     },
     {
       "otazka": "Co mi vezme příliš rychlé hubnutí?",
-      "odpoved": "Prudké omezení zvedá hlad a snižuje pocit sytosti. Když jde deficit moc rychle a chybí bílkoviny se silovým tréninkem, tělo obětuje i sval, ne jen tuk. Málo energie zhorší tréninky, náladu i spánek a po drastické dietě se skoro vždy vrací kila."
+      "odpoved": "Prudké omezení zvedá hlad a snižuje pocit sytosti. Když jde deficit moc rychle a chybí bílkoviny se silovým tréninkem, tělo obětuje i sval. Málo energie zhorší tréninky, náladu i spánek a po drastické dietě se skoro vždy vrací kila."
     },
     {
       "otazka": "Jaké tempo hubnutí je rozumné?",
-      "odpoved": "Pro většinu lidí zhruba 0,3 až 0,7 kg týdně, orientačně 0,5–1 % tělesné hmotnosti. Čím víc máš nabráno, tím rychleji to na startu obvykle jde. Sleduj průměr za týden nebo dva, ne jeden den na váze."
+      "odpoved": "Pro většinu lidí zhruba 0,3 až 0,7 kg týdně, orientačně 0,5–1 % tělesné hmotnosti. Čím víc máš nabráno, tím rychleji to na startu obvykle jde. Sleduj průměr za týden nebo dva místo jednoho čísla z rána."
     },
     {
       "otazka": "Jak udělat rychlejší start, aby se mi to nevymstilo?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Proč se mi po rychlé dietě váha vrátila?",
-      "odpoved": "Vrátila se voda a glykogen a často i chuť dohnat týdny hladu. Je to důsledek příliš tvrdého režimu, ne slabé vůle."
+      "odpoved": "Vrátila se voda a glykogen a často i chuť dohnat týdny hladu. Je to důsledek příliš tvrdého režimu. Se slabou vůlí to nesouvisí."
     }
   ],
   "opory": [
@@ -53,5 +53,6 @@
     "Kolik silových tréninků týdně, článek neuvádí.",
     "Tempo 0,3 až 0,7 kg týdně je v článku bez zdroje, uvádím ho tak, jak ho článek podává („pro většinu lidí\")."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[1], faq[2] bez „X, ne Y“; faq[4] empatická negace samostatně"
 }

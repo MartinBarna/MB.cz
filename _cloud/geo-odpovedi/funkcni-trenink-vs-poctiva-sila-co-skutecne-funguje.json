@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Dělá posilovna nefunkční svaly?",
-      "odpoved": "Ne. Posilovna ti dává potenciál a tvůj sport ho promění ve skutečný výkon. Nejlepší funkční trénink je trénink tvého sportu."
+      "odpoved": "Ne. Posilovna ti vybuduje základ a tvůj sport ho promění ve výkon. Nejlepší funkční trénink je trénink tvého sportu."
     },
     {
       "otazka": "Jak silní byli fotbalisté ve studii?",
@@ -42,5 +42,6 @@
     "Údaje o síle českých mládežnických fotbalistů jsou připsané „expertům z FAČR a českých akademií“ bez konkrétního zdroje.",
     "Tvrzení na konci (méně zranění, lepší hubnutí, víc energie) článek neopírá o studii, proto je v odpovědích nemám. Doporučuji ověřit údaje o studii (Keiner et al. 2022) proti originálu před použitím."
   ],
-  "kontrola": "opraveno: kratka_odpoved už nezačíná obecným ‚Klasický silový trénink.‘, výsledek je vázaný na studii s mladými fotbalisty (zobecnění nad rámec jedné studie); faq[2] české údaje připsány expertům z FAČR místo ‚podle článku‘"
+  "kontrola": "opraveno: kratka_odpoved už nezačíná obecným ‚Klasický silový trénink.‘, výsledek je vázaný na studii s mladými fotbalisty (zobecnění nad rámec jedné studie); faq[2] české údaje připsány expertům z FAČR místo ‚podle článku‘",
+  "hlas": "upraveno: faq[1] bez „potenciál“ a „skutečný“"
 }

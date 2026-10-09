@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Jak vybrat certifikační kurz pro trenéry a výživové poradce?",
-      "odpoved": "Dívej se na akreditaci a obsah, ne na marketing: co konkrétně se naučíš a kdo učí. Pokud kurz staví na zázračných dietách, detoxech a zakázaných potravinách, uteč. Zeptej se, kolik času věnuje vedení reálného klienta."
+      "odpoved": "Dívej se na akreditaci a obsah: co konkrétně se naučíš a kdo učí. Reklamní sliby kurzu přeskoč. Pokud kurz staví na zázračných dietách, detoxech a zakázaných potravinách, uteč. Zeptej se, kolik času věnuje vedení reálného klienta."
     },
     {
       "otazka": "Odliší mě certifikát od ostatních trenérů?",
@@ -33,5 +33,6 @@
     "Článek neuvádí konkrétní typ živnosti, název kvalifikace ani seznam akreditovaných kurzů a sám říká, že se požadavky mění a záleží na přesném vymezení činnosti.",
     "Článek neuvádí cenu ani délku certifikačních kurzů."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „X, ne Y“"
 }

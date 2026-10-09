@@ -1,8 +1,8 @@
 {
   "url": "https://martinbarna.cz/clanky/toxiny-v-jidle-strach-versus-realita-aneb-8-nejcastejsich-toxinovych-o.html",
   "titulek": "Toxiny v jídle: Strach versus realita aneb 8 nejčastějších „toxinových“ obav 🤦‍♂️",
-  "hlavni_otazka": "Jsou pesticidy, sladidla, GMO a další „toxiny“ v jídle opravdu nebezpečné?",
-  "kratka_odpoved": "Většina „toxinových“ obav je podle článku výrazně přehnaná. Ve vyspělých zemích má drtivá většina potravin rezidua pesticidů hluboko pod bezpečnou hranicí a umělá sladidla jsou v rámci přijatelného denního příjmu bezpečná. Zdraví doopravdy ohrožuje spíš nadváha, nedostatek pohybu, špatný spánek, chronický stres, kouření a nadměrný alkohol.",
+  "hlavni_otazka": "Jsou pesticidy, sladidla, GMO a další „toxiny“ v jídle nebezpečné?",
+  "kratka_odpoved": "Většina „toxinových“ obav je výrazně přehnaná. Ve vyspělých zemích má drtivá většina potravin rezidua pesticidů hluboko pod bezpečnou hranicí a umělá sladidla jsou v rámci přijatelného denního příjmu bezpečná. Zdraví doopravdy ohrožuje spíš nadváha, nedostatek pohybu, špatný spánek, chronický stres, kouření a nadměrný alkohol.",
   "faq": [
     {
       "otazka": "Jsou umělá sladidla bezpečná?",
@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Mám se vyhýbat GMO potravinám?",
-      "odpoved": "Podle článku nemusíš. Patří k nejpřísněji testovaným potravinám na světě a desítky let studií nepřinesly žádný důkaz škodlivosti."
+      "odpoved": "Nemusíš. Patří k nejpřísněji testovaným potravinám na světě a desítky let studií nepřinesly žádný důkaz škodlivosti."
     },
     {
       "otazka": "Jsou konzervanty a aditiva v průmyslových potravinách nebezpečné?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Mám řešit mikroplasty?",
-      "odpoved": "Mikroplasty jsou všude, ale jejich zdravotní dopady zatím neznáme, výzkum teprve začíná. Článek radí zatím se tím netrápit, protože nemá smysl honit něco, čemu se stejně nevyhneš."
+      "odpoved": "Mikroplasty jsou všude, ale jejich zdravotní dopady zatím neznáme, výzkum teprve začíná. Zatím se tím netrap, nemá smysl honit něco, čemu se stejně nevyhneš."
     }
   ],
   "opory": [
@@ -104,5 +104,6 @@
     "U endokrinních disruptorů článek nejmenuje konkrétní látky, uvádí jen, že důkazy jsou smíšené a účinek malý.",
     "U tvrzení, že GMO potraviny „často bývají dokonce výživnější“, článek neuvádí příklady ani zdroj."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; kratka_odpoved, faq[1] a faq[4] bez „podle článku / Článek radí“"
 }

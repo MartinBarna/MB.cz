@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Přestává se spánkovou apnoí platit kalorický deficit?",
-      "odpoved": "Nepřestává, CICO platí dál. Apnoe ti nemění termodynamiku, jen ti ztěžuje, abys deficit dlouhodobě udržel."
+      "odpoved": "Nepřestává, CICO (kalorie dovnitř, kalorie ven) platí dál. Apnoe ti nemění termodynamiku, jen ti ztěžuje, abys deficit dlouhodobě udržel."
     },
     {
       "otazka": "Jak zjistím, jestli mám spánkovou apnoi?",
@@ -37,5 +37,6 @@
     "Článek nepopisuje, jaké vyšetření na apnoi se dělá a jak probíhá, ani další příznaky kromě chrápání a denní únavy.",
     "Článek neříká, jak se apnoe léčí, pokud ji lékař potvrdí."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] zkratka CICO vysvětlena"
 }

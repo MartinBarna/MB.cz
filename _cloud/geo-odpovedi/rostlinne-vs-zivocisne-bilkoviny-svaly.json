@@ -2,10 +2,10 @@
   "url": "https://martinbarna.cz/clanky/rostlinne-vs-zivocisne-bilkoviny-svaly.html",
   "titulek": "Rostlinné vs živočišné bílkoviny na svaly",
   "hlavni_otazka": "Dají se postavit svaly na rostlinných bílkovinách stejně jako na mase?",
-  "kratka_odpoved": "Podle randomizované studie z roku 2025 ano: rostlinná i živočišná strava nastartovaly tvorbu svalových bílkovin stejně. Rozhoduje, kolik bílkovin sníš celkem za den, ne jestli pochází z kuřete, nebo z čočky. Studie ale zkoumala mladé zdravé lidi po krátkou dobu.",
+  "kratka_odpoved": "Randomizovaná studie z roku 2025 říká, že ano: rostlinná i živočišná strava nastartovaly tvorbu svalových bílkovin stejně. Rozhoduje, kolik bílkovin sníš celkem za den, kuře nebo čočka je vedlejší. Studie ale zkoumala mladé zdravé lidi po krátkou dobu.",
   "faq": [
     {
-      "otazka": "Jak ta studie probíhala?",
+      "otazka": "Jak vědci porovnali rostlinné a živočišné bílkoviny?",
       "odpoved": "Vědci vzali 40 zdravých aktivních lidí, kteří devět dní silově trénovali a jedli přesně nastavenou stravu s 1,1–1,2 g bílkovin na kilo tělesné hmotnosti. Jedna skupina jedla živočišné zdroje, druhá výhradně rostlinné, a pak se citlivou metodou změřila tvorba svalových bílkovin."
     },
     {
@@ -17,7 +17,7 @@
       "odpoved": "Orientačně 1,6–2,2 g bílkovin na kilo, pokud chceš stavět nebo držet svaly. Na rostlinné stravě přidej trochu navrch a kombinuj zdroje, třeba luštěniny s obilovinami, tofu, tempeh, sóju nebo kvalitní rostlinný protein. Při zdravotních potížích nebo speciální dietě se poraď s lékařem či nutričním specialistou."
     },
     {
-      "otazka": "Jaké má ta studie limity?",
+      "otazka": "Platí to i pro starší lidi nebo v tvrdé dietě?",
       "odpoved": "Šlo o mladé zdravé lidi, krátkou dobu a spíš střední příjem bílkovin. U starších lidí, u velmi vysokého příjmu nebo v tvrdém deficitu můžou drobné rozdíly, jako je kvalita bílkoviny a obsah leucinu, hrát o něco větší roli."
     }
   ],
@@ -76,5 +76,6 @@
     "Článek neříká, o kolik konkrétně má být příjem bílkovin na rostlinné stravě vyšší, jen „trochu navrch“.",
     "Studie trvala devět dní a měřila tvorbu svalových bílkovin; článek neuvádí data o dlouhodobém přírůstku svalové hmoty."
   ],
-  "kontrola": "opraveno: faq[2] doplněno ze závěrečného upozornění ‚při zdravotních potížích nebo speciální dietě se poraď s lékařem či nutričním specialistou‘; nejiste[0] opraveno, článek studii ve Zdroji uvádí (Askow a kol., Med Sci Sports Exerc 2025)"
+  "kontrola": "opraveno: faq[2] doplněno ze závěrečného upozornění ‚při zdravotních potížích nebo speciální dietě se poraď s lékařem či nutričním specialistou‘; nejiste[0] opraveno, článek studii ve Zdroji uvádí (Askow a kol., Med Sci Sports Exerc 2025)",
+  "hlas": "upraveno: kratka_odpoved bez úvodního „Podle“ a bez „ne jestli pochází“; faq[0] a faq[3] otázky jako dotaz člověka"
 }

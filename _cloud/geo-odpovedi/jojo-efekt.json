@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/jojo-efekt.html",
   "titulek": "Jojo efekt: proč se váha vrací a jak ho porazit",
   "hlavni_otazka": "Proč se mi po dietě vrací váha a jak zabránit jojo efektu?",
-  "kratka_odpoved": "Jojo efekt většinou nezpůsobuje slabá vůle, ale špatně nastavený proces: příliš velký deficit, ztráta svalů a dieta s jasným koncem. Aby to vydrželo, drž mírný deficit 15–20 % pod výdejem, jez 1,6–2 g bílkovin na kilo, posiluj a po dietě postupně přidávej kalorie zpátky na udržovací příjem.",
+  "kratka_odpoved": "Jojo efekt dělá špatně nastavený proces: příliš velký deficit, ztráta svalů a dieta s jasným koncem. Slabá vůle za to většinou nemůže. Aby to vydrželo, drž mírný deficit 15–20 % pod výdejem, jez 1,6–2 g bílkovin na kilo, posiluj a po dietě postupně přidávej kalorie zpátky na udržovací příjem.",
   "faq": [
     {
       "otazka": "Proč se po agresivním hubnutí zpomalí metabolismus?",
-      "odpoved": "Když hubneš agresivně a bez bílkovin a silového tréninku, tělo si nebere jen tuk, ale i sval. Míň svalu znamená nižší denní výdej, a o to snadněji se tuk vrátí, jakmile se vrátíš k normálnímu jídlu."
+      "odpoved": "Když hubneš agresivně a bez bílkovin a silového tréninku, tělo si bere i sval. Míň svalu znamená nižší denní výdej, a o to snadněji se tuk vrátí, jakmile se vrátíš k normálnímu jídlu."
     },
     {
       "otazka": "Jak velký kalorický deficit držet, aby se váha nevrátila?",
-      "odpoved": "Mírný deficit, 15–20 % pod výdejem, ne hladovka. K tomu dost bílkovin (1,6–2 g na kilo) a silový trénink, který dává tělu důvod si sval nechat."
+      "odpoved": "Mírný deficit, 15–20 % pod výdejem, žádná hladovka. K tomu dost bílkovin (1,6–2 g na kilo) a silový trénink, který dává tělu důvod si sval nechat."
     },
     {
       "otazka": "Proč mám po dietě pořád hlad?",
@@ -47,5 +47,6 @@
     "Článek neříká, jak dlouho zůstat na udržovacím příjmu po dietě (jen „chvíli\"), ani o kolik kalorií a jak rychle je přidávat.",
     "Údaj o metabolismu nižším zhruba o 700 kcal denně (Fothergill 2016) článek výslovně označuje za extrémní případ, proto není použit jako obecná odpověď."
   ],
-  "kontrola": "opraveno: faq[0] otázka „Proč se mi po dietě zpomalí metabolismus?“ zpřesněna na agresivní hubnutí (článek to váže na hubnutí agresivně a bez bílkovin a silového tréninku, ne na každou dietu)"
+  "kontrola": "opraveno: faq[0] otázka „Proč se mi po dietě zpomalí metabolismus?“ zpřesněna na agresivní hubnutí (článek to váže na hubnutí agresivně a bez bílkovin a silového tréninku, ne na každou dietu)",
+  "hlas": "upraveno: kratka_odpoved bez „nezpůsobuje X, ale Y“ (empatická negace samostatně); faq[0] bez „nejen tuk, ale i sval“; faq[1] bez „ne hladovka“"
 }

@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Fungují cviky na obličej, válečky nebo gua sha?",
-      "odpoved": "Studie, která by prokázala úbytek tuku z tváří cvičením nebo masáží, se při psaní článku nenašla. Masáž umí krátkodobě rozhýbat zadrženou vodu, takže obličej může na pár hodin vypadat svěžeji. Tuk ale nespálí ani váleček, ani kámen."
+      "odpoved": "Studie, která by prokázala úbytek tuku z tváří cvičením nebo masáží, jsem při psaní článku nenašel. Masáž umí krátkodobě rozhýbat zadrženou vodu, takže obličej může na pár hodin vypadat svěžeji. Tuk ale nespálí ani váleček, ani kámen."
     },
     {
       "otazka": "Proč mám ráno oteklý obličej?",
@@ -48,5 +48,6 @@
     "Studie Alam 2018 o obličejovém cvičení zkoumala vzhled stárnutí, ne hubnutí, proto ji v odpovědích nepoužívám jako důkaz pro ani proti.",
     "Tvrzení, že obličej bývá jedno z prvních míst, kde okolí změnu zaregistruje, je v článku úvaha bez zdroje, do FAQ jsem ho nedal."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] „se nenašla“ → 1. osoba"
 }

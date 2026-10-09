@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Proč jsou odborníci k Wobenzymu skeptičtí?",
-      "odpoved": "Enzymy jsou bílkoviny a trávení je z větší části rozloží, takže se do krve dostane jen malá část. Část studií je navíc starších nebo placených výrobcem a výsledky nejsou konzistentní."
+      "odpoved": "Enzymy jsou bílkoviny a trávení je z větší části rozloží, takže se do krve dostane jen malá část. Část studií je navíc starších nebo placených výrobcem a výsledky se rozcházejí."
     },
     {
       "otazka": "Co pomůže na bolavé klouby víc než Wobenzym?",
@@ -39,5 +39,6 @@
     "Článek nejmenuje konkrétní studie (autory, časopisy), jen roky a typy studií.",
     "Údaj o 200 studiích bez vážných vedlejších účinků pochází od výrobce, ne z nezávislého zdroje; v odpovědi je to tak označené."
   ],
-  "kontrola": "opraveno: kratka_odpoved ‚Podle článku přesvědčivě ne‘ → ‚Důkazy přesvědčivé nejsou‘ (článek říká, že důkazy nejsou přesvědčivé, ne že přesvědčivě nefunguje); faq[3] o bezpečnosti doplněno, že nemá čekat efekt léku a neodkládat návštěvu lékaře"
+  "kontrola": "opraveno: kratka_odpoved ‚Podle článku přesvědčivě ne‘ → ‚Důkazy přesvědčivé nejsou‘ (článek říká, že důkazy nejsou přesvědčivé, ne že přesvědčivě nefunguje); faq[3] o bezpečnosti doplněno, že nemá čekat efekt léku a neodkládat návštěvu lékaře",
+  "hlas": "upraveno: faq[1] „konzistentní“ česky"
 }

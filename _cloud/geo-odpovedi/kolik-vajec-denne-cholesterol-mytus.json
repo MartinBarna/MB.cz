@@ -9,7 +9,7 @@
       "odpoved": "U většiny zdravých lidí jen málo. Tělo si tvorbu cholesterolu reguluje samo: když ho z jídla dostane víc, vyrobí míň, když málo, vyrobí víc. Proto pár vajec u většiny zdravých lidí hladinu v krvi nijak dramaticky nezvedne."
     },
     {
-      "otazka": "Co doopravdy ovlivňuje cholesterol v krvi?",
+      "otazka": "Co ovlivňuje cholesterol v krvi víc než vejce?",
       "odpoved": "Spíš nasycené a hlavně trans tuky, vláknina, tělesná hmotnost a tuk kolem pasu. K tomu celý životní styl: pohyb, kouření, alkohol, spánek a stres."
     },
     {
@@ -49,5 +49,6 @@
     "Článek neříká, jak člověk pozná, že je hyper-respondér (kromě odběrů a konzultace s lékařem).",
     "U nasycených tuků článek mluví opatrně („tradičně se pojí\"), proto odpověď netvrdí víc než to."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] otázka bez „doopravdy“"
 }

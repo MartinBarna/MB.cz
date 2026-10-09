@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/vitamin-d-na-co-ma-smysl.html",
   "titulek": "Vitamin D po 40: na co reálně má a nemá smysl",
   "hlavni_otazka": "Má smysl brát po čtyřicítce vitamin D?",
-  "kratka_odpoved": "U někoho ano, u někoho ne, a víc rozhodně není líp. Spolu s vápníkem reálně pomáhá kostem a u lidí s opravdu nízkou hladinou může pomoct i se svalovou funkcí a stabilitou, jako prevenci nachlazení ho ale data zatím nepodpírají. Nehádej a nech si od lékaře změřit hladinu 25-OH vitaminu D z krve.",
+  "kratka_odpoved": "U někoho ano, u někoho ne, a víc rozhodně není líp. Spolu s vápníkem reálně pomáhá kostem a u lidí s hodně nízkou hladinou může pomoct i se svalovou funkcí a stabilitou, jako prevenci nachlazení ho ale data zatím nepodpírají. Nehádej a nech si od lékaře změřit hladinu 25-OH vitaminu D z krve.",
   "faq": [
     {
       "otazka": "Kolik vitaminu D denně brát?",
@@ -144,5 +144,6 @@
     "Článek neříká, od jaké hladiny 25-OH vitaminu D jde o deficit ani od jaké dávky je příjem už nadměrný.",
     "Článek neuvádí, kolik vápníku denně je dostatečný příjem."
   ],
-  "kontrola": "opraveno: faq[0] (dávka) doplněno „zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu“ a faq[4] (užívání) „nezačínej na vlastní pěst, konzultuj s lékařem“ ze závěrečného upozornění; faq[0] pásmo 20–40 ng/ml zmírněno na „naznačuje“ jako v článku; nejiste[0] opraveno, autoři jsou v seznamu zdrojů"
+  "kontrola": "opraveno: faq[0] (dávka) doplněno „zvlášť pokud bereš léky, jsi těhotná nebo máš jakoukoli zdravotní diagnózu“ a faq[4] (užívání) „nezačínej na vlastní pěst, konzultuj s lékařem“ ze závěrečného upozornění; faq[0] pásmo 20–40 ng/ml zmírněno na „naznačuje“ jako v článku; nejiste[0] opraveno, autoři jsou v seznamu zdrojů",
+  "hlas": "upraveno: kratka_odpoved „opravdu nízkou“ → „hodně nízkou“"
 }

@@ -1,8 +1,8 @@
 {
   "url": "https://martinbarna.cz/clanky/co-dela-stravu-zdravou.html",
   "titulek": "Co opravdu dělá stravu zdravou (není to matcha z Amazonu)",
-  "hlavni_otazka": "Co dělá stravu opravdu zdravou?",
-  "kratka_odpoved": "Pestrý talíř z běžných surovin, ne drahé superpotraviny. Přehled z roku 2025 o jídelníčcích Blue Zones našel společné hlavně jedno: hodně polyfenolů z ovoce, zeleniny, bylinek a olivového oleje. Barva a slupka jsou vodítko, tam bývá polyfenolů nejvíc.",
+  "hlavni_otazka": "Co dělá stravu zdravou?",
+  "kratka_odpoved": "Pestrý talíř z běžných surovin. Přehled z roku 2025 o jídelníčcích Blue Zones našel společné hlavně jedno: hodně polyfenolů z ovoce, zeleniny, bylinek a olivového oleje. Barva a slupka jsou vodítko, tam bývá polyfenolů nejvíc. Drahé superpotraviny k tomu nepotřebuješ.",
   "faq": [
     {
       "otazka": "Kde najdu polyfenoly v běžné české kuchyni?",
@@ -10,15 +10,15 @@
     },
     {
       "otazka": "Prodlužují polyfenoly život?",
-      "odpoved": "Z dat o Blue Zones to jisté není. Je to pozorování, ne experiment, a v těch oblastech se liší i pohyb, spánek a to, jak spolu lidé žijí. Sporná jsou i samotná data o extrémním věku."
+      "odpoved": "Z dat o Blue Zones to jisté není. Jde o pozorování bez experimentu a v těch oblastech se liší i pohyb, spánek a to, jak spolu lidé žijí. Sporná jsou i samotná data o extrémním věku."
     },
     {
       "otazka": "Pomůžou mi polyfenoly zhubnout?",
-      "odpoved": "Nečekej to od nich. Polyfenoly nejsou kouzlo, které přebije kalorie, o váze pořád rozhoduje energetická bilance. Ber je jako bonus ke kvalitě jídelníčku, ne jako náhradu za základy."
+      "odpoved": "Nečekej to od nich. O váze pořád rozhoduje energetická bilance a polyfenoly ji nepřebijí. Ber je jako bonus ke kvalitě jídelníčku."
     },
     {
       "otazka": "Mám kvůli polyfenolům pít červené víno?",
-      "odpoved": "Ne. Žádná studie o polyfenolech není důvod začít pít. Alkohol si nech tam, kde ti sedí do života, ne kvůli zdraví."
+      "odpoved": "Ne. Žádná studie o polyfenolech není důvod začít pít. Když ti víno sedí do života, dej si ho pro chuť, na zdraví to nehraj."
     }
   ],
   "opory": [
@@ -39,5 +39,6 @@
     "Článek neuvádí, kolik polyfenolů denně jíst, ani jejich konkrétní účinky na zdraví.",
     "Článek nechává otevřený spor o datech Blue Zones (Saul Newman vs. tvůrci konceptu) a nerozhoduje ho."
   ],
-  "kontrola": "opraveno: faq[2] „Ne.“ nahrazeno „Nečekej to od nich.“, článek netvrdí, že polyfenoly s hubnutím nepomáhají vůbec, jen že nepřebijí kalorie"
+  "kontrola": "opraveno: faq[2] „Ne.“ nahrazeno „Nečekej to od nich.“, článek netvrdí, že polyfenoly s hubnutím nepomáhají vůbec, jen že nepřebijí kalorie",
+  "hlas": "upraveno: hlavni_otazka bez „opravdu“; kratka_odpoved, faq[1], faq[2], faq[3] bez „X, ne Y“"
 }

@@ -6,11 +6,11 @@
   "faq": [
     {
       "otazka": "Odkud se vzal strach, že bílkoviny ničí ledviny?",
-      "odpoved": "Z rady pro nemocné. Lidem s onemocněním ledvin se bílkoviny opravdu omezují, protože poškozené ledviny hůř zvládají odpadní látky z metabolismu bílkovin. Po cestě se z toho ale stalo, že bílkoviny škodí každému, a to je úplně jiná věta."
+      "odpoved": "Z rady pro nemocné. Lidem s onemocněním ledvin se bílkoviny omezují, protože poškozené ledviny hůř zvládají odpadní látky z metabolismu bílkovin. Po cestě se z toho ale stalo, že bílkoviny škodí každému, a to je úplně jiná věta."
     },
     {
       "otazka": "Co je hyperfiltrace po jídle s bílkovinami?",
-      "odpoved": "Krátkodobé zvýšení výkonu ledvin po proteinu. Je to normální adaptace, ne poškození, stejně jako když ti při běhu zrychlí srdce."
+      "odpoved": "Krátkodobé zvýšení výkonu ledvin po proteinu. Ledviny prostě zaberou, stejně jako ti při běhu zrychlí srdce. Normální adaptace, žádné poškození."
     },
     {
       "otazka": "Kolik bílkovin denně je tak akorát?",
@@ -46,5 +46,6 @@
     "Článek neuvádí, kolik vody denně pít při vyšším příjmu bílkovin.",
     "Článek nenavrhuje konkrétní příjem bílkovin pro lidi s nemocnými ledvinami, odkazuje je na lékaře nebo nutričního terapeuta."
   ],
-  "kontrola": "opraveno: faq[2] (g/kg) doplněno upozornění na onemocnění ledvin a konzultaci s lékařem ze závěrečného upozornění"
+  "kontrola": "opraveno: faq[2] (g/kg) doplněno upozornění na onemocnění ledvin a konzultaci s lékařem ze závěrečného upozornění",
+  "hlas": "upraveno: faq[0] bez „opravdu“; faq[1] bez „X, ne Y“, kratší věty"
 }

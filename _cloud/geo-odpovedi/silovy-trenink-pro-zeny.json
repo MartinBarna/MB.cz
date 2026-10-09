@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/silovy-trenink-pro-zeny.html",
   "titulek": "Silový trénink pro ženy: jak začít (bez strachu ze zmohutnění)",
   "hlavni_otazka": "Zmohutní žena z posilování?",
-  "kratka_odpoved": "Nezmohutní. Ženy mají výrazně méně testosteronu než muži, takže velký svalový objem budují jen velmi pomalu a obtížně. Běžným silovým tréninkem 2–3x týdně získáš spíš pevné a vytvarované tělo, ne mohutnost.",
+  "kratka_odpoved": "Nezmohutní. Ženy mají výrazně méně testosteronu než muži, takže velký svalový objem budují jen velmi pomalu a obtížně. Běžným silovým tréninkem 2–3x týdně získáš spíš pevné a vytvarované tělo.",
   "faq": [
     {
       "otazka": "Kolikrát týdně má žena posilovat, když začíná?",
@@ -103,5 +103,6 @@
     "Článek neuvádí, kolik bílkovin má žena při silovém tréninku jíst, jen „dostatek bílkovin“.",
     "Článek neříká, jak velký má být „mírný kalorický deficit“ v kaloriích."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne mohutnost“"
 }

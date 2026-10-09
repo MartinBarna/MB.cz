@@ -13,12 +13,12 @@
       "odpoved": "Začni 5–10 minutami dynamické rozcvičky, tedy pohyby v plném rozsahu, ale v pohybu, a přidej zahřátí, ze kterého ti zteplá tělo. Pak projeď náběhové série daného cviku od prázdné tyče postupně k pracovní váze."
     },
     {
-      "otazka": "Co opravdu rozhoduje o zranění v posilovně?",
+      "otazka": "Co rozhoduje o zranění v posilovně?",
       "odpoved": "Rozumná progrese zátěže, technika a dostatečná regenerace. Naprostá většina úrazů v posilovně vzniká z toho, že někdo přidá moc rychle a moc, ať už váhu, objem, nebo obojí."
     },
     {
       "otazka": "Kdy má statické protahování smysl?",
-      "odpoved": "Po tréninku nebo samostatně v jiný čas, když chceš zlepšit nebo udržet pohyblivost a rozsah pohybu. Protahuj se proto, že chceš zlepšit mobilitu, ne ze strachu ze zranění."
+      "odpoved": "Po tréninku nebo samostatně v jiný čas, když chceš zlepšit nebo udržet pohyblivost a rozsah pohybu. Protahuj se proto, že chceš zlepšit mobilitu. Před zraněním tě to neochrání."
     }
   ],
   "opory": [
@@ -80,5 +80,6 @@
     "Článek neříká, od jak dlouhé výdrže v protažení se objevuje pokles síly, jen obecně „držíš dlouho“.",
     "Článek se týká silového a výkonového tréninku; neříká, jak je to u jiných sportů."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] otázka bez „opravdu“; faq[3] bez „ne ze strachu“"
 }

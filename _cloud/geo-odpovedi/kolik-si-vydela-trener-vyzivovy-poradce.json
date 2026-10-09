@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Jak vydělávat víc, když už mám deset klientů?",
-      "odpoved": "Od deseti klientů přestává být problém počet a začíná být problém čas: buď zvedneš cenu, nebo se udřeš. Cenu ti nikdo nezaplatí za certifikát, ale za výsledky, které umíš doložit, a za servis jako plán na míru, týdenní check-iny a úpravy podle dat."
+      "odpoved": "Od deseti klientů přestává být problém počet a začíná být problém čas: buď zvedneš cenu, nebo se udřeš. Lidi ti zaplatí za doložené výsledky a za servis: plán na míru, týdenní check-iny a úpravy podle dat."
     },
     {
       "otazka": "Proč záleží na tom, jak dlouho u mě klient vydrží?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Vydělám víc na osobních trénincích, nebo online?",
-      "odpoved": "Osobní trénink má strop daný hodinami dne a cenou lekce ve tvém městě. Online koučink ten strop zvedá, protože neprodáváš hodiny, ale vedení. Bez procesů se ale utopíš v psaní jídelníčků už u pěti klientů."
+      "odpoved": "Osobní trénink má strop daný hodinami dne a cenou lekce ve tvém městě. Online koučink ten strop zvedá, protože prodáváš vedení místo hodin. Bez procesů se ale utopíš v psaní jídelníčků už u pěti klientů."
     }
   ],
   "opory": [
@@ -38,5 +38,6 @@
     "Článek neřeší daně, odvody ani náklady, takže 20 000 nebo 40 000 Kč je hrubý příjem z příkladu, ne čistý výdělek.",
     "Článek neříká, jakou cenu za osobní lekci nebo online spolupráci je realistické si účtovat, ani jak dlouho klienti v průměru vydrží."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „nezaplatí za X, ale za Y“; faq[3] bez „neprodáváš X, ale Y“"
 }

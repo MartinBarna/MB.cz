@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/hydratace-deti-sport.html",
   "titulek": "Hydratace dětí ve sportu: kdy stačí voda a kdy ne (a jak na domácí iontový nápoj)",
   "hlavni_otazka": "Stačí dítěti při sportu voda, nebo potřebuje iontový nápoj?",
-  "kratka_odpoved": "Na běžný trénink do 60 minut je čistá voda naprosto dostačující. Když dítě sportuje déle než hodinu, vysokou intenzitou nebo ve velkém horku, ztrácí potem i sodík a energii a vyplatí se nápoj se 4–8 % sacharidů a 0,5–0,7 g sodíku na litr.",
+  "kratka_odpoved": "Na běžný trénink do 60 minut stačí čistá voda. Když dítě sportuje déle než hodinu, vysokou intenzitou nebo ve velkém horku, ztrácí potem i sodík a energii a vyplatí se nápoj se 4–8 % sacharidů a 0,5–0,7 g sodíku na litr.",
   "faq": [
     {
       "otazka": "Jak udělat domácí iontový nápoj pro dítě?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Proč jsou děti na dehydrataci citlivější než dospělí?",
-      "odpoved": "Mají větší povrch těla vzhledem k hmotnosti, takže se v horku zahřejí rychleji, potí se později a méně efektivně a hůř rozpoznají žízeň."
+      "odpoved": "Mají větší povrch těla vzhledem k hmotnosti, takže se v horku zahřejí rychleji, potí se později a méně účinně a hůř rozpoznají žízeň."
     },
     {
       "otazka": "Kdy s dítětem po sportu k lékaři?",
@@ -47,5 +47,6 @@
     "Článek neuvádí rozdíly podle věku dítěte (předškolák vs. teenager), jen „podle velikosti dítěte“.",
     "Mírná dětská verze nápoje (asi 3 % cukru) je pod hranicí 4–8 %, kterou článek uvádí jako ideál; článek ji uvádí jako verzi „na chuť a aby pilo“, ne jako sportovní."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „naprosto dostačující“; faq[3] „efektivně“ česky"
 }

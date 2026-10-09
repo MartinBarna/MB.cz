@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/bcaa-aminokyseliny-mytus.html",
   "titulek": "Musíš brát BCAA na svaly? Mýtus o aminokyselinách",
   "hlavni_otazka": "Mám brát BCAA, abych nepřišel o svaly?",
-  "kratka_odpoved": "Pokud normálně jíš, nemusíš. Každá kompletní bílkovina (maso, vejce, ryby, mléčné výrobky, syrovátkový protein) už BCAA obsahuje i se zbylými esenciálními aminokyselinami. O sval tě připraví velký a dlouhý kalorický deficit, málo bílkovin a žádný silový trénink, ne vynechaný šejkr.",
+  "kratka_odpoved": "Pokud normálně jíš, nemusíš. Každá kompletní bílkovina (maso, vejce, ryby, mléčné výrobky, syrovátkový protein) už BCAA obsahuje i se zbylými esenciálními aminokyselinami. O sval tě připraví velký a dlouhý kalorický deficit, málo bílkovin a žádný silový trénink. Vynechaný šejkr ti ho nevezme.",
   "faq": [
     {
       "otazka": "Co jsou BCAA?",
-      "odpoved": "BCAA jsou větvené aminokyseliny, konkrétně tři: leucin, isoleucin a valin. Pro stavbu svalu jsou opravdu důležité, leucin obzvlášť."
+      "odpoved": "BCAA jsou větvené aminokyseliny, konkrétně tři: leucin, isoleucin a valin. Pro stavbu svalu jsou důležité, leucin obzvlášť."
     },
     {
       "otazka": "Proč samotné BCAA sval nepostaví?",
@@ -44,5 +44,6 @@
     "Článek neuvádí dávkování kreatinu ani konkrétní studie k BCAA.",
     "Článek neříká, jestli BCAA mohou škodit, jen že „nejsou škodlivé“ a nic moc nedají; o vedlejších účincích ani dávkách nic dalšího neuvádí."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „X, ne Y“ na konci; faq[0] bez „opravdu“"
 }

@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/silovy-trenink-dlouhovekost.html",
   "titulek": "Silový trénink a dlouhověkost: stačí hodina týdně",
   "hlavni_otazka": "Kolik silového tréninku týdně stačí, aby to mělo vliv na délku života?",
-  "kratka_odpoved": "Podle metaanalýzy z roku 2022 vyšlo největší snížení rizika úmrtí, o 27 %, kolem 60 minut silového tréninku týdně a při vyšších objemech byla výhoda menší. Jakékoli množství posilování se pojilo s o 15 % nižším rizikem úmrtí ze všech příčin. Jde o pozorovací data, tedy o souvislost, ne o důkaz příčiny.",
+  "kratka_odpoved": "V metaanalýze z roku 2022 vyšlo největší snížení rizika úmrtí, o 27 %, kolem 60 minut silového tréninku týdně a při vyšších objemech byla výhoda menší. Jakékoli množství posilování se pojilo s o 15 % nižším rizikem úmrtí ze všech příčin. Jde o pozorovací data, tedy o souvislost, důkaz příčiny to není.",
   "faq": [
     {
       "otazka": "Je lepší kombinovat posilování s kardiem?",
@@ -53,5 +53,6 @@
     "Studie se v číslech rozcházejí (15 % proti 21 % u celkové úmrtnosti, rozdílné výsledky u nádorové úmrtnosti) a článek sám říká, že přesné číslo nikdo nezná, spolehlivý je jen směr.",
     "Článek neříká, jakou intenzitu nebo konkrétní formu posilování sledované studie zahrnovaly."
   ],
-  "kontrola": "opraveno: faq[1] (tréninkový plán) doplněno o upozornění, že po operaci, se srdečními potížemi nebo omezujícími bolestmi zad si začátek nech odsouhlasit u lékaře nebo fyzioterapeuta; článek ho má hned pod plánem, JSON ho měl jen u otázky na věk"
+  "kontrola": "opraveno: faq[1] (tréninkový plán) doplněno o upozornění, že po operaci, se srdečními potížemi nebo omezujícími bolestmi zad si začátek nech odsouhlasit u lékaře nebo fyzioterapeuta; článek ho má hned pod plánem, JSON ho měl jen u otázky na věk",
+  "hlas": "upraveno: kratka_odpoved bez úvodního „Podle“ a bez „ne o důkaz příčiny“"
 }

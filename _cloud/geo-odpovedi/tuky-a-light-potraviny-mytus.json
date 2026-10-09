@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/tuky-a-light-potraviny-mytus.html",
   "titulek": "Tuk tě dělá tlustým? Mýtus o tucích a „light“ potravinách",
   "hlavni_otazka": "Tloustne se z tuku v jídle a pomáhají light potraviny zhubnout?",
-  "kratka_odpoved": "Netloustneš z toho, že na talíři byl tuk, ale z toho, že přijmeš víc kalorií, než spálíš. Tuk je jen energeticky hustší, zhruba 9 kcal na gram proti okolo 4 u bílkovin a sacharidů, takže se s ním snáz přejíš. Nálepka „light“ ti sama o sobě nezhubne ani gram.",
+  "kratka_odpoved": "Tloustneš z kalorií navíc, ať přijdou odkudkoli. Tuk je jen energeticky hustší, zhruba 9 kcal na gram proti okolo 4 u bílkovin a sacharidů, takže se s ním snáz přejíš. Nálepka „light“ ti sama o sobě nezhubne ani gram.",
   "faq": [
     {
       "otazka": "Proč light potraviny často nepomáhají?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Jak poznám, jestli se light verze vyplatí?",
-      "odpoved": "Otoč obal a koukni na kalorie a cukr, ne na nápis vepředu. Když má light verze stejně nebo víc kalorií a víc cukru, není to žádná výhra."
+      "odpoved": "Otoč obal a koukni na kalorie a cukr, nápis vepředu přeskoč. Když má light verze stejně nebo víc kalorií a víc cukru, není to žádná výhra."
     }
   ],
   "opory": [
@@ -71,5 +71,6 @@
     "Článek neuvádí doporučený podíl tuku ve stravě ani konkrétní denní množství v gramech.",
     "Srovnání plnotučného a light jogurtu je obecné; článek neuvádí konkrétní hodnoty kalorií ani cukru."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „Netloustneš z X, ale z Y“; faq[4] bez „ne na nápis vepředu“"
 }

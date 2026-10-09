@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Co je na hubnutí důležitější, kroky, nebo jídlo?",
-      "odpoved": "Nejdřív rozhoduje strava, tedy deficit a dost bílkovin. Pak silový trénink, ať si v redukci udržíš svaly. Kroky a kardio jsou bonus, ne základ."
+      "odpoved": "Nejdřív rozhoduje strava, tedy deficit a dost bílkovin. Pak silový trénink, ať si v redukci udržíš svaly. Kroky a kardio jsou až bonus navrch."
     },
     {
       "otazka": "Kde se mi berou kalorie navíc, když jím zdravě?",
@@ -37,5 +37,6 @@
     "Článek neříká, jak přesně jídlo měřit (vážit, aplikace), jen „změř si, co jíš\".",
     "Číslo 1 500 kcal týdně je výdej z chůze ve studii, ne obecný výdej 10 tisíc kroků; v odpovědi je tak podané."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „bonus, ne základ“"
 }

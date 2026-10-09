@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Co dělat v praxi, když chci žít déle?",
-      "odpoved": "Silový trénink dvakrát až třikrát týdně, 7 000 až 9 000 kroků denně a podíl tuku ve zdravém pásmu. Kardio ber jako součást, ne jako základ, na kterém všechno stojí."
+      "odpoved": "Silový trénink dvakrát až třikrát týdně, 7 000 až 9 000 kroků denně a podíl tuku ve zdravém pásmu. Kardio ber jako jednu ze součástí."
     }
   ],
   "opory": [
@@ -31,5 +31,6 @@
     "Článek neříká, jestli doporučení (silový trénink dvakrát až třikrát týdně, 7 000 až 9 000 kroků denně) vychází přímo ze studie Kjaergaard, nebo je to autorova praktická rada.",
     "Článek neuvádí zdroj údaje, že lidé s nejvyšší kondicí mají v běžném pozorování až o 50 % nižší riziko úmrtí."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[2] bez „součást, ne základ“"
 }

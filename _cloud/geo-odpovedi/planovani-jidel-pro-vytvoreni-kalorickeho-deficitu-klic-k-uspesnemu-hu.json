@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/planovani-jidel-pro-vytvoreni-kalorickeho-deficitu-klic-k-uspesnemu-hu.html",
   "titulek": "Plánování jídel pro vytvoření kalorického deficitu: klíč k úspěšnému hubnutí",
   "hlavni_otazka": "Jak si naplánovat jídla, abych byl v kalorickém deficitu a hubnul?",
-  "kratka_odpoved": "Zjisti si svůj kalorický výdej přes online kalkulačku nebo u odborníka a sniž denní příjem o 300–500 kalorií. Sázej na bílkoviny, vlákninu a zdravé tuky a naplánuj si týden dopředu, ať máš zdravou volbu vždycky po ruce.",
+  "kratka_odpoved": "Zjisti si svůj kalorický výdej přes online kalkulačku nebo u odborníka a sniž denní příjem o 300–500 kalorií. Sázej na bílkoviny, vlákninu a zdravé tuky a naplánuj si týden dopředu, ať máš zdravou volbu pořád po ruce.",
   "faq": [
     {
       "otazka": "Co znamená kalorický deficit?",
@@ -76,5 +76,6 @@
     "Článek neříká, jak rychle se při deficitu 300–500 kalorií denně hubne.",
     "Článek neuvádí konkrétní množství bílkovin, vlákniny ani vody na den."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „vždycky“"
 }

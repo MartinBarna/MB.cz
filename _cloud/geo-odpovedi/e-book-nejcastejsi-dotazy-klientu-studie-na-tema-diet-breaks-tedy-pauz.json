@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-studie-na-tema-diet-breaks-tedy-pauz.html",
   "titulek": "E-book Nejčastější dotazy klientů – Studie na téma diet breaks, tedy pauzy od diety a hubnutí",
   "hlavni_otazka": "Pomáhají pauzy od diety (diet breaks) zhubnout víc?",
-  "kratka_odpoved": "Ve studii, kterou článek rozebírá, zhubla skupina s dvoutýdenními pauzami na udržovacích kaloriích za dané období téměř dvojnásobek tuku, udržela víc svalů a po dietě nabrala mnohem méně tuku zpět. Studie z roku 2021 ale u diet breaks oproti plynulému hubnutí žádnou výhodu nenašly. Pauza má smysl hlavně psychologicky.",
+  "kratka_odpoved": "Ve studii zhubla skupina s dvoutýdenními pauzami na udržovacích kaloriích za dané období téměř dvojnásobek tuku, udržela víc svalů a po dietě nabrala mnohem méně tuku zpět. Studie z roku 2021 ale u diet breaks oproti plynulému hubnutí žádnou výhodu nenašly. Pauza má smysl hlavně psychologicky.",
   "faq": [
     {
       "otazka": "Jak vypadala studie o pauzách od diety?",
@@ -35,5 +35,6 @@
     "Článek neuvádí, jak zjistit svou udržovací hodnotu kcal.",
     "V první skupině článek píše 67 % kcal ze standardního příjmu; u druhé skupiny v dietních blocích procento výslovně neopakuje, proto jsem ho u ní neuváděl."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno „za dané období“ (dieta s pauzami trvala 30 místo 16 týdnů); faq[0] doplněno, že průměrný úbytek tuku na týden byl ve skupině s pauzami nižší (článek to výslovně uvádí), aby odpověď nevyzněla, že pauzy hubnutí zrychlují"
+  "kontrola": "opraveno: kratka_odpoved doplněno „za dané období“ (dieta s pauzami trvala 30 místo 16 týdnů); faq[0] doplněno, že průměrný úbytek tuku na týden byl ve skupině s pauzami nižší (článek to výslovně uvádí), aby odpověď nevyzněla, že pauzy hubnutí zrychlují",
+  "hlas": "upraveno: kratka_odpoved bez „kterou článek rozebírá“"
 }

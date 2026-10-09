@@ -10,9 +10,10 @@ Clanek = clanky/<slug>.html (bez index.html) + pilire jak-zhubnout/ a jak-nabrat
 
 Kontroluje:
   1. ke kazdemu clanku prave jeden JSON, zadny osirely
-  2. validni JSON, klice url, titulek, hlavni_otazka, kratka_odpoved, faq, opory, nejiste, kontrola
+  2. validni JSON, klice url, titulek, hlavni_otazka, kratka_odpoved, faq, opory, nejiste, kontrola, hlas
   3. url = canonical clanku, titulek = H1
   4. kontrola je "ok", "opraveno: ...", "smazano: ..." (pripadne "opraveno: ...; smazano: ...")
+     hlas (revize hlasu 10. 10. 2026) je "beze změny" nebo "upraveno: ..."
   5. kazda polozka (kratka_odpoved, faq[i]) ma oporu, zadna opora nemiri mimo
   6. KAZDA citace v "opory" je doslova v textu clanku. Overuje se dvema nezavislymi cestami:
      a) text uvnitr <article> (+ H1 a perex v hlavicce) z HTML parseru, bez CTA boxu
@@ -33,7 +34,7 @@ from html.parser import HTMLParser
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(REPO, "_cloud", "geo-odpovedi")
-KLICE = ["url", "titulek", "hlavni_otazka", "kratka_odpoved", "faq", "opory", "nejiste", "kontrola"]
+KLICE = ["url", "titulek", "hlavni_otazka", "kratka_odpoved", "faq", "opory", "nejiste", "kontrola", "hlas"]
 PILIRE = {"jak-zhubnout": "jak-zhubnout/index.html", "jak-nabrat-svaly": "jak-nabrat-svaly/index.html"}
 AI_FRAZE = [r"\bKlíčem je", r"\bklíčem je", r"\bVe světě", r"\bve světě\b", r"\bPojďme", r"\bpojďme",
             r"\bNení to jen\b", r"\bnení to jen\b", r"\bNejde jen o\b", r"\bnejde jen o\b",
@@ -174,6 +175,9 @@ def kontroluj(slug):
     k = d.get("kontrola", "")
     if not (k == "ok" or re.match(r"^(opraveno|smazano): \S", k)):
         e.append(f"kontrola ma spatny tvar: {k[:40]!r}")
+    hl = d.get("hlas", "")
+    if not (hl == "beze změny" or re.match(r"^upraveno: \S", hl)):
+        e.append(f"hlas ma spatny tvar: {hl[:40]!r}")
     t1, t2 = flat(citelny_text(raw, oznac_cta=False)), text_html(raw)
     ko = d.get("kratka_odpoved", "")
     if len(ko.split()) > 60:
@@ -203,7 +207,7 @@ def kontroluj(slug):
         for num in re.findall(r"\d+(?:[,.]\d+)?", v):
             if num not in cisla and num.replace(",", ".") not in cisla and num.replace(".", ",") not in cisla:
                 e.append(f"cislo {num} neni v clanku")
-    autorsky = " ".join(vystup + d.get("nejiste", []) + [k])
+    autorsky = " ".join(vystup + d.get("nejiste", []) + [k, hl])
     for f in AI_FRAZE:
         if re.search(f, autorsky):
             e.append(f"AI fraze: {f}")

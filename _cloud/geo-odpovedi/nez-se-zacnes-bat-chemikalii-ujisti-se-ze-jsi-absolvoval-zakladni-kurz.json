@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/nez-se-zacnes-bat-chemikalii-ujisti-se-ze-jsi-absolvoval-zakladni-kurz.html",
   "titulek": "Než se začneš bát ‚chemikálií‘, ujisti se, že jsi absolvoval ZÁKLADNÍ KURZ CHEMIE!",
   "hlavni_otazka": "Mám se bát chemikálií v jídle?",
-  "kratka_odpoved": "Podle Layna Nortona, jehož thread článek překládá, samotné slovo „chemikálie“ nic neříká: o tom, jestli něco škodí, nerozhoduje látka, ale dávka. Všechno je chemie, i obyčejný banán nebo voda. Místo strašení se ptej na přímé důkazy, jestli konkrétní látka škodí v množství, které normálně sníš.",
+  "kratka_odpoved": "Layne Norton, jehož příspěvek tady překládám, to říká jasně: samotné slovo „chemikálie“ nic neznamená, o tom, jestli něco škodí, rozhoduje dávka. Všechno je chemie, i obyčejný banán nebo voda. Místo strašení se ptej na přímé důkazy, jestli konkrétní látka škodí v množství, které normálně sníš.",
   "faq": [
     {
       "otazka": "Co znamená, že dávka dělá jed?",
@@ -10,15 +10,15 @@
     },
     {
       "otazka": "Jsou umělá sladidla v dietní limonádě nebezpečná?",
-      "odpoved": "V běžném množství ne. Podle Layna Nortona bys musel sníst 1000 až 10 000x normální množství, abys měl problémy, zatímco u vody je smrtelná dávka jen asi 10x běžná. Na otravu vodou bys tak umřel dřív, než bys snědl tolik aspartamu, aby ti ublížil."
+      "odpoved": "V běžném množství ne. Norton to počítá tak, že bys musel sníst 1000 až 10 000x normální množství, abys měl problémy, zatímco u vody je smrtelná dávka jen asi 10x běžná. Na otravu vodou bys tak umřel dřív, než bys snědl tolik aspartamu, aby ti ublížil."
     },
     {
       "otazka": "Jsou chemikálie i v přírodních potravinách?",
-      "odpoved": "Ano, podle Layna Nortona i obyčejný organický banán obsahuje spoustu chemikálií, včetně toxických látek. Toxické jsou ale v tom smyslu, že by ti uškodily, kdybys naráz snědl 10 000 banánů."
+      "odpoved": "Ano. I obyčejný organický banán obsahuje podle Nortona spoustu chemikálií, včetně toxických látek. Toxické jsou ale v tom smyslu, že by ti uškodily, kdybys naráz snědl 10 000 banánů."
     },
     {
       "otazka": "Jsou zpracované potraviny automaticky nezdravé?",
-      "odpoved": "Ne. Držet se hlavně minimálně zpracovaných jídel je rozumné vodítko, ne železné pravidlo. Třeba syrovátkový protein je zpracovaný, a přesto podle Layna Nortona snižuje zánět, zlepšuje citlivost na inzulin, snižuje tělesný tuk a pomáhá budovat svaly."
+      "odpoved": "Ne. Držet se hlavně minimálně zpracovaných jídel je rozumné vodítko, žádné železné pravidlo. Třeba syrovátkový protein je zpracovaný, a přesto podle Layna Nortona snižuje zánět, zlepšuje citlivost na inzulin, snižuje tělesný tuk a pomáhá budovat svaly."
     }
   ],
   "opory": [
@@ -46,5 +46,6 @@
     "Údaj o dihydrogenmonoxidu („zabíjí čtvrt milionu lidí ročně“) je řečnický příklad bez zdroje, proto není použit.",
     "Samotný seznam chemikálií v banánu je v původním příspěvku na obrázku (slide), v textu článku chybí."
   ],
-  "kontrola": "opraveno: kratka_odpoved a faq[0] až faq[3] přisouzeny Layne Nortonovi (článek je překlad jeho threadu, odpovědi to podávaly bez autora nebo jako „podle článku“); nejiste[1] upraveno"
+  "kontrola": "opraveno: kratka_odpoved a faq[0] až faq[3] přisouzeny Layne Nortonovi (článek je překlad jeho threadu, odpovědi to podávaly bez autora nebo jako „podle článku“); nejiste[1] upraveno",
+  "hlas": "upraveno: kratka_odpoved přisouzení Nortonovi v 1. osobě („tady překládám“) a bez „nerozhoduje X, ale Y“; faq[1] a faq[2] bez třetího a čtvrtého „Podle Layna Nortona“ v řadě; faq[3] bez „vodítko, ne pravidlo“"
 }

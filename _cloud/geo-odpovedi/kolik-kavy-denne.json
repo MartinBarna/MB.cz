@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/kolik-kavy-denne.html",
   "titulek": "Kolik kávy denně: co pro tebe káva dělá a co ne",
   "hlavni_otazka": "Kolik kávy denně je zdravé?",
-  "kratka_odpoved": "Nejnižší rizika vycházejí kolem 3 až 4 šálků denně proti nulové spotřebě, jde ale o pozorovací data a průměr z velkých skupin, ne předpis pro tebe. Když kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat, a když ji nepiješ, nejsou důvod začít. V těhotenství je to otázka na lékaře nebo gynekologa.",
+  "kratka_odpoved": "Nejnižší rizika vycházejí kolem 3 až 4 šálků denně proti nulové spotřebě, jde ale o pozorovací data a průměr z velkých skupin, žádný předpis pro tebe. Když kávu piješ a je ti po ní dobře, data ti nedávají důvod přestat, a když ji nepiješ, nejsou důvod začít. V těhotenství je to otázka na lékaře nebo gynekologa.",
   "faq": [
     {
       "otazka": "Pomáhá káva při hubnutí?",
-      "odpoved": "Efekt existuje, ale je malý. V metaanalýze 13 randomizovaných studií zvětšilo zdvojnásobení příjmu kofeinu průměrný úbytek hmotnosti o 22 %, jde ale o procenta už probíhajícího úbytku, ne kilogramy navíc. Hubnutí řeší příjem a výdej, káva je doplněk."
+      "odpoved": "Efekt existuje, ale je malý. V metaanalýze 13 randomizovaných studií zvětšilo zdvojnásobení příjmu kofeinu průměrný úbytek hmotnosti o 22 %, jde ale o procenta z úbytku, který už běží, žádná kila navíc. Hubnutí řeší příjem a výdej, káva je doplněk."
     },
     {
       "otazka": "Kdy si dát poslední kávu, aby mi nenarušila spánek?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Je na cholesterol lepší filtrovaná káva?",
-      "odpoved": "Podle přehledu je vařená a nefiltrovaná káva kvůli diterpenům aterogennější než filtrovaná, jde ale o slabší typ důkazu. Pokud řešíš cholesterol, dává smysl dát přednost filtrované kávě před frenchpressem, tureckou nebo překapávanou přes kovové sítko. I 600 ml filtrované kávy denně ale ve studii zvedlo za čtyři týdny celkový cholesterol o 0,15 až 0,25 mmol/l."
+      "odpoved": "Podle přehledu je vařená a nefiltrovaná káva kvůli diterpenům horší pro cévy (aterogennější) než filtrovaná, jde ale o slabší typ důkazu. Pokud řešíš cholesterol, dává smysl dát přednost filtrované kávě před frenchpressem, tureckou nebo překapávanou přes kovové sítko. I 600 ml filtrované kávy denně ale ve studii zvedlo za čtyři týdny celkový cholesterol o 0,15 až 0,25 mmol/l."
     },
     {
       "otazka": "Můžu pít kávu v těhotenství?",
@@ -50,5 +50,6 @@
     "Článek neříká, jaká konkrétní rizika přehled v BMJ u kávy v těhotenství našel ani jaký limit tam platí. Odkazuje na lékaře, a tak to zůstalo.",
     "Studie o hubnutí se podle článku mezi sebou obrovsky rozcházely (I² 91 až 94 %) a autoři píší jen „kofein by mohl podporovat“, proto je efekt v odpovědi podán jako malý a nejistý."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněna o upozornění, že v těhotenství je káva otázka na lékaře nebo gynekologa (článek: těhotenství je jedna ze dvou oblastí, kde přehled v BMJ našel rizika), protože krátká odpověď uvádí pásmo 3 až 4 šálků denně"
+  "kontrola": "opraveno: kratka_odpoved doplněna o upozornění, že v těhotenství je káva otázka na lékaře nebo gynekologa (článek: těhotenství je jedna ze dvou oblastí, kde přehled v BMJ našel rizika), protože krátká odpověď uvádí pásmo 3 až 4 šálků denně",
+  "hlas": "upraveno: kratka_odpoved bez „ne předpis pro tebe“; faq[0] bez „ne kilogramy navíc“; faq[3] „aterogennější“ vysvětleno"
 }

@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Jak velký deficit a kolik bílkovin po čtyřicítce?",
-      "odpoved": "Martin u klientů po čtyřicítce nastavuje deficit kolem 15 až 20 procent pod odhadovaným výdejem, tedy tempo zhruba 0,3 až 0,7 kg týdně. Bílkoviny cílí na 1,6 až 2,2 g na kilogram hmotnosti denně, v každém hlavním jídle."
+      "odpoved": "U klientů po čtyřicítce nastavuju deficit kolem 15 až 20 procent pod odhadovaným výdejem, tedy tempo zhruba 0,3 až 0,7 kg týdně. Bílkoviny cílím na 1,6 až 2,2 g na kilogram hmotnosti denně, v každém hlavním jídle."
     },
     {
       "otazka": "Jak začít se silovým tréninkem po čtyřicítce?",
@@ -45,5 +45,6 @@
     "Studie Verreijen 2017 běžela na lidech ve věku 55 až 80 let a šlo o výsledek uvnitř jedné skupiny (+0,6 kg beztukové hmoty při kombinaci bílkovin a posilování); článek sám říká, že si z ní bere hlavně směr, proto ji neuvádím jako samostatnou odpověď.",
     "Tempo 0,3 až 0,7 kg týdně a 0,5 % hmotnosti týdně (1,5 až 3 kg měsíčně) jsou v článku dvě různé formulace Martinovy praxe; nechávám je u dvou různých otázek tak, jak stojí."
   ],
-  "kontrola": "opraveno: faq[3] otázka přeformulována (článek netvrdí, že váha v přechodu neklesá, ale že může stát, zatímco se mění poměr tuku a svalu) a doplněno „o hormonální terapii se bav s lékařem“"
+  "kontrola": "opraveno: faq[3] otázka přeformulována (článek netvrdí, že váha v přechodu neklesá, ale že může stát, zatímco se mění poměr tuku a svalu) a doplněno „o hormonální terapii se bav s lékařem“",
+  "hlas": "upraveno: faq[0] z 3. osoby („Martin nastavuje“) do 1. osoby"
 }

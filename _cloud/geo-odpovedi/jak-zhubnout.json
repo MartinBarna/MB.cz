@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Kolik bílkovin jíst, když hubnu?",
-      "odpoved": "Rozumný cíl je zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně. Rozlož je do celého dne, ať máš v každém jídle pořádný zdroj. Líp zasytí a spolu se silovým tréninkem chrání svaly."
+      "odpoved": "Zhruba 1,6 až 2,2 g bílkovin na kilogram tělesné hmotnosti denně. Rozlož je do celého dne, ať máš v každém jídle pořádný zdroj. Líp zasytí a spolu se silovým tréninkem chrání svaly."
     },
     {
       "otazka": "Musím při hubnutí vyřadit sladké a oblíbená jídla?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Zhubnu hlavně díky kardiu?",
-      "odpoved": "Kardio je doplněk, ne motor hubnutí. Spálí míň, než lidé čekají, a hlad po něm to často vynuluje. Nejdůležitější je silový trénink, který ti v deficitu udrží svaly, a k tomu obyčejná chůze."
+      "odpoved": "Kardio je jen doplněk. Spálí míň, než lidé čekají, a hlad po něm to často vynuluje. Nejdůležitější je silový trénink, který ti v deficitu udrží svaly, a k tomu obyčejná chůze."
     },
     {
       "otazka": "Jak se vyhnout jojo efektu?",
@@ -117,5 +117,6 @@
     "FAQPage JSON-LD, které stránka už má, tvrdí i věci, které ve viditelném textu nejsou (např. „0,3 až 0,7 kg týdně“, „rychlé hubnutí o pár kilo za týden je většinou voda“). Do tohoto JSON se nepřebíraly.",
     "Rozsah bílkovin 1,6 až 2,2 g/kg je v článku bez rozlišení podle aktivity nebo věku."
   ],
-  "kontrola": "opraveno: nově doplněno při revizi 10. 10. 2026 (dávky 1 až 3 pilíř vynechaly)"
+  "kontrola": "opraveno: nově doplněno při revizi 10. 10. 2026 (dávky 1 až 3 pilíř vynechaly)",
+  "hlas": "upraveno: faq[0] bez „Rozumný cíl“ (opakuje se napříč články); faq[2] bez „doplněk, ne motor“"
 }

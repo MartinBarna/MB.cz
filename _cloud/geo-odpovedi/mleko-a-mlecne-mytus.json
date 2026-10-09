@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Zahleňuje mléko?",
-      "odpoved": "Ne. Pocit „obalené pusy“ je reálný, ale je to jen dočasná textura hustší tekutiny, ne tvorba hlenu. V dýchacích cestách se nic neděje a za pár minut je to pryč."
+      "odpoved": "Ne. Pocit „obalené pusy“ je reálný, ale jde jen o dočasnou texturu hustší tekutiny. V dýchacích cestách se nic neděje a za pár minut je to pryč."
     },
     {
       "otazka": "Je mléko zánětlivé?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Je lepší plnotučné, nebo light mléčné výrobky?",
-      "odpoved": "Obojí je v pořádku. Light má míň kalorií na porci, plnotučné víc zasytí a chutná líp. Rozhoduje kontext a celkové kalorie, ne nálepka „light“."
+      "odpoved": "Obojí je v pořádku. Light má míň kalorií na porci, plnotučné víc zasytí a chutná líp. Rozhodují celkové kalorie za den."
     },
     {
       "otazka": "Je bio mléko zdravější?",
@@ -44,5 +44,6 @@
     "Článek neříká, kolik mléčných výrobků denně je rozumné, jen „klidně denně“ pro lidi bez intolerance a alergie.",
     "U laktózové intolerance článek popisuje příznaky, ale neříká, jak ji ověřit nebo kdy jít k lékaři."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „ne tvorba hlenu“; faq[3] bez „ne nálepka“"
 }

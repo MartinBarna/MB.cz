@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/jak-zhubnout-bez-cviceni.html",
   "titulek": "Jak zhubnout bez cvičení: co to opravdu vyžaduje",
   "hlavni_otazka": "Dá se zhubnout bez cvičení?",
-  "kratka_odpoved": "Ano, jde to: hubne se z jídla a trénink je pojistka na svaly a kondici, ne motor hubnutí. V dánské studii u lidí s obezitou zhubly skupiny s upraveným jídelníčkem za dvanáct týdnů 12 kg, ať cvičily, nebo ne, samotné cvičení dalo 3,5 kg. Bez tréninku ale musí jídlo sedět přesněji.",
+  "kratka_odpoved": "Ano, jde to: hubne se z jídla a trénink je pojistka na svaly a kondici. V dánské studii u lidí s obezitou zhubly skupiny s upraveným jídelníčkem za dvanáct týdnů 12 kg, ať cvičily, nebo ne, samotné cvičení dalo 3,5 kg. Bez tréninku ale musí jídlo sedět přesněji.",
   "faq": [
     {
       "otazka": "Proč nehubnu, i když jím pod 1200 kcal?",
@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Jak hlídat jídlo, když necvičím?",
-      "odpoved": "Važ si jídlo aspoň dva týdny, ať víš, jak vypadá tvoje běžná porce v gramech. Zapisuj i víkend, protože pět dnů v deficitu a dva dny o 1500 kcal nad ním dá průměr kolem nuly. Piš to hned, ne večer po paměti."
+      "odpoved": "Važ si jídlo aspoň dva týdny, ať víš, jak vypadá tvoje běžná porce v gramech. Zapisuj i víkend, protože pět dnů v deficitu a dva dny o 1500 kcal nad ním dá průměr kolem nuly. Zapisuj to hned, zpětně po paměti to nedoženeš."
     },
     {
       "otazka": "Kolik kroků denně, když necvičím?",
@@ -53,5 +53,6 @@
     "Lidem, kteří se kvůli zranění nebo nemoci nemůžou hýbat vůbec, článek jen doporučuje nechat si rozsah pohybu potvrdit u lékaře nebo fyzioterapeuta; do FAQ jsem to nerozváděl.",
     "Příklad „zapsaný den 1600 kcal, po dovážení 2200\" je Martinova zkušenost s klienty, ne měření, proto ho v odpovědích nemám."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „ne motor hubnutí“; faq[1] bez „ne večer po paměti“"
 }

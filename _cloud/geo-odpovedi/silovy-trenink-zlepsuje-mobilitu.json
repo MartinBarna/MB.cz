@@ -18,11 +18,11 @@
     },
     {
       "otazka": "Ztuhnu z posilování?",
-      "odpoved": "Ztuhlý se můžeš cítit, když v posilovně jedeš všechno na půl, třeba půlené dřepy, protože svaly v protažení nikdy pořádně nezatížíš. Není to posilováním, je to osekaným rozsahem."
+      "odpoved": "Ztuhlý se můžeš cítit, když v posilovně jedeš všechno na půl, třeba půlené dřepy, protože svaly v protažení nikdy pořádně nezatížíš. Může za to osekaný rozsah."
     },
     {
       "otazka": "Je tedy strečink zbytečný?",
-      "odpoved": "Není. Když máš někde rozsah opravdu omezený, protahování ti ho pomůže otevřít, a při omezené pohyblivosti nebo zdravotních potížích se poraď s lékařem nebo fyzioterapeutem. Jen si nemusíš přidávat hodiny protahování, abys byl pohyblivý, když posiluješ přes plný rozsah."
+      "odpoved": "Není. Když máš někde rozsah omezený, protahování ti ho pomůže otevřít, a při omezené pohyblivosti nebo zdravotních potížích se poraď s lékařem nebo fyzioterapeutem. Jen si nemusíš přidávat hodiny protahování, abys byl pohyblivý, když posiluješ přes plný rozsah."
     }
   ],
   "opory": [
@@ -52,5 +52,6 @@
     "Článek neříká, jak velký je „středně velký“ efekt v konkrétních číslech, ani za jak dlouho se pohyblivost zlepší (kromě osmi týdnů v jedné studii).",
     "Článek nerozebírá postup při zranění nebo bolesti kloubů; jen v závěrečném upozornění posílá při zdravotních potížích nebo omezené pohyblivosti k lékaři nebo fyzioterapeutovi."
   ],
-  "kontrola": "opraveno: faq[4] doplněno „při omezené pohyblivosti nebo zdravotních potížích se poraď s lékařem nebo fyzioterapeutem“ ze závěrečného upozornění; faq[2] vrácena podmínka „jak ti dovolí kyčel a technika“ u dřepu; nejiste opraveno (článek lékaře a fyzioterapeuta zmiňuje)"
+  "kontrola": "opraveno: faq[4] doplněno „při omezené pohyblivosti nebo zdravotních potížích se poraď s lékařem nebo fyzioterapeutem“ ze závěrečného upozornění; faq[2] vrácena podmínka „jak ti dovolí kyčel a technika“ u dřepu; nejiste opraveno (článek lékaře a fyzioterapeuta zmiňuje)",
+  "hlas": "upraveno: faq[3] bez „Není to X, je to Y“; faq[4] bez „opravdu“"
 }

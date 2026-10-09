@@ -2,15 +2,15 @@
   "url": "https://martinbarna.cz/clanky/posilovani-je-dobre-pro-vase-svaly-i-mozek.html",
   "titulek": "Posilování je dobré pro vaše SVALY i MOZEK!",
   "hlavni_otazka": "Prospívá posilování i mozku, nebo je pravda, že svalovci jsou hloupí?",
-  "kratka_odpoved": "Podle Layna Nortona, PhD, výzkum ukazuje pravý opak mýtu o hloupých svalovcích: budování svalů a síly prospívá tělu i mozku. Mezi svalovou hmotou a silou a poklesem kognice je silná nepřímá souvislost, stejně jako u rizika Alzheimerovy choroby, demence, úzkosti a deprese. Pravidelný silový trénink navíc zlepšuje i samotné myšlení.",
+  "kratka_odpoved": "Layne Norton, PhD, to shrnuje tak, že výzkum ukazuje pravý opak mýtu o hloupých svalovcích: budování svalů a síly prospívá tělu i mozku. Mezi svalovou hmotou a silou a poklesem kognice je silná nepřímá souvislost, stejně jako u rizika Alzheimerovy choroby, demence, úzkosti a deprese. Pravidelný silový trénink navíc zlepšuje i samotné myšlení.",
   "faq": [
     {
       "otazka": "Pomáhá silový trénink na depresi a úzkost?",
-      "odpoved": "Podle Layna Nortona, PhD, jehož text článek překládá, pravidelný silový trénink prokazatelně snižuje příznaky deprese, úzkosti i schizofrenie. Odkazuje přitom na studie s PMID 26375919, 37429171 a 40711106."
+      "odpoved": "Norton, jehož text tady překládám, píše, že pravidelný silový trénink prokazatelně snižuje příznaky deprese, úzkosti i schizofrenie. Odkazuje přitom na studie s PMID 26375919, 37429171 a 40711106."
     },
     {
       "otazka": "U koho silový trénink zlepšuje myšlení?",
-      "odpoved": "Podle Layna Nortona u zdravých lidí i u lidí s kognitivním postižením. Zlepšují se dokonce i výsledky testů u dětí, které pravidelně trénují."
+      "odpoved": "U zdravých lidí i u lidí s kognitivním postižením, píše Norton. Zlepšují se dokonce i výsledky testů u dětí, které pravidelně trénují."
     },
     {
       "otazka": "Pomáhá pohyb starším lidem proti kognitivnímu úpadku?",
@@ -76,5 +76,6 @@
     "Článek mluví o souvislosti mezi svaly a kognicí, ale nerozebírá, nakolik jde o příčinu a nakolik jen o korelaci.",
     "U části zdrojů (Frontiers in Neuroscience 2019, BMC Geriatrics 2020, ResearchGate 2022) článek neuvádí přesnou citaci ani autory."
   ],
-  "kontrola": "opraveno: faq[1] (zlepšení myšlení u zdravých, s kognitivním postižením a u dětí) přisouzeno Laynu Nortonovi, jehož text článek překládá"
+  "kontrola": "opraveno: faq[1] (zlepšení myšlení u zdravých, s kognitivním postižením a u dětí) přisouzeno Laynu Nortonovi, jehož text článek překládá",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[1] bez tří „Podle Layna Nortona“ za sebou, přisouzení v 1. osobě („tady překládám“)"
 }

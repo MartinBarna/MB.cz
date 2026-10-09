@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Je nadváha vlastní volba?",
-      "odpoved": "Často není, i když to společnost předpokládá. Martin chce lidem tu volbu dát. Když někdo s obezitou přijde do fitka, znamená to, že s tím už něco dělá."
+      "odpoved": "Často není, i když to společnost předpokládá. Já chci lidem tu volbu dát. Když někdo s obezitou přijde do fitka, znamená to, že s tím už něco dělá."
     },
     {
       "otazka": "Je nadváha zdravotní riziko?",
@@ -34,5 +34,6 @@
     "Článek je úvaha o přístupu koučů, ne návod; neobsahuje konkrétní čísla ani postup.",
     "Článek místy říká, že vzhled je volba, a jinde, že nadváha často volbou není. Odpovědi drží obě věty tak, jak v článku stojí, a rozpor nerozhodují."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] z 3. osoby („Martin chce“) do 1. osoby"
 }

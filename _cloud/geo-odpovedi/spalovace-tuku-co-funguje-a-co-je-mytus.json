@@ -10,18 +10,18 @@
     },
     {
       "otazka": "Funguje extrakt ze zeleného čaje (EGCG)?",
-      "odpoved": "Efekt je marginální a velká část jde nejspíš na vrub kofeinu, který v těch přípravcích bývá taky. Zelený čaj jako nápoj je v pohodě, ale za koncentrovaný extrakt plýtváš penězi a vysokodávkové extrakty EGCG mají hlášené případy zátěže jater."
+      "odpoved": "Efekt je malý a velká část jde nejspíš na vrub kofeinu, který v těch přípravcích bývá taky. Zelený čaj jako nápoj je v pohodě, ale za koncentrovaný extrakt plýtváš penězi a vysokodávkové extrakty EGCG mají hlášené případy zátěže jater."
     },
     {
       "otazka": "A co efedrin nebo nikotin?",
-      "odpoved": "Na potlačení chuti a zvednutí výdeje opravdu fungují, ale cena je vysoká. Efedrin žene srdce, zvedá tlak a má spojitost s vážnými kardiovaskulárními příhodami, nikotin je silně návykový. Nech je být."
+      "odpoved": "Na potlačení chuti a zvednutí výdeje fungují, ale cena je vysoká. Efedrin žene srdce, zvedá tlak a má spojitost s vážnými kardiovaskulárními příhodami, nikotin je silně návykový. Nech je být."
     },
     {
       "otazka": "Jsou komerční spalovače bezpečné?",
       "odpoved": "Často mixují velké dávky stimulantů (kofein, synefrin, yohimbin a další), které můžou zatížit srdce a tlak, rozbít spánek a vyvolat úzkost a nervozitu. S jakýmkoliv kardiovaskulárním problémem je to vyloženě nebezpečné. Doplňky nejsou regulované jako léky, takže kdo bere léky nebo má zdravotní problém, má se nejdřív zeptat lékaře."
     },
     {
-      "otazka": "Co tedy tuk opravdu spaluje?",
+      "otazka": "Co tedy tuk spaluje?",
       "odpoved": "Mírný kalorický deficit, dost bílkovin (zhruba 1,6–2,2 g na kilo), silový trénink, kroky a spánek. Tady leží 90 % výsledku."
     }
   ],
@@ -128,5 +128,6 @@
     "Článek nejmenuje konkrétní stanoviska ISSN ani studie, o které opírá hodnocení jednotlivých doplňků.",
     "Článek neuvádí, jaké dávky extraktu zeleného čaje nebo garcinie jsou považované za „vysokodávkové“."
   ],
-  "kontrola": "opraveno: faq[0] (kofein) doplněna konzultace s lékařem při zdravotních potížích nebo lécích ze závěrečného upozornění o stimulantech; faq[3] doplněno „s kardiovaskulárním problémem vyloženě nebezpečné“; stylisticky odstraněno „podle článku“ v kratka_odpoved, faq[2] a faq[4]"
+  "kontrola": "opraveno: faq[0] (kofein) doplněna konzultace s lékařem při zdravotních potížích nebo lécích ze závěrečného upozornění o stimulantech; faq[3] doplněno „s kardiovaskulárním problémem vyloženě nebezpečné“; stylisticky odstraněno „podle článku“ v kratka_odpoved, faq[2] a faq[4]",
+  "hlas": "upraveno: faq[1] „marginální“ česky; faq[2] bez „opravdu“; faq[4] otázka bez „opravdu“"
 }

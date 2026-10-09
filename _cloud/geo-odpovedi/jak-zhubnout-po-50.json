@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Kolik bílkovin jíst po padesátce, když hubnu?",
-      "odpoved": "V praxi se cílí na 1,6 až 2,2 g na kilogram tělesné hmotnosti, rozdělené do všech jídel dne. Metaanalýza u lidí starších 50 let ukázala, že při vyšším příjmu bílkovin si udrželi víc svalové hmoty a shodili víc tuku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber tato čísla jako orientaci a nastavení probírej se svým lékařem."
+      "odpoved": "V praxi cílím na 1,6 až 2,2 g na kilogram tělesné hmotnosti, rozdělené do všech jídel dne. Metaanalýza u lidí starších 50 let ukázala, že při vyšším příjmu bílkovin si udrželi víc svalové hmoty a shodili víc tuku. Když bereš léky na štítnou žlázu, cukrovku nebo tlak, nebo řešíš čerstvou diagnózu, ber tato čísla jako orientaci a nastavení probírej se svým lékařem."
     },
     {
       "otazka": "Jak velký deficit držet po padesátce?",
@@ -104,5 +104,6 @@
     "Hormonální léčbu v přechodu článek posílá ke gynekologovi a nerozebírá ji.",
     "Článek u 75 kg uvádí 120 až 140 g bílkovin denně, ale 1,6 až 2,2 g na kilo dává při 75 kg 120 až 165 g. Příklad proto v odpovědích není; čísla v článku by stálo za to sladit."
   ],
-  "kontrola": "opraveno: kratka_odpoved a faq[1] doplněny o upozornění na léky na štítnou žlázu, cukrovku nebo tlak a lékaře (článek ho vztahuje na všechna čísla), faq[2] doplněno „nebo řešíš čerstvou diagnózu“; z faq[1] vypuštěn příklad 75 kg = 120 až 140 g, který s 1,6 až 2,2 g/kg nesedí; nejiste upraveno"
+  "kontrola": "opraveno: kratka_odpoved a faq[1] doplněny o upozornění na léky na štítnou žlázu, cukrovku nebo tlak a lékaře (článek ho vztahuje na všechna čísla), faq[2] doplněno „nebo řešíš čerstvou diagnózu“; z faq[1] vypuštěn příklad 75 kg = 120 až 140 g, který s 1,6 až 2,2 g/kg nesedí; nejiste upraveno",
+  "hlas": "upraveno: faq[1] „v praxi se cílí“ → 1. osoba"
 }

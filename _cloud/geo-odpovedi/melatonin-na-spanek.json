@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Komu melatonin pomáhá?",
-      "odpoved": "Hlavně tam, kde máš rozhozený vnitřní čas: při jet lagu, sovám se zpožděnou fází, starším lidem, co si ho sami vyrábějí míň, a při návratu do režimu po cestách. Funguje hlavně na rozhozený čas, ne na klasickou nespavost."
+      "odpoved": "Hlavně tam, kde máš rozhozený vnitřní čas: při jet lagu, sovám se zpožděnou fází, starším lidem, co si ho sami vyrábějí míň, a při návratu do režimu po cestách. Na klasickou nespavost ale nezabírá."
     },
     {
       "otazka": "Kdy mi melatonin nepomůže?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Na co si dát u melatoninu pozor?",
-      "odpoved": "Je to hormon, ne bonbon: u dětí jen po domluvě s pediatrem a pozor na kombinaci s léky. A v testech 71 % produktů nesedělo s etiketou, takže nevíš, kolik ho doopravdy bereš."
+      "odpoved": "Je to hormon, podle toho s ním zacházej: u dětí jen po domluvě s pediatrem a pozor na kombinaci s léky. A v testech 71 % produktů nesedělo s etiketou, takže nevíš, kolik ho doopravdy bereš."
     }
   ],
   "opory": [
@@ -44,5 +44,6 @@
     "U chronické nespavosti se článek nestaví jednoznačně (EU regulátor rychlejší usínání uznává, americká spánková akademie ho jako první volbu nedoporučuje, „pravda leží někde mezi“), proto tvrdím jen, že funguje hlavně na rozhozený čas.",
     "Údaj 7 minut pochází z meta-analýzy 19 studií; článek neuvádí, pro jakou skupinu lidí a dávku platí."
   ],
-  "kontrola": "opraveno: kratka_odpoved, která odpovídá i na ‚kolik ho brát‘, doplněna o upozornění z článku ‚u dětí jen po domluvě s pediatrem‘"
+  "kontrola": "opraveno: kratka_odpoved, která odpovídá i na ‚kolik ho brát‘, doplněna o upozornění z článku ‚u dětí jen po domluvě s pediatrem‘",
+  "hlas": "upraveno: faq[2] bez „ne na klasickou nespavost“; faq[4] bez „hormon, ne bonbon“"
 }

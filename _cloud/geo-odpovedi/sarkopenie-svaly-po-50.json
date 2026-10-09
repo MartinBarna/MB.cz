@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Kolik svalů člověk s věkem ztrácí?",
-      "odpoved": "Podle odborného přehledu z roku 2025 ztrácíš po čtvrté dekádě života zhruba 8 % svalové hmoty za dekádu a po sedmdesátce se to zrychlí na 15 % za dekádu. Síla přitom mizí ještě rychleji než samotná hmota."
+      "odpoved": "Odborný přehled z roku 2025 uvádí, že po čtvrté dekádě života ztrácíš zhruba 8 % svalové hmoty za dekádu a po sedmdesátce se to zrychlí na 15 % za dekádu. Síla přitom mizí ještě rychleji než samotná hmota."
     },
     {
       "otazka": "Jak má vypadat silový trénink proti sarkopenii?",
@@ -22,7 +22,7 @@
     },
     {
       "otazka": "Proč je úbytek svalů po padesátce nebezpečný?",
-      "odpoved": "Slabší svaly znamenají horší stabilitu. Podle přehledu o sarkopenii a pádech jsou pády třetí nejčastější příčinou chronické disability u seniorů a zhruba každý desátý pád končí zlomeninou. Odborný přehled z roku 2025 spojuje sarkopenii s vyšší úmrtností, sníženou kvalitou života a fyzickou nesoběstačností."
+      "odpoved": "Slabší svaly znamenají horší stabilitu. Přehled o sarkopenii a pádech uvádí pády jako třetí nejčastější příčinu dlouhodobého postižení u seniorů a zhruba každý desátý pád končí zlomeninou. Odborný přehled z roku 2025 spojuje sarkopenii s vyšší úmrtností, sníženou kvalitou života a fyzickou nesoběstačností."
     }
   ],
   "opory": [
@@ -50,5 +50,6 @@
     "Článek v textu nepřiřazuje čísla (8 % a 15 % za dekádu, 1,2 až 1,5 g/kg) ke konkrétním položkám ze seznamu zdrojů; 1,2 až 1,5 g/kg přisuzuje „mnoha odborným doporučením“.",
     "Článek neříká, kolik leucinu je potřeba ani jestli se vyplatí suplementace."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno upozornění ze závěru článku (cukrovka, srdce, klouby, ledviny, léky → poraď se s lékařem) a kvůli limitu slov zkrácena o detail meta-analýzy; faq[4] doplněno „podle přehledu o sarkopenii a pádech“; nejiste[1] opraveno (článek autory a názvy zdrojů uvádí)"
+  "kontrola": "opraveno: kratka_odpoved doplněno upozornění ze závěru článku (cukrovka, srdce, klouby, ledviny, léky → poraď se s lékařem) a kvůli limitu slov zkrácena o detail meta-analýzy; faq[4] doplněno „podle přehledu o sarkopenii a pádech“; nejiste[1] opraveno (článek autory a názvy zdrojů uvádí)",
+  "hlas": "upraveno: faq[0] a faq[4] bez úvodního „Podle“; faq[4] „disability“ česky"
 }

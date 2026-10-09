@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/bezlepkova-dieta-mytus.html",
   "titulek": "Bezlepková dieta zhubne každého? Mýtus o bezlepkovém",
   "hlavni_otazka": "Zhubnu, když vyřadím lepek?",
-  "kratka_odpoved": "Lepek za to nemůže: pokud nemáš celiakii ani prokázanou citlivost na lepek, lepek sám o sobě netloustne ani neškodí. Když po jeho vyřazení zhubneš, je to proto, že s pečivem, pizzou a koláči zmizela hromada kalorií. Rozhoduje deficit, ne nálepka.",
+  "kratka_odpoved": "Lepek za to nemůže: pokud nemáš celiakii ani prokázanou citlivost na lepek, lepek sám o sobě netloustne ani neškodí. Když po jeho vyřazení zhubneš, je to proto, že s pečivem, pizzou a koláči zmizela hromada kalorií. Je to obyčejný deficit.",
   "faq": [
     {
       "otazka": "Jsou bezlepkové výrobky dietnější?",
@@ -10,15 +10,15 @@
     },
     {
       "otazka": "Kdy má bezlepková dieta smysl?",
-      "odpoved": "Při diagnostikované celiakii, kde je bezlepková strava jediná léčba a drží se striktně a celoživotně. A při prokázané intoleranci nebo citlivosti na lepek, kterou má potvrdit lékař, ne samodiagnóza z internetu."
+      "odpoved": "Při diagnostikované celiakii, kde je bezlepková strava jediná léčba a drží se striktně a celoživotně. A při prokázané intoleranci nebo citlivosti na lepek, kterou ti potvrdí lékař. Samodiagnóza z internetu nestačí."
     },
     {
       "otazka": "Jsou celozrnné obiloviny s lepkem nezdravé?",
-      "odpoved": "Ne. Celozrnná pšenice, žito a další obiloviny s lepkem jsou běžný zdroj vlákniny, B-vitaminů a minerálů. Když je vyřadíš jen z módy, spíš si jídelníček ochudíš."
+      "odpoved": "Celozrnná pšenice, žito a další obiloviny s lepkem jsou běžný zdroj vlákniny, B-vitaminů a minerálů. Když je vyřadíš jen z módy, spíš si jídelníček ochudíš."
     },
     {
-      "otazka": "Co ukázala studie z roku 2025 o citlivosti na lepek?",
-      "odpoved": "Ve dvojitě zaslepeném pokusu s 28 lidmi s IBS, kteří věřili, že jim lepek škodí, nebyl mezi variantami statisticky významný rozdíl. Zhoršení nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu. Neceliakální citlivost na lepek přesto reálně existuje a část lidí ji skutečně má, potíže si proto nech prověřit u lékaře."
+      "otazka": "Existuje citlivost na lepek i bez celiakie?",
+      "odpoved": "Ve dvojitě zaslepeném pokusu s 28 lidmi s IBS, kteří věřili, že jim lepek škodí, nebyl mezi variantami statisticky významný rozdíl. Zhoršení nahlásilo 39 % lidí po pšenici, 36 % po lepku a 29 % i po placebu. Neceliakální citlivost na lepek přesto existuje a část lidí ji má, potíže si proto nech prověřit u lékaře."
     }
   ],
   "opory": [
@@ -41,5 +41,6 @@
     "Článek neuvádí, jak se celiakie nebo neceliakální citlivost na lepek diagnostikuje (jaké vyšetření).",
     "Článek neuvádí, kolik kilo lidé po vyřazení lepku typicky shodí; píše jen „pár kilo“."
   ],
-  "kontrola": "opraveno: faq[3] doplněno upozornění z článku, že neceliakální citlivost na lepek reálně existuje a potíže je třeba nechat prověřit u lékaře (bez něj studie zněla jako popření citlivosti)"
+  "kontrola": "opraveno: faq[3] doplněno upozornění z článku, že neceliakální citlivost na lepek reálně existuje a potíže je třeba nechat prověřit u lékaře (bez něj studie zněla jako popření citlivosti)",
+  "hlas": "upraveno: kratka_odpoved a faq[1] bez „X, ne Y“; faq[2] bez úvodního „Ne.“ (třetí v řadě); faq[3] otázka jako dotaz člověka a bez „reálně/skutečně“"
 }

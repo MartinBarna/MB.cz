@@ -2,19 +2,19 @@
   "url": "https://martinbarna.cz/clanky/ovoce-a-cukr-mytus.html",
   "titulek": "Ovoce má moc cukru? Mýtus o ovoci v dietě",
   "hlavni_otazka": "Můžu jíst ovoce, když hubnu, nebo má moc cukru?",
-  "kratka_odpoved": "Ano, klidně 2–3 porce ovoce denně i v dietě. Ovoce má díky vodě a vláknině málo kalorií na velký objem a dobře sytí, takže se jím těžko přejíš. Tloustne se z celkového nadbytku energie, ne z jablka, jen ovoce počítej do kalorií jako vše ostatní.",
+  "kratka_odpoved": "Ano, klidně 2–3 porce ovoce denně i v dietě. Ovoce má díky vodě a vláknině málo kalorií na velký objem a dobře sytí, takže se jím těžko přejíš. Tloustne se z celkového nadbytku energie, jen ovoce počítej do kalorií jako vše ostatní.",
   "faq": [
     {
       "otazka": "Musím se bát fruktózy v ovoci?",
-      "odpoved": "U celého ovoce ne. Množství fruktózy je v něm malé a přichází zabalené ve vláknině, která zpomalí, jak rychle se cukr dostane do těla. Problém, který lidi s fruktózou spojují, se týká tekutých a koncentrovaných cukrů v obřích množstvích, ne jablka, hrušky nebo hrsti malin."
+      "odpoved": "U celého ovoce ne. Množství fruktózy je v něm malé a přichází zabalené ve vláknině, která zpomalí, jak rychle se cukr dostane do těla. Problém, který lidi s fruktózou spojují, se týká tekutých a koncentrovaných cukrů v obřích množstvích. Jablko, hruška nebo hrst malin do toho nespadají."
     },
     {
       "otazka": "Na jaké ovoce si v dietě dát pozor?",
-      "odpoved": "Na sušené ovoce, smoothie a džusy. Kalorie a cukr v nich utečou rychle a sytí míň. Nemusíš je zakazovat, jen je měj pod kontrolou, ne v hlavní roli."
+      "odpoved": "Na sušené ovoce, smoothie a džusy. Kalorie a cukr v nich utečou rychle a sytí míň. Nemusíš je zakazovat, jen je drž v menším."
     },
     {
       "otazka": "Je cukr z ovoce pro tělo jiný než cukr ze sušenky?",
-      "odpoved": "Tělo chemicky řeší pořád to samé, ať je gram cukru z ovoce, z medu, nebo ze sušenky. O přibírání nebo hubnutí rozhoduje celková energetická bilance za delší dobu, ne původ jednotlivého sousta."
+      "odpoved": "Tělo chemicky řeší pořád to samé, ať je gram cukru z ovoce, z medu, nebo ze sušenky. O přibírání nebo hubnutí rozhoduje celková energetická bilance za delší dobu."
     },
     {
       "otazka": "Co ovoce v dietě dává kromě cukru?",
@@ -95,5 +95,6 @@
     "Článek neuvádí, jak velká je jedna porce ovoce (v gramech ani kusech).",
     "Článek neuvádí konkrétní čísla, kolik cukru nebo kalorií má sušené ovoce, džus či smoothie oproti čerstvému ovoci."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[1], faq[2] bez „X, ne Y“"
 }

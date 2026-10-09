@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Co se stane, když do chodu těla nevhodně zasáhnu?",
-      "odpoved": "Stejně jako u hodin: když do jejich rytmu nevhodně zasáhneš, začnou jít nepřesně, nebo se rovnou poškodí. Aby šly dobře, musí být seřízené ne víc, ne míň, ale tak akorát."
+      "odpoved": "Stejně jako u hodin: když do jejich rytmu nevhodně zasáhneš, začnou jít nepřesně, nebo se rovnou poškodí. Aby šly dobře, musí být seřízené tak akorát."
     },
     {
       "otazka": "Řekne mi věda přesnou cestu k výsledku?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Proč nemám tělo škatulkovat?",
-      "odpoved": "Škatulkuje se snadno, dívat se bez předsudků je mnohem těžší. Když to nezvládneš, uvidíš vždycky nanejvýš půlku pravdy."
+      "odpoved": "Škatulkuje se snadno, dívat se bez předsudků je mnohem těžší. Když to nezvládneš, uvidíš nanejvýš půlku pravdy."
     }
   ],
   "opory": [
@@ -33,5 +33,6 @@
     "Článek je krátká úvaha bez konkrétních rad k výživě nebo tréninku; neříká, co konkrétně v těle „seřídit“.",
     "Že se tělo umí regenerovat, článek vyvozuje z věty „Hodiny se samy neumí regenerovat“ uvedené jako rozdíl mezi tělem a hodinami."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „ne víc, ne míň, ale“; faq[2] bez „vždycky“"
 }

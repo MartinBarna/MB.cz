@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/lide-nesnasi-odpovednost-a-vzdy-se-snazi-najit-obetniho-beranka.html",
   "titulek": "Lidé NESNÁŠÍ odpovědnost a vždy se snaží najít obětního beránka.",
   "hlavni_otazka": "Můžou za tloustnutí a nemoci semenné oleje a cukr?",
-  "kratka_odpoved": "Podle Layna Nortona, jehož text článek překládá, nejsou problém semenné oleje ani cukr, ale to, že jíme moc a hýbeme se málo. Ve srovnání s nasycenými tuky jsou na tom podle něj semenné oleje mnohem líp. Studie, které při stejných kaloriích nahradily cukr jinými sacharidy, žádný vliv na zdraví neukázaly.",
+  "kratka_odpoved": "Layne Norton, jehož text tady překládám, vidí problém jinde než v semenných olejích nebo cukru: jíme moc a hýbeme se málo. Ve srovnání s nasycenými tuky jsou na tom podle něj semenné oleje mnohem líp. Studie, které při stejných kaloriích nahradily cukr jinými sacharidy, žádný vliv na zdraví neukázaly.",
   "faq": [
     {
       "otazka": "Jsou semenné oleje škodlivé?",
-      "odpoved": "Podle Layna Nortona jsou na tom ve srovnání s nasycenými tuky mnohem líp: při výměně za stejný počet kalorií uvádí neutrální nebo pozitivní účinky na zánět, citlivost na inzulín, tuk v játrech, metabolické zdraví, kardiovaskulární onemocnění a úmrtnost. Pokud zdraví nějak škodí, je to podle něj pouze kvůli nadbytku kalorií."
+      "odpoved": "Ve srovnání s nasycenými tuky na tom jsou podle Nortona mnohem líp: při výměně za stejný počet kalorií uvádí neutrální nebo pozitivní účinky na zánět, citlivost na inzulín, tuk v játrech, metabolické zdraví, kardiovaskulární onemocnění a úmrtnost. Pokud zdraví nějak škodí, je to podle něj pouze kvůli nadbytku kalorií."
     },
     {
       "otazka": "Zvyšuje cukr riziko úmrtí?",
@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Můžou za obezitu potravinářské firmy a vláda?",
-      "odpoved": "Podle Layna Nortona má potravinové prostředí na epidemii obezity svůj podíl. Na konci dne to ale pořád stojí na osobní odpovědnosti."
+      "odpoved": "Potravinové prostředí má podle Nortona na epidemii obezity svůj podíl. Na konci dne to ale pořád stojí na osobní odpovědnosti."
     }
   ],
   "opory": [
@@ -85,5 +85,6 @@
     "Článek neříká, co přesně znamená „strava s vysokým obsahem cukru\", ani nedává praktické doporučení, kolik cukru nebo oleje je v pořádku.",
     "Čísla o riziku (30 %, až 300 %) článek uvádí bez vysvětlení, oproti jaké skupině se počítají."
   ],
-  "kontrola": "opraveno: kratka_odpoved a všechny faq přisouzeny Layne Nortonovi (článek je překlad jeho textu, odpovědi to podávaly jako fakta bez autora); nejiste[0] upraveno"
+  "kontrola": "opraveno: kratka_odpoved a všechny faq přisouzeny Layne Nortonovi (článek je překlad jeho textu, odpovědi to podávaly jako fakta bez autora); nejiste[0] upraveno",
+  "hlas": "upraveno: kratka_odpoved přisouzení Nortonovi v 1. osobě („tady překládám“) a bez „nejsou X, ale Y“; faq[0] a faq[3] bez čtvrtého „Podle Layna Nortona“ v řadě"
 }

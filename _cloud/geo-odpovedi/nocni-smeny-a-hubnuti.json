@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "O kolik směnný provoz zvyšuje riziko obezity a metabolického syndromu?",
-      "odpoved": "Podle meta-analýzy z roku 2018 (Sun, Obesity Reviews) mají směnní pracovníci o 23 % vyšší riziko obezity a podle meta-analýzy z roku 2021 (Wang, Chronobiology International) o 30 % vyšší riziko metabolického syndromu. U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné."
+      "odpoved": "Meta-analýza z roku 2018 (Sun, Obesity Reviews) dává směnným pracovníkům o 23 % vyšší riziko obezity, meta-analýza z roku 2021 (Wang, Chronobiology International) o 30 % vyšší riziko metabolického syndromu. U lidí, kteří jezdí noční směny přes 20 let, je riziko zhruba dvojnásobné."
     },
     {
       "otazka": "Proč mám na noční směně větší hlad?",
@@ -14,15 +14,15 @@
     },
     {
       "otazka": "Kdy mám jíst, když pracuju v noci?",
-      "odpoved": "Hlavní jídlo dej před směnu nebo po ní, ne doprostřed noci. Jídlo si připrav z domu, ať se vyhneš tomu, co je zrovna po ruce ve tři ráno."
+      "odpoved": "Hlavní jídlo dej před směnu nebo po ní. Jídlo si připrav z domu, ať se vyhneš tomu, co je zrovna po ruce ve tři ráno."
     },
     {
       "otazka": "Mám kvůli horšímu spánku jet větší deficit?",
-      "odpoved": "Ne, spánek ber jako prioritu, ne jako důvod k většímu deficitu. Méně spánku znamená větší hlad."
+      "odpoved": "Ne. Spánek ber jako prioritu, protože méně spánku znamená větší hlad."
     },
     {
       "otazka": "Pomůže si na noční směně zdřímnout?",
-      "odpoved": "Ano, strategický šlofík 20–30 minut doprostřed směny pomůže s energií i s chutěmi."
+      "odpoved": "Ano, krátký šlofík 20–30 minut doprostřed směny pomůže s energií i s chutěmi."
     }
   ],
   "opory": [
@@ -48,5 +48,6 @@
     "Článek neříká, jestli se „zhruba dvojnásobné“ riziko u lidí s nočními směnami přes 20 let týká obezity, nebo metabolického syndromu, a neuvádí k tomu zdroj.",
     "Článek neuvádí, o kolik vyšší jsou hladiny inzulinu a leptinu u nočních směn ani z jaké studie údaj pochází."
   ],
-  "kontrola": "opraveno: otázka faq[0] rozšířena o metabolický syndrom, protože odpověď uvádí i jeho riziko a článek neříká, ke kterému riziku patří „zhruba dvojnásobné“ u nočních směn přes 20 let (pod otázkou jen na obezitu by to četlo jako dvojnásobné riziko obezity)"
+  "kontrola": "opraveno: otázka faq[0] rozšířena o metabolický syndrom, protože odpověď uvádí i jeho riziko a článek neříká, ke kterému riziku patří „zhruba dvojnásobné“ u nočních směn přes 20 let (pod otázkou jen na obezitu by to četlo jako dvojnásobné riziko obezity)",
+  "hlas": "upraveno: faq[0] bez úvodního „Podle“; faq[2] a faq[3] bez „X, ne Y“; faq[4] „strategický šlofík“ → „krátký šlofík“"
 }

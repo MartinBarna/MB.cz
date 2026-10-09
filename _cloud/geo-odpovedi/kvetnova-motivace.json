@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/kvetnova-motivace.html",
   "titulek": "Květnová motivace",
   "hlavni_otazka": "Jak se přinutit cvičit a jíst zdravě, když se mi nechce?",
-  "kratka_odpoved": "Počítej s tím, že tě to bavit nemusí, a dělej to stejně. Mnoho úspěšných lidí, se kterými Martin Barna mluvil, cvičí a dbá na výživu šest dní v týdnu, nenávidí to, ale dělají to stejně. Nuť tělo do věcí, do kterých se mu nechce, ať je to poslední opakování, nebo odmítnutí dalšího sladkého.",
+  "kratka_odpoved": "Počítej s tím, že tě to bavit nemusí, a dělej to stejně. Mnoho úspěšných lidí, se kterými jsem mluvil, cvičí a dbá na výživu šest dní v týdnu, nenávidí to, ale dělají to stejně. Nuť tělo do věcí, do kterých se mu nechce, ať je to poslední opakování, nebo odmítnutí dalšího sladkého.",
   "faq": [
     {
       "otazka": "Záleží na tom, jaký pohyb si vyberu?",
@@ -10,11 +10,11 @@
     },
     {
       "otazka": "Proč u cvičení a dobrého jídla zůstat dlouhodobě?",
-      "odpoved": "Martin začal v devatenácti kvůli egu a touze vypadat dobře, ale zůstal kvůli hlavě. Kamarádi, co toho nechali, podle něj stárli rychleji, víc marodili a ztráceli energii. Když tělo pořádně zmákne fyzicky a doplní dobrým jídlem, hlava se mu pročistí a odvede svou nejlepší práci."
+      "odpoved": "Začal jsem v devatenácti kvůli egu a touze vypadat dobře, ale zůstal jsem kvůli hlavě. Kamarádi, co toho nechali, stárli rychleji, víc marodili a ztráceli energii. Když tělo pořádně zmákne fyzicky a doplní dobrým jídlem, hlava se mu pročistí a odvede svou nejlepší práci."
     },
     {
       "otazka": "Co znamená „zapřáhnout vola do pluhu“?",
-      "odpoved": "Přinutit se dělat věci, které nechceš. Podle jednoho z úspěšných lidí, se kterými Martin mluvil, to vyvažuje vnitřní síly v člověku, které nás jinak přemáhají."
+      "odpoved": "Přinutit se dělat věci, které nechceš. Jeden z úspěšných lidí, se kterými jsem mluvil, to popsal tak, že to vyvažuje vnitřní síly v člověku, které nás jinak přemáhají."
     }
   ],
   "opory": [
@@ -56,5 +56,6 @@
     "„Šest dní v týdnu\" popisuje, co dělají úspěšní lidé, se kterými autor mluvil. Článek to nepodává jako doporučení, proto to v odpovědi tak není.",
     "Postřeh, že nikdo z podnikatelů na akci neměl nadváhu, je jedna anekdota; jako obecné tvrzení jsem ho nepoužil."
   ],
-  "kontrola": "opraveno: otázka faq[0] ‚Jaký pohyb je nejlepší, abych u toho vydržel?‘ → ‚Záleží na tom, jaký pohyb si vyberu?‘, článek o vydržení u konkrétního pohybu nemluví, jen říká, že na volbě nezáleží; opora kratka_odpoved rozdělena na tři citace, protože původní přecházela přes CTA box (perex a tělo článku)"
+  "kontrola": "opraveno: otázka faq[0] ‚Jaký pohyb je nejlepší, abych u toho vydržel?‘ → ‚Záleží na tom, jaký pohyb si vyberu?‘, článek o vydržení u konkrétního pohybu nemluví, jen říká, že na volbě nezáleží; opora kratka_odpoved rozdělena na tři citace, protože původní přecházela přes CTA box (perex a tělo článku)",
+  "hlas": "upraveno: kratka_odpoved, faq[1] a faq[2] z 3. osoby („Martin Barna mluvil“, „Martin začal“) do 1. osoby"
 }

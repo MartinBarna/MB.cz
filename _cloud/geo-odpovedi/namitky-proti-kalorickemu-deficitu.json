@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/namitky-proti-kalorickemu-deficitu.html",
   "titulek": "5 námitek proti kalorickému deficitu (a proč ani jedna neplatí)",
   "hlavni_otazka": "Platí kalorický deficit, i když mám problém s hormony nebo metabolismem?",
-  "kratka_odpoved": "Platí. Zdravotní stavy, termický efekt potravin i hormony jsou reálné, ale energetickou bilanci neruší, jen mění čísla, která do ní dosadíš. U lidí, kteří o sobě tvrdili, že jim hubnutí nejde, stál podle studie Lichtman (1992) za neúspěchem podhodnocený příjem a přeceněný pohyb, ne porucha metabolismu.",
+  "kratka_odpoved": "Platí. Zdravotní stavy, termický efekt potravin i hormony jsou reálné, ale energetickou bilanci neruší, jen mění čísla, která do ní dosadíš. U lidí, kteří o sobě tvrdili, že jim hubnutí nejde, stál podle studie Lichtman (1992) za neúspěchem podhodnocený příjem a přeceněný pohyb.",
   "faq": [
     {
       "otazka": "Deficit mi nefungoval. Nemám pomalý metabolismus?",
@@ -31,5 +31,6 @@
     "Článek neradí, jak příjem a pohyb přesněji měřit, aby se člověk vyhnul podhodnocení, proto taková rada v FAQ není.",
     "Počet účastníků Lichtmanovy studie článek neuvádí."
   ],
-  "kontrola": "opraveno: kratka_odpoved ‚u lidí, kterým hubnutí nešlo‘ → ‚u lidí, kteří o sobě tvrdili, že jim hubnutí nejde‘, studie Lichtman sledovala lidi podle jejich vlastního tvrzení"
+  "kontrola": "opraveno: kratka_odpoved ‚u lidí, kterým hubnutí nešlo‘ → ‚u lidí, kteří o sobě tvrdili, že jim hubnutí nejde‘, studie Lichtman sledovala lidi podle jejich vlastního tvrzení",
+  "hlas": "upraveno: kratka_odpoved bez „ne porucha metabolismu“"
 }

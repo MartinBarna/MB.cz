@@ -2,11 +2,11 @@
   "url": "https://martinbarna.cz/clanky/spanek-vyziva-a-fitness-u-populace-40.html",
   "titulek": "Spánek, výživa a fitness u populace 40+",
   "hlavni_otazka": "Co pomáhá lidem po čtyřicítce se stravou, pohybem a spánkem?",
-  "kratka_odpoved": "Článek z nových studií vyvozuje tyto tipy: po čtyřicítce vsaď na vyvážený příjem bílkovin i z rostlinných zdrojů a středomořskou stravu. K tomu 30 minut středně náročného pohybu denně a slušný spánek. Pro lepší usínání choď odpoledne na přirozené světlo a večer uber obrazovky.",
+  "kratka_odpoved": "Z nových studií plynou tyhle tipy: po čtyřicítce vsaď na vyvážený příjem bílkovin i z rostlinných zdrojů a středomořskou stravu. K tomu 30 minut středně náročného pohybu denně a slušný spánek. Pro lepší usínání choď odpoledne na přirozené světlo a večer uber obrazovky.",
   "faq": [
     {
       "otazka": "Kolik bílkovin je optimální kvůli riziku cukrovky 2. typu?",
-      "odpoved": "Studie z června 2025 u dospělých s průměrným věkem 55 let našla U-křivku: optimální příjem 12–17 % energie z bílkovin riziko snižuje, příliš nízký nebo příliš vysoký ho zvedá. U rostlinných bílkovin podle článku platí opačný vztah, tedy nižší riziko."
+      "odpoved": "Studie z června 2025 u dospělých s průměrným věkem 55 let našla U-křivku: optimální příjem 12–17 % energie z bílkovin riziko snižuje, příliš nízký nebo příliš vysoký ho zvedá. U rostlinných bílkovin se ukazuje opačný vztah, tedy nižší riziko."
     },
     {
       "otazka": "Je vegetariánská strava ve vyšším věku riziková?",
@@ -18,11 +18,11 @@
     },
     {
       "otazka": "Jak souvisí pohyb a spánek s psychikou?",
-      "odpoved": "Výzkum z prosince 2024 u čínských dospělých ukázal, že středně a hodně intenzivní pohyb snižuje riziko deprese (OR 0,596 u středního, OR 0,697 u intenzivního), zatímco nedostatek spánku ho zvedá. Článek proto doporučuje spojit pohyb s kvalitním spánkem, řekněme 7–9 hodin."
+      "odpoved": "Výzkum z prosince 2024 u čínských dospělých ukázal, že středně a hodně intenzivní pohyb snižuje riziko deprese (OR 0,596 u středního, OR 0,697 u intenzivního), zatímco nedostatek spánku ho zvedá. Proto spoj pohyb s kvalitním spánkem, řekněme 7–9 hodin."
     },
     {
       "otazka": "Jak si po čtyřicítce zlepšit usínání?",
-      "odpoved": "Podle výzkumu z června 2025 jasné světlo přes den (nad 1000 lx) zvýší večerní produkci melatoninu a večerní světlo ho už tolik netlumí, takže se lépe usíná. Článek radí chodit odpoledne na přirozené světlo a večer ubírat obrazovky, usínání se tak může posunout o 20–30 minut dřív."
+      "odpoved": "Podle výzkumu z června 2025 jasné světlo přes den (nad 1000 lx) zvýší večerní produkci melatoninu a večerní světlo ho už tolik netlumí, takže se lépe usíná. Choď proto odpoledne na přirozené světlo a večer ubírej obrazovky, usínání se tak může posunout o 20–30 minut dřív."
     }
   ],
   "opory": [
@@ -97,5 +97,6 @@
     "Článek nevysvětluje, co přesně znamená „opačný vztah“ u rostlinných bílkovin ve studii o cukrovce 2. typu.",
     "Posun usínání o 20–30 minut dřív nemá v článku uvedený zdroj."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved, faq[0], faq[3], faq[4] bez „Článek vyvozuje / podle článku / Článek doporučuje / Článek radí“"
 }

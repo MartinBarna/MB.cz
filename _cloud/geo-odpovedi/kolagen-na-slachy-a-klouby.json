@@ -10,10 +10,10 @@
     },
     {
       "otazka": "Proč tolik studií tvrdí, že kolagen funguje?",
-      "odpoved": "Většinu výzkumu, který to podporuje, platí výrobci suplementů. A skoro nikdy se nepočítá s tím, kolik bílkovin přijímáš celkově."
+      "odpoved": "Většinu výzkumu, který to podporuje, platí výrobci suplementů. A málokdy se počítá s tím, kolik bílkovin přijímáš celkově."
     },
     {
-      "otazka": "Co ukázaly nezávislé studie o kolagenu?",
+      "otazka": "Jsou nějaké nezávislé studie, že kolagen funguje?",
       "odpoved": "V jedné nedávné studii u silově trénovaných mužů neměl 15 g hydrolyzovaného kolagenu 2x denně žádný efekt na svalovou ani spojivovou tkáň, ani na bolest svalů. Aussieker a kol. (2023) nenašli, že by 30 g kolagenu po tréninku zvýšilo svalovou spojivovou tkáň nebo celkovou syntézu kolagenu v těle."
     },
     {
@@ -47,5 +47,6 @@
     "Údaje bez citovaného zdroje (syntéza kolagenu klesá po 25 letech o 1–1,5 % ročně, vitamín C 100 mg denně, spánek 7–9 h, ryby 2x týdně) jsem do odpovědí nedal. Článek je podává jako rady autora, ne jako výsledek studií.",
     "Velká část článku je překlad příspěvku Menna Henselmanse, zbytek je komentář a biochemický výklad autora. Článek neříká, kdo by kolagen naopak potřebovat mohl."
   ],
-  "kontrola": "opraveno: kratka_odpoved přisouzena Mennu Henselmansovi (studie i věta „většina lidí kolagen nepotřebuje“ jsou z překladu jeho příspěvku, ne Martinovy); faq[2] doplněno „v jedné nedávné studii“"
+  "kontrola": "opraveno: kratka_odpoved přisouzena Mennu Henselmansovi (studie i věta „většina lidí kolagen nepotřebuje“ jsou z překladu jeho příspěvku, ne Martinovy); faq[2] doplněno „v jedné nedávné studii“",
+  "hlas": "upraveno: faq[1] bez „skoro nikdy“; faq[2] otázka jako dotaz člověka"
 }

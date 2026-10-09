@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/elonga-hrv-veda-nebo-marketing.html",
   "titulek": "Elonga a HRV náramek: co je věda a co marketing",
   "hlavni_otazka": "Vyplatí se HRV náramek Elonga a dá se věřit jeho skóre stresu a regenerace?",
-  "kratka_odpoved": "HRV je reálná věc a ranní trend za týdny umí být užitečný signál, že je něco jinak. Oddělené skóre „stres“ a „regenerace“ je ale zjednodušení: LF pásmo není čistý sympatikus a poměr LF/HF jako měřítko rovnováhy je v literatuře silně zpochybněný. Ber náramek jako deník trendů, ne diagnózu.",
+  "kratka_odpoved": "HRV je reálná věc a ranní trend za týdny umí být užitečný signál, že je něco jinak. Oddělené skóre „stres“ a „regenerace“ je ale zjednodušení: LF pásmo není čistý sympatikus a poměr LF/HF jako měřítko rovnováhy je v literatuře silně zpochybněný. Ber náramek jako deník trendů. Diagnózu z něj nedělej.",
   "faq": [
     {
       "otazka": "Co je HRV?",
@@ -14,15 +14,15 @@
     },
     {
       "otazka": "Jak HRV náramek používat rozumně?",
-      "odpoved": "Sleduj trend za 7–14 dní, ne jedno ranní skóre. O tréninku rozhoduj podle plánu, subjektivního pocitu a dlouhodobého trendu, appka je rádce, ne trenér. Při bušení srdce, mdlobách, dlouhodobé únavě nebo duševních potížích jdi k lékaři, u duševní krize volej Linku první psychické pomoci 116 123."
+      "odpoved": "Sleduj trend za 7–14 dní, jedno ranní skóre přeskoč. O tréninku rozhoduj podle plánu, pocitu a dlouhodobého trendu, appka je jen rádce. Při bušení srdce, mdlobách, dlouhodobé únavě nebo duševních potížích jdi k lékaři, u duševní krize volej Linku první psychické pomoci 116 123."
     },
     {
       "otazka": "Je funkční věk z HRV appky spolehlivý?",
-      "odpoved": "Porovnání s věkovými normami HRV ve výzkumu existuje, ale jedno skóre typu „je ti 34“ je marketingový kompozit, ne diagnóza stárnutí. Ber ho maximálně jako hrubý kompas v čase u sebe samotného."
+      "odpoved": "Porovnání s věkovými normami HRV ve výzkumu existuje, ale jedno skóre typu „je ti 34“ je marketingový součet a diagnózu stárnutí z něj nevyčteš. Ber ho nanejvýš jako hrubý kompas, jak se v čase měníš ty sám."
     },
     {
       "otazka": "Je měření z optického náramku stejně přesné jako EKG?",
-      "odpoved": "Laboratorní standard pro HRV je EKG. Optika umí být u klidového měření slušná, ale frekvenční složky jsou náchylnější na šum, prokrvení, pohyb a polohu senzoru. Veřejně dostupné peer-reviewed srovnání senzoru Elonga s laboratorním EKG podle článku zatím není hotová věc."
+      "odpoved": "Laboratorní standard pro HRV je EKG. Optika umí být u klidového měření slušná, ale frekvenční složky jsou náchylnější na šum, prokrvení, pohyb a polohu senzoru. Veřejně dostupné recenzované srovnání senzoru Elonga s laboratorním EKG zatím chybí."
     }
   ],
   "opory": [
@@ -53,5 +53,6 @@
     "Článek výslovně uvádí, že nemá interní validační data Elongy; hodnocení přesnosti se může změnit, pokud firma zveřejní srovnání s EKG.",
     "Článek jmenuje konkrétní firmu a osobu (Radim Šlachta, Ph.D., mySASY). Odpovědi jsou formulované tak, aby tvrzení o firmě nepřesahovala článek; před zveřejněním doporučuji, aby je Martin zkontroloval."
   ],
-  "kontrola": "opraveno: faq[2] doplněny vynechané „duševní potíže“ mezi důvody jít k lékaři a Linka první psychické pomoci 116 123 ze závěrečného upozornění"
+  "kontrola": "opraveno: faq[2] doplněny vynechané „duševní potíže“ mezi důvody jít k lékaři a Linka první psychické pomoci 116 123 ze závěrečného upozornění",
+  "hlas": "upraveno: kratka_odpoved, faq[2] a faq[3] bez „X, ne Y“, „kompozit“ česky; faq[4] bez „podle článku“ a „peer-reviewed“"
 }

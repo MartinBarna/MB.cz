@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Proč se nevyplatí po tréninku opít?",
-      "odpoved": "Játra se podílí i na regeneraci a budování svalů. Když jdeš cvičit a pak se opiješ, tělo dá přednost odbourávání alkoholu z krve a svaly jdou na druhou kolej. Podle Dr. Laynea Nortona trochu piva játra zdaleka tak nezatíží jako stav, kdy už začínáš být opilý."
+      "odpoved": "Játra se podílí i na regeneraci a budování svalů. Když jdeš cvičit a pak se opiješ, tělo dá přednost odbourávání alkoholu z krve a svaly jdou na druhou kolej. Podle Dr. Layna Nortona trochu piva játra zdaleka tak nezatíží jako stav, kdy už začínáš být opilý."
     },
     {
       "otazka": "Jak zmírnit kocovinu druhý den?",
@@ -45,5 +45,6 @@
     "Kalorické hodnoty nápojů jsou v článku bez zdroje a mezi značkami se mohou lišit.",
     "Zdravotní rizika alkoholu článek řeší jen okrajově (zátěž jater, „moc benefitů z něj nemá, spíš naopak“), hlavně se věnuje hubnutí a regeneraci."
   ],
-  "kontrola": "opraveno: faq[1] otázka zúžena z „alkohol po tréninku“ na opití (článek mluví o opití) a tvrzení o „trochu piva“ přisouzeno Dr. Laynu Nortonovi; nejiste[2] opraveno (článek zátěž jater zmiňuje)"
+  "kontrola": "opraveno: faq[1] otázka zúžena z „alkohol po tréninku“ na opití (článek mluví o opití) a tvrzení o „trochu piva“ přisouzeno Dr. Laynu Nortonovi; nejiste[2] opraveno (článek zátěž jater zmiňuje)",
+  "hlas": "upraveno: skloňování „Layna Nortona“"
 }

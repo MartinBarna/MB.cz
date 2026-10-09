@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Proč jsou bílkoviny při hubnutí tak důležité?",
-      "odpoved": "V deficitu chrání svalovou hmotu, takže hubneš tuk, ne sval. Po bílkovinném jídle navíc vydržíš déle bez hladu a tělo na jejich trávení spálí víc energie než u tuků a sacharidů."
+      "odpoved": "V deficitu chrání svalovou hmotu, takže jde dolů tuk a sval zůstává. Po bílkovinném jídle navíc vydržíš déle bez hladu a tělo na jejich trávení spálí víc energie než u tuků a sacharidů."
     },
     {
       "otazka": "Z čeho bílkoviny vzít?",
@@ -33,5 +33,6 @@
     "Doporučení 1,6–2,2 g/kg je v článku pro „většinu aktivních lidí“; pro neaktivní lidi článek číslo neuvádí.",
     "Článek nevyčísluje, o kolik víc energie tělo spálí na trávení bílkovin."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[0] bez „hubneš tuk, ne sval“"
 }

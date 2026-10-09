@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/doporuceni-bisglycinatu-horciku-pro-vas-aktivni-zivotni-styl.html",
   "titulek": "Doporučení bisglycinátu hořčíku pro váš aktivní životní styl",
   "hlavni_otazka": "Jaký hořčík brát, když hodně sportuju?",
-  "kratka_odpoved": "Když pravidelně chodíš do fitka nebo naplno sportuješ, vyzkoušej bisglycinát hořčíku: dobře se vstřebává a obvykle nedělá problémy se zažíváním jako oxid hořčíku. Martin doporučuje 300–400 mg elementárního hořčíku denně, nejlíp večer, a začít nižší dávkou, třeba 200 mg. Než začneš brát jakýkoliv doplněk, poraď se s lékařem.",
+  "kratka_odpoved": "Když pravidelně chodíš do fitka nebo naplno sportuješ, vyzkoušej bisglycinát hořčíku: dobře se vstřebává a obvykle nedělá problémy se zažíváním jako oxid hořčíku. Doporučuju 300–400 mg elementárního hořčíku denně, nejlíp večer, a začít nižší dávkou, třeba 200 mg. Než začneš brát jakýkoliv doplněk, poraď se s lékařem.",
   "faq": [
     {
       "otazka": "Proč zrovna bisglycinát hořčíku?",
@@ -10,11 +10,11 @@
     },
     {
       "otazka": "Kolik bisglycinátu hořčíku denně a kdy?",
-      "odpoved": "300–400 mg elementárního hořčíku denně, nejlíp večer kvůli spánku a regeneraci svalů. Začni radši nižší dávkou, třeba 200 mg, a sleduj, jak tělo reaguje. Než začneš brát jakýkoliv doplněk, probereš to s lékařem."
+      "odpoved": "300–400 mg elementárního hořčíku denně, nejlíp večer kvůli spánku a regeneraci svalů. Začni radši nižší dávkou, třeba 200 mg, a sleduj, jak tělo reaguje. Než začneš brát jakýkoliv doplněk, prober to s lékařem."
     },
     {
       "otazka": "Jak glycin pomáhá spánku?",
-      "odpoved": "Glycin působí na nervový systém uklidňujícím způsobem, mírně snižuje tělesnou teplotu a pomáhá usnout. Podle studií uvedených v článku 3 g glycinu před spaním zlepšují kognitivní funkce, snižují denní únavu a podporují regeneraci svalů po tréninku."
+      "odpoved": "Glycin působí na nervový systém uklidňujícím způsobem, mírně snižuje tělesnou teplotu a pomáhá usnout. Podle studií 3 g glycinu před spaním zlepšují kognitivní funkce, snižují denní únavu a podporují regeneraci svalů po tréninku."
     },
     {
       "otazka": "Kolik stojí kvalitní bisglycinát hořčíku?",
@@ -41,5 +41,6 @@
     "Ceny a značky jsou k datu napsání článku; článek sám radí porovnat ceny na Heureka.cz nebo v lékárnách.",
     "Tvrzení o pomoci proti křečím a úzkosti článek jen zmiňuje bez čísel, proto jsem z nich samostatnou otázku nedělal."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněna o radu poradit se s lékařem před začátkem užívání doplňku (článek: „než začneš brát jakýkoliv doplněk, probereš to s lékařem“), protože uvádí dávkování"
+  "kontrola": "opraveno: kratka_odpoved doplněna o radu poradit se s lékařem před začátkem užívání doplňku (článek: „než začneš brát jakýkoliv doplněk, probereš to s lékařem“), protože uvádí dávkování",
+  "hlas": "upraveno: kratka_odpoved z 3. osoby („Martin doporučuje“) do 1. osoby; faq[1] „probereš to“ → „prober to“ (varování zůstává); faq[2] bez „uvedených v článku“"
 }

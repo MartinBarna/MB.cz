@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Jak se tělo brání hubnutí?",
-      "odpoved": "Sníží výdej energie, takže jsi unavený a míň se hýbeš během dne (nižší NEAT), a zvýší příjem přes hlad a chutě. Čím míň tuku máš, čím rychleji hubneš a čím větší deficit děláš, tím víc se tělo brání a šetří."
+      "odpoved": "Sníží výdej energie, takže jsi unavený a míň se hýbeš během dne (nižší NEAT, tedy pohyb mimo trénink), a zvýší příjem přes hlad a chutě. Čím míň tuku máš, čím rychleji hubneš a čím větší deficit děláš, tím víc se tělo brání a šetří."
     },
     {
       "otazka": "Proč mi po přidání jídla stoupne váha, i když nepřibírám tuk?",
@@ -40,5 +40,6 @@
     "Článek sám upozorňuje, že studie z roku 2021 zpochybňují důležitost leucinu; výklad o leucinu a MPS je tedy podle článku nejistý.",
     "Role hormonů štítné žlázy (T3, T4) je v článku popsaná jen obecně."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] zkratka NEAT vysvětlena"
 }

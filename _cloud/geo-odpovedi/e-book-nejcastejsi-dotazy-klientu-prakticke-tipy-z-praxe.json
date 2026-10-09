@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Proč dva lidé hubnou na úplně jiném počtu kalorií?",
-      "odpoved": "Martin koučoval ženu s váhou 52 kg, která jedla přes 2300 kcal denně, trénovala 3–4krát týdně a tuk jí šel dolů. Jiná, mnohem těžší klientka nehubla ani na 1150 kcal. Klidně mohla vědomě nebo nevědomě jíst víc, protože neměla praxi s vážením a zapisováním."
+      "odpoved": "Koučoval jsem ženu s váhou 52 kg, která jedla přes 2300 kcal denně, trénovala 3–4krát týdně a tuk jí šel dolů. Jiná, mnohem těžší klientka nehubla ani na 1150 kcal. Klidně mohla vědomě nebo nevědomě jíst víc, protože neměla praxi s vážením a zapisováním."
     },
     {
       "otazka": "Zhubnu, když vyřadím sacharidy?",
@@ -32,5 +32,6 @@
     "Věta „Cyklické snižování a zvyšování příjmu většiny makronutrientů je periodicky prospěšné, ale chronicky hloupé“ není v článku vysvětlená, proto jsem z ní otázku nedělal.",
     "Článek nevysvětluje, jak přesně si nastavit makroživiny podle životního stylu; jen že se to ukáže až sledováním reakce konkrétního člověka."
   ],
-  "kontrola": "opraveno: kratka_odpoved, poslední věta zněla kategoričtěji než článek (‚ne tvoje osobní potřeby‘ → ‚nemusí sedět na tvoje osobní potřeby‘)"
+  "kontrola": "opraveno: kratka_odpoved, poslední věta zněla kategoričtěji než článek (‚ne tvoje osobní potřeby‘ → ‚nemusí sedět na tvoje osobní potřeby‘)",
+  "hlas": "upraveno: faq[0] z 3. osoby („Martin koučoval“) do 1. osoby"
 }

@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Je jedno, jaké probiotikum si koupím?",
-      "odpoved": "Není, rozhoduje konkrétní kmen, ne „širokospektrum na všechno“. Výsledek z jedné studie proto nepřeneseš na jiný produkt z pultu."
+      "odpoved": "Není, rozhoduje konkrétní kmen, žádné „širokospektrum na všechno“. Výsledek z jedné studie proto nepřeneseš na jiný produkt z pultu."
     },
     {
       "otazka": "Kdy jít se střevními potížemi k lékaři?",
@@ -76,5 +76,6 @@
     "Článek neuvádí, kolik fermentovaného jídla lidé ve studii ze Stanfordu jedli a jak dlouho.",
     "Článek nevysvětluje, jak počítat „druhy“ rostlin (například jestli se různé odrůdy téže plodiny počítají zvlášť)."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[3] bez „X, ne Y“"
 }

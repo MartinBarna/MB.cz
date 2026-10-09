@@ -18,7 +18,7 @@
     },
     {
       "otazka": "Kolik kofeinu zlepšuje výkon?",
-      "odpoved": "Atletický výkon prokazatelně zvedá zhruba 3–6 mg kofeinu na 1 kg tělesné hmotnosti. Ve spalovačích a pre-workoutech bývá 200–400 mg na odměrku, a to je opravdu hodně. Spoustě lidí stačí silná káva."
+      "odpoved": "Atletický výkon prokazatelně zvedá zhruba 3–6 mg kofeinu na 1 kg tělesné hmotnosti. Ve spalovačích a pre-workoutech bývá 200–400 mg na odměrku, a to je hodně. Spoustě lidí stačí silná káva."
     },
     {
       "otazka": "Potřebuju multivitamin?",
@@ -60,5 +60,6 @@
     "Článek tvrdí, že kreatin monohydrát je „100% efektivní v nasycení buněk“; formulace je nejasná, proto ji necituji.",
     "Hranice leucinu 1,7 g a 3,5–4 g na jídlo jsou v článku „podle výzkumů“ bez konkrétního zdroje, proto jsem je do odpovědí nedal."
   ],
-  "kontrola": "opraveno: kratka_odpoved „Spalovače fungují hlavně díky kofeinu“ → „Hlavní funkční složkou většiny spalovačů je kofein“, článek uvádí, že spalovače žádný statisticky významný vliv na spalování neprokázaly"
+  "kontrola": "opraveno: kratka_odpoved „Spalovače fungují hlavně díky kofeinu“ → „Hlavní funkční složkou většiny spalovačů je kofein“, článek uvádí, že spalovače žádný statisticky významný vliv na spalování neprokázaly",
+  "hlas": "upraveno: faq[3] bez „opravdu“"
 }

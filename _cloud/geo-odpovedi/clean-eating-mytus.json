@@ -2,7 +2,7 @@
   "url": "https://martinbarna.cz/clanky/clean-eating-mytus.html",
   "titulek": "Musíš jíst „čistě“? Mýtus o clean eating a zakázaných jídlech",
   "hlavni_otazka": "Musím jíst čistě, abych zhubl?",
-  "kratka_odpoved": "Nemusíš, žádná potravina není sama o sobě čistá ani špinavá a žádné jediné jídlo tě neztloustí ani neudělá zdravým. Rozhoduje celek: kalorie, bílkoviny, vláknina a to, jak dlouho to držíš. Zhubneš z deficitu a konzistence, ne z čistoty talíře.",
+  "kratka_odpoved": "Nemusíš, žádná potravina není sama o sobě čistá ani špinavá a žádné jediné jídlo tě neztloustí ani neudělá zdravým. Rozhoduje celek: kalorie, bílkoviny, vláknina a to, jak dlouho to držíš. Hubneš z deficitu a z toho, že u něj vydržíš.",
   "faq": [
     {
       "otazka": "Co je pravidlo 80/20 ve stravování?",
@@ -10,15 +10,15 @@
     },
     {
       "otazka": "Proč může být clean eating škodlivé?",
-      "odpoved": "Dělení jídla na dobré a zlé snadno vede k úzkosti a výčitkám z normálního jídla. Posedlost zdravým jídlem má i jméno, orthorexie. Striktní zákazy navíc dřív nebo později spustí binge cyklus: týden čistě, pak přejedení a vina."
+      "odpoved": "Dělení jídla na dobré a zlé snadno vede k úzkosti a výčitkám z normálního jídla. Posedlost zdravým jídlem má i jméno, orthorexie. Striktní zákazy navíc dřív nebo později spustí koloběh: týden čistě, pak přejedení a vina."
     },
     {
       "otazka": "Můžu jíst zdravé potraviny bez omezení?",
-      "odpoved": "Ne, tělo počítá kalorie, ne marketing. Ořechy, ořechová másla, oleje, avokádo nebo granola jsou energeticky vydatné. Lžíce oleje má víc kalorií než kostka cukru."
+      "odpoved": "Ne. I zdravé potraviny mají kalorie a tělo je sečte. Ořechy, ořechová másla, oleje, avokádo nebo granola jsou energeticky vydatné. Lžíce oleje má víc kalorií než kostka cukru."
     },
     {
       "otazka": "Má tělo s „čistým“ jídlem jinou práci než se „špinavým“?",
-      "odpoved": "Ne. Tělo nepozná, jestli glukóza přišla z domácí ovesné kaše nebo z tyčinky, a zpracuje obojí stejnou cestou. Bílkovina z kuřete i z proteinového dezertu jsou pořád aminokyseliny."
+      "odpoved": "Tělo nepozná, jestli glukóza přišla z domácí ovesné kaše nebo z tyčinky, a zpracuje obojí stejnou cestou. Bílkovina z kuřete i z proteinového dezertu jsou pořád aminokyseliny."
     }
   ],
   "opory": [
@@ -75,5 +75,6 @@
     "Článek neuvádí konkrétní množství bílkovin, vlákniny ani kalorií.",
     "Orthorexii článek jen zmiňuje; neříká, jak ji poznat ani kam se obrátit pro pomoc."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: kratka_odpoved bez „konzistence“ a „X, ne Y“; faq[1] bez „binge cyklus“; faq[2] bez „kalorie, ne marketing“; faq[3] bez úvodního „Ne.“"
 }

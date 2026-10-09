@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Komu injekce na hubnutí patří a komu ne?",
-      "odpoved": "U člověka s výraznou obezitou a cukrovkou, vysokým tlakem nebo nemocným srdcem je lék léčba, ne kosmetika. Pro člověka s pár kily navíc a bez nemoci to lék není: rizika má stejná, doložený přínos pro zdraví ne. Rozhoduje o tom lékař a lék patří do lékárny na recept, nikdy z internetu."
+      "odpoved": "U člověka s výraznou obezitou a cukrovkou, vysokým tlakem nebo nemocným srdcem je to léčba. Pro člověka s pár kily navíc a bez nemoci to lék není: rizika má stejná, doložený přínos pro zdraví ne. Rozhoduje o tom lékař a lék patří do lékárny na recept, nikdy z internetu."
     },
     {
       "otazka": "Přijdu na injekcích na hubnutí o svaly?",
@@ -62,5 +62,6 @@
     "Přínosy pro srdce (SELECT) a prevenci cukrovky u prediabetu jsem vynechal: článek je váže na lidi s nemocí a na rozhodnutí lékaře a vytržené by zněly jako doporučení léku.",
     "„14 % váhy zpět\" v SURMOUNT-4 přebírám doslova; článek nevysvětluje, jestli jde o procento původní váhy, nebo o procentní body."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněno, pro koho platí čísla STEP 1 (lidé s obezitou, nebo s nadváhou a nemocí); faq[2] doplněno ‚kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře‘ a že 1,2–1,6 g/kg se u velké nadváhy počítá z cílové váhy; faq[4] doplněna chybějící porucha příjmu potravy a jakákoli nemoc mezi situace, kdy rozhoduje výhradně lékař"
+  "kontrola": "opraveno: kratka_odpoved doplněno, pro koho platí čísla STEP 1 (lidé s obezitou, nebo s nadváhou a nemocí); faq[2] doplněno ‚kdo má vysoký tlak nebo nemocné srdce, ptá se nejdřív lékaře‘ a že 1,2–1,6 g/kg se u velké nadváhy počítá z cílové váhy; faq[4] doplněna chybějící porucha příjmu potravy a jakákoli nemoc mezi situace, kdy rozhoduje výhradně lékař",
+  "hlas": "upraveno: faq[1] bez „léčba, ne kosmetika“ (varování zůstávají)"
 }

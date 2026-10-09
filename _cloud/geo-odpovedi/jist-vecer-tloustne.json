@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Proč lidi hubnou, když přestanou jíst po šesté?",
-      "odpoved": "Ne kvůli té hodině. Tím pravidlem zkrátí okno, ve kterém jedí, a snědí míň kalorií celkově: vynechají večerní uzobávání u televize, druhou večeři nebo noční nájezd na lednici."
+      "odpoved": "Zkrátí si tím okno, ve kterém jedí, a snědí míň kalorií celkově: vynechají večerní uzobávání u televize, druhou večeři nebo noční nájezd na lednici. Samotná hodina v tom roli nehraje."
     },
     {
       "otazka": "Pomáhá dřívější večeře zhubnout?",
@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Proč by dřívější jídlo mohlo s hubnutím pomáhat?",
-      "odpoved": "Článek uvádí tři vysvětlení. Tělo je na trávení o něco líp naladěné přes den, ale ten efekt je malý. Pozdní jedení bývá spojené s větší chutí a horším řízením hladu druhý den a večer je past na bezmyšlenkovité uzobávání."
+      "odpoved": "Vysvětlení jsou tři. Tělo je na trávení o něco líp naladěné přes den, ale ten efekt je malý. Pozdní jedení bývá spojené s větší chutí a horším řízením hladu druhý den a večer je past na bezmyšlenkovité uzobávání."
     },
     {
       "otazka": "Jak jíst večer, když chci zhubnout?",
@@ -85,5 +85,6 @@
     "Seznam zdrojů [1] až [3] je v článku až pod sekcí „Mohlo by tě zajímat“ (Madjd 2021, Hatanaka 2022, Hegedus 2024); citace se opírají jen o text výkladu, ne o tento seznam.",
     "Článek neříká, o kolik hodin dřív by večeře měla být, aby to mělo smysl."
   ],
-  "kontrola": "opraveno: faq[1] doplněno „v redukčním režimu“ ke studii s 82 ženami (podmínka studie chyběla, ačkoli nejiste tvrdilo, že je zachovaná)"
+  "kontrola": "opraveno: faq[1] doplněno „v redukčním režimu“ ke studii s 82 ženami (podmínka studie chyběla, ačkoli nejiste tvrdilo, že je zachovaná)",
+  "hlas": "upraveno: faq[0] bez úvodního „Ne kvůli té hodině“; faq[2] bez „Článek uvádí“"
 }

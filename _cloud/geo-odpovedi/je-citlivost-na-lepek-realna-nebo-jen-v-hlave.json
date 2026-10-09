@@ -1,24 +1,24 @@
 {
   "url": "https://martinbarna.cz/clanky/je-citlivost-na-lepek-realna-nebo-jen-v-hlave.html",
   "titulek": "Je citlivost na lepek reálná nebo jen v hlavě? 😏",
-  "hlavni_otazka": "Je citlivost na lepek skutečná, nebo si ji lidé jen namlouvají?",
-  "kratka_odpoved": "Podle Menna Henselmanse, jehož příspěvek článek překládá, je citlivost na lepek u menšiny lidí reálná i bez celiakie. Spousta lidí ale ve skutečnosti řeší dráždivý tračník (IBS), citlivost na FODMAP nebo nocebo efekt: ve studii, kde nevěděli, co jedí, hlásili „citliví“ potíže, ať lepek jedli, nebo ne. Potíže si nech prověřit a nevyhýbej se lepku naslepo.",
+  "hlavni_otazka": "Je citlivost na lepek reálná, nebo si ji lidé jen namlouvají?",
+  "kratka_odpoved": "Menno Henselmans, jehož příspěvek tady překládám, říká: u menšiny lidí je citlivost na lepek reálná i bez celiakie. Spousta lidí ale řeší něco jiného, dráždivý tračník (IBS), citlivost na FODMAP nebo nocebo efekt: ve studii, kde nevěděli, co jedí, hlásili „citliví“ potíže, ať lepek jedli, nebo ne. Potíže si nech prověřit a nevyhýbej se lepku naslepo.",
   "faq": [
     {
-      "otazka": "Co ukázala studie, kde lidé nevěděli, jestli jedí lepek?",
+      "otazka": "Co se stalo, když lidé citliví na lepek nevěděli, co jedí?",
       "odpoved": "Zdraví lidé s i bez samozvané citlivosti na lepek jedli jogurt s 16 g lepku proti syrovátce a muffiny s 16 g lepku proti muffinům bez lepku, aniž věděli, co zrovna jedí. Po pěti dnech mezi skupinami nevyšly žádné významné rozdíly v trávicích potížích, střevní permeabilitě ani v zánětu."
     },
     {
       "otazka": "Co je nocebo efekt u lepku?",
-      "odpoved": "Potíže zhoršují samotná očekávání, ne to, co máš na talíři. Ve studii lidé, kteří se považovali za citlivé na lepek, hlásili víc únavy, bolestí břicha a nafouknutí bez ohledu na to, jestli zrovna lepek jedli."
+      "odpoved": "Potíže zhoršuje samotné očekávání. Ve studii lidé, kteří se považovali za citlivé na lepek, hlásili víc únavy, bolestí břicha a nafouknutí bez ohledu na to, jestli zrovna lepek jedli."
     },
     {
       "otazka": "Co když mám po jídle s lepkem trávicí potíže?",
-      "odpoved": "Spousta lidí, kteří si myslí, že jsou citliví na lepek, ve skutečnosti řeší dráždivý tračník (IBS) nebo citlivost na FODMAP. U IBS bývá spouštěčem spíš citlivost na FODMAP než samotný lepek a cílené vyřazení FODMAP potravin často uleví. Nech si potíže pořádně prověřit, třeba eliminační FODMAP dietou nebo testy."
+      "odpoved": "Spousta lidí, kteří si myslí, že jsou citliví na lepek, má dráždivý tračník (IBS) nebo citlivost na FODMAP. U IBS bývá spouštěčem spíš citlivost na FODMAP než samotný lepek a cílené vyřazení FODMAP potravin často uleví. Nech si potíže pořádně prověřit, třeba eliminační FODMAP dietou nebo testy."
     },
     {
       "otazka": "Mám preventivně vyřadit lepek z jídelníčku?",
-      "odpoved": "Ne naslepo. Rozhoduje celá strava, ne jeden viník, a nemá smysl škrtat potraviny, které škrtat nemusíš. Pestrá strava ti udělá líp."
+      "odpoved": "Ne naslepo. Rozhoduje celá strava a nemá smysl škrtat potraviny, které škrtat nemusíš. Pestrá strava ti udělá líp."
     }
   ],
   "opory": [
@@ -43,5 +43,6 @@
     "Tvrzení z koučinkové části (tuk dolů, stabilnější inzulin, libido, kostní hustota po návratu sacharidů) a rada „dej si dost bílkovin na regeneraci“ nemají v článku oporu ve studii, proto nejsou v odpovědích.",
     "Studie trvala pět dní; článek neříká, jestli by výsledek platil i dlouhodobě."
   ],
-  "kontrola": "opraveno: kratka_odpoved přisouzena Mennu Henselmansovi (článek je překlad jeho příspěvku) a sjednocena česká uvozovka; v nejiste opraveny uvozovky"
+  "kontrola": "opraveno: kratka_odpoved přisouzena Mennu Henselmansovi (článek je překlad jeho příspěvku) a sjednocena česká uvozovka; v nejiste opraveny uvozovky",
+  "hlas": "upraveno: hlavni_otazka bez „skutečná“; kratka_odpoved přisouzení Henselmansovi v 1. osobě („tady překládám“), bez „ve skutečnosti“; faq[0] otázka přirozeněji; faq[1], faq[2], faq[3] bez „X, ne Y“ a „ve skutečnosti“"
 }

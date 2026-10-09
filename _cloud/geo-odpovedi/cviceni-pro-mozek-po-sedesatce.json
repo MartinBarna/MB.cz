@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Je pro paměť lepší kardio, nebo posilování?",
-      "odpoved": "Podle meta-analýzy Zhang 2025 vyhrál v paměti aerobní trénink. Silovka skončila první v celkové kognici a v kontrole pozornosti."
+      "odpoved": "V meta-analýze Zhang 2025 vyhrál v paměti aerobní trénink. Silovka skončila první v celkové kognici a v kontrole pozornosti."
     },
     {
       "otazka": "Je silový trénink po čtyřicítce jen o vzhledu?",
@@ -33,5 +33,6 @@
     "Hodnota SMD 0,48 pro IGF-1 (Vints 2023) je v článku bez vysvětlení, co znamená, proto ji v odpovědích neuvádím.",
     "Velká část textu je v infografikách (obrázcích); text obrázků jsem nepoužil, jen viditelný text článku."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez úvodního „Podle“"
 }

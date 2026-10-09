@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Kolik kofeinu můžu v těhotenství nebo při kojení?",
-      "odpoved": "Článek doporučuje omezit příjem na 200 mg denně a poradit se s lékařem."
+      "odpoved": "Omez příjem na 200 mg denně a poraď se s lékařem."
     },
     {
       "otazka": "Kolik kofeinu je bezpečné pro děti a dospívající?",
@@ -47,5 +47,6 @@
     "U těhotných se tabulka a text mírně liší (u kojících uvádí i jednotlivou dávku 200 mg, u těhotných ne). Odpověď drží jen společný denní limit 200 mg a odkaz na lékaře.",
     "Obsah kofeinu v energetických nápojích (80–100 mg na 250 ml) je jen v tabulce a nepoužil jsem ho."
   ],
-  "kontrola": "opraveno: kratka_odpoved doplněna o limit 200 mg denně a konzultaci s lékařem pro těhotné a kojící ženy, protože krátká odpověď uvádí bezpečný denní limit"
+  "kontrola": "opraveno: kratka_odpoved doplněna o limit 200 mg denně a konzultaci s lékařem pro těhotné a kojící ženy, protože krátká odpověď uvádí bezpečný denní limit",
+  "hlas": "upraveno: faq[2] bez „Článek doporučuje“ (varování zůstává)"
 }

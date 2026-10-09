@@ -10,7 +10,7 @@
     },
     {
       "otazka": "Jak si dopřát oblíbené jídlo a nezničit si výsledky?",
-      "odpoved": "Plánuj dopředu, dej si jedno jídlo, ne celý den, a hned další jídlo se vrať k normálu. Nehladověj celý den předem, skončí to přejedením, a nedělej z toho vinu."
+      "odpoved": "Plánuj dopředu: jedno jídlo místo celého dne a hned dalším jídlem se vrať k normálu. Nehladověj celý den předem, skončí to přejedením, a nedělej z toho vinu."
     },
     {
       "otazka": "Dá se úplně obejít bez cheat day?",
@@ -33,5 +33,6 @@
     "Článek neříká, jak často si cheat meal dát (jednou týdně, častěji).",
     "Čísla 500 kcal deficitu a 2 000 až 3 000 kcal navíc jsou v článku modelový příklad, ne obecné pravidlo pro každého."
   ],
-  "kontrola": "ok"
+  "kontrola": "ok",
+  "hlas": "upraveno: faq[1] bez „jedno jídlo, ne celý den“"
 }
