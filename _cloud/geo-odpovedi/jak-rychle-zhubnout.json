@@ -1,0 +1,56 @@
+{
+  "url": "https://martinbarna.cz/clanky/jak-rychle-zhubnout.html",
+  "titulek": "Jak rychle zhubnout (a proč to většinou nevydrží)",
+  "hlavni_otazka": "Jak rychle zhubnout a dá se shodit 5 kg za týden?",
+  "kratka_odpoved": "Váha umí spadnout o několik kilo během pár dní, ale naprostá většina toho úbytku je voda a glykogen, ne tuk, a po návratu k normálnímu jídlu se vrátí. Kilo tuku má zhruba 7 700 kcal, takže reálně jde o stovky gramů tuku týdně. Rozumné tempo je pro většinu lidí zhruba 0,3 až 0,7 kg týdně.",
+  "faq": [
+    {
+      "otazka": "Proč váha při rychlé dietě klesne tak rychle?",
+      "odpoved": "Když seškrtáš sacharidy a kalorie, tělo nejdřív spálí zásobní cukr (glykogen) ve svalech a játrech a na každý gram glykogenu jsou navázané zhruba 3 gramy vody. K tomu přibude méně jídla ve střevech a výkyvy v zadržování vody podle soli a hormonů."
+    },
+    {
+      "otazka": "Co mi vezme příliš rychlé hubnutí?",
+      "odpoved": "Prudké omezení zvedá hlad a snižuje pocit sytosti. Když jde deficit moc rychle a chybí bílkoviny se silovým tréninkem, tělo obětuje i sval, ne jen tuk. Málo energie zhorší tréninky, náladu i spánek a po drastické dietě se skoro vždy vrací kila."
+    },
+    {
+      "otazka": "Jaké tempo hubnutí je rozumné?",
+      "odpoved": "Pro většinu lidí zhruba 0,3 až 0,7 kg týdně, orientačně 0,5–1 % tělesné hmotnosti. Čím víc máš nabráno, tím rychleji to na startu obvykle jde. Sleduj průměr za týden nebo dva, ne jeden den na váze."
+    },
+    {
+      "otazka": "Jak udělat rychlejší start, aby se mi to nevymstilo?",
+      "odpoved": "Jez zhruba 1,6–2,2 g bílkovin na kilogram tělesné hmotnosti denně a posiluj, bez toho v rychlém deficitu ztrácíš víc svalu. Deficit nedělej přehnaně hluboký a rychlejší fázi ber jako pár týdnů, pak přejdi na udržitelné tempo. Když máš zdravotní důvod hubnout svižněji, řeš to s lékařem."
+    },
+    {
+      "otazka": "Proč se mi po rychlé dietě váha vrátila?",
+      "odpoved": "Vrátila se voda a glykogen a často i chuť dohnat týdny hladu. Je to důsledek příliš tvrdého režimu, ne slabé vůle."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Ano, čísla na váze umí spadnout o několik kilo během pár dní. Problém je, že naprostá většina toho úbytku není tuk."},
+    {"pro": "kratka_odpoved", "citace": "Jakmile se vrátíš k normálnímu jídlu, glykogen i voda se doplní a kila jsou zpátky, a to bez toho, že bys „selhal\"."},
+    {"pro": "kratka_odpoved", "citace": "Jeden kilogram tělesného tuku má v sobě zhruba 7 700 kcal. I při poctivém kalorickém deficitu se bavíme o stovkách gramů skutečného tuku týdně, ne o kilech. Rychlá čísla na váze jsou hlavně voda a glykogen: užitečná zpětná vazba, ale ne měřítko úspěchu."},
+    {"pro": "kratka_odpoved", "citace": "Rozumné tempo pro většinu lidí je zhruba 0,3 až 0,7 kg za týden, orientačně 0,5–1 % tělesné hmotnosti."},
+    {"pro": "faq[0]", "citace": "Když seškrtáš sacharidy a kalorie, tělo nejdřív spálí zásobní cukr (glykogen) ve svalech a játrech. A na každý gram glykogenu jsou navázané zhruba 3 gramy vody. K tomu se přidá méně jídla ve střevech a výkyvy v zadržování vody podle soli a hormonů."},
+    {"pro": "faq[1]", "citace": "Hlad a chutě. Prudké omezení zvedá hlad a snižuje pocit sytosti."},
+    {"pro": "faq[1]", "citace": "Ztráta svalů. Když jde deficit moc rychle a chybí bílkoviny se silovým tréninkem, tělo obětuje i sval, ne jen tuk."},
+    {"pro": "faq[1]", "citace": "Únava a vyhoření. Málo energie znamená horší tréninky, náladu i spánek."},
+    {"pro": "faq[1]", "citace": "Jojo efekt. Po drastické dietě se skoro vždy vrací nejen kila, ale i frustrace."},
+    {"pro": "faq[2]", "citace": "Rozumné tempo pro většinu lidí je zhruba 0,3 až 0,7 kg za týden, orientačně 0,5–1 % tělesné hmotnosti."},
+    {"pro": "faq[2]", "citace": "Čím víc máš nabráno, tím rychleji na startu obvykle půjde."},
+    {"pro": "faq[2]", "citace": "Sleduj průměr za týden nebo dva a nech drobné výkyvy být."},
+    {"pro": "faq[3]", "citace": "Dost bílkovin. Zhruba 1,6–2,2 g na kilogram tělesné hmotnosti denně."},
+    {"pro": "faq[3]", "citace": "Bez něj v rychlém deficitu ztrácíš víc svalu."},
+    {"pro": "faq[3]", "citace": "Deficit ne přehnaně hluboký."},
+    {"pro": "faq[3]", "citace": "Časový limit. Rychlejší fázi ber jako pár týdnů, ne trvalý režim. Pak přejdi na udržitelné tempo."},
+    {"pro": "faq[3]", "citace": "Někdy dokonce pomáhá s motivací nebo když máš zdravotní důvod hubnout svižněji (to vždy řeš s lékařem, ne podle článku)."},
+    {"pro": "faq[4]", "citace": "Protože se vrátila voda a glykogen a často i chuť dohnat týdny hladu."},
+    {"pro": "faq[4]", "citace": "Je to důsledek příliš tvrdého režimu, ne slabé vůle."}
+  ],
+  "nejiste": [
+    "Článek neříká, jak velký deficit (v kcal ani v procentech) zvolit, ani na rychlejším startu, kde píše jen „ne přehnaně hluboký\".",
+    "Délka rychlejší fáze je jen „pár týdnů\", přesněji ji článek neurčuje.",
+    "Údaj 7 700 kcal na kilo tuku článek nepřepočítává na konkrétní týdenní deficit, nedopočítával jsem to.",
+    "Kolik silových tréninků týdně, článek neuvádí.",
+    "Tempo 0,3 až 0,7 kg týdně je v článku bez zdroje, uvádím ho tak, jak ho článek podává („pro většinu lidí\")."
+  ]
+}

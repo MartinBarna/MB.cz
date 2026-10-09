@@ -1,0 +1,59 @@
+{
+  "url": "https://martinbarna.cz/clanky/inzulinova-rezistence-prediabetes.html",
+  "titulek": "Inzulinová rezistence a prediabetes: co to je a co s tím udělá životní styl",
+  "hlavni_otazka": "Dá se prediabetes a inzulinová rezistence zvrátit životním stylem?",
+  "kratka_odpoved": "U velké části lidí ano, prediabetes se dá životním stylem otočit zpět. Podle přehledu z roku 2025 dokáže intenzivní změna životního stylu snížit přechod do cukrovky zhruba o 40–70 %. Největší páka je zhubnout přebytečný tuk mírným deficitem, k tomu posilování 2–3× týdně, chůze po jídle a 7–9 hodin spánku.",
+  "faq": [
+    {
+      "otazka": "Co je inzulinová rezistence?",
+      "odpoved": "Buňky na inzulin reagují líně, takže slinivka musí posílat víc a víc inzulinu, aby udržela cukr v krvi dole. Když už na to nestačí, cukr začne pomalu lézt nahoru a dostáváš se do prediabetu."
+    },
+    {
+      "otazka": "Jaké je riziko, že z prediabetu bude cukrovka?",
+      "odpoved": "Prediabetes je mezistupeň: cukr je vyšší, než má být, ale ještě pod hranicí diagnózy cukrovky. Podle přehledového článku z roku 2025 mají lidé s prediabetem zhruba 5–10% šanci ročně, že přejdou do plné cukrovky. Prediabetes patří do rukou lékaře, a pokud bereš léky, sám je neměň ani nevysazuj."
+    },
+    {
+      "otazka": "Proč inzulinová rezistence přibývá s věkem a s váhou?",
+      "odpoved": "Nadbytečný tuk, zvlášť viscerální kolem orgánů a v játrech, zhoršuje citlivost na inzulin. Sval je největší odběratel cukru z krve, a jak s věkem a menším pohybem ubývá, klesá i citlivost na inzulin. Obojí, kila i svalovou aktivitu, reálně ovlivníš."
+    },
+    {
+      "otazka": "Jaký pohyb pomáhá při inzulinové rezistenci?",
+      "odpoved": "Nejlíp kombinace: silový trénink 2–3× týdně s postupným přidáváním zátěže buduje sval, který z krve odebírá nejvíc cukru. K tomu 10–15 minut chůze po hlavních jídlech. V experimentu z roku 2025 snížilo lehké chození místo sezení cukr v krvi po jídle."
+    },
+    {
+      "otazka": "Má spánek vliv na hladinu cukru?",
+      "odpoved": "Laboratorní studie z roku 2026 ukázala, že už krátkodobé omezení spánku zhoršilo zpracování cukru u zdravých mladých lidí. Víkendové dospání to plně nevyžehlilo. Srovnej si proto spánek na pravidelných 7–9 hodin."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "A hlavně: u velké části lidí se to dá životním stylem otočit zpět."},
+    {"pro": "kratka_odpoved", "citace": "Přehledový článek z roku 2025 to shrnuje z druhé strany: podle něj intenzivní změna životního stylu dokáže snížit přechod z prediabetu do cukrovky zhruba o 40–70 %."},
+    {"pro": "kratka_odpoved", "citace": "Zhubni přebytečný tuk mírným, udržitelným deficitem: největší páka."},
+    {"pro": "kratka_odpoved", "citace": "Posiluj 2–3× týdně a přidávej zátěž: buduješ sval, který odebírá cukr."},
+    {"pro": "kratka_odpoved", "citace": "Choď po jídle 10–15 minut a hlídej si denní kroky."},
+    {"pro": "kratka_odpoved", "citace": "Spi 7–9 hodin pravidelně, ne jen o víkendu."},
+    {"pro": "faq[0]", "citace": "Inzulinová rezistence znamená, že se ten klíč otáčí hůř. Buňky na inzulin reagují líně, takže slinivka musí posílat víc a víc inzulinu, aby udržela cukr dole."},
+    {"pro": "faq[0]", "citace": "Když už na to nestačí, cukr v krvi začne pomalu lézt nahoru. A tady se dostáváš do prediabetu."},
+    {"pro": "faq[1]", "citace": "Prediabetes je mezistupeň mezi normálem a cukrovkou 2. typu: cukr vyšší než má být, ale ještě pod hranicí diagnózy. Podle přehledového článku z roku 2025 mají lidé s prediabetem zhruba 5–10% šanci ročně, že přejdou do plné cukrovky."},
+    {"pro": "faq[1]", "citace": "Prediabetes i cukrovka patří do rukou lékaře."},
+    {"pro": "faq[1]", "citace": "Pokud bereš jakékoli léky, sám je neměň ani nevysazuj; některé léky navíc mohou s tréninkem interagovat: jedna studie z roku 2026 třeba naznačila, že metformin může u části lidí tlumit cévní přínos cvičení."},
+    {"pro": "faq[2]", "citace": "Nadbytečný tuk, zvlášť ten viscerální kolem orgánů a v játrech, zhoršuje citlivost na inzulin a udržuje tělo v tichém zánětu."},
+    {"pro": "faq[2]", "citace": "Sval je největší odběratel cukru z krve. Jak stárneme a míň se hýbeme, svalu ubývá, aktivita klesá a citlivost na inzulin s tím taky."},
+    {"pro": "faq[2]", "citace": "Dobrá zpráva: obojí, kila i svalovou aktivitu, reálně ovlivníš."},
+    {"pro": "faq[3]", "citace": "Pohyb funguje ze dvou různých stran a nejlíp je kombinovat."},
+    {"pro": "faq[3]", "citace": "Silový trénink buduje sval, tedy tu tkáň, která z krve odebírá nejvíc cukru."},
+    {"pro": "faq[3]", "citace": "Stačí 2–3 silové jednotky týdně, u kterých postupně přidáváš zátěž."},
+    {"pro": "faq[3]", "citace": "Praktický recept: 2–3× týdně posilovna nebo cvičení s vlastní vahou, plus 10–15 minut chůze po hlavních jídlech a slušný denní počet kroků."},
+    {"pro": "faq[3]", "citace": "V experimentu z roku 2025 stačilo místo sezení lehké chození a snížilo to cukr v krvi po jídle; delší souvislá procházka srazila i inzulin po jídle."},
+    {"pro": "faq[4]", "citace": "Laboratorní studie z roku 2026 ukázala, že už krátkodobé omezení spánku zhoršilo zpracování cukru u zdravých mladých lidí. A víkendové „dospání“ to plně nevyžehlilo."},
+    {"pro": "faq[4]", "citace": "Takže než začneš řešit exotické doplňky, srovnej si spánek. Pravidelných 7–9 hodin dělá pro citlivost na inzulin víc než většina zázračných tablet."}
+  ],
+  "nejiste": [
+    "Článek neuvádí hodnoty cukru ani HbA1c, od kterých jde o prediabetes, jen že je změří lékař.",
+    "Velikost deficitu ani kolik kil zhubnout článek nevyčísluje, píše jen „mírný, udržitelný deficit\".",
+    "Konkrétní množství bílkovin ani sacharidů článek neuvádí („dost bílkovin\", „rozumné množství sacharidů\"), proto v odpovědích nejsou.",
+    "Napětí v textu: článek říká, že prediabetes se „u velké části lidí\" dá otočit zpět, ale zároveň, že dlouhodobě ustoupený prediabetes byl ve studii PREVIEW „spíš vzácnost\". Přebral jsem formulaci článku, ale není jasné, jak to spolu sedí.",
+    "Spánková studie byla na zdravých mladých lidech, ne na lidech s prediabetem; otázku jsem proto formuloval obecně.",
+    "Zmínku o metforminu a tlumení přínosu cvičení článek sám označuje jen za naznačení jedné studie, nepoužil jsem ji jako tvrzení."
+  ]
+}

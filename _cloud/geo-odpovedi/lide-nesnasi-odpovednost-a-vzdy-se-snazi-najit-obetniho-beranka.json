@@ -1,0 +1,68 @@
+{
+  "url": "https://martinbarna.cz/clanky/lide-nesnasi-odpovednost-a-vzdy-se-snazi-najit-obetniho-beranka.html",
+  "titulek": "Lidé NESNÁŠÍ odpovědnost a vždy se snaží najít obětního beránka.",
+  "hlavni_otazka": "Můžou za tloustnutí a nemoci semenné oleje a cukr?",
+  "kratka_odpoved": "Problém nejsou semenné oleje ani cukr, ale to, že jíme moc a hýbeme se málo. Ve srovnání s nasycenými tuky jsou na tom semenné oleje podle dat mnohem líp. A studie, které při stejných kaloriích nahradily cukr jinými sacharidy, žádný vliv na zdraví neukázaly.",
+  "faq": [
+    {
+      "otazka": "Jsou semenné oleje škodlivé?",
+      "odpoved": "Podle dat jsou na tom ve srovnání s nasycenými tuky mnohem líp: při výměně za stejný počet kalorií článek uvádí neutrální nebo pozitivní účinky na zánět, citlivost na inzulín, tuk v játrech, metabolické zdraví, kardiovaskulární onemocnění a úmrtnost. Pokud zdraví nějak škodí, je to podle článku pouze kvůli nadbytku kalorií."
+    },
+    {
+      "otazka": "Zvyšuje cukr riziko úmrtí?",
+      "odpoved": "Strava s vysokým obsahem cukru zvyšuje riziko úmrtnosti zhruba o 30 %, ale podle článku to celé vysvětlují kalorie. Studie, které cukr izokaloricky nahradily jinými sacharidy, žádný vliv na zdraví neukázaly."
+    },
+    {
+      "otazka": "Je horší cukr, nebo nadváha?",
+      "odpoved": "Obezita zvyšuje riziko úmrtnosti až o 300 % a i jen mírná nadváha o 30 %. Vliv cukru tedy stojí a padá s tím, kolik kalorií ti dodá."
+    },
+    {
+      "otazka": "Můžou za obezitu potravinářské firmy a vláda?",
+      "odpoved": "Potravinové prostředí na epidemii obezity svůj podíl rozhodně má. Na konci dne to ale pořád stojí na osobní odpovědnosti."
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Problém nejsou semenné oleje ani cukr. Problém je, že toho jíme moc a hýbeme se málo."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Když semenné oleje izokaloricky (tedy při stejném počtu kalorií) nahradíš nasycenými tuky, vidíme neutrální nebo pozitivní účinky na zánět, citlivost na inzulín, tuk v játrech, metabolické zdraví, kardiovaskulární onemocnění a úmrtnost (PMIDs: 40048719, 31369090, 16357064, 27434027 & 16904539)."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "A jak data JASNĚ ukazují, ve srovnání s nasycenými tuky jsou na tom semenné oleje mnohem líp."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Studie, které izokaloricky nahradily cukr jinými sacharidy, žádný vliv na zdraví neukázaly (PMID: 30787473)."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Když semenné oleje izokaloricky (tedy při stejném počtu kalorií) nahradíš nasycenými tuky, vidíme neutrální nebo pozitivní účinky na zánět, citlivost na inzulín, tuk v játrech, metabolické zdraví, kardiovaskulární onemocnění a úmrtnost (PMIDs: 40048719, 31369090, 16357064, 27434027 & 16904539). Pokud semenné oleje zdraví nějak škodí, je to POUZE kvůli nadbytku kalorií."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "A jak data JASNĚ ukazují, ve srovnání s nasycenými tuky jsou na tom semenné oleje mnohem líp."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Strava s vysokým obsahem cukru zvyšuje riziko úmrtnosti zhruba o 30 % (PMID: 30590448). Zní to děsivě. Jenže to celé vysvětlují kalorie. Studie, které izokaloricky nahradily cukr jinými sacharidy, žádný vliv na zdraví neukázaly (PMID: 30787473)."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "K tomu si přidej, že obezita zvyšuje riziko úmrtnosti až o 300 % (PMID: 29490333) a i jen mírná nadváha o 30 % (PMID: 36756765). Vliv cukru tedy stojí a padá s tím, kolik kalorií ti dodá."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Potravinové prostředí na epidemii obezity svůj podíl rozhodně má. Ale na konci dne to pořád stojí na osobní odpovědnosti."
+    }
+  ],
+  "nejiste": [
+    "Článek je překlad textu Layna Nortona a má spíš povahu názorového postu. Tvrzení „POUZE kvůli nadbytku kalorií\" je autorovo silné tvrzení, proto je v FAQ uvozené „podle článku\".",
+    "Věta v článku doslova říká, že semenné oleje „nahradíš nasycenými tuky\", ale následující věta srovnává ve prospěch semenných olejů, takže směr náhrady je v textu nejasný (nejspíš chyba překladu). Odpovědi proto směr náhrady neuvádějí a drží se srovnání olejů s nasycenými tuky.",
+    "Článek neříká, co přesně znamená „strava s vysokým obsahem cukru\", ani nedává praktické doporučení, kolik cukru nebo oleje je v pořádku.",
+    "Čísla o riziku (30 %, až 300 %) článek uvádí bez vysvětlení, oproti jaké skupině se počítají."
+  ]
+}

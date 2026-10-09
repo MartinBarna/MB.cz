@@ -22,6 +22,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
+sys.dont_write_bytecode = True
 sys.path.insert(0, HERE)
 from extrahuj_text import extract, normalize  # noqa: E402
 

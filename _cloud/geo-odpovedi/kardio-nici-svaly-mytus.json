@@ -1,0 +1,52 @@
+{
+  "url": "https://martinbarna.cz/clanky/kardio-nici-svaly-mytus.html",
+  "titulek": "Kardio ti sežere svaly? Mýtus o kardiu a síle",
+  "hlavni_otazka": "Přijdu o svaly, když budu k posilování chodit i na kardio?",
+  "kratka_odpoved": "Rozumné množství kardia ti svaly nesežere. Sval drží silový trénink, dost bílkovin a ne moc agresivní deficit, kardio je v tom doplněk, ne nepřítel. Konflikt reálně nastává až při obrovském vytrvalostním objemu, třeba tréninku na maraton, souběžně s maximální snahou o sílu.",
+  "faq": [
+    {
+      "otazka": "Co je interference efekt?",
+      "odpoved": "Vytrvalostní a silový trénink táhnou tělo trochu jiným směrem. Když jich naskládáš obrovský objem vedle sebe, můžou si navzájem trochu brzdit pokrok v síle a růstu svalů. Pár kardií týdně vedle silového tréninku ho ale nespustí."
+    },
+    {
+      "otazka": "Co svaly v dietě opravdu ujídá?",
+      "odpoved": "Skoro nikdy to není kardio. Viníkem bývá moc velký deficit, málo bílkovin, žádný silový trénink nebo špatný spánek."
+    },
+    {
+      "otazka": "Může mi kardio pomoct svaly v dietě udržet?",
+      "odpoved": "Ano, nepřímo. Pár kardií týdně přidá do energetické bilance trochu prostoru, takže nemusíš tak drasticky řezat jídlo. A míň drastický deficit zase chrání svaly."
+    },
+    {
+      "otazka": "Jak skládat kardio a posilování, aby se nebrzdily?",
+      "odpoved": "Prioritou je silový trénink, kardio dávej spíš v nízké až střední intenzitě. Klidné kardio po siláku nebo v jiný den je v pohodě. Tvrdé kardio těsně před tréninkem nohou ti sníží výkon na siláku, proto přehoď pořadí nebo den."
+    },
+    {
+      "otazka": "Kolikrát týdně posilovat a kolikrát dělat kardio?",
+      "odpoved": "Rozumný režim je 2–4× týdně silový trénink jako základ a 2–3× týdně kardio nebo prostě nachozené kroky. K tomu ne moc agresivní tempo hubnutí a dost bílkovin každý den."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Pravda je střízlivější a hodně osvobozující: rozumné množství kardia ti svaly nesežere. Sval drží silový trénink, dost bílkovin a ne moc agresivní deficit. Kardio je v tom všem doplněk, ne nepřítel."},
+    {"pro": "kratka_odpoved", "citace": "Bavíme se o člověku, který souběžně trénuje na maraton (nebo víc) a zároveň se snaží maximálně přibrat sílu a svaly. Dvě protichůdné maximálky najednou. Tam ten konflikt reálně je."},
+    {"pro": "faq[0]", "citace": "Ten jev se jmenuje interference efekt a říká zjednodušeně, že vytrvalostní a silový trénink táhnou tělo trochu jiným směrem. Když jich naskládáš obrovský objem vedle sebe, můžou si navzájem trochu brzdit pokrok v síle a růstu svalů."},
+    {"pro": "faq[0]", "citace": "Interference efekt je reálný, ale začíná až v extrémech. Pár kardií týdně vedle silového tréninku ho nespustí."},
+    {"pro": "faq[1]", "citace": "Když se v dietě ztratí kus svalu, viník skoro nikdy není kardio."},
+    {"pro": "faq[1]", "citace": "Moc velký deficit."},
+    {"pro": "faq[1]", "citace": "Málo bílkovin. Bez stavebního materiálu nemá tělo z čeho sval držet a opravovat."},
+    {"pro": "faq[1]", "citace": "Žádný silový trénink."},
+    {"pro": "faq[1]", "citace": "Špatný spánek. Málo a mizerného spánku zhoršuje regeneraci a hraje proti udržení svalů."},
+    {"pro": "faq[2]", "citace": "Výdej navíc = snazší deficit. Pár kardií týdně přidá do energetické bilance trochu prostoru, takže nemusíš tak drasticky řezat jídlo. A míň drastický deficit zase chrání svaly. Paradoxně ti kardio pomáhá je udržet."},
+    {"pro": "faq[3]", "citace": "Priorita je silový trénink. To je motor udržení a stavby svalů. Kardio se mu podřizuje, ne naopak. Kardio spíš nízká až střední intenzita a v rozumném množství."},
+    {"pro": "faq[3]", "citace": "Klidné kardio, ale po tvrdém siláku nebo v jiný den V pohodě."},
+    {"pro": "faq[3]", "citace": "Tvrdé kardio těsně před silovým tréninkem nohou Spíš ne. Sníží ti to výkon na siláku. A to je to, co svalům fakticky uškodí. Přehoď pořadí nebo den."},
+    {"pro": "faq[4]", "citace": "Žádná věda, jen rozumný režim, který drží svaly a přidá ti kondici: 2–4× týdně silový trénink. To je základ a priorita."},
+    {"pro": "faq[4]", "citace": "2–3× týdně kardio nebo prostě nachozené kroky."},
+    {"pro": "faq[4]", "citace": "Hlídej deficit a bílkoviny. Ne moc agresivní tempo hubnutí a dost bílkovin každý den."}
+  ],
+  "nejiste": [
+    "Článek nekvantifikuje, kde začíná „obrovský objem“ kardia, uvádí jen příklad tréninku na maraton (nebo víc) souběžně s maximální snahou o sílu.",
+    "Článek neuvádí, kolik bílkovin je „dost“, ani jak velký deficit je ještě „rozumný“.",
+    "Článek neodkazuje na žádné konkrétní studie k interferenčnímu efektu, jde o shrnutí z praxe.",
+    "Článek neříká, kolik času nechat mezi tvrdým kardiem a tréninkem nohou."
+  ]
+}

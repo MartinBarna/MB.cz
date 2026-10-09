@@ -1,0 +1,50 @@
+{
+  "url": "https://martinbarna.cz/clanky/kolik-kroku-denne-chuze-na-hubnuti.html",
+  "titulek": "Kolik kroků denně? Chůze je podceňovaný nástroj na hubnutí",
+  "hlavni_otazka": "Kolik kroků denně bych měl ujít, abych zhubl?",
+  "kratka_odpoved": "Zjisti svůj současný průměr a přidej k němu 2 000 až 3 000 kroků. Dlouhodobý rozumný cíl pro většinu aktivních lidí je někde v pásmu 7 000–10 000 kroků denně, ber to jako vodítko, ne dogma. Většina zdravotních přínosů chůze se často objevuje už mezi 7 000 a 8 000 kroky.",
+  "faq": [
+    {
+      "otazka": "Musím chodit 10 000 kroků denně?",
+      "odpoved": "Ne. Číslo 10 000 nepochází z žádné studie, vzniklo v šedesátých letech v Japonsku jako marketingový slogan k prodeji krokoměru. Většina zdravotních přínosů chůze se objevuje dávno před ním, často už mezi 7 000 a 8 000 kroky."
+    },
+    {
+      "otazka": "Co je NEAT a proč na něm záleží?",
+      "odpoved": "NEAT je energie, kterou spálíš vším pohybem, co není trénink: chůze, stání, úklid, nákup, hraní s dětmi. U většiny lidí spálí přes den výrazně víc kalorií než jedna tréninková jednotka."
+    },
+    {
+      "otazka": "Proč chůze na hubnutí tak dobře funguje?",
+      "odpoved": "Zvedá denní výdej, a přitom tě nezničí. Po chůzi nemáš vlčí hlad jako po intervalech a skoro nepotřebuje regeneraci. Je udržitelná, a nástroj, který zvládneš dělat roky, vždycky porazí ten, co vydržíš dva týdny."
+    },
+    {
+      "otazka": "Je lepší chodit trochu každý den, nebo hodně jednou týdně?",
+      "odpoved": "Lepší je dělat 7 000 kroků každý den po celý rok než si jednou za týden dát 20 000 a zbytek dní prosedět. Vyhrává konzistence."
+    },
+    {
+      "otazka": "Může chůze nahradit kardio?",
+      "odpoved": "Chůze kardio nenahradí, ale pro většinu lidí, co chtějí zhubnout, je praktičtějším základem. Ideálně silový trénink na udržení svalů, k tomu chůze jako každodenní motor a kardio navrch, když máš čas a chuť."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Zjisti svůj současný průměr."},
+    {"pro": "kratka_odpoved", "citace": "Přidej k němu 2 000 až 3 000 kroků."},
+    {"pro": "kratka_odpoved", "citace": "Dlouhodobý rozumný cíl pro většinu aktivních lidí je někde v pásmu 7 000–10 000 kroků denně. Není to dogma, ber to jako vodítko."},
+    {"pro": "kratka_odpoved", "citace": "Zdravotní přínosy chůze rostou už od relativně nízkých čísel a většina benefitů se objevuje dávno před magickou desítkou, často už někde mezi 7 000 a 8 000 kroky."},
+    {"pro": "faq[0]", "citace": "Číslo 10 000 kroků nepochází z žádné studie. Vzniklo v 60. letech v Japonsku jako marketingový slogan k prodeji krokoměru"},
+    {"pro": "faq[0]", "citace": "Zdravotní přínosy chůze rostou už od relativně nízkých čísel a většina benefitů se objevuje dávno před magickou desítkou, často už někde mezi 7 000 a 8 000 kroky."},
+    {"pro": "faq[1]", "citace": "Je to zkratka pro non-exercise activity thermogenesis, tedy energie, kterou spálíš vším pohybem, co není trénink. Chůze, stání, úklid, nákup, hraní s dětmi, vrtění na židli."},
+    {"pro": "faq[1]", "citace": "U většiny lidí NEAT spálí přes den výrazně víc kalorií než jedna tréninková jednotka."},
+    {"pro": "faq[2]", "citace": "Zvedá tvůj denní výdej, a přitom tě nezničí."},
+    {"pro": "faq[2]", "citace": "Po chůzi nemáš ten vlčí hlad jako po intervalech, takže nepřejíš to, co jsi spálil."},
+    {"pro": "faq[2]", "citace": "Skoro nepotřebuje regeneraci."},
+    {"pro": "faq[2]", "citace": "Je udržitelná. A udržitelnost v hubnutí rozhoduje. Nástroj, který zvládneš dělat roky, vždycky porazí ten, co vydržíš dva týdny."},
+    {"pro": "faq[3]", "citace": "Lepší je dělat 7 000 kroků každý den po celý rok než si jednou za týden dát 20 000 a zbytek dní prosedět. Vyhrává konzistence, ne hrdinství."},
+    {"pro": "faq[4]", "citace": "Chůze kardio nenahradí, ale pro většinu lidí, co chtějí zhubnout, je praktičtějším základem."},
+    {"pro": "faq[4]", "citace": "Silový trénink na udržení svalů, k tomu chůze jako tvůj každodenní motor a kardio navrch, když máš čas a chuť."}
+  ],
+  "nejiste": [
+    "Článek neuvádí žádnou konkrétní studii k tvrzení, že většina benefitů přichází mezi 7 000 a 8 000 kroky, a mluví o zdravotních přínosech obecně, ne konkrétně o hubnutí.",
+    "Článek neříká, kolik kalorií chůze nebo 1 000 kroků spálí, ani kolik váhy se dá chůzí zhubnout.",
+    "Pásmo 7 000–10 000 kroků článek vztahuje k „většině aktivních lidí“, pro málo aktivní nebo starší lidi zvlášť nic neříká."
+  ]
+}

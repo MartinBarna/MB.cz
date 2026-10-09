@@ -1,0 +1,71 @@
+{
+  "url": "https://martinbarna.cz/clanky/korelace-neni-kauzalita.html",
+  "titulek": "Korelace není kauzalita",
+  "hlavni_otazka": "Jaký je rozdíl mezi korelací a kauzalitou?",
+  "kratka_odpoved": "Korelace znamená, že se dvě věci dějí ve stejnou dobu nebo se hýbou společně, kauzalita je, když jedna věc tu druhou opravdu způsobuje. Prodeje zmrzliny a utonutí v bazénech stoupají spolu, ale za obojím stojí horké počasí. Ve výživě ze souvislosti bez pořádného experimentu, třeba randomizované kontrolované studie, ještě nevyplývá příčina.",
+  "faq": [
+    {
+      "otazka": "Způsobují umělá sladidla obezitu nebo rakovinu?",
+      "odpoved": "Většina studií, které tím straší, ukazuje jen souvislost, ne příčinu. Přehled NCI z roku 2023 shrnuje, že u lidí není důkaz, že by umělá sladidla rakovinu způsobovala. Práce v BMJ z roku 2022 našla souvislost s kardiovaskulárními riziky, ale sama upozorňuje, že to není důkaz příčiny."
+    },
+    {
+      "otazka": "Co je reverzní kauzalita?",
+      "odpoved": "Článek ji ukazuje na sladidlech: lidé s nadváhou často sahají po dietních nápojích, takže to vypadá, že sladidla „dělají“ obezitu. Ono je to ale obráceně a tomu se říká reverzní kauzalita."
+    },
+    {
+      "otazka": "Jsou lidé, co snídají, štíhlejší díky snídani?",
+      "odpoved": "Souvislost tam je, příčina spíš ne. Spíš platí, že zdravěji žijící lidé prostě snídají pravidelně, ne že by samotná snídaně hubla za tebe."
+    },
+    {
+      "otazka": "Jsou chemikálie v jídle nebezpečné?",
+      "odpoved": "Chemikálie je úplně všechno, voda, vzduch i ovoce, a nic jako „bez chemikálií“ neexistuje. Rozhoduje dávka: i přírodní látky v ovoci umí být ve vysokých dávkách jedovaté, ale v normálním množství jsou v pohodě."
+    },
+    {
+      "otazka": "Jak poznám, jestli strašidelná zpráva o jídle stojí na důkazech?",
+      "odpoved": "Ověř si zdroj (PubMed, WHO) a hledej meta-analýzy. U každého strašidelného postu se zeptej: stojí to na experimentu, nebo jen na pozorování?"
+    }
+  ],
+  "opory": [
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Korelace znamená, že se dvě věci dějí ve stejnou dobu nebo se hýbou společně. Klasický příklad: stoupají prodeje zmrzliny a zároveň stoupají i utonutí v bazénech. Kauzalita je něco jiného. To je, když jedna věc tu druhou opravdu způsobuje. Zmrzlina nikoho neutopí. Za obojím stojí horké počasí."
+    },
+    {
+      "pro": "kratka_odpoved",
+      "citace": "Spousta studií ukazuje, že spolu dvě věci souvisí, ale bez pořádného experimentu (třeba randomizované kontrolované studie) z toho ještě nevyplývá příčina."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Pořád někdo straší, že aspartam nebo sukralóza způsobují rakovinu, obezitu nebo srdeční choroby. Jenže většina těch studií ukazuje jen souvislost, ne příčinu."
+    },
+    {
+      "pro": "faq[0]",
+      "citace": "Přehled NCI z roku 2023 shrnuje, že u lidí není důkaz, že by umělá sladidla rakovinu způsobovala [1]. Práce v BMJ z roku 2022 sice našla souvislost s kardiovaskulárními riziky, ale sama upozorňuje, že to není důkaz příčiny a chtělo by to lepší experimenty [2]."
+    },
+    {
+      "pro": "faq[1]",
+      "citace": "Lidé s nadváhou často sahají po dietních nápojích, takže to vypadá, že sladidla „dělají“ obezitu. Ono je to ale obráceně. Tomuhle se říká reverzní kauzalita."
+    },
+    {
+      "pro": "faq[2]",
+      "citace": "Ve fitku narazíš na klasiku: „Lidé, co snídají, jsou štíhlejší.“ Souvislost tam je. Ale příčina? Spíš platí, že zdravěji žijící lidé prostě snídají pravidelně, ne že by samotná snídaně hubla za tebe [5]."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Jenže chemikálie je úplně všechno. Voda (H2O), vzduch, ovoce. Všechno se skládá z atomů a molekul. Nic jako „bez chemikálií“ neexistuje, jak vysvětluje American Chemical Society [3]."
+    },
+    {
+      "pro": "faq[3]",
+      "citace": "Strašení „toxickými“ látkami v jídle navíc často zapomíná na dávku. I přírodní látky v ovoci umí být ve vysokých dávkách jedovaté, ale v normálním množství jsou v pohodě [4]."
+    },
+    {
+      "pro": "faq[4]",
+      "citace": "Takže když na něco narazíš: ověř si zdroj (PubMed, WHO), hledej meta-analýzy a pamatuj, že korelace ≠ kauzalita. U každého strašidelného postu se zkus zeptat: stojí to na experimentu, nebo jen na pozorování?"
+    }
+  ],
+  "nejiste": [
+    "Článek tvrdí, že sladidla jsou v běžných množstvích bezpečná a potvrzuje to WHO, ale neuvádí, jaké množství je „běžné“, ani konkrétní dokument WHO; tohle tvrzení proto v odpovědích není.",
+    "U mléka a rakoviny článek říká jen, že souvislost je často kvůli jiným věcem, jako je životní styl. Bez dalšího vysvětlení jsem to jako samostatnou FAQ nepoužil.",
+    "Reverzní kauzalitu článek obecně nedefinuje, vysvětluje ji jen na příkladu se sladidly, proto je tak podaná i v odpovědi."
+  ]
+}
