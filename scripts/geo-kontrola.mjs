@@ -28,6 +28,8 @@
  *   [DLOUHA_POMLCKA]     znak U+2014 v JSON-LD nebo v llms.txt / llms-full.txt
  *   [SITEMAP_*]          indexovaná stránka chybí v sitemap.xml, nebo je v ní noindex / neexistující soubor
  *   [LLMS_*]             llms.txt odkazuje na neexistující stránku nebo neodkazuje na llms-full.txt
+ *   [BLOG_NAZEV]         výpis blogu: název v JSON-LD jiný než viditelná karta článku
+ *   [LLMS_JMENO_KLIENTA] llms.txt nebo llms-full.txt obsahuje jméno klienta z recenzí na /reference/
  *   (varování) LLMS_FULL_ZASTARALY  llms-full.txt neodpovídá aktuálnímu HTML (pusť generátor)
  */
 import fs from 'node:fs';
@@ -260,6 +262,22 @@ for (const s of stranky) {
   }
 }
 
+// Výpis blogu: název článku v JSON-LD (blogPost) = viditelný titulek jeho karty (revize R1).
+{
+  const blog = stranky.find((x) => x.rel === 'clanky/index.html');
+  const karty = new Map();
+  for (const m of (blog?.html || '').matchAll(/<a href="([^"]+\.html)" class="text-decoration-none">[\s\S]*?card-title[^>]*>([^<]*)</g)) {
+    karty.set(`${ORIGIN}/clanky/${m[1]}`, normalizujMezery(m[2].replace(/&amp;/g, '&').replace(/&quot;/g, '"')));
+  }
+  for (const b of blog?.bloky || []) {
+    for (const p of [].concat(b.data?.blogPost || [])) {
+      const k = karty.get(p.url);
+      if (k === undefined) chyba('BLOG_BEZ_KARTY', 'clanky/index.html', `${p.url} je v JSON-LD, ale na stránce nemá kartu`);
+      else if (k !== p.headline) chyba('BLOG_NAZEV', 'clanky/index.html', `${p.url}: JSON-LD „${p.headline}" ≠ karta „${k}"`);
+    }
+  }
+}
+
 /* -------------------------------------------------------------- 2. sitemap */
 
 const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
@@ -302,9 +320,29 @@ for (const m of llms.matchAll(/\]\((https:\/\/martinbarna\.cz[^)\s]*)\)/g)) {
 const fullCesta = path.join(ROOT, LLMS_FULL);
 if (!fs.existsSync(fullCesta)) chyba('LLMS_FULL_CHYBI', LLMS_FULL, 'soubor neexistuje, pusť node scripts/generuj-llms-full.mjs');
 else {
-  const full = fs.readFileSync(fullCesta, 'utf8');
+  // Konce řádků sjednotit: na Windows checkoutu (core.autocrlf) má soubor CRLF a bez
+  // tohohle by se hlásil falešně zastaralý (revize R1).
+  const lf = (t) => t.replace(/\r\n?/g, '\n');
+  const full = lf(fs.readFileSync(fullCesta, 'utf8'));
   if (full.includes('\u2014')) chyba('DLOUHA_POMLCKA', LLMS_FULL, 'obsahuje znak U+2014');
-  if (full !== sestavLlmsFull().text) varuj('LLMS_FULL_ZASTARALY', LLMS_FULL, 'neodpovídá aktuálnímu HTML, pusť node scripts/generuj-llms-full.mjs');
+  if (full !== lf(sestavLlmsFull().text)) varuj('LLMS_FULL_ZASTARALY', LLMS_FULL, 'neodpovídá aktuálnímu HTML, pusť node scripts/generuj-llms-full.mjs');
+
+  // ⛔ Jména klientů z recenzí do llms.txt ani llms-full.txt nepatří (revize R1).
+  // Seznam se bere z recenzí v JSON-LD na /reference/, tedy ze všech 70 zveřejněných.
+  const jmena = new Set();
+  for (const b of stranky.find((x) => x.rel === 'reference/index.html')?.bloky || []) {
+    kazdyUzel(b.data, (u) => {
+      const n = typy(u).includes('Review') && u.author?.name?.trim();
+      if (n) jmena.add(n);
+    });
+  }
+  if (!jmena.size) chyba('LLMS_JMENA_NEZNAMA', 'reference/index.html', 'nenašel jsem recenze v JSON-LD, kontrolu jmen nejde udělat');
+  for (const [soubor, obsah] of [[LLMS_FULL, full], ['llms.txt', llms]]) {
+    for (const n of jmena) {
+      const re = new RegExp(`(^|[^\\p{L}])${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}($|[^\\p{L}])`, 'u');
+      if (re.test(obsah)) chyba('LLMS_JMENO_KLIENTA', soubor, `obsahuje jméno klienta z recenze „${n}"`);
+    }
+  }
 }
 
 /* --------------------------------------------------------------- 4. výpis */
