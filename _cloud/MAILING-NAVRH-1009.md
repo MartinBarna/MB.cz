@@ -689,6 +689,7 @@ Nová tabulka, sloupec ani CHECK constraint potřeba nejsou. `email_events.type`
    - věty „dva měsíce zdarma" a „měsíc Academy k ročnímu VIP" jsou dopočet slovy, při změně ceníku je zkontrolovat ručně (CLAUDE.md);
    - most dnes měsíc Academy k ročnímu VIP opravdu uděluje (`ACADEMY_BONUS_SOURCE`).
 7. **Měření má slepá místa.** Platby Basicu a VIP platby lidí, kteří videokurz měli už předtím, Academy DB nevidí. Úplné číslo je jen v appce.
+8. **Deploy webu by tyhle soubory zveřejnil.** `deploy-wedos.yml` nevylučuje `_cloud/**`, vylučuje jen `*.md`. Po mergi do `main` a deployi by SQL, generátor, patch i náhledy byly veřejně na martinbarna.cz/_cloud/. Před mergem doplnit `_cloud/**` do `exclude` a do `EXCL` v `scripts/verify-deploy.js`, nebo větev nemergovat.
 
 **Otázky pro Martina (jeho rozhodnutí):**
 
