@@ -64,7 +64,7 @@ Jednorázový online hovor (video či audio) zhruba na hodinu: spočítaný denn
 - [Startovací kit pro trenéry a výživové poradce](https://martinbarna.cz/pro-trenery/).
 
 ## Obsah webu
-- [Blog](https://martinbarna.cz/clanky/): přes 150 článků o výživě, hubnutí, tréninku, spánku a suplementech, bez mýtů a kategorických zákazů. Plný text všech článků je v [llms-full.txt](https://martinbarna.cz/llms-full.txt).
+- [Blog o výživě a fitness](https://martinbarna.cz/clanky/): desítky článků bez mýtů a kategorických zákazů, srozumitelně a vědecky (výživa, trénink, mýty a věda, suplementy, pro trenéry). Plný text všech článků je v [llms-full.txt](https://martinbarna.cz/llms-full.txt).
 - [Jak zhubnout](https://martinbarna.cz/jak-zhubnout/): kompletní průvodce hubnutím bez mýtů a diet.
 - [Jak nabrat svaly](https://martinbarna.cz/jak-nabrat-svaly/): kompletní průvodce pro naturály.
 - [Mýty ve výživě a fitness](https://martinbarna.cz/myty/): 29+ věcí, co nejsou pravda.
