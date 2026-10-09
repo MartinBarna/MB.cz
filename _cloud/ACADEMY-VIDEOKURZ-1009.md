@@ -125,3 +125,44 @@ Vizuální texty beze změny, jen napojení `<label for>` nebo `aria-label`:
 - Blokující skripty v hlavičce: jen `ba-theme.js` / `theme-boot.js`, které musí být synchronní
   (jinak problikne opačný motiv). Ponecháno záměrně.
 - Skutečný iPhone/Safari ani Android nebyl k dispozici; vše na Chromiu s mobilní emulací.
+
+## Opravy po R1
+
+### 0. Merge `origin/main`
+- `git merge origin/main` (GEO větev: JSON-LD před `</head>` v lekcích). Konflikty v 6 volných lekcích
+  `akademie/studium/{m1-l1,m1-l2,m1-l3,m2-l1,m3-l1,m6-l1}` vyřešené tak, že zůstal **oba bloky**:
+  `<style id="a11y-fix">` i `<script type="application/ld+json">` z main. Kontrola: v každé právě
+  jeden a11y blok, JSON-LD přítomen, žádné značky konfliktu v repu.
+- `node scripts/geo-kontrola.mjs` → **VÝSLEDEK: 0 chyb** (0 varování), po merge i po všech opravách níže.
+
+### 1. (S) Rozšířená plocha odkazů v hlavičce překrývala značku
+- Potvrzeno měřením: na 360 px v `akademie/klient/` (jediná stránka, kde se hlavička zalomí na víc řádků)
+  překrýval „Moje studium" značku o 421 px², „Napsat Martinovi" o 388 px², navíc o 41 px² logo `MB`
+  a o 36 px² přepínač motivu (ten se zalomí pod odkazy do vlastní řady `.topr`).
+- Oprava v bloku `a11y-fix` (všech 468 stránek + šablony obou generátorů):
+  `@media(max-width:480px){.ba .top .in{row-gap:14px}.ba .topr{row-gap:14px}}`.
+  Odkaz přesahuje svůj 19px řádek o 13 px nahoru i dolů, takže mezera mezi řadami musí být ≥ 13 px
+  (dřív 8 px v `ba-ui.css:80` a 12 px v `.topr`). Dotyková plocha zůstává 45 až 47 px.
+  `row-gap` působí jen na zalomené řady, takže stránky s hlavičkou v jedné řadě se nemění.
+- Cena: zalomená hlavička na mobilu je o 6 px vyšší (`moje`: 112,6 → 118,6 px), v `klient`
+  o 8 px (144 → 152 px, mezera k přepínači motivu). Na desktopu beze změny.
+- Měřeno: průnik obdélníku každého `.topr a` se všemi odkazy, tlačítky, `.brand` a `.mark` v `.top`
+  (mimo předky a potomky), plus výška < 44 px. **Všech 470 stránek** `akademie/*` (bez adminu),
+  šířky **360 a 1366 px**, motiv **tmavý i světlý**: 0 průniků, 0 cílů pod 44 px.
+  Navíc vzorek 24 typů stránek na 320 a 412 px: 0 průniků.
+
+### 2. (S) `scripts/build-m20.js` přepisoval živé lekce modulu 20
+- Ověřeno: výstup šablony se s živými lekcemi neshoduje (0 z 11). Živé lekce prošly později
+  `apply-ba-theme` (odkaz Zpět v `.topr`, přepínač světlého motivu) a dalšími úpravami.
+- Zvolena pojistka místo srovnávání šablony (srovnání by byl samostatný úkol s rizikem rozdílu v obsahu):
+  - bez přepínače zapíše **jen lekce, které ještě neexistují**, existující vypíše jako přeskočené,
+  - `--out <složka>` = suchý běh mimo živé soubory,
+  - `--force` = vědomý přepis (v hlavičce skriptu je napsané, proč a kdy).
+- Ověřeno nasucho: `node scripts/build-m20.js` → 0 zapsáno, 11 přeskočeno, `git status` lekcí m20 beze změny;
+  `node scripts/build-m20.js --out <tmp>` → 11 souborů v tmp, porovnání s živými 0 z 11 (známý stav).
+- Návrh pro majitele: kdo bude chtít modul 20 generovat dál, srovná nejdřív šablonu s živými lekcemi
+  (porovnání `--out` výstupu proti `akademie/studium/m20-*`), teprve pak `--force`.
+
+### Kontrola po opravách
+- Celý průchod 470 stránek na 360 px: 0 chyb JS, 0 lokálních 404, 0 přetečení, 0 polí bez popisku
+  (kromě úmyslně skrytého honeypotu `website`).

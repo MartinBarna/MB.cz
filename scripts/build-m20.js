@@ -2,7 +2,13 @@
 /* build-m20.js — generátor lekcí modulu 20 „Martinův systém v praxi".
  * Sdílená šablona (head/styly/skripty + audio) → konzistentní lekce z příručky.
  * Obsah lekcí žije v poli LESSONS níže; spuštěním se (re)generují soubory.
- *   node scripts/build-m20.js
+ *   node scripts/build-m20.js                 zapíše jen lekce, které ještě neexistují
+ *   node scripts/build-m20.js --out <složka>  nasucho do jiné složky (živé lekce nedotčené)
+ *   node scripts/build-m20.js --force         přepíše i existující lekce
+ * POJISTKA (R1, 9. 10. 2026): šablona níže se s živými lekcemi NESHODUJE (0 z 11). Živé
+ * lekce prošly pozdějšími úpravami (apply-ba-theme: odkaz Zpět v .topr, přepínač světlého
+ * motivu, a11y blok, JSON-LD). Proto bez --force existující soubory nepřepisuje; --force
+ * použij jen po srovnání šablony s živými lekcemi (porovnej výstup --out proti akademie/studium).
  * Po přidání lekce nezapomeň: zařadit do CURRICULUM v akademie/studium/index.html
  * a spustit node scripts/sync-academy-counts.js.
  */
@@ -80,7 +86,7 @@ function page(L) {
 <style>
 ${STYLE}
 </style>
-<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
+<style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}@media(max-width:480px){.ba .top .in{row-gap:14px}.ba .topr{row-gap:14px}}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -145,11 +151,21 @@ ${quizHtml(L.quiz)}
 // ---- Obsah lekcí (z příručky MARTINUV_SYSTEM_V_PRAXI.md) ----
 const LESSONS = require('./m20-content.js');
 
+const ARGS = process.argv.slice(2);
+const FORCE = ARGS.includes('--force');
+const outIdx = ARGS.indexOf('--out');
+if (outIdx !== -1 && !ARGS[outIdx + 1]) { console.error('Chybí složka za --out.'); process.exit(1); }
+const OUT_BASE = outIdx !== -1 ? path.resolve(ARGS[outIdx + 1]) : path.join(ROOT, 'akademie/studium');
+
 let written = 0;
+const skipped = [];
 for (const L of LESSONS) {
-  const dir = path.join(ROOT, 'akademie/studium', L.id);
+  const dir = path.join(OUT_BASE, L.id);
+  const file = path.join(dir, 'index.html');
+  if (fs.existsSync(file) && !FORCE) { skipped.push(L.id); continue; }
   fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), page(L));
+  fs.writeFileSync(file, page(L));
   written++;
 }
-console.log('Vygenerováno lekcí modulu 20:', written, '→', LESSONS.map(l => l.id).join(', '));
+console.log('Vygenerováno lekcí modulu 20:', written, '→', OUT_BASE);
+if (skipped.length) console.log('Přeskočeno (už existují, přepis jen s --force):', skipped.join(', '));
