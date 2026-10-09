@@ -2,14 +2,15 @@
 """Pilot GEO odpovedi (jen ve vetvi cloud/geo-odpovedi-1009, nenasazuje se).
 
 Vlozi do clanku z _cloud/geo-odpovedi/<slug>.json:
-  a) pod perex (<p class="lead">) ramecek .pull "Kratka odpoved" s textem kratka_odpoved
+  a) pod perex (<p class="lead">) ramecek .pull "Kratka odpoved: <hlavni_otazka>" a pod tim kratka_odpoved
   b) sekci "Caste otazky" (h2 + p.faq-q + p) PRED zadany kotevni retezec
-  c) FAQPage JSON-LD za posledni <script type="application/ld+json"> v <head>
+  c) FAQPage JSON-LD hned za posledni <script type="application/ld+json"> v <head>
 Viditelny text i JSON-LD vznikaji z tehoz retezce, takze se shoduji slovo od slova.
 Chybejici CSS tridy .pull a .faq-q doplni do inline <style> clanku (stejne pravidlo jako jinde na webu).
 
 Pouziti:
-  python3 -I _cloud/geo-pilot.py vloz <slug> "<kotva pred FAQ>"
+  python3 -I _cloud/geo-pilot.py vloz <slug> "<kotva pred FAQ>"   (typicky "<h2>Mohlo by tě zajímat</h2>";
+                                                              CTA box tesne pred kotvou se preskoci)
   python3 -I _cloud/geo-pilot.py over <slug> [<slug>...]   kontrola shody viditelneho textu a JSON-LD
 """
 import html
@@ -54,7 +55,7 @@ def vloz(slug, kotva):
     m = re.search(r'<p class="lead">.*?</p>\n', t, re.S)
     if not m:
         sys.exit(f"{slug}: perex <p class=\"lead\"> nenalezen")
-    box = (f'{I}<div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď:</strong> '
+    box = (f'{I}<div class="pull" data-geo="kratka-odpoved"><strong>Krátká odpověď: {esc(d["hlavni_otazka"])}</strong><br>'
            f'{esc(d["kratka_odpoved"])}</div>\n')
     t = t[:m.end()] + box + t[m.end():]
     # b) sekce Caste otazky
@@ -62,6 +63,12 @@ def vloz(slug, kotva):
     for f in d["faq"]:
         faq += f'{I}<p class="faq-q">{esc(f["otazka"])}</p>\n{I}<p>{esc(f["odpoved"])}</p>\n'
     i = t.index(kotva)
+    # FAQ patri za obsah clanku: kdyz tesne pred kotvou stoji CTA box, vlozi se pred nej
+    j = t.rfind('<div class="cta-box"', 0, i)
+    if j != -1:
+        seg = t[j:i]
+        if seg.count("<div") == 1 and seg.rstrip().endswith("</div>"):
+            i = j
     zac = t.rfind("\n", 0, i) + 1
     t = t[:zac] + faq + "\n" + t[zac:]
     # c) FAQPage JSON-LD
@@ -71,7 +78,8 @@ def vloz(slug, kotva):
     blok = ('    <script type="application/ld+json">\n' + json.dumps(ld, ensure_ascii=False, indent=2)
             + '\n    </script>\n')
     hlava = t[:t.index("</head>")]
-    k = hlava.rfind("</script>")
+    k = hlava.rfind('<script type="application/ld+json">')
+    k = t.index("</script>", k)
     k = t.index("\n", k) + 1
     t = t[:k] + blok + t[k:]
     open(p, "w", encoding="utf-8").write(t)
@@ -87,7 +95,7 @@ def over(slug):
     t = open(p, encoding="utf-8").read()
     e = []
     m = re.search(r'<div class="pull" data-geo="kratka-odpoved">(.*?)</div>', t, re.S)
-    if not m or text(m.group(1)) != "Krátká odpověď: " + d["kratka_odpoved"]:
+    if not m or text(m.group(1)) != f"Krátká odpověď: {d['hlavni_otazka']}" + d["kratka_odpoved"]:
         e.append("ramecek != kratka_odpoved")
     sekce = re.search(r"<h2>Časté otázky</h2>\n(.*?)\n\n", t, re.S)
     viditelne = re.findall(r'<p class="faq-q">(.*?)</p>\s*<p>(.*?)</p>', sekce.group(1), re.S) if sekce else []

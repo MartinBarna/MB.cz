@@ -9,12 +9,8 @@
       "odpoved": "Ne. Účinek má za sebou víc než 20 let studií, ale zhruba třetina lidí jsou non-responders a efekt u nich nepřijde, zbylé dvě třetiny z něj vytěží opravdu hodně. Z běžné stravy přitom dostatečné množství získáš jen těžko."
     },
     {
-      "otazka": "Kolik vitaminu D brát?",
-      "odpoved": "Článek radí začít na 2000 IU, ale nejlíp si nechat udělat krevní testy. Spoustě lidí podle něj stačí až 4000 IU, někomu i 8000 IU denně, než se dostane na slušnou hladinu."
-    },
-    {
       "otazka": "Proč doplňovat vitamin D?",
-      "odpoved": "Pokud nejsi celoročně opálený, máš ho s velkou pravděpodobností málo, a tak je na tom u nás skoro každý. Naskákat tolik vitaminu D ze slunce v našich podmínkách v podstatě nejde."
+      "odpoved": "Pokud nejsi celoročně opálený, máš ho s velkou pravděpodobností málo, a tak je na tom u nás skoro každý. Naskákat tolik vitaminu D ze slunce v našich podmínkách v podstatě nejde. Než začneš, nejlíp si nech udělat krevní testy."
     },
     {
       "otazka": "Na co si dát pozor u omega-3?",
@@ -29,16 +25,17 @@
     {"pro": "kratka_odpoved", "citace": "Suplementů jsou plné regály a většina z nich za ty peníze nestojí."},
     {"pro": "faq[0]", "citace": "Účinek má za sebou víc než 20 let studií. Zhruba třetina lidí jsou „non-responders“ a efekt u nich nepřijde, ale ty zbylé dvě třetiny z toho vytěží opravdu hodně"},
     {"pro": "faq[0]", "citace": "Z běžné stravy přitom dostatečné množství získáš jen těžko, na to bys musel jíst hodně masa."},
-    {"pro": "faq[1]", "citace": "Začni na 2000 IU, ale nejlíp si nech udělat krevní testy. Spoustě lidí stačí až 4000 IU, někomu i 8000 IU denně, než se dostane na slušnou hladinu."},
-    {"pro": "faq[2]", "citace": "Pokud nejsi celoročně pěkně opálený, máš ho s velkou pravděpodobností málo. A tak je na tom u nás skoro každý."},
-    {"pro": "faq[2]", "citace": "Naskákat tolik vitaminu D ze slunce v našich podmínkách v podstatě nejde."},
-    {"pro": "faq[3]", "citace": "Tady je háček: musíš najít opravdu kvalitního výrobce. Cena bývá vyšší a spousta produktů na trhu navíc neobsahuje deklarované množství, nebo jsou oxidované. Tím pádem působí spíš prozánětlivě"}
+    {"pro": "faq[1]", "citace": "Pokud nejsi celoročně pěkně opálený, máš ho s velkou pravděpodobností málo. A tak je na tom u nás skoro každý."},
+    {"pro": "faq[1]", "citace": "Naskákat tolik vitaminu D ze slunce v našich podmínkách v podstatě nejde."},
+    {"pro": "faq[1]", "citace": "Začni na 2000 IU, ale nejlíp si nech udělat krevní testy."},
+    {"pro": "faq[2]", "citace": "Tady je háček: musíš najít opravdu kvalitního výrobce. Cena bývá vyšší a spousta produktů na trhu navíc neobsahuje deklarované množství, nebo jsou oxidované. Tím pádem působí spíš prozánětlivě"}
   ],
   "nejiste": [
     "Článek neuvádí dávkování kreatinu ani omega-3.",
     "Článek neuvádí žádné zdroje ani studie; dávky vitaminu D (2000, 4000 a 8000 IU) jsou Martinovo doporučení bez odkazu. Před zveřejněním jako citovatelné odpovědi doporučuji, aby je Martin potvrdil, protože jde o konkrétní dávkování.",
     "Účinky omega-3 na hubnutí, mozek, kůži a klouby článek jen vyjmenovává bez čísel a zdrojů, proto jsem z nich samostatnou otázku nedělal.",
-    "Článek nedefinuje, co je slušná hladina vitaminu D v krvi."
+    "Článek nedefinuje, co je slušná hladina vitaminu D v krvi.",
+    "Smazaná FAQ „Kolik vitaminu D brát?“ (2000 IU, „spoustě lidí až 4000 IU, někomu i 8000 IU denně“) čeká na Martinovo potvrzení dávek; článek vitamin-d-na-co-ma-smysl uvádí u dospělých 600 až 2000 IU a dávkování nechává na lékaři."
   ],
-  "kontrola": "ok"
+  "kontrola": "smazano: faq[1] o dávce vitaminu D (až 8000 IU denně bez zdroje a bez odkazu na lékaře, nad horní hranicí 4000 IU; rozpor s článkem vitamin-d-na-co-ma-smysl), dokud Martin dávky nepotvrdí; opraveno: faq[1] doplněno „nejlíp si nech udělat krevní testy“ z článku"
 }
