@@ -1,0 +1,50 @@
+{
+  "url": "https://martinbarna.cz/clanky/jojo-efekt.html",
+  "titulek": "Jojo efekt: proč se váha vrací a jak ho porazit",
+  "hlavni_otazka": "Proč se mi po dietě vrací váha a jak zabránit jojo efektu?",
+  "kratka_odpoved": "Jojo efekt většinou nezpůsobuje slabá vůle, ale špatně nastavený proces: příliš velký deficit, ztráta svalů a dieta s jasným koncem. Aby to vydrželo, drž mírný deficit 15–20 % pod výdejem, jez 1,6–2 g bílkovin na kilo, posiluj a po dietě postupně přidávej kalorie zpátky na udržovací příjem.",
+  "faq": [
+    {
+      "otazka": "Proč se mi po dietě zpomalí metabolismus?",
+      "odpoved": "Když hubneš agresivně a bez bílkovin a silového tréninku, tělo si nebere jen tuk, ale i sval. Míň svalu znamená nižší denní výdej, a o to snadněji se tuk vrátí, jakmile se vrátíš k normálnímu jídlu."
+    },
+    {
+      "otazka": "Jak velký kalorický deficit držet, aby se váha nevrátila?",
+      "odpoved": "Mírný deficit, 15–20 % pod výdejem, ne hladovka. K tomu dost bílkovin (1,6–2 g na kilo) a silový trénink, který dává tělu důvod si sval nechat."
+    },
+    {
+      "otazka": "Proč mám po dietě pořád hlad?",
+      "odpoved": "Sumithran a kol. (2011) změřili u 50 lidí, že se hormony chuti ani rok po dietě nevrátily k normálu. Tělo si drží nastavení z doby, kdy jsi hubnul, a u většiny lidí to nejde vypnout vůlí ze dne na den."
+    },
+    {
+      "otazka": "Jak se po skončení diety vrátit k normálnímu jídlu?",
+      "odpoved": "Nevracej se k jídlu skokem. Postupně přidávej kalorie zpátky na udržovací příjem a chvíli na téhle hladině zůstaň."
+    },
+    {
+      "otazka": "Proč nefunguje dieta na měsíc a pak zase normálně?",
+      "odpoved": "Když se vrátíš přesně k tomu, co tě k nadváze přivedlo, dostaneš stejný výsledek. Funguje postupná změna návyků, kterou zvládneš dělat i za rok."
+    }
+  ],
+  "opory": [
+    {"pro": "kratka_odpoved", "citace": "Většinou za tím není slabá vůle, ale špatně nastavený proces."},
+    {"pro": "kratka_odpoved", "citace": "Příliš velký deficit, ztráta svalů a dieta, co má jasný „konec\", místo aby měnila návyky natrvalo."},
+    {"pro": "kratka_odpoved", "citace": "Mírný deficit (15–20 % pod výdejem), ne hladovka."},
+    {"pro": "kratka_odpoved", "citace": "Dost bílkovin (1,6–2 g na kilo): chrání svaly i sytost."},
+    {"pro": "kratka_odpoved", "citace": "Silový trénink: dává tělu důvod sval si nechat."},
+    {"pro": "kratka_odpoved", "citace": "Postupně přidávej kalorie zpátky na udržovací příjem a chvíli na téhle hladině zůstaň."},
+    {"pro": "faq[0]", "citace": "Když hubneš agresivně a bez bílkovin a silového tréninku, tělo si nebere jen tuk. Sebere i sval."},
+    {"pro": "faq[0]", "citace": "Míň svalu znamená nižší denní výdej, a o to snadněji se tuk vrátí, jakmile se vrátíš k normálnímu jídlu."},
+    {"pro": "faq[1]", "citace": "Mírný deficit (15–20 % pod výdejem), ne hladovka."},
+    {"pro": "faq[1]", "citace": "Dost bílkovin (1,6–2 g na kilo): chrání svaly i sytost."},
+    {"pro": "faq[1]", "citace": "Silový trénink: dává tělu důvod sval si nechat."},
+    {"pro": "faq[2]", "citace": "Sumithran a kol. (2011, PMID 22029981) to změřili u 50 lidí: hormony chuti se ani rok po dietě nevrátily k normálu."},
+    {"pro": "faq[2]", "citace": "Tělo si drží nastavení z doby, kdy jsi hubnul. Hlad po dietě táhnou i hormony, u většiny lidí to nejde vypnout vůlí ze dne na den."},
+    {"pro": "faq[3]", "citace": "Když dohubneš, nevracej se k jídlu skokem. Postupně přidávej kalorie zpátky na udržovací příjem a chvíli na téhle hladině zůstaň."},
+    {"pro": "faq[4]", "citace": "Když se vrátíš přesně k tomu, co tě k nadváze přivedlo, dostaneš stejný výsledek."},
+    {"pro": "faq[4]", "citace": "Funguje postupná změna návyků, kterou zvládneš dělat i za rok."}
+  ],
+  "nejiste": [
+    "Článek neříká, jak dlouho zůstat na udržovacím příjmu po dietě (jen „chvíli\"), ani o kolik kalorií a jak rychle je přidávat.",
+    "Údaj o metabolismu nižším zhruba o 700 kcal denně (Fothergill 2016) článek výslovně označuje za extrémní případ, proto není použit jako obecná odpověď."
+  ]
+}
