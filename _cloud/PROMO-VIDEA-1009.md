@@ -179,6 +179,10 @@ nemění.
 jako `assets/app/zapis-jidla-v2.webp` (nový název kvůli 30denní cache CDN). Ukazuje ho **jediná
 stránka webu: `/tvuj-coach/`** (martinbarna.cz/tvuj-coach/, sekce „Co appka umí“, karta „Zapsat
 jídlo trvá vteřiny“). Žádná jiná stránka, mail ani skript na `zapis-jidla.webp` neodkazuje.
+Draft PR [MartinBarna/MB.cz#560](https://github.com/MartinBarna/MB.cz/pull/560), commit `eb1dfd339`: nový soubor
++ přepnutý `<img>` (a komentář nad ním), ceny, texty ani Stripe beze změny. Původní `zapis-jidla.webp`
+zůstává, ať HTML ještě držené v cache nemá rozbitý obrázek. Lokální render `/tvuj-coach/`: obrázek se
+načte (780×1688), 0 JS chyb. **Nenasazeno**, po merge je potřeba spustit `deploy-wedos.yml`.
 
 ## Odkud je každé tvrzení
 
