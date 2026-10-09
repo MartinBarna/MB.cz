@@ -1,77 +1,83 @@
 # Martin Barna: online výživa a fitness koučink
 
-> Martin Barna je český online výživový a fitness kouč (působí od roku 2013, přes 600 klientů, přes 100 hodnocení na Googlu a Facebooku). Pomáhá lidem zhubnout, nabrat svaly a zlepšit formu pomocí flexibilního stravování, vědecky podloženě, bez hladovění a bez jojo efektu. Na martinbarna.cz najdeš koučovací appku Tvůj Coach, videokurz výživy, Barna Academy pro trenéry, individuální koučink, konzultace a řadu nástrojů a obsahu zdarma.
+> Martin Barna je český online výživový a fitness kouč. Výživě a tréninku se profesionálně věnuje od roku 2013, vedl přes 600 klientů a má přes 100 hodnocení na Googlu a Facebooku (průměr 5,0). Učí flexibilní stravování: vědecky podloženě, bez hladovění a bez jojo efektu. Na martinbarna.cz najdeš koučovací appku Tvůj Coach, videokurz výživy, Barna Academy pro trenéry a výživové poradce, online koučink 1:1, online konzultace a nástroje a články zdarma.
 
-## O koučovi
-- Online výživový a fitness kouč, působí po celé ČR od roku 2013, přes 600 klientů.
-- Přístup: flexibilní stravování (počítání maker), individuální plán, silový trénink, udržitelné návyky bez drastických diet.
-- Kontakt: martin@martinbarna.cz, WhatsApp +420 603 229 831.
+Plné znění hlavních stránek a všech článků blogu (čistý text bez menu a patičky): [llms-full.txt](https://martinbarna.cz/llms-full.txt). Ceny a čísla níže odpovídají textu stránek webu. Při citaci prosím uváděj URL konkrétní stránky.
 
-## Produkty
+## O Martinovi
+- [O mně](https://martinbarna.cz/#omne): 13+ let praxe jako fitness trenér, přes 13 let ve výživě, mezinárodní trenérská certifikace, certifikace výživového poradce a pokročilá koučovací studia. Host ve vysílání České televize.
+- Přístup: flexibilní stravování (kalorie a makra na míru), silový trénink a udržitelné návyky místo drastických diet.
+- Kontakt: martin@martinbarna.cz, WhatsApp a telefon +420 603 229 831.
+- Provozovatel: Martin Barna, IČO 76383032, Lumírova 489/11, 700 30 Ostrava-Výškovice.
+
+## Produkty a ceny
 
 ### Tvůj Coach (koučovací appka)
-[tvujcoach.cz](https://tvujcoach.cz) · [popis produktu](https://martinbarna.cz/tvuj-coach/)
-Webová appka (běží i na mobilu), která spojuje výživu a trénink v jednom systému. Co umí:
-- **Zápis jídla čárovým kódem, hlasem nebo z fotky** (appka z fotky odhadne makra).
-- **Databáze přes 50 000 potravin** včetně značkového zboží z českých obchodů (Lidl, Tesco, Albert, Globus), hledání i celou větou.
-- **Knihovna přes 410 fit receptů** přímo v appce, s makry na porci.
-- **Adaptivní cíle:** kalorie a makra se přepočítávají podle reálných týdenních check-inů, ne podle vzorce z internetu.
-- **Trénink:** generátor plánu podle místa, vybavení a úrovně, databáze 128 cviků s fotkou a technikou, zápis sérií, auto-regulace zátěže, hlídání objemu po 14 svalových partiích v pásmech MEV/MAV/MRV, mezocyklus s deloadem.
-- **Generátor jídelníčku** včetně týdenního nákupního seznamu v kusech.
-- **„Co si můžu ještě dnes dát?"**: návrh jídla, které dorovná zbývající bílkoviny a vlákninu, aniž přepálí kalorie.
-- **Kontrola kvality dat:** když je den poskládaný převážně z odhadů z fotky, engine odmítne podle něj hnout kalorickým cílem.
-- **AI Coach** (verze VIP): chat Martinovým hlasem, komentář ke každému check-inu, focení jídla.
-- Ceny: **Free 0 Kč navždy**, **Basic 249 Kč/měsíc** (2 490 Kč/rok), **VIP s AI koučem 499 Kč/měsíc** (4 990 Kč/rok).
-
-### 40 receptů a 48 odpovědí
-[martinbarna.cz/recepty-a-odpovedi](https://martinbarna.cz/recepty-a-odpovedi/)
-Dvě PDF ke stažení: kuchařka se 40 recepty i s makry a e-book s odpověďmi na 48 nejčastějších dotazů klientů (hlad a chutě, alkohol, spánek, stres, kolísání váhy, suplementy, ketogenní dieta a další). **Cena 349 Kč jednorázově, navždy tvoje.** Nejlevnější způsob, jak začít, obojí je zároveň součástí videokurzu výživy za 1 490 Kč.
+[Popis a ceník](https://martinbarna.cz/tvuj-coach/) · [tvujcoach.cz](https://tvujcoach.cz)
+Webová aplikace v češtině (appka pro iPhone a Android se chystá), která spojuje výživu, trénink a AI kouče. Kalorie, makra i týdenní přepočet cílů počítá engine appky, AI je vysvětluje.
+- Zápis jídla čárovým kódem, ve verzi VIP i hlasem a z fotky (AI odhadne kalorie a makra, odhad potvrdíš).
+- **Databáze přes 50 000 potravin** včetně zboží z Lidlu, Tesca, Alberta či Globusu.
+- **Knihovna přes 410 fit receptů**.
+- Cíle se každý týden přepočítají podle check-inu, váhy a zápisů (Basic). Vlastní kalorie a makra si nastavíš i ve Free.
+- Trénink: plán podle toho, kde cvičíš (fitko, doma, hřiště) a kolik dní máš (Basic), 128 cviků s technikou a nejčastějšími chybami, zápis sérií a vývoj síly, objem po svalových partiích a mezocyklus (Basic).
+- Generátor jídelníčku s gramážemi a nákupním seznamem, i na celý týden (Basic).
+- „Co si můžu ještě dnes dát?": appka nabídne, čím dorovnáš zbývající kalorie a bílkoviny, aniž den přestřelíš (Basic).
+- Když je den poskládaný hlavně z fotoodhadů, cíle podle něj nepřepočítá.
+- AI kouč Martinovým hlasem (VIP): odpovídá z tvých čísel, umí appku ovládat (zapíše a upraví jídlo) a okomentuje každý check-in.
+- Ceny: **Free 0 Kč navždy, bez karty**, **Basic 249 Kč/měsíc** (2 490 Kč/rok), **VIP s AI koučem 499 Kč/měsíc** (4 990 Kč/rok). K první platbě VIP videokurz výživy (hodnota 1 490 Kč) zdarma, k ročnímu VIP navíc měsíc Barna Academy. Do 14 dnů vrácení peněz.
 
 ### Videokurz výživy
 [martinbarna.cz/videokurz](https://martinbarna.cz/videokurz)
-182 videí, přes 20 hodin obsahu, kuchařka se 40+ recepty, 2 e-booky a 23 dalších průvodců a šablon (celkem 26 bonusových materiálů: 24 ke stažení plus kalkulačka a generátor receptů online). **Cena 1 490 Kč jednorázově, doživotní přístup.** 11 lekcí zdarma na vyzkoušení.
+182 videí, přes 20 hodin obsahu, doživotní přístup. 26 bonusových materiálů (24 ke stažení plus kalkulačka a generátor receptů online), mezi nimi kuchařka 40+ receptů a 2 e-booky. **Cena 1 490 Kč jednorázově**, 14denní záruka vrácení peněz. [11 lekcí zdarma](https://martinbarna.cz/videokurz#zdarma) na vyzkoušení, stačí e-mail. Zdarma ho dostaneš i k první platbě appky Tvůj Coach VIP.
+
+### 40 receptů a 48 odpovědí
+[martinbarna.cz/recepty-a-odpovedi](https://martinbarna.cz/recepty-a-odpovedi/)
+Dvě PDF ke stažení: kuchařka se 40 recepty (u každého kalorie a rozpad na bílkoviny, sacharidy a tuky) a e-book s odpověďmi na 48 otázek, které klienti pokládají nejčastěji. **Cena 349 Kč jednorázově**, soubory zůstanou napořád. Obojí je i součástí videokurzu výživy.
 
 ### Barna Academy
 [martinbarna.cz/akademie](https://martinbarna.cz/akademie/)
-Škola pro trenéry, výživové poradce a pro ty, které to chytlo naplno: 24 modulů, 256 lekcí, audio verze lekcí, generátor jídelníčků a tréninků, databáze 128 cviků, rebrandovatelné materiály pro vlastní klienty, certifikace, AI kouč a affiliate program. Videokurz výživy v ceně.
-**Ceny: 990 Kč měsíčně (zrušitelné kdykoli), nebo 8 900 Kč jednorázově s doživotním přístupem.** U doživotního přístupu je v ceně i rok appky Tvůj Coach ve VIP verzi (hodnota 4 990 Kč).
+Škola pro trenéry, výživové poradce i závodníky fitness: 24 modulů a 256 lekcí (výživa, psychologie chování, anatomie, trénink, byznys a AI pro trenéry), s odcitovanými vědeckými zdroji, kvízy, úkoly a poslechem lekcí. AI Martin u každé lekce, generátory jídelníčků a tréninků, databáze 128 cviků, rebrandovatelné materiály pro vlastní klienty, certifikace po závěrečném testu a případové studii, affiliate program. Videokurz výživy v ceně.
+**Ceny: 990 Kč měsíčně (zrušíš kdykoli), nebo 8 900 Kč jednorázově s doživotním přístupem.** Appka Tvůj Coach ve VIP verzi: u doživotního přístupu na rok (hodnota 4 990 Kč), u měsíčního členství po celou dobu, co členství běží. 14denní záruka vrácení peněz.
+Ukázkové lekce zdarma: [Proč lidé jedí, i když nemají hlad](https://martinbarna.cz/akademie/studium/m1-l1/), [Mechanismus jídla](https://martinbarna.cz/akademie/studium/m1-l2/), [Vůle a změna chování](https://martinbarna.cz/akademie/studium/m1-l3/), [Kosterní systém](https://martinbarna.cz/akademie/studium/m2-l1/), [Energetická bilance](https://martinbarna.cz/akademie/studium/m3-l1/), [Kdo jsi a kdo je tvůj klient](https://martinbarna.cz/akademie/studium/m6-l1/).
 
 ### Online koučink 1:1
 [martinbarna.cz/koucing](https://martinbarna.cz/koucing/)
-Individuální vedení na míru: cíle a makra na míru, týdenní check-in s rozborem a úpravou plánu, klientský dashboard s grafy, AI kouč 24/7, appka Tvůj Coach, vzdělávací materiály, podpora e-mailem a na WhatsAppu.
-**Ceny: Gold 6 450 Kč/měsíc, Diamond 11 900 Kč/měsíc** (Diamond navíc hlasové odpovědi, jeden video hovor týdně a Barna Academy v ceně po dobu koučinku, po 3 zaplacených měsících napořád). Výhodnější sazby na 3 a 6 měsíců.
+Individuální vedení s týdenními kontrolami: makro cíle na míru, každý týden analýza a úprava cílů i aktivit, podpora na e-mailu a WhatsAppu (po–pá), klientská sekce s grafy pokroku, AI Martin 24/7, appka Tvůj Coach po celou dobu koučinku, vzdělávací přílohy, kuchařka, e-book a videokurz výživy.
+**Gold 6 450 Kč/měsíc** (3 měsíce 16 950 Kč, 6 měsíců 31 950 Kč). **Diamond 11 900 Kč/měsíc** (3 měsíce 32 900 Kč, 6 měsíců 59 500 Kč): navíc zvukové zprávy na WhatsAppu, jeden video či audio hovor týdně a Barna Academy v ceně po celou dobu koučinku, po 3 zaplacených měsících napořád. Do Diamondu Martin bere nejvýš 3 lidi najednou.
 
 ### Online konzultace
 [martinbarna.cz/konzultace](https://martinbarna.cz/konzultace/)
-Jednorázový online hovor zhruba na hodinu: spočítané kalorie a makra, konkrétní první kroky a písemné shrnutí.
-**Cena 2 990 Kč** (videokurz výživy v ceně), nebo zvýhodněných **2 190 Kč** pro toho, kdo už videokurz má. Když si do 14 dní objednáš koučink, cena konzultace se ti odečte.
+Jednorázový online hovor (video či audio) zhruba na hodinu: spočítaný denní příjem, bílkoviny a makra na míru a dva až tři konkrétní kroky na první týden. **Cena 2 990 Kč jednorázově**, v ceně videokurz výživy, kuchařka a dva e-booky. Když si do 14 dní po konzultaci objednáš koučink Gold nebo Diamond, cena konzultace se ti odečte z ceny balíčku.
 
-### Členská komunita na HeroHero
-[herohero.co/martinbarna](https://herohero.co/martinbarna)
-Placená členská sekce: týdenní rozbory studií v plném znění, odpovědi na dotazy členů, zákulisí toho, jak upravuji plány klientům, a jídelníček v PDF jednou měsíčně. **Cena 6 € měsíčně, nebo 60 € ročně** (deset měsíců místo dvanácti). Zkušební období 2 týdny.
+### Další služby
+- [Osobní tréninky](https://martinbarna.cz/treninky) v GYM BIP fitness, Ostrava-Zábřeh, pro 1 až 2 osoby (1 lekce 1 190 Kč, výhodnější balíčky 10, 20 a 30 lekcí).
+- [Přednášky a workshopy](https://martinbarna.cz/prednasky/) o výživě a zdravém životním stylu pro firmy, školy i veřejnost.
+- [Dárkový poukaz](https://martinbarna.cz/poukaz/) na koučink, konzultaci nebo videokurz.
+- [Členská komunita na HeroHero](https://herohero.co/martinbarna).
 
 ## Zdarma
-- [Nástroje zdarma](https://martinbarna.cz/nastroje-zdarma/): generátor jídelníčku, generátor tréninku a databáze 128 cviků s video ukázkami.
-- [Kalkulačka kalorií a makroživin](https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/): orientační denní příjem a makra.
-- [7denní makro plán pro ženy 30+](https://martinbarna.cz/makro-plan/): jez do sytosti a začni hubnout.
-- [7denní plán „Dostaň formu zpátky" pro muže 35+](https://martinbarna.cz/forma-zpet/).
-- [11 lekcí videokurzu zdarma](https://martinbarna.cz/videokurz#zdarma).
+- [Nástroje zdarma](https://martinbarna.cz/nastroje-zdarma/): generátor jídelníčku, generátor tréninku a databáze 128 cviků s technikou a nejčastějšími chybami, bez registrace.
+- [Kalkulačka kalorií a makroživin](https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/).
+- [Kvíz: Co ti reálně brání zhubnout?](https://martinbarna.cz/kviz/) (6 otázek).
+- [7denní makro plán pro ženy 30+](https://martinbarna.cz/makro-plan/) (PDF na e-mail).
+- [7denní plán „Dostaň formu zpátky" pro muže 35+](https://martinbarna.cz/forma-zpet/) (PDF na e-mail).
+- [Startovací kit pro trenéry a výživové poradce](https://martinbarna.cz/pro-trenery/).
 
 ## Obsah webu
-- [Články](https://martinbarna.cz/clanky/): 146 vědecky podložených článků o výživě, hubnutí, tréninku a suplementech.
-- [Mýty ve výživě a fitness](https://martinbarna.cz/myty/): hub s 29+ vyvrácenými mýty (cukr, detox, spalovače tuku, jídlo večer ad.).
-- [Jak zhubnout](https://martinbarna.cz/jak-zhubnout/): kompletní průvodce hubnutím.
-- [Jak nabrat svaly](https://martinbarna.cz/jak-nabrat-svaly/): kompletní průvodce nabíráním svalů.
-- [Reference](https://martinbarna.cz/reference/): 70 vybraných recenzí z více než 100 na Googlu a Facebooku, plus galerie reálných proměn klientů.
+- [Blog](https://martinbarna.cz/clanky/): přes 150 článků o výživě, hubnutí, tréninku, spánku a suplementech, bez mýtů a kategorických zákazů. Plný text všech článků je v [llms-full.txt](https://martinbarna.cz/llms-full.txt).
+- [Jak zhubnout](https://martinbarna.cz/jak-zhubnout/): kompletní průvodce hubnutím bez mýtů a diet.
+- [Jak nabrat svaly](https://martinbarna.cz/jak-nabrat-svaly/): kompletní průvodce pro naturály.
+- [Mýty ve výživě a fitness](https://martinbarna.cz/myty/): 29+ věcí, co nejsou pravda.
+- [Reference](https://martinbarna.cz/reference/): 70 recenzí v textu z více než 100 na Googlu a Facebooku a proměny klientů.
 
-## Kontakt a profily
+## Profily
 - Web: https://martinbarna.cz/
-- E-mail: martin@martinbarna.cz
-- WhatsApp: +420 603 229 831
 - Instagram: https://www.instagram.com/martinbarnaonlinevyzivafitness
 - TikTok: https://www.tiktok.com/@martinbarna_cz
-- YouTube: https://www.youtube.com/@MartinBarna
-- Facebook: https://www.facebook.com/share/1CZuTf2wvb/
+- YouTube: https://www.youtube.com/MartinBarna
+- Facebook: https://www.facebook.com/martinbarnaonlinevyzivaafitness
+- Hodnocení na Googlu: https://search.google.com/local/reviews?placeid=ChIJQ-8yTbnlE0cRJj3EiDujXRY
+- HeroHero: https://herohero.co/martinbarna
 
 ## Pro koho
-Lidé v ČR a na Slovensku, kteří chtějí zhubnout, nabrat svaly nebo zlepšit formu zdravě a natrvalo, typicky ženy 30+ a muži 35+. Appka Tvůj Coach je pro ty, kdo chtějí systém a data místo hádání. Barna Academy je pro trenéry a výživové poradce, kteří chtějí vzdělání a hotové nástroje pro práci s klienty. Koučink 1:1 je pro ty, kdo chtějí, aby jim to někdo nastavil a vedl je týden po týdnu.
+Lidé v Česku, kteří chtějí zhubnout, nabrat svaly nebo zlepšit formu zdravě a natrvalo, typicky ženy 30+ a muži 35+. Appka Tvůj Coach je pro ty, kdo chtějí systém a data místo hádání. Videokurz výživy je pro samostudium vlastním tempem. Barna Academy je pro trenéry a výživové poradce, kteří chtějí vzdělání a hotové nástroje pro práci s klienty. Koučink 1:1 je pro ty, kdo chtějí, aby jim to někdo nastavil a vedl je týden po týdnu.
