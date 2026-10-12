@@ -447,7 +447,11 @@
           }
           return (r.data || []).map(function (row) {
             var s = row.scales || {}, ac = row.activity || {}, nt = row.notes || {};
-            var adh = num(s.dodrzeni); // skala 1 az 5 -> procenta, at sedi prah "adherence < 60 %"
+            // 12. 10. 2026 (Martin): vsech 5 skal reportu je skolni znamka, 1 = nejlip.
+            // Prehled kouce (moje/kouc) pocita se starym smerem (adherence v %, spanek
+            // 5 = vyborny), proto se dodrzeni a spanek tady otaci zpet: 6 - x.
+            function zpet(v) { return v == null ? null : 6 - v; }
+            var adh = zpet(num(s.dodrzeni)); // skala -> procenta, at sedi prah "adherence < 60 %"
             return {
               email: row.email,
               user_id: row.email,            // client_reports nema user_id, seskupuje se podle e-mailu
@@ -461,7 +465,7 @@
               // cetl jako energii, tedy obracene: flag svitil prave u nejsilnejsich klientu.
               // Jmeno "sila" je verne tomu, co se opravdu sbira. Nemenit zpatky.
               sila: num(s.sila),
-              sleep: num(s.spanek_kvalita),
+              sleep: zpet(num(s.spanek_kvalita)),
               cravings: num(s.hlad),
               workouts_done: num(ac.fitko),
               // Snimek zadani ulozeny primo v reportu. Je to spravny zdroj (tentyz, proti

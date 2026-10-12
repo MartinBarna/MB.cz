@@ -693,15 +693,16 @@ function rdFakta(rep: RdRow, drive: RdRow[], tg: RdRow | null, intake: RdRow | n
     " · sport " + rdProtiCili(sportMin, cil("sport_min"), "min") +
     " · tréninků " + rdProtiCili(rdNum(a.fitko), cil("treninky"), "×"));
 
-  // ⛔ Škály nemají všechny stejný směr (síla sjednocena 18. 8. 2026 na 1 = nejlíp, ale
-  // spánek a dodržení jedou obráceně). Model si to nesmí domýšlet, proto je směr u každé.
+  // ⛔ Od 12. 10. 2026 mají všech 5 škál směr školní známky (1 = nejlíp; síla od 18. 8.,
+  // spánek a dodržení od 12. 10., stará data přemapována 6 - x). Model si směr nesmí
+  // domýšlet, proto je pořád napsaný u každé.
   L.push("ŠKÁLY 1 až 5, u každé je napsáno, co je která strana: " +
     "únava " + rdFmt(rdNum(s.unava)) + " (1 = čerstvý, 5 = vyřízený)" +
     " · hlad " + rdFmt(rdNum(s.hlad)) + " (1 = žádný, 5 = pořád)" +
     " · síla v tréninku " + rdFmt(rdNum(s.sila)) + " (1 = nabušeno, 5 = slabota)" +
-    " · kvalita spánku " + rdFmt(rdNum(s.spanek_kvalita)) + " (1 = mizerná, 5 = výborná)" +
+    " · kvalita spánku " + rdFmt(rdNum(s.spanek_kvalita)) + " (1 = výborná, 5 = mizerná)" +
     " · spánek " + rdFmt(rdNum(s.spanek_h), "h") +
-    " · dodržení plánu " + rdFmt(rdNum(s.dodrzeni)) + " (1 = vůbec, 5 = na 100 %)");
+    " · dodržení plánu " + rdFmt(rdNum(s.dodrzeni)) + " (1 = na 100 %, 5 = vůbec)");
 
   const pnPrev = prev ? ((rdJ(prev, "activity").plan_next ?? {}) as Record<string, unknown>) : {};
   if (rdNum(pnPrev.kroky) !== null || rdNum(pnPrev.sport_min) !== null) {

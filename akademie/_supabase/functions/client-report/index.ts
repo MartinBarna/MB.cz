@@ -272,7 +272,7 @@ function reportMail(name: string, r: any, prev: any | null, first: any | null, w
 
   // škály
   const s = r.scales || {};
-  b += sect("Pocity (1–5)") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
+  b += sect("Pocity (1 = nejlíp, 5 = nejhůř)") + `<table role='presentation' width='100%' cellpadding='0' cellspacing='0' class='mb-body' style='font-size:14px;color:#F0EADF'>` +
     `<tr><td style='padding:4px 0;width:44%'>Únava</td><td>${dots(s.unava)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.unava)}</td></tr>` +
     `<tr><td style='padding:4px 0'>Hlad</td><td>${dots(s.hlad)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.hlad)}</td></tr>` +
     `<tr><td style='padding:4px 0'>Síla</td><td>${dots(s.sila)}</td><td class='mb-mut' align='right' style='color:#8F8A99'>${skala(s.sila)}</td></tr>` +

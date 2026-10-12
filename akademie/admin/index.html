@@ -2015,7 +2015,7 @@
       {id:'kcal',   nazev:'Kalorie',   jed:'kcal',dolu:false, cil:'kcal',      get:function(r){ return kliNum((r.nutrition||{}).kcal); }},
       {id:'protein',nazev:'Bílkoviny', jed:'g',   dolu:false, cil:'protein',   get:function(r){ return kliNum((r.nutrition||{}).protein); }},
       {id:'kroky',  nazev:'Kroky',     jed:'',    dolu:false, cil:'kroky',     get:function(r){ return kliNum((r.activity||{}).kroky); }},
-      {id:'dodrz',  nazev:'Dodržení',  jed:'/5',  dolu:false, cil:null,        get:function(r){ return kliNum((r.scales||{}).dodrzeni); }}
+      {id:'dodrz',  nazev:'Dodržení',  jed:'/5',  dolu:true,  cil:null,        get:function(r){ return kliNum((r.scales||{}).dodrzeni); }}
     ];
     var KDV={ okno:90, metrika:'weight' };   // výchozí pohled: váha za 90 dní
 

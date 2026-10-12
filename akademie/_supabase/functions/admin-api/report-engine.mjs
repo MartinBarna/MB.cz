@@ -293,7 +293,7 @@ export function spocitejBlok(v) {
   if (sportMin !== null) radky.push("Sport " + fmt(sportMin, "min za týden"));
   if (cisla.spanekH !== null || cisla.spanekKvalita !== null) {
     radky.push("Spánek " + (cisla.spanekH !== null ? fmt(cisla.spanekH, "h") : "hodiny neuvedeny") +
-      (cisla.spanekKvalita !== null ? ", kvalita " + fmt(cisla.spanekKvalita) + "/5" : ""));
+      (cisla.spanekKvalita !== null ? ", kvalita " + fmt(cisla.spanekKvalita) + "/5 (1 = nejlíp)" : ""));
   }
 
   return { cisla, radky, text: radky.join("\n") };

@@ -188,7 +188,7 @@
         <div class="kcard"><h3>Aktuální váha</h3><div class="kstat" id="stW">-</div><p id="stWsub"></p></div>
         <div class="kcard"><h3>Celková změna</h3><div class="kstat" id="stD">-</div><p id="stDsub"></p></div>
         <div class="kcard"><h3>Odeslané reporty</h3><div class="kstat" id="stN">-</div><p id="stNsub"></p></div>
-        <div class="kcard"><h3>Dodržení plánu Ø</h3><div class="kstat" id="stA">-</div><p>průměr ze všech reportů (1–5)</p></div>
+        <div class="kcard"><h3>Dodržení plánu Ø</h3><div class="kstat" id="stA">-</div><p>průměr ze všech reportů (1 = nejlíp, 5 = nejhůř)</p></div>
       </div>
 
       <!-- reference (ukáže se po 8+ reportech) -->
@@ -224,7 +224,7 @@
           <div class="gwrap"><h3>Kalorie</h3><p class="sub" id="gCsub">denní průměr v týdnu (kcal)</p><div id="gC"></div></div>
           <div class="gwrap"><h3>Bílkoviny</h3><p class="sub" id="gPsub">denní průměr v týdnu (g)</p><div id="gP"></div></div>
           <div class="gwrap"><h3>Kroky</h3><p class="sub">denní průměr v týdnu</p><div id="gK"></div></div>
-          <div class="gwrap"><h3>Energie a dodržení</h3><p class="sub">škály 1–5: síla a únava (nižší = líp) · dodržení plánu (vyšší = líp)</p><div id="gS"></div></div>
+          <div class="gwrap"><h3>Energie a dodržení</h3><p class="sub">škály 1–5 jako ve škole: u všech nižší = líp</p><div id="gS"></div></div>
         </div>
       </div>
 
@@ -1496,7 +1496,7 @@
             a.plan = { stejne: true, kroky: ac.kroky, sport_min: ac.sport_min };
           }
         } },
-      { id: "skaly", title: "Jak ses cítil/a?", help: "Škály 1–5. Není správná odpověď, podle tohohle Martin ladí plán.",
+      { id: "skaly", title: "Jak ses cítil/a?", help: "Všechny škály jako známky ve škole: 1 = nejlíp, 5 = nejhůř. Není správná odpověď, podle tohohle Martin ladí plán.",
         render: function(a){
           var s = a.scales || {};
           return fScale("f_unava", "Únava", s.unava, "1 = čerstvý/á", "5 = vyřízený/á")
@@ -1505,17 +1505,20 @@
             // Stará Google Sheets éra známkovala 1 = výborná; web do 18. 8. sbíral
             // obráceně (1 = slabota) a klientům (Bednarz) tím „skočila" síla v grafu.
             // Webová data do 18. 8. jsou v DB přemapovaná (6 - x), viz zápis šéfa.
+            // 12. 10. 2026 (rozhodl Martin): i kvalita spánku a dodržení plánu jako
+            // školní známka, 1 = nejlíp. Nový formulář ukládá scales.skala_v = 2; řádky
+            // bez značky jsou starý směr (5 = nejlíp) a v DB se jednorázově přemapují 6 - x.
             + fScale("f_sila", "Síla v tréninku", s.sila, "1 = nabušeno", "5 = slabota")
-            + fScale("f_spanekk", "Kvalita spánku", s.spanek_kvalita, "1 = mizerná", "5 = výborná")
+            + fScale("f_spanekk", "Kvalita spánku", s.spanek_kvalita, "1 = výborná", "5 = mizerná")
             + fNum("f_spanekh", "Spánek: hodin průměrně", "h", "např. 7", s.spanek_h)
-            + fScale("f_dodrz", "Dodržení plánu", s.dodrzeni, "1 = vůbec", "5 = na 100 %");
+            + fScale("f_dodrz", "Dodržení plánu", s.dodrzeni, "1 = na 100 %", "5 = vůbec");
         },
         mount: function(){ ["f_unava", "f_hlad", "f_sila", "f_spanekk", "f_dodrz"].forEach(mountPick); },
         collect: function(a){
           var out = {}, need = [["f_unava", "unava", "únavu"], ["f_hlad", "hlad", "hlad"], ["f_sila", "sila", "sílu"], ["f_spanekk", "spanek_kvalita", "kvalitu spánku"], ["f_dodrz", "dodrzeni", "dodržení plánu"]];
           for(var i = 0; i < need.length; i++){ var v = pickVal(need[i][0]); if(v == null) return "Naklikej prosím " + need[i][2] + " (1–5)."; out[need[i][1]] = Number(v); }
           var h = optNum("f_spanekh", 2, 14); if(h.err) return "Spánek: " + h.err;
-          out.spanek_h = h.v; a.scales = out;
+          out.spanek_h = h.v; out.skala_v = 2; a.scales = out;
         } },
       { id: "texty", title: "Slovní zhodnocení", help: "Pár vět stačí, tohle je pro Martina často to nejcennější z celého reportu. Žádné pole nemá limit délky.",
         render: function(a){
