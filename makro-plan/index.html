@@ -204,7 +204,7 @@
     /* [30. 9. 2026] Bez .mainmenu by scroll-top.js přepínač režimu přilepil pod hlavičku (osiřelý); na landingu ho neukazujeme. */
     .nav .mb-theme-toggle{display:none!important}
     /* Mobil: cookie lišta dole u kraje (stránka nemá spodní CTA lištu, rezerva 92 px je zbytečná a lišta zakrývala tlačítko formuláře). */
-    @media(max-width:991px){html #mb-cookie{bottom:8px!important;left:8px!important;right:8px!important}}
+    @media(min-width:481px) and (max-width:991px){html #mb-cookie{bottom:8px!important;left:8px!important;right:8px!important}}
 </style>
     <script type="application/ld+json">
 {
@@ -226,7 +226,7 @@
   ]
 }
     </script>
-    <script defer src="/assets/analytics.js?v=g22"></script><script defer src="/assets/referral.js?v=g9"></script>
+    <script defer src="/assets/analytics.js?v=g23"></script><script defer src="/assets/referral.js?v=g9"></script>
     <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
     <style>/* kontrast: oranžový final CTA blok = tmavý text (marketing-dark ho zesvětlil) */
     .final h2,.final p,.final .fine,.final .sign,.final a:not(.btn){color:#161616!important}

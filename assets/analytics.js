@@ -244,14 +244,14 @@
         '@media(max-width:991px){#mb-cookie{left:12px!important;right:12px!important;bottom:92px!important;max-width:none!important;padding:12px 14px 10px!important;font-size:.82rem!important;line-height:1.35!important}' +
           '#mb-cookie .mb-c-title{display:none!important}#mb-cookie .mb-c-long{display:none!important}#mb-cookie .mb-c-short{display:inline!important}' +
           '#mb-cookie #mb-c-ok,#mb-cookie #mb-c-no{padding:7px 10px!important;font-size:.85rem!important}#mb-cookie #mb-c-an{margin-top:4px!important;font-size:.76rem!important;padding:0!important}}' +
-        // Do 480 px jeste nizsi karta (12. 10. 2026): mensi padding a pismo, tri tlacitka v jednom radku, vyska kolem 70 px.
-        // bottom 4 px jen tam, kde neni spodni nakupni lista. Stranky s .mbar a videokurz po odscrollovani (.vk-buybar.show) nechavaji 92 px, jinak by lista sedla na zlate CTA.
-        '@media(max-width:480px){#mb-cookie{bottom:4px!important;padding:4px 8px!important;font-size:11px!important;line-height:1.15!important;border-radius:12px!important;box-sizing:border-box!important;display:flex!important;flex-wrap:wrap!important;align-items:center!important;column-gap:4px!important;row-gap:2px!important}' +
+        // Do 480 px jeste nizsi karta (12. 10. 2026): mensi padding a pismo, tri tlacitka v jednom radku, vyska kolem 75 px.
+        // Lista sedi NAHORE (oprava 12. 10. vecer po revizi): dole zakryvala spodni CTA listy (.cta-bar domovske, .mbar,
+        // .vk-buybar, WhatsApp) a pri nizkem viewportu vestavenych prohlizecu FB a IG i zlata tlacitka. Nahore nekoliduje s zadnym CTA.
+        '@media(max-width:480px){#mb-cookie{top:calc(4px + env(safe-area-inset-top,0px))!important;bottom:auto!important;padding:4px 8px!important;font-size:11px!important;line-height:1.15!important;border-radius:12px!important;box-sizing:border-box!important;display:flex!important;flex-wrap:wrap!important;align-items:center!important;column-gap:4px!important;row-gap:2px!important}' +
           '#mb-cookie .mb-c-text{flex:1 0 100%}' +
           '#mb-cookie>div:has(#mb-c-ok){display:contents!important}' +
-          '#mb-cookie #mb-c-ok,#mb-cookie #mb-c-no{flex:0 0 auto!important;padding:3px 6px!important;font-size:11px!important}' +
-          '#mb-cookie #mb-c-an{width:auto!important;margin:0!important;flex:1 1 0!important;min-width:0!important;font-size:10px!important;line-height:1.1!important;padding:1px 2px!important;text-align:center}' +
-          'body:has(.mbar) #mb-cookie,body:has(.vk-buybar.show) #mb-cookie{bottom:92px!important}}' +
+          '#mb-cookie #mb-c-ok,#mb-cookie #mb-c-no{flex:0 0 auto!important;min-height:28px!important;padding:3px 10px!important;font-size:11px!important}' +
+          '#mb-cookie #mb-c-an{width:auto!important;margin:0!important;flex:1 1 0!important;min-width:0!important;font-size:10px!important;line-height:1.1!important;padding:1px 2px!important;text-align:center}}' +
         '#mb-cookie .mb-c-short{display:none}' +
         'html[data-theme="light"] #mb-cookie{' +
           'background:linear-gradient(180deg,var(--mb-surface,#ffffff),var(--mb-bg,#F7F3EB))!important;' +
