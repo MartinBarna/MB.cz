@@ -449,8 +449,10 @@
             var s = row.scales || {}, ac = row.activity || {}, nt = row.notes || {};
             // 12. 10. 2026 (Martin): vsech 5 skal reportu je skolni znamka, 1 = nejlip.
             // Prehled kouce (moje/kouc) pocita se starym smerem (adherence v %, spanek
-            // 5 = vyborny), proto se dodrzeni a spanek tady otaci zpet: 6 - x.
-            function zpet(v) { return v == null ? null : 6 - v; }
+            // 5 = vyborny), proto se dodrzeni a spanek otaci zpet (6 - x), ale JEN u radku
+            // se znackou skala_v >= 2. Radek bez znacky je jeste stary smer a otacet se nesmi.
+            var skolni = Number(s.skala_v) >= 2;
+            function zpet(v) { return v == null ? null : (skolni ? 6 - v : v); }
             var adh = zpet(num(s.dodrzeni)); // skala -> procenta, at sedi prah "adherence < 60 %"
             return {
               email: row.email,

@@ -993,6 +993,9 @@
   function wOpen(id, steps, onDone){
     W.id = id; W.steps = steps; W.i = 0; W.ans = {}; W.onDone = onDone; WFILES = []; SUBPATHS = [];
     try { var d = JSON.parse(localStorage.getItem(draftKey()) || "null"); if(d && d.ans){ W.ans = d.ans; } } catch(e){}
+    // Koncept rozpracovaný před 12. 10. 2026 má spánek a dodržení ve starém směru (5 = nejlíp).
+    // S novými popisky by se odeslal obráceně, proto tyhle dvě škály klient naklikne znovu.
+    if(W.ans.scales && !W.ans.scales.skala_v){ delete W.ans.scales.spanek_kvalita; delete W.ans.scales.dodrzeni; }
     el("wiz").classList.add("open"); document.body.style.overflow = "hidden";
     wShow();
   }
