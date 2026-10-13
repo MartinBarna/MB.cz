@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calorie and macro calculator | Martin Barna</title>
+    <meta name="description" content="Free calorie and macro calculator: kcal, protein, fat, carbs and weekly pace. Pounds or kilograms, feet and inches or centimeters. Result on the page, no signup required.">
+    <meta name="theme-color" content="#0f1113">
+    <meta name="color-scheme" content="dark">
+    <link rel="canonical" href="https://martinbarna.cz/en/calculator/">
+    <link rel="alternate" hreflang="en" href="https://martinbarna.cz/en/calculator/">
+    <link rel="alternate" hreflang="cs" href="https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://martinbarna.cz/en/calculator/">
+    <meta property="og:title" content="Calorie and macro calculator | Martin Barna">
+    <meta property="og:description" content="Free calorie and macro calculator: kcal, protein, fat, carbs and weekly pace. Result on the page.">
+    <meta property="og:image" content="https://martinbarna.cz/en/og/en-coaching.jpg?v=1013">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Martin Barna, nutrition and fitness coach">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calorie and macro calculator | Martin Barna">
+    <meta name="twitter:description" content="Free calorie and macro calculator: kcal, protein, fat, carbs and weekly pace. Result on the page.">
+    <meta name="twitter:image" content="https://martinbarna.cz/en/og/en-coaching.jpg?v=1013">
+    <link rel="icon" href="/favicon-g3.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32-g3.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
+    <link rel="preload" href="/assets/vendor/fonts/barlow-condensed-latin-800.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/assets/vendor/fonts/poppins-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Calorie and macro calculator",
+      "description": "Free calorie and macro calculator: kcal, protein, fat, carbs and weekly pace. Pounds or kilograms, feet and inches or centimeters. Result on the page.",
+      "url": "https://martinbarna.cz/en/calculator/",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Web",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "author": { "@id": "https://martinbarna.cz/#martin" },
+      "provider": { "@id": "https://martinbarna.cz/#org" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://martinbarna.cz/en/" },
+        { "@type": "ListItem", "position": 2, "name": "Calorie and macro calculator", "item": "https://martinbarna.cz/en/calculator/" }
+      ]
+    }
+    </script>
+    <style>
+        :root { --acc:#EBB12C; --acc-l:#F6CD63; --txt:#f0eadf; --mut:#aeb4ba; --warm:#cabfb1; --bg:#0f1113; }
+        * { box-sizing:border-box; }
+        [hidden] { display:none!important; }
+        html { scroll-behavior:smooth; }
+        body { margin:0; font-family:'Poppins',Arial,sans-serif; color:var(--txt); background:#0f1113; line-height:1.6; }
+        a { color:var(--acc-l); }
+        img { max-width:100%; height:auto; }
+        .wrap { max-width:1080px; margin:0 auto; padding:0 20px; }
+        h1,h2,h3 { color:#fff; line-height:1.2; margin:0 0 .8rem; }
+        h1 { font-size:clamp(1.7rem,4.6vw,2.6rem); font-weight:800; max-width:22ch; }
+        .lead { color:var(--warm); font-size:1.02rem; max-width:42rem; margin:0 0 1rem; }
+        .skip-link { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+        .skip-link:focus { position:fixed; left:8px; top:8px; width:auto; height:auto; margin:0; clip:auto; overflow:visible; background:#EBB12C; color:#161616; font-weight:700; padding:10px 18px; z-index:2000; text-decoration:none; }
+        a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; }
+        .nav { display:block; position:sticky; top:0; z-index:10; background:#0c0b0a; border-bottom:1px solid rgba(255,255,255,.08); }
+        .nav .wrap { max-width:1320px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; position:relative; }
+        .brand { font-weight:800; text-decoration:none; font-size:1.15rem; display:flex; align-items:center; gap:8px; flex-shrink:0; color:#fff; }
+        .brand img { height:30px; width:auto; aspect-ratio:194/96; display:block; }
+        .brand span { white-space:nowrap; }
+        .navlinks { display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+        .navlinks a { text-decoration:none; font-weight:600; font-size:.78rem; color:#cabfb4; }
+        .navlinks a:hover { color:#F6CD63; }
+        .navlinks a.cta { white-space:nowrap; padding:7px 12px; border-radius:50px; background:#EBB12C; color:#1A1222; }
+        .nav-toggle { position:absolute; opacity:0; width:0; height:0; pointer-events:none; }
+        .nav-burger { display:none; background:transparent; border:1px solid rgba(255,255,255,.18); color:#cabfb4; border-radius:8px; padding:5px 11px; font-size:1.2rem; line-height:1; cursor:pointer; }
+        @media (max-width:1259px) {
+            .nav-burger { display:block; }
+            .navlinks { display:none; position:absolute; top:calc(100% + 1px); left:0; right:0; background:#0c0b0a; flex-direction:column; align-items:stretch; gap:2px; padding:8px 20px 16px; border-top:1px solid rgba(255,255,255,.08); }
+            .nav-toggle:checked ~ .navlinks { display:flex; }
+            .navlinks a { display:block; padding:10px 2px; font-size:1rem; border-bottom:1px solid rgba(255,255,255,.08); }
+            .navlinks a.cta { text-align:center; margin-top:8px; border-bottom:none; }
+        }
+        .crumbs { font-size:.85rem; color:var(--mut); padding:14px 0 0; }
+        .crumbs a { color:var(--warm); text-decoration:none; }
+        main { padding:1.2rem 0 3rem; }
+        .layout { display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; align-items:start; }
+        .layout > * { min-width:0; }
+        .cbox, .result, .lead { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:1.4rem 1.2rem; }
+        .result { background:linear-gradient(135deg,rgba(235,177,44,.16),rgba(235,177,44,.04)); border-color:rgba(235,177,44,.4); }
+        .field { margin-bottom:.85rem; min-width:0; }
+        .field label, .lbl { display:block; font-weight:600; font-size:.88rem; margin-bottom:.3rem; }
+        input[type=text], input[type=email], select {
+            width:100%; max-width:100%; background:#1a1c20; border:1px solid rgba(255,255,255,.18); border-radius:12px;
+            color:#fff; font-family:inherit; font-size:16px; padding:.72rem .9rem;
+        }
+        select option { color:#161616; background:#fff; }
+        .seg { display:flex; flex-wrap:wrap; gap:4px; border:1px solid rgba(255,255,255,.18); border-radius:50px; padding:3px; margin:0 0 1rem; background:rgba(255,255,255,.04); }
+        .seg label { cursor:pointer; }
+        .seg input { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); }
+        .seg span { display:block; padding:.45rem .8rem; border-radius:50px; font-size:.84rem; font-weight:600; color:var(--warm); }
+        .seg input:checked + span { background:#EBB12C; color:#1A1222; }
+        .row2 { display:grid; grid-template-columns:1fr 1fr; gap:.8rem; }
+        .row2 > * { min-width:0; }
+        .note, .fine, .disclaimer { color:var(--mut); font-size:.8rem; margin:.4rem 0 0; }
+        .btn { display:inline-block; width:100%; font-weight:700; text-decoration:none; border-radius:50px; padding:.85rem 1.2rem; font-size:1rem; border:none; cursor:pointer; font-family:inherit; text-align:center; background:#EBB12C; color:#1A1222; }
+        .btn.ghost { background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,.25); margin-top:.6rem; }
+        .btn[disabled] { opacity:.65; cursor:progress; }
+        .big { font-size:clamp(1.8rem,6vw,2.4rem); font-weight:800; color:#fff; line-height:1.1; margin:.2rem 0; }
+        .big small { font-size:1rem; font-weight:600; color:var(--warm); }
+        .macros { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:.5rem; margin:.6rem 0; }
+        .macros div { background:rgba(0,0,0,.25); border-radius:12px; padding:.55rem .4rem; text-align:center; min-width:0; }
+        .macros b { display:block; color:#fff; font-size:1.15rem; }
+        .macros span { color:var(--warm); font-size:.72rem; }
+        .meta, .pace { color:var(--warm); font-size:.88rem; margin:.35rem 0; overflow-wrap:anywhere; }
+        ul.notes { margin:.4rem 0 0; padding-left:1.1rem; }
+        .check { display:flex; gap:.65rem; align-items:flex-start; margin:.4rem 0 1rem; font-size:.9rem; cursor:pointer; }
+        .check input { width:1.15rem; height:1.15rem; margin:.2rem 0 0; flex-shrink:0; accent-color:#EBB12C; }
+        .hp { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+        .err { color:#ffb4a8; font-weight:600; font-size:.9rem; }
+        .ok-msg { background:rgba(80,200,120,.12); border:1px solid rgba(80,200,120,.45); color:#d7f5e1; border-radius:14px; padding:1rem; }
+        .coach { margin:.8rem 0 0; }
+        footer { border-top:1px solid rgba(255,255,255,.08); padding:2rem 20px 2.4rem; text-align:center; color:var(--mut); font-size:.86rem; }
+        footer p { margin:.35rem 0; overflow-wrap:anywhere; }
+        footer a { color:var(--warm); }
+        @media (max-width:800px) { .layout { grid-template-columns:1fr; } }
+        @media (max-width:400px) { .macros { grid-template-columns:1fr 1fr; } }
+    </style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/arena.css?v=a8">
+    <style>
+        body { color:#f0eadf!important; background:#0f1113!important; }
+        .nav { background:#0c0b0a!important; }
+        .nav a, .navlinks a { color:#cabfb4!important; }
+        .navlinks a.cta, .btn:not(.ghost) { background:#EBB12C!important; color:#1A1222!important; }
+        input, select { color:#fff!important; background:#1a1c20!important; }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="nav"><div class="wrap"><a class="brand" href="/en/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" width="61" height="30" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Open menu">&#9776;</label><nav class="navlinks" aria-label="Main menu"><a href="/en/#kit">Free kit</a><a href="/en/calculator/">Calculator</a><a href="/en/workout/">Workout plan</a><a href="/en/#coaching">Coaching</a><a href="/en/blog/">Articles</a><a href="/en/protein/">Protein tool</a><a href="/kalkulacka-kalorii-a-makrozivin/" lang="cs" hreflang="cs">Česky</a><a class="cta" href="/en/#apply">Apply</a></nav></div></div>
+<main id="main">
+    <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb"><a href="/en/">Home</a> › <span>Calorie and macro calculator</span></nav>
+        <h1>Calorie and macro calculator</h1>
+        <p class="lead">Kcal, protein, fat, carbs and a weekly pace. Same formula as the Czech calculator on this site (Mifflin-St Jeor). The result shows here, free, before you type an email.</p>
+        <div class="layout">
+            <form id="calc-form" class="cbox" novalidate>
+                <div class="seg" role="radiogroup" aria-label="Units">
+                    <label><input type="radio" name="units" value="metric"><span>Metric (kg, cm)</span></label>
+                    <label><input type="radio" name="units" value="imperial" checked><span>Imperial (lb, ft + in)</span></label>
+                </div>
+                <div class="field" data-units="metric" hidden>
+                    <label for="c-wkg">Weight (kg)</label>
+                    <input id="c-wkg" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="80">
+                </div>
+                <div class="field" data-units="imperial">
+                    <label for="c-wlb">Weight (lb)</label>
+                    <input id="c-wlb" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="176">
+                </div>
+                <div class="field" data-units="metric" hidden>
+                    <label for="c-hcm">Height (cm)</label>
+                    <input id="c-hcm" type="text" inputmode="decimal" autocomplete="off" maxlength="6" placeholder="178">
+                </div>
+                <div class="field row2" data-units="imperial">
+                    <div><label for="c-hft">Height (ft)</label><input id="c-hft" type="text" inputmode="numeric" autocomplete="off" maxlength="2" placeholder="5"></div>
+                    <div><label for="c-hin">(in)</label><input id="c-hin" type="text" inputmode="decimal" autocomplete="off" maxlength="4" placeholder="10"></div>
+                </div>
+                <div class="field">
+                    <label for="c-age">Age (years)</label>
+                    <input id="c-age" type="text" inputmode="numeric" autocomplete="off" maxlength="3" placeholder="35">
+                </div>
+                <div class="field">
+                    <label for="c-sex">Sex</label>
+                    <select id="c-sex">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <p class="note">The formula differs by about 160 kcal between the two. Pick the one closer to your body.</p>
+                </div>
+                <div class="field">
+                    <label for="c-act">Activity</label>
+                    <select id="c-act">
+                        <option value="sedavy">Sedentary (office job, little movement)</option>
+                        <option value="lehka">Light (exercise 1 to 3 times a week)</option>
+                        <option value="stredni" selected>Moderate (exercise 3 to 5 times a week)</option>
+                        <option value="vysoka">High (exercise 6 to 7 times a week)</option>
+                        <option value="extremni">Very high (physical job or training twice a day)</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="c-goal">Goal</label>
+                    <select id="c-goal">
+                        <option value="hubnuti">Lose fat faster (bigger deficit)</option>
+                        <option value="mirne_hubnuti" selected>Lose fat at a calm pace (smaller deficit)</option>
+                        <option value="udrzeni">Maintain weight</option>
+                        <option value="mirny_narust">Build muscle (small surplus)</option>
+                        <option value="narust">Gain faster (bigger surplus)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Calculate</button>
+                <p class="err" id="calc-err" role="alert" hidden></p>
+            </form>
+            <div>
+                <div class="result" id="calc-result" aria-live="polite">
+                    <h2>Your numbers</h2>
+                    <p class="big"><span id="r-kcal">-</span> <small>kcal a day</small></p>
+                    <div class="macros">
+                        <div><b id="r-protein">-</b><span>protein, g</span></div>
+                        <div><b id="r-fat">-</b><span>fat, g</span></div>
+                        <div><b id="r-carbs">-</b><span>carbs, g</span></div>
+                        <div><b id="r-fiber">-</b><span>fiber, g</span></div>
+                    </div>
+                    <p class="meta" id="r-meta"></p>
+                    <p class="pace" id="r-pace"></p>
+                    <ul class="notes" id="r-notes" hidden></ul>
+                    <p class="disclaimer">Not medical advice. These numbers come from a standard formula (Mifflin-St Jeor) and are a starting point, not a diagnosis or a treatment plan. If you are pregnant or breastfeeding, have or had an eating disorder, take medication that affects weight or appetite, or have a medical condition, talk to your doctor before you change how you eat. Adults 18 and over.</p>
+                </div>
+                <div class="lead" id="lead-box" hidden>
+                    <h2>Get the free Eating Out Playbook</h2>
+                    <p class="lead">The numbers stay on this page either way. The playbook is the PDF my clients use in restaurants.</p>
+                    <form id="lead-form" novalidate>
+                        <div class="field">
+                            <label for="lead-first">First name</label>
+                            <input id="lead-first" name="first_name" type="text" autocomplete="given-name" maxlength="80">
+                        </div>
+                        <div class="field">
+                            <label for="lead-email">Email</label>
+                            <input id="lead-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254">
+                        </div>
+                        <div class="hp" aria-hidden="true"><label for="lead-website">Website</label><input id="lead-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+                        <label class="check" for="lead-consent"><input id="lead-consent" name="consent" type="checkbox"><span id="lead-consent-text">Yes, send me the Fat Loss Kit, a short email series after it, and then about one email a week with tips and coaching offers. I can unsubscribe anytime.</span></label>
+                        <button type="submit" class="btn">Get the free Playbook</button>
+                        <p class="err" id="lead-err" role="alert" hidden></p>
+                    </form>
+                    <div class="ok-msg" id="lead-ok" tabindex="-1" hidden>
+                        <p>Saved, <span id="lead-ok-name"></span>. Your numbers on this page: <b><span id="lead-ok-kcal"></span> kcal</b>, <b><span id="lead-ok-protein"></span> g protein</b>, <b><span id="lead-ok-fat"></span> g fat</b>, <b><span id="lead-ok-carbs"></span> g carbs</b>.</p>
+                        <p>Eating Out Playbook: <a href="/download/eating-out-playbook.pdf" download>Download the PDF</a>. This signup is stored for the emails you just agreed to.</p>
+                    </div>
+                    <p class="fine">Martin Barna (Czech business ID 76383032) stores your name, email, and the calculator result (kcal, protein, activity, goal, units). Not your age, height or weight. Until you unsubscribe, or after 3 years without activity. <a href="/en/privacy/">Privacy Policy</a>.</p>
+                    <p class="coach">Want these numbers adjusted every week from what you actually eat? <a href="/en/#apply">Apply for coaching</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <p>Martin Barna · nutrition and fitness coach · Ostrava, Czech Republic</p>
+    <p lang="cs">Czech business ID (IČO) 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</p>
+    <p>Contact: <a href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a></p>
+    <p><a href="/en/privacy/">Privacy Policy</a> · <a href="#" data-cookie-settings>Cookie settings</a> · <a href="/en/calculator/">Calculator</a> · <a href="/en/workout/">Workout plan</a> · <a href="/kalkulacka-kalorii-a-makrozivin/" lang="cs" hreflang="cs">Česky</a></p>
+</footer>
+<script defer src="/assets/analytics.js?v=g24"></script>
+<script src="/assets/meal-gen.js?v=20261001a"></script>
+<script src="/en/calc-en.js?v=1013b"></script>
+<script src="/en/calculator/page.js?v=1013a"></script>
+</body>
+</html>
