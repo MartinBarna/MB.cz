@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protein and high-protein recipes: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="How much protein to eat, how to spread it, and 14 fast recipes from ordinary food. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Protein and high-protein recipes</h1>
+    <p class="lead">Protein is the macro that matters most to you: it keeps you full, it protects muscle in a deficit, and it is what muscle gain sits on. First the "why and how much", from the research. Then a pile of fast recipes from ordinary ingredients. Practical, cheap, no performance at the stove.</p>
+
+    <h2>Why protein matters this much</h2>
+    <p>Of the three macros, protein is the important one wherever you are headed: losing fat, holding your shape, or gaining. It is not only "building material for muscle". It does several jobs at once:</p>
+    <ul class="check">
+      <li><b>It fills you up best.</b> Of the macros, protein has the strongest effect on feeling full: more protein in a meal means less hunger between meals and an easier time holding calories. In fat loss that is often the difference between "this works" and "this doesn't" [4,7].</li>
+      <li><b>It protects muscle when you are in a deficit.</b> When you lose weight, the body also reaches for muscle. A higher protein intake in a calorie deficit measurably spares more active muscle and supports muscle protein synthesis. More of the weight you lose is then fat, and less is muscle [8].</li>
+      <li><b>Thermic effect (TEF).</b> Digesting protein burns more energy than digesting carbs or fat. Some of the calories from protein "leave" during digestion. A small thing, but it works in your favour [7].</li>
+      <li><b>It is what muscle gain sits on.</b> With strength training, enough protein measurably increases gains in strength and muscle mass. Past a sensible ceiling, adding more protein does not help further. More is not better [1].</li>
+    </ul>
+    <div class="callout"><b>Treat protein as the frame of the diet.</b> Build every meal around a protein source and fill in the rest. Get this right and you have done 80% of the work. The rest is fine-tuning. <img src="data:image/png;base64,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" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"></div>
+
+    <h2>How much per day, and how to spread it</h2>
+    <p>For someone who trains and wants to keep or build muscle, <b>1.6-2.2 g of protein per kg of body weight</b> per day works well [1,2,3]. The low end is enough for most people. The top end makes sense mainly in a hard deficit, when you want to defend muscle as much as you can. At 80 kg that is about 130-175 g a day.</p>
+    <p><b>How you spread it</b> matters as much as <b>how much</b>. The body can use only a limited dose at one sitting for building muscle. More protein in one go does not push muscle synthesis any further. A practical rule: about <b>0.4 g/kg per meal</b>, split across <b>3-5 meals</b> a day [5,6]. At 80 kg that is about 30-40 g of protein per meal, a few times a day. That works better than two giant doses [5].</p>
+    <p>Behind that is the <b>"leucine threshold"</b>: to kick off muscle protein synthesis in a meal, the portion needs enough essential amino acids, leucine above all. You hit that with a portion around 0.4 g/kg from a good source [6]. That is why it is better to spread protein through the day than to dump it all into dinner.</p>
+
+    <h2>Protein sources: what, and from where</h2>
+    <p>Protein is either <b>animal</b> (meat, fish, eggs, dairy) or <b>plant</b> (legumes, grains, soy, nuts). The key difference is <b>completeness</b>: whether the source has all the essential amino acids in a good ratio, and how well you absorb it:</p>
+    <ul class="check">
+      <li><b>Animal = complete.</b> Meat, fish, eggs and dairy have the full amino acid profile, including enough leucine, and the body uses them well. One source in a meal covers the portion comfortably [3].</li>
+      <li><b>Plant = usually better combined.</b> Single plant sources tend to be "weaker" in one amino acid (legumes are low in methionine, grains are low in lysine). Combine them across the day (lentils + bread, beans + rice) and the profile fills in. Soy is the exception. It is complete on its own.</li>
+      <li><b>Use a bit more if you eat mostly plants.</b> Absorption is often lower, so on a mostly plant diet I would aim toward the top of the intake range and watch the leucine in each portion [2,3].</li>
+    </ul>
+    <p><b>Cheap sources that actually fill you:</b> eggs, low-fat quark or Greek yogurt, cottage cheese, skyr and cultured dairy, chicken thighs, lean mince, canned tuna, lentils, beans and chickpeas, frozen fish fillets. You get the protein without a fuss and without an expensive shop.</p>
+
+    <div class="callout"><b>How to read the recipes:</b> Each one has ingredients with weights, a short method, and macros for 1 portion: <b>P</b> = protein, <b>C</b> = carbs, <b>F</b> = fat (grams), plus a rough kcal figure. Adjust the weights to your own target. They are not sacred. Grams stay the amount to cook. Ounces and cups in brackets are approximate, so you can shop without a scale.</div>
+
+    <h2>Breakfast</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Quark bowl with oats</b><br><small>200 g low-fat quark or Greek yogurt (about 7 oz), 40 g oats (about 1/2 cup), 100 g frozen fruit (about 3.5 oz), 10 g honey (about 2 tsp).<br>1) Pour a little water or milk over the oats. 2) Stir in the quark and honey. 3) Fruit on top.<br><b>P 32 · C 45 · F 6 · ~360 kcal</b></small></div>
+      <div class="step"><b><span class="n">2</span>Scrambled eggs with cottage cheese</b><br><small>3 eggs, 100 g cottage cheese (about 3.5 oz), 1 slice of ham, salt, pepper, 5 g oil (about 1 tsp).<br>1) Beat the eggs. 2) Fry them in the oil. 3) Toward the end, stir in the cottage cheese and chopped ham.<br><b>P 34 · C 4 · F 22 · ~360 kcal</b></small></div>
+      <div class="step"><b><span class="n">3</span>Protein oats</b><br><small>50 g oats (about 1/2 cup), 250 ml milk (about 1 cup), 30 g protein powder, vanilla (about 1 oz), 1 banana.<br>1) Cook the oats in the milk. 2) Once it has cooled a bit, stir in the protein. 3) Add sliced banana.<br><b>P 38 · C 55 · F 9 · ~460 kcal</b></small></div>
+    </div>
+
+    <h2>Lunch</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">4</span>Chicken with rice and vegetables</b><br><small>150 g chicken breast (about 5.3 oz), 60 g rice, dry (about 1/3 cup), 150 g frozen vegetables (about 5.3 oz), 5 g oil (about 1 tsp), seasoning.<br>1) Cook the rice. 2) Salt and season the chicken and sear it. 3) Add the vegetables and let them soften.<br><b>P 42 · C 50 · F 9 · ~470 kcal</b></small></div>
+      <div class="step"><b><span class="n">5</span>Lentils with egg</b><br><small>80 g red lentils, dry (about 1/3 cup), 2 hard-boiled eggs, 1 onion, 5 g oil (about 1 tsp), vinegar.<br>1) Cook the lentils until soft. 2) Fry the onion. 3) Mix, and put the chopped eggs on top.<br><b>P 32 · C 48 · F 16 · ~450 kcal</b></small></div>
+      <div class="step"><b><span class="n">6</span>Tuna pasta</b><br><small>70 g pasta, dry (about 2.5 oz), 1 can of tuna in its own juice, 100 g sweetcorn (about 3.5 oz), 30 g yogurt (about 2 tbsp).<br>1) Cook the pasta. 2) Drain the tuna. 3) Mix with the sweetcorn and yogurt.<br><b>P 40 · C 58 · F 6 · ~470 kcal</b></small></div>
+      <div class="step"><b><span class="n">7</span>Lean beef mince with potato</b><br><small>120 g lean ground beef (about 4.2 oz), 250 g potatoes (about 8.8 oz), 1 onion, 5 g oil (about 1 tsp), seasoning.<br>1) Boil the potatoes. 2) Fry the onion and brown the meat. 3) Salt and serve.<br><b>P 36 · C 42 · F 16 · ~460 kcal</b></small></div>
+    </div>
+
+    <h2>Dinner</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">8</span>Cheese and vegetable omelette</b><br><small>3 eggs, 40 g mild cheese, 30% fat in dry matter, such as Edam (about 1.4 oz), 1 pepper, 5 g oil (about 1 tsp), salt, pepper.<br>1) Beat the eggs. 2) Pour them into the pan, scatter on the cheese and pepper. 3) Fold and finish cooking.<br><b>P 28 · C 6 · F 26 · ~370 kcal</b></small></div>
+      <div class="step"><b><span class="n">9</span>Baked fish fillet with vegetables</b><br><small>200 g frozen fish fillet, cod (about 7 oz), 200 g zucchini (about 7 oz), 5 g oil (about 1 tsp), lemon, salt.<br>1) Put the fish and zucchini on a tray. 2) Drizzle with oil and lemon. 3) Bake 20 min at 200 &deg;C (about 390 &deg;F).<br><b>P 38 · C 7 · F 9 · ~270 kcal</b></small></div>
+      <div class="step"><b><span class="n">10</span>Skyr with sliced chicken</b><br><small>150 g skyr (about 5.3 oz), 100 g sliced chicken or chicken ham (about 3.5 oz), 1 tomato, 50 g rye bread (about 1.8 oz).<br>1) Salt and season the skyr as a dip. 2) Slice the bread. 3) Serve with the chicken and tomato.<br><b>P 38 · C 28 · F 5 · ~310 kcal</b></small></div>
+    </div>
+
+    <h2>Snack</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">11</span>Protein yogurt with nuts</b><br><small>200 g plain yogurt, Greek style (about 7 oz), 20 g walnuts (about a small handful), 80 g strawberries (about 2.8 oz).<br>1) Put the yogurt in a bowl. 2) Scatter chopped walnuts on top. 3) Add the strawberries.<br><b>P 18 · C 14 · F 18 · ~290 kcal</b></small></div>
+      <div class="step"><b><span class="n">12</span>Cottage cheese on rye bread</b><br><small>120 g cottage cheese (about 4.2 oz), 1 slice of rye bread (50 g, about 1.8 oz), 1 hard-boiled egg, chives.<br>1) Spread the cottage cheese on the bread. 2) Egg slices on top. 3) Scatter chives.<br><b>P 26 · C 26 · F 11 · ~300 kcal</b></small></div>
+    </div>
+
+    <h2>A sweet version</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">13</span>Protein quark cream</b><br><small>250 g low-fat quark or Greek yogurt (about 8.8 oz), 30 g chocolate protein powder (about 1 oz), 50 ml milk (about 3 tbsp), 15 g cocoa (about 2 tbsp), 10 g honey (about 2 tsp).<br>1) Beat the quark, protein and milk smooth. 2) Stir in the cocoa and honey. 3) Chill, and put a few raspberries on top.<br><b>P 48 · C 24 · F 8 · ~370 kcal</b></small></div>
+      <div class="step"><b><span class="n">14</span>Skyr "cheesecake" in a glass</b><br><small>200 g skyr (about 7 oz), 50 g fat-free sour cream (about 1.8 oz), 20 g protein powder, vanilla (about 0.7 oz), 25 g crushed plain biscuits (about 0.9 oz), 80 g fruit (about 2.8 oz).<br>1) Stir the skyr, sour cream and protein together. 2) Put the biscuit crumbs on the bottom. 3) Layer the cream and the fruit.<br><b>P 42 · C 32 · F 6 · ~360 kcal</b></small></div>
+    </div>
+
+    <div class="callout"><b>Practical tip:</b> Pick 2-3 recipes you like and that fit your budget, and make them your rotation. Fewer decisions = more success. A fixed frame for the diet sticks better than inventing something new every day. I have tried this on myself and with clients, and it works. :)</div>
+
+    <h2>How to raise protein without cooking</h2>
+    <p>The usual problem is not "I don't know a recipe". It is that you simply cannot fit enough protein into the day. Here is the rescue: things you take out of the fridge and eat. No cooking. Done in a minute:</p>
+    <ul class="check">
+      <li><b>Quark and skyr.</b> 250 g low-fat quark = about 30 g of protein. A pot of skyr is about 16-18 g. Eat it as it is, salt it, or sweeten it with fruit.</li>
+      <li><b>Cottage cheese and high-protein yogurt.</b> Cottage cheese is about 12 g per 100 g. High-protein yogurts can be 18-20 g per pot. An easy snack for work.</li>
+      <li><b>Hard-boiled eggs.</b> Boil a few ahead. One egg is about 6-7 g of protein, and they travel in a bag anytime.</li>
+      <li><b>Lean ham and meat.</b> Decent ham (a high meat content), sliced chicken, slices of roast meat. A few slices and you have 15-20 g extra.</li>
+      <li><b>Lean meat from the cupboard.</b> Canned tuna in its own juice (about 25 g per can) is the cheapest protein backup in the kitchen.</li>
+      <li><b>Legumes.</b> Canned chickpeas or beans: drain them and throw them into a salad. Plant protein and fibre, no work.</li>
+      <li><b>Protein powder.</b> The fastest way to fill a missing 20-30 g when food will not get you there. Not a must, but a practical crutch: a scoop into milk or into porridge and you are done.</li>
+    </ul>
+
+    <h2>How to keep the macros in line</h2>
+    <ul class="check">
+      <li>Want more protein? Add a portion of quark, skyr, cottage cheese or an extra egg. Cheap, and no work.</li>
+      <li>Losing fat? Keep the protein and the vegetables, and cut oil and the sides (rice, pasta, bread).</li>
+      <li>Gaining? Flip it: add the side, plus fats that earn their place (nuts, olive oil, avocado).</li>
+      <li>Drink. Water, tea, coffee without sugar. Liquid calories hide easily, and then you wonder where they went.</li>
+    </ul>
+
+    <div class="callout"><b>Summary:</b> the target is <b>1.6-2.2 g of protein per kg</b> a day [1,2,3], spread over 3-5 meals of about <b>0.4 g/kg</b> [5,6]. Build every meal around a protein source and adjust the rest. <b>Your action step this week:</b> work out your daily protein (body weight &times; 1.8) and, at every meal, check that there is at least one proper source. If the day runs short, use quark, skyr, or a scoop of protein. Be Effective. <img src="data:image/png;base64,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" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"></div>
+
+    <div class="foot">
+      <div>&copy; <span class="brandName2">Martin Barna</span>: client guide. Share only with the author's permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Morton RW, et al. A systematic review, meta-analysis and meta-regression of protein supplementation on resistance training. Br J Sports Med. 2018;52(6):376-384. [2] J&auml;ger R, et al. International Society of Sports Nutrition Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20. [3] Phillips SM, Van Loon LJC. Dietary protein for athletes: from requirements to optimum adaptation. J Sports Sci. 2011;29 Suppl 1:S29-S38. [4] Leidy HJ, et al. The role of protein in weight loss and maintenance. Am J Clin Nutr. 2015;101(6):1320S-1329S. [5] Areta JL, et al. Timing and distribution of protein ingestion during prolonged recovery from resistance exercise alters myofibrillar protein synthesis. J Physiol. 2013;591(9):2319-2331. [6] Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal for muscle-building? J Int Soc Sports Nutr. 2018;15:10. [7] Westerterp-Plantenga MS, et al. Dietary protein, weight loss, and weight maintenance. Annu Rev Nutr. 2009;29:21-41. [8] Pasiakos SM, et al. Effects of high-protein diets on fat-free mass and muscle protein synthesis following weight loss. FASEB J. 2013;27(9):3837-3847. Note: macros and calories are rough and can differ by brand, the exact weight and the cooking. This guide is information. It is not a personal meal plan from your coach.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Protein recipes';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>
