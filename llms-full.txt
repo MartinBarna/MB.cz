@@ -12592,7 +12592,7 @@ Je to pozorovací studie, takže ukazuje souvislost, příčinu z ní s jistotou
 
 ## Chodíš 10 tisíc kroků a váha stojí? Proč
 URL: https://martinbarna.cz/clanky/kroky-vs-presnost-jidla.html
-Autor: Martin Barna · Vydáno: 2026-06-23
+Autor: Martin Barna · Vydáno: 2026-06-23 · Aktualizováno: 2026-10-13
 
 Nachodíš 10 tisíc kroků, jíš „zdravě" a váha pořád stojí. Znáš to?
 
@@ -12603,7 +12603,7 @@ Nejspíš nevíš přesně, kolik toho sníš, a tělo si část výdeje z chůz
 
 Stejná infografická série, jakou dávám na sítě. Tady na jednom místě.
 
-Četl jsem nedávno studii (Knaan a spol., Communications Medicine 2026). Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky. Klesl klidový výdej, hůř se spalo, chůze začala být úspornější a přes den se člověk nevědomky hýbal míň.
+Četl jsem nedávno studii (Knaan a spol., Communications Medicine 2026). Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky. Klesl klidový výdej, klesl i výdej energie ve spánku, chůze začala být úspornější a přes den se člověk nevědomky hýbal míň.
 
 Z toho plyne jednoduché pořadí věcí. Nejdřív rozhoduje strava, tedy deficit a dost bílkovin. Pak silák, ať si v redukci udržíš svaly. Kroky a kardio jsou bonus, ne základ.
 
@@ -12623,7 +12623,7 @@ Zdroje v carouselu
 
 Jak si tělo bere zpátky kalorie spálené chůzí?
 
-Ve studii Knaan a spol. (2026) lidem klesl klidový výdej, hůř spali, chůze začala být úspornější a přes den se nevědomky hýbali míň. Dohromady si tělo vzalo zpátky skoro 40 % výdeje z chůze.
+Ve studii Knaan a spol. (2026) lidem klesl klidový výdej, klesl i výdej energie ve spánku, chůze začala být úspornější a přes den se nevědomky hýbali míň. Dohromady si tělo vzalo zpátky skoro 40 % výdeje z chůze.
 
 Co je na hubnutí důležitější, kroky, nebo jídlo?
 
@@ -17959,7 +17959,7 @@ Je to proces regenerace svalové tkáně, který dočasně roste po jídle s bí
 
 ## E-book Nejčastější dotazy klientů – Proč tělesná váha kolísá, i když hubnete
 URL: https://martinbarna.cz/clanky/e-book-nejcastejsi-dotazy-klientu-proc-telesna-vaha-kolisa-i-kdyz-hubn.html
-Autor: Martin Barna · Vydáno: 2025-01-26
+Autor: Martin Barna · Vydáno: 2025-01-26 · Aktualizováno: 2026-10-13
 
 #### Nejčastější dotazy klientů
 
@@ -17986,11 +17986,11 @@ Jak tělo ukládá energii
 
 - zaměříme se na rozdíl, když tělo uloží energii do tukových zásob jako mastné kyseliny, a když do svalů a jater jako glykogen
 
-Netrénovaný člověk má na 100 g svalů v zásobě zhruba 12 g glykogenu.
+Netrénovaný člověk má na kg svalů v zásobě zhruba 12 g glykogenu.
 
 - Glykogen je forma sacharidů, které si tělo ukládá hlavně pro regulaci hladiny krevního cukru (glukózy), na pohyb a fungování ve vyšší intenzitě, kdy na pokrytí akutních potřeb mastné kyseliny nestačí.
 
-- Trénovaný atlet může mít v zásobě až 33 g glykogenu na 100 g svaloviny, což je téměř 3x více než netrénovaný člověk.
+- Trénovaný atlet může mít v zásobě až 33 g glykogenu na kg svaloviny, což je téměř 3x více než netrénovaný člověk.
 
 Na silový trénink tělo reaguje tím, že zesiluje, zvětšuje glykogenové zásoby a adaptuje se i nervovým systémem. Zásoby glykogenu si zvětšuje hlavně proto, že těžší a delší tréninky vyžadují víc energie a vysokou intenzitu tělo nepokryje jen z tukových zásob, tedy z mastných kyselin. Když ve fitku makáš a zatěžuješ svaly, glykogen se postupně vyčerpává a pak zase doplňuje z jídla nebo vnitřními metabolickými procesy, jako je glukoneogeneze.
 
@@ -18008,7 +18008,7 @@ Aby to dávalo smysl i bez biochemie, vezmeme si na pomoc jednoduché přirovná
 
 - Také proto, že na každý 1 gram glykogenu tělo ukládá vždy 3 gramy vody spolu s tím.
 
-Dej si teď dohromady pár čísel. Netrénovaný člověk má na 100 g svaloviny zhruba 12 g glykogenu, atlet klidně i 33 g. Průměrný netrénovaný člověk má podle většiny zdrojů v těle kolem 500 g glykogenu a na každý gram se váže vždy 3 gramy vody. Z toho je vidět, že u atletů může tělesná váha běžně kolísat o několik kilogramů, a to čistě kvůli plnění a vyprazdňování glykogenových zásob, bez ohledu na to, kolik mají v těle tuku nebo jestli zrovna hubnou.
+Dej si teď dohromady pár čísel. Netrénovaný člověk má na kg svaloviny zhruba 12 g glykogenu, atlet klidně i 33 g. Průměrný netrénovaný člověk má podle většiny zdrojů v těle kolem 500 g glykogenu a na každý gram se váže vždy 3 gramy vody. Z toho je vidět, že u atletů může tělesná váha běžně kolísat o několik kilogramů, a to čistě kvůli plnění a vyprazdňování glykogenových zásob, bez ohledu na to, kolik mají v těle tuku nebo jestli zrovna hubnou.
 
 Kolísání váhy tedy samo o sobě nic neříká o tom, jestli přibíráš nebo hubneš tuk. K tomu navíc běží tisíce metabolických procesů, které pracují s tekutinami a do váhy se taky promítají.
 
@@ -18605,7 +18605,7 @@ Svaly/sacharidy/voda a jejich vliv na váhu v kilogramech
 
 - Tělo v reakci na cvičení zvyšuje zásoby sacharidů ve svalech.
 
-- Podle materiálů z Advanced Koučink Academy je to u netrénovaného člověka kolem 12 g glykogenu na 100 g svaloviny, u hodně trénovaného atleta kolem 32 g na 100 g. To je skoro 3x tolik. Čím to? Roste objem tréninku, a ten je podle metaanalýz hlavní hnací motor svalového rozvoje (metaanalýza je analýza kupy studií na dané téma, takže stojí nad jednotlivými studiemi).
+- Podle materiálů z Advanced Koučink Academy je to u netrénovaného člověka kolem 12 g glykogenu na kg svaloviny, u hodně trénovaného atleta kolem 32 g na kg. To je skoro 3x tolik. Čím to? Roste objem tréninku, a ten je podle metaanalýz hlavní hnací motor svalového rozvoje (metaanalýza je analýza kupy studií na dané téma, takže stojí nad jednotlivými studiemi).
 
 - Svaly takhle sílí a zároveň jim rostou zásoby „glykogenu“, což se projeví tím, že se svaly zvětší.
 
