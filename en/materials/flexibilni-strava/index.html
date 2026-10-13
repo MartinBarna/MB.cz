@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flexible eating: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="How to eat flexibly and still hit your goal: energy balance, protein, the 80/20 rule and planning treats. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Flexible eating</h1>
+    <p class="lead">No food is “forbidden”. Your body doesn’t care whether a food is “clean” or “dirty”. It cares about total energy and protein over the day. I’ll show you how to have pizza and a beer and still hit your goal. Practical and based on science.</p>
+
+    <h2>Energy balance: the main lever</h2>
+    <p>Start with the most important thing: whether you lose, maintain or gain weight depends on your <b>energy balance</b>: how much energy you take in versus how much you burn [4]. No “magic” food and no “miracle” combination gets around that. To lose weight, you need a moderate <b>deficit</b>. To build muscle with minimal fat, a moderate <b>surplus</b>. One meal won’t make you lose or gain. The total over days and weeks decides.</p>
+    <p>Your body can’t tell a “clean” calorie from an “unhealthy” one by the label. It counts energy and nutrients. The <b>IIFYM</b> principle (“if it fits your macros”) says something simple: if a food fits your daily target of protein, carbs and fats, go ahead and eat it. The position of the professional society is clear: different approaches can work, but energy balance and macro composition are what primarily matter, not specific “allowed” foods [7].</p>
+
+    <div class="callout"><b>Main point:</b> <b>Energy balance</b> decides your weight [4]. Whether that weight is muscle or fat depends mainly on <b>enough protein</b> and training [6]. The rest is detail and your preference.</div>
+
+    <h2>Protein: how much and why</h2>
+    <p>Protein is the nutrient you sort out first. It keeps and builds muscle, <b>fills you up</b> more than any other nutrient and protects muscle mass in a deficit, so you lose fat and not muscle [8]. For an active person in a deficit, <b>~1.6-2.2 g per kg of body weight per day</b> works well [5]. A meta-analysis showed that getting protein intake up increases the gains in strength and muscle from training, with a sensible ceiling around ~1.6 g/kg for most people [6].</p>
+    <ul class="check">
+      <li>Have a protein source in <b>every main meal</b>: meat, fish, eggs, dairy, legumes, a quality protein powder.</li>
+      <li>A higher protein intake keeps you <b>full longer</b>, so you overeat less in a deficit [8].</li>
+      <li>This is your “anchor”. When protein is on target, the rest of the day is flexible.</li>
+    </ul>
+
+    <h2>Rigid vs. flexible: why flexible wins</h2>
+    <p>This is the core of it. A <b>rigid</b> approach (“all or nothing”, a list of forbidden foods, one slip = a ruined day) sounds disciplined but sabotages you in practice. A <b>flexible</b> approach (no food is forbidden, the whole counts) is psychologically easier to keep up. And the data confirm it:</p>
+    <ul class="check">
+      <li>Rigid control of eating is linked with <b>higher body weight, bigger swings</b> and more symptoms of disordered eating; flexible control with the opposite, more favorable profile [1].</li>
+      <li>Flexible and rigid control are two <b>measurably different dimensions</b> of dietary restraint [2].</li>
+      <li>Rigid control predicts <b>overeating and anxiety around food</b>, while flexible control is unrelated to disordered eating, or related in the opposite direction [3].</li>
+    </ul>
+    <p>The mechanism is simple: when you forbid a food, you create pressure. One “failure” then triggers the feeling “it’s ruined anyway” and sets off overeating. Flexibility removes that pressure. And, paradoxically, it leads to <b>less</b> overeating, not more [1,3].</p>
+
+    <h2>The “clean eating” myth and the 80/20 rule</h2>
+    <p>Splitting food into “clean” and “dirty” sounds logical, but it is a trap. A salad won’t save you by itself and a piece of chocolate won’t ruin anything. The total of energy and nutrients decides [4,7]. Instead of moral labels, use the practical <b>80/20</b> rule:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>~80% base</b><br><small>Minimally processed, nutritious foods: meat, fish, eggs, dairy, fruit, vegetables, legumes, whole grains. This is where your protein and fiber come from.</small></div>
+      <div class="step"><b><span class="n">2</span>~20% anything</b><br><small>Pizza, chocolate, beer, ice cream. If it fits your macros, enjoy it without guilt. No “cheat”, just food.</small></div>
+      <div class="step"><b><span class="n">3</span>No bans</b><br><small>A ban = pressure = later overeating [1,3]. Instead of “I’m not allowed”, think “how much and when”.</small></div>
+      <div class="step"><b><span class="n">4</span>The whole &gt; one meal</b><br><small>One dessert decides nothing. What you do most of the time, over days and weeks, decides [4].</small></div>
+    </div>
+
+    <h2>Fiber, vegetables and “liquid calories”</h2>
+    <p>These 80% have one main job: to give you plenty of nutrients and fullness for a reasonable amount of energy. <b>Fiber</b> does the heavy lifting: it slows digestion, keeps you full longer, and a higher fiber intake is linked with lower body weight [9]. That is why vegetables, fruit, legumes and whole grains belong in the base, and not as a punishment.</p>
+    <div class="callout"><b>Watch the liquid calories:</b> Sweet drinks, juices, smoothies, sweet coffee and especially <b>alcohol</b> add a lot of energy but barely fill you up. They can easily push you over your daily target without you “feeling” it. Alcohol also has no usable building value, and in a deficit it takes up room you would rather give to food or protein.</div>
+    <ul class="check">
+      <li>Quench your thirst mainly with water, tea and unsweetened drinks.</li>
+      <li>If you want a drink with alcohol, fine. <b>Plan it into the day</b> as part of those 20% and cut somewhere else.</li>
+      <li>Fiber and vegetables = more fullness for less energy. Your best ally in a deficit [9].</li>
+    </ul>
+
+    <h2>When to track and when not to</h2>
+    <p>Counting macros is a <b>tool, not a lifestyle</b>. It fits certain phases, and you don’t have to do it forever:</p>
+    <ul class="check">
+      <li><b>When you start</b> and have no feel for portions: a few weeks of weighing and logging open your eyes to how much you really eat.</li>
+      <li><b>When results stall</b> and you need to know where you stand (almost everyone underestimates their intake).</li>
+      <li><b>When you have a specific goal</b> (conditioning, a contest, performance) and want accuracy for a few weeks [5].</li>
+      <li><b>Once you have a feel for it</b>, you can put the tracker aside and go by the 80/20 rule and the plate. You don’t have to weigh for the rest of your life.</li>
+    </ul>
+
+    <h2>How to plan your “treats” into the day</h2>
+    <p>This is the skill that makes flexible eating work. If you know the evening will bring pizza or two beers, build the rest of the day around it:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Reserve some room</b><br><small>Keep part of your daily energy free for the evening treat. Planned = no guilt, under control.</small></div>
+      <div class="step"><b><span class="n">2</span>Cut somewhere, not everywhere</b><br><small>Lighter, filling meals with protein and fiber during the day. You save energy, not fullness.</small></div>
+      <div class="step"><b><span class="n">3</span>Keep your protein</b><br><small>Leave your protein target untouched [5,6]. Save on fats and liquid calories rather than on protein.</small></div>
+      <div class="step"><b><span class="n">4</span>Enjoy it</b><br><small>If it fits, it is part of the plan, not a “sin”. No feeling of failure, no overeating the next day [1].</small></div>
+    </div>
+
+    <div class="callout"><b>Action step:</b> This week do just one thing: set a <b>protein target</b> (~1.6-2.2 g/kg) [5] and have a protein source in every main meal. When that runs by itself, add an energy target and the 80/20 rule. Leave the bans alone. Flexibility lasts longer than an iron will [1,3]. Be Effective! <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAQAElEQVR4nOxce4wdV3n/vnNm7mPt9drO06EpAeygpFApbZW2kIdDSh9SpLzrtAHUIrUVrVCkSlXVoEpNpf5LVVH+qEhL1KpFrePExI4TcKBAIEEIEBJ/AIIAgiTgmNje3fucmXMO33ceM3Pvrh2bnXuHXeYnnZ25s7N3Zr7f9z5nVkCDWiGgQa1oCKgZDQE1oyGgZjQE1IyGgJrREFAzGgJqRkNAzWgIqBkNATWjIaBmNATUjIaAmtEQUDMaAmpGQ0DNaAioGQ0BNaMhoGY0BNSMhoCaEcHPAcaf+/1fRVDXgzDXghQSROsr8WLrOF772I9giwOhRqSfe+fNSa9/CIy+SLRiEO2IZM9DAsYxoJRfBY0HSU8ewbcc/DFsQdRGwOD4zUey5ZXbRDt2Qmfht6UbTEBE3tGgu0XeGvkJGg/jWx57FLYQaiFg/OlbHhyfOvNPGEkn+I4EyYLvCPosSPt9aMoJEG6gJGPofBui1gN41X8/BVsAtQThZLX3DyxX1nIRIw3eN3SIhqYTRvRjTCNVAJqGSN2QhgjAfXTXT5jvvesO2AKYOwGDZ256zKRZbLWfhI+UBiDSVpHmZ8TKkIQ8mBp8TBEhkoZgEkQELfxf850/vRI2OeZOgOqPbhOk6QISkqWmQf4eWqT5tB2Slq/0AVZXaQy88EnoI+NG6u9YsiuKW9Aa/xtscsw1DV09dss/qn4vjpBdCzkcZUBnRAZZAy4ugRkug1n+JlnDCKzvFx2A1iJgZzdAh261RSSwixL8O2IiE78LmxxztQCdjB4QJHyDLrDqjDYZSVQp0Cltu4tgdl5J+0TA+DRg8ipZwCugBydom7nYkLjzQTMTFBVeOHAbbGLM1wVl6Q4OtAwbcsmvm4yET5ZAtQAJNrO/eWWlC89+KYKXXtKgkoRczxBMSq4pod+n5IdSOqZoGCYi2webGHNzQWeO7H8cRysQUbajNWm/ZiIMEUCC7LPGn6T0U4NEA3vecBHs2Xtp8PU0+DbJajKKC6M2uSIigdMl/g5jMtjEmBsBZjT6A0nVbpaOJ44jCRwpveRsqLBHdBUK+3lLAsUCirkULJz2j+mXMvZ1gv4GbGLMhYDex3/zMoROW6n+ROVHXR+SMWk9pZa8zYFsHUwCD09Cq0skkPa36bzln9DnBY4jQ7z66DOwiTGXGJD19Id0tFi6HDrlJsFLwUmNsVmRzXDC1hg/wA0mhC2BBb9A36VS9v+bvi0xFwvQJnunxC7VT+w2EqfYnEkyEeCKMOvPOb20yu8Ctd2KzAXcjOLEyFsEn8QBWEYPwibHzAlYObL/4mz5zE6wmU4XJOX4aNgCjNN8JcmVaydsjge2/cPHwQdZ+p0hbVdD0v7M5//0y+1yP+576kXY5Jg5AToxD4FsgRlTkSW7ICi/F9x64MaaMF7wwms7ZUWeCAvOb5gbzvuz1NUAbCVZ9im87rnPwhbAzAlQmbjDdtvUSXLvV1DxSiSkKyRHcj4UhZG3TEYQfLAARsaWQPUC/TmZjm3G0aknINvxh7BFMNN29JmjN+xKVuNTkvx4JEZ2mHQ79Xh6pOzKC1+4ZtzUPt8aor897oIKaskJcVhctvuv8MYnT8MWwUwtAIfyIST/LmhYwUZtyiQHYBYyai9kkI7GkAwSiDst01IL73AFV3FrUbGbxO/+2nOwBTFTAiiG3i0sAcqRwC6EJmAicj1mQYFM2xCNEipwx4hL8V92bvv6lnEt54uZEcDuJ+3hFZFg7fckSJf/Y4tcTatNbghBUkYTU3+HGgp3wYxhvvC211OU3wOd7jfwN55Zhp8DzIwAHOJDzvV4F2TTTp/GCz+9yHPB2yI7L0BNOamf/e3/Ezc+X4kVmKev3UvNpQ/TRa+jam+JaoaWrR9ICbiu0F/cT01AoakjOzAmerZ15dIf4ZsOzp2UmQXhUwdveply+D0RTSVKGlFELYc2Vb4dFnzLDW60cSksI7dNlcJfefpnVgrz/9duh3F0jBp1v0WPFtsWRnm43offF14RbClORbeAdAV7FKoebL39yQ/BnDATAvqHbtwzzMTLVvB+SOp0Rm20MQBa3NEk4ce+08mCkf5WlgdP4K9/+na4QKhj13wMlb4PpResJXUdAvKtmCQhlOckEpVgpkfwZ63rDz8CM8ZMekGZwQ8ghOwnuCFjO5/uobF4eN6X3jfx2N69oAkWc/yNS+rIm1eoOLvP1RC4zjUCKeXtFDmsCEwazc7JBRHFu8VHe5+5+6swY8yEAOo63GUFzySAJ0F44QdNw1K3E0tCiqlF97VbP3U+1zFH9/2O6otTVO0t4rrfO02CLEbukqLCWiLp993Y9st43ehL9/bNC/cuwYxQOQH9j739Cq1wD3qN58GT8E77cR0NxYKYEKW3dW4xX7/1snNdxzz91tuzcXqcIyn4gg3Lwi9/byAZpy2ibAXBAvzwx9qX4EKyLE/BjFA5AVkkP2AFD4GA4IZCj1/kvtYCS6QEIUURmrE+drZrmKM3vDEb9h5Hblev0fwpC8B1yJ52S9NuSJZJkNDabcTg8/cNYAaonAAS9Z0QhM6fgvYXPWhwKx78gHIwxNxKTEv+2vD5/Vetd400+dE3Ic24V1FkEThF6GuSISbdUU5CcEWycE10bvd1urv81IFvQcWolADOfjJ2P1C2ALfvBMBnlbaBiBA8sZSU0UO3MPvk9DWSw/u+C8koLgt8kgQscrvyd54PGSX/n6fGJWvZ8WZ1de+Zux+AClEpAZkRfw9TgnfCL08xQkngfh9K/tkLCjk3F7jXPPeO68P3j49cc8D0B29Yc+EycTnJWHzOiTmblUxZYR6n5Jo0tXMpfBAqRKUEKC3uWCN4+9mDd4x/YBMujxM5eL51PhuVGT6W//k4e9iX0muujaWf00cndsvElK8tENZ+6ZRF0Y5cMKL3iXsegYpQGQGvHtr/S6kSe4p7LRFhP5cf3G9D3z+4KDvV6Ekh34tEgsmy16XP3fJ75rM3XQPjbHu+UtpMCsyUfl4QjP9hzvrLNYewi++BilAZAVLj34UZdCxrPQNx/T8ypXhgJ+Cl2+eZYukzFM5G0t7B7NWffBlpwh7tuwLunGkS1rlAIcNc0P5AmPQPx0zpdwF66rg/f+HSEfafuPOCq/X1UBkBmRZ3OVmGZQxFIC6kEARuiu3Ew/tYYe+MhE2BkIlAnS2SN1pg90NOwE7lu0t4F1EWXFnQE0KfulYYvMTRDr8UPnxWU595lFZq6Db8K1SASrqhJyn7SUby8kimRVwFWOuSYUr7JoTEDxlux698iIRdsCXMkKYlBYhuCzSvoLYT9dxA4xUVhoM14HrCPZfQbWDVk5mS/RvtY5WZEn4Y7njc1VdABaiEAKnjv05f8yzjNDas8QnKbuVknLnbD9KTgU7TeTUET0lSJ5UmlKnHGXFc8ALnPyNi7IppOD+hC0ee+1wKsPk5mN+uu49gEZNkiDirxHtUQoDReNO0m1/fO5ddjRe6dMK2KR9i4df5vHSVMp+e81xt5ZaqUOfBaJpRMzp/o8YwWWUSykLnbMpqrsiJdUJWJTcI7nfWKopbXeuiChLizmur3PmgEhZJC69+zZOs5msoHngysAW3kqemKWn+YNV99AO7JPQO9ZZi6VyQ9pZkV9ORK9Km5Kv1Wjcyrc3s5+3Iii2vOcrCsayIBeHcEhGnD248EG+YAHpGzFS0NK3zJv8RDuhJf5+buLeEnBQB9sUB1vysD8VyFY4JdH6HBMDrdGliB0M66uXsFnOBF9C5hF8SaBhZ5kYQfJZNEhGCdNkVgb4ZNogNu6De47ce4DcuvN6ugTHB0YMXDkxqaNB8+zIeuIJodBJgeKZUJxTArn+7xsYD6jZlmMdSt1ia3ZJxvl6Xq11VukFTbIO7mm6FAJTc2TSJngyjYtggNkyASsVbXVroBIm+/IJ8CyXtLgsevI+WdgLBajezMzxBBNDULC/7P0v9gAvaLdjqC5fmWleDblWdQtsIzFvfeqrSLsN4yzJ6bdVbTmH1NAnOEtBEn4ENYuNB2NCMhs/H2SUY+9KdOgsJuiDD7stC8+0CXQpsA9L8Ab9DcG7lwjZbAas9F2qZ9f9OhjTBr4VNT5254ZTcg1bLIvCuS5KZutfJgMz6sfPA4UOwQWyYALq3yGqdlLmWGE4lgRfdKvug/BILWh8au3OUdxFC+YfWzkUMVgBW+6V64BzgoEyxwK4fpWLB8NIWVmi2BNZY5ecgpo1oIkvitHTK/UzUBLCOGzKWgKTXgSpQgQXw0wv30FhKWax2R8B0CDoFgxZxoIxKGiW8VdhXVEekzY6884F9q6ZF2c/Ivz+s3TtmRvm4Y5Vfle4VJglY437WsFUia9INqURqqAAbtwCQQ9BOYJon31nzrdiNW3ZON0tZMz0eZxXo5obTUmAONcFyQs1+/nxhcQ35dBsQKSD7Igl9XLcGaJ2gWit8Zy5TgXq9IAyTbkg5JdJJ9H2oABsmIE31R8iU/9aAC34cCO3bj5aA2Fo5egUSGff4/YHAAQttQELjV4PhZ0sqkN8Xi1LXqEv79tr85RrR1Wb5pE3JnZjJPv/ZG4Ymz96MTXOF3SrROQAVAKEC/Pgj92a8cFxIXoSlqPhMKbnJgFdFCzvouFT2PTBuJQD/M46wAoGCrxjCxkGC4jig+XVW3Xee0DdXRYR+zidMe4YJoKngGzqzoVXCmRbv2OobXKZFY7C6Q+24/5OVdBGqWZqI5rTJoosNCYG9Ua7cJS9jtVO6VdIsGeQYQRYhRxtOpYvbEPZ/DJGGJuwj3EHhNNe6e3D+Hte4nxC30MdeV1TYSps1nmMck6HcCjo695+hIlTTjGslB7NR931udRvaTMQlQi411SJMoijfRHPnRKrrjlcIQSToiFPUF0tunpfGuFoFbdYcWh4A+XQoCxzcfVqBa/RxRdp9Tq95BQxV/Xrp3U//DVSESlwQ48UP/3GKOoqQXQ8NtK5Hl9yQsoODMGcvEttkEC2YFbQ+TYI76ed30Cl5mGv2QrdFo9PoQvhB460FSPdZs/AlT7nyd92+60+efAIqQmWro6P26NGkt3Sf8DNWgqcTSfDGvgpGroZfxpNMAGVK9CDCxJQXGZgddpKQExLk0Lo/W+9R1a3R95tywaOrW4LA+Ti/yU83rqzriSwJTIBsjw9VKXxGZRbA+OG/vCfVKo5Y8zkICytwsgi7TsgLn6ygZbDaC58VJGxe1CZCLeCrc3QuBSZcDi+ilDkJQfszLgo1/xu14ZlL/+LwLqgYlb4fEC8u3zA8ffHzkMVoH0grq3VGuDdk2CHHOCbNUjA34BJ1K8gK0LuVkOVAcDVO4Fp7EowTuP1/FtRr4wmfqLMyunwGwre3BxXjxH/c/a7eyUv+yy3zLLSeV0cLcgltXUXOeWEwlH0Z6dyd0S431TkBTtud0KUVuN2S5qsshu07X3phz/sP7YUZYSae4MS/33N//9Xd/0ndWmH/BwQ6SOsOlgAAAQ5JREFUEtpmUCxTmTOUDItkQoYjrLCtBQTh+8EQcgyLF738P5e/7/D9MEPMzBWbY3vbP/j2215KVnZdZLMhKnWjGv+zDAs/AW6gOXejbTd0/XM7215JF3aP77rkvY8ehRlj5rHwxMP3fHC4suPP9Upn23wC79nBbifD9Qs/FAl0t51cXtw5vmfnez8+t//AMjeZnP7oHVetnNn5uBq13wQqalFRI7lCM2aD92DKu8VX2bdybFPQrU5yVS65HHJFsjWkWmWkUaSZiNLTkUiOd19v3r/rzsNnYM6oWyl/4VFtH6DBBaMhoGY0BNSMhoCa0RBQMxoCakZDQM1oCKgZDQE1oyGgZjQE1IyGgJrxUwAAAP//AZADCAAAAAZJREFUAwClA4Mcyj6rxwAAAABJRU5ErkJggg==" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"></div>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span>: client guide. Share only with the author’s permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Stewart TM, Williamson DA, White MA. Rigid vs. flexible dieting: association with eating disorder symptoms in nonobese women. Appetite. 2002;38(1):39–44. [2] Westenhoefer J, Stunkard AJ, Pudel V. Validation of the flexible and rigid control dimensions of dietary restraint. Int J Eat Disord. 1999;26(1):53–64. [3] Linardon J, Mitchell S. Rigid dietary control, flexible dietary control, and intuitive eating: evidence for their differential relationship to disordered eating. Eat Behav. 2017;26:16–22. [4] Hall KD, Heymsfield SB, Kemnitz JW, et al. Energy balance and its components: implications for body weight regulation. Am J Clin Nutr. 2012;95(4):989–994. [5] Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20. [6] Morton RW, et al. A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains. Br J Sports Med. 2018;52(6):376–384. [7] Aragon AA, et al. International Society of Sports Nutrition position stand: diets and body composition. J Int Soc Sports Nutr. 2017;14:16. [8] Leidy HJ, et al. The role of protein in weight loss and maintenance. Am J Clin Nutr. 2015;101(6):1320S–1329S. [9] Slavin JL. Dietary fiber and body weight. Nutrition. 2005;21(3):411–418.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Flexible eating';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>

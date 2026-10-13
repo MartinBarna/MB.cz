@@ -274,7 +274,8 @@ for (const s of stranky) {
     const autor = [].concat(c.author || [])[0];
     if (!autor || autor['@id'] !== ID.martin) chyba('CLANEK_AUTOR', rel, 'author není odkaz na #martin');
     if (!c.publisher || c.publisher['@id'] !== ID.org) chyba('CLANEK_VYDAVATEL', rel, 'publisher není odkaz na #org');
-    if (c.inLanguage !== 'cs') chyba('CLANEK_JAZYK', rel, `inLanguage je ${c.inLanguage}, čekám cs`);
+    const ocekavanyJazyk = rel.startsWith('en/') ? 'en' : 'cs';
+    if (c.inLanguage !== ocekavanyJazyk) chyba('CLANEK_JAZYK', rel, `inLanguage je ${c.inLanguage}, čekám ${ocekavanyJazyk}`);
     const meo = c.mainEntityOfPage && (c.mainEntityOfPage['@id'] || c.mainEntityOfPage);
     if (kanon && meo !== kanon) chyba('CLANEK_URL', rel, `mainEntityOfPage ${meo} ≠ canonical ${kanon}`);
     if (!c.headline) chyba('CLANEK_HEADLINE', rel, 'chybí headline');

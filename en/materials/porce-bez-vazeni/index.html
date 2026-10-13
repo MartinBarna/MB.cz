@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portions without weighing: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="Estimate portions with your own hand instead of a kitchen scale: palm, handful, thumb and fist. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Portions without weighing</h1>
+    <p class="lead">You don’t need to carry a kitchen scale everywhere. Your own hand is always with you, and it is a measure you never forget at home. I’ll show you how to estimate portions so you can stick with it and so it actually works.</p>
+
+    <h2>Why you shouldn’t weigh your food forever</h2>
+    <p>A scale is a tool, not a lifestyle. For a few weeks it is great: it teaches you what 100 grams of rice or chicken really looks like and trains your eye. But nobody keeps carrying it to work, to restaurants and to lunch at their parents’ for the rest of their life. You won’t either, and you don’t need to. The goal is a <b>good estimate you can keep up every day</b>, not accuracy to the gram.</p>
+    <p>The important part: your weight follows your energy balance, how much energy you take in versus how much you burn [1]. No measuring method gets around this law. Your hand gives you a simple way to watch that balance by eye, without counting every bite. And since portion size itself strongly drives how much you end up eating [2,3], it makes sense to have a simple measure for it that is always with you.</p>
+    <p>Hand size also usually matches body size. A bigger body has a bigger palm and needs more food, a smaller body has a smaller palm and needs less. So the measure adjusts to you by itself. It won’t be exact to the gram, but it is exact enough to keep going for months. That’s what I care about: a system you can run every day, not the most precise one for one week that you drop anyway.</p>
+
+    <div class="callout"><b>The principle:</b> one “portion” = one part of your hand. You measure protein with your <b>palm</b>, carbs with a <b>cupped handful</b>, fats with your <b>thumb</b> and vegetables with your <b>fist</b>. The thickness and width of the portion match the thickness and width of that part of your hand. Your hand = your portion, so it adjusts to your sex and body size by itself.</div>
+
+    <h2>Four measures are enough</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Palm = protein</b><br><small>Meat, fish, eggs, quark or cottage cheese, tofu. One palm (without the fingers) ≈ one portion, about 20-30 g of protein. That happens to be a dose that starts muscle building well in one meal [5,7].</small></div>
+      <div class="step"><b><span class="n">2</span>Handful = carbs</b><br><small>Rice, potatoes, pasta, oats, fruit. One cupped handful ≈ one portion of carbs. Energy for the day and for training.</small></div>
+      <div class="step"><b><span class="n">3</span>Thumb = fats</b><br><small>Oil, butter, nut butter, nuts, cheese. The size of your thumb ≈ one portion, about 8-15 g of fat. Fat is calorie-dense, so the measure is small.</small></div>
+      <div class="step"><b><span class="n">4</span>Fist = vegetables</b><br><small>Broccoli, salad, peppers, tomatoes, zucchini. One fist ≈ one portion. A lot of volume and fiber for few calories. You hardly need to worry about adding more.</small></div>
+    </div>
+    <p>Women and smaller people usually take the lower end of the number of portions, bigger men the upper end. Don’t overthink it. Your hand already carries that calibration.</p>
+
+    <h2>The plate method: even simpler</h2>
+    <p>If you don’t feel like counting even portions, look at your plate as a pie chart and divide it:</p>
+    <ul class="check">
+      <li><b>Half of the plate</b>: vegetables and salads. A lot of volume and fiber, they fill you up for few calories.</li>
+      <li><b>A quarter of the plate</b>: protein (palm). It keeps you full and protects your muscle in a deficit [6].</li>
+      <li><b>A quarter of the plate</b>: carbs (handful). Energy for the day and for training.</li>
+      <li><b>A small share of fats</b> (thumb). For cooking, for flavor or on top.</li>
+    </ul>
+
+    <h2>Your plate by goal</h2>
+    <p>Same hand, different ratios. These are guidelines for one main meal. Start from them and after 1-2 weeks adjust by your hunger and by how your weight moves:</p>
+    <div class="grid">
+      <div class="step"><b>Plate for fat loss</b><br><small>1 palm of protein, 1 handful of carbs, 1 thumb of fats, <b>2 fists of vegetables</b>. Vegetables and protein bring volume and fullness, so you hold a deficit without starving [2,3]. Don’t skimp on protein. It protects muscle [6]. Smaller people lean toward the lower end.</small></div>
+      <div class="step"><b>Plate for gaining</b><br><small>2 palms of protein, <b>2-3 handfuls of carbs</b>, 1-2 thumbs of fats, 1 fist of vegetables. You mostly add carbs (extra energy) and keep protein high enough [5]. Put most of your carbs around training.</small></div>
+      <div class="step"><b>Plate for maintenance</b><br><small>1-2 palms of protein, 1-2 handfuls of carbs, 1-2 thumbs of fats, 1-2 fists of vegetables. Keep weight and energy steady: balance around zero [1].</small></div>
+      <div class="step"><b>After training</b><br><small>A palm of protein + a handful (up to two) of carbs. You give your muscle building material [5] and refill the energy you used.</small></div>
+    </div>
+
+    <h2>Mixed meals, restaurants and liquid calories</h2>
+    <p>Real life is not always a clean plate with meat, rice and vegetables kept apart. How to handle the tricky cases:</p>
+    <ul class="check">
+      <li><b>Mixed meals (goulash, risotto, pasta with sauce):</b> estimate how many palms of protein and how many handfuls of carbs are in the portion, as if you had split it on a plate. A few meals of practice and it comes by itself.</li>
+      <li><b>Restaurants:</b> portions are often bigger than you need, and there is more fat and carbs in them than you see [2]. Start with a palm of protein and an extra fist of vegetables, keep carbs and sauces to about a handful. It’s fine to leave some on the plate. You don’t have to finish.</li>
+      <li><b>Liquid calories:</b> sweet drinks, juices, lattes, smoothies and “healthy” shakes barely count toward fullness: they give you energy, but they don’t calm hunger the way solid food does [4,8]. Count them as food, not as water.</li>
+      <li><b>Alcohol:</b> ~7 kcal per gram, plus it throws off your portion control and raises the urge to snack. It’s not a demon, but count it in your balance and keep it in check when you’re losing fat.</li>
+    </ul>
+
+    <h2>When a short weighing is worth it</h2>
+    <p>Your hand is an estimate, and every estimate drifts over time. Now and then it is good to recalibrate:</p>
+    <ul class="check">
+      <li><b>Worth weighing:</b> for a few days to retrain your eye (how much does your typical handful of rice or palm of chicken weigh), when results stall after weeks, or when you fine-tune protein for a specific goal [5]. Think of it as servicing an instrument, not as a permanent routine.</li>
+      <li><b>Not worth it:</b> when weighing stresses you out, spoils your relationship with food or makes you skip meals with other people. Then the hand is clearly better, because you can <b>really keep it up</b>, and that decides your long-term result [8].</li>
+    </ul>
+
+    <div class="callout"><b>Practical tip:</b> For one week, use the hand method for just <b>one meal a day</b> (lunch is fine). When it feels natural, add a second. Every now and then, weigh your portions for 2-3 days, retrain your eye and put the scale back in the drawer. The point is to eat with attention and do well day after day, not to be perfect to the gram. You can do it without a scale. :)</div>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span>: client guide. Share only with the author’s permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Hall KD, et al. Energy balance and its components: implications for body weight regulation. Am J Clin Nutr. 2012;95(4):989–994. [2] Rolls BJ, Morris EL, Roe LS. Portion size of food affects energy intake in normal-weight and overweight men and women. Am J Clin Nutr. 2002;76(6):1207–1213. [3] Zuraikat FM, Roe LS, Smethers AD, Rolls BJ. Dose–response effects of portion size on intake. Am J Clin Nutr. 2018. [4] Almiron-Roig E, et al. Factors that determine energy compensation: a systematic review of preload studies. Nutr Rev. 2013;71(7):458–473. [5] Jäger R, et al. ISSN Position Stand: protein and exercise. J Int Soc Sports Nutr. 2017;14:20. [6] Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20. [7] Schoenfeld BJ, Aragon AA. How much protein can the body use in a single meal? J Int Soc Sports Nutr. 2018;15:10. [8] Mozaffarian D, et al. Changes in diet and lifestyle and long-term weight gain in women and men. N Engl J Med. 2011;364(25):2392–2404. Portion values are approximate and vary with hand size and goal.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Portions without weighing';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>
