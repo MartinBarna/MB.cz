@@ -1,7 +1,7 @@
 // Testy kadence reportů v připomínkách (5. 10. 2026, fáze 2).
 // Spuštění: npx --yes deno@2 test --allow-read akademie/_supabase/functions/client-remind/kadence.test.ts
 // ⛔ Data jsou vymyšlená. „Hana" je jen jméno scénáře z analýzy (report 4. 10., kadence 2, posun na 25. 10.).
-import { NEJDELSI_OKNO_DNI, oknoOpakovaniDni, planVyzvy, tydnySlovy, uzDostalNedavno } from "./kadence.ts";
+import { NEJDELSI_OKNO_DNI, obdobiDoMailu, oknoOpakovaniDni, planVyzvy, tydnySlovy, uzDostalNedavno } from "./kadence.ts";
 
 function tvrd(podminka: boolean, popis: string) {
   if (!podminka) throw new Error("NESEDÍ: " + popis);
@@ -74,6 +74,45 @@ Deno.test("okno „už dostal nedávno“ podle kadence", () => {
   tvrd(!uzDostalNedavno(3, undefined, nedele("2026-10-04"), ted), "3 týdny: po 21 dnech ano");
 });
 
+Deno.test("znění za víc týdnů: kadence 2+, ruční posun ano, vynechaný týden ne (13. 10.)", () => {
+  // týdenní klient, report 11. 10., termín ručně posunutý na 25. 10. (offline týden 18. 10.)
+  const t = planVyzvy("2026-10-25", [web("2026-10-11")], 1, false, "2026-10-25");
+  tvrd(t.naRade && t.posunuto && t.tydnu === 2, "25. 10.: výzva, posunuto, dva týdny");
+  const o = obdobiDoMailu(t);
+  tvrd(!!o && o.tydnu === 2 && o.od === "2026-10-12" && o.do === "2026-10-25", "týdenní s posunem ⇒ dva týdny 12. až 25. 10.");
+  tvrd(!planVyzvy("2026-10-18", [web("2026-10-11")], 1, false, "2026-10-25").naRade, "18. 10. žádná výzva");
+  // pondělní report 12. 10. (týden 5. až 11. 10.) ⇒ stejné období
+  const po12 = obdobiDoMailu(planVyzvy("2026-10-25", [web("2026-10-12")], 1, false, "2026-10-25"));
+  tvrd(!!po12 && po12.tydnu === 2 && po12.od === "2026-10-12", "pondělní report ⇒ dva týdny od 12. 10.");
+  // týdenní, poslední report 4. 10., posun na 25. 10. ⇒ tři týdny
+  const k = obdobiDoMailu(planVyzvy("2026-10-25", [web("2026-10-04")], 1, false, "2026-10-25"));
+  tvrd(!!k && k.tydnu === 3 && k.od === "2026-10-05" && k.do === "2026-10-25", "tři týdny 5. až 25. 10.");
+  // týdenní, vynechal týden SÁM (bez posunu) ⇒ týdenní znění (revize R1, nález N4)
+  tvrd(obdobiDoMailu(planVyzvy("2026-10-18", [web("2026-10-04")], null, false, null)) === null, "vynechaný týden bez posunu ⇒ týdenní text");
+  // po reportu 25. 10. je posun spotřebovaný ⇒ 1. 11. zase týdenní znění
+  const po = [web("2026-10-11"), web("2026-10-25", { obdobi_od: "2026-10-12", obdobi_do: "2026-10-25" })];
+  const p1 = planVyzvy("2026-11-01", po, 1, false, "2026-10-25");
+  tvrd(p1.naRade && !p1.posunuto && obdobiDoMailu(p1) === null, "1. 11. týdenní text");
+  // nový klient bez reportu s ručním termínem: období týden ⇒ týdenní znění
+  tvrd(obdobiDoMailu(planVyzvy("2026-10-25", [], 1, false, "2026-10-25")) === null, "bez reportu ⇒ týdenní text");
+  // poslední webový report v červenci nebo 27. 9. (report chodí jinudy): období na stropu 4 týdny ⇒ týdenní znění
+  const cervenec = planVyzvy("2026-10-25", [web("2026-07-20")], null, false, "2026-10-25");
+  tvrd(cervenec.posunuto && cervenec.tydnu === 4 && obdobiDoMailu(cervenec) === null, "červenec ⇒ strop 4 týdny ⇒ týdenní text");
+  const zari = planVyzvy("2026-10-25", [web("2026-09-27")], null, false, "2026-10-25");
+  tvrd(zari.tydnu === 4 && obdobiDoMailu(zari) === null, "27. 9. ⇒ 4 týdny ⇒ týdenní text");
+  // vědomá cena stropu (revize Groka): posun o 25 dní (období 1. až 25. 10.) ⇒ týdenní znění jako před 13. 10.
+  const d25 = planVyzvy("2026-10-25", [web("2026-09-30", { obdobi_od: "2026-09-28", obdobi_do: "2026-09-30" })], 1, false, "2026-10-25");
+  tvrd(d25.posunuto && d25.obdobi.dni === 25 && d25.tydnu === 4 && obdobiDoMailu(d25) === null, "25 dní ⇒ týdenní text");
+  // 24 dní (období 2. až 25. 10.) ⇒ ještě „tři týdny"
+  const d24 = obdobiDoMailu(planVyzvy("2026-10-25", [web("2026-10-01", { obdobi_od: "2026-09-28", obdobi_do: "2026-10-01" })], 1, false, "2026-10-25"));
+  tvrd(!!d24 && d24.tydnu === 3 && d24.od === "2026-10-02", "24 dní ⇒ tři týdny");
+  // kadence 2 beze změny proti 5. 10.
+  const h = [{ report_date: "2026-08-03", source: "tvuj-coach" }, web("2026-10-04")];
+  const hv = obdobiDoMailu(planVyzvy("2026-10-25", h, 2, true, "2026-10-25"));
+  tvrd(!!hv && hv.tydnu === 3 && hv.od === "2026-10-05", "kadence 2: tři týdny jako dřív");
+  tvrd(obdobiDoMailu(undefined) === null, "bez plánu nic");
+});
+
 Deno.test("slova do mailu", () => {
   tvrd(tydnySlovy(2) === "dva týdny" && tydnySlovy(3) === "tři týdny" && tydnySlovy(4) === "čtyři týdny", "týdny slovy");
 });
@@ -88,6 +127,6 @@ Deno.test("index.ts: kadence se čte týmž dotazem a klíč pro hlídku zůstá
   tvrd(!src.includes("UZ_DOSTAL_DNI_14D"), "stará konstanta 14d je pryč (nahradilo ji okno podle kadence)");
   // předmět týdenní výzvy beze změny
   tvrd(src.includes('"Týdenní report ✍️ (3 minuty)"'), "předmět týdenní výzvy beze změny");
-  // Revize R1, nález N4: znění „za víc týdnů" jen pro kadenci 2 a 3, týdenní klient má týdenní text.
-  tvrd(src.includes("(pl && pl.kadence >= 2 ? { tydnu: pl.tydnu, od: pl.obdobi.od, do: pl.obdobi.do } : null)"), "znění za víc týdnů jen pro kadenci 2+");
+  // Revize R1, nález N4 + 13. 10.: o znění „za víc týdnů" rozhoduje testovaná `obdobiDoMailu`.
+  tvrd(src.includes(": obdobiDoMailu(pl);"), "znění za víc týdnů rozhoduje obdobiDoMailu");
 });

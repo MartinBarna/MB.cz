@@ -51,7 +51,7 @@ import { emailySeznam } from "../_shared/mail-seznam.ts";
 // u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { preskocitVyzvuKReportu } from "./cerstvy-klient.ts";
-import { NEJDELSI_OKNO_DNI, planVyzvy, tydnySlovy, uzDostalNedavno as uzDostalNedavnoKadence, type PlanVyzvy } from "./kadence.ts";
+import { NEJDELSI_OKNO_DNI, obdobiDoMailu, planVyzvy, tydnySlovy, uzDostalNedavno as uzDostalNedavnoKadence, type PlanVyzvy } from "./kadence.ts";
 import { dnesPraha, kadenceKlienta, popisObdobi, pridejDny, type RadekReportu } from "../_shared/report-obdobi.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -222,6 +222,8 @@ function mailHtml(osloveni: string, kind: "report" | "register", maPrilohu: bool
   // ⭐ [5. 10. 2026] Report za víc týdnů u klienta s kadencí 2 a 3 týdny (i s ručním posunem)
   //    má vlastní znění: „týden je za tebou" by lhalo. Týdenní klient dostává týdenní znění
   //    slovo od slova, i když týden vynechal (revize R1, nález N4); `obd` je pro něj null.
+  //    [13. 10. 2026] Výjimka: týdenní klient s RUČNĚ posunutým termínem (offline týden 18. 10.)
+  //    dostane znění za víc týdnů. Rozhoduje `obdobiDoMailu` v `kadence.ts`.
   //    ⚠️ NÁVRH TEXTU KE KONTROLE ŠÉFA (Martinův hlas, anti-AI průchod před nasazením).
   if (kind === "report" && obd && obd.tydnu > 1) {
     const obdTxt = popisObdobi(obd.od, obd.do);
@@ -622,13 +624,14 @@ Deno.serve(async (req: Request) => {
   for (const tgt of targets) {
     const isReg = tgt.kind === "register";
     // Období do znění výzvy: u ostrého běhu z plánu klienta, u testu vymyšlené podle `test_tydnu`.
-    // ⛔ [revize R1, nález N4, rozhodnutí šéfa 5. 10. 2026] Znění „za víc týdnů" jen pro kadenci
-    //    2 a 3. Týdenní klient po vynechaném týdnu (nebo po dlouhé pauze) dostane původní týdenní
-    //    text slovo od slova; období mu ukáže až formulář.
+    // ⛔ [revize R1, nález N4, rozhodnutí šéfa 5. 10. 2026] Znění „za víc týdnů" pro kadenci 2 a 3.
+    //    Týdenní klient po vynechaném týdnu (nebo po dlouhé pauze) dostane původní týdenní text
+    //    slovo od slova; období mu ukáže až formulář. [13. 10. 2026, Martin] Výjimka: ručně
+    //    posunutý termín (offline týden), viz `obdobiDoMailu` v `kadence.ts`.
     const pl = planBy.get(tgt.email);
     const obdMail = testEmail
       ? (testTydnu > 1 ? { tydnu: testTydnu, od: pridejDny(dnesD, -(7 * testTydnu - 1)), do: dnesD } : null)
-      : (pl && pl.kadence >= 2 ? { tydnu: pl.tydnu, od: pl.obdobi.od, do: pl.obdobi.do } : null);
+      : obdobiDoMailu(pl);
     // ⛔ `rezervovano` je ZÁMĚRNĚ mimo `try`: když spadne cokoli mezi rezervací a
     //    odesláním, řádek v `client_remind_sent` už existuje a mail neodešel. Bez tohohle
     //    by to byla tichá ztráta mailu, přesně ta vada, kterou celá dávka opravuje.
