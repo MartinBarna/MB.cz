@@ -1,0 +1,33 @@
+-- EN mailing: cron (13. 10. 2026). ⛔ ZÁMĚRNĚ ZAKOMENTOVANÉ. Nespouštět, dokud neplatí VŠE:
+--   1. migrace en-mailing-2026-10-13.sql je aplikovaná,
+--   2. edge funkce en-mailing a en-unsubscribe jsou nasazené a stažené zpět (diff sedí),
+--   3. stránka https://martinbarna.cz/en/unsubscribe/ je živě (Wedos deploy),
+--   4. app_config.en_mailing_secret = stejná hodnota jako secret EN_MAILING_SECRET funkce,
+--   5. dry-run vrátil očekávaný náhled a testovací mail (test_step) došel a odhlášení z něj funguje.
+--
+-- Cron sám nic nezapne: dokud en_mailing_config.enabled = false, každý běh je jen náhled.
+-- ⚠️ Náhled se pak ukládá do net._http_response každou hodinu (bez e-mailů, jen lead_id a maska).
+--
+-- Rytmus: každou hodinu v 15. minutě (UTC). Mail 1 tak odejde do hodiny po přihlášení,
+-- další kroky podle rozvrhu dní (2, 4, 6, 8) a nejdřív 20 h po předchozím mailu.
+-- Strop 50 mailů za běh je ve funkci. Job se zakládá podle jména (upsert), druhé spuštění nevadí.
+--
+-- select cron.schedule(
+--   'en-mailing-hodinove',
+--   '15 * * * *',
+--   $cmd$
+--   select net.http_post(
+--     url := 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/en-mailing',
+--     headers := jsonb_build_object('Content-Type','application/json','x-cron-secret',(select value from public.app_config where key='en_mailing_secret')),
+--     body := '{}'::jsonb,
+--     timeout_milliseconds := 120000
+--   );
+--   $cmd$
+-- );
+--
+-- Kontrola po založení:
+--   select jobid, jobname, schedule, active from cron.job where jobname = 'en-mailing-hodinove';
+-- Odpověď posledních běhů:
+--   select status_code, content::text from net._http_response order by created desc limit 5;
+-- Zrušení cronu:
+--   select cron.unschedule('en-mailing-hodinove');

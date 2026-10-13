@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
+<title>Unsubscribe | Martin Barna</title>
+<!-- Odhlášení z EN mailingu (edge en-mailing). Tlačítko = POST na edge en-unsubscribe.
+     Odkaz z mailu sem vede s ?e=<email>&t=<token>. GET této stránky nic nemění (mailové skenery).
+     ⛔ Bez analytics.js: v adrese je e-mail. -->
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    background: #0C0B10; margin: 0; padding: 40px 16px; color: #F0EADF;
+  }
+  html[data-theme="light"]{color-scheme:light;}
+  html[data-theme="light"] body{background:#F7F3EB;color:#161310;color-scheme:light;}
+  html[data-theme="light"] .card{background:#fff;border-color:rgba(22,19,16,.12);}
+  html[data-theme="light"] p,html[data-theme="light"] .foot a{color:#5C564C;}
+  .card {
+    max-width: 480px; margin: 0 auto; background: #181520;
+    border: 1px solid #262232; border-radius: 2px; padding: 32px; text-align: center;
+  }
+  .brand {
+    border-left: 3px solid #EBB12C; padding-left: 10px; font-weight: 800; font-size: 13px;
+    letter-spacing: .2em; text-transform: uppercase; color: #EBB12C; margin: 0 0 20px; text-align: left;
+  }
+  h1 { font-size: 20px; margin: 0 0 12px; }
+  p { line-height: 1.55; color: #A09AAD; margin: 0 0 20px; overflow-wrap: anywhere; }
+  .btn {
+    display: inline-block; background: #EBB12C; color: #1A1222; border: none; cursor: pointer;
+    padding: 13px 26px; border-radius: 0; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .05em; font-size: 15px; font-family: inherit;
+  }
+  .btn:disabled { opacity: .55; cursor: default; }
+  .foot { margin: 18px 0 0; }
+  .foot a { color: #8F8A99; font-size: 13px; text-decoration: none; }
+</style>
+<link rel="stylesheet" href="/assets/theme-light.css?v=w12">
+</head>
+<body>
+  <div class="card">
+    <div class="brand">Martin Barna</div>
+    <h1 id="ttl">Unsubscribe?</h1>
+    <p id="msg">Loading…</p>
+    <div id="act"></div>
+    <p class="foot"><a href="https://martinbarna.cz/en/">Back to martinbarna.cz/en/</a></p>
+  </div>
+
+<script>
+(function () {
+  var ENDPOINT = "https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/en-unsubscribe";
+  var q = new URLSearchParams(location.search);
+  var e = (q.get("e") || "").trim();
+  var t = (q.get("t") || "").trim();
+  var ttl = document.getElementById("ttl");
+  var msg = document.getElementById("msg");
+  var act = document.getElementById("act");
+
+  function show(title, text, button) {
+    ttl.textContent = title;
+    msg.textContent = text;
+    act.innerHTML = "";
+    if (button) act.appendChild(button);
+  }
+
+  function broken() {
+    show("This link doesn't work",
+      "The unsubscribe link is incomplete or no longer valid. Reply to any of my emails with \"unsubscribe\" and I'll take you off the list by hand.");
+  }
+
+  if (!e || !t) { broken(); return; }
+
+  var b = document.createElement("button");
+  b.className = "btn";
+  b.textContent = "Unsubscribe";
+  b.addEventListener("click", function () {
+    b.disabled = true;
+    b.textContent = "Unsubscribing…";
+    fetch(ENDPOINT + "?e=" + encodeURIComponent(e) + "&t=" + encodeURIComponent(t), {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: "{}"
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; });
+    }).then(function (res) {
+      if (res && res.ok) {
+        show("You're unsubscribed",
+          "Done. " + e + " won't get any more emails from this series or my English newsletter.");
+      } else if (res && res.error === "link") {
+        broken();
+      } else {
+        b.disabled = false;
+        b.textContent = "Unsubscribe";
+        msg.textContent = "Something went wrong. Please try again in a minute.";
+      }
+    }).catch(function () {
+      b.disabled = false;
+      b.textContent = "Unsubscribe";
+      msg.textContent = "Something went wrong. Please try again in a minute.";
+    });
+  });
+  show("Unsubscribe?", "Click the button and " + e + " won't get any more emails from me in English.", b);
+})();
+</script>
+</body>
+</html>
