@@ -24,7 +24,7 @@ const EXCL = [
   /^_import\//, /^_zaloha\//, /^_zdroje\//, /^_cloud\//, // [9. 10. 2026] podklady cloud sezení, na web nepatří
   /^Logo-rebrand\//, /^scripts\//, /^akademie\/_ai\//, /^akademie\/_pdf\//,
   /^akademie\/_supabase\//, /^akademie\/_videokurz\//, /\.md$/, /^CNAME$/, /^\.nojekyll$/,
-  /^\.htaccess$/, // Apache ho přes HTTP záměrně nevydává (401) — zvenku neověřitelný
+  /(^|\/)\.htaccess$/, // Apache ho přes HTTP záměrně nevydává (401) — zvenku neověřitelný; i v domains/<alias>/
   // ⛔ [12. 9. 2026] `docs/` server nevydává SCHVÁLNĚ: `/docs/` vrací 403 a soubory
   //    v něm 401. Jsou to interní SQL a poznámky, které na webu nemají co dělat,
   //    takže je to žádoucí stav, ne chyba. Ověřovací krok ale `docs/*.sql` hlásil
