@@ -42,7 +42,7 @@ const PLAYBOOK = 'eating-out-playbook';
 // Pořadí v knihovně: playbook, pak pořadí dávek překladu. Neznámé slugy abecedně na konec.
 const ORDER = [PLAYBOOK, 'uvitaci-balicek', 'jidlo-v-restauraci', 'porce-bez-vazeni', 'vikendove-prejidani',
   'plato-zastavena-vaha', 'denik-navyku', 'kroky-a-cardio', 'flexibilni-strava', 'spanek-a-regenerace',
-  'stres-a-kortizol', 'hydratace-pitny-rezim', 'high-protein-recepty', 'suplementy-co-funguje',
+  'stres-a-kortizol', 'hydratace-pitny-rezim', 'high-protein-recepty', 'kucharka', 'suplementy-co-funguje',
   'zacni-cvicit', 'treninkovy-plan', 'jak-cist-studie', 'tydenni-checkin', 'vstupni-dotaznik'];
 
 const args = process.argv.slice(2);

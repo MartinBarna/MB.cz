@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <script src="/assets/theme-boot.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/assets/theme-boot.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Articles | Martin Barna</title>
     <meta name="description" content="Practical fat loss for busy people. No meal prep, no magic.">
     <meta name="theme-color" content="#EBB12C">
@@ -21,78 +21,78 @@
     <meta property="og:image:alt" content="Martin Barna - online nutrition and fitness coach">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://martinbarna.cz/assets/og-default.jpg?v=g7">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
-    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
-    <link rel="stylesheet" href="/assets/highend.css?v=r2">
-    <style>
-        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
-        .skip-link:focus{left:0}
-        :root { --green:#EBB12C; --green-dark:#161616; --green-light:#fff4e8; --gold:#EBB12C; --ink:#161616; }
-        * { box-sizing:border-box; scroll-behavior:smooth; }
-        a:focus-visible, button:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; border-radius:4px; }
-        body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
-        a { color:var(--green-dark); }
-        .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
-        .nav .wrap { max-width:1320px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:22px; position:relative; }
-        .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; flex-shrink:0; }
-        .brand img { height:30px; width:auto; aspect-ratio:194/96; flex-shrink:0; display:block; } .brand span { white-space:nowrap; }
-        .nav a.back { text-decoration:none; font-weight:600; color:var(--ink); }
-        .navlinks { display:flex; align-items:center; gap:20px; }
-        .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
-        .navlinks a:hover { color:var(--green); }
-        .navlinks a.cta { white-space:nowrap; background:var(--green); color:#161616; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
-        .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
-        .navlinks { gap:11px; } .navlinks a { font-size:.88rem; } .navlinks a[href="/recepty-a-odpovedi/"] { white-space:nowrap; } .navlinks a.cta { padding:8px 14px; } /* kompakt vzdy: 13 polozek se plnou velikosti nevejde do wrapu 1320 */ .nav-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none;} .nav-burger{display:none;background:none;border:1px solid #d8d8d8;color:var(--ink);border-radius:8px;padding:5px 11px;font-size:1.2rem;line-height:1;cursor:pointer;flex-shrink:0;} @media (max-width:1259px){ .nav-burger{display:block;} .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:2px;padding:8px 20px 16px;box-shadow:0 12px 26px rgba(0,0,0,.14);border-top:1px solid #eee;} .nav-toggle:checked ~ .navlinks{display:flex;} .navlinks .hide-sm{display:block;padding:10px 2px;font-size:1rem;border-bottom:1px solid #f0f0f0;} .navlinks a.cta{text-align:center;margin-top:8px;padding:12px 20px;} } @media (min-width:1260px) and (max-width:1319px){ .navlinks{gap:6px} .navlinks a{font-size:.78rem} .navlinks a.cta{padding:6px 10px} }
-        .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; position:relative; overflow:hidden; }
-        .hero::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
-        .hero > * { position:relative; z-index:1; }
-        .hero .tag { background:rgba(255,255,255,.2); padding:5px 14px; border-radius:50px; font-size:.8rem; font-weight:600; }
-        .hero h1 { max-width:840px; margin:1rem auto 0; font-size:clamp(2.1rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; letter-spacing:-.025em; }
-        .wrapc { max-width:760px; margin:0 auto; padding:0 20px; }
-        article { padding:60px 0; font-size:1.08rem; }
-        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; font-size:clamp(1.55rem, 3.6vw, 2.1rem); letter-spacing:-.018em; line-height:1.2; }
-        article ul, article ol { padding-left:1.2rem; }
-        article li { margin:.4rem 0; }
-        .lead { font-size:1.2rem; color:#3a463f; }
-        .cta-box { background:var(--green-light); border-radius:20px; padding:2.2rem; margin:3rem 0 0; text-align:center; box-shadow:0 10px 30px rgba(22,22,22,.05); }
-        .cta-box h3 { color:var(--green-dark); font-weight:800; margin-top:0; }
-        .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; padding:13px 32px; border-radius:50px; text-decoration:none; margin:6px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; }
-        .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(235,177,44,.38); background:var(--green-dark); color:#fff; }
-        .btn.gold { background:var(--gold); } .btn.gold:hover { background:#C8901F; }
-        .disclaimer { font-size:.9rem; color:#5c655f; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
-        footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
-        footer a { color:#F6CD63; text-decoration:underline; }
-        .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
-        body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
-        ::selection { background:#EBB12C; color:#fff; }
-        h1, h2, h3 { letter-spacing:-.015em; }
-        @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
-        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
-        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
-        .crumbs span { color:var(--ink); }
-        .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
-        .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
-        .author-box img { width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
-        .author-box h4 { margin:0 0 .3rem; color:var(--green-dark); font-weight:800; font-size:1.1rem; }
-        .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
-        .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
-        @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
-        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
-        /* Always set background and text color together. This site also loads marketing-dark.css,
-           which flips the page to a dark theme and turns the text light. A light background
-           without its own text color becomes white on white. That happened in production
-           on 21 August 2026, and Martin found it, not a check: the text was in the DOM,
-           it just was not visible. That is why the CTA boxes below set both colors explicitly. */
-        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
-        .wrap-index { max-width:1120px; margin:0 auto; padding:0 20px 60px; }
-        .index-intro { font-size:1.15rem; max-width:640px; margin:.6rem auto 0; opacity:.92; }
-        .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.4rem; margin:2.2rem 0 0; }
-        .blog-card { display:block; background:#161616; color:#fff; border-radius:20px; padding:1.6rem; text-decoration:none; box-shadow:0 10px 30px rgba(22,22,22,.05); }
-        .blog-card h2 { margin:0 0 .55rem; font-size:1.15rem; color:#fff; line-height:1.3; }
-        .blog-card p { margin:0; color:#e8e8e8; }
-        .empty-list { color:#e8e8e8; margin:2rem 0 0; }
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%23EBB12C'/><text x='50' y='70' font-size='54' font-family='Arial' font-weight='bold' fill='%23161616' text-anchor='middle'>MB</text></svg>">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+    <link rel="stylesheet" href="/assets/highend.css?v=r2">
+    <style>
+        .skip-link{position:absolute;left:-999px;top:0;background:#EBB12C;color:#161616;font-weight:700;padding:10px 18px;border-radius:0 0 10px 0;z-index:2000;text-decoration:none}
+        .skip-link:focus{left:0}
+        :root { --green:#EBB12C; --green-dark:#161616; --green-light:#fff4e8; --gold:#EBB12C; --ink:#161616; }
+        * { box-sizing:border-box; scroll-behavior:smooth; }
+        a:focus-visible, button:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; border-radius:4px; }
+        body { font-family:'Poppins',Arial,sans-serif; color:var(--ink); margin:0; line-height:1.75; }
+        a { color:var(--green-dark); }
+        .nav { background:#fff; box-shadow:0 2px 14px rgba(0,0,0,.06); position:sticky; top:0; z-index:10; }
+        .nav .wrap { max-width:1320px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:22px; position:relative; }
+        .brand { font-weight:800; color:var(--green-dark); text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+        .brand img { height:30px; width:auto; aspect-ratio:194/96; flex-shrink:0; display:block; } .brand span { white-space:nowrap; }
+        .nav a.back { text-decoration:none; font-weight:600; color:var(--ink); }
+        .navlinks { display:flex; align-items:center; gap:20px; }
+        .navlinks a { text-decoration:none; font-weight:600; color:var(--ink); font-size:.96rem; }
+        .navlinks a:hover { color:var(--green); }
+        .navlinks a.cta { white-space:nowrap; background:var(--green); color:#161616; padding:9px 20px; border-radius:50px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+        .navlinks a.cta:hover { color:#fff; background:var(--green-dark); transform:translateY(-1px); }
+        .navlinks { gap:11px; } .navlinks a { font-size:.88rem; } .navlinks a[href="/recepty-a-odpovedi/"] { white-space:nowrap; } .navlinks a.cta { padding:8px 14px; } /* kompakt vzdy: 13 polozek se plnou velikosti nevejde do wrapu 1320 */ .nav-toggle{position:absolute;opacity:0;width:0;height:0;pointer-events:none;} .nav-burger{display:none;background:none;border:1px solid #d8d8d8;color:var(--ink);border-radius:8px;padding:5px 11px;font-size:1.2rem;line-height:1;cursor:pointer;flex-shrink:0;} @media (max-width:1259px){ .nav-burger{display:block;} .navlinks{display:none;position:absolute;top:calc(100% + 1px);left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:2px;padding:8px 20px 16px;box-shadow:0 12px 26px rgba(0,0,0,.14);border-top:1px solid #eee;} .nav-toggle:checked ~ .navlinks{display:flex;} .navlinks .hide-sm{display:block;padding:10px 2px;font-size:1rem;border-bottom:1px solid #f0f0f0;} .navlinks a.cta{text-align:center;margin-top:8px;padding:12px 20px;} } @media (min-width:1260px) and (max-width:1319px){ .navlinks{gap:6px} .navlinks a{font-size:.78rem} .navlinks a.cta{padding:6px 10px} }
+        .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 100%); color:#fff; padding:80px 20px 64px; text-align:center; position:relative; overflow:hidden; }
+        .hero::before { content:""; position:absolute; inset:0; pointer-events:none; background:radial-gradient(circle at 78% 22%, rgba(255,255,255,.16), transparent 46%); }
+        .hero > * { position:relative; z-index:1; }
+        .hero .tag { background:rgba(255,255,255,.2); padding:5px 14px; border-radius:50px; font-size:.8rem; font-weight:600; }
+        .hero h1 { max-width:840px; margin:1rem auto 0; font-size:clamp(2.1rem, 5vw, 3.2rem); font-weight:800; line-height:1.12; letter-spacing:-.025em; }
+        .wrapc { max-width:760px; margin:0 auto; padding:0 20px; }
+        article { padding:60px 0; font-size:1.08rem; }
+        article h2 { color:var(--green-dark); font-weight:800; margin-top:2.4rem; font-size:clamp(1.55rem, 3.6vw, 2.1rem); letter-spacing:-.018em; line-height:1.2; }
+        article ul, article ol { padding-left:1.2rem; }
+        article li { margin:.4rem 0; }
+        .lead { font-size:1.2rem; color:#3a463f; }
+        .cta-box { background:var(--green-light); border-radius:20px; padding:2.2rem; margin:3rem 0 0; text-align:center; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .cta-box h3 { color:var(--green-dark); font-weight:800; margin-top:0; }
+        .btn { display:inline-block; background:var(--green); color:#161616; font-weight:700; padding:13px 32px; border-radius:50px; text-decoration:none; margin:6px; box-shadow:0 6px 18px rgba(235,177,44,.22); transition:transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease, background .25s ease; }
+        .btn:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(235,177,44,.38); background:var(--green-dark); color:#fff; }
+        .btn.gold { background:var(--gold); } .btn.gold:hover { background:#C8901F; }
+        .disclaimer { font-size:.9rem; color:#5c655f; border-top:1px solid #e6ece6; margin-top:2.5rem; padding-top:1.2rem; }
+        footer { background:var(--ink); color:#cfd8d2; text-align:center; padding:26px 20px; }
+        footer a { color:#F6CD63; text-decoration:underline; }
+        .fab-wa { position:fixed; right:20px; bottom:20px; width:58px; height:58px; border-radius:50%; background:#25D366; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.25); color:#fff; text-decoration:none; }
+        body { -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility; }
+        ::selection { background:#EBB12C; color:#fff; }
+        h1, h2, h3 { letter-spacing:-.015em; }
+        @media (prefers-reduced-motion: reduce){ *, *::before, *::after { transition-duration:.001ms!important; scroll-behavior:auto!important; } }
+        .crumbs { max-width:1120px; margin:0 auto; padding:12px 20px 0; font-size:.85rem; color:#666; }
+        .crumbs a { color:#666; text-decoration:none; } .crumbs a:hover { color:var(--green); }
+        .crumbs span { color:var(--ink); }
+        .hero-meta { margin:1rem auto 0; font-size:.92rem; opacity:.92; font-weight:600; }
+        .author-box { display:flex; gap:1.2rem; align-items:center; background:#fff; border:1px solid #f0e6da; border-radius:20px; padding:1.6rem; margin:3rem 0 0; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .author-box img { width:84px; height:84px; border-radius:50%; object-fit:cover; flex:0 0 84px; }
+        .author-box h4 { margin:0 0 .3rem; color:var(--green-dark); font-weight:800; font-size:1.1rem; }
+        .author-box p { margin:0 0 .7rem; font-size:.96rem; color:#5a5a5a; line-height:1.55; }
+        .author-box .btn { margin:0; padding:10px 24px; font-size:.95rem; }
+        @media (max-width:560px){ .author-box { flex-direction:column; text-align:center; } }
+        .faq-q { font-weight:700; color:var(--green-dark); margin:1.6rem 0 .3rem; }
+        /* Always set background and text color together. This site also loads marketing-dark.css,
+           which flips the page to a dark theme and turns the text light. A light background
+           without its own text color becomes white on white. That happened in production
+           on 21 August 2026, and Martin found it, not a check: the text was in the DOM,
+           it just was not visible. That is why the CTA boxes below set both colors explicitly. */
+        .pull { background:var(--green-light); border-left:4px solid var(--green); border-radius:0 14px 14px 0; padding:1.1rem 1.4rem; margin:1.8rem 0; font-weight:600; color:var(--green-dark); }
+        .wrap-index { max-width:1120px; margin:0 auto; padding:0 20px 60px; }
+        .index-intro { font-size:1.15rem; max-width:640px; margin:.6rem auto 0; opacity:.92; }
+        .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.4rem; margin:2.2rem 0 0; }
+        .blog-card { display:block; background:#161616; color:#fff; border-radius:20px; padding:1.6rem; text-decoration:none; box-shadow:0 10px 30px rgba(22,22,22,.05); }
+        .blog-card h2 { margin:0 0 .55rem; font-size:1.15rem; color:#fff; line-height:1.3; }
+        .blog-card p { margin:0; color:#e8e8e8; }
+        .empty-list { color:#e8e8e8; margin:2rem 0 0; }
     </style>
     <script type="application/ld+json">
 {
@@ -135,8 +135,38 @@
     },
     {
       "@type": "BlogPosting",
+      "headline": "Cardio burns less than you think",
+      "url": "https://martinbarna.cz/en/blog/cardio-burns-less-than-you-think.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "The clean eating myth: no food is dirty",
+      "url": "https://martinbarna.cz/en/blog/clean-eating-myth.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": "Cravings and hunger: why you want sweets when you diet",
       "url": "https://martinbarna.cz/en/blog/cravings-and-hunger.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Diet breaks: do they help you lose more fat?",
+      "url": "https://martinbarna.cz/en/blog/diet-breaks.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Diet soda and weight loss: what the studies say",
+      "url": "https://martinbarna.cz/en/blog/diet-soda-and-weight-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Do you need breakfast to lose weight?",
+      "url": "https://martinbarna.cz/en/blog/do-you-need-breakfast-to-lose-weight.html",
       "datePublished": "2026-10-13"
     },
     {
@@ -153,6 +183,12 @@
     },
     {
       "@type": "BlogPosting",
+      "headline": "Fasted cardio: does it burn more fat?",
+      "url": "https://martinbarna.cz/en/blog/fasted-cardio.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": "Weight loss after 40: what changes and what you only think changes",
       "url": "https://martinbarna.cz/en/blog/fat-loss-after-40.html",
       "datePublished": "2026-10-13"
@@ -165,8 +201,26 @@
     },
     {
       "@type": "BlogPosting",
+      "headline": "Fiber and fat loss: the quiet part of the plate",
+      "url": "https://martinbarna.cz/en/blog/fiber-and-fat-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": "Flexible dieting: eat the foods you like and still lose fat",
       "url": "https://martinbarna.cz/en/blog/flexible-dieting.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Fruit and weight loss: the sugar myth",
+      "url": "https://martinbarna.cz/en/blog/fruit-and-weight-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "How fast should you lose weight?",
+      "url": "https://martinbarna.cz/en/blog/how-fast-should-you-lose-weight.html",
       "datePublished": "2026-10-13"
     },
     {
@@ -183,8 +237,26 @@
     },
     {
       "@type": "BlogPosting",
+      "headline": "How much should you sleep: hours or a steady schedule?",
+      "url": "https://martinbarna.cz/en/blog/how-much-sleep-do-you-need.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "How often should you eat to lose fat?",
+      "url": "https://martinbarna.cz/en/blog/how-often-should-you-eat.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": "How to lose belly fat: what works (and what is a myth)",
       "url": "https://martinbarna.cz/en/blog/how-to-lose-belly-fat.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "How to lose face fat: what works and what does not",
+      "url": "https://martinbarna.cz/en/blog/how-to-lose-face-fat.html",
       "datePublished": "2026-10-13"
     },
     {
@@ -207,8 +279,50 @@
     },
     {
       "@type": "BlogPosting",
+      "headline": "Is sugar bad for weight loss?",
+      "url": "https://martinbarna.cz/en/blog/is-sugar-bad-for-weight-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": "How to lose weight without exercise: what it takes",
       "url": "https://martinbarna.cz/en/blog/lose-weight-without-exercise.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Macros and fat loss: calories and protein do the work",
+      "url": "https://martinbarna.cz/en/blog/macros-and-fat-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Meal planning that creates a calorie deficit",
+      "url": "https://martinbarna.cz/en/blog/meal-planning-for-fat-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Menopause and weight gain: what actually works",
+      "url": "https://martinbarna.cz/en/blog/menopause-and-weight-gain.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Protein after training: how much actually matters?",
+      "url": "https://martinbarna.cz/en/blog/protein-timing-after-workout.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "A sample fat loss day: about 1,550 kcal",
+      "url": "https://martinbarna.cz/en/blog/sample-fat-loss-meal-plan.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Night shifts and fat loss: harder, and still possible",
+      "url": "https://martinbarna.cz/en/blog/shift-work-and-fat-loss.html",
       "datePublished": "2026-10-13"
     },
     {
@@ -225,8 +339,32 @@
     },
     {
       "@type": "BlogPosting",
+      "headline": "Spot reduction is a myth: crunches do not flatten the belly",
+      "url": "https://martinbarna.cz/en/blog/spot-reduction-myth.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
       "headline": "Strength training and longevity: one hour a week",
       "url": "https://martinbarna.cz/en/blog/strength-training-one-hour-a-week.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Stress, appetite, and why muscle will not grow",
+      "url": "https://martinbarna.cz/en/blog/stress-and-fat-loss.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Training volume on a diet: 12 sets or 30?",
+      "url": "https://martinbarna.cz/en/blog/training-volume-while-dieting.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Ultra-processed food: why you overeat it without noticing",
+      "url": "https://martinbarna.cz/en/blog/ultra-processed-food.html",
       "datePublished": "2026-10-13"
     },
     {
@@ -245,6 +383,12 @@
       "@type": "BlogPosting",
       "headline": "Why your weight fluctuates even when you are losing fat",
       "url": "https://martinbarna.cz/en/blog/why-your-weight-fluctuates.html",
+      "datePublished": "2026-10-13"
+    },
+    {
+      "@type": "BlogPosting",
+      "headline": "Will lifting make women bulky?",
+      "url": "https://martinbarna.cz/en/blog/will-lifting-make-women-bulky.html",
       "datePublished": "2026-10-13"
     },
     {
@@ -276,15 +420,15 @@
   ]
 }
     </script>
-    <script defer src="/assets/analytics.js?v=g24"></script>
-    <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
-    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
-    <link rel="stylesheet" href="/assets/theme-light.css?v=w12">
+    <script defer src="/assets/analytics.js?v=g24"></script>
+    <link rel="stylesheet" href="/assets/marketing-dark.css?v=r6">
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/theme-light.css?v=w12">
 </head>
-<body>
-    <a class="skip-link" href="#obsah">Skip to content</a>
-    <div class="nav"><div class="wrap"><a class="brand" href="/en/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Open menu">☰</label><nav class="navlinks" aria-label="Main menu"><a class="hide-sm" href="/en/blog/">Articles</a><a class="hide-sm" href="/en/protein/">Protein tool</a><a class="hide-sm" href="/en/#kit">Free kit</a><a class="hide-sm lang-switch" href="/clanky/">Česky</a><a class="cta" href="/en/#coaching">Coaching</a></nav></div></div>
-
+<body>
+    <a class="skip-link" href="#obsah">Skip to content</a>
+    <div class="nav"><div class="wrap"><a class="brand" href="/en/"><img src="/assets/brand/mb-mark-gold.png" alt="Martin Barna - logo" decoding="async"><span>Martin Barna</span></a><input type="checkbox" id="navtgl" class="nav-toggle" aria-hidden="true"><label class="nav-burger" for="navtgl" aria-label="Open menu">☰</label><nav class="navlinks" aria-label="Main menu"><a class="hide-sm" href="/en/blog/">Articles</a><a class="hide-sm" href="/en/protein/">Protein tool</a><a class="hide-sm" href="/en/#kit">Free kit</a><a class="hide-sm lang-switch" href="/clanky/">Česky</a><a class="cta" href="/en/#coaching">Coaching</a></nav></div></div>
+
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/en/">Home</a> › <span>Articles</span></nav>
     <header class="hero" id="obsah">
         <h1>Articles</h1>
@@ -303,36 +447,60 @@
                 <a class="blog-card" href="/en/blog/alcohol-and-fat-loss.html"><h2>Can you lose weight and still drink alcohol? What the science says</h2><p>Beer, wine, a shot, and the weight still goes down. What decides it, and where a sensible limit is.</p></a>
                 <a class="blog-card" href="/en/blog/build-muscle-in-a-calorie-deficit.html"><h2>Building muscle in a calorie deficit is possible</h2><p>A 2026 DXA study: trained people eating 250 calories below maintenance lost 2.94 kg of fat and gained 1.04 kg of lean mass.</p></a>
                 <a class="blog-card" href="/en/blog/calorie-deficit-how-much-to-eat.html"><h2>Calorie deficit: how much to eat to lose fat and still function</h2><p>How big a calorie deficit to set: 15 to 20% below your energy use, protein 1.6 to 2.2 g per kg, and why a deficit often only looks like it is not working.</p></a>
+                <a class="blog-card" href="/en/blog/cardio-burns-less-than-you-think.html"><h2>Cardio burns less than you think</h2><p>The body claws back about 70% of cardio calories. A 600 kcal watch reading often adds about 180 to the day. Food still leads.</p></a>
+                <a class="blog-card" href="/en/blog/clean-eating-myth.html"><h2>The clean eating myth: no food is dirty</h2><p>No food is clean or dirty. Fat loss is the deficit you can keep, plus protein and fiber. An 80/20 plate beats a ban list.</p></a>
                 <a class="blog-card" href="/en/blog/cravings-and-hunger.html"><h2>Cravings and hunger: why you want sweets when you diet</h2><p>Why you crave sweets when you lose weight: a very strict diet, low protein and fibre, sweet food as a fast source of energy, and for some women the days around the period.</p></a>
+                <a class="blog-card" href="/en/blog/diet-breaks.html"><h2>Diet breaks: do they help you lose more fat?</h2><p>One study: breaks at maintenance, almost twice the fat, more muscle kept. Studies from 2021 found no edge. The pause still helps you last.</p></a>
+                <a class="blog-card" href="/en/blog/diet-soda-and-weight-loss.html"><h2>Diet soda and weight loss: what the studies say</h2><p>Swap sugary drinks for diet soda and people lose weight. Human trials have not shown a wrecked microbiome or stronger cravings.</p></a>
+                <a class="blog-card" href="/en/blog/do-you-need-breakfast-to-lose-weight.html"><h2>Do you need breakfast to lose weight?</h2><p>A 2014 trial and a 2019 BMJ review found no meaningful effect of breakfast on weight. The day's calories decide.</p></a>
                 <a class="blog-card" href="/en/blog/drinks-dinners-and-social-events.html"><h2>Drinking on a diet: how to handle parties, dinners and social events</h2><p>How to have a drink at a party and keep losing fat: calories in beer, wine and spirits, and simple rules for the night.</p></a>
                 <a class="blog-card" href="/en/blog/eating-late-at-night.html"><h2>Does eating late at night make you fat? The myth of no food after 6 pm</h2><p>Eating after 6 pm does not make you fat by itself. Total calories decide, and an earlier dinner may help a little. What studies say.</p></a>
+                <a class="blog-card" href="/en/blog/fasted-cardio.html"><h2>Fasted cardio: does it burn more fat?</h2><p>Fasted cardio burns more fat in the session. Over 24 hours it evens out. The week's calorie balance decides fat loss.</p></a>
                 <a class="blog-card" href="/en/blog/fat-loss-after-40.html"><h2>Weight loss after 40: what changes and what you only think changes</h2><p>Energy use per kg of lean mass does not drop between 20 and 60. Muscle and movement do. A 15 to 20% deficit, protein and weights fix most of it.</p></a>
                 <a class="blog-card" href="/en/blog/fat-loss-after-50.html"><h2>Weight loss after 50: metabolism, protein and strength training</h2><p>Metabolism does not drop after 50 the way people say. A mild deficit, protein and strength training do the work. Why the scale lies in menopause.</p></a>
+                <a class="blog-card" href="/en/blog/fiber-and-fat-loss.html"><h2>Fiber and fat loss: the quiet part of the plate</h2><p>About 30 to 38 g of fiber a day fills you up, slows sugar absorption, and adds almost no calories. Add it slowly.</p></a>
                 <a class="blog-card" href="/en/blog/flexible-dieting.html"><h2>Flexible dieting: eat the foods you like and still lose fat</h2><p>How to eat your favourite foods and still get results: the principle of flexible dieting (IIFYM) and the 80/20 rule.</p></a>
+                <a class="blog-card" href="/en/blog/fruit-and-weight-loss.html"><h2>Fruit and weight loss: the sugar myth</h2><p>Two or three portions of whole fruit a day fit a fat loss diet. Dried fruit, juice and smoothies are where calories slip.</p></a>
+                <a class="blog-card" href="/en/blog/how-fast-should-you-lose-weight.html"><h2>How fast should you lose weight?</h2><p>Most of a fast drop is water and glycogen. A kilo of fat is about 7,700 kcal. A pace of 0.3 to 0.7 kg a week holds.</p></a>
                 <a class="blog-card" href="/en/blog/how-many-steps-a-day.html"><h2>How many steps a day? Walking is an underrated fat loss tool</h2><p>Where the 10,000 steps myth came from, and how many steps a day make sense for you.</p></a>
                 <a class="blog-card" href="/en/blog/how-much-protein.html"><h2>Protein: how much to eat and why</h2><p>How much protein you need to lose fat and keep muscle, where to get it, and one simple habit that gets you to your number.</p></a>
+                <a class="blog-card" href="/en/blog/how-much-sleep-do-you-need.html"><h2>How much should you sleep: hours or a steady schedule?</h2><p>Around 7 hours for a typical adult. Trainers often need 8 to 10. Once you have seven, keep the schedule steady.</p></a>
+                <a class="blog-card" href="/en/blog/how-often-should-you-eat.html"><h2>How often should you eat to lose fat?</h2><p>Meal frequency does not turn metabolism on. Same calories and protein, three meals or six, land on the same fat loss.</p></a>
                 <a class="blog-card" href="/en/blog/how-to-lose-belly-fat.html"><h2>How to lose belly fat: what works (and what is a myth)</h2><p>Spot reduction does not exist. The belly shrinks when total body fat shrinks: calorie deficit, weights, protein, sleep and realistic expectations.</p></a>
+                <a class="blog-card" href="/en/blog/how-to-lose-face-fat.html"><h2>How to lose face fat: what works and what does not</h2><p>Face fat goes when body fat goes. Water leaves faster: less alcohol, less salt, enough sleep. Face exercises do not burn fat.</p></a>
                 <a class="blog-card" href="/en/blog/how-to-start-losing-weight.html"><h2>How to start losing weight: the first 4 weeks without a crash diet</h2><p>One change per week instead of everything at once. Week 1 log, week 2 deficit, week 3 protein, week 4 strength and walking. With the studies behind it.</p></a>
                 <a class="blog-card" href="/en/blog/cheat-day-or-cheat-meal.html"><h2>Cheat day or cheat meal? How to take a break without wrecking your week</h2><p>How to take a break from your diet without wiping out a week of work: cheat meal versus cheat day, with the maths.</p></a>
                 <a class="blog-card" href="/en/blog/intermittent-fasting-what-studies-say.html"><h2>Intermittent fasting: what the studies say</h2><p>A BMJ analysis of 99 trials and 6,582 people: intermittent fasting loses weight as well as a classic deficit, no better. What that means in practice.</p></a>
+                <a class="blog-card" href="/en/blog/is-sugar-bad-for-weight-loss.html"><h2>Is sugar bad for weight loss?</h2><p>Sugar is not poison. A spoon in coffee is about 20 kcal. The day's surplus matters, and liquid sugar is the easy leak.</p></a>
                 <a class="blog-card" href="/en/blog/lose-weight-without-exercise.html"><h2>How to lose weight without exercise: what it takes</h2><p>You can lose weight without exercise, but one lever is gone, so your food has to be more accurate. What the studies say and what you pay for it.</p></a>
+                <a class="blog-card" href="/en/blog/macros-and-fat-loss.html"><h2>Macros and fat loss: calories and protein do the work</h2><p>Calories, protein and fiber are the macros that move fat loss. Carbs and fat can follow taste and training.</p></a>
+                <a class="blog-card" href="/en/blog/meal-planning-for-fat-loss.html"><h2>Meal planning that creates a calorie deficit</h2><p>Plan the week so a 300 to 500 kcal deficit happens on its own. Protein, fiber and food already in the kitchen.</p></a>
+                <a class="blog-card" href="/en/blog/menopause-and-weight-gain.html"><h2>Menopause and weight gain: what actually works</h2><p>Same meals, more weight, mostly at the middle. Lifting, 1.2 to 1.6 g protein per kg, and a deficit of 250 to 750 kcal.</p></a>
+                <a class="blog-card" href="/en/blog/protein-timing-after-workout.html"><h2>Protein after training: how much actually matters?</h2><p>1.6 to 2.2 g of protein per kg of body weight. The low end is where the papers agree. The high end is still a debate.</p></a>
+                <a class="blog-card" href="/en/blog/sample-fat-loss-meal-plan.html"><h2>A sample fat loss day: about 1,550 kcal</h2><p>One normal day at about 1,550 kcal and 110 g of protein. Copy the structure, then move the portions to your own numbers.</p></a>
+                <a class="blog-card" href="/en/blog/shift-work-and-fat-loss.html"><h2>Night shifts and fat loss: harder, and still possible</h2><p>Shift work raises obesity risk about 23%. Calories still count. Eat the main meal off the shift, pack food, and protect sleep.</p></a>
                 <a class="blog-card" href="/en/blog/sleep-and-fat-loss.html"><h2>What too little sleep does to your fat loss</h2><p>In a 14-day lab study, short sleep changed what people lost on the same diet: more muscle, less fat. What it means for you.</p></a>
                 <a class="blog-card" href="/en/blog/slow-metabolism-myth.html"><h2>Slow metabolism: why it is rarely the reason you are not losing weight</h2><p>&quot;I eat almost nothing and don't lose weight.&quot; Usually the cause is underestimated intake and overestimated energy use, not a broken metabolism. What to do.</p></a>
+                <a class="blog-card" href="/en/blog/spot-reduction-myth.html"><h2>Spot reduction is a myth: crunches do not flatten the belly</h2><p>Crunches strengthen the muscle. They do not burn the fat on top. Fat leaves across the whole body, in an order genetics set.</p></a>
                 <a class="blog-card" href="/en/blog/strength-training-one-hour-a-week.html"><h2>Strength training and longevity: one hour a week</h2><p>Studies link strength training to lower mortality, with the best result around one hour a week. What the data say and what they do not.</p></a>
+                <a class="blog-card" href="/en/blog/stress-and-fat-loss.html"><h2>Stress, appetite, and why muscle will not grow</h2><p>Chronic stress keeps digestion down and can kill appetite. Acute stress, like training, is fine. Sleep times and real rest come first.</p></a>
+                <a class="blog-card" href="/en/blog/training-volume-while-dieting.html"><h2>Training volume on a diet: 12 sets or 30?</h2><p>In a 40% deficit, 12 and 30 weekly sets both kept lean mass. More sets added more strength. It is still a preprint.</p></a>
+                <a class="blog-card" href="/en/blog/ultra-processed-food.html"><h2>Ultra-processed food: why you overeat it without noticing</h2><p>Hall 2019: +508 kcal a day on ultra-processed food, even when the offered calories and macros matched. Speed of eating is the lever.</p></a>
                 <a class="blog-card" href="/en/blog/weekend-overeating.html"><h2>Weekend overeating: how to enjoy your weekend without wrecking the week</h2><p>Weekends can erase your weekday deficit. A weekly calorie average is a system that survives Friday night.</p></a>
                 <a class="blog-card" href="/en/blog/what-to-eat-to-lose-fat.html"><h2>What to eat to lose weight: a plate that works, with no miracle foods</h2><p>No single food makes you lose fat. A simple plate template: protein, quality carbs, vegetables, a little fat, and water.</p></a>
                 <a class="blog-card" href="/en/blog/why-your-weight-fluctuates.html"><h2>Why your weight fluctuates even when you are losing fat</h2><p>Why the scale jumps from day to day even when you diet well, and why that should not scare you. What the numbers on the scale mean.</p></a>
+                <a class="blog-card" href="/en/blog/will-lifting-make-women-bulky.html"><h2>Will lifting make women bulky?</h2><p>No. Women carry a few percent of male testosterone, so muscle grows slower and smaller. Heavy lifting builds shape, not bulk by accident.</p></a>
                 <a class="blog-card" href="/en/blog/yo-yo-dieting.html"><h2>Yo-yo dieting: why the weight comes back and how to stop it</h2><p>Why the weight comes back after a diet and how to eat so the result lasts. A mild deficit, protein, weights and a slow return to maintenance.</p></a>
             </div>
     </div>
 
-    <footer>
-        <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online nutrition and fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async" loading="lazy">
-        <p>&copy; Martin Barna · <a href="/en/privacy/">Privacy</a> · <a href="#" data-cookie-settings>Cookie settings</a><br><span style="opacity:.7;font-size:.92em">Martin Barna · Czech business ID (IČO) 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</span></p>
-    </footer>
-    <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="WhatsApp">
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
-    </a>
-  <script src="/assets/scroll-top.js?v=g13" defer></script>
-<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/theme-light.css?v=w12"></body>
-</html>
+    <footer>
+        <img src="/assets/brand/logo-full-gold.png" alt="Martin Barna - Online nutrition and fitness" width="230" height="114" style="display:block;height:auto;max-width:200px;margin:0 auto 1rem" decoding="async" loading="lazy">
+        <p>&copy; Martin Barna · <a href="/en/privacy/">Privacy</a> · <a href="#" data-cookie-settings>Cookie settings</a><br><span style="opacity:.7;font-size:.92em">Martin Barna · Czech business ID (IČO) 76383032 · Lumírova 489/11, 700 30 Ostrava-Výškovice</span></p>
+    </footer>
+    <a class="fab-wa" href="https://wa.me/420603229831" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.748-.747zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/></svg>
+    </a>
+  <script src="/assets/scroll-top.js?v=g13" defer></script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/theme-light.css?v=w12"></body>
+</html>
