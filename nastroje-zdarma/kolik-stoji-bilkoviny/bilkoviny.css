@@ -107,8 +107,9 @@
 .bz-hodnota { display: block; color: var(--bz-text); white-space: nowrap; }
 .bz-kc { display: block; font-size: 1.12rem; font-weight: 800; color: var(--bz-akcent); white-space: nowrap; }
 .bz-stitek-libova {
-  display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: 999px;
-  font-size: .74rem; font-weight: 700; color: var(--bz-dobre); background: var(--bz-dobre-plocha);
+  display: inline-block; margin-top: 4px; padding: 2px 9px; border-radius: 12px;
+  font-size: .74rem; font-weight: 700; line-height: 1.25; text-align: center; text-wrap: balance;
+  color: var(--bz-dobre); background: var(--bz-dobre-plocha);
 }
 .bz a.bz-zdroj { display: inline-block; margin-top: 2px; font-size: .84rem; color: var(--bz-akcent); text-decoration: underline; text-underline-offset: .18em; }
 .bz-tabulka tbody tr:hover { background: var(--bz-plocha-2); }

@@ -10,7 +10,8 @@
 // (starší Safari by kvůli nim nespustil celý app.js).
 // Čísla se zaokrouhlují jen při zobrazení, výpočty běží na plnou přesnost.
 
-const LIBOVA_HRANICE = 10; // aspoň tolik g bílkovin na 100 kcal = „libová“
+const LIBOVA_HRANICE = 10; // aspoň tolik g bílkovin na 100 kcal dostane štítek STITEK (v kódu dál „libová“)
+const STITEK = 'hodně bílkovin na kalorie'; // jediné místo, kde se štítek jmenuje
 const MIX_MAX_POLOZEK = 3; // nejlevnější mix: nejvýš tolik potravin
 const MIX_MAX_PODIL = 50; // nejlevnější mix: jedna potravina nejvýš tolik % bílkovin
 const KALKULACKA_MAX_POLOZEK = 4; // kalkulačka: nejvýš tolik vybraných potravin
@@ -18,7 +19,7 @@ const CIL_VYCHOZI = 100; // kalkulačka: výchozí denní cíl bílkovin v g
 const CIL_MIN = 20;
 const CIL_MAX = 400;
 const NBSP = String.fromCharCode(0xa0); // pevná mezera
-const TEXT_MIX_NEJDE = 'Na mix chybí aspoň dvě libové potraviny z různých kategorií.';
+const TEXT_MIX_NEJDE = 'Na mix chybí aspoň dvě potraviny se štítkem „' + STITEK + '“ z různých kategorií.';
 
 const fmt0 = new Intl.NumberFormat('cs-CZ', { maximumFractionDigits: 0 });
 const fmt1 = new Intl.NumberFormat('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
