@@ -85,7 +85,10 @@
    * Hlavní funkce. MealGen = window.MealGen ze sdíleného enginu.
    * inp = { units:'metric'|'imperial', sex:'male'|'female', age, heightCm, heightFt, heightIn,
    *         weightKg, weightLb, activity:<klíč enginu>, goal:<klíč enginu> }
-   * Vrací { ok:false, code, message } nebo { ok:true, kcal, protein, tdee, bmr, notes[], calc{} }.
+   * Vrací { ok:false, code, message } nebo { ok:true, kcal, protein, fat, carbs, fiber,
+   * tempoKgTyden, tdee, bmr, notes[], calc{} }.
+   * fat, carbs, fiber a tempo jsou totéž, co vrátil computeTargets. calc (do en_leads) dál
+   * nese jen kcal, protein_g a tdee, stejně jako kit na /en/.
    */
   function calculate(MealGen, inp) {
     inp = inp || {};
@@ -125,6 +128,10 @@
       ok: true,
       kcal: t.kcal,
       protein: t.protein,
+      fat: t.fat,
+      carbs: t.carbs,
+      fiber: t.fiber,
+      tempoKgTyden: t.tempoKgTyden,
       tdee: t.tdee,
       bmr: t.bmr,
       notes: notes,

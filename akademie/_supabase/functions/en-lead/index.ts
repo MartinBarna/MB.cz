@@ -1,6 +1,8 @@
 // en-lead: příjem leadů z anglické stránky martinbarna.cz/en/ (13. 10. 2026, větev en-x-1013).
 //   kind 'kit'         = The Busy Professional's Fat Loss Kit (kalkulačka + Eating Out Playbook)
 //   kind 'application' = přihláška do EN Gold koučinku (písemně, bez callů)
+//   kind 'calculator'  = plná kalkulačka na /en/calculator/ (stejný calc jako kit)
+//   kind 'workout'     = generátor tréninku na /en/workout/ (calc null, plan_summary -> message)
 //
 // verify_jwt = false (veřejná stránka, žádný uživatel, žádný klíč v prohlížeči).
 // Jen POST (jinak 405). CORS a Origin jen https://martinbarna.cz a https://www.martinbarna.cz.
@@ -142,7 +144,9 @@ Deno.serve(async (req: Request) => {
   if (String(b.website ?? "").trim()) return json({ ok: true }, 200, origin);
 
   const kind = String(b.kind ?? "");
-  if (kind !== "kit" && kind !== "application") return json({ ok: false, error: "invalid_kind" }, 400, origin);
+  if (kind !== "kit" && kind !== "application" && kind !== "calculator" && kind !== "workout") {
+    return json({ ok: false, error: "invalid_kind" }, 400, origin);
+  }
 
   const email = String(b.email ?? "").trim().toLowerCase();
   if (email.length > 254 || !EMAIL_RE.test(email)) return json({ ok: false, error: "invalid_email" }, 400, origin);
@@ -159,6 +163,9 @@ Deno.serve(async (req: Request) => {
 
   let goal: string | null = null;
   let message: string | null = null;
+  // workout: calc se neukládá (žádné tělesné údaje). Krátký popis voleb jde do existujícího
+  // sloupce message, žádný nový sloupec. kit a calculator ukládají jen cleanCalc.
+  let calc: Json | null = null;
   if (kind === "application") {
     const g = text(b.goal, 200);
     if (g === null) return json({ ok: false, error: "goal_required" }, 400, origin);
@@ -167,6 +174,14 @@ Deno.serve(async (req: Request) => {
     const m = text(b.message, 2000);
     if (m === "too_long") return json({ ok: false, error: "too_long", field: "message" }, 400, origin);
     message = m;
+    calc = cleanCalc(b.calc);
+  } else if (kind === "workout") {
+    const m = text(b.plan_summary, 500);
+    if (m === "too_long") return json({ ok: false, error: "too_long", field: "plan_summary" }, 400, origin);
+    message = m;
+    calc = null;
+  } else {
+    calc = cleanCalc(b.calc);
   }
 
   const url = Deno.env.get("SUPABASE_URL") ?? "";
@@ -210,7 +225,7 @@ Deno.serve(async (req: Request) => {
     consent_at: new Date().toISOString(),
     goal,
     message,
-    calc: cleanCalc(b.calc),
+    calc,
     utm_source: utm(b.utm_source),
     utm_medium: utm(b.utm_medium),
     utm_campaign: utm(b.utm_campaign),
