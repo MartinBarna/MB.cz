@@ -222,5 +222,39 @@ Deno.serve(async (req: Request) => {
     console.error("en-lead: insert selhal", error.code ?? "", error.message ?? "");
     return json({ ok: false, error: "db" }, 500, origin);
   }
+  // Přihláška = upozornění Martinovi hned (Elon 13. 10.: rychlost na lead je nejvíc peněz).
+  // Jen Martinovi, nikdy klientovi. Jeden pokus; selhání mailu nesmí shodit uložený lead.
+  if (kind === "application") await upozorniMartina({ firstName, email, goal, message, utm_source: utm(b.utm_source), utm_campaign: utm(b.utm_campaign) });
   return json({ ok: true }, 200, origin);
 });
+
+function esc(s: unknown): string {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+}
+
+async function upozorniMartina(l: { firstName: string; email: string; goal: string | null; message: string | null; utm_source: string | null; utm_campaign: string | null }): Promise<void> {
+  const key = Deno.env.get("RESEND_API_KEY") ?? "";
+  if (!key) {
+    console.error("en-lead: RESEND_API_KEY chybí, upozornění na přihlášku neodešlo");
+    return;
+  }
+  const html = `<p><b>Nová EN přihláška do koučinku</b> (martinbarna.cz/en/)</p>
+<p>Jméno: ${esc(l.firstName)}<br>E-mail: ${esc(l.email)}<br>Cíl: ${esc(l.goal)}<br>Zpráva: ${esc(l.message)}<br>Zdroj: ${esc(l.utm_source ?? "-")} / ${esc(l.utm_campaign ?? "-")}</p>
+<p>Celý záznam: Academy tabulka en_leads. Odpověď: koncept od Coache, odesílá Martin.</p>`;
+  try {
+    const r = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from: "Web MB.cz <news@martinbarna.cz>",
+        to: ["martin@martinbarna.cz"],
+        bcc: ["fitness.barna@gmail.com"],
+        subject: `🇬🇧 EN přihláška: ${l.firstName}`.slice(0, 120),
+        html,
+      }),
+    });
+    if (r.status !== 200) console.error("en-lead: upozornění Resend status", r.status);
+  } catch (e) {
+    console.error("en-lead: upozornění selhalo", e instanceof Error ? e.message : String(e));
+  }
+}
