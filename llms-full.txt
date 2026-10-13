@@ -302,7 +302,7 @@ Vzít si VIP · 499 Kč → Basic bez AI kouče · 249 Kč →
 
 K první platbě VIP dostaneš videokurz výživy za 1 490 Kč zdarma, a zůstane ti, i když předplatné zrušíš. K ročnímu VIP navíc měsíc Barna Academy.
 
-Nejdřív si spočítej cíle zdarma, za 2 minuty →
+Spočítej si cíle za 2 minuty, pod výsledkem můžeš rovnou vzít VIP
 
 ✓ Čísla počítá engine, AI ti je vysvětlí ✓ 600+ klientů od 2013 ✓ Zrušíš kdykoliv, do 14 dnů vrácení peněz
 
@@ -500,7 +500,7 @@ navždy, bez karty
 
 - Webová aplikace, česky (appka pro iPhone a Android se chystá)
 
-Založit Free účet →
+Nebo si zatím jen zapisuj ve Free verzi zdarma
 
 Předplatné je opakovaná platba. Obnovuje se automaticky na konci každého období (měsíc, tři měsíce, nebo rok) za stejnou cenu, dokud ho nezrušíš. Zrušit ho můžeš kdykoliv v appce: Profil → Předplatné → Spravovat předplatné, kde se otevře správa platby, nebo mi napiš. Zaplacené období vždy doběhne do konce a další platba se už nestrhne.
 
@@ -579,7 +579,11 @@ Kompletní videokurz, ve kterém ti krok za krokem ukážu, jak jíst pro hubnut
 
 ∞ doživotní přístup
 
-Chci videokurz za 1 490 Kč 🎁 Vyzkoušet 11 lekcí zdarma Co se naučím?
+Chci videokurz za 1 490 Kč
+
+Nechceš platit hned? Vyzkoušej 11 lekcí zdarma
+
+Co se naučím?
 
 💸 Jednorázově 1 490 Kč, doživotní přístup, bez měsíčních poplatků.
 
@@ -3227,6 +3231,16 @@ Knihovna cviků s provedením krok za krokem a nejčastějšími chybami. Hledej
 128 cviků Technika a chyby Filtry + hledání
 
 Otevřít databázi →
+
+🧾
+
+### Kolik stojí bílkoviny
+
+Ceny potravin přepočtené na 100 g bílkovin a kalkulačka, kolik tě bílkoviny stojí za den a za měsíc.
+
+Ceny s datem Kalkulačka Bez registrace
+
+Otevřít srovnání →
 
 📱
 
