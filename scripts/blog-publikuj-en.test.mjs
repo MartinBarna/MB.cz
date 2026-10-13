@@ -217,7 +217,9 @@ test('hreflang-cz-en mění jen <head>, idempotentně', () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'hreflang-en-'));
   const clanky = path.join(tmp, 'clanky');
   fs.mkdirSync(clanky);
-  const src = fs.readFileSync(path.join(ROOT, 'clanky/hubnuti-po-40.html'), 'utf8');
+  // Od #565 má živý článek hreflang už v <head>; test potřebuje stav PŘED během skriptu.
+  const src = fs.readFileSync(path.join(ROOT, 'clanky/hubnuti-po-40.html'), 'utf8')
+    .replace(/\s*<link rel="alternate" hreflang="(?:en|cs)"[^>]*>/g, '');
   fs.writeFileSync(path.join(clanky, 'hubnuti-po-40.html'), src);
   const drafts = path.join(tmp, 'drafts');
   fs.mkdirSync(drafts);
@@ -235,8 +237,10 @@ test('hreflang-cz-en mění jen <head>, idempotentně', () => {
   assert.equal(twice[0].changed, false);
   const after2 = fs.readFileSync(path.join(clanky, 'hubnuti-po-40.html'), 'utf8');
   assert.equal(after, after2);
-  assert.equal((after2.match(/hreflang="en"/g) || []).length, 1);
-  assert.equal((after2.match(/hreflang="cs"/g) || []).length, 1);
+  // Jen v <head>: od #565 má tělo i odkaz „English version“ s hreflang="en".
+  const head2 = after2.split('</head>')[0];
+  assert.equal((head2.match(/hreflang="en"/g) || []).length, 1);
+  assert.equal((head2.match(/hreflang="cs"/g) || []).length, 1);
 
   fs.rmSync(tmp, { recursive: true, force: true });
 });
