@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hydration: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="How much to drink, why thirst gets mistaken for hunger, and when you actually need sodium. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Hydration</h1>
+    <p class="lead">Water is the most underrated "supplement" for performance, focus and appetite. Lose a few percent of body water and strength, endurance and mood all drop. And you will often mistake thirst for hunger. Here is how much to drink in real life, and how to actually do it. Practical, and based on the research.</p>
+
+    <h2>How much to drink</h2>
+    <p>Water is an <b>essential nutrient</b>. Digestion, blood flow and body temperature all sit on it [2]. A workable starting point is <b>about 30-35 ml per kg of body weight per day</b>: at 80 kg that is 80 &times; 30-35 ml = about 2.4-2.8 L from all sources. You take in part of it (about 20-30%) from food. You drink the rest. Reference values put total daily intake from all fluids and food at about <b>2.0 L for women and 2.5 L for men</b> [3].</p>
+    <p>That is a starting point, not a ceiling. Add more for the situation:</p>
+    <ul class="check">
+      <li><b>Training and sweat.</b> Under load, in the heat, and in people who sweat a lot, losses go up. Replace fluid based on how much you sweat, not on one fixed number [1].</li>
+      <li><b>Heat and humidity.</b> On a hot day, or in an overheated room, you evaporate more without noticing. Add some.</li>
+      <li><b>Body size.</b> A bigger, more muscular body needs more than a small one. That is why counting per kilogram makes sense.</li>
+      <li><b>Urine colour as a check.</b> Pale straw = fine. Dark = drink. It is the simplest feedback you have.</li>
+    </ul>
+    <div class="callout"><b>Main point:</b> Start at <b>about 30-35 ml/kg</b> and adjust for activity, heat and sweat [1,2]. Drink across the day, not only when your mouth is dry. Thirst arrives late.</div>
+
+    <h2>Electrolytes: it is not only water</h2>
+    <p>Water on its own is not the whole story. <b>Electrolytes</b> matter too, mainly sodium and potassium. Sweat costs you <b>sodium</b> first. Sodium keeps fluid in the body and helps you absorb it. That is why a drink with a little sodium <b>stays in you longer</b> than plain water [8]. Potassium works inside cells, and together with sodium it runs nerve and muscle signalling and water balance.</p>
+    <ul class="check">
+      <li><b>Sodium</b> you normally get from food (salt). On a long session, with heavy sweating, or in the heat, it is worth replacing it on purpose.</li>
+      <li><b>Potassium</b> is in fruit, vegetables, potatoes and legumes. A varied diet usually covers it.</li>
+      <li>On efforts longer than about 60-90 min, or when you sweat hard, use a drink <b>with sodium</b>, not water alone [1,8].</li>
+      <li>A normal day, an office, an easy session? Water and ordinary food are plenty. You do not need an expensive sports drink.</li>
+    </ul>
+
+    <h2>Signs of dehydration</h2>
+    <p>Dehydration does not start with thirst. Thirst is a late signal. The body flags low fluid earlier, and it is easy to ignore:</p>
+    <ul class="check">
+      <li><b>Dark urine, and not much of it.</b> The most reliable and fastest hydration check [4].</li>
+      <li><b>Fatigue, headache, a worse mood.</b> Even <b>mild</b> dehydration (a loss of about 1-2% of body weight as water) worsens mood and raises perceived effort [5,6].</li>
+      <li><b>A dry mouth, sticky saliva, thirst.</b> Drink before it gets here.</li>
+      <li><b>Worse focus and a "foggy" head.</b> The brain reacts sensitively to a drop in fluid [6].</li>
+    </ul>
+    <div class="callout"><b>Rule of thumb:</b> A loss of about <b>2% of body weight</b> from fluid already cuts performance and thinking in a measurable way [4,6]. At 80 kg that is only about 1.6 kg. A hard session can take that off you easily.</div>
+
+    <h2>Effect on performance and the brain</h2>
+    <p>This is why it is not a cosmetic detail. Dehydration is one of the cheapest ways to <b>undercut your own performance</b>:</p>
+    <ul class="check">
+      <li><b>Physical performance.</b> Fluid loss above about 2% of body weight reduces endurance and strength, and raises heart strain and perceived effort, especially in the heat [1,4].</li>
+      <li><b>Brain and mood.</b> Mild dehydration worsens attention and memory and raises fatigue and irritability. Shown in women [5] and in men [6].</li>
+      <li><b>Cooling.</b> Less water = worse cooling through sweat = you overheat sooner and performance drops [1].</li>
+    </ul>
+    <p>In other words: before you fine-tune the last percent of your diet or your training, make sure you are drinking enough. It is the fastest win.</p>
+
+    <h2>Thirst vs. hunger: don't mix them up</h2>
+    <p>The thirst and hunger centres in the brain sit close together, so a thirst signal is easy to read as an urge to eat. The result: you eat when you were actually just <b>thirsty</b>. Water can also help energy intake directly. A higher water intake is linked with <b>lower energy intake</b> and better weight control [7].</p>
+    <ul class="check">
+      <li>A craving "for something" between meals? Drink first and wait about 10 minutes. Often it was thirst [7].</li>
+      <li><b>A glass of water before a meal</b> fills you a little more and helps you not overeat [7].</li>
+      <li>Water has no calories and takes up space in the stomach. A cheap helper in a deficit.</li>
+    </ul>
+
+    <h2>Caffeine and alcohol vs. hydration</h2>
+    <p>Coffee and beer collect a lot of myths. Let's straighten them:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Coffee does not "dry you out"</b><br><small>Ordinary doses of caffeine have only a mild diuretic effect, and they count toward daily fluid like anything else. Coffee and tea hydrate about as well as water [8].</small></div>
+      <div class="step"><b><span class="n">2</span>Alcohol dehydrates</b><br><small>It suppresses the hormone that holds water, so you urinate more and hydration gets worse. Beer is also not among the better hydrating drinks [8].</small></div>
+      <div class="step"><b><span class="n">3</span>Water in between</b><br><small>With alcohol, put a glass of water between drinks. You cut the losses and the morning after.</small></div>
+      <div class="step"><b><span class="n">4</span>Watch the whole day</b><br><small>Morning coffee is fine. If the day is only coffee and beer, add plain water on top.</small></div>
+    </div>
+
+    <h2>Practical tips: how to drink more</h2>
+    <p>Knowing how much to drink is half of it. The other half is <b>actually drinking it</b>. These habits make it automatic:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>A bottle in sight</b><br><small>What you see, you drink. Keep a bottle on the desk, in the car, in the bag. Out of sight = forgotten.</small></div>
+      <div class="step"><b><span class="n">2</span>A glass in the morning</b><br><small>Right after waking, drink a glass of water. You went hours overnight without drinking, and you start the day down.</small></div>
+      <div class="step"><b><span class="n">3</span>Attach it to habits</b><br><small>Drink with every meal, with coffee, and on the way to the bathroom. Hook drinking onto something you already do.</small></div>
+      <div class="step"><b><span class="n">4</span>Around training</b><br><small>Drink before, during and after the session, and add sodium when you sweat a lot [1,8]. Use urine colour as the check [4].</small></div>
+    </div>
+
+    <div class="callout"><b>Action step:</b> This week do just one thing: work out <b>about 30-35 ml/kg</b> as your base target, get a bottle, and keep it in sight. In the heat and around training, add more and add sodium [1,8]. Once that runs by itself, worry about the details. Be Effective! <img src="data:image/png;base64,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" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"><img src="data:image/png;base64,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" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"></div>
+
+    <div class="foot">
+      <div>&copy; <span class="brandName2">Martin Barna</span>: client guide. Share only with the author's permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Sawka MN, et al. American College of Sports Medicine position stand: exercise and fluid replacement. Med Sci Sports Exerc. 2007;39(2):377-390. [2] J&eacute;quier E, Constant F. Water as an essential nutrient: the physiological basis of hydration. Eur J Clin Nutr. 2010;64(2):115-123. [3] EFSA Panel on Dietetic Products. Scientific opinion on dietary reference values for water. EFSA Journal. 2010;8(3):1459. [4] Cheuvront SN, Kenefick RW. Dehydration: physiology, assessment, and performance effects. Compr Physiol. 2014;4(1):257-285. [5] Armstrong LE, et al. Mild dehydration affects mood in healthy young women. J Nutr. 2012;142(2):382-388. [6] Ganio MS, et al. Mild dehydration impairs cognitive performance and mood of men. Br J Nutr. 2011;106(10):1535-1543. [7] Daniels MC, Popkin BM. Impact of water intake on energy intake and weight status. Nutr Rev. 2010;68(9):505-521. [8] Maughan RJ, et al. A randomized trial to assess the potential of different beverages to affect hydration status. Am J Clin Nutr. 2016;103(3):717-723.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Hydration';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>
