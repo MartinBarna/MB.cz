@@ -320,9 +320,11 @@
 <script src="/assets/ba-config.js?v=20260628b"></script>
 <script src="/assets/ai-martin.js?v=g10" defer></script>
 <script src="/assets/ba-academy.js?v=20260728a"></script>
+<script src="/akademie/klient/klient-i18n.js?v=20261013b"></script>
 <script>
 (function(){
   "use strict";
+  if (window.KLIENT_I18N) window.KLIENT_I18N.bootPage();
   var CFG = window.BA_CONFIG || {};
   var FN = (CFG.url || "") + "/functions/v1/client-report";
   var myEmail = "", myName = "", reports = [], hasIntake = false, intakeRow = null;
@@ -343,7 +345,11 @@
   var OBD = null;
 
   function el(id){ return document.getElementById(id); }
-  function czk(n){ return (n==null||n==="") ? "-" : String(n).replace(".", ","); }
+  function czk(n){
+    if (n==null||n==="") return "-";
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return String(n);
+    return String(n).replace(".", ",");
+  }
   // Prazdna hodnota MUSI vratit null, ne 0. Driv se testovalo String(v) misto normalizovaneho
   // retezce, takze String(null) bylo "null" (neprazdne) a toNum(null) vracelo 0. Dusledek:
   // chybejici vaha se pocitala jako nula kilo ("Celkova zmena +73,8 kg") a v grafu se kreslila
@@ -393,9 +399,19 @@
     if("bdflmnptvw".indexOf(last) !== -1) return fn + "e";
     return fn;
   }
-  function dateCz(iso){ var d = new Date(iso + "T12:00:00"); return d.getDate()+". "+(d.getMonth()+1)+". "+d.getFullYear(); }
+  function dateCz(iso){
+    var d = new Date(iso + "T12:00:00");
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return window.KLIENT_I18N.dateEn(d);
+    return d.getDate()+". "+(d.getMonth()+1)+". "+d.getFullYear();
+  }
   function denZ(iso){ return String(iso == null ? "" : iso).slice(0, 10); }
   function escH(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  var USER_LABELS = { "Kardio": 1, "Další": 1, "Povedlo se": 1, "Drhlo": 1, "Otázky": 1, "Navíc": 1, "Cíl": 1, "Proč": 1, "Termín": 1, "Diety": 1, "Sport": 1, "Omezení": 1, "Léky": 1, "Alergie": 1, "Nejí": 1, "Vaření": 1, "Vybavení": 1, "Práce": 1, "Vzkaz": 1, "Telefon": 1 };
+  function sumRow(label, val){
+    var shown = escH(val);
+    if(USER_LABELS[label]) shown = '<span data-user="1">' + shown + "</span>";
+    return '<div class="kv"><span>' + label + "</span><span>" + shown + "</span></div>";
+  }
   // Startovní bod z vstupního dotazníku. Graf váhy/měr jinak začínal až od 1. reportu,
   // takže u lidí s pauzou mezi dotazníkem a prvním reportem chyběl začátek cesty.
   // source=intake-baseline, ať se to neplete se skutečným reportem (kcal, historie, stN).
@@ -432,11 +448,26 @@
   function isoPoledne(iso){ var p = String(iso).split("-"); return Date.UTC(+p[0], +p[1] - 1, +p[2], 12); }
   function isoPlus(iso, n){ return new Date(isoPoledne(iso) + n * 86400000).toISOString().slice(0, 10); }
   function isoDen(iso){ return DNY_ISO[(new Date(isoPoledne(iso)).getUTCDay() + 6) % 7]; }
-  function isoKratce(iso, sRokem){ var p = String(iso).split("-"); return (+p[2]) + ". " + (+p[1]) + "." + (sRokem ? " " + p[0] : ""); }
-  function popisObd(od, d){ return od === d ? isoKratce(od, true) : isoKratce(od, od.slice(0, 4) !== d.slice(0, 4)) + " až " + isoKratce(d, true); }
+  function isoKratce(iso, sRokem){
+    var p = String(iso).split("-");
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return window.KLIENT_I18N.isoKratceEn(iso, sRokem);
+    return (+p[2]) + ". " + (+p[1]) + "." + (sRokem ? " " + p[0] : "");
+  }
+  function popisObd(od, d){
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return window.KLIENT_I18N.popisObdEn(od, d);
+    return od === d ? isoKratce(od, true) : isoKratce(od, od.slice(0, 4) !== d.slice(0, 4)) + " až " + isoKratce(d, true);
+  }
   function slovoDni(n){ return n + (n === 1 ? " den" : (n >= 2 && n <= 4 ? " dny" : " dní")); }
   // Den v rozpisu: nový tvar má datum („Po 5. 10."), starý jen zkratku dne.
-  function denRozpisu(d){ return d && isoDate(d.datum) ? isoDen(d.datum) + " " + isoKratce(d.datum, false) : String((d && d.den) || ""); }
+  function denRozpisu(d){
+    var en = window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en";
+    if (d && isoDate(d.datum)) {
+      var den = isoDen(d.datum);
+      return (en ? window.KLIENT_I18N.dayLabel(den) : den) + " " + isoKratce(d.datum, false);
+    }
+    var kod = String((d && d.den) || "");
+    return en ? window.KLIENT_I18N.dayLabel(kod) : kod;
+  }
   // Týdenní report (nebo náhradní režim bez období) má texty přesně jako dřív.
   function obdTydenni(){ return !OBD || OBD.dni === 7; }
   // Období uložené u reportu v historii, nebo null (starý report bez období).
@@ -481,11 +512,16 @@
   }
   // Řádky denního rozpisu: s obdobím jeden na každý den (s datem), bez něj Po až Ne jako dřív.
   function slotyRozpisu(){
-    if(!OBD) return DAYS.map(function(d){ return { label: d, datum: null, den: d }; });
+    function lab(den, rest){
+      var name = (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") ? window.KLIENT_I18N.dayLabel(den) : den;
+      return rest ? name + " " + rest : name;
+    }
+    if(!OBD) return DAYS.map(function(d){ return { label: lab(d), datum: null, den: d }; });
     var out = [];
     for(var i = 0; i < OBD.dni; i++){
       var iso = isoPlus(OBD.od, i);
-      out.push({ label: isoDen(iso) + " " + isoKratce(iso, false), datum: iso, den: isoDen(iso) });
+      var den = isoDen(iso);
+      out.push({ label: lab(den, isoKratce(iso, false)), datum: iso, den: den });
     }
     return out;
   }
@@ -546,6 +582,7 @@
   function hezkyNazev(nameTxt){
     var m = /^(pruvodce|trenink|jidelnicek)-(\d{4})-(\d{2})-(\d{2})\.html?$/i.exec(String(nameTxt || ""));
     if (!m) return String(nameTxt || "").replace(/\.html?$/i, "");
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return window.KLIENT_I18N.hezkyNazevEn(m[1], m[2], m[3], m[4]);
     var typ = { pruvodce: "Průvodce koučinkem", trenink: "Tréninkový plán", jidelnicek: "Jídelníček na míru" }[m[1].toLowerCase()];
     return typ + " (" + Number(m[4]) + ". " + Number(m[3]) + ". " + m[2] + ")";
   }
@@ -561,7 +598,8 @@
       }).then(function(html){
         if (!w) { toast("Prohlížeč zablokoval nové okno."); return; }
         var titul = String(nameTxt).replace(/\.html?$/i, "").replace(/-\d{4}-\d{2}-\d{2}$/, "");
-        titul = titul === "pruvodce" ? "Průvodce koučinkem" : titul === "trenink" ? "Tréninkový plán" : titul === "jidelnicek" ? "Jídelníček na míru" : nameTxt;
+        if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") titul = window.KLIENT_I18N.personalTitle(titul) || nameTxt;
+        else titul = titul === "pruvodce" ? "Průvodce koučinkem" : titul === "trenink" ? "Tréninkový plán" : titul === "jidelnicek" ? "Jídelníček na míru" : nameTxt;
         var attr = html.replace(/&/g, "&amp;").replace(/"/g, "&quot;");
         w.document.open();
         w.document.write('<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + titul.replace(/</g, "&lt;") + ' · Martin Barna</title><style>html,body{margin:0;height:100%;background:#fff}iframe{border:0;width:100%;height:100%;display:block}</style></head><body><iframe sandbox="allow-popups allow-downloads allow-modals" srcdoc="' + attr + '"></iframe></body></html>');
@@ -610,13 +648,13 @@
     for(var g = 0; g <= 2; g++){
       var gv = yMin + (yMax - yMin) * g / 2, gy = Y(gv);
       out += '<line x1="' + pl + '" y1="' + gy + '" x2="' + (w - pr) + '" y2="' + gy + '" stroke="' + GRID + '"/>';
-      out += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="' + MUT + '">' + (Math.round(gv * 10) / 10).toLocaleString("cs-CZ") + '</text>';
+      out += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="' + MUT + '">' + locNum(gv, false) + '</text>';
     }
     // x popisky: max 5
     var step = Math.max(1, Math.ceil(n / 5));
     for(var i = 0; i < n; i += step){
       var d = new Date(dates[i] + "T12:00:00");
-      out += '<text x="' + X(i) + '" y="' + (h - 8) + '" text-anchor="middle" font-size="10" fill="' + MUT + '">' + d.getDate() + '.' + (d.getMonth() + 1) + '.</text>';
+      out += '<text x="' + X(i) + '" y="' + (h - 8) + '" text-anchor="middle" font-size="10" fill="' + MUT + '">' + axisDen(d) + '</text>';
     }
     if(cil != null){
       var cy = Y(cil);
@@ -641,8 +679,9 @@
     if(seriesList.length > 1){
       var lx = pl;
       seriesList.forEach(function(s){
-        out += '<circle cx="' + (lx + 4) + '" cy="10" r="4" fill="' + s.color + '"/><text x="' + (lx + 12) + '" y="14" font-size="10" fill="' + MUT + '">' + s.name + '</text>';
-        lx += 14 + s.name.length * 6.2;
+        var lab = (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") ? window.KLIENT_I18N.tr(s.name) : s.name;
+        out += '<circle cx="' + (lx + 4) + '" cy="10" r="4" fill="' + s.color + '"/><text x="' + (lx + 12) + '" y="14" font-size="10" fill="' + MUT + '">' + lab + '</text>';
+        lx += 14 + String(lab).length * 6.2;
       });
     }
     el(elId).innerHTML = out + "</svg>";
@@ -658,7 +697,7 @@
     for(var g = 0; g <= 2; g++){
       var gv = yMax * g / 2, gy = pt + (h - pt - pb) * (1 - gv / yMax);
       out += '<line x1="' + pl + '" y1="' + gy + '" x2="' + (w - pr) + '" y2="' + gy + '" stroke="' + GRID + '"/>';
-      out += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="' + MUT + '">' + Math.round(gv).toLocaleString("cs-CZ") + '</text>';
+      out += '<text x="' + (pl - 6) + '" y="' + (gy + 4) + '" text-anchor="end" font-size="10" fill="' + MUT + '">' + locNum(gv, true) + '</text>';
     }
     if(cilB != null){
       var cyB = pt + (h - pt - pb) * (1 - cilB / yMax);
@@ -670,11 +709,11 @@
       var cx = n < 2 ? (pl + (w - pl - pr) / 2) : pl + (w - pl - pr) * (i / (n - 1));
       if(i % step === 0){
         var d = new Date(p.x + "T12:00:00");
-        out += '<text x="' + cx + '" y="' + (h - 8) + '" text-anchor="middle" font-size="10" fill="' + MUT + '">' + d.getDate() + '.' + (d.getMonth() + 1) + '.</text>';
+        out += '<text x="' + cx + '" y="' + (h - 8) + '" text-anchor="middle" font-size="10" fill="' + MUT + '">' + axisDen(d) + '</text>';
       }
       if(p.y == null) return;
       var bh = (h - pt - pb) * (p.y / yMax);
-      out += '<rect x="' + (cx - bw / 2) + '" y="' + (h - pb - bh) + '" width="' + bw + '" height="' + bh + '" rx="3" fill="' + GOLD + '" opacity=".85"><title>' + dateCz(p.x) + ': ' + Math.round(p.y).toLocaleString("cs-CZ") + '</title></rect>';
+      out += '<rect x="' + (cx - bw / 2) + '" y="' + (h - pb - bh) + '" width="' + bw + '" height="' + bh + '" rx="3" fill="' + GOLD + '" opacity=".85"><title>' + dateCz(p.x) + ': ' + locNum(p.y, true) + '</title></rect>';
     });
     el(elId).innerHTML = out + "</svg>";
   }
@@ -698,7 +737,16 @@
     { k: "fat", label: "Tuky", unit: "g/den" }
   ];
   function tgVal(k){ return targets ? toNum(targets[k]) : null; }
-  function cele(v){ return Math.round(v).toLocaleString("cs-CZ"); }
+  function locNum(v, whole){
+    var n = whole ? Math.round(v) : Math.round(v * 10) / 10;
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return n.toLocaleString("en-US");
+    return n.toLocaleString("cs-CZ");
+  }
+  function cele(v){ return locNum(v, true); }
+  function axisDen(d){
+    if (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") return window.KLIENT_I18N.axisDenEn(d);
+    return d.getDate() + "." + (d.getMonth() + 1) + ".";
+  }
   function renderTargets(){
     // Nástroje jídelníčku a tréninku jsou sdílené s trenéry z Academy. Klient koučinku je
     // otevírá s ?klient=1: stránka pak mluví k němu (ne „zadej údaje klienta") a jídelníček
@@ -726,7 +774,7 @@
                 + '<div style="font-size:.72rem;color:#6d6879;">' + p.label + ' (' + p.unit + ')</div></div>';
             }).join("")
           + '</div>' : "")
-      + (note ? '<p style="margin:14px 0 0;font-size:.92rem;color:#E8E3EF;">💬 ' + escH(note) + '</p>' : "")
+      + (note ? '<p style="margin:14px 0 0;font-size:.92rem;color:#E8E3EF;">💬 <span data-user="1">' + escH(note) + '</span></p>' : "")
       + '<p style="margin:10px 0 0;font-size:.78rem;color:#8F8A99;">Zadal Martin'
       + (targets.updated_at ? " " + dateCz(String(targets.updated_at).slice(0, 10)) : "")
       + '. Co k tomu potřebuješ probrat, napiš do reportu.</p></div></div>';
@@ -900,7 +948,7 @@
         + "</td><td class='r'>" + czk(toNum(nu.fat)) + znackaAppky(nu, "fat", r.source)
         + "</td><td class='r'>" + czk(toNum(nu.fiber)) + znackaAppky(nu, "fiber", r.source)
         + "</td><td class='r'>" + czk(toNum(nu.dny_zapsano)) + (obdR && toNum(nu.dny_zapsano) != null ? "/" + obdR.dni : "") + znackaAppky(nu, "dny_zapsano", r.source)
-        + "</td><td class='r'>" + (toNum(ac.kroky) != null ? Math.round(toNum(ac.kroky)).toLocaleString("cs-CZ") : "-") + delta("kroky", ac.kroky, true, tgR)
+        + "</td><td class='r'>" + (toNum(ac.kroky) != null ? locNum(toNum(ac.kroky), true) : "-") + delta("kroky", ac.kroky, true, tgR)
         + "</td><td class='r'>" + czk(toNum(ac.fitko)) + delta("treninky", ac.fitko, true, tgR)
         + "</td><td class='r'>" + czk(sportMin) + delta("sport_min", sportMin, true, tgR)
         + "</td><td class='r'>" + czk(toNum(sc.dodrzeni)) + "</td></tr>";
@@ -917,8 +965,8 @@
     });
   }
 
-  function renderDocs(){
-    Promise.all([storageList("shared"), storageList(myEmail)]).then(function(res){
+  function renderDocs(listPromise){
+    (listPromise || Promise.all([storageList("shared"), storageList(myEmail)])).then(function(res){
       var items = [];
       (res[0] || []).forEach(function(o){ if(o && o.name && o.id) items.push({ path: "shared/" + o.name, name: o.name, size: o.metadata && o.metadata.size, shared: true, at: o.created_at }); });
       (res[1] || []).forEach(function(o){ if(o && o.name && o.id) items.push({ path: myEmail + "/" + o.name, name: o.name, size: o.metadata && o.metadata.size, shared: false, at: o.created_at }); });
@@ -932,19 +980,41 @@
       items.sort(function(a, b){ return String(b.at || "").localeCompare(String(a.at || "")); });
       var host = el("docs");
       items.forEach(function(it){
+        var en = window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en";
+        var view = en ? window.KLIENT_I18N.materialView(it.name) : null;
+        if(en && it.shared && (!view || view.hide || !view.page)) return;
+        if(view && view.hide) return;
         var a = document.createElement("a");
-        a.className = "doc"; a.href = "#";
+        a.className = "doc";
+        var shared = it.shared ? ' <span style="color:#8F8A99;font-size:.78rem;">· pro všechny klienty</span>' : "";
+        var size = it.size ? Math.max(1, Math.round(it.size / 1024)) + " kB" : "";
+        if(view && view.page){
+          a.href = view.page; a.target = "_blank"; a.rel = "noopener";
+          a.innerHTML = '<span class="ic">📋</span><span>' + escH(view.title) + shared + '</span><span class="sz">' + size + "</span>";
+          host.appendChild(a);
+          if(view.pdf){
+            var pdf = document.createElement("a");
+            pdf.className = "doc"; pdf.href = view.pdf; pdf.target = "_blank"; pdf.rel = "noopener";
+            pdf.innerHTML = '<span class="ic">📄</span><span>' + escH(view.title) + " PDF" + shared + "</span><span class=\"sz\"></span>";
+            host.appendChild(pdf);
+          }
+          return;
+        }
+        a.href = "#";
         // Lidský název místo souboru: `pruvodce-2026-09-05.html` je pro klienta šifra (5. 9. 2026).
-        a.innerHTML = '<span class="ic">' + (jeHtml(it.name) ? "📋" : "📄") + '</span><span>' + escH(hezkyNazev(it.name)) + (it.shared ? ' <span style="color:#8F8A99;font-size:.78rem;">· pro všechny klienty</span>' : "") + '</span><span class="sz">' + (it.size ? Math.max(1, Math.round(it.size / 1024)) + " kB" : "") + "</span>";
+        var nazev = hezkyNazev(it.name);
+        var nazevHtml = (view === null && en && !/^(pruvodce|trenink|jidelnicek)-\d{4}-\d{2}-\d{2}\.html?$/i.test(it.name))
+          ? '<span data-user="1">' + escH(nazev) + "</span>" : escH(nazev);
+        a.innerHTML = '<span class="ic">' + (jeHtml(it.name) ? "📋" : "📄") + "</span><span>" + nazevHtml + shared + '</span><span class="sz">' + size + "</span>";
         a.addEventListener("click", function(e){ e.preventDefault(); openDoc(it.path, it.name); });
         host.appendChild(a);
       });
     });
   }
 
-  function renderFotky(){
+  function renderFotky(listPromise){
     // fotky z reportů (podsložka email/fotky/) - SELECT policy vlastní složky je pokrývá
-    storageList(myEmail + "/fotky").then(function(list){
+    (listPromise || storageList(myEmail + "/fotky")).then(function(list){
       var imgs = (list || []).filter(function(o){
         if(!(o && o.name && o.id)) return false;
         var mt = (o.metadata && o.metadata.mimetype) || "";
@@ -973,11 +1043,12 @@
       imgs.forEach(function(o){
         var ts = (String(o.name).match(/^(\d{13})/) || [])[1];
         var dd = ts ? new Date(Number(ts)) : (o.created_at ? new Date(o.created_at) : null);
-        var when = (dd && !isNaN(dd)) ? dd.getDate() + ". " + (dd.getMonth() + 1) + ". " + dd.getFullYear() : "";
+        var when = "";
+        if(dd && !isNaN(dd)) when = (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") ? window.KLIENT_I18N.dateEn(dd) : (dd.getDate() + ". " + (dd.getMonth() + 1) + ". " + dd.getFullYear());
         var card = document.createElement("a");
         card.className = "fitem"; card.href = "#"; card.target = "_blank"; card.rel = "noopener";
         card.setAttribute("data-path", myEmail + "/fotky/" + o.name);
-        card.innerHTML = '<img alt="' + escH(when ? "Fotka z " + when : o.name) + '"><span class="fd">' + escH(when || o.name) + '</span>';
+        card.innerHTML = '<img alt="' + escH(when ? "Fotka z " + when : o.name) + '"><span class="fd">' + (when ? escH(when) : '<span data-user="1">' + escH(o.name) + "</span>") + "</span>";
         card.addEventListener("click", function(e){ if(card.getAttribute("href") === "#") e.preventDefault(); });
         host.appendChild(card);
         if(io) io.observe(card); else loadImg(card);
@@ -1002,7 +1073,8 @@
   function wCloseFn(force){
     // `_obdobi` je jen značka konceptu (období reportu), ne odpověď klienta: sama o sobě se neptá.
     var odpovedi = Object.keys(W.ans).filter(function(k){ return k !== "_obdobi"; });
-    if(!force && odpovedi.length && !confirm("Zavřít? Rozpracované odpovědi zůstanou uložené v tomhle prohlížeči.")) return;
+    var zavrit = "Zavřít? Rozpracované odpovědi zůstanou uložené v tomhle prohlížeči.";
+    if(!force && odpovedi.length && !confirm(window.KLIENT_I18N ? window.KLIENT_I18N.tr(zavrit) : zavrit)) return;
     el("wiz").classList.remove("open"); document.body.style.overflow = "";
   }
   function wSaveDraft(){ try { localStorage.setItem(draftKey(), JSON.stringify({ ans: W.ans, t: Date.now() })); } catch(e){} }
@@ -1058,7 +1130,7 @@
 
   // ---- field helpers ----
   function fNum(id, label, unit, ph, val, opt){
-    if(typeof val === "number") val = String(val).replace(".", ",");   // česká čárka v inputu (draft ukládá čísla)
+    if(typeof val === "number") val = (window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en") ? String(val) : String(val).replace(".", ",");   // česká čárka v inputu (draft ukládá čísla)
     return '<div class="frow"><label for="' + id + '">' + label + (opt ? ' <span class="opt">(nepovinné)</span>' : "") + '</label><div class="funit"><input class="fin" id="' + id + '" type="text" inputmode="decimal" placeholder="' + (ph || "") + '" value="' + escH(val == null ? "" : val) + '">' + (unit ? '<span class="u">' + unit + "</span>" : "") + "</div></div>";
   }
   function fText(id, label, ph, val, opt, area){
@@ -1079,7 +1151,7 @@
     return /^image\//.test(t) || t === "application/pdf" || /\.(pdf|xls|xlsx)$/.test(n);
   }
   function fotoRender(){
-    var list = WFILES.map(function(f, i){ return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;font-size:.9rem;color:#E8E3EF;"><span>' + (/^image\//.test(f.type || "") ? "📷" : "📎") + ' ' + escH(f.name) + ' <span style="color:#8F8A99;">(' + Math.max(1, Math.round(f.size / 1024)) + ' kB)</span></span><button type="button" data-frm="' + i + '" style="background:none;border:none;color:#e05c5c;cursor:pointer;font-size:1rem;">✕</button></div>'; }).join("");
+    var list = WFILES.map(function(f, i){ return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;font-size:.9rem;color:#E8E3EF;"><span>' + (/^image\//.test(f.type || "") ? "📷" : "📎") + ' <span data-user="1">' + escH(f.name) + '</span> <span style="color:#8F8A99;">(' + Math.max(1, Math.round(f.size / 1024)) + ' kB)</span></span><button type="button" data-frm="' + i + '" style="background:none;border:none;color:#e05c5c;cursor:pointer;font-size:1rem;">✕</button></div>'; }).join("");
     return '<div class="frow"><label>Fotky a přílohy <span class="opt">(nepovinné · max 6, každá do 8 MB)</span></label>'
       + '<input type="file" id="f_foto" accept="image/*,application/pdf,.xls,.xlsx" multiple class="fin" style="padding:10px;">'
       + '<div id="f_fotoList" style="margin-top:8px;">' + list + '</div></div>'
@@ -1539,7 +1611,7 @@
         render: function(a){
           function g(title, gotoId, rows){
             var filled = rows.filter(function(r){ return r[1] !== "" && r[1] != null && r[1] !== "-"; });
-            return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
+            return '<div class="sumg"><h4>' + title + ' <button type="button" data-goto="' + gotoId + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return sumRow(r[0], r[1]); }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
           }
           var m = a.measurements || {}, n = a.nutrition || {}, ac = a.activity || {}, s = a.scales || {}, t = a.notes || {}, p = a.plan || {};
           return obdBox()
@@ -1632,7 +1704,7 @@
             ["Poznámka", "pozn", [["Vzkaz", a.poznamka]]]];
           return groups.map(function(grp){
             var filled = grp[2].filter(function(r){ return r[1] !== "" && r[1] != null; });
-            return '<div class="sumg"><h4>' + grp[0] + ' <button type="button" data-goto="' + grp[1] + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return '<div class="kv"><span>' + r[0] + "</span><span>" + escH(r[1]) + "</span></div>"; }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
+            return '<div class="sumg"><h4>' + grp[0] + ' <button type="button" data-goto="' + grp[1] + '">Upravit</button></h4>' + (filled.length ? filled.map(function(r){ return sumRow(r[0], r[1]); }).join("") : '<div class="kv"><span>-</span><span></span></div>') + "</div>";
           }).join("");
         },
         mount: mountGoto,
@@ -1681,7 +1753,13 @@
   function boot(u){
     myEmail = String(u.email || "").toLowerCase();
     myName = (u.user_metadata && (u.user_metadata.full_name || u.user_metadata.name)) || "";
-    function pozdrav(){ el("hello").textContent = myName ? "Ahoj, " + vokativ(myName.split(" ")[0]) + "!" : "Ahoj!"; }
+    function pozdrav(){
+      if(window.KLIENT_I18N && window.KLIENT_I18N.lang()==="en"){
+        el("hello").textContent = myName ? "Hi, " + myName.split(" ")[0] + "!" : "Hi!";
+        return;
+      }
+      el("hello").textContent = myName ? "Ahoj, " + vokativ(myName.split(" ")[0]) + "!" : "Ahoj!";
+    }
     pozdrav();
     // Jméno klienta zadává Martin v adminu (customer_contacts); magic link ho do
     // user_metadata nedá, takže sekce zdravila „Ahoj!" a report šel s e-mailem
@@ -1694,6 +1772,17 @@
     }
     var ap = el("tileAppka");
     if(ap) ap.setAttribute("href", "https://coach.martinbarna.cz/sign-in?email=" + encodeURIComponent(myEmail) + "&from=koucink");
+    // Seznamy ze Storage startují hned, vykreslí se až po jazyku (jinak by EN klient
+    // stihl dostat české sdílené přílohy, kdyby storage došlo dřív než client_targets).
+    var docsPromise = Promise.all([storageList("shared"), storageList(myEmail)]);
+    var fotosPromise = storageList(myEmail + "/fotky");
+    var dokumentyHotovo = false;
+    function ukazDokumenty(){
+      if(dokumentyHotovo) return;
+      dokumentyHotovo = true;
+      renderDocs(docsPromise);
+      renderFotky(fotosPromise);
+    }
     el("load").style.display = "none"; el("app").style.display = "";
     // ⛔ FILTR NA VLASTNÍ E-MAIL PATŘÍ DO DOTAZU, ne jen do RLS.
     // Do 4. 8. 2026 tu filtr nebyl a stránka spoléhala na politiky. Jenže
@@ -1722,6 +1811,8 @@
       intakeRow = (Array.isArray(res[1]) && res[1].length) ? res[1][0] : null;
       hasIntake = !!intakeRow;
       targets = (Array.isArray(res[2]) && res[2].length) ? res[2][0] : null;
+      if(window.KLIENT_I18N){ try { window.KLIENT_I18N.applyClientLang(targets); } catch(e){} }
+      pozdrav();
       if(!hasIntake && res[1] !== null) el("intakeCta").style.display = ""; // při chybě nenutit dotazník stávajícímu klientovi
       renderTargets();
       renderDash(failed);
@@ -1739,9 +1830,8 @@
           var bi = el("btnIntake"); if(bi) bi.click();
         }
       }catch(e){}
-    }).catch(function(){ renderDash(true); });
-    renderDocs();
-    renderFotky();
+      ukazDokumenty();
+    }).catch(function(){ renderDash(true); ukazDokumenty(); });
     // reference: souhlas + jejich slova → mail Martinovi
     el("refOpen").addEventListener("click", function(){ el("refForm").style.display = ""; el("refOpen").style.display = "none"; });
     el("refSend").addEventListener("click", function(){
@@ -1770,7 +1860,7 @@
         var ctx = c.getContext("2d");
         ctx.fillStyle = "#15171a"; ctx.fillRect(0, 0, c.width, c.height);
         ctx.drawImage(img, 0, 0, c.width, c.height);
-        ctx.fillStyle = "#8F8A99"; ctx.font = "14px Arial"; ctx.fillText("martinbarna.cz · osobní koučink", 12, c.height - 10);
+        ctx.fillStyle = "#8F8A99"; ctx.font = "14px Arial"; ctx.fillText(window.KLIENT_I18N ? window.KLIENT_I18N.tr("martinbarna.cz · osobní koučink") : "martinbarna.cz · osobní koučink", 12, c.height - 10);
         var a = document.createElement("a"); a.download = "moje-vaha.png"; a.href = c.toDataURL("image/png"); a.click();
       };
       img.onerror = function(){ toast("Obrázek se nepodařilo vytvořit."); };
@@ -1795,6 +1885,8 @@
         OBD = o;
         wOpen("report", reportSteps(), function(a){
           // plan_next jede uvnitr activity (jsonb), at neni potreba nova kolona v client_reports
+          // ⛔ Payload zůstává tady, ne v klient-i18n.js: když se vrstva nenačte, report musí odejít.
+          // Stejný tvar drží KLIENT_I18N.reportPayload jen kvůli testu CZ = EN.
           var ac = a.activity || {};
           if(a.plan) ac.plan_next = a.plan;
           // Období, ke kterému patří čísla. Server ho zkontroluje a uloží (bez období = jako dřív).
