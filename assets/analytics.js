@@ -5,6 +5,27 @@
   var GA_ID = 'G-C3JC8G3FS0';
   var KEY = 'mb_consent_v1';
 
+  // ⭐ [13. 10. 2026] ANGLICKÉ STRÁNKY (martinbarna.cz/en/…): stejná lišta, stejná pravidla
+  // souhlasu i stejné měření jako český web, jen anglický text a odkaz na /en/privacy/.
+  // Pozná se podle <html lang="en"> nebo cesty /en/. České znění níž je beze změny.
+  // ⚠️ EN stránky načítají tenhle soubor s vlastním ?v= (g24), české zůstávají na g23.
+  var EN = /^en\b/i.test(document.documentElement.getAttribute('lang') || '') || /^\/en(\/|$)/.test(location.pathname);
+  var TXT = EN ? {
+    aria: 'Cookie consent',
+    long: 'We use cookies for visitor statistics (Google Analytics) and ad measurement (Meta Pixel) to make the website and the ads better. They only start with your consent. Details in the <a href="/en/privacy/" style="color:#F6CD63">Privacy Policy</a>.',
+    short: '🍪 Cookies for statistics and ad measurement, only with your consent. <a href="/en/privacy/" style="color:#F6CD63">Privacy</a>.',
+    ok: 'Accept',
+    no: 'Decline',
+    an: 'Allow statistics only (no ad cookies)'
+  } : {
+    aria: 'Souhlas s cookies',
+    long: 'Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.',
+    short: '🍪 Cookies pro statistiku a měření reklam, jen s tvým souhlasem. <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">Zásady</a>.',
+    ok: 'Přijmout',
+    no: 'Odmítnout',
+    an: 'Povolit jen statistiku (bez reklamních cookies)'
+  };
+
   // ⛔⛔ [6. 9. 2026] VOLBA SE UKLÁDÁ NA DVĚ MÍSTA, JINAK SE LIŠTA VRACÍ.
   // Tester hlásil, že po kliknutí na „Odmítnout" lišta zůstává. Ve skutečnosti zmizí,
   // ale volba se ukládala JEN do `localStorage`, a ten je v přísném režimu prohlížeče
@@ -269,7 +290,7 @@
     var box = document.createElement('div');
     box.id = 'mb-cookie';
     box.setAttribute('role', 'dialog');
-    box.setAttribute('aria-label', 'Souhlas s cookies');
+    box.setAttribute('aria-label', TXT.aria);
     box.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:3000;max-width:360px;' +
       'background:linear-gradient(180deg,#16130f,#100d0a);color:#ece4d9;border:1px solid rgba(255,255,255,.1);border-radius:16px;' +
       '-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);' +
@@ -277,12 +298,12 @@
       'font-size:.92rem;line-height:1.5;';
     box.innerHTML =
       '<div class="mb-c-title" style="font-weight:700;margin-bottom:.3rem;color:#fff">🍪 Cookies</div>' +
-      '<div class="mb-c-text" style="color:#f3ece2"><span class="mb-c-long">Používáme cookies pro statistiku návštěvnosti (Google Analytics) a měření reklam (Meta Pixel), abychom web i reklamy vylepšovali. Spustí se až s tvým souhlasem. Podrobnosti v <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">zásadách ochrany údajů</a>.</span><span class="mb-c-short">🍪 Cookies pro statistiku a měření reklam, jen s tvým souhlasem. <a href="/zasady-ochrany-osobnich-udaju/" style="color:#F6CD63">Zásady</a>.</span></div>' +
+      '<div class="mb-c-text" style="color:#f3ece2"><span class="mb-c-long">' + TXT.long + '</span><span class="mb-c-short">' + TXT.short + '</span></div>' +
       '<div style="display:flex;gap:8px;margin-top:12px">' +
-        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#EBB12C;color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">Přijmout</button>' +
-        '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:2px">Odmítnout</button>' +
+        '<button id="mb-c-ok" style="flex:1;border:none;cursor:pointer;background:#EBB12C;color:#160d04;font-weight:700;padding:10px 12px;border-radius:2px">' + TXT.ok + '</button>' +
+        '<button id="mb-c-no" style="flex:1;border:1.5px solid rgba(255,255,255,.22);cursor:pointer;background:transparent;color:#ece4d9;font-weight:700;padding:10px 12px;border-radius:2px">' + TXT.no + '</button>' +
       '</div>' +
-      '<button id="mb-c-an" style="width:100%;margin-top:8px;border:none;background:transparent;color:#cabfae;cursor:pointer;font-family:inherit;font-size:.82rem;text-decoration:underline;padding:2px">Povolit jen statistiku (bez reklamních cookies)</button>';
+      '<button id="mb-c-an" style="width:100%;margin-top:8px;border:none;background:transparent;color:#cabfae;cursor:pointer;font-family:inherit;font-size:.82rem;text-decoration:underline;padding:2px">' + TXT.an + '</button>';
     document.body.appendChild(box);
     document.getElementById('mb-c-ok').onclick = function () { setChoice('granted', box); };
     document.getElementById('mb-c-no').onclick = function () { setChoice('denied', box); };
@@ -605,6 +626,21 @@
    odkaz chová normálně (otevře appku se zprávou) - tam QR netřeba. */
 (function () {
   var PHONE = '420603229831';
+  // [13. 10. 2026] Anglické stránky (/en/, <html lang="en">) dostanou okno anglicky, české beze změny.
+  var EN = /^en\b/i.test(document.documentElement.getAttribute('lang') || '') || /^\/en(\/|$)/.test(location.pathname);
+  var Q = EN ? {
+    aria: 'WhatsApp QR code',
+    close: 'Close',
+    text: 'Scan the QR code with your phone and a chat with me opens with the message ready. Or write to <b>+420&nbsp;603&nbsp;229&nbsp;831</b>.',
+    web: 'Open WhatsApp Web',
+    app: 'I have the app on my computer → open it directly'
+  } : {
+    aria: 'WhatsApp QR kód',
+    close: 'Zavřít',
+    text: 'Naskenuj QR kód mobilem a otevře se ti chat se mnou i s předvyplněnou zprávou. Nebo napiš na <b>+420&nbsp;603&nbsp;229&nbsp;831</b>.',
+    web: 'Otevřít WhatsApp Web',
+    app: 'Mám appku v počítači → otevřít rovnou'
+  };
   function isDesktop() {
     var coarse = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
     var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent || '');
@@ -628,16 +664,16 @@
   function openQR(href) {
     closeQR();
     var wrap = document.createElement('div');
-    wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-label', 'WhatsApp QR kód');
+    wrap.setAttribute('role', 'dialog'); wrap.setAttribute('aria-label', Q.aria);
     wrap.style.cssText = 'position:fixed;inset:0;z-index:4000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px;font-family:Poppins,Arial,sans-serif;';
     wrap.innerHTML =
       '<div style="background:#fff;color:#161616;border-radius:18px;max-width:340px;width:100%;padding:24px 22px 20px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.35);position:relative;">' +
-        '<button type="button" aria-label="Zavřít" data-x style="position:absolute;top:8px;right:12px;border:none;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#9a948c;">×</button>' +
+        '<button type="button" aria-label="' + Q.close + '" data-x style="position:absolute;top:8px;right:12px;border:none;background:transparent;font-size:1.6rem;line-height:1;cursor:pointer;color:#9a948c;">×</button>' +
         '<div style="display:flex;align-items:center;justify-content:center;gap:9px;font-weight:800;font-size:1.08rem;margin-bottom:.3rem;"><span style="width:13px;height:13px;border-radius:50%;background:#EBB12C;display:inline-block;"></span>WhatsApp</div>' +
-        '<p style="margin:.2rem 0 1rem;color:#5a5045;font-size:.9rem;line-height:1.45;">Naskenuj QR kód mobilem a otevře se ti chat se mnou i s předvyplněnou zprávou. Nebo napiš na <b>+420&nbsp;603&nbsp;229&nbsp;831</b>.</p>' +
-        '<img src="' + qrFileFor(href) + '" alt="WhatsApp QR kód" width="210" height="210" style="width:210px;height:210px;display:block;margin:0 auto;border:1px solid #eee;border-radius:10px;padding:8px;background:#fff;">' +
-        '<a href="' + webHref(href) + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;background:#EBB12C;color:#fff;font-weight:700;text-decoration:none;padding:11px 22px;border-radius:50px;font-size:.92rem;">Otevřít WhatsApp Web</a>' +
-        '<div style="margin-top:10px;"><a href="' + href + '" target="_blank" rel="noopener" style="color:#9a948c;font-size:.82rem;">Mám appku v počítači → otevřít rovnou</a></div>' +
+        '<p style="margin:.2rem 0 1rem;color:#5a5045;font-size:.9rem;line-height:1.45;">' + Q.text + '</p>' +
+        '<img src="' + qrFileFor(href) + '" alt="' + Q.aria + '" width="210" height="210" style="width:210px;height:210px;display:block;margin:0 auto;border:1px solid #eee;border-radius:10px;padding:8px;background:#fff;">' +
+        '<a href="' + webHref(href) + '" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;background:#EBB12C;color:#fff;font-weight:700;text-decoration:none;padding:11px 22px;border-radius:50px;font-size:.92rem;">' + Q.web + '</a>' +
+        '<div style="margin-top:10px;"><a href="' + href + '" target="_blank" rel="noopener" style="color:#9a948c;font-size:.82rem;">' + Q.app + '</a></div>' +
       '</div>';
     wrap.addEventListener('click', function (e) { if (e.target === wrap) closeQR(); });
     wrap.querySelector('[data-x]').addEventListener('click', closeQR);

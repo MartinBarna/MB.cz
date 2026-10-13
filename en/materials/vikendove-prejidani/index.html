@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="description" content="A weekly average instead of daily perfection: how to plan higher days and handle weekend overeating without guilt. A guide by Martin Barna.">
+<title>How to handle weekend overeating: guide by Martin Barna</title>
+<link rel="stylesheet" href="../../../assets/vendor/fonts/poppins.css">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; }
+  body { font-family: 'Poppins', Arial, sans-serif; color: #F0EADF; background: #0C0B10; }
+  .page { width: 210mm; height: 297mm; background: linear-gradient(165deg, #15171a 0%, #0f1113 100%); padding: 18mm 20mm 14mm; position: relative; overflow: hidden; page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+
+  .brandrow { display: flex; align-items: center; gap: 4mm; margin-bottom: 10mm; }
+  .mark { width: 11mm; height: 11mm; border-radius: 3mm; background: #EBB12C; color: #1A1222; font-weight: 800; font-size: 5mm; display: flex; align-items: center; justify-content: center; }
+  .brand { font-weight: 800; font-size: 4mm; letter-spacing: .2mm; line-height: 1.2; }
+  .brand span { display: block; color: #F6CD63; font-weight: 600; font-size: 2.7mm; letter-spacing: .5mm; text-transform: uppercase; }
+
+  .eyebrow { color: #EBB12C; font-weight: 800; font-size: 3mm; letter-spacing: .3mm; text-transform: uppercase; margin: 0 0 3mm; }
+  h1 { font-size: 13mm; line-height: 1.1; font-weight: 800; margin: 0 0 5mm; }
+  h1 .hl { color: #EBB12C; }
+  h2 { font-size: 6.6mm; line-height: 1.15; font-weight: 800; margin: 0 0 5mm; }
+  h2 .hl { color: #EBB12C; }
+  h3 { font-size: 4.4mm; font-weight: 700; margin: 7mm 0 2.5mm; color: #F6CD63; }
+  p { font-size: 3.75mm; line-height: 1.6; color: #d9d5df; margin: 0 0 3.5mm; }
+  b, strong { color: #F0EADF; }
+
+  .lead { font-size: 4.3mm; line-height: 1.55; color: #ece8f0; }
+  .callout { background: rgba(235,177,44,.09); border-left: 1mm solid #EBB12C; border-radius: 0 2mm 2mm 0; padding: 5mm 6mm; margin: 5mm 0; }
+  .callout p { margin: 0; color: #F0EADF; }
+  .callout .k { color: #EBB12C; font-weight: 800; }
+
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 4mm 0; }
+  .steps > li { position: relative; padding-left: 11mm; margin-bottom: 5mm; }
+  .steps > li::before { counter-increment: s; content: counter(s); position: absolute; left: 0; top: -.5mm; width: 7.5mm; height: 7.5mm; background: #EBB12C; color: #1A1222; border-radius: 50%; font-weight: 800; font-size: 4mm; display: flex; align-items: center; justify-content: center; }
+  .steps > li b { color: #F6CD63; }
+
+  .split { display: flex; gap: 6mm; margin: 5mm 0; }
+  .col { flex: 1; background: rgba(255,255,255,.03); border: .3mm solid rgba(255,255,255,.08); border-radius: 3mm; padding: 5mm 6mm; }
+  .col.no { border-color: rgba(224,90,90,.35); }
+  .col.yes { border-color: rgba(235,177,44,.4); }
+  .col .h { font-weight: 800; font-size: 3.7mm; margin-bottom: 2.5mm; }
+  .col.no .h { color: #e07a7a; }
+  .col.yes .h { color: #EBB12C; }
+  .col ul { margin: 0; padding-left: 4.5mm; }
+  .col li { font-size: 3.4mm; line-height: 1.45; margin-bottom: 1.8mm; color: #cfc9d6; }
+
+  .checklist { list-style: none; padding: 0; margin: 3mm 0; }
+  .checklist li { position: relative; padding-left: 7mm; font-size: 3.6mm; line-height: 1.4; margin-bottom: 2.6mm; color: #ded9e4; }
+  .checklist li::before { content: "✓"; position: absolute; left: 0; top: -.2mm; color: #EBB12C; font-weight: 800; font-size: 4.2mm; }
+  .phase { color: #F6CD63; font-weight: 800; font-size: 3.4mm; letter-spacing: .3mm; text-transform: uppercase; margin: 3.2mm 0 2mm; }
+
+  .keys { counter-reset: k; list-style: none; padding: 0; margin: 4mm 0; }
+  .keys li { counter-increment: k; position: relative; padding: 4mm 5mm 4mm 13mm; background: rgba(255,255,255,.03); border-radius: 2.5mm; margin-bottom: 3mm; font-size: 3.9mm; line-height: 1.4; }
+  .keys li::before { content: counter(k); position: absolute; left: 4.5mm; top: 3.4mm; color: #EBB12C; font-weight: 800; font-size: 6mm; }
+
+  .cta { background: linear-gradient(160deg, #211b26 0%, #17131c 100%); border: .3mm solid rgba(235,177,44,.3); border-radius: 4mm; padding: 7mm 8mm; margin-top: 6mm; }
+  .cta h2 { margin-bottom: 3mm; }
+  .cta .line { font-size: 3.7mm; color: #ded9e4; margin-bottom: 2mm; padding-left: 6mm; position: relative; }
+  .cta .line::before { content: "→"; position: absolute; left: 0; color: #EBB12C; font-weight: 800; }
+
+  .foot { position: absolute; left: 20mm; right: 20mm; bottom: 9mm; display: flex; justify-content: space-between; align-items: baseline; border-top: .3mm solid rgba(255,255,255,.1); padding-top: 3mm; font-size: 2.7mm; color: #8F8A99; }
+  .foot .beff { color: #EBB12C; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online nutrition coach</span></div></div>
+  <div style="margin-top: 34mm">
+    <p class="eyebrow">Macro coaching · practical guide</p>
+    <h1>How to handle<br><span class="hl">weekend overeating</span></h1>
+    <p class="lead">A system with no strict bans and no weekend chaos. You stay in control, you keep room for real life, and the results last.</p>
+  </div>
+  <div class="callout" style="margin-top: 12mm">
+    <p><span class="k">The most important change, right at the start:</span> instead of “strict 5-6 days + weekend chaos” you move to a <b>weekly calorie average</b>. The weekend can be higher if you planned it and the rest of the week balances it out. That is flexibility that works long term.</p>
+  </div>
+  <div class="foot"><span>martinbarna.cz/en</span><span class="beff">Be Effective!</span></div>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online nutrition coach</span></div></div>
+  <p class="eyebrow">Why this happens</p>
+  <h2>Why rigid plans <span class="hl">fail</span></h2>
+  <p>When you have an exact meal plan for every day, written by someone else, you feel either “successful” (when you follow it) or like a “failure” (when you don’t). That creates huge pressure. Then the weekend comes with “now I finally deserve it”. And overeating is almost unavoidable.</p>
+  <p>In macro coaching we do it differently. You learn to work with macros (protein, carbs, fats) and to weigh your food. The goal is to eat intuitively and sensibly after a few months, so you don’t depend on tables forever. You get there because you went through the phase of weighing, logging and learning what foods “cost” in calories.</p>
+
+  <h3>1. A weekly average instead of daily perfection</h3>
+  <p>The most successful clients stop chasing the perfect day and look at the whole week:</p>
+  <ul class="steps">
+    <li><b>Monday-Thursday:</b> a moderate deficit (this is where you “save up” room).</li>
+    <li><b>Friday-Saturday:</b> a higher intake, but <b>planned</b>, not chaos.</li>
+    <li><b>Sunday:</b> back to a sustainable intake.</li>
+  </ul>
+  <div class="callout">
+    <p><span class="k">In numbers:</span> if you hold a deficit of ~300-500 kcal/day during the week, you can easily “save up” <b>1,500-2,000 kcal</b> over 4 days. That is real room for one proper dinner or two higher meals on the weekend, and the weekly average still stays in a deficit. You keep losing weight, without extremes and without the rebound effect.</p>
+  </div>
+  <div class="foot"><span>Macro coaching · weekend overeating</span><span>page 2 · martinbarna.cz/en</span></div>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online nutrition coach</span></div></div>
+  <p class="eyebrow">Practical strategies</p>
+  <h2>What to <span class="hl">actually do</span></h2>
+
+  <h3>2. Plan your “higher days” ahead</h3>
+  <p>The best defense against impulsive overeating is a plan made in advance:</p>
+  <ul class="steps">
+    <li>On Friday morning, sit down for <b>5-10 minutes</b> and decide which <b>1-2 meals</b> of the weekend you really want to enjoy.</li>
+    <li>Log them in your food-tracking app: you see how much of your “budget” they take.</li>
+    <li>For the rest of the weekend, keep protein high and eat plenty of volume (vegetables).</li>
+  </ul>
+  <p>With a plan you reduce decision fatigue and the risk of “one meal and then I’ll deal with it on Monday”.</p>
+
+  <h3>3. Protein + volume as the base (on weekends too)</h3>
+  <p>Even when you eat something that isn’t “ideal”, you can limit the impact a lot. The order on your plate:</p>
+  <ul class="steps">
+    <li>Start with a <b>big portion of protein</b> (100-150 g of meat/fish/quark or a shake).</li>
+    <li>Add <b>plenty of low-calorie vegetables</b> (volume = fullness).</li>
+    <li>Only then carbs and fats.</li>
+  </ul>
+  <div class="callout">
+    <p><span class="k">How much protein is enough:</span> for fat loss and keeping muscle, usually <b>1.6-2.2 g per kg</b> of body weight. More does no harm, but if it stresses you out and you feel like a failure when you miss it, it isn’t necessary. The goal is sustainability, not perfectionism.</p>
+  </div>
+  <div class="split">
+    <div class="col yes"><div class="h">A planned higher day</div><ul><li>I know in advance what I’ll have</li><li>Protein + vegetables first</li><li>Back to your rhythm the next morning</li><li>Fits into the weekly average</li></ul></div>
+    <div class="col no"><div class="h">An uncontrolled “binge”</div><ul><li>Impulse, no plan</li><li>Overeating until you feel sick</li><li>Guilt → “I’ll start again on Monday”</li><li>Wrecks the whole week</li></ul></div>
+  </div>
+  <div class="foot"><span>Macro coaching · weekend overeating</span><span>page 3 · martinbarna.cz/en</span></div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online nutrition coach</span></div></div>
+  <p class="eyebrow">Mindset and reset</p>
+  <h2>Your head, Monday <span class="hl">and your system</span></h2>
+
+  <h3>4. Mindful eating and no guilt</h3>
+  <p>When you decide to have something special, do it with attention: eat slowly, don’t count every calorie in your head and enjoy it. After the meal, tell yourself: <b>“That was good. Now I’m going back to the plan.”</b> No self-blame. Guilt is one of the strongest triggers for more overeating. Drop it.</p>
+
+  <h3>5. The Monday reset (linked to your reports)</h3>
+  <div class="split">
+    <div class="col no"><div class="h">What NOT to do on Monday</div><ul><li>Starve or “detox”</li><li>Punish yourself with extra training</li><li>Fall into a feeling of failure</li></ul></div>
+    <div class="col yes"><div class="h">What to do</div><ul><li>Back to your normal plan (you can go <span style="white-space:nowrap">100-200 kcal</span> lower for 2-3 days)</li><li>Higher protein, quality training</li><li>Fill in your Monday report</li></ul></div>
+  </div>
+  <p>That brings you back to your rhythm quickly and without the yo-yo effect, and your coach has the data to adjust your plan if needed.</p>
+
+  <h3>Your action plan for this weekend</h3>
+  <p class="phase">Friday morning (5-10 minutes)</p>
+  <ul class="checklist"><li>Decide on max. 1-2 “higher” meals you want to enjoy</li><li>Log them in your app (you see how much budget they take)</li><li>Slightly adjust Wednesday/Thursday so the weekly average works out</li></ul>
+  <p class="phase">During the weekend</p>
+  <ul class="checklist"><li>Start every bigger meal with protein + vegetables</li><li>Drink plenty of water</li><li>If you drink alcohol: in moderation and with food</li></ul>
+  <p class="phase">Monday: report + reset</p>
+  <ul class="checklist"><li>Back to your normal plan, higher protein</li><li>Fill in your report (weight, energy, hunger, macros, steps…)</li><li>No guilt, just data and back to your rhythm</li></ul>
+  <div class="foot"><span>Macro coaching · weekend overeating</span><span>page 4 · martinbarna.cz/en</span></div>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page">
+  <div class="brandrow"><div class="mark">MB</div><div class="brand">Martin Barna<span>online nutrition coach</span></div></div>
+  <p class="eyebrow">The long-term solution</p>
+  <h2>Your way <span class="hl">forward</span></h2>
+  <p>The best results come from clients who:</p>
+  <ul class="checklist">
+    <li>Stop seeing weekends as the “enemy” of their goals</li>
+    <li>Learn to plan ahead (a proactive approach)</li>
+    <li>Move from “someone tells me what to eat” to “I can plan it myself”</li>
+    <li>Understand that weighing and logging is a temporary tool on the way to intuition</li>
+    <li>Have a strong reason “why” and are willing to keep going for long enough</li>
+  </ul>
+
+  <h3>Summary: 5 keys</h3>
+  <ul class="keys">
+    <li>Move from daily perfection to a <b>weekly average</b>.</li>
+    <li>Plan 1-2 higher meals ahead (Friday, 5-10 minutes).</li>
+    <li><b>Protein + volume</b> as the base, on weekends too.</li>
+    <li>Eat with attention and <b>without guilt</b>. Guilt kills results.</li>
+    <li>Monday = <b>report + reset</b>, not a punishment.</li>
+  </ul>
+
+  <div class="cta">
+    <h2 style="font-size:6mm">Want to go <span class="hl">further?</span></h2>
+    <p style="margin-bottom:4mm">I don’t plan to send you exact meal plans forever. You learn macros, weighing and planning, and in the end you eat intuitively and with awareness, which gives you freedom and control at the same time.</p>
+    <div class="line">Apply on <b>martinbarna.cz/en</b> (in writing, no call needed)</div>
+    <div class="line">Weekly report + my written reply, and WhatsApp support Monday to Friday (I reply within 24 hours)</div>
+    <div class="line">12 weeks or longer = best results (real change takes time)</div>
+  </div>
+  <div class="foot"><span>Martin Barna · online nutrition and fitness</span><span class="beff">Be Effective!</span></div>
+</div>
+
+</body>
+</html>

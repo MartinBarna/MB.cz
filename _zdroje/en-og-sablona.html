@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<title>OG en-coaching</title>
+<!-- Šablona OG obrázku pro martinbarna.cz/en/ (13. 10. 2026). Mimo deploy (_zdroje/ je ve vyloučení FTP).
+     Výroba (lokální server v kořeni repa na :8099):
+       chrome --headless --hide-scrollbars --window-size=1200,630 --screenshot=og.png http://127.0.0.1:8099/_zdroje/en-og-sablona.html
+       python: PIL převod og.png -> en/og/en-coaching.jpg (kvalita 86)
+     Texty jen z ověřené copy (title stránky, řádek důvěry z landing-copy.md). -->
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css">
+<style>
+  html,body{margin:0;width:1200px;height:630px;overflow:hidden;background:#0c0b10;}
+  .og{position:relative;width:1200px;height:630px;font-family:'Poppins',Arial,sans-serif;color:#fff;}
+  .og img{position:absolute;right:0;top:0;width:700px;height:630px;object-fit:cover;object-position:50% 22%;}
+  .og::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0c0b10 0%,#0c0b10 44%,rgba(12,11,16,.82) 60%,rgba(12,11,16,.18) 100%);}
+  .bar{position:absolute;left:0;top:0;bottom:0;width:14px;background:#EBB12C;z-index:2;}
+  .txt{position:absolute;left:78px;top:92px;width:640px;z-index:2;}
+  .kick{display:inline-block;font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#F6CD63;font-size:26px;border:2px solid rgba(235,177,44,.55);background:rgba(235,177,44,.12);padding:8px 18px;}
+  h1{font-size:64px;line-height:1.08;font-weight:800;margin:30px 0 0;letter-spacing:-.01em;}
+  .brand{position:absolute;left:78px;bottom:70px;display:flex;align-items:center;gap:16px;z-index:2;}
+  .mb{width:62px;height:62px;border-radius:14px;background:#EBB12C;color:#161616;font-weight:800;font-size:26px;display:flex;align-items:center;justify-content:center;}
+  .who{font-family:'Barlow Condensed','Arial Narrow',Arial,sans-serif;text-transform:uppercase;line-height:1.1;}
+  .who b{display:block;font-size:30px;letter-spacing:.06em;}
+  .who span{display:block;font-size:20px;letter-spacing:.14em;color:#F6CD63;font-weight:600;}
+</style>
+</head>
+<body>
+  <div class="og">
+    <img src="/assets/foto/martin/hero.jpg" alt="">
+    <div class="bar"></div>
+    <div class="txt">
+      <span class="kick">Since 2013 · 600+ clients</span>
+      <h1>Fat loss coaching for busy professionals</h1>
+    </div>
+    <div class="brand"><span class="mb">MB</span><span class="who"><b>Martin Barna</b><span>Online nutrition &amp; fitness</span></span></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit tracker: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="The science of building habits plus a printable weekly habit tracker: small steps, if-then plans and a simple sheet. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* tracker table */
+  table.tracker{width:100%;border-collapse:collapse;margin:14px 0;font-size:.84rem;}
+  table.tracker th,table.tracker td{border:1px solid var(--line);padding:8px 6px;text-align:center;}
+  table.tracker thead th{background:var(--soft);color:var(--ink);font-weight:700;}
+  table.tracker td.hab{text-align:left;font-weight:600;background:var(--paper);}
+  table.tracker tbody tr:nth-child(even) td.hab{background:var(--soft);}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} table.tracker{font-size:.74rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Habit tracker <span style="font-weight:400;color:var(--muted);font-size:1.2rem;">(weekly sheet)</span></h1>
+    <p class="lead">Your results come from months of small, repeated actions, not from one perfect week. This sheet is built on the science of habit formation and gives you a practical weekly tracker: follow 3-5 habits that decide your fitness and health, and keep them until they become automatic.</p>
+
+    <h2>Why habits beat motivation</h2>
+    <p>Motivation goes up and down: it arrives full in the morning, fades in the evening and is gone after a bad day. A habit is something you do almost automatically, without big decisions and without willpower. When something is automatic, your environment triggers it and you don’t have to win an inner battle every time [3]. So your job is to build a <b>system of habits</b> and not wait for the right mood.</p>
+    <p>A habit forms in a loop: <b>cue → routine → reward</b>. Something in your environment triggers the action, you do it, and you get a reward (a good feeling, relief, a tick on the list). The more often the loop repeats in the same context, the more the behavior moves from “I have to decide” to “I do it automatically” [2,3].</p>
+    <p>As for the time it takes: a study that followed people’s everyday behavior in real life found that a new habit becomes automatic after a <b>median of ~66 days</b>, with a huge range of <b>18 to 254 days</b> depending on the person and the difficulty of the action [1]. So forget “21 days and done”. Keep it small, keep going long enough, and don’t get discouraged when it doesn’t click right away.</p>
+
+    <div class="callout"><b>Action step for today:</b> Pick <b>one</b> habit you want to build in, shrink it to an absurdly small version (1 glass of water, 5 minutes of walking) and attach it to something you already do every day. Write it in the form “<b>After [existing action] I will [new habit]</b>” and put this sheet where you can see it. That is the whole task for today.</div>
+
+    <h2>The small-step rule (atomic habits)</h2>
+    <p>The biggest mistake is taking too big a bite at the start. So start with an <b>absurdly small habit</b>, so small that you can do it even on your worst day. At first the goal is to build <b>identity and repetition</b>: to show yourself “I am a person who moves / drinks water / trains”. A small habit that you complete beats a big one you don’t.</p>
+    <ul class="check">
+      <li><b>Start absurdly small.</b> Instead of “train for an hour” set “put on my shoes and go out for 5 minutes”. You raise the bar when the habit runs by itself.</li>
+      <li><b>Stack your habits (habit stacking).</b> Attach the new habit to an existing routine with the formula “<b>After [existing action] I will [new habit]</b>”. Example: <i>After my morning coffee I drink a glass of water.</i> The existing routine is the trigger: you don’t have to remember anything, your environment reminds you [2,3].</li>
+      <li><b>Make the trigger visible.</b> Shoes by the door, a bottle on the desk, the tracker on the fridge. What you see, you do; what disappears from sight disappears from your mind.</li>
+    </ul>
+
+    <h2>Implementation intentions: the “if, then” plan</h2>
+    <p>A resolution like “I’ll exercise more” almost never works because it doesn’t say when and where. An <b>implementation intention</b> is much stronger: a concrete plan in the form “<b>When [situation] happens, I will [action]</b>”. This links the trigger to the action in advance, and at that moment you no longer decide, you just act. Research repeatedly shows that people who write such a plan reach their goals clearly more often than people with the same strength of intention but no plan [4].</p>
+    <ul class="check">
+      <li>“When I get home from work, I change straight away and go for a walk.”</li>
+      <li>“When I serve my lunch, I put the vegetables on my plate first.”</li>
+      <li>“When it is 10 pm, I put my phone down and go brush my teeth.”</li>
+    </ul>
+
+    <h2>Set your goal the smart way (SMART)</h2>
+    <p>For a habit to go somewhere, it needs a clear goal. Specific and reasonably challenging goals lead to higher performance than a vague “give it your all”, as long as the person understands them and accepts them as their own [5]. Use the <b>SMART</b> framework: specific, measurable, achievable, relevant and time-bound. Replace “I’ll be healthier” with “<b>for the next 4 weeks I’ll put protein in every main meal and walk 8,000 steps a day</b>”.</p>
+    <div class="callout"><b>Outcome goal vs. process goal:</b> An outcome (lose 4 kg) motivates you but does not steer your daily behavior. So set mostly <b>process goals</b>: what exactly you will do every day. You control the process, and the outcome follows as a consequence.</div>
+
+    <h2>Track the process, not only the result</h2>
+    <p>Writing things down and <b>self-monitoring</b> are among the most effective behavior change techniques. Just by ticking off the habit you raise your chance of keeping it [6]. You see in black and white how it is going, you get instant feedback, and a chain of ticked days becomes a reward by itself.</p>
+    <p>The key is to <b>measure the process, not only the result</b>. Your weight moves from day to day for dozens of reasons you cannot influence. But “did I put protein in every meal today?” is a yes/no, it is in your hands and you can tick it. When you keep up the process over a long time, the result arrives. So mainly track the <b>days you completed</b> and the length of your unbroken chain.</p>
+
+    <h2>3-5 habits that matter</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Protein in every meal</b><br><small>A palm or two of meat, fish, eggs, quark or legumes. Keeps you full and keeps your muscle.</small></div>
+      <div class="step"><b><span class="n">2</span>Steps</b><br><small>Set a realistic target (e.g. 7-10 thousand a day). The cheapest lever for energy and for weight.</small></div>
+      <div class="step"><b><span class="n">3</span>Sleep</b><br><small>7-9 h and a similar bedtime. Without sleep, the other habits get harder.</small></div>
+      <div class="step"><b><span class="n">4</span>Water</b><br><small>Drink through the day. A glass with every meal is a simple start.</small></div>
+      <div class="step"><b><span class="n">5</span>Vegetables</b><br><small>A portion of vegetables with 2 meals a day. Fiber, fullness, micronutrients.</small></div>
+      <div class="step"><b><span class="n">6</span>Training</b><br><small>Planned sessions in the week (e.g. 3×). Tick off a shorter session too, if you managed it.</small></div>
+      <div class="step"><b><span class="n">7</span>Free row</b><br><small>Your own habit: stretching, reading, no phone at the table… anything that makes sense to you.</small></div>
+    </div>
+
+    <h2>Weekly tracker: print it and fill it in</h2>
+    <p>Choose <b>3 to 5</b> of the habits above (don’t take more at the start) and tick (✓) every day you complete a habit. You don’t need 100%. Aim for an <b>unbroken chain</b>: don’t skip twice in a row. Keep the sheet where you can see it, so it works as a trigger and as instant feedback [6].</p>
+    <table class="tracker">
+      <thead>
+        <tr><th style="text-align:left;width:34%;">Habit</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th><th>Sun</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="hab">Protein in every meal</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="hab">Steps (goal: _____)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="hab">Sleep 7-9 h</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="hab">Water (goal: _____)</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="hab">Vegetables 2×</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="hab">Training</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="hab">Your own: ___________</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout"><b>The “never twice in a row” rule:</b> One missed day means nothing: it is chance, not failure. But <b>two missed days in a row are already a pattern</b> and the start of the end. If it didn’t work today, just jump back in tomorrow. One stumble doesn’t destroy the whole chain. What destroys it is “forget it, it’s ruined anyway”. It isn’t.</div>
+
+    <h2>How to get back after a slip</h2>
+    <p>Slips will happen: illness, travel, a crazy week. A habit doesn’t fail because of one missed day. It fails because of what you tell yourself about it. Behavior change is not a straight line, it is a <b>cycle with relapses</b>. Coming back after a stumble is a normal part of the process, not proof that you can’t do it [8].</p>
+    <ul class="check">
+      <li><b>Count 1, not 0.</b> One miss means nothing. Deal with the second one in a row right away: that is the line where a new (bad) habit is born.</li>
+      <li><b>Fix your environment, not yourself.</b> Find what triggered the slip and change the conditions (bottle on the desk, shoes by the door) instead of blaming your willpower.</li>
+      <li><b>Shrink the dose, keep the ambition.</b> In a hard week drop the goal to the minimum (1 glass, 5 minutes), so you don’t break the chain. A small habit that you complete &gt; a big one you don’t.</li>
+      <li><b>Stand on inner motivation.</b> Keep the habits that make sense to you, not only to the number on the scale. Goals that you chose and accept as your own last the longest [7].</li>
+    </ul>
+
+    <h2>Weekly reflection (at the end of the week)</h2>
+    <ul class="check">
+      <li>Which habit went <b>best</b> and why? (Keep this the same.)</li>
+      <li>Where was the most common slip and what triggered it? (Fix the environment, not yourself.)</li>
+      <li>Is any goal too big? Shrink it for next week so that you can complete it even on a busy day.</li>
+      <li>Which habits do you <b>carry over</b> to next week, and when do you add a new one?</li>
+    </ul>
+
+    <div class="callout"><b>Practical tip:</b> Don’t chase the perfect week. Play for <b>consistency over time</b>. 4 days out of 7 every week for two months do more than one flawless week and then nothing.</div>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span>: client guide. Share only with the author’s permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Lally P, van Jaarsveld CHM, Potts HWW, Wardle J. How are habits formed: modelling habit formation in the real world. Eur J Soc Psychol. 2010;40(6):998–1009. [2] Gardner B, Lally P, Wardle J. Making health habitual: the psychology of 'habit-formation' and general practice. Br J Gen Pract. 2012;62(605):664–666. [3] Wood W, Neal DT. A new look at habits and the habit–goal interface. Psychol Rev. 2007;114(4):843–863. [4] Gollwitzer PM. Implementation intentions: strong effects of simple plans. Am Psychol. 1999;54(7):493–503. [5] Locke EA, Latham GP. Building a practically useful theory of goal setting and task motivation. Am Psychol. 2002;57(9):705–717. [6] Michie S, et al. The behavior change technique taxonomy (v1) of 93 hierarchically clustered techniques. Ann Behav Med. 2013;46(1):81–95. [7] Teixeira PJ, et al. Motivation, self-determination, and long-term weight control. Int J Behav Nutr Phys Act. 2012;9:22. [8] Prochaska JO, DiClemente CC. Stages and processes of self-change. Am Psychol. 1992;47(9):1102–1114.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Habit tracker';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome package for a new client: guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="What to expect from coaching, how to read your macros and how to report. A welcome guide for new clients by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Welcome package</div>
+    </div>
+
+    <h1>Welcome to working together</h1>
+    <p class="lead">This is your start. In a few minutes you will know what to expect from working together, how to read your plan and how to report to me, so we pull in the same direction from week one.</p>
+
+    <h2>What to expect</h2>
+    <p>There is no miracle one-week diet here. We build habits that last, step by step, around your life. The plan gets adjusted based on how your body responds and how it fits you. Results don’t go straight up: your weight moves up and down from day to day (water, food in your gut, hormones) and that’s normal. We look at the <b>trend over 2-4 weeks</b>, not at one morning on the scale.</p>
+
+    <div class="callout"><b>Our roles:</b> I give you the plan, the knowledge and the feedback. You do the daily work and tell me how it goes. It works when we stay connected. Every week you send me your report (about 3 minutes from your phone) and I answer in writing with your plan for the next week. Between reports, message me on WhatsApp, Monday to Friday. I reply within 24 hours. Ask me when something doesn’t fit. No question is stupid.</div>
+
+    <h2>How to read macros</h2>
+    <p>Macros are three nutrients that give you energy and building material. In your plan you will see daily targets in grams:</p>
+    <ul class="check">
+      <li><b>Protein</b>: building material for muscle, keeps you full and protects muscle in a deficit. Priority number one.</li>
+      <li><b>Carbs</b>: the main fuel for training and for your head. They are not the enemy, we just set them to the right amount.</li>
+      <li><b>Fats</b>: needed for hormones and for absorbing vitamins. We don’t go below a certain minimum.</li>
+    </ul>
+    <p>Calories are just the sum: 1 g of protein and 1 g of carbs = 4 kcal, 1 g of fat = 9 kcal. Hitting your macros within ±5-10 g is perfectly fine. It doesn’t have to match to the gram.</p>
+
+    <h2>Plate basics &amp; hydration</h2>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Protein with every meal</b><br><small>Meat, fish, eggs, quark or cottage cheese, yogurt, legumes. One palm to one and a half palms per portion.</small></div>
+      <div class="step"><b><span class="n">2</span>Half the plate vegetables</b><br><small>Volume, fiber, fullness for few calories. Make it colorful and make the portion big.</small></div>
+      <div class="step"><b><span class="n">3</span>Carbs by goal</b><br><small>Rice, potatoes, oats, bread, fruit. The main energy source for training.</small></div>
+      <div class="step"><b><span class="n">4</span>A little quality fat</b><br><small>Olive oil, nuts, avocado. Measure it: it is the most calorie-dense of all.</small></div>
+      <div class="step"><b><span class="n">5</span>Water all day</b><br><small>Roughly ~30-35 ml per kg of body weight, more when training and in the heat. Watch the color of your urine: light is the goal.</small></div>
+      <div class="step"><b><span class="n">6</span>Drink instead of snacking</b><br><small>Thirst is often mistaken for hunger. Water, tea, coffee without sugar. Watch the calories from drinks.</small></div>
+    </div>
+
+    <h2>How to report</h2>
+    <p>Your weekly report is your feedback to me. Without it I’m guessing. Keep a simple, regular system:</p>
+    <ul class="check">
+      <li><b>Weight:</b> in the morning, on an empty stomach, after the toilet, in the same clothes. Ideally every day, and we look at the weekly average.</li>
+      <li><b>Photos:</b> once a week, same light, same place and same poses (front, side, back). The mirror tells you more than the scale.</li>
+      <li><b>Measurements:</b> waist, hips, others if you like, once every 1-2 weeks.</li>
+      <li><b>How you feel:</b> energy, sleep, hunger, mood, training. A short note is enough.</li>
+    </ul>
+
+    <div class="callout"><b>Tip:</b> Report the bad weeks too, especially those. If you keep the “missed” days to yourself, I can’t help you. Write it straight, no sugarcoating = I adjust your plan faster and smarter.</div>
+
+    <h2>Common beginner mistakes</h2>
+    <ul class="check">
+      <li>Measuring success only by the scale and panicking after one day up. Watch the trend.</li>
+      <li>Starting too hard and cutting out “everything”. Drastic jumps don’t last. We go step by step.</li>
+      <li>Forgetting protein and liquid calories (juices, lattes, alcohol, sauces).</li>
+      <li>Weighing your food after cooking once and estimating by eye the next time. Stick to one method (ideally raw, weighed).</li>
+      <li>Skipping training because “I’m not in the mood”. Habit &gt; motivation.</li>
+    </ul>
+
+    <h2>Frequently asked questions (FAQ)</h2>
+    <p><b>Do I have to weigh my food forever?</b> No. At the start it trains your eye and your feel for portions. Later you will estimate.</p>
+    <p><b>Can I have a cheat meal / a favorite food?</b> Yes. No food is forbidden, we just count it. Flexibility keeps the plan going for the long run.</p>
+    <p><b>Do I need supplements?</b> The base is food, sleep and training. Supplements are the cherry on top, not the base. We’ll go through them individually.</p>
+    <p><b>What if I can’t follow the plan 100%?</b> Following 80-90% over the long term beats 100% for three days. Consistency wins.</p>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span>: client guide. Share only with the author’s permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src">Sources (selection): WHO: Healthy diet, fact sheet (2020). U.S. Dietary Guidelines for Americans 2020–2025 (MyPlate). Morton RW et al. Br J Sports Med 2018 (protein and strength/muscle mass). EFSA: Scientific Opinion on Dietary Reference Values for water (2010). Helms ER et al. J Int Soc Sports Nutr 2014 (nutrition for contest prep, deficit and protein).</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Welcome package for a new client';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>

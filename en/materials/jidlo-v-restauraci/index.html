@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eating out and on the road: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="How to eat out and travel without losing your results: a plate template, drinks, big dinners, weekends and vacations. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Eating out and on the road</h1>
+    <p class="lead">Vacation, a business trip, a birthday, a weekend at your parents’. Life does not happen only next to your kitchen scale. I’ll show you how to eat out and on the road and keep your results, without stress and without counting every bite. Practical and based on science.</p>
+
+    <h2>The rule everything stands on</h2>
+    <p>Before you head out, remember one thing: whether you lose, maintain or gain weight depends on your <b>total energy balance over the week</b>, not on one restaurant meal [1]. One dinner won’t make you fat, just like one salad won’t make you lean. That takes a lot of pressure off. You don’t have to be perfect at every meal. Being <b>reasonable most of the time</b> is enough.</p>
+    <p>The second anchor is <b>protein</b>. It keeps your muscle, it fills you up more than any other nutrient, and in a deficit it protects you from losing muscle instead of fat [4]. Build your meal around protein when you eat out and half the work is done: you are full, you are satisfied, and you nibble less on everything else.</p>
+    <div class="callout"><b>Main point:</b> Eating out is fine. What hurts your progress is the <b>obsession and guilt</b> you build around it. The goal is a <b>sensible total over the week</b> [1].</div>
+
+    <h2>A template for every plate</h2>
+    <p>One simple formula works in any restaurant in the world. You don’t need to know calories or read labels. Just build your plate from these parts:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Protein as the base</b><br><small>Grilled meat, fish, chicken, eggs, cheese, beans and lentils. Pick this first. It keeps you full and protects muscle [4].</small></div>
+      <div class="step"><b><span class="n">2</span>Vegetables / salad</b><br><small>A side of vegetables, a salad, steamed vegetables. A lot of volume and fullness for little energy: your ally [7].</small></div>
+      <div class="step"><b><span class="n">3</span>Carbs, with sense</b><br><small>Fries, rice, bread, pasta. Go ahead, but as one part of the plate, not two extra portions.</small></div>
+      <div class="step"><b><span class="n">4</span>Sauces and fats on the side</b><br><small>Dressing, butter and sauces “on the side”, not poured over everything. They easily add hundreds of calories you don’t “feel”.</small></div>
+    </div>
+    <ul class="check">
+      <li><b>Good choice:</b> “grilled”, “baked” or “steamed” on the menu. “Fried”, “battered” and “baked with cheese” are heavier. Order them if you like, just not with every meal.</li>
+      <li>Eat the <b>protein and vegetables first</b>, carbs and dessert after. You get full before you finish everything.</li>
+    </ul>
+
+    <h2>Liquid calories and alcohol: the ones you don’t count</h2>
+    <p>This is where people lose track most often when they eat out, and they don’t know why. Sweet drinks, juices, sweet coffee, cocktails and especially <b>alcohol</b> add a lot of energy but barely fill you up [7]. They easily add a second, “invisible” portion of calories on top of your meal. Alcohol also lowers your guard around food, and later in the evening you pick at more than you wanted.</p>
+    <ul class="check">
+      <li>The default is <b>water, sparkling water, unsweetened tea or plain black coffee</b>. Calorie-free with any meal.</li>
+      <li>If you want to drink alcohol, that’s fine. Count it as <b>part of your budget</b>, not as an extra. Choose: more food or more drinks, not both at full size.</li>
+      <li><b>Alternate your drinks with water.</b> You drink less, you feel better and you’re not wrecked in the morning.</li>
+      <li>Skip the sweet cocktails and beer deals. A few glasses of spirits with a zero-sugar mixer, or dry wine, have less impact than sweet mixed drinks.</li>
+    </ul>
+
+    <h2>“Banking” calories: plan the evening ahead</h2>
+    <p>If you know a big dinner, a party or a wedding is coming in the evening, build the rest of the day around it. This is called <b>“banking”</b>. You keep part of your daily energy aside for the big meal, so it fits without guilt:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>A lighter day, not a fast</b><br><small>Filling, protein-rich meals with lower energy during the day. Don’t save so hard that you arrive starving. That ends in overeating.</small></div>
+      <div class="step"><b><span class="n">2</span>Keep your protein</b><br><small>Save on fats and carbs rather than on protein [3,4]. Leave your protein untouched all day.</small></div>
+      <div class="step"><b><span class="n">3</span>Eat before the event</b><br><small>A small protein snack (yogurt, eggs) an hour before. You arrive full and resist the endless starters better.</small></div>
+      <div class="step"><b><span class="n">4</span>Then get back on track</b><br><small>After the big meal, just carry on as normal. No “paying it off” by starving the next day.</small></div>
+    </div>
+    <div class="callout"><b>Watch out:</b> Banking doesn’t mean not eating all day. You arrive at the table starving and eat more than if you had eaten normally. After an extreme cut, your body doesn’t “even out” the extra food the way you hope [7]. The goal is a lighter day, not an empty one.</div>
+
+    <h2>Restaurant portions: size is a trap</h2>
+    <p>Restaurants don’t want to hurt you. They want you to leave satisfied, so portions are big. And people have a proven tendency to <b>eat more the bigger the portion they get</b>, even when they aren’t really hungry [2]. A bigger plate, a bigger pack, “upsize the meal for a small extra charge”. All of it pushes you to eat more than you need [6]. A few tricks to get around it:</p>
+    <ul class="check">
+      <li><b>Think about portion size on purpose.</b> Big portion = you eat more. It has been measured, and it works even on people who think it doesn’t work on them [2,6].</li>
+      <li>Order a <b>starter + soup</b> instead of a giant main course, or <b>share</b> a big dish with someone.</li>
+      <li>Ask for half to be <b>boxed to take away</b> right at the start. What isn’t on the plate, you won’t finish out of habit.</li>
+      <li>You don’t have to finish “because it’s paid for”. A full plate is not an obligation. You paid for a meal, not for overeating.</li>
+      <li>Watch the <b>bread basket and the free chips</b> on the table. Move them away or take some once. Mindless nibbling is pure extra energy [6].</li>
+    </ul>
+
+    <h2>Specific choices: fast food, hotel, airport</h2>
+    <p>On the road you often don’t get ideal options. That’s fine. You can still find a reasonable choice here. The goal is “good enough to keep going”:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Fast food</b><br><small>A burger without the second bun and extra sauce, grilled chicken instead of fried, a smaller portion of fries and a zero-calorie drink. A wrap or a grilled sandwich is usually lighter than the “large meal deal”.</small></div>
+      <div class="step"><b><span class="n">2</span>Hotel breakfast</b><br><small>Eggs, ham, cheese, yogurt, fruit and vegetables as the base. Bread and sweet things on the side, not as the main course. Protein in the morning keeps you full for a long time [4].</small></div>
+      <div class="step"><b><span class="n">3</span>Airport and gas station</b><br><small>Look for: yogurt, quark or cottage cheese, a bag of unsalted nuts, eggs, sushi, a sandwich with meat, a protein bar. Protein + something filling beats a croissant and a cola.</small></div>
+      <div class="step"><b><span class="n">4</span>Buffet / all-inclusive</b><br><small>Walk through the whole buffet with your eyes first, then fill your plate. 2/3 of the plate protein and vegetables. Pick 1-2 things you really want, not a little of everything.</small></div>
+    </div>
+    <ul class="check">
+      <li>Keep an <b>emergency protein</b> in your bag: a protein bar or a bag of nuts. It saves you from desperate choices when nothing good is around for hours.</li>
+      <li>Eating out regularly is linked with higher energy intake and gradual weight gain [5]. That’s why it pays to have a plan instead of improvising when you’re hungry.</li>
+    </ul>
+
+    <h2>Weekends, vacations and damage control without guilt</h2>
+    <p>This is where people slip most often: the math of the weekend. A weekend is only <b>2 of 7 days</b>. If you eat sensibly for five days and go looser for two, you can still be on track. The problem starts when the weekend turns into “everything is allowed from Friday to Monday” and wipes out the whole weekly deficit.</p>
+    <ul class="check">
+      <li><b>Keep the basics on weekends too.</b> You don’t have to count, but keep protein and vegetables in your meals. “Looser” doesn’t mean “no rules”.</li>
+      <li><b>One free meal ≠ a free day.</b> If you have dessert at lunch, great. Dinner can still be normal. You don’t need the “might as well go all in” attitude.</li>
+      <li><b>No guilt, no paying it off.</b> If you overate, nothing bad happened. At the next meal, just go back to normal. Guilt leads to “it’s ruined anyway” and more overeating, not to a fix.</li>
+      <li><b>On vacation, enjoy yourself and keep a rhythm.</b> Movement (walking, swimming), protein in your meals, water between drinks. A few looser days won’t undo your progress. What matters is the return, not perfection.</li>
+    </ul>
+    <div class="callout"><b>Action step:</b> Next time you go out, do just one thing: pick <b>protein + vegetables as the base of your plate</b> and choose <b>water or a zero-calorie drink</b>. Don’t count anything else. Your results come from what you do most of the time [1]. Be Effective! <img src="data:image/png;base64,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" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"></div>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span>: client guide. Share only with the author’s permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Hall KD, et al. Energy balance and its components: implications for body weight regulation. Am J Clin Nutr. 2012;95(4):989–994. [2] Rolls BJ, Morris EL, Roe LS. Portion size of food affects energy intake in normal-weight and overweight men and women. Am J Clin Nutr. 2002;76(6):1207–1213. [3] Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20. [4] Leidy HJ, et al. The role of protein in weight loss and maintenance. Am J Clin Nutr. 2015;101(6):1320S–1329S. [5] Bes-Rastrollo M, et al. A prospective study of eating away-from-home meals and weight gain in a Mediterranean population. Public Health Nutr. 2010;13(9):1356–1363. [6] Wansink B. Environmental factors that increase the food intake and consumption volume of unknowing consumers. Annu Rev Nutr. 2004;24:455–479. [7] Almiron-Roig E, et al. Factors that determine energy compensation: a systematic review of preload studies. Nutr Rev. 2013;71(7):458–473.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Eating out';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Eating Out Playbook | Martin Barna</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="How to order in 8 types of places and keep losing fat. Part of the Busy Professional's Fat Loss Kit by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<!-- Zdroj PDF download/eating-out-playbook.pdf (vyrábí en/materials/vyrob-pdf.mjs). Šablona = české přílohy
+     materialy/<tema>/index.html (tmavý papír, A4, .step, .callout, .check), texty doslova z
+     _Claude-dokumenty/2026-10-13_en-klienti/texty/eating-out-playbook.md (agent TEXTY). -->
+<style>
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  h3{font-size:1.05rem;margin:22px 0 8px;color:var(--brand2);}
+  p{margin:.5rem 0;}
+  .stack{display:grid;gap:12px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step p{margin:.35rem 0 0;color:var(--muted);font-size:.95rem;}
+  .venue{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 6px;}
+  .venue .box{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:12px 14px;}
+  .venue .box.trap{border-left:4px solid #c9734f;}
+  .venue .lbl{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);margin:0 0 4px;}
+  .venue .trap .lbl{color:#e3a07f;}
+  .venue ul{list-style:none;padding:0;margin:0;font-size:.9rem;}
+  .venue li{padding:4px 0 4px 22px;position:relative;}
+  .venue .good li::before{content:"\2713";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .venue .trap li::before{content:"\2715";position:absolute;left:0;color:#e3a07f;font-weight:800;}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"\2713";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem;}
+  th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{color:var(--brand);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;}
+  td:last-child{white-space:nowrap;}
+  .cta{margin-top:18px;}
+  .cta a{color:var(--brand);font-weight:700;}
+  .sign{margin-top:14px;font-weight:700;}
+  .sign span{display:block;font-weight:600;color:var(--muted);}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar .tb-btn{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;text-decoration:none;font-size:.9rem;}
+  .toolbar a.lnk{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;line-height:1.55;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;border:none;}
+    .pad{padding:36px 44px;} @page{size:A4;margin:0;}
+    h2,h3{break-after:avoid;page-break-after:avoid;}
+    h2{margin:20px 0 6px;} h3{margin:16px 0 6px;} .stack{gap:10px;margin:10px 0;} .foot{margin-top:18px;padding-top:12px;}
+    .src{font-size:.68rem;line-height:1.45;} .sign{margin-top:10px;}
+    .step,.venue,.callout,tr{break-inside:avoid;page-break-inside:avoid;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 22px;} .venue{grid-template-columns:1fr;} h1{font-size:1.6rem;} .head{flex-wrap:wrap;} .kicker{text-align:left;} }
+</style>
+</head>
+<body>
+  <div class="toolbar">
+    <a class="tb-btn" href="/download/eating-out-playbook.pdf" download>Download the PDF</a>
+    <a class="lnk" href="/en/materials/">&larr; Client guides</a>
+    <a class="lnk" href="/en/">&larr; martinbarna.cz/en/</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span class="logo-fallback">MB</span>
+        <span class="who">Martin Barna<small>Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>The Eating Out Playbook</h1>
+    <p class="lead">How to order in 8 types of places and keep losing fat. Part of the Busy Professional's Fat Loss Kit.</p>
+    <p>Business dinners, airports, hotel buffets, Friday drinks. My clients don't live next to a kitchen scale and I don't ask them to. This is what I tell them before a trip: five rules, and for each type of place what to order and what quietly adds 500 kcal (calories).</p>
+    <p>About the numbers: the kcal in this guide are rough estimates for typical restaurant portions in the US and UK. Your plate will be different. If the menu shows calories (big chains in the US and UK have to), trust the menu over my table. What matters is the size of the swap: a 300 kcal swap changes your week, a 30 kcal one doesn't.</p>
+
+    <h2>The five rules</h2>
+    <div class="stack">
+      <div class="step"><b><span class="n">1</span>The week decides, not one meal.</b>
+        <p>Whether you lose, hold or gain fat is decided by your energy balance over the whole week, not by one dinner [1]. One dinner doesn't make you fat and one salad doesn't make you lean. Reasonable most of the time beats perfect some of the time. If you know a big dinner is coming, bank for it: a lighter day with protein in every meal (lighter, not a fast), a small protein snack an hour before, and the next day back to normal. No punishment and no extra cardio the day after.</p></div>
+      <div class="step"><b><span class="n">2</span>Protein first.</b>
+        <p>Build every plate around a palm-sized portion of protein: meat, fish, seafood, eggs, cottage cheese, tofu. That's roughly 20 to 30 g of protein. Of all nutrients protein fills you up the most and it protects your muscle while you lose fat [3]. Order it first, eat it first. Half the job is done before the fries arrive.</p></div>
+      <div class="step"><b><span class="n">3</span>The plate template.</b>
+        <p>Protein + vegetables or salad + one portion of carbs (fries, rice, bread, pasta) + sauces and fats on the side. Menu words that mean lighter: grilled, baked, steamed, poached, roasted. Heavier: fried, battered, crispy, creamy, loaded, cheese-baked, "with our special sauce". You can still have the heavy ones. Just not at every meal, and not all of them in one meal.</p></div>
+      <div class="step"><b><span class="n">4</span>Drinks are the silent 500.</b>
+        <p>Sugary drinks, juice, flavored coffee, cocktails and beer add energy and almost no fullness [5]. Default drink: water, sparkling water, unsweetened tea, black coffee or a zero soda. Alcohol goes into the budget: more food or more drinks, one of the two at full volume.</p></div>
+      <div class="step"><b><span class="n">5</span>The portion is the trap.</b>
+        <p>Restaurants want you to leave full, so portions are big. The bigger the portion, the more you eat, even without hunger [2]. Starter plus soup instead of a main. Share the big dish. Box half of it right away. Skip the bread basket or take one piece. You paid for the food, not for finishing it. Eating out often goes together with higher intake and slow weight gain over the years [4], so walking in with a plan beats improvising hungry.</p></div>
+    </div>
+    <div class="callout"><b>The main thing:</b> what sabotages you is the guilt and the all-or-nothing thinking around eating out, much more than the dinner itself. The goal is a reasonable total for the week [1].</div>
+
+    <h2>8 types of places</h2>
+
+    <h3>1. Steakhouse</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>A lean cut (filet, sirloin), 200 to 250 g (7 to 9 oz), with grilled vegetables or a side salad, dressing on the side: about 500 to 700 kcal.</li>
+        <li>Grilled fish or shrimp with vegetables: about 400 to 600 kcal.</li>
+        <li>Starter: shrimp cocktail or a simple salad instead of anything fried: about 150 to 300 kcal.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>A 400 g (14 oz) ribeye with fries and butter or béarnaise: about 1,300 to 1,800 kcal. Half the steak boxed up and vegetables instead of fries cuts it roughly in half.</li>
+        <li>Loaded baked potato (sour cream, cheese, bacon) or creamed spinach: about 400 to 700 kcal per side dish, before the steak even arrives.</li>
+      </ul></div>
+    </div>
+
+    <h3>2. Italian</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>Grilled chicken or fish main with vegetables: about 500 to 700 kcal.</li>
+        <li>Pasta with a tomato-based sauce (marinara, arrabbiata) with chicken or seafood, a normal portion: about 600 to 800 kcal. Ask for a half portion or share.</li>
+        <li>Thin-crust margherita shared between two, plus a salad: about 450 to 600 kcal for your half.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>Creamy pasta (carbonara, alfredo) or lasagna, restaurant size: about 1,000 to 1,400 kcal. Add garlic bread and tiramisu and the dinner passes 2,000.</li>
+        <li>The bread basket with olive oil before the food comes: about 300 to 500 kcal you won't remember eating.</li>
+      </ul></div>
+    </div>
+
+    <h3>3. Asian (Thai, Chinese, Japanese, Vietnamese)</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>Sashimi (12 pieces) with miso soup and edamame: about 400 to 650 kcal. Nigiri (8 to 10 pieces) with miso soup: about 500 to 750 kcal.</li>
+        <li>Clear broth soup with lean meat and vegetables (pho, noodle soup): about 400 to 700 kcal. Ramen with pork belly is heavier: about 900 to 1,500 kcal, share it or count it as the main meal of the day.</li>
+        <li>Stir-fried chicken, beef or tofu with vegetables and one cup of steamed rice: about 600 to 800 kcal. Sauce on the side if they can.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>Battered meat in sweet sauce (sweet and sour, orange chicken, katsu curry) with fried rice: about 1,200 to 1,600 kcal.</li>
+        <li>Coconut curries (green, massaman) and pad thai, a full portion with rice or noodles: about 900 to 1,300 kcal. Great food, just share it or count it.</li>
+      </ul></div>
+    </div>
+
+    <h3>4. Burger place</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>Single patty, no cheese and bacon, ketchup or mustard instead of a mayo-based sauce, side salad instead of fries: about 500 to 700 kcal.</li>
+        <li>Grilled chicken sandwich (grilled, not crispy): about 450 to 650 kcal.</li>
+        <li>Small fries instead of large, zero drink instead of regular: fries about 250 to 350 kcal, the drink 0.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>Double cheeseburger with bacon + large fries + regular soda: about 1,700 to 2,300 kcal. A whole day of fat loss calories on one tray.</li>
+        <li>Milkshake: about 500 to 800 kcal. It's a dessert with a straw.</li>
+      </ul></div>
+    </div>
+
+    <h3>5. Hotel breakfast buffet</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>2 to 3 eggs (boiled, scrambled, omelette) + ham or smoked salmon + tomatoes and cucumber + 1 slice of bread: about 400 to 600 kcal and 30+ g of protein. Full until lunch.</li>
+        <li>Greek yogurt or skyr with fruit and a small handful of nuts or oats: about 300 to 450 kcal.</li>
+        <li>Coffee black or with milk, and water: 0 to 50 kcal. Juice is in the traps.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>The full plate: bacon, sausages, hash browns, fried eggs, buttered toast, pancakes with syrup: about 900 to 1,400 kcal. Breakfast is done and so is your deficit for the day.</li>
+        <li>Pastries and juice: a croissant about 250 to 350 kcal, a pain au chocolat 300 to 400, a glass of orange juice 100 to 130. Two pastries and two juices = about 800 kcal with almost no protein, and hungry again by 10.</li>
+      </ul></div>
+    </div>
+
+    <h3>6. Airport</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>Pre-packed sandwich or wrap with chicken, turkey or tuna: about 350 to 500 kcal. A sushi box: about 350 to 500.</li>
+        <li>Protein pot, Greek yogurt, boiled eggs, cottage cheese: about 150 to 300 kcal each. Cheap fullness.</li>
+        <li>A 30 to 40 g bag of nuts or a protein bar as the emergency protein: about 170 to 250 kcal. Buy it before you're starving, not after.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>Large flavored coffee (caramel latte, frappuccino) + a pastry: about 600 to 900 kcal. A coffee that is a dessert.</li>
+        <li>Fast food combo or a "meal deal" with chips and a sugary drink: about 900 to 1,500 kcal. Plus an airport beer or two at 200 to 250 kcal each.</li>
+      </ul></div>
+    </div>
+
+    <h3>7. Corporate dinner (set menu, wine on the table)</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>Starter: soup, carpaccio, beef tartare, shrimp or a simple salad: about 150 to 300 kcal.</li>
+        <li>Main: grilled fish, steak or chicken with vegetables, potatoes as a small side: about 500 to 700 kcal.</li>
+        <li>Dessert: share it, or take the espresso. One glass of wine (120 to 130 kcal), then sparkling water in a wine glass. Nobody at the table checks.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>Bread and butter during the speeches (about 200 to 400 kcal before the starter) and a main in cream sauce with gratin potatoes (about 900 to 1,200 kcal).</li>
+        <li>3 to 4 glasses of wine plus a dessert: about 800 to 1,100 kcal on top. The evening ends at 2,000 to 2,800 kcal. Ordered with a plan: 800 to 1,100. Same table, same people.</li>
+      </ul></div>
+    </div>
+
+    <h3>8. Bar or pub</h3>
+    <div class="venue">
+      <div class="box good"><p class="lbl">Better choices</p><ul>
+        <li>Spirit with soda water or a diet mixer: about 100 to 110 kcal. Dry wine: about 120 to 130. Small beer (330 ml): about 130 to 150.</li>
+        <li>A protein meal before you go (chicken, eggs, yogurt, cottage cheese). Hungry plus alcohol = nachos.</li>
+        <li>Water or soda water between drinks. You drink less, feel better, and the next morning still counts.</li>
+      </ul></div>
+      <div class="box trap"><p class="lbl">Traps</p><ul>
+        <li>5 pints of beer: about 1,100 to 1,250 kcal. Sweet cocktails (mojito, piña colada, espresso martini): about 200 to 500 kcal each.</li>
+        <li>Bar food: nachos with cheese 1,000 to 1,500 kcal, loaded fries 800 to 1,200, wings with sauce and dip 1,000 or more, and the late-night kebab or pizza slice 600 to 1,200. After a few drinks people eat more anyway [6], so plan for it before the first one.</li>
+      </ul></div>
+    </div>
+
+    <h2>The minimum version for travel days</h2>
+    <p>Three things, nothing else:</p>
+    <div class="stack">
+      <div class="step"><b><span class="n">1</span>Protein in every meal.</b> A palm of meat, fish, eggs, yogurt or cottage cheese. Airport, hotel, gas station, there's always one option.</div>
+      <div class="step"><b><span class="n">2</span>8,000 steps.</b> Airports and cities give you half of it for free.</div>
+      <div class="step"><b><span class="n">3</span>Write down roughly what you ate.</b> Even a guess. A rough number beats no number; the untracked days are where the extra 2,000 hides.</div>
+    </div>
+    <p>Also: emergency protein in the bag (protein bar, nuts, jerky), a water bottle, default drink water or zero. One free meal is one meal: dessert at lunch doesn't turn dinner into a free-for-all. And the day after a big one is a normal day, without fasting, detox or cardio as punishment. You just continue.</p>
+
+    <h2>Alcohol in numbers</h2>
+    <p>Pure alcohol has 7 kcal per gram (fat 9, protein and carbs 4). Typical drinks, rough values:</p>
+    <table>
+      <tr><th>Drink</th><th>Rough kcal</th></tr>
+      <tr><td>Dry wine, 150 ml glass (12 to 13 %)</td><td>120 to 130</td></tr>
+      <tr><td>Prosecco, 125 ml</td><td>90 to 100</td></tr>
+      <tr><td>Beer 5 %, 500 ml / a pint (568 ml)</td><td>200 to 250</td></tr>
+      <tr><td>Light beer, 330 ml</td><td>100 to 110</td></tr>
+      <tr><td>Spirit, 40 ml (40 %), neat or with soda water or a diet mixer</td><td>90 to 110</td></tr>
+      <tr><td>Gin and tonic (50 ml gin + 200 ml regular tonic)</td><td>170 to 200 (diet tonic: about 110)</td></tr>
+      <tr><td>Aperol spritz</td><td>150 to 200</td></tr>
+      <tr><td>Mojito, margarita</td><td>200 to 300</td></tr>
+      <tr><td>Piña colada, espresso martini</td><td>300 to 500</td></tr>
+    </table>
+    <p>Two more facts:</p>
+    <ul class="check">
+      <li>In studies on younger adults, people ate on average about 80 kcal more food after drinking, and they did not eat less later to make up for the alcohol [6]. A bar with snacks is often more than that.</li>
+      <li>Your body burns the alcohol first, so fat burning drops for a few hours. The calories still count. There is no free drink.</li>
+    </ul>
+    <p>What works for my clients: pick the number of drinks before the night (2 or 3), water or soda water between them, spirits with soda or diet mixers, dry wine instead of sweet cocktails, and a protein meal before you go. The math over a week: 3 nights x 3 drinks x 150 kcal = 1,350 kcal, almost a full day of food. Two drinks instead of three on each of those nights = 450 kcal back.</p>
+    <p>If you take medication or have a health condition, ask your doctor about alcohol. This guide is about calories only.</p>
+
+    <h2>Before your next dinner out</h2>
+    <div class="callout">Try one thing: protein and vegetables as the base of the plate, water or zero as the drink. Count nothing else. What you do most of the time decides the result. One plate doesn't.</div>
+    <p class="cta">Want me to build this into your actual week? Written coaching: weekly check-in with your numbers recalculated, WhatsApp Monday to Friday, a plan for restaurants and travel, no calls. <a href="https://martinbarna.cz/en/?utm_source=playbook-pdf&amp;utm_medium=pdf&amp;utm_campaign=en-kit#coaching">martinbarna.cz/en/#coaching</a></p>
+    <p class="sign">Be Effective!<span>Martin</span></p>
+
+    <div class="foot">
+      <div>&copy; Martin Barna. Share only with the author's permission.</div>
+      <div><a href="https://martinbarna.cz/en/">martinbarna.cz/en/</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Hall KD, et al. Energy balance and its components: implications for body weight regulation. Am J Clin Nutr. 2012;95(4):989-994. [2] Rolls BJ, Morris EL, Roe LS. Portion size of food affects energy intake in normal-weight and overweight men and women. Am J Clin Nutr. 2002;76(6):1207-1213. [3] Leidy HJ, et al. The role of protein in weight loss and maintenance. Am J Clin Nutr. 2015;101(6):1320S-1329S. [4] Bes-Rastrollo M, et al. A prospective study of eating away-from-home meals and weight gain in a Mediterranean population. Public Health Nutr. 2010;13(9):1356-1363. [5] Almiron-Roig E, et al. Factors that determine energy compensation: a systematic review of preload studies. Nutr Rev. 2013;71(7):458-473. [6] Kwok A, et al. Effect of alcohol consumption on food energy intake: a systematic review and meta-analysis. Br J Nutr. 2019;121(5):481-495. Calorie ranges for dishes and drinks are estimates for typical portions (drink values based on USDA FoodData Central averages); your restaurant will differ.</p>
+  </div></div>
+</body>
+</html>

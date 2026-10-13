@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <script src="/assets/ba-theme.js"></script>
+    <script src="/assets/theme-boot.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plateau, when the scale stops moving: client guide</title>
+<meta name="robots" content="noindex">
+<meta name="description" content="What a weight plateau really is, how to check that you are in a deficit, and which levers to pull first. A client guide by Martin Barna.">
+<link rel="stylesheet" href="/assets/vendor/fonts/poppins.css">
+<style>
+  /* ===== BRAND TOKENS (overridden from the URL: ?name=&color=&color2=&logo=&web=) ===== */
+  :root{
+    --brand:#EBB12C; --brand2:#F6CD63; --ink:#f2ece3; --muted:#b4a99a;
+    --soft:#221a12; --line:#2e2620; --paper:#17120e;
+  }
+html[data-theme="light"]{
+  --ink:#161310; --muted:#5C564C; --soft:#F3EEE4; --line:rgba(22,19,16,.12); --paper:#ffffff;
+  color-scheme:light;
+}
+html[data-theme="light"] body{background:#F7F3EB;color-scheme:light;}
+html[data-theme="light"] .sheet{border-color:rgba(22,19,16,.12);box-shadow:0 24px 64px rgba(22,19,16,.12);}
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{font-family:'Poppins',Arial,sans-serif;color:var(--ink);background:#0f0c0a;line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sheet{max-width:820px;margin:24px auto;background:var(--paper);border:1px solid #2a221b;box-shadow:0 24px 64px rgba(0,0,0,.55);}
+  .pad{padding:48px 56px;}
+  /* header */
+  .head{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:3px solid var(--brand);padding-bottom:18px;}
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand img{height:46px;width:auto;display:block;}
+  .brand .logo-fallback{width:46px;height:46px;border-radius:11px;background:var(--brand);color:#161616;font-weight:800;font-size:1.2rem;display:flex;align-items:center;justify-content:center;}
+  .brand .who{font-weight:800;font-size:1.1rem;line-height:1.15;}
+  .brand .who small{display:block;font-weight:600;font-size:.74rem;color:var(--muted);letter-spacing:.04em;}
+  .kicker{text-align:right;font-size:.72rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);}
+  /* title */
+  h1{font-size:2rem;line-height:1.12;margin:26px 0 6px;letter-spacing:-.02em;}
+  .lead{font-size:1.05rem;color:var(--muted);margin:0 0 8px;}
+  h2{font-size:1.18rem;margin:26px 0 8px;color:var(--ink);position:relative;padding-left:16px;}
+  h2::before{content:"";position:absolute;left:0;top:.18em;bottom:.18em;width:5px;border-radius:3px;background:var(--brand);}
+  p{margin:.5rem 0;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .step{background:var(--soft);border:1px solid var(--line);border-radius:14px;padding:14px 16px;}
+  .step b{color:var(--ink);} .step .n{display:inline-flex;width:24px;height:24px;border-radius:7px;background:var(--brand);color:#161616;font-weight:800;font-size:.85rem;align-items:center;justify-content:center;margin-right:8px;}
+  .step small{color:var(--muted);}
+  .callout{background:var(--soft);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:12px;padding:14px 18px;margin:16px 0;}
+  .callout b{color:var(--brand);}
+  ul.check{list-style:none;padding:0;margin:.4rem 0;}
+  ul.check li{padding:4px 0 4px 26px;position:relative;}
+  ul.check li::before{content:"✓";position:absolute;left:0;color:var(--brand);font-weight:800;}
+  .foot{border-top:1px solid var(--line);margin-top:30px;padding-top:16px;display:flex;justify-content:space-between;gap:16px;font-size:.82rem;color:var(--muted);flex-wrap:wrap;}
+  .foot a{color:var(--brand);text-decoration:none;font-weight:600;}
+  .src{font-size:.72rem;color:#9a9082;margin-top:10px;}
+  /* toolbar (on screen, not in print) */
+  .toolbar{position:sticky;top:0;z-index:10;background:#15110e;color:#fff;display:flex;gap:10px;align-items:center;justify-content:center;padding:10px;font-family:'Poppins',Arial,sans-serif;font-size:.9rem;}
+  .toolbar button{background:var(--brand);color:#1A1222;border:none;font-weight:700;padding:9px 20px;border-radius:50px;cursor:pointer;font-family:inherit;}
+  .toolbar a{color:#cfc6bb;text-decoration:none;font-size:.85rem;}
+  @media print{
+    body{background:#0f0c0a;} .toolbar{display:none;} .sheet{box-shadow:none;margin:0;max-width:none;}
+    .pad{padding:40px 44px;} @page{size:A4;margin:0;}
+  }
+  @media(max-width:680px){ .pad{padding:30px 24px;} .grid{grid-template-columns:1fr;} h1{font-size:1.6rem;} }
+</style>
+    <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
+    <link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13">
+</head>
+<body>
+  <div class="toolbar">
+    <button id="printBtn">⬇ Download / Print to PDF</button>
+    <a href="/en/materials/">← Materials library</a>
+    <a href="/en/">← Back to the site</a>
+  </div>
+
+  <div class="sheet"><div class="pad">
+    <div class="head">
+      <div class="brand">
+        <span id="brandLogo" class="logo-fallback">MB</span>
+        <span class="who"><span id="brandName">Martin Barna</span><small id="brandTag">Online nutrition &amp; fitness</small></span>
+      </div>
+      <div class="kicker">Client guide</div>
+    </div>
+
+    <h1>Plateau: when your weight stops moving</h1>
+    <p class="lead">The scale doesn’t move for a week or two, and panic starts: “my metabolism is broken”. It almost never is. I’ll show you straight what a plateau really is, how to check whether you are in a deficit at all, and which levers get things moving again, without starving yourself.</p>
+
+    <h2>What a plateau is and when it is “real”</h2>
+    <p>A plateau means your weight has stopped moving. The catch: most “stops” you see on the scale over a few days are not a stop in fat loss. It’s <b>measurement noise</b>. Body weight normally moves by hundreds of grams up to over a kilo from one day to the next: retained water (salt, carbs, stress, menstrual cycle), gut contents, how full your muscle glycogen is. Fat can keep coming off under the surface [1].</p>
+    <p>Only the <b>weekly average</b> can show a real plateau: you weigh yourself every morning under the same conditions and compare this week’s average with last week’s. If the average hasn’t moved even after <b>2-3 weeks</b>, only then do you deal with a plateau. One day up or down means nothing.</p>
+    <div class="callout"><b>Main point:</b> Fat loss still depends on your <b>energy balance</b>: what you take in versus what you burn [1]. A plateau means intake and output have met somewhere. Physics still works. Let’s find where.</div>
+
+    <h2>The fake plateau: water, measuring and weekends</h2>
+    <p>Before you change anything, let’s rule out the three most common “fake” plateaus. Very often one of them is behind the stall on the scale, not adaptation:</p>
+    <ul class="check">
+      <li><b>Retained water.</b> More salt, more carbs, hard training, little sleep, stress or the menstrual cycle can hide fat loss for a week or two. The fat is going, the water masks it.</li>
+      <li><b>Inaccurate or irregular measuring.</b> Weighing at different times, after meals, in clothes, once a week at random. That is guessing. Data needs the same conditions every time, and an average.</li>
+      <li><b>Weekends erase the weekly deficit.</b> Five days of a nice deficit and two days off “by eye” can easily bring the whole week back to zero. Balance is counted over the whole week, not just the workdays.</li>
+    </ul>
+
+    <h2>Metabolic adaptation: no myths about a “broken metabolism”</h2>
+    <p>When you lose weight for a longer time, the body fights back and your energy expenditure drops a little. This is called <b>adaptive thermogenesis</b>, and it is a real, documented effect [2,3,4]. But it does not mean a “broken” or “damaged” metabolism. It is a temporary, reversible adjustment, not a disorder:</p>
+    <ul class="check">
+      <li><b>NEAT drops.</b> Spontaneous movement outside training (walking, fidgeting, gestures, shifting around) quietly fades. NEAT is the biggest variable part of energy expenditure and can shift by hundreds of calories [6].</li>
+      <li><b>A smaller body burns less.</b> When you weigh less, your basal expenditure and the energy cost of moving drop too. The deficit that worked at the start may not be a deficit today [4].</li>
+      <li><b>Adaptation is small next to measurement error.</b> Real adaptive thermogenesis is usually in the low hundreds of calories [2,3]. By itself that does not explain a plateau when you also under-report your intake by more.</li>
+    </ul>
+    <div class="callout"><b>Straight talk:</b> Losing weight does <b>not break</b> your metabolism. It slows down a bit and comes back when you return to a higher intake [2,3]. There is no “burnt out” body that “doesn’t lose weight even though I barely eat”. The explanation is almost always more ordinary.</div>
+
+    <h2>Why people eat more than they think</h2>
+    <p>This is the most uncomfortable part and the most important one. A classic study showed that people who “can’t lose weight even though they barely eat” under-reported their intake by <b>about 47%</b> and over-reported their activity [5]. They weren’t liars. They honestly believed it. Intake simply leaks like this:</p>
+    <ul class="check">
+      <li><b>Uncounted sips and tastes.</b> A spoonful while cooking, a bite from the kids’ plate, nuts from the bowl, milk in your coffee, oil in the pan: each one alone is nothing, over a day it can be hundreds of calories.</li>
+      <li><b>Estimating by eye.</b> A spoon of peanut butter is often two, a “handful” of nuts is often two handfuls. Calorie-dense foods forgive the least.</li>
+      <li><b>Liquid calories.</b> Sweet drinks, juices, beer, sweet coffee: they go almost unnoticed, but they count fully in your balance.</li>
+      <li><b>Free weekends and “just today”.</b> A few exceptions a week add up to more than you expect, and the deficit on paper disappears.</li>
+    </ul>
+
+    <h2>How to check you are really in a deficit</h2>
+    <p>Before you cut anything, you need <b>data</b>, not a feeling. Two weeks of honest measuring almost always reveals the truth. This is the checklist before you start to panic:</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Weigh your food for 14 days</b><br><small>Kitchen scale, not guessing. Including oil, sauces, sips and tastes. The goal is not forever. Just to see clearly where you really are [5].</small></div>
+      <div class="step"><b><span class="n">2</span>Count everything</b><br><small>Weekends, alcohol, a teaspoon here, a bite there. What you don’t write down “doesn’t exist” in the balance. And that is exactly where the deficit disappears.</small></div>
+      <div class="step"><b><span class="n">3</span>Weekly average weight</b><br><small>Weigh every morning on an empty stomach and follow the weekly average, not single days. Only when two in a row stall is it a plateau [1].</small></div>
+      <div class="step"><b><span class="n">4</span>Only then change something</b><br><small>When the data confirm a stall with honest measuring, you reach for the levers below. Without data you would only guess and cut for nothing.</small></div>
+    </div>
+
+    <h2>Practical levers when the plateau is real</h2>
+    <p>Once you have confirmed that you really stall with honest measuring, you have clear levers. Take them <b>from top to bottom</b>: first tighten your tracking and add movement, and only at the end cut some food.</p>
+    <div class="grid">
+      <div class="step"><b><span class="n">1</span>Tighten your food tracking</b><br><small>Often you only need to stop under-reporting. Weighing and honest logging by themselves “find” the deficit that was leaking away [5].</small></div>
+      <div class="step"><b><span class="n">2</span>Add steps / NEAT</b><br><small>A few thousand extra steps a day bring back the expenditure that adaptation dampened [6]. Cheaper and easier to keep up than cutting more food.</small></div>
+      <div class="step"><b><span class="n">3</span>Adjust intake slightly</b><br><small>If needed, you take away a small piece (~5-10%), typically from fats or liquid calories. Keep protein [7]. No drastic cuts.</small></div>
+      <div class="step"><b><span class="n">4</span>Diet break / refeed</b><br><small>A few days up to 1-2 weeks at maintenance intake give your head and your consistency a rest and can ease adaptation [4,7]. A tool, not a failure.</small></div>
+    </div>
+    <div class="callout"><b>Keep the proportions in mind:</b> Training and cardio add little to total expenditure compared with what we expect. That is why simply “adding an hour of cardio” often does not break a plateau [8]. Lever number one is almost always <b>accurate intake and daily movement</b>, more than harder work in the gym.</div>
+
+    <h2>Patience &gt; drastic cutting</h2>
+    <p>The most common mistake on a plateau is panic: cutting calories in half and adding two hours of cardio. Short term it may move the scale. Long term it <b>wrecks your consistency</b>: hunger, fatigue, mood swings and sooner or later overeating. And long-term consistency decides the result more than how aggressive the deficit is [7].</p>
+    <ul class="check">
+      <li><b>Small, sustainable adjustments</b> beat drastic cuts that you can’t keep up even for 14 days.</li>
+      <li><b>Adaptation is reversible.</b> A diet break does not send you back to the start: it lets your body and your head catch a breath [4,7].</li>
+      <li><b>Consistency over weeks and months</b> is what takes fat off. One perfect day solves nothing, a hundred ordinary days do [1].</li>
+    </ul>
+
+    <h2>When a plateau is actually OK (and when to stop pushing)</h2>
+    <p>What most guides leave out: <b>not every plateau has to be broken</b>. Sometimes a stall on the scale is exactly what you want:</p>
+    <ul class="check">
+      <li><b>Maintenance.</b> When you are where you want to be, a stable weight is the goal, not a problem. Finishing a fat-loss phase is not a defeat.</li>
+      <li><b>Recomposition.</b> The scale stands still, but you lose fat and gain muscle at the same time. The mirror, your measurements and your strength in the gym tell you more than the number on the scale.</li>
+      <li><b>A long deficit and exhaustion.</b> If you have been in a deficit for a long time and you are tired and hungry with a short fuse, a <b>diet break or a move to maintenance</b> is smarter than pushing on [4,7].</li>
+      <li><b>Health and head first.</b> When the chase for the last few kilos spoils your sleep, your relationship with food and your mood, it is time to step back. Fitness can be built patiently, in stages.</li>
+    </ul>
+
+    <div class="callout"><b>Action step:</b> Before you panic, do one thing: <b>weigh your food carefully for 14 days and follow your weekly average weight</b> [1,5]. Almost always it turns out the deficit was leaking somewhere. Then use the levers from the top: tighten your tracking, add steps, and only at the end cut a little [6,7]. Patience and consistency beat drastic cutting in the long run. Be Effective! <img src="data:image/png;base64,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" alt="" width="20" height="20" style="width:1.3em;height:1.3em;vertical-align:-.3em"></div>
+
+    <div class="foot">
+      <div>© <span class="brandName2">Martin Barna</span>: client guide. Share only with the author’s permission.</div>
+      <div><a id="brandWeb" href="https://martinbarna.cz/en/">martinbarna.cz/en</a></div>
+    </div>
+    <p class="src"><b>Sources:</b> [1] Hall KD, Heymsfield SB, Kemnitz JW, Klein S, Schoeller DA, Speakman JR. Energy balance and its components: implications for body weight regulation. Am J Clin Nutr. 2012;95(4):989–994. [2] Müller MJ, Bosy-Westphal A. Adaptive thermogenesis with weight loss in humans. Obesity. 2013;21(2):218–228. [3] Rosenbaum M, Leibel RL. Adaptive thermogenesis in humans. Int J Obes (Lond). 2010;34(Suppl 1):S47–S55. [4] Trexler ET, Smith-Ryan AE, Norton LE. Metabolic adaptation to weight loss: implications for the athlete. J Int Soc Sports Nutr. 2014;11:7. [5] Lichtman SW, et al. Discrepancy between self-reported and actual caloric intake and exercise in obese subjects. N Engl J Med. 1992;327(27):1893–1898. [6] Levine JA. Non-exercise activity thermogenesis (NEAT). Best Pract Res Clin Endocrinol Metab. 2002;16(4):679–702. [7] Helms ER, Aragon AA, Fitschen PJ. Evidence-based recommendations for natural bodybuilding contest preparation: nutrition and supplementation. J Int Soc Sports Nutr. 2014;11:20. [8] Thomas DM, et al. Why do individuals not lose more weight from an exercise intervention at a defined dose? An energy balance analysis. Obes Rev. 2012;13(10):835–847.</p>
+  </div></div>
+
+<script>
+  // Rebranding from URL parameters (?name=&tag=&color=&color2=&logo=&web=). Default = Martin Barna.
+  (function(){
+    var p = new URLSearchParams(location.search);
+    function clean(s){ return (s||'').toString().slice(0,80); }
+    var color = clean(p.get('color'));
+    var color2 = clean(p.get('color2'));
+    var name = clean(p.get('name'));
+    var tag = clean(p.get('tag'));
+    var logo = clean(p.get('logo'));
+    var web = clean(p.get('web'));
+    var root = document.documentElement.style;
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color)){ var c = color[0]==='#'?color:'#'+color; root.setProperty('--brand', c); if(!color2) root.setProperty('--brand2', c); }
+    if (/^#?[0-9a-fA-F]{3,8}$/.test(color2)){ var c2 = color2[0]==='#'?color2:'#'+color2; root.setProperty('--brand2', c2); }
+    if (name){ document.getElementById('brandName').textContent = name;
+      document.querySelectorAll('.brandName2').forEach(function(e){ e.textContent = name; });
+      var lf=document.getElementById('brandLogo'); if(lf && lf.classList.contains('logo-fallback')){ lf.textContent = name.trim().split(/\s+/).map(function(w){return w[0];}).join('').slice(0,2).toUpperCase()||'MB'; } }
+    if (tag){ document.getElementById('brandTag').textContent = tag; }
+    if (logo && /^https?:\/\//.test(logo)){ var img=document.createElement('img'); img.alt=name||'logo'; img.src=logo; img.onerror=function(){}; var slot=document.getElementById('brandLogo'); slot.replaceWith(img); img.id='brandLogo'; }
+    if (web){ var a=document.getElementById('brandWeb'); var href = /^https?:\/\//.test(web)?web:('https://'+web); a.href=href; a.textContent=web.replace(/^https?:\/\//,''); }
+    document.title = (name||'Martin Barna') + ' - Plateau';
+  })();
+  document.getElementById('printBtn').addEventListener('click', function(){ window.print(); });
+</script>
+<link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
+</html>
