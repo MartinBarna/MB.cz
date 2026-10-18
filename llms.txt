@@ -57,7 +57,7 @@ Jednorázový online hovor (video či audio) zhruba na hodinu: spočítaný denn
 
 ## Zdarma
 - [Nástroje zdarma](https://martinbarna.cz/nastroje-zdarma/): generátor jídelníčku, generátor tréninku a databáze 128 cviků s technikou a nejčastějšími chybami, bez registrace.
-- [Kolik stojí bílkoviny](https://martinbarna.cz/nastroje-zdarma/kolik-stoji-bilkoviny/): srovnání cen potravin přepočtených na 100 g bílkovin a kalkulačka denních nákladů, bez registrace.
+- [Kolik stojí bílkoviny](https://martinbarna.cz/nastroje-zdarma/kolik-stoji-bilkoviny/): srovnání 87 potravin z Rohlíku podle ceny 10 g bílkovin (snímek cen ke dni 14. 10. 2026), bez registrace.
 - [Kalkulačka kalorií a makroživin](https://martinbarna.cz/kalkulacka-kalorii-a-makrozivin/).
 - [Kvíz: Co ti reálně brání zhubnout?](https://martinbarna.cz/kviz/) (6 otázek).
 - [7denní makro plán pro ženy 30+](https://martinbarna.cz/makro-plan/) (PDF na e-mail).
