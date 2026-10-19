@@ -237,7 +237,7 @@ const MAIL1_NO_NUMBERS: Template = {
   preheader: "Calories and protein a day, what to do with them this week. And one question for you.",
   body: `Hi {{first_name}},
 
-everything starts with two numbers: calories a day and protein a day. The calculator gives you both in 30 seconds: ${LINKS.calculator}
+Everything starts with two numbers: calories a day and protein a day. The calculator gives you both in 30 seconds: ${LINKS.calculator}
 
 What to do with them this week:
 1) Eat around your calorie number most days. Some days you'll be over, some under. The week average is what counts.
