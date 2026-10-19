@@ -208,57 +208,57 @@ const MAIL1_NUMBERS: Template = {
   preheader: "{{kcal}} kcal and {{protein_g}} g of protein a day. And one question for you.",
   body: `Hi {{first_name}},
 
-your numbers from the calculator:
+Here are your numbers from the calculator:
 
 {{kcal}} kcal a day
 {{protein_g}} g of protein a day
 
 What to do with them this week:
-1) Eat around {{kcal}} kcal most days. Some days over, some under, the week counts.
+1) Eat around {{kcal}} kcal most days. Some days you'll be over, some under. The week average is what counts.
 2) Hit the protein every day. Spread it over 3 to 4 meals. A palm of meat or fish is about 20 to 30 g of protein. If your target is higher, make the portions bigger or add a fifth meal.
 3) Weigh yourself and measure your waist once a week, morning, same conditions. Write both down.
 
-After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system, the rest is details.
+After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system. The rest is details.
 
 Your Eating Out Playbook (PDF): {{playbook_url}}
-8 types of places, what to order, what quietly adds 500 kcal. Read the steakhouse and the bar first, that's where my clients lose the most.
+8 types of places: what to order and which extras add 500 kcal to a meal. Start with the steakhouse and the bar. That's where I see my clients go over the most.
 
-Who is writing to you: Martin Barna, nutrition and fitness coach from Czechia. In the field since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
+In case we haven't met: I'm Martin Barna, nutrition and fitness coach from Czechia. Coaching since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
 
-One question, and I mean it: reply to this email with one line. What is the biggest thing that breaks your diet right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer.
+Now one question for you. Hit reply and write me one line: what breaks your diet the most right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer every one.
 
 Be Effective!
 Martin`,
 };
 
-// Varianta bez čísel (⚠️ dopsaná v kódu, v .md doslova není; projít hlasem před zapnutím).
+// Varianta bez čísel (dopsaná v kódu, v .md doslova není; prošlá hlasem 19. 10. 2026, čeká na Martinovo schválení).
 const MAIL1_NO_NUMBERS: Template = {
-  subject: "Your Eating Out Playbook + your two numbers",
+  subject: "Your Eating Out Playbook + the two numbers that matter",
   preheader: "Calories and protein a day, what to do with them this week. And one question for you.",
   body: `Hi {{first_name}},
 
-everything starts with two numbers: calories a day and protein a day. The calculator gives you both in 2 minutes: ${LINKS.calculator}
+Everything starts with two numbers: calories a day and protein a day. The calculator gives you both in 30 seconds: ${LINKS.calculator}
 
 What to do with them this week:
-1) Eat around your calorie number most days. Some days over, some under, the week counts.
+1) Eat around your calorie number most days. Some days you'll be over, some under. The week average is what counts.
 2) Hit the protein every day. Spread it over 3 to 4 meals. A palm of meat or fish is about 20 to 30 g of protein. If your target is higher, make the portions bigger or add a fifth meal.
 3) Weigh yourself and measure your waist once a week, morning, same conditions. Write both down.
 
-After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system, the rest is details.
+After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system. The rest is details.
 
 Your Eating Out Playbook (PDF): {{playbook_url}}
-8 types of places, what to order, what quietly adds 500 kcal. Read the steakhouse and the bar first, that's where my clients lose the most.
+8 types of places: what to order and which extras add 500 kcal to a meal. Start with the steakhouse and the bar. That's where I see my clients go over the most.
 
-Who is writing to you: Martin Barna, nutrition and fitness coach from Czechia. In the field since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
+In case we haven't met: I'm Martin Barna, nutrition and fitness coach from Czechia. Coaching since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
 
-One question, and I mean it: reply to this email with one line. What is the biggest thing that breaks your diet right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer.
+Now one question for you. Hit reply and write me one line: what breaks your diet the most right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer every one.
 
 Be Effective!
 Martin`,
 };
 
 const MAIL2: Template = {
-  subject: "Up 1.4 kg this morning. It was not fat.",
+  subject: "Up 1.4 kg this morning. It wasn't fat.",
   preheader: "1 to 2 kg in a day is water and glycogen. What to measure instead.",
   body: `Hi {{first_name}},
 
@@ -273,7 +273,7 @@ What moved the scale:
 I see this in reports every week: scale flat or up, waist down 2 cm. Looking only at the scale, the client would call it a bad week. It was a good one.
 
 What to watch instead:
-1) Weigh in the morning, after the bathroom, before food, same scale. Daily if you can handle it, then compare WEEKLY AVERAGES, never two single days.
+1) Weigh in the morning, after the bathroom, before food, same scale. Daily if you can handle it, then compare weekly averages instead of two single days.
 2) Waist once a week, same spot (at the navel), same time. This number is the one I trust most for belly fat.
 3) A photo once a month, same light, same place.
 
@@ -290,7 +290,7 @@ const MAIL3: Template = {
   preheader: "Three things that keep the result moving when everything else is on fire.",
   body: `Hi {{first_name}},
 
-the weeks that break results, in what I see with clients, are the all-or-nothing ones. Trip on Tuesday, dinner on Wednesday, "I'll start again Monday" by Thursday. Four days of nothing erase ten days of work.
+The weeks that break results, in what I see with clients, are the all-or-nothing ones. Trip on Tuesday, dinner on Wednesday, "I'll start again Monday" by Thursday. Four days of nothing erase ten days of work.
 
 So with every client I agree on the minimum version in advance, before the bad week comes. Three things, nothing else:
 
@@ -298,11 +298,11 @@ So with every client I agree on the minimum version in advance, before the bad w
 2) 8,000 steps. Airports and cities give you half of it for free.
 3) Write down roughly what you ate. Even a guess. A rough number beats no number.
 
-That's it. Done every day of a bad week, it stops the week from turning into a total write-off. It does not replace the calorie target. Then the normal plan again.
+That's it. Done every day of a bad week, it stops the week from turning into a total write-off. It doesn't replace the calorie target. Then the normal plan again.
 
 Two rules that go with it:
 - Count 1, not 0. One missed day means nothing. Two in a row, fix it the same day. That's where the new (bad) habit starts.
-- Shrink the dose, not the ambition. In a crazy week the goal is a protein breakfast and a 20 minute walk, done. A small habit you kept beats a big one you dropped.
+- Shrink the dose and keep the goal. In a crazy week the goal is a protein breakfast and a 20 minute walk, done. A small habit you kept beats a big one you dropped.
 
 In the playbook, the chapter "The minimum version for travel days" is the same thing with a shopping list for the airport.
 
@@ -345,7 +345,7 @@ const MAIL5: Template = {
   preheader: "Written coaching, weekly check-ins, no calls. Who it's for and who it isn't.",
   body: `Hi {{first_name}},
 
-this is the last email of the kit series. You have the numbers, the playbook, the minimum version and the weekend math. Some people take that and run with it, and that's fine with me.
+This is the last email of the kit series. You have the numbers, the playbook, the minimum version and the weekend math. Some people take that and run with it, and that's fine with me.
 
 If you'd rather have someone set it up for you and check it every week, this is how I work with English-speaking clients:
 
