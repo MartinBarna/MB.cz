@@ -208,50 +208,50 @@ const MAIL1_NUMBERS: Template = {
   preheader: "{{kcal}} kcal and {{protein_g}} g of protein a day. And one question for you.",
   body: `Hi {{first_name}},
 
-your numbers from the calculator:
+Here are your numbers from the calculator:
 
 {{kcal}} kcal a day
 {{protein_g}} g of protein a day
 
 What to do with them this week:
-1) Eat around {{kcal}} kcal most days. Some days over, some under, the week counts.
+1) Eat around {{kcal}} kcal most days. Some days you'll be over, some under. The week average is what counts.
 2) Hit the protein every day. Spread it over 3 to 4 meals. A palm of meat or fish is about 20 to 30 g of protein. If your target is higher, make the portions bigger or add a fifth meal.
 3) Weigh yourself and measure your waist once a week, morning, same conditions. Write both down.
 
-After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system, the rest is details.
+After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system. The rest is details.
 
 Your Eating Out Playbook (PDF): {{playbook_url}}
-8 types of places, what to order, what quietly adds 500 kcal. Read the steakhouse and the bar first, that's where my clients lose the most.
+8 types of places: what to order and which extras add 500 kcal to a meal. Start with the steakhouse and the bar. That's where I see my clients go over the most.
 
-Who is writing to you: Martin Barna, nutrition and fitness coach from Czechia. In the field since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
+In case we haven't met: I'm Martin Barna, nutrition and fitness coach from Czechia. Coaching since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
 
-One question, and I mean it: reply to this email with one line. What is the biggest thing that breaks your diet right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer.
+Now one question for you. Hit reply and write me one line: what breaks your diet the most right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer every one.
 
 Be Effective!
 Martin`,
 };
 
-// Varianta bez čísel (⚠️ dopsaná v kódu, v .md doslova není; projít hlasem před zapnutím).
+// Varianta bez čísel (dopsaná v kódu, v .md doslova není; prošlá hlasem 19. 10. 2026, čeká na Martinovo schválení).
 const MAIL1_NO_NUMBERS: Template = {
-  subject: "Your Eating Out Playbook + your two numbers",
+  subject: "Your Eating Out Playbook + the two numbers that matter",
   preheader: "Calories and protein a day, what to do with them this week. And one question for you.",
   body: `Hi {{first_name}},
 
-everything starts with two numbers: calories a day and protein a day. The calculator gives you both in 2 minutes: ${LINKS.calculator}
+everything starts with two numbers: calories a day and protein a day. The calculator gives you both in 30 seconds: ${LINKS.calculator}
 
 What to do with them this week:
-1) Eat around your calorie number most days. Some days over, some under, the week counts.
+1) Eat around your calorie number most days. Some days you'll be over, some under. The week average is what counts.
 2) Hit the protein every day. Spread it over 3 to 4 meals. A palm of meat or fish is about 20 to 30 g of protein. If your target is higher, make the portions bigger or add a fifth meal.
 3) Weigh yourself and measure your waist once a week, morning, same conditions. Write both down.
 
-After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system, the rest is details.
+After 2 to 3 weeks the trend tells you if the number is right. If it isn't, you move it by 100 to 200 kcal. That's the whole system. The rest is details.
 
 Your Eating Out Playbook (PDF): {{playbook_url}}
-8 types of places, what to order, what quietly adds 500 kcal. Read the steakhouse and the bar first, that's where my clients lose the most.
+8 types of places: what to order and which extras add 500 kcal to a meal. Start with the steakhouse and the bar. That's where I see my clients go over the most.
 
-Who is writing to you: Martin Barna, nutrition and fitness coach from Czechia. In the field since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
+In case we haven't met: I'm Martin Barna, nutrition and fitness coach from Czechia. Coaching since 2013, 600+ clients, guest on Czech national TV. I coach busy people in writing: weekly check-ins, normal food, restaurants included.
 
-One question, and I mean it: reply to this email with one line. What is the biggest thing that breaks your diet right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer.
+Now one question for you. Hit reply and write me one line: what breaks your diet the most right now? Business dinners, travel, weekends, evenings at home, no time? I read every reply myself and I answer every one.
 
 Be Effective!
 Martin`,

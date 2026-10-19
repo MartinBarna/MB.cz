@@ -9,7 +9,7 @@ Lead z `/en/` (formulář kit, `/en/calculator/`, `/en/workout/`) dostane 5 mail
 
 | Krok | Den od startu | Předmět |
 |---|---|---|
-| 1 | 0 (do hodiny) | Your numbers + the Eating Out Playbook (bez čísel: Your Eating Out Playbook + your two numbers) |
+| 1 | 0 (do hodiny) | Your numbers + the Eating Out Playbook (bez čísel: Your Eating Out Playbook + the two numbers that matter) |
 | 2 | 2 | Up 1.4 kg this morning. It was not fat. |
 | 3 | 4 | The minimum version (for the week that falls apart) |
 | 4 | 6 | Weekend math: 5 days of work, 2 days that erase it |
@@ -28,7 +28,7 @@ Pravidla (vše v `logic.ts`, každé má test v `logic_test.ts`):
 - Max 50 mailů za běh, nejstarší starty první. Běh se zastaví po 3 selháních Resendu nebo po 100 s.
 - Testovací řádky (`first_name` TEST-CLAUDE, e-mail fitness.barna@gmail.com) jen v náhledu.
 - Razítko `en_mail_log` (unique `lead_email` + `step`) se zapisuje **před** Resendem. Souběžný běh dostane konflikt a mail nepošle.
-- Mail 1 bez výsledku kalkulačky (typicky workout) jde ve variantě bez čísel s odkazem na kalkulačku. ⚠️ Tahle varianta je dopsaná v kódu, v .md doslova není: před zapnutím projít hlasem.
+- Mail 1 bez výsledku kalkulačky (typicky workout) jde ve variantě bez čísel s odkazem na kalkulačku. Tahle varianta je dopsaná v kódu, v .md doslova není. Hlasem prošlá 19. 10. 2026 (oba mail 1), schválení Martin.
 - `{{price_block}}` je prázdný (ceny nikdy v kódu), v mailu 5 se nezobrazí.
 - Odesílatel `Martin Barna <news@martinbarna.cz>`, `reply_to` `martin@martinbarna.cz` (mail 1 a 5 žádají o odpověď).
 
