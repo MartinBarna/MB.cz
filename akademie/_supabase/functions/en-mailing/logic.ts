@@ -258,7 +258,7 @@ Martin`,
 };
 
 const MAIL2: Template = {
-  subject: "Up 1.4 kg this morning. It was not fat.",
+  subject: "Up 1.4 kg this morning. It wasn't fat.",
   preheader: "1 to 2 kg in a day is water and glycogen. What to measure instead.",
   body: `Hi {{first_name}},
 
@@ -273,7 +273,7 @@ What moved the scale:
 I see this in reports every week: scale flat or up, waist down 2 cm. Looking only at the scale, the client would call it a bad week. It was a good one.
 
 What to watch instead:
-1) Weigh in the morning, after the bathroom, before food, same scale. Daily if you can handle it, then compare WEEKLY AVERAGES, never two single days.
+1) Weigh in the morning, after the bathroom, before food, same scale. Daily if you can handle it, then compare weekly averages instead of two single days.
 2) Waist once a week, same spot (at the navel), same time. This number is the one I trust most for belly fat.
 3) A photo once a month, same light, same place.
 
@@ -290,7 +290,7 @@ const MAIL3: Template = {
   preheader: "Three things that keep the result moving when everything else is on fire.",
   body: `Hi {{first_name}},
 
-the weeks that break results, in what I see with clients, are the all-or-nothing ones. Trip on Tuesday, dinner on Wednesday, "I'll start again Monday" by Thursday. Four days of nothing erase ten days of work.
+The weeks that break results, in what I see with clients, are the all-or-nothing ones. Trip on Tuesday, dinner on Wednesday, "I'll start again Monday" by Thursday. Four days of nothing erase ten days of work.
 
 So with every client I agree on the minimum version in advance, before the bad week comes. Three things, nothing else:
 
@@ -298,11 +298,11 @@ So with every client I agree on the minimum version in advance, before the bad w
 2) 8,000 steps. Airports and cities give you half of it for free.
 3) Write down roughly what you ate. Even a guess. A rough number beats no number.
 
-That's it. Done every day of a bad week, it stops the week from turning into a total write-off. It does not replace the calorie target. Then the normal plan again.
+That's it. Done every day of a bad week, it stops the week from turning into a total write-off. It doesn't replace the calorie target. Then the normal plan again.
 
 Two rules that go with it:
 - Count 1, not 0. One missed day means nothing. Two in a row, fix it the same day. That's where the new (bad) habit starts.
-- Shrink the dose, not the ambition. In a crazy week the goal is a protein breakfast and a 20 minute walk, done. A small habit you kept beats a big one you dropped.
+- Shrink the dose and keep the goal. In a crazy week the goal is a protein breakfast and a 20 minute walk, done. A small habit you kept beats a big one you dropped.
 
 In the playbook, the chapter "The minimum version for travel days" is the same thing with a shopping list for the airport.
 
@@ -345,7 +345,7 @@ const MAIL5: Template = {
   preheader: "Written coaching, weekly check-ins, no calls. Who it's for and who it isn't.",
   body: `Hi {{first_name}},
 
-this is the last email of the kit series. You have the numbers, the playbook, the minimum version and the weekend math. Some people take that and run with it, and that's fine with me.
+This is the last email of the kit series. You have the numbers, the playbook, the minimum version and the weekend math. Some people take that and run with it, and that's fine with me.
 
 If you'd rather have someone set it up for you and check it every week, this is how I work with English-speaking clients:
 
