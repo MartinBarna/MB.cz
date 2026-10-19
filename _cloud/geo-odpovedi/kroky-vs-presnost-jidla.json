@@ -6,7 +6,7 @@
   "faq": [
     {
       "otazka": "Jak si tělo bere zpátky kalorie spálené chůzí?",
-      "odpoved": "Ve studii Knaan a spol. (2026) lidem klesl klidový výdej, hůř spali, chůze začala být úspornější a přes den se nevědomky hýbali míň. Dohromady si tělo vzalo zpátky skoro 40 % výdeje z chůze."
+      "odpoved": "Ve studii Knaan a spol. (2026) lidem klesl klidový výdej i výdej energie ve spánku, chůze začala být úspornější a přes den se nevědomky hýbali míň. Dohromady si tělo vzalo zpátky skoro 40 % výdeje z chůze."
     },
     {
       "otazka": "Co je na hubnutí důležitější, kroky, nebo jídlo?",
@@ -25,7 +25,7 @@
     {"pro": "kratka_odpoved", "citace": "Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky."},
     {"pro": "kratka_odpoved", "citace": "Studie ukazují, že lidi svůj příjem podhodnotí klidně o 20 až 50 % (Lichtman, NEJM 1992; Burrows 2019)."},
     {"pro": "kratka_odpoved", "citace": "Takže to nejspíš není genetika ani pomalý metabolismus. Spíš jen nevíš přesně, kolik toho jíš."},
-    {"pro": "faq[0]", "citace": "Četl jsem nedávno studii (Knaan a spol., Communications Medicine 2026). Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky. Klesl klidový výdej, hůř se spalo, chůze začala být úspornější a přes den se člověk nevědomky hýbal míň."},
+    {"pro": "faq[0]", "citace": "Četl jsem nedávno studii (Knaan a spol., Communications Medicine 2026). Lidi zvedli výdej z chůze zhruba o 1 500 kcal týdně a vydrželi to 12 týdnů. Tělo si ale skoro 40 % vzalo zpátky. Klesl klidový výdej, klesl i výdej energie ve spánku, chůze začala být úspornější a přes den se člověk nevědomky hýbal míň."},
     {"pro": "faq[1]", "citace": "Nejdřív rozhoduje strava, tedy deficit a dost bílkovin. Pak silák, ať si v redukci udržíš svaly. Kroky a kardio jsou bonus, ne základ."},
     {"pro": "faq[2]", "citace": "Studie ukazují, že lidi svůj příjem podhodnotí klidně o 20 až 50 % (Lichtman, NEJM 1992; Burrows 2019). Olej od oka, kousek čokolády, sklenka vína k večeři, dojídání po dětech. Sečte se to do pěkné porce."},
     {"pro": "faq[2]", "citace": "Ale na úbytek tuku si fakt změř, co jíš."},
