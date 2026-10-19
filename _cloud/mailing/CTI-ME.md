@@ -2,10 +2,14 @@
 
 Podklady k návrhu `_cloud/MAILING-NAVRH-1009.md`. **Všechno je NÁVRH.** Nic se nenasadilo, na Supabase, Resend ani appku se nesahalo.
 
+**Kolo hlasu 9. 10. 2026 (větev `cloud/mailing-hlas-1009`):** texty všech 13 mailů i opravy P0 prošly hlasem Martina
+podle `HLAS-MARTINA.md`. Co se měnilo a proč (před/po u každého mailu, opakování napříč tratí, měření pomlček):
+`_cloud/MAILING-HLAS-1009.md`. Fakta, čísla, podmínky, UTM ani proměnné se neměnily.
+
 | Soubor | Co to je | Čemu věřit |
 |---|---|---|
-| `sablony.cjs` | **Jediný zdroj textů** 13 nových mailů (`vip-free`, `vip-kupci`, `vip-leady`) a opravy P0 | Texty jsou návrh pro Martina. Upravuje se tady, ne v SQL ani v náhledech. |
-| `generuj.cjs` | Generátor: zkontroluje pravidla a vyrobí náhledy, SQL a sekci 6 v hlavním dokumentu | Spuštění: `node _cloud/mailing/generuj.cjs`. Při porušení pravidla spadne a nic nevyrobí. |
+| `sablony.cjs` | **Jediný zdroj textů** 13 nových mailů (`vip-free`, `vip-kupci`, `vip-leady`) a opravy P0 | Texty jsou návrh pro Martina po kole hlasu. Upravuje se tady, ne v SQL ani v náhledech. Každý mail má tři předměty: `subject` (A, klasika, výchozí do DB), `subject_b` (B, klasika), `subject_c` (C, z hloubky). Vybírá Martin. |
+| `generuj.cjs` | Generátor: zkontroluje pravidla a vyrobí náhledy, SQL a sekci 6 v hlavním dokumentu | Spuštění: `node _cloud/mailing/generuj.cjs`. Při porušení pravidla spadne a nic nevyrobí. Od kola hlasu hlídá i vykřičník mimo podpis, absolutna (musí, vždy, nikdy), AI obraty („Tady je“, klíčové, skutečné a další), druhou prosbu v mailu a délku všech tří předmětů. |
 | `nahledy/` | HTML náhledy v obalu 1:1 s `drip-send`, rozcestník `index.html` | Ceny jsou schválně jen jako jména proměnných. Patička je zástupná, živá je v `app_config.footer_html`. |
 | `00-kontroly-pred-spustenim.sql` | Dotazy jen pro čtení proti živé DB, včetně výchozího stavu plateb VIP | **Pustit první.** Návrh vznikl jen z repa. |
 | `01-sablony-insert.sql` | Insert 13 šablon (vygenerovaný) | Inertní, dokud nevede most ani zápis. |

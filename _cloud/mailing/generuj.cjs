@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generator NAVRHU mailu (9. 10. 2026). Spusteni: node _cloud/mailing/generuj.cjs
+// Generator NAVRHU mailu (9. 10. 2026, kolo hlasu tehoz dne). Spusteni: node _cloud/mailing/generuj.cjs
 // Cte `sablony.cjs`, kontroluje pravidla a vyrabi:
 //   nahledy/<track>-<step>-<key>.html   nahled ve stejnem obalu jako drip-send (wrapHtml 1:1)
 //   nahledy/index.html                  rozcestnik nahledu
@@ -27,7 +27,7 @@ const ZNAME = new Set([
 // KONTROLY (spadne pri prvnim poruseni, nic se nevygeneruje)
 // ---------------------------------------------------------------------------
 const chyby = [];
-const textVse = (m) => [m.subject, m.subject_b, m.preheader, JSON.stringify(m.blocks)].join(' ');
+const textVse = (m) => [m.subject, m.subject_b, m.subject_c, m.preheader, JSON.stringify(m.blocks)].join(' ');
 for (const m of VSE) {
   const id = m.track + '/' + m.step;
   const t = textVse(m);
@@ -38,7 +38,21 @@ for (const m of VSE) {
   for (const b of btns) if (!/utm_source=email&utm_medium=drip&utm_campaign=[a-z0-9-]+&utm_content=[a-z0-9-]+/.test(b.href)) chyby.push(id + ': tlacitko bez UTM');
   for (const k of (t.match(/\{\{([^{}]+)\}\}/g) || []).map((x) => x.slice(2, -2))) if (!ZNAME.has(k)) chyby.push(id + ': neznama promenna {{' + k + '}}');
   for (const zakaz of ['Odemkni', 'Revoluční', 'Klíčem je', 'Pojďme', 'Cesta k', 'V dnešní době', 'Není to jen']) if (t.includes(zakaz)) chyby.push(id + ': zakazana fraze „' + zakaz + '“');
-  if (m.subject.length > 70 || m.subject_b.length > 70) chyby.push(id + ': predmet delsi nez 70 znaku');
+  // Kolo hlasu 9. 10. 2026 (HLAS-MARTINA.md, ../MAILING-HLAS-1009.md):
+  //  - vykricnik jen v podpisu „Be Effective!"
+  if (t.split('Be Effective!').join('').includes('!')) chyby.push(id + ': vykricnik mimo podpis');
+  //  - AI obraty a buzzwordy
+  for (const zakaz of ['Tady je proč', 'Tady je ', 'Ať už jsi', 'Doufám, že', 'tiše hlíd', 'elegantně', 'robustní', 'bezešv', 'game-changer', 'Většina lidí', 'klíčov', 'skutečn', 'opravdov', 'v konečném důsledku', 'je důležité si uvědomit'])
+    if (t.toLowerCase().includes(zakaz.toLowerCase())) chyby.push(id + ': AI obrat „' + zakaz + '“');
+  //  - absolutna
+  //    (\b v JS nezna ceske znaky, proto hranice slova pres vycet pismen)
+  const CZ = 'a-záčďéěíňóřšťúůýž';
+  for (const abs of (t.match(new RegExp('(?<![' + CZ + '])(musíš|musí|vždy|vždycky|nikdy|zaručeně|100 ?%)(?![' + CZ + '])', 'gi')) || [])) chyby.push(id + ': absolutum „' + abs + '“');
+  //  - jedna prosba na mail: tlacitko. Vyzva k odpovedi je druha prosba.
+  for (const prosba of ['odpověz mi', 'odepiš mi', 'napiš mi jednou větou', 'odepiš na tenhle']) if (t.toLowerCase().includes(prosba)) chyby.push(id + ': druha prosba „' + prosba + '“ (jedna prosba na mail = tlacitko)');
+  //  - tri predmety: A, B (klasika) a C (z hloubky), kazdy do 70 znaku
+  if (!m.subject_c) chyby.push(id + ': chybi subject_c (z hloubky)');
+  for (const [n, sub] of [['A', m.subject], ['B', m.subject_b], ['C', m.subject_c || '']]) if (sub.length > 70) chyby.push(id + ': predmet ' + n + ' delsi nez 70 znaku');
 }
 // Klice musi byt unikatni (email_events.detail.key, statistiky podle klice).
 const klice = VSE.map((m) => m.key);
@@ -115,7 +129,7 @@ for (const f of fs.readdirSync(NAHLEDY)) if (f.endsWith('.html')) fs.unlinkSync(
 const soubor = (m) => `${m.track}-${m.step}-${m.key}.html`;
 const meta = (m) => `<div style='font-family:monospace;font-size:12px;color:#A09AAD;margin:0 0 16px;line-height:1.5'>` +
   `NÁVRH · trať <b>${m.track}</b> · krok ${m.step} · key ${m.key} · wait_days ${m.wait_days === null ? 'null (konec)' : m.wait_days}<br>` +
-  `Předmět A: <b style='color:#F0EADF'>${esc(mergeTxt(gender(m.subject, false)))}</b><br>Předmět B: ${esc(mergeTxt(gender(m.subject_b, false)))}<br>Náhledový text: ${esc(mergeTxt(gender(m.preheader, false)))}</div>`;
+  `Předmět A (klasika, výchozí do DB): <b style='color:#F0EADF'>${esc(mergeTxt(gender(m.subject, false)))}</b><br>Předmět B (klasika): ${esc(mergeTxt(gender(m.subject_b, false)))}<br>Předmět C (z hloubky): ${esc(mergeTxt(gender(m.subject_c, false)))}<br>Náhledový text: ${esc(mergeTxt(gender(m.preheader, false)))}</div>`;
 for (const m of VSE) {
   const html = wrapHtml(mergeTxt(gender(m.preheader, false)), meta(m) + renderHtml(m.blocks, false), fill(PATICKA, false), m.subject);
   fs.writeFileSync(path.join(NAHLEDY, soubor(m)), html);
@@ -123,7 +137,7 @@ for (const m of VSE) {
 const radek = (m) => `<tr><td>${m.track}</td><td>${m.step}</td><td>${m.wait_days === null ? 'konec' : m.wait_days}</td><td><a href='${soubor(m)}'>${esc(mergeTxt(gender(m.subject, false)))}</a></td></tr>`;
 fs.writeFileSync(path.join(NAHLEDY, 'index.html'), `<!doctype html><html lang='cs'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Náhledy mailů</title>` +
   `<style>body{font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0C0B10;color:#F0EADF;margin:0;padding:24px 16px}a{color:#F6CD63}table{border-collapse:collapse;width:100%;max-width:900px}td,th{border-bottom:1px solid #262231;padding:8px;text-align:left;font-size:14px}h1{font-size:20px}h2{font-size:16px;margin-top:28px}</style></head><body>` +
-  `<h1>Náhledy mailů: návrh 9. 10. 2026 (nic se neodesílá)</h1><p>Ceny jsou schválně jen jako proměnné. Text je návrh, finální znění schvaluje Martin.</p>` +
+  `<h1>Náhledy mailů: návrh 9. 10. 2026 (nic se neodesílá)</h1><p>Ceny jsou schválně jen jako proměnné. Text je návrh po kole hlasu (MAILING-HLAS-1009.md), finální znění schvaluje Martin. Předměty A a B jsou klasika, C je z hloubky; v náhledu jsou všechny tři, Martin vybírá.</p>` +
   [['Trať 1: vip-free', vipFree], ['Trať 2: vip-kupci', vipKupci], ['Trať 3: vip-leady', vipLeady], ['Oprava P0: Basic → VIP (4 existující kroky)', opravaP0]]
     .map(([nadpis, tr]) => `<h2>${nadpis}</h2><table><tr><th>Trať</th><th>Krok</th><th>Čeká dní</th><th>Předmět A</th></tr>${tr.map(radek).join('')}</table>`).join('') +
   `</body></html>`);
@@ -209,7 +223,7 @@ function mailMd(m, den) {
     return '> ' + md(x.html);
   }).join('\n>\n');
   return `#### ${m.track} · krok ${m.step}${den === null ? '' : ' · den ' + den} · \`${m.key}\`\n\n` +
-    `- **Předmět A:** ${md(m.subject)}\n- **Předmět B:** ${md(m.subject_b)}\n- **Náhledový text:** ${md(m.preheader)}\n` +
+    `- **Předmět A (klasika, výchozí do DB):** ${md(m.subject)}\n- **Předmět B (klasika):** ${md(m.subject_b)}\n- **Předmět C (z hloubky):** ${md(m.subject_c)}\n- **Náhledový text:** ${md(m.preheader)}\n` +
     `- **CTA:** „${md(b.text)}" → \`${b.href}\`\n- **Čeká po odeslání:** ${m.wait_days === null ? 'nic, konec trati' : m.wait_days === 'BEZE ZMENY' ? 'beze změny (jako dnes)' : m.wait_days + (m.wait_days >= 5 ? ' dní' : ' dny')}\n\n${telo}\n`;
 }
 function tratMd(nadpis, tr) {
