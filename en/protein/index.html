@@ -257,6 +257,7 @@
     .field { width: auto; }
     .field input { width: 280px; }
     #minp { width: 140px; }
+    #goal { width: 140px; }
     .sortbar { display: none; }
     .lbl { display: none; }
     .sheet { display: table; border-collapse: collapse; }
@@ -313,6 +314,44 @@
     * { transition: none !important; }
   }
   button, a { transition: background-color 160ms ease, color 160ms ease; }
+  .sharebar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 16px 0 0;
+  }
+  .sharebar button {
+    min-height: 44px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--chip-line);
+    background: transparent;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+  .sharebar button:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+  .copied { font-weight: 700; color: var(--gold); min-height: 1.25em; }
+  .calc { margin-top: 16px; }
+  .calc select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--chip-line);
+    background: #121212;
+    color: var(--text);
+    font: inherit;
+    color-scheme: dark;
+  }
+  .calc-out { margin-top: 4px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  @media (min-width: 641px) {
+    .calc select { width: min(36rem, 70vw); }
+  }
 </style>
 </head>
 <body>
@@ -336,6 +375,26 @@
       <p class="note-block">The ranking is by numbers only, nobody can buy a place in it.</p>
       <p class="note-block">Fresh meat (chicken, turkey, beef, salmon) is not in the table yet.</p>
     </div>
+    <div class="sharebar" role="group" aria-label="Share">
+      <button type="button" id="share">Share</button>
+      <button type="button" id="copy">Copy link</button>
+      <span id="copied" class="copied" role="status" aria-live="polite"></span>
+    </div>
+    <section class="intro calc" id="kalkulacka" aria-labelledby="kalk-h">
+      <h2 id="kalk-h">What it costs per day</h2>
+      <p>Enter how many grams of protein you want per day and pick a food. The daily cost is your goal times the price of 1 g of protein from this table. A month is 30 days.</p>
+      <div class="controls">
+        <div class="field">
+          <label for="goal">Daily protein goal (g)</label>
+          <input id="goal" type="text" inputmode="decimal" autocomplete="off" value="100">
+        </div>
+        <div class="field">
+          <label for="food">Food</label>
+          <select id="food"></select>
+        </div>
+      </div>
+      <p id="calc-live" class="calc-out" aria-live="polite"></p>
+    </section>
     <nav class="jumps" aria-label="Categories">
       <a href="#tvarohy">Quark</a>
       <a href="#jogurty-a-skyry">Yogurts and skyr</a>
@@ -661,8 +720,125 @@ function initSortbar() {
     setSort(btn.getAttribute("data-sort"));
   });
 }
+function pageUrl() {
+  const link = document.querySelector('link[rel="canonical"]');
+  const raw = link ? link.getAttribute("href") : (location.origin + location.pathname);
+  const u = new URL(raw, location.origin);
+  return u.origin + u.pathname;
+}
+function categoryAnchor() {
+  if (catFilter && catFilter !== "all") return "#" + catFilter;
+  const h = String(location.hash || "").replace(/^#/, "").split("?")[0];
+  for (let i = 0; i < CATS.length; i++) {
+    if (CATS[i].code === h) return "#" + h;
+  }
+  return "";
+}
+function shareUrl() {
+  return pageUrl() + categoryAnchor();
+}
+function fallbackCopy(text) {
+  return new Promise(function (resolve, reject) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    ok ? resolve() : reject(new Error("copy"));
+  });
+}
+function writeClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text).catch(function () { return fallbackCopy(text); });
+  }
+  return fallbackCopy(text);
+}
+let copiedTimer = null;
+function showCopied() {
+  const el = document.getElementById("copied");
+  el.textContent = "Copied";
+  clearTimeout(copiedTimer);
+  copiedTimer = setTimeout(function () { el.textContent = ""; }, 2500);
+}
+function initShare() {
+  document.getElementById("copy").addEventListener("click", function () {
+    writeClipboard(shareUrl()).then(showCopied).catch(function () {});
+  });
+  document.getElementById("share").addEventListener("click", function () {
+    const url = shareUrl();
+    if (navigator.share) {
+      navigator.share({ title: document.title, url: url }).catch(function (err) {
+        if (err && err.name === "AbortError") return;
+        writeClipboard(url).then(showCopied).catch(function () {});
+      });
+      return;
+    }
+    writeClipboard(url).then(showCopied).catch(function () {});
+  });
+}
+function moneyFromCents(c) {
+  const abs = Math.abs(Math.round(c));
+  const whole = String(Math.floor(abs / 100));
+  const frac = String(abs % 100).padStart(2, "0");
+  return money(whole + "." + frac);
+}
+function proteinCostCents(per10, grams) {
+  return Math.round(grams * cents(per10) / 10);
+}
+function initCalc() {
+  const sel = document.getElementById("food");
+  const goal = document.getElementById("goal");
+  const out = document.getElementById("calc-live");
+  const blank = document.createElement("option");
+  blank.value = "";
+  blank.textContent = "Choose a food";
+  sel.appendChild(blank);
+  CATS.forEach(function (cat) {
+    const group = document.createElement("optgroup");
+    group.label = cat.name;
+    FOODS.filter(function (f) { return f.cat === cat.code; })
+      .slice()
+      .sort(function (a, b) { return a.name.localeCompare(b.name, "en") || a.id - b.id; })
+      .forEach(function (f) {
+        const opt = document.createElement("option");
+        opt.value = String(f.id);
+        opt.textContent = f.name;
+        group.appendChild(opt);
+      });
+    sel.appendChild(group);
+  });
+  function render() {
+    const g = parseMin(goal.value);
+    const f = byId.get(Number(sel.value));
+    if (!(g > 0) && !f) {
+      out.textContent = "Enter a daily goal in grams and choose a food.";
+      return;
+    }
+    if (!(g > 0)) {
+      out.textContent = "Enter a daily goal in grams, for example 100.";
+      return;
+    }
+    if (!f) {
+      out.textContent = "Choose a food.";
+      return;
+    }
+    const day = proteinCostCents(f.per10, g);
+    const month = day * 30;
+    out.textContent = f.name + ": " + moneyFromCents(day) + " per day, " + moneyFromCents(month) + " per 30 days.";
+  }
+  goal.addEventListener("input", render);
+  sel.addEventListener("change", render);
+  render();
+}
 function init() {
   verify();
+  initShare();
+  initCalc();
   renderCategories();
   document.getElementById("rows").innerHTML = FOODS.map(bigRow).join("");
   initSortbar();
