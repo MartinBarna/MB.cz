@@ -97,7 +97,7 @@
         .skip-link:focus { left:0; }
         a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline:3px solid #EBB12C; outline-offset:2px; }
 
-        /* ===== Hlavička: stejná jako /koucing/ (tmavá vrstva, burger jen pod 1260 px) ===== */
+        /* ===== Header: same as /koucing/ (dark bar, burger only under 1260 px) ===== */
         .nav { --green:#EBB12C; --green-dark:#161616; --ink:#161616; display:block; position:sticky; top:0; z-index:10; background:#0c0b0a!important; border-bottom:1px solid rgba(255,255,255,.08)!important; }
         .nav .wrap { max-width:1320px; margin:0 auto; padding:14px 20px; display:flex; justify-content:space-between; align-items:center; gap:12px; position:relative; }
         .brand { font-weight:800; text-decoration:none; font-size:1.25rem; display:flex; align-items:center; gap:8px; flex-shrink:0; }
@@ -128,11 +128,13 @@
         .btn { display:inline-block; font-weight:700; text-decoration:none; border-radius:50px; padding:.85rem 1.7rem; font-size:1rem; border:none; cursor:pointer; font-family:inherit; text-align:center; }
         .btn-acc { background:linear-gradient(145deg,var(--acc-l),var(--acc)); color:#1A1222; box-shadow:0 10px 30px rgba(235,177,44,.28); }
         .btn-ghost { border:1.5px solid rgba(255,255,255,.25); color:#fff; background:transparent; }
-        .btn-row { display:flex; flex-wrap:wrap; gap:.8rem; }
+        .btn-row { display:flex; flex-wrap:wrap; gap:.8rem; align-items:center; }
+        .hero .link-sec { color:var(--warm); font-weight:600; text-decoration:underline; text-underline-offset:.18em; }
+        .hero .link-sec:hover { color:var(--acc-l); }
         .btn[disabled] { opacity:.65; cursor:progress; }
         .trust { margin:1.6rem 0 0; color:var(--mut); font-size:.88rem; font-weight:600; }
 
-        /* ===== Karty a mřížky ===== */
+        /* ===== Cards and grids ===== */
         .grid { display:grid; gap:1.1rem; }
         .g2 { grid-template-columns:repeat(2,minmax(0,1fr)); }
         .card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:18px; padding:1.5rem 1.4rem; }
@@ -141,7 +143,7 @@
         .card p:last-child { margin-bottom:0; }
         .card .num { display:inline-flex; width:1.9rem; height:1.9rem; border-radius:50%; background:var(--acc); color:#161616; font-weight:800; align-items:center; justify-content:center; margin-right:.5rem; font-size:.95rem; }
 
-        /* ===== Formuláře ===== */
+        /* ===== Forms ===== */
         .cbox { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.12); border-radius:20px; padding:1.8rem 1.7rem; }
         .cbox h2, .cbox h3 { margin-bottom:.6rem; }
         .cbox .intro { color:var(--warm); margin:0 0 1.2rem; font-size:.96rem; }
@@ -176,7 +178,7 @@
         .inside h2 { margin-bottom:1.1rem; }
         .inside .card + .card { margin-top:1rem; }
 
-        /* ===== Kalkulačka ===== */
+        /* ===== Calculator ===== */
         .calc { display:grid; grid-template-columns:1.1fr .9fr; gap:2rem; align-items:start; }
         .calc > * { min-width:0; }
         .seg { display:inline-flex; border:1px solid rgba(255,255,255,.18); border-radius:50px; padding:3px; margin:0 0 1.1rem; background:rgba(255,255,255,.04); flex-wrap:wrap; }
@@ -204,13 +206,13 @@
         .res-coach a { font-weight:700; }
         .disclaimer { color:var(--mut); font-size:.8rem; margin:1.2rem 0 0; }
 
-        /* ===== O Martinovi ===== */
+        /* ===== About ===== */
         .about { display:grid; grid-template-columns:.75fr 1.25fr; gap:2.6rem; align-items:center; }
         .about > * { min-width:0; }
         .about img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:20px; border:1px solid rgba(255,255,255,.12); display:block; }
         .about p { color:var(--warm); font-size:.98rem; }
 
-        /* ===== Koučink ===== */
+        /* ===== Coaching ===== */
         .steps { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.6rem 2rem; }
         .step { position:relative; padding-left:3.4rem; min-width:0; }
         .step .n { position:absolute; left:0; top:.1rem; width:2.4rem; height:2.4rem; border-radius:50%; background:var(--acc); color:#161616; font-weight:800; font-size:1.15rem; display:flex; align-items:center; justify-content:center; }
@@ -222,7 +224,7 @@
         .nocalls { max-width:760px; margin:1.4rem auto 0; color:var(--warm); text-align:center; }
         .cta-wrap { text-align:center; margin-top:1.6rem; }
 
-        /* ===== Pro koho ===== */
+        /* ===== Who it is for ===== */
         .fit { display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
         .fit > * { min-width:0; }
         .fit ul { list-style:none; margin:0; padding:0; }
@@ -230,7 +232,7 @@
         .fit .yes li::before { content:"\2713"; position:absolute; left:0; color:var(--acc); font-weight:800; }
         .fit .no li::before { content:"\2715"; position:absolute; left:0; color:#e98b7f; font-weight:800; }
 
-        /* ===== FAQ (selektory jen uvnitř .faq, ať nechytí nic v hlavičce) ===== */
+        /* ===== FAQ (selectors only inside .faq so they do not hit the header) ===== */
         .faq { max-width:760px; margin:0 auto; }
         .faq details { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:14px; margin-bottom:.8rem; }
         .faq summary { cursor:pointer; font-weight:700; color:#fff; padding:1rem 2.6rem 1rem 1.2rem; list-style:none; position:relative; }
@@ -239,7 +241,7 @@
         .faq details[open] summary::after { transform:rotate(45deg); }
         .faq details p { color:var(--mut); font-size:.93rem; margin:0; padding:0 1.2rem 1.1rem; }
 
-        /* ===== Přihláška ===== */
+        /* ===== Application ===== */
         .apply { max-width:680px; margin:0 auto; }
 
         footer { border-top:1px solid rgba(255,255,255,.08); padding:2.4rem 20px 6.5rem; text-align:center; color:var(--mut); font-size:.86rem; }
@@ -271,8 +273,6 @@
         @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { transition-duration:.001ms!important; } }
     </style>
     <link rel="stylesheet" href="/assets/app-brand-override.css?v=r4">
-    <!-- arena.css (design system webu) až ZA inline stylem, ať v kaskádě vyhraje jako na ostatních stránkách.
-         V hlavičce místo konce <body>: nadpis se nepřestyluje po prvním vykreslení (žádný posun layoutu). -->
     <link rel="stylesheet" href="/assets/arena.css?v=a8">
 </head>
 <body>
@@ -286,15 +286,14 @@
 <section class="hero">
     <div class="wrap">
         <div>
-        <h1>Fat loss for people who eat out, travel and work 10 hour days.</h1>
-        <p class="lead">I'm Martin, nutrition and fitness coach from Czechia. In the field since 2013, 600+ clients. I coach busy people in writing: weekly check-ins, normal food, restaurants included, no crash diets. Start with the free kit: your calories and protein in 30 seconds, plus the Eating Out Playbook.</p>
+        <h1>Fat loss for people who eat out, travel, and work 10-hour days.</h1>
+        <p class="lead">I'm Martin, a nutrition and fitness coach from Czechia. I've been coaching since 2013, with 600+ clients. I coach busy people in writing: weekly check-ins, everyday food, restaurants included, no crash diets. Start with the free kit: your calories and protein in 30 seconds, plus the Eating Out Playbook.</p>
         <div class="btn-row">
             <a class="btn btn-acc" href="#kit">Get the free kit</a>
-            <a class="btn btn-ghost" href="#coaching">How coaching works</a>
+            <a class="link-sec" href="#coaching">How coaching works</a>
         </div>
         <p class="trust">Since 2013 · 600+ clients · 5.0 from 100+ reviews on Google and Facebook · Guest on Czech national TV</p>
         </div>
-        <!-- Fotka jen na desktopu: na mobilu se přes <picture> nestáhne vůbec (rychlost, LCP = nadpis). -->
         <div class="hero-photo"><picture><source media="(min-width: 901px)" srcset="/assets/foto/martin/hero.webp"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Martin Barna, nutrition and fitness coach" width="480" height="600" decoding="async"></picture></div>
     </div>
 </section>
@@ -304,7 +303,7 @@
     <div class="wrap kit">
         <div class="cbox">
             <h2>The Busy Professional's Fat Loss Kit (free)</h2>
-            <p class="intro">Two things my clients use the most. The calculator result shows right here on the page, the playbook is a PDF.</p>
+            <p class="intro">Two things my clients use most. The calculator result shows right here on the page, and the playbook is a PDF.</p>
             <form id="kit-form" novalidate>
                 <div class="field">
                     <label for="kit-first">First name</label>
@@ -315,12 +314,12 @@
                     <input id="kit-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required>
                 </div>
                 <div class="hp" aria-hidden="true"><label for="kit-website">Website</label><input id="kit-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
-                <label class="check" for="kit-consent"><input id="kit-consent" name="consent" type="checkbox"><span id="kit-consent-text">Yes, send me the Fat Loss Kit, a short email series after it, and then about one email a week with tips and coaching offers. I can unsubscribe anytime.</span></label>
+                <label class="check" for="kit-consent"><input id="kit-consent" name="consent" type="checkbox"><span id="kit-consent-text">Yes, send me the Fat Loss Kit, a short email series, then about one email a week with tips and coaching offers, and I can unsubscribe anytime.</span></label>
                 <button type="submit" class="btn btn-acc">Send me the kit</button>
                 <p class="err" id="kit-err" role="alert" hidden></p>
             </form>
             <div class="ok-msg" id="kit-ok" tabindex="-1" hidden>
-                <p>Done, <span class="js-first-name"></span>. Here is your Eating Out Playbook: <a href="/download/eating-out-playbook.pdf" download>Download the PDF</a>. Your calories and protein are in the <a href="#calculator">calculator below</a>; if you haven't filled it in yet, it takes 30 seconds.</p>
+                <p>Done, <span class="js-first-name"></span>. Here is your Eating Out Playbook: <a href="/download/eating-out-playbook.pdf" download>Download the PDF</a>. Your calories and protein are in the <a href="#calculator">calculator below</a>; if you haven't filled it out yet, it takes 30 seconds.</p>
                 <p id="kit-ok-numbers" hidden>Your starting numbers: <b><span id="kit-ok-kcal"></span> kcal a day</b> · <b><span id="kit-ok-protein"></span> g protein a day</b></p>
             </div>
             <p class="fine">Your download link and your numbers appear right here after you click. Your data: Martin Barna (Czech business ID 76383032) stores your name and email, and your calorie and protein result if you used the calculator, only to send you the kit and the emails, until you unsubscribe or after 3 years without activity. Details in the <a href="/en/privacy/">Privacy Policy</a>.</p>
@@ -330,21 +329,20 @@
             <h2>What's inside</h2>
             <div class="card">
                 <h3><span class="num">1</span>Calorie and protein calculator</h3>
-                <p>Your daily kcal (calories) for your goal and a protein target in grams. The same calculation I use with my clients as a starting point. 30 seconds, result on this page, no email needed.</p>
+                <p>Your daily kcal (calories) for your goal, and a protein target in grams. The same calculation I use with my clients as a starting point. It takes 30 seconds, the result shows on this page, and no email is needed.</p>
             </div>
             <div class="card">
                 <h3><span class="num">2</span>The Eating Out Playbook (PDF)</h3>
-                <p>How to order in 8 types of places: steakhouse, Italian, Asian, burger, hotel breakfast, airport, corporate dinner, bar. For each one 3 better choices and 2 traps, with rough kcal. Plus the minimum version for travel days and alcohol in numbers.</p>
+                <p>How to order in 8 types of places: steakhouse, Italian, Asian, burger, hotel breakfast, airport, corporate dinner, and bar. For each one, 3 better choices and 2 traps, with rough kcal. Plus a minimum version for travel days, and alcohol in numbers.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 4. KALKULAČKA -->
 <section class="sec" id="calculator" style="background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06);">
     <div class="wrap">
         <h2 class="center">Your calories and protein</h2>
-        <p class="sec-sub">Fill in 6 fields. The result is a starting point; in coaching I adjust it every week from your real data.</p>
+        <p class="sec-sub">Fill out 6 fields. The result is a starting point. In coaching I adjust it every week from your actual data.</p>
         <div class="calc">
             <form id="calc-form" class="cbox" novalidate>
                 <div class="seg" role="radiogroup" aria-label="Units">
@@ -377,7 +375,7 @@
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
-                    <p class="note" id="c-sex-note">The formula differs by about 160 kcal between the two. Pick the one closer to your body.</p>
+                    <p class="note" id="c-sex-note">The formula differs by about 160 kcal between male and female. Pick the one closer to your body.</p>
                 </div>
                 <div class="field">
                     <label for="c-act">Activity (pick the closest)</label>
@@ -393,7 +391,7 @@
                     <label for="c-goal">Goal</label>
                     <select id="c-goal">
                         <option value="hubnuti">Lose fat faster (bigger deficit)</option>
-                        <option value="mirne_hubnuti">Lose fat at a calm pace (smaller deficit)</option>
+                        <option value="mirne_hubnuti">Lose fat at a steady pace (smaller deficit)</option>
                         <option value="udrzeni" selected>Maintain weight</option>
                         <option value="mirny_narust">Build muscle (small surplus)</option>
                         <option value="narust">Gain faster (bigger surplus)</option>
@@ -406,15 +404,13 @@
                 <h3>Your starting numbers</h3>
                 <p class="big"><span id="r-kcal">-</span> <small>kcal a day</small></p>
                 <p class="big2"><span id="r-protein">-</span> <small>g protein a day</small></p>
-                <p class="meta" id="r-meta" hidden>Resting metabolism (BMR) <span id="r-bmr"></span> kcal · daily burn with activity (TDEE) <span id="r-tdee"></span> kcal</p>
+                <p class="meta" id="r-meta" hidden>Resting metabolism (BMR) <span id="r-bmr"></span> kcal · daily burn including activity (TDEE) <span id="r-tdee"></span> kcal</p>
                 <p class="err" id="calc-err" role="alert" hidden></p>
-                <p class="what" id="r-what" hidden>Eat around <span id="r-what-kcal"></span> kcal most days. Hit the protein every day, spread over 3 to 4 meals. Weigh yourself and measure your waist once a week, same conditions. After 2 to 3 weeks the trend tells you if the number is right. The playbook shows how to hold this in restaurants.</p>
+                <p class="what" id="r-what" hidden>Eat around <span id="r-what-kcal"></span> kcal most days. Hit the protein every day, spread over 3 to 4 meals. Weigh yourself and measure your waist once a week, under the same conditions. After 2 to 3 weeks, the trend tells you if the number is right. The playbook shows how to stick to this at restaurants.</p>
                 <ul class="notes" id="r-notes" hidden></ul>
-                <!-- Pod výsledkem (šéf 13. 10. podle posudku PLAN): odkaz na kit a věta o koučinku s #apply.
-                     Texty doslova z landing-copy.md (úvod kalkulačky a tlačítko přihlášky), bez ceny. -->
                 <div class="res-cta" id="r-cta" hidden>
                     <a class="btn btn-acc" id="r-cta-kit" href="#kit">Get the free kit</a>
-                    <p class="res-coach">The result is a starting point; in coaching I adjust it every week from your real data. <a href="#apply">Apply for coaching</a></p>
+                    <p class="res-coach">The result is a starting point. In coaching I adjust it every week from your actual data. <a href="#apply">Apply for coaching</a></p>
                 </div>
                 <p class="disclaimer">Not medical advice. These numbers come from a standard formula (Mifflin-St Jeor) and are a starting point, not a diagnosis or a treatment plan. If you are pregnant or breastfeeding, have or had an eating disorder, take medication that affects weight or appetite, or have a medical condition, talk to your doctor before you change how you eat. This tool is for adults (18+).</p>
             </div>
@@ -422,29 +418,27 @@
     </div>
 </section>
 
-<!-- 5. KDO JE MARTIN -->
 <section class="sec">
     <div class="wrap about">
         <img src="/assets/foto/martin/portret.webp" alt="Martin Barna, nutrition and fitness coach" width="640" height="641" loading="lazy" decoding="async">
         <div>
-            <h2>Who is writing this</h2>
-            <p>Martin Barna, nutrition and fitness coach from Ostrava, Czech Republic. In the field professionally since 2013: 13 years of nutrition practice and 600+ clients.</p>
+            <h2>Who I am</h2>
+            <p>Martin Barna, a nutrition and fitness coach from Ostrava, Czech Republic. Coaching professionally since 2013: 13 years of nutrition practice and 600+ clients.</p>
             <p>Guest on Czech national TV (ČT). 5.0 average from 100+ reviews on Google and Facebook.</p>
-            <p>International trainer certification, nutrition advisor certification, advanced coaching studies.</p>
-            <p>I coach online and mostly in writing. My clients are busy adults: parents, managers, people who travel for work. You learn to eat normal food in the right amounts instead of getting a meal plan for the drawer, so the result stays when we finish. Diet does about 80 % of the result; steps, some strength training and sleep do the rest.</p>
+            <p>I have an international trainer certification, a nutrition advisor certification, and advanced coaching studies.</p>
+            <p>I coach online, mostly in writing. My clients are busy adults: parents, managers, and people who travel for work. You learn to eat everyday food in the right amounts, instead of a meal plan that ends up in a drawer, so the results last after we finish. Diet is about 80% of the result. Steps, some strength training, and sleep do the rest.</p>
             <p><a href="/reference/" lang="cs" hreflang="cs">Reviews in Czech (screenshots from Google and Facebook): martinbarna.cz/reference/</a></p>
         </div>
     </div>
 </section>
 
-<!-- 6. ČLÁNKY A NÁSTROJ NA BÍLKOVINY -->
 <section class="sec" style="padding-top:1rem;">
     <div class="wrap">
         <h2 class="center">Free stuff while you decide</h2>
         <div class="grid g2">
             <div class="card">
                 <h3>Articles in English</h3>
-                <p>Alcohol and fat loss, weekend overeating, eating late, how much protein, steps, sleep, fat loss after 40 and after 50. Short, with numbers, from 13 years of coaching.</p>
+                <p>Alcohol and fat loss, weekend overeating, eating late, how much protein, steps, sleep, fat loss after 40, and fat loss after 50. Short articles, with numbers, from 13 years of coaching.</p>
                 <p><a href="/en/blog/">Read the articles</a></p>
             </div>
             <div class="card">
@@ -456,21 +450,20 @@
     </div>
 </section>
 
-<!-- 7. JAK KOUČINK FUNGUJE -->
 <section class="sec" id="coaching" style="background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06);">
     <div class="wrap">
-        <h2 class="center">How the coaching works (everything in writing)</h2>
-        <p class="sec-sub">One program for English-speaking clients: the same weekly system my Czech clients use, in writing. I take a limited number of clients so I can read every report properly.</p>
+        <h2 class="center">How coaching works (all in writing)</h2>
+        <p class="sec-sub">One program for English-speaking clients: the same weekly system my Czech clients use, in writing. I take a limited number of clients so I can read every report in full.</p>
         <div class="steps">
-            <div class="step"><span class="n">1</span><h3>You apply in writing</h3><p>Fill in the form below. I usually reply within 24 hours on working days with a few questions, and we see if it's a fit.</p></div>
-            <div class="step"><span class="n">2</span><h3>You get your plan</h3><p>After payment you fill in an intake questionnaire. Within 48 hours you have your calories, protein and macros, a meal plan built around the way you actually eat (restaurants included) and a training plan for your real schedule.</p></div>
-            <div class="step"><span class="n">3</span><h3>Weekly report, 3 minutes from your phone</h3><p>Weight, waist, food, steps, training, how the week went. I answer in writing with the plan for the next week and recalculate your numbers. Every week, as long as we work together.</p></div>
-            <div class="step"><span class="n">4</span><h3>WhatsApp between the reports</h3><p>Monday to Friday for everything in between: a menu before a dinner, a hotel breakfast, a week that fell apart. I answer within 24 hours (time zones). Plus one short educational guide every week: portions without a scale, plateaus, eating out, sleep.</p></div>
+            <div class="step"><span class="n">1</span><h3>You apply in writing</h3><p>Fill out the form below. I usually reply within 24 hours on business days with a few questions, and we see if it's a fit.</p></div>
+            <div class="step"><span class="n">2</span><h3>You get your plan</h3><p>After you pay, you fill out an intake questionnaire. Within 48 hours you have your calories, protein, and macros, a meal plan built around how you actually eat (restaurants included), and a training plan for your actual schedule.</p></div>
+            <div class="step"><span class="n">3</span><h3>Weekly report, 3 minutes on your phone</h3><p>Weight, waist, food, steps, training, how the week went. I answer in writing with the plan for the next week and recalculate your numbers. Every week, as long as we work together.</p></div>
+            <div class="step"><span class="n">4</span><h3>WhatsApp between reports</h3><p>Monday to Friday for everything in between: a menu before dinner, a hotel breakfast, a week that fell apart. I answer within 24 hours, across time zones. Plus one short educational guide every week: portions without a scale, plateaus, eating out, and sleep.</p></div>
         </div>
         <ul class="feat">
-            <li>Calories and macros set for you and recalculated every week from your report</li>
-            <li>Weekly report and my written answer with the plan for next week</li>
-            <li>WhatsApp Monday to Friday, answer within 24 hours</li>
+            <li>Calories and macros set for you, recalculated every week from your report</li>
+            <li>Weekly report and my written answer with the plan for the next week</li>
+            <li>WhatsApp Monday to Friday, with an answer within 24 hours</li>
             <li>A plan for eating out and travel, built into your week</li>
             <li>The minimum version for messy weeks, agreed in advance</li>
             <li>One educational guide (PDF) every week</li>
@@ -484,27 +477,26 @@
     </div>
 </section>
 
-<!-- 8. PRO KOHO -->
 <section class="sec">
     <div class="wrap">
-        <h2 class="center">Is this for you</h2>
+        <h2 class="center">Is this for you?</h2>
         <div class="fit">
             <div class="card yes">
                 <h3>This is for you if:</h3>
                 <ul>
                     <li>You want to lose 5 to 20 kg, mostly the belly, and keep it off.</li>
-                    <li>You eat out 2 or more times a week, travel, or work 10 hour days.</li>
-                    <li>Your diets so far worked until the first business dinner.</li>
+                    <li>You eat out 2 or more times a week, travel, or work 10-hour days.</li>
+                    <li>Your diets worked until the first business dinner.</li>
                     <li>You want a plan built on your real week and someone who checks it every 7 days.</li>
-                    <li>You can write a 3 minute report once a week and log your food, at least roughly.</li>
+                    <li>You can write a 3-minute report once a week and log your food, at least roughly.</li>
                 </ul>
             </div>
             <div class="card no">
                 <h3>This is not for you if:</h3>
                 <ul>
-                    <li>You want 10 kg gone in 3 weeks. Realistic is 0.5 to 1 % of body weight a week, so 0.5 to 1 kg a week if you weigh 100 kg.</li>
+                    <li>You want 10 kg gone in 3 weeks. A realistic pace is 0.5 to 1% of body weight a week, so 0.5 to 1 kg a week if you weigh 100 kg.</li>
                     <li>You want a fixed meal plan to follow without thinking. You'll learn to decide for yourself; that's the whole point.</li>
-                    <li>You don't want to write anything down, not even a rough guess. Then I have nothing to adjust.</li>
+                    <li>You don't want to write anything down, not even a rough guess. Then I have nothing to adjust from.</li>
                     <li>You are pregnant or breastfeeding, have an eating disorder, take medication that affects weight, or have a medical condition. Talk to your doctor first. I'm a coach, not a doctor.</li>
                     <li>You are under 18.</li>
                 </ul>
@@ -518,25 +510,24 @@
     <div class="wrap">
         <h2 class="center">Questions I get</h2>
         <div class="faq">
-            <details><summary>I'm in the US, UK or Australia. Does the time difference matter?</summary><p>I'm in Czechia (Central European Time). You write when it suits you, and I usually answer within 24 hours on working days. Nothing in this coaching needs us online at the same time.</p></details>
-            <details><summary>I eat out 3 or 4 times a week. Does this work?</summary><p>That's where most of the work is, and where most diets break. We build the plan around your dinners instead of against them: protein and vegetables first, one portion of carbs, sauces on the side, drinks in the budget. The playbook is the short version. In coaching you can send me a menu a day ahead on WhatsApp and I mark what to take.</p></details>
-            <details><summary>What about alcohol?</summary><p>You can drink. Alcohol = 7 kcal per gram. A small glass of wine (150 ml) is roughly 120 to 130 kcal, a large restaurant pour 150 to 220, a pint of beer 200 to 250, a cocktail 200 to 500 (a creamy one is the top of that). We put it in the weekly numbers. One more thing from the studies: in studies on younger adults, people ate on average about 80 kcal more food after drinking and did not eat less later to make up for it. In a bar with snacks it is often more. So we plan the food around the drinks too.</p></details>
-            <details><summary>I have no time for the gym.</summary><p>Diet does about 80 % of the result. For the rest: 8,000 steps a day and two short strength sessions a week, at home or in a hotel room, 20 to 30 minutes. If you have a gym and like it, we use it. If you don't, we don't.</p></details>
-            <details><summary>How fast will I lose weight?</summary><p>A realistic pace is 0.5 to 1 % of body weight a week, so 0.5 to 1 kg a week if you weigh 100 kg. 10 kg = roughly 3 to 5 months. Faster is possible on paper and usually costs muscle, energy and the result itself a few months later. The scale also jumps 1 to 2 kg with water and salt, so we watch the trend and the waist, not one morning.</p></details>
+            <details><summary>I'm in the US, UK or Australia. Does the time difference matter?</summary><p>I'm in Czechia (Central European Time). You write when it works for you, and I usually answer within 24 hours on business days. Nothing in this coaching requires us to be online at the same time.</p></details>
+            <details><summary>I eat out 3 or 4 times a week. Does this work?</summary><p>That's where most of the work is, and where most diets break. We build the plan around your dinners instead of against them: protein and vegetables first, one portion of carbs, sauces on the side, drinks in the budget. The playbook is the short version. In coaching you can send me a menu a day ahead on WhatsApp and I mark what to order.</p></details>
+            <details><summary>What about alcohol?</summary><p>You can drink. Alcohol = 7 kcal per gram. A small glass of wine (150 ml) is roughly 120 to 130 kcal, a large restaurant pour is 150 to 220, a pint of beer is 200 to 250, and a cocktail is 200 to 500 (a creamy one is at the top of that range). We count it in the weekly numbers. Studies on younger adults found that people ate about 80 kcal more food on average after drinking, and did not eat less later to make up for it. In a bar with snacks, it is often more. So we plan the food around the drinks too.</p></details>
+            <details><summary>I have no time for the gym.</summary><p>Diet is about 80% of the result. For the rest: 8,000 steps a day and two short strength sessions a week, at home or in a hotel room, 20 to 30 minutes. If you have a gym and like it, we use it. If you don't, we don't.</p></details>
+            <details><summary>How fast will I lose weight?</summary><p>A realistic pace is 0.5 to 1% of body weight a week, so 0.5 to 1 kg a week if you weigh 100 kg. 10 kg takes roughly 3 to 5 months. Faster is possible on paper and usually costs you muscle, energy, and the result a few months later. The scale also jumps 1 to 2 kg with water and salt, so we watch the trend and your waist, not one morning.</p></details>
             <details><summary>Why no calls?</summary><p>Everything is in writing, so you have every plan, every number and every answer in one place, and you can read it again on the plane. Second reason, an honest one: my English is better on paper than on a call, and I'd rather give you a precise answer than a fast one. Want more support? Message me for VIP options.</p></details>
-            <details><summary>What happens after I apply?</summary><p>I usually reply within 24 hours on working days with a few questions. If it's a fit, you pay by card, fill in the intake questionnaire, and within 48 hours you have your calories, protein, meal plan and training plan. Then your first weekly report.</p></details>
+            <details><summary>What happens after I apply?</summary><p>I usually reply within 24 hours on business days with a few questions. If it's a fit, you pay by card, fill out the intake questionnaire, and within 48 hours you have your calories, protein, meal plan, and training plan. Then your first weekly report.</p></details>
             <details><summary>How much does it cost?</summary><p>The current price is in the coaching section above: monthly, or 12 weeks paid upfront for less. You only pay after I've answered your application and we both agree it's a fit. Payment is by card.</p></details>
             <details><summary>What if it's not for me?</summary><p>You have a 14-day money-back guarantee. If you change your mind within 14 days of paying, email martin@martinbarna.cz and you get the full amount back. No reason needed.</p></details>
         </div>
     </div>
 </section>
 
-<!-- 10. PŘIHLÁŠKA -->
 <section class="sec" id="apply" style="background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06);">
     <div class="wrap">
         <div class="cbox apply">
             <h2>Apply for coaching</h2>
-            <p class="intro">Tell me where you are and what you want. I usually reply within 24 hours on working days, in writing, with a few questions back. No pressure and no automatic sales sequence from this form.</p>
+            <p class="intro">Tell me where you are and what you want. I usually reply within 24 hours on business days, in writing, with a few questions back. No pressure, and no automatic sales sequence from this form.</p>
             <form id="apply-form" novalidate>
                 <div class="field">
                     <label for="ap-first">First name</label>
@@ -552,7 +543,7 @@
                 </div>
                 <div class="field">
                     <label for="ap-msg">A few lines about you</label>
-                    <textarea id="ap-msg" name="message" maxlength="2000" placeholder="Age, job, how a normal week looks, what you tried before"></textarea>
+                    <textarea id="ap-msg" name="message" maxlength="2000" placeholder="Age, job, what a normal week looks like, what you've tried before"></textarea>
                 </div>
                 <div class="hp" aria-hidden="true"><label for="ap-website">Website</label><input id="ap-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
                 <label class="check" for="ap-consent"><input id="ap-consent" name="consent" type="checkbox"><span><span id="ap-consent-text">I agree that Martin Barna stores my data to answer this application.</span> <a href="/en/privacy/">Privacy Policy</a>.</span></label>
@@ -560,7 +551,7 @@
                 <p class="err" id="ap-err" role="alert" hidden></p>
             </form>
             <div class="ok-msg" id="ap-ok" tabindex="-1" hidden>
-                <p>Thanks, <span class="js-first-name"></span>. I read every application myself and usually reply within 24 hours on working days (Czech time). If nothing arrives, check the spam folder.</p>
+                <p>Thanks, <span class="js-first-name"></span>. I read every application myself and usually reply within 24 hours on business days (Czech time). If nothing arrives, check the spam folder.</p>
             </div>
             <div class="price-box" data-price-block hidden></div>
             <p class="vip">Want more support? <a href="mailto:martin@martinbarna.cz?subject=VIP%20options">Message me</a> for VIP options.</p>
@@ -580,9 +571,6 @@
 
 <div class="mbar"><a class="m1" href="#kit">Get the free kit</a><a class="m2" href="#apply">Apply</a></div>
 
-<!-- Měření a cookie lišta: STEJNÝ skript a stejná pravidla souhlasu jako český web (GA4 v consent mode,
-     Meta Pixel a vlastní page_views až po souhlasu, atribuce MBAttr). Na <html lang="en"> ukáže
-     anglickou lištu s odkazem na /en/privacy/. ⚠️ Vlastní ?v=g24, české stránky jsou na g23. -->
 <script defer src="/assets/analytics.js?v=g24"></script>
 <script defer src="/en/calc-en.js?v=1013a"></script>
 <script>
