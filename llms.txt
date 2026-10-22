@@ -4,6 +4,17 @@
 
 Plné znění hlavních stránek a všech článků blogu (čistý text bez menu a patičky): [llms-full.txt](https://martinbarna.cz/llms-full.txt). Ceny a čísla níže odpovídají textu stránek webu. Při citaci prosím uváděj URL konkrétní stránky.
 
+## In English
+
+Martin Barna is a nutrition and fitness coach from Ostrava, Czech Republic, coaching professionally since 2013 with 600+ clients. In English he offers written online fat loss coaching for busy people who eat out and travel: a weekly report, a written answer with the plan for the next week, WhatsApp Monday to Friday, no video calls. 14-day money-back guarantee. Contact: martin@martinbarna.cz.
+
+- [Coaching in English](https://martinbarna.cz/en/): how the written coaching works, FAQ and application form.
+- [Calorie and macro calculator](https://martinbarna.cz/en/calculator/): kcal, protein, fat, carbs and weekly pace, pounds or kilograms, no signup.
+- [Workout plan generator](https://martinbarna.cz/en/workout/): gym, home or outdoor, exercises, sets and reps, no signup.
+- [Protein cost tool](https://martinbarna.cz/en/protein/): what 10 g of protein costs in 87 foods from Rohlik (price snapshot of 14 October 2026).
+- [Articles](https://martinbarna.cz/en/blog/): practical fat loss for busy people.
+- [Privacy Policy for the English pages](https://martinbarna.cz/en/privacy/).
+
 ## O Martinovi
 - [O mně](https://martinbarna.cz/#omne): 13+ let praxe jako fitness trenér, přes 13 let ve výživě, mezinárodní trenérská certifikace, certifikace výživového poradce a pokročilá koučovací studia. Host ve vysílání České televize.
 - Přístup: flexibilní stravování (kalorie a makra na míru), silový trénink a udržitelné návyky místo drastických diet.
@@ -42,7 +53,7 @@ Ukázkové lekce zdarma: [Proč lidé jedí, i když nemají hlad](https://marti
 
 ### Online koučink 1:1
 [martinbarna.cz/koucing](https://martinbarna.cz/koucing/)
-Individuální vedení s týdenními kontrolami: makro cíle na míru, každý týden analýza a úprava cílů i aktivit, podpora na e-mailu a WhatsAppu (po–pá), klientská sekce s grafy pokroku, AI Martin 24/7, appka Tvůj Coach po celou dobu koučinku, vzdělávací přílohy, kuchařka, e-book a videokurz výživy.
+Individuální vedení s týdenními kontrolami: makro cíle na míru, každý týden analýza a úprava cílů i aktivit, podpora na e-mailu a WhatsAppu (po-pá), klientská sekce s grafy pokroku, AI Martin 24/7, appka Tvůj Coach po celou dobu koučinku, vzdělávací přílohy, kuchařka, e-book a videokurz výživy.
 **Gold 6 450 Kč/měsíc** (3 měsíce 16 950 Kč, 6 měsíců 31 950 Kč). **Diamond 11 900 Kč/měsíc** (3 měsíce 32 900 Kč, 6 měsíců 59 500 Kč): navíc zvukové zprávy na WhatsAppu, jeden video či audio hovor týdně a Barna Academy v ceně po celou dobu koučinku, po 3 zaplacených měsících napořád. Do Diamondu Martin bere nejvýš 3 lidi najednou.
 
 ### Online konzultace
