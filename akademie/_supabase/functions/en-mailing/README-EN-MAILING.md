@@ -1,11 +1,11 @@
-# EN mailing: 5 úvodních mailů pro leady z martinbarna.cz/en/
+# EN mailing: úvodní série a týdenní maily pro leady z martinbarna.cz/en/
 
 Stav 13. 10. 2026: **napsáno a otestováno lokálně, NIC NENASAZENO, automat VYPNUTÝ.**
 Větev `en-mailing-1013` (repo MB.cz), commit jen lokálně.
 
 ## Co to dělá
 
-Lead z `/en/` (formulář kit, `/en/calculator/`, `/en/workout/`) dostane 5 mailů:
+Lead z `/en/` (formulář kit, `/en/calculator/`, `/en/workout/`) dostane 5 úvodních mailů a potom 36 týdenních (kroky 6 až 41):
 
 | Krok | Den od startu | Předmět |
 |---|---|---|
@@ -14,8 +14,10 @@ Lead z `/en/` (formulář kit, `/en/calculator/`, `/en/workout/`) dostane 5 mail
 | 3 | 4 | The minimum version (for the week that falls apart) |
 | 4 | 6 | Weekend math: 5 days of work, 2 days that erase it |
 | 5 | 8 | Want me to set this up for you? |
+| 6 až 41 | `8 + 7 * (krok - 5)`: krok 6 den 15, krok 7 den 22, krok 41 den 260 | jeden týdenní mail, texty v `texty-tydenni/` |
 
-Texty: `_Claude-dokumenty/2026-10-13_en-klienti/texty/emails-en-1-5.md`, v kódu `logic.ts`.
+Texty kroků 1 až 5: `_Claude-dokumenty/2026-10-13_en-klienti/texty/emails-en-1-5.md`, v kódu `logic.ts`.
+Týdenní texty: `texty-tydenni/NN-*.md`, v kódu `weekly.ts` (generátor, viz níž).
 
 Pravidla (vše v `logic.ts`, každé má test v `logic_test.ts`):
 - Start série = **nejstarší** lead daného e-mailu s `kind` kit, calculator nebo workout. Jedna série na e-mail.
@@ -23,13 +25,13 @@ Pravidla (vše v `logic.ts`, každé má test v `logic_test.ts`):
 - Podmínka `consent = true` u startovního leadu.
 - Odhlášený (`en_unsubscribes`) nedostane nic.
 - Další krok = nejvyšší zalogovaný + 1. Krok se **spotřebuje i při selhání** (`failed`, `sending`), nic se neopakuje, nikdy se nejde zpátky.
-- Mezi dvěma maily téhož člověka aspoň 20 h (po pauze se dohání po jednom mailu denně).
+- Mezi dvěma maily téhož člověka: kroky 1 až 5 aspoň 20 h (po pauze se dohání po jednom mailu denně), kroky 6 až 41 aspoň 144 h.
 - Krok 1 nezačne, když je start starší než 14 dní (`MAX_START_AGE_DAYS`).
 - Max 50 mailů za běh, nejstarší starty první. Běh se zastaví po 3 selháních Resendu nebo po 100 s.
 - Testovací řádky (`first_name` TEST-CLAUDE, e-mail fitness.barna@gmail.com) jen v náhledu.
 - Razítko `en_mail_log` (unique `lead_email` + `step`) se zapisuje **před** Resendem. Souběžný běh dostane konflikt a mail nepošle.
 - Mail 1 bez výsledku kalkulačky (typicky workout) jde ve variantě bez čísel s odkazem na kalkulačku. Tahle varianta je dopsaná v kódu, v .md doslova není. Hlasem prošlá 19. 10. 2026 (oba mail 1 i maily 2 až 5), schválení Martin.
-- `{{price_block}}` je prázdný (ceny nikdy v kódu), v mailu 5 se nezobrazí.
+- `{{price_block}}` je prázdný (ceny nikdy v kódu), v mailu 5 ani v týdenních se nezobrazí.
 - Odesílatel `Martin Barna <news@martinbarna.cz>`, `reply_to` `martin@martinbarna.cz` (mail 1 a 5 žádají o odpověď).
 
 ## Soubory
@@ -37,8 +39,11 @@ Pravidla (vše v `logic.ts`, každé má test v `logic_test.ts`):
 | Soubor | Co |
 |---|---|
 | `akademie/_supabase/en-mailing-2026-10-13.sql` | tabulky `en_mailing_config` (enabled false), `en_mail_log`, `en_unsubscribes`; RLS bez politik, revoke |
+| `akademie/_supabase/en-mailing-tydenni-2026-10-25.sql` | check na `en_mail_log.step` z 1..5 na 1..41 (idempotentní, samo se nespouští) |
 | `akademie/_supabase/en-mailing-cron-2026-10-13.sql` | cron, **zakomentovaný** |
-| `functions/en-mailing/index.ts` + `logic.ts` | odesílání (POST + `x-cron-secret`) |
+| `functions/en-mailing/index.ts` + `logic.ts` + `weekly.ts` | odesílání (POST + `x-cron-secret`); `weekly.ts` je výstup generátoru |
+| `functions/en-mailing/scripts/gen-weekly.mjs` | z `texty-tydenni/NN-*.md` vyrobí `weekly.ts` |
+| `functions/en-mailing/texty-tydenni/` | 36 zdrojových textů týdenních mailů |
 | `functions/en-unsubscribe/index.ts` + `token.ts` | odhlášení |
 | `en/unsubscribe/index.html` | webová stránka s tlačítkem (edge funkce HTML servírovat neumí) |
 | `functions/en-mailing/logic_test.ts`, `handler_test.ts` | testy |
@@ -47,11 +52,41 @@ Pravidla (vše v `logic.ts`, každé má test v `logic_test.ts`):
 GET na `en-unsubscribe` nic nezapisuje, jen přesměruje na `https://martinbarna.cz/en/unsubscribe/?e=...&t=...`, kde člověk klikne na tlačítko (POST). Důvody: (1) Supabase edge funkce přepisuje `text/html` na `text/plain` (stejná past jako u české `unsubscribe`), (2) firemní mailové skenery otevírají odkazy z mailů a GET se zápisem by tiše odhlašoval. Skutečný one-click zajišťuje hlavička `List-Unsubscribe` + `List-Unsubscribe-Post` (RFC 8058): Gmail a Apple Mail posílají POST přímo na funkci.
 ⚠️ V odkazu je e-mail (`?e=`), proto stránka nemá analytics a má `referrer no-referrer`.
 
+## Týdenní maily (kroky 6 až 41)
+
+Po kroku 5 série nekončí. Jednou týdně přijde jeden mail, celkem 36. Krok 6 je soubor `texty-tydenni/01-*.md`, krok 41 je `36-*.md`.
+
+Den od startu série pro krok k (6 až 41) je `8 + 7 * (k - 5)`. Krok 6 den 15, krok 7 den 22, krok 41 den 260. Kroky 1 až 5 zůstávají 0, 2, 4, 6, 8.
+
+Mezera od předchozího mailu: kroky 1 až 5 aspoň 20 h, kroky 6 až 41 aspoň 144 h. Kratší pauza mail nepošle (`gap`), i když den už nastal. Odhlášení, souhlas, přihláška do koučinku a testovací řádky platí stejně jako u kroků 1 až 5. Patičku (odkaz na odhlášení a adresa) přidává stejný mechanismus v `logic.ts`.
+
+Placeholdery v těle doplňuje `renderEmail` přes `fill`. Generátor je v textu nechává:
+
+- `{{first_name}}` stejně jako u kroků 1 až 5
+- `{{link_article:SLUG}}` na `https://martinbarna.cz/en/blog/SLUG.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-NN`. NN je dvoumístné číslo týdne, tedy krok minus 5 doplněný nulou (krok 6 je 01, krok 41 je 36)
+- `{{link_apply}}` je `LINKS.apply`, `{{link_kit}}` je `LINKS.calculator`
+- `{{price_block}}` je prázdný řetězec
+- neznámý placeholder, včetně tvaru s dvojtečkou, shodí sestavení mailu. V hotovém mailu nezůstane `{{`
+
+Odesílatel a `reply_to` jsou stejné jako u kroků 1 až 5.
+
+Znovu vygenerovat `weekly.ts` (ze složky `functions/en-mailing`, po úpravě markdownu):
+
+```
+node scripts/gen-weekly.mjs
+```
+
+Skript čte jen soubory `NN-*.md` (`/^\d\d-[^.]+\.md$/`), seřadí je 01 až 36 a když jich není přesně 36 nebo čísla nejdou souvisle, skončí chybou. `weekly.ts` needitovat ručně. Do deploye patří i `weekly.ts` (importuje ho `logic.ts`).
+
+### Migrace kroku
+
+Než smí odejít krok 6, musí v DB platit check `step between 1 and 41`. Soubor `akademie/_supabase/en-mailing-tydenni-2026-10-25.sql` v DO bloku najde check constraint na `public.en_mail_log`, jehož definice obsahuje `step`, zahodí ho a založí `en_mail_log_step_check`. Jde spustit opakovaně. Bez ní insert kroku 6 spadne a mail neodejde, protože razítko se píše před Resendem. Tahle změna migraci sama neaplikuje.
+
 ## Testy (lokálně, bez sítě a bez DB)
 
 ```
 cd akademie/_supabase/functions/en-mailing
-deno test --no-lock --allow-env          # logic_test.ts (27) + handler_test.ts (10)
+deno test --no-lock --allow-env          # logic_test.ts (32) + handler_test.ts (10)
 deno check --no-lock index.ts ../en-unsubscribe/index.ts
 ```
 `handler_test.ts` zachytí `Deno.serve`, Supabase napodobí v paměti a Resend jen počítá.
@@ -96,7 +131,7 @@ Projekt Academy `uhmrpfsdcujbhbtumqye`. ⛔ Vždy `--project-ref`. ⛔ Celá slo
      -H "x-cron-secret: <EN_MAILING_SECRET>" -H "Content-Type: application/json" -d '{}'
    ```
    Čekám `"mode":"dry","enabled":false` a seznam `items` (lead_id, maska e-mailu, krok). Projít, jestli sedí, komu by co šlo.
-7. **Testovací maily (jen na fitness.barna@gmail.com, nic se nezapisuje):** `-d '{"test_step":1}'`, `-d '{"test_step":1,"test_no_calc":true}'`, pak 2 až 5. V doručeném mailu: vzhled, odkazy (klik), odpověď jde na martin@, **odhlášení klikem z mailu** (stránka -> tlačítko -> „You're unsubscribed") a v Gmailu tlačítko „Odhlásit odběr". Po testu odhlášení smazat testovací adresu:
+7. **Testovací maily (jen na fitness.barna@gmail.com, nic se nezapisuje):** `-d '{"test_step":1}'`, `-d '{"test_step":1,"test_no_calc":true}'`, pak 2 až 5 a stejně 6 až 41 (týdenní, horní hranice je `STEPS`). V doručeném mailu: vzhled, odkazy (klik), odpověď jde na martin@, **odhlášení klikem z mailu** (stránka -> tlačítko -> „You're unsubscribed") a v Gmailu tlačítko „Odhlásit odběr". Po testu odhlášení smazat testovací adresu:
    ```sql
    delete from public.en_unsubscribes where email = 'fitness.barna@gmail.com';
    ```
@@ -114,7 +149,7 @@ Ověření: `select enabled, updated_at from public.en_mailing_config;` a po nej
 ```sql
 update public.en_mailing_config set enabled = false, updated_at = now(), note = 'Vypnuto <kdo, proč>' where id = true;
 ```
-Platí od dalšího běhu. Rozjeté série se po zapnutí dokončí podle pravidel (20 h mezera, žádný krok dvakrát). Úplné zastavení i cronu: `select cron.unschedule('en-mailing-hodinove');`.
+Platí od dalšího běhu. Rozjeté série se po zapnutí dokončí podle pravidel (20 h mezera u kroků 1 až 5, 144 h u týdenních, žádný krok dvakrát). Úplné zastavení i cronu: `select cron.unschedule('en-mailing-hodinove');`.
 
 Ruční odhlášení (někdo napíše „unsubscribe"):
 ```sql

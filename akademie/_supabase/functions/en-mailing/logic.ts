@@ -5,20 +5,34 @@
 // ⛔ Kdo mění text tady, mění i tam (nebo napíše proč ne). Varianta mailu 1 BEZ čísel
 //    (lead bez výsledku kalkulačky, typicky /en/workout/) v .md doslova není, je dopsaná tady
 //    podle pokynu v .md ("blok s čísly vynechat a nechat jen odkaz na kalkulačku").
-// ⛔ Ceny nikdy v kódu: {{price_block}} je prázdný, takže se v mailu 5 nezobrazí.
+// ⛔ Ceny nikdy v kódu: {{price_block}} je prázdný, takže se v mailu 5 ani v týdenních nezobrazí.
+// Kroky 6..41: weekly.ts (generátor scripts/gen-weekly.mjs ze texty-tydenni/). Needitovat ručně.
+
+import { WEEKLY } from "./weekly.ts";
 
 // ---------------------------------------------------------------------------
 // Pravidla série
 // ---------------------------------------------------------------------------
 export const SERIES_KINDS = ["kit", "calculator", "workout"];
-/** Den od startu série (nejstarší lead daného e-mailu), od kterého smí odejít krok 1..5. */
-export const SCHEDULE_DAYS = [0, 2, 4, 6, 8];
-export const STEPS = SCHEDULE_DAYS.length;
+/** Den od startu série (nejstarší lead daného e-mailu), od kterého smí odejít krok.
+ *  1..5: 0, 2, 4, 6, 8. 6..41: 8 + 7*(krok-5), krok 6 den 15, krok 41 den 260. */
+const INTRO_DAYS = [0, 2, 4, 6, 8];
+export const STEPS = 41;
+export const SCHEDULE_DAYS: number[] = Array.from({ length: STEPS }, (_, i) => {
+  const step = i + 1;
+  return step <= INTRO_DAYS.length ? INTRO_DAYS[i] : 8 + 7 * (step - 5);
+});
 export const MAX_PER_RUN = 50;
 /** Krok 1 nezačne, když je start starší (lead z doby před zapnutím by dostal "hned po přihlášení" po měsíci). */
 export const MAX_START_AGE_DAYS = 14;
-/** Mezi dvěma maily téhož člověka aspoň tolik hodin (dohánění po pauze nepošle dva maily za den). */
+/** Mezi dvěma maily téhož člověka aspoň tolik hodin. Kroky 1..5 (dohánění po pauze nepošle dva maily za den). */
 export const MIN_GAP_HOURS = 20;
+/** Kroky 6..41: aspoň 144 h od posledního mailu. */
+export const MIN_GAP_HOURS_WEEKLY = 144;
+
+if (WEEKLY.length !== STEPS - INTRO_DAYS.length) {
+  throw new Error("WEEKLY: expected " + (STEPS - INTRO_DAYS.length) + ", got " + WEEKLY.length);
+}
 /** Kdo poslal přihlášku do koučinku, je v osobní konverzaci s Martinem; prodejní série mu nechodí. */
 export const SKIP_IF_APPLIED = true;
 export const TEST_EMAIL = "fitness.barna@gmail.com";
@@ -73,7 +87,8 @@ export function nextStep(startIso: string, rows: LogRow[], now: Date): StepDecis
   if (ageMs < SCHEDULE_DAYS[step - 1] * DAY_MS) return { step: null, reason: "not_yet" };
   if (rows.length) {
     const last = rows.reduce((m, r) => Math.max(m, Date.parse(r.sent_at) || 0), 0);
-    if (now.getTime() - last < MIN_GAP_HOURS * HOUR_MS) return { step: null, reason: "gap" };
+    const gapH = step >= 6 ? MIN_GAP_HOURS_WEEKLY : MIN_GAP_HOURS;
+    if (now.getTime() - last < gapH * HOUR_MS) return { step: null, reason: "gap" };
   }
   return { step };
 }
@@ -379,16 +394,23 @@ export function template(step: number, hasNumbers: boolean): Template {
     case 3: return MAIL3;
     case 4: return MAIL4;
     case 5: return MAIL5;
-    default: throw new Error("unknown step " + step);
+    default: {
+      const w = step >= 6 && step <= STEPS ? WEEKLY[step - 6] : undefined;
+      if (!w) throw new Error("unknown step " + step);
+      return w;
+    }
   }
 }
 
-/** Dosadí {{placeholdery}}. ⛔ Neznámý nebo nevyplněný placeholder = výjimka, mail s {{...}} nesmí odejít. */
+/** Dosadí {{placeholdery}}, včetně tvaru s dvojtečkou ({{link_article:SLUG}}).
+ *  ⛔ Neznámý nebo nevyplněný placeholder = výjimka, mail s {{ nesmí odejít. */
 export function fill(s: string, vars: Record<string, string>): string {
-  return s.replace(/\{\{(\w+)\}\}/g, (_, k: string) => {
+  const out = s.replace(/\{\{([^}]+)\}\}/g, (_, k: string) => {
     if (!(k in vars)) throw new Error("placeholder without value: " + k);
     return vars[k];
   });
+  if (out.includes("{{")) throw new Error("placeholder left in text");
+  return out;
 }
 
 export function cleanFirstName(raw: string | null | undefined): string {
@@ -424,7 +446,18 @@ export function renderEmail(step: number, v: { firstName: string | null; calc: C
     price_block: "",
     unsubscribe_url: v.unsubscribeUrl,
     postal_address: POSTAL_ADDRESS,
+    link_apply: LINKS.apply,
+    link_kit: LINKS.calculator,
   };
+  if (step >= 6) {
+    const nn = String(step - 5).padStart(2, "0");
+    for (const part of [t.subject, t.preheader, t.body]) {
+      for (const m of part.matchAll(/\{\{link_article:([^}]+)\}\}/g)) {
+        const slug = m[1];
+        vars[`link_article:${slug}`] = `${SITE}/en/blog/${slug}.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-${nn}`;
+      }
+    }
+  }
   if (v.calc) {
     vars.kcal = fmt(v.calc.kcal);
     vars.protein_g = fmt(v.calc.protein_g);
