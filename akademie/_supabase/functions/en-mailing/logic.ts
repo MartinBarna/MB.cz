@@ -430,9 +430,57 @@ function paragraphHtml(p: string): string {
     .replace(/https?:\/\/[^\s<]+/g, (m) => {
       const trail = m.match(/[.,;:)]+$/)?.[0] ?? "";
       const url = trail ? m.slice(0, -trail.length) : m;
-      return `<a href="${url}" style="color:#1a5fb4">${url}</a>${trail}`;
+      // Viditelný text bez utm a tokenů (dlouhá adresa v tmavé kartě rozbíjí řádky), href plný.
+      const label = url.replace(/^https?:\/\//, "").replace(/[?#].*$/, "");
+      return `<a class="mb-link" href="${url}" style="color:#F6CD63">${label}</a>${trail}`;
     })
     .replace(/\n/g, "<br>\n");
+}
+
+/**
+ * Stejný „kabát“ jako české maily (`drip-send` wrapHtml): tmavá karta, zlatá linka, značka
+ * MARTIN BARNA, tmavá patička. Zámky barev drží tmavý vzhled i v Gmailu a Outlooku s dark mode.
+ * Měníš-li vzhled, měň ho na obou stranách.
+ */
+function wrapHtml(subject: string, preheader: string, body: string, footerHtml: string): string {
+  const FONT = "-apple-system,Segoe UI,Roboto,Arial,sans-serif";
+  const LOCKS = ".mb-bg{background-color:#0C0B10!important}" +
+    ".mb-card{background-color:#16131D!important}" +
+    ".mb-rule{background-color:#EBB12C!important}" +
+    ".mb-body{color:#F0EADF!important}" +
+    ".mb-brand{color:#F6CD63!important;border-left-color:#EBB12C!important}" +
+    ".mb-foot{background-color:#100E16!important}" +
+    ".mb-mut{color:#A09AAD!important}" +
+    ".mb-link{color:#F6CD63!important}";
+  const og = (sel: string, decl: string) => `[data-ogsc] ${sel},[data-ogsb] ${sel}{${decl}}`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><meta name="supported-color-schemes" content="dark light"><title>${esc(subject)}</title>` +
+    `<style>` +
+    `:root{color-scheme:dark light;supported-color-schemes:dark light}` +
+    `body,table,td,p,li,a{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}` +
+    `.mb-body a,.mb-mut a{color:#F6CD63}` +
+    `@media (prefers-color-scheme: dark){${LOCKS}.mb-body a,.mb-mut a{color:#F6CD63!important}}` +
+    og(".mb-bg", "background-color:#0C0B10!important") +
+    og(".mb-card", "background-color:#16131D!important") +
+    og(".mb-rule", "background-color:#EBB12C!important") +
+    og(".mb-body", "color:#F0EADF!important") +
+    og(".mb-brand", "color:#F6CD63!important;border-left-color:#EBB12C!important") +
+    og(".mb-foot", "background-color:#100E16!important") +
+    og(".mb-mut", "color:#A09AAD!important") +
+    og(".mb-link", "color:#F6CD63!important") +
+    `@media only screen and (max-width:620px){.mb-pad{padding:26px 20px 22px!important}.mb-fpad{padding:16px 20px 20px!important}}` +
+    `</style></head>` +
+    `<body class="mb-bg" style="margin:0;padding:0;background-color:#0C0B10;background-image:linear-gradient(180deg,#17131F 0%,#0C0B10 46%,#0A0910 100%)">` +
+    `<span style="display:none!important;opacity:0;color:transparent;height:0;width:0;overflow:hidden">${esc(preheader)}</span>` +
+    `<table role="presentation" class="mb-bg" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0C0B10" style="background-color:#0C0B10;background-image:linear-gradient(180deg,#17131F 0%,#0C0B10 46%,#0A0910 100%)"><tr><td align="center" style="padding:24px 12px 30px">` +
+    `<table role="presentation" class="mb-card" width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#16131D" style="width:100%;max-width:600px;background-color:#16131D;border-radius:2px;border:1px solid #262231">` +
+    `<tr><td class="mb-rule" bgcolor="#EBB12C" height="3" style="height:3px;line-height:3px;font-size:2px;background-color:#EBB12C">&nbsp;</td></tr>` +
+    `<tr><td class="mb-body mb-pad" style="padding:30px 32px 26px;font-family:${FONT};font-size:16px;line-height:1.6;color:#F0EADF">` +
+    `<div class="mb-brand" style="border-left:3px solid #EBB12C;padding-left:12px;font-weight:800;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#F6CD63;margin:0 0 22px">Martin Barna</div>\n` +
+    body +
+    `</td></tr>` +
+    `<tr><td class="mb-foot mb-fpad" bgcolor="#100E16" style="padding:18px 32px 22px;background-color:#100E16;border-top:1px solid #262231">` +
+    `<div class="mb-mut" style="font-family:${FONT};font-size:12px;line-height:1.55;color:#A09AAD">${footerHtml}</div>` +
+    `</td></tr></table></td></tr></table></body></html>`;
 }
 
 export type RenderedMail = { subject: string; preheader: string; text: string; html: string };
@@ -467,16 +515,8 @@ export function renderEmail(step: number, v: { firstName: string | null; calc: C
   const subject = fill(t.subject, vars);
   const preheader = fill(t.preheader, vars);
   const text = body + "\n\n--\n" + footer + "\n";
-  const paras = body.split(/\n{2,}/).map((p) => `<p style="margin:0 0 16px">${paragraphHtml(p)}</p>`).join("\n");
-  const html = `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(subject)}</title></head>
-<body style="margin:0;padding:24px 16px;background:#ffffff;color:#161310;font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:16px;line-height:1.55">
-<span style="display:none;max-height:0;overflow:hidden;opacity:0">${esc(preheader)}</span>
-<div style="max-width:600px;margin:0 auto">
-${paras}
-<p style="margin:32px 0 0;font-size:13px;line-height:1.5;color:#6b665e">${paragraphHtml(footer)}</p>
-</div>
-</body></html>`;
+  const paras = body.split(/\n{2,}/).map((p) => `<p style="margin:0 0 15px">${paragraphHtml(p)}</p>`).join("\n");
+  const html = wrapHtml(subject, preheader, paras, paragraphHtml(footer));
   return { subject, preheader, text, html };
 }
 
