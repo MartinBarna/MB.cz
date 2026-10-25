@@ -7,6 +7,7 @@ import {
   fill,
   type Lead,
   type LogRow,
+  LINKS,
   MAX_PER_RUN,
   MAX_START_AGE_DAYS,
   nextStep,
@@ -18,6 +19,7 @@ import {
   unsubToken,
   verifyUnsubToken,
 } from "./logic.ts";
+import { WEEKLY } from "./weekly.ts";
 import * as unsubCopy from "../en-unsubscribe/token.ts";
 
 const DAY = 86_400_000;
@@ -51,7 +53,8 @@ Deno.test("krok 1 hned po přihlášení", () => {
 
 Deno.test("rozvrh dnů 0/2/4/6/8: před termínem not_yet, po něm další krok", () => {
   const days = [0, 2, 4, 6, 8];
-  for (let s = 2; s <= STEPS; s++) {
+  // Jen úvodní kroky 2..5. Týdenní den a mezera 144 h mají vlastní test (STEPS je 41).
+  for (let s = 2; s <= 5; s++) {
     const prev: LogRow[] = [];
     for (let k = 1; k < s; k++) prev.push(log("a@x.cz", k, 2 * DAY)); // předchozí mail před 2 dny
     const pred = nextStep(ago(days[s - 1] * DAY - HOUR), prev, NOW);
@@ -61,9 +64,9 @@ Deno.test("rozvrh dnů 0/2/4/6/8: před termínem not_yet, po něm další krok"
   }
 });
 
-Deno.test("po kroku 5 už nic", () => {
+Deno.test("po kroku 5 série pokračuje: při splněném dni a mezeře jde krok 6", () => {
   const rows = [1, 2, 3, 4, 5].map((s) => log("a@x.cz", s, 10 * DAY));
-  assertEquals(nextStep(ago(30 * DAY), rows, NOW), { step: null, reason: "done" });
+  assertEquals(nextStep(ago(30 * DAY), rows, NOW), { step: 6 });
 });
 
 Deno.test("dohánění po pauze: nejvýš jeden mail za 20 h", () => {
@@ -101,7 +104,7 @@ Deno.test("žádný krok 2x: dva leady téhož e-mailu = jedna série, start = n
   assertEquals(p.items[0].step, 2);
 });
 
-Deno.test("žádný krok 2x: simulace 30 dní hodinového cronu = přesně 5 mailů, každý krok jednou", () => {
+Deno.test("žádný krok 2x: simulace 30 dní hodinového cronu, každý krok jednou a ve svém dni", () => {
   const l = lead({ created_at: "2026-10-01T08:30:00Z" });
   const rows: LogRow[] = [];
   const sentDays: number[] = [];
@@ -113,8 +116,8 @@ Deno.test("žádný krok 2x: simulace 30 dní hodinového cronu = přesně 5 mai
       sentDays.push(Math.floor((now.getTime() - Date.parse(l.created_at)) / DAY));
     }
   }
-  assertEquals(rows.map((r) => r.step), [1, 2, 3, 4, 5]);
-  assertEquals(sentDays, [0, 2, 4, 6, 8]);
+  assertEquals(rows.map((r) => r.step), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assertEquals(sentDays, [0, 2, 4, 6, 8, 15, 22, 29]);
 });
 
 // --- odhlášený, application, souhlas, test ------------------------------------
@@ -219,6 +222,71 @@ Deno.test("jméno: HTML escapované, prázdné = there", () => {
 Deno.test("fill: neznámý placeholder = výjimka (mail s {{...}} neodejde)", () => {
   assertThrows(() => fill("Hi {{nope}}", {}));
   assertThrows(() => renderEmail(1, { firstName: "A", calc: null, unsubscribeUrl: "" }));
+});
+
+Deno.test("krok 6 až den 15: den 14 ne, den 15 ano", () => {
+  const prev = [1, 2, 3, 4, 5].map((s) => log("a@x.cz", s, 30 * DAY));
+  assertEquals(nextStep(ago(14 * DAY), prev, NOW), { step: null, reason: "not_yet" });
+  assertEquals(nextStep(ago(15 * DAY), prev, NOW), { step: 6 });
+});
+
+Deno.test("týdenní mezera 144 h: 143 h ne, 144 h ano; kroky 1-5 dál 20 h", () => {
+  const early = [1, 2, 3, 4, 5].map((s) => log("a@x.cz", s, 143 * HOUR));
+  assertEquals(nextStep(ago(40 * DAY), early, NOW), { step: null, reason: "gap" });
+  const ok = [1, 2, 3, 4, 5].map((s) => log("a@x.cz", s, 144 * HOUR));
+  assertEquals(nextStep(ago(40 * DAY), ok, NOW), { step: 6 });
+  // Krok 5 je pořád úvodní: 19 h ne, 20 h ano. Ne 144 h.
+  const intro = [1, 2, 3, 4].map((s) => log("a@x.cz", s, 19 * HOUR));
+  assertEquals(nextStep(ago(20 * DAY), intro, NOW), { step: null, reason: "gap" });
+  const introOk = [1, 2, 3, 4].map((s) => log("a@x.cz", s, 20 * HOUR));
+  assertEquals(nextStep(ago(20 * DAY), introOk, NOW), { step: 5 });
+});
+
+Deno.test("po kroku 41 už nic", () => {
+  const rows = Array.from({ length: 41 }, (_, i) => log("a@x.cz", i + 1, 20 * DAY));
+  assertEquals(nextStep(ago(400 * DAY), rows, NOW), { step: null, reason: "done" });
+});
+
+Deno.test("týdenní šablony 6..41: bez {{, s odhlášením, odkaz na článek, price_block prázdný", () => {
+  const url = "https://martinbarna.cz/en/unsubscribe/?e=a%40b.cz&t=x";
+  assertEquals(WEEKLY.length, 36);
+  let priced = 0;
+  for (let step = 6; step <= 41; step++) {
+    const src = WEEKLY[step - 6];
+    const nn = String(step - 5).padStart(2, "0");
+    const m = renderEmail(step, { firstName: "Anna", calc: null, unsubscribeUrl: url });
+    for (const part of [m.subject, m.preheader, m.text, m.html]) {
+      assertFalse(part.includes("{{"), `krok ${step}: zbyl placeholder`);
+    }
+    assert(m.text.includes("Unsubscribe: " + url), `krok ${step}: odhlášení`);
+    assert(m.html.includes(`href="${url.replace(/&/g, "&amp;")}"`), `krok ${step}: odhlášení v HTML`);
+    assertEquals(m.text.split("You get this email because").length, 2, `krok ${step}: patička právě jednou`);
+    const slugs = [...src.body.matchAll(/\{\{link_article:([^}]+)\}\}/g)].map((x) => x[1]);
+    assert(slugs.length >= 1, `krok ${step} (soubor ${nn}) nemá odkaz na článek`);
+    for (const slug of slugs) {
+      const link = `https://martinbarna.cz/en/blog/${slug}.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-${nn}`;
+      assert(m.text.includes(link), `krok ${step}: ${link}`);
+    }
+    if (src.body.includes("{{price_block}}")) {
+      priced++;
+      assertFalse(m.text.includes("price_block"), `krok ${step}: price_block nezmizel`);
+      assertFalse(/\$|USD|€|Kč/.test(m.text), `krok ${step}: v týdenním mailu je cena`);
+    }
+    if (src.body.includes("{{link_apply}}")) assert(m.text.includes(LINKS.apply), `krok ${step}: link_apply`);
+    if (src.body.includes("{{link_kit}}")) assert(m.text.includes(LINKS.calculator), `krok ${step}: link_kit`);
+  }
+  assert(priced > 0, "žádná šablona neměla {{price_block}}");
+  assertEquals(fill("A{{price_block}}B", { price_block: "" }), "AB");
+  const m6 = renderEmail(6, { firstName: "Anna", calc: null, unsubscribeUrl: url });
+  assert(m6.text.includes("https://martinbarna.cz/en/blog/what-to-eat-to-lose-fat.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-01"));
+  const m41 = renderEmail(41, { firstName: "Anna", calc: null, unsubscribeUrl: url });
+  assert(m41.text.includes("https://martinbarna.cz/en/blog/fruit-and-weight-loss.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-36"));
+});
+
+Deno.test("fill: neznámý placeholder s dvojtečkou = výjimka, nedokončený {{ taky", () => {
+  assertThrows(() => fill("See {{link_other:slug}}", {}));
+  assertThrows(() => fill("{{link_article:slug}}", {}));
+  assertThrows(() => fill("Hi {{", {}));
 });
 
 Deno.test("cleanCalc: jen rozumná čísla", () => {

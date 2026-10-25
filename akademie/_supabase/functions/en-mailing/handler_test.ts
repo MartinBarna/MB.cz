@@ -3,7 +3,7 @@
 // fetch na Resend do počítadla. Ověřuje pořadí razítko -> Resend, vypínač, test řádky, odhlášení.
 // Spuštění (z této složky): deno test --no-lock --allow-env handler_test.ts
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { deriveUnsubKey, unsubToken } from "./logic.ts";
+import { deriveUnsubKey, STEPS, unsubToken } from "./logic.ts";
 // Statický import připraví graf modulů supabase-js (dynamický import níž by jinak selhal na npm závislostech).
 import "jsr:@supabase/supabase-js@2";
 
@@ -216,7 +216,7 @@ Deno.test("test_step: jen na fitness.barna@gmail.com, nic se nezapisuje, i při 
   assertEquals(resendCalls[0].to, "fitness.barna@gmail.com");
   assert(resendCalls[0].subject.startsWith("[TEST] "));
   assertEquals(db.en_mail_log.length, 0);
-  assertEquals((await call({ test_step: 9 })).status, 400);
+  assertEquals((await call({ test_step: STEPS + 1 })).status, 400);
 });
 
 Deno.test("en-unsubscribe: GET jen přesměruje, POST se špatným tokenem 400, správný zapíše jednou", async () => {

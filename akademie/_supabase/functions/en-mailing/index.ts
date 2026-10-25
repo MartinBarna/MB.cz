@@ -1,5 +1,5 @@
-// en-mailing: 5 úvodních anglických mailů pro leady z martinbarna.cz/en/ (13. 10. 2026, větev en-mailing-1013).
-// Pravidla a čisté funkce: ./logic.ts (testy ./logic_test.ts). Návod: ./README-EN-MAILING.md.
+// en-mailing: anglické maily pro leady z martinbarna.cz/en/ (13. 10. 2026, větev en-mailing-1013).
+// Kroky 1-5 úvodní série, kroky 6-41 týdenní (weekly.ts). Pravidla: ./logic.ts. Návod: ./README-EN-MAILING.md.
 //
 // ⛔ VYPNUTO, DOKUD MARTIN NEZAPNE: public.en_mailing_config.enabled = false => běh je jen náhled
 //    (dry-run), nic se nerazítkuje a nic neposílá. Chyba čtení vypínače = 500 a nic (ne "asi zapnuto").
@@ -11,7 +11,7 @@
 // Volání: jen POST s hlavičkou x-cron-secret == secret EN_MAILING_SECRET (jinak 401; GET 405).
 //   body {}                     běh podle vypínače (vypnuto = náhled)
 //   body {"dry_run": true}      náhled i při zapnutém vypínači
-//   body {"test_step": 1..5}    jeden mail daného kroku JEN na fitness.barna@gmail.com, předmět [TEST],
+//   body {"test_step": 1..41}   jeden mail daného kroku JEN na fitness.barna@gmail.com, předmět [TEST],
 //                               nic se nezapisuje; {"test_step": 1, "test_no_calc": true} = mail 1 bez čísel
 // Odpovědi neobsahují celé e-maily (cron je ukládá do net._http_response), jen lead_id a masku.
 //
