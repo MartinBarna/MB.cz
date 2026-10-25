@@ -3178,6 +3178,14 @@ Deno.serve(async (req) => {
     }
 
     if (typ === "invoice.payment_failed") {
+      // ⛔ Jen naše Academy faktury. Stejný účet nese i předplatné appky Tvůj Coach;
+      // bez filtru by alert „selhala platba měsíčního členství" šel i na cizí fakturu.
+      const { ceny, produkty } = cenyAProdukty(obj.lines);
+      const nase = ceny.some((c) => ALLOWED_PRICES.includes(c)) ||
+                   produkty.some((p) => ALLOWED_PRODUCTS.includes(p));
+      if (!nase) {
+        return json({ ok: true, ignorovano: "payment_failed cizí faktura" });
+      }
       const email = String(obj.customer_email ?? "").trim().toLowerCase();
       await alertAdmin("Stripe: selhala platba měsíčního členství", {
         email, invoice: obj.id, poznamka: `Nezamykáme, grace ${GRACE_DNI} dní, pak vyprší samo.`,
