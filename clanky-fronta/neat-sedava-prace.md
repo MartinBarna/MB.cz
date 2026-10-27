@@ -38,8 +38,8 @@ na udržení váhy. Kdyby platilo jen „kalorie navíc = tuk navíc", přibrali
 
 Nepřibrali. Rozdíly v tom, kolik tuku si kdo uložil, byly **desetinásobné**, a dvě třetiny
 zvýšeného výdeje šly na vrub právě pohybu mimo trénink. Kdo po přejedení víc chodil, vrtěl
-se a stál, ukládal míň. Souvislost byla silná (korelace 0,77), a byla to jediná věc, která
-odolnost vůči přibírání předpovídala.
+se a stál, ukládal míň. Souvislost byla silná (korelace 0,77) a předpovídala
+odolnost vůči přibírání tuku.
 
 Jedna poctivá poznámka. Bylo to šestnáct lidí v laboratoři a přejídání, ne dieta. Studie
 říká, proč někdo nepřibírá, když jí víc. Neříká, že tě pohyb mimo trénink zachrání, když
@@ -50,7 +50,7 @@ jíš míň a nehubneš. Tam je odpověď jinde, nejčastěji v zápisu jídla, 
 
 O šest let později (PMID 15681386) Levine oblékl deset štíhlých a deset mírně obézních
 lidí do senzorů, které deset dní každou půl sekundu zaznamenávaly polohu těla. Všichni
-měli sedavé zaměstnání.
+byli sedaví dobrovolníci.
 
 Obézní účastníci seděli v průměru **o dvě hodiny denně déle**. Zajímavé bylo, že rozložení
 poloh se nezměnilo, ani když obézní zhubli, ani když štíhlí přibrali. Autoři to vykládají
@@ -80,8 +80,8 @@ Tady si dovolím zbrzdit nadšení kolem stolů na stání. Metaanalýza 46 stud
 u žen 0,1 a u mužů 0,19. To je asi devět kalorií za hodinu. Šest hodin stání denně dělá
 řádově 54 kcal, podle propočtu autorů za rok asi 2,5 kg tuku, pokud se nezmění příjem.
 
-Cochranův přehled (PMID 26984326) k tomu přidává, že stůl na sezení i stání zkrátí sezení
-v práci o 30 minut až 2 hodiny za den, ale kvalita důkazů je nízká a sami autoři píšou,
+Cochranův přehled (PMID 26984326) k tomu přidává, že stůl na sezení i stání může zkrátit sezení
+v práci o 30 minut až 2 hodiny za den, ale kvalita důkazů je velmi nízká až nízká a sami autoři píšou,
 že u stání jde o „hardly any extra energy expenditure", tedy skoro žádný výdej navíc.
 
 Takže stání ano, jako způsob, jak přerušit sezení. Spalování od něj nečekej. Rozdíl dělá
@@ -100,7 +100,7 @@ se dají do dne vložit bez převlékání:
 - **Přerušit sezení každou hodinu** aspoň na dvě minuty. Tady pomáhá i ten stůl na stání.
 
 Kolik to reálně dá? Metaanalýza devíti studií s krokoměrem (Richardson 2008, PMID 18195317)
-vyšla bez změny jídla na **1,27 kg za medián šestnácti týdnů**, tedy asi 50 gramů týdně.
+vyšla bez změny jídla na **1,27 kg**, medián délky byl šestnáct týdnů. V průměru lidé hubli 0,05 kg týdně.
 To je pravdivé číslo a schválně ho píšu. Pohyb mimo trénink sám o sobě nikoho nezhubne.
 Dělá dvě jiné věci: drží výdej na úrovni, se kterou ti sedí cíle z appky nebo z kalkulačky,
 a vysvětluje, proč kolegyně s oběma nohama v pohybu nepřibírá. Kolik kroků má smysl mít

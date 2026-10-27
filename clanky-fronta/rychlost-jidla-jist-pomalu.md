@@ -6,7 +6,7 @@ Kategorie: Hubnutí
 SEO title: Jíst pomalu: pomáhá rychlost jídla hubnout?
 Emoji: ⏱️
 Filtr: vyziva
-Meta: Kdo jí rychle, má podle metaanalýzy 23 studií dvakrát vyšší šanci na obezitu. Co se stane, když zpomalíš, a pět jednoduchých kroků, jak jíst pomaleji.
+Meta: Kdo jí rychle, má podle metaanalýzy 23 studií šanci na obezitu 2,15krát vyšší. Co se stane, když zpomalíš, a pět jednoduchých kroků, jak jíst pomaleji.
 Popis: Co říkají studie o rychlosti jídla, příjmu a váze a jak zpomalit jídlo v běžném dni bez stopek a počítání soust.
 CTA: makro-plan
 Související:
@@ -25,7 +25,7 @@ Britská metaanalýza 22 pokusů (Robinson a kol., Am J Clin Nutr 2014, PMID 248
 
 Zajímavý detail: hlad na konci jídla ani tři a půl hodiny po něm se mezi rychlým a pomalým jídlem nelišil. Lidé tedy snědli méně a hladovější se necítili.
 
-Japonská metaanalýza 23 studií (Ohkuma a kol., Int J Obes 2015, PMID 26100137) se podívala z druhé strany. Lidé, kteří o sobě říkali, že jedí rychle, měli v průměru BMI o 1,78 vyšší a dvakrát vyšší šanci na obezitu než ti, kteří jedí pomalu. Tady pozor: jde o pozorování, ne pokus. Neříká, že rychlé jídlo obezitu způsobuje, a lidé si rychlost hodnotili sami.
+Japonská metaanalýza 23 studií (Ohkuma a kol., Int J Obes 2015, PMID 26100137) se podívala z druhé strany. Lidé, kteří jedli rychle, měli v průměru BMI o 1,78 vyšší a šanci na obezitu 2,15krát vyšší než ti, kteří jedli pomalu. Tady pozor: jde o pozorování, ne pokus. Neříká, že rychlé jídlo obezitu způsobuje.
 
 Dohromady to ale dává smysl. Tělu chvíli trvá, než signály sytosti ze žaludku a střev dojdou do mozku. Když talíř zmizí za pět minut, sníš klidně porci navíc dřív, než to stihneš poznat.
 
