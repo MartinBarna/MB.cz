@@ -35,6 +35,7 @@ import {
   unsubPageUrl,
   unsubToken,
 } from "./logic.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const FROM = "Martin Barna <news@martinbarna.cz>";
 // Mail 1 a 5 žádají o odpověď: odpovědi musí dojít Martinovi, ne na news@.
@@ -62,26 +63,31 @@ type SendResult = { ok: true; id: string } | { ok: false; error: string };
 
 async function sendResend(apiKey: string, to: string, mail: RenderedMail, oneClick: string): Promise<SendResult> {
   try {
-    const r = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM,
-        to: [to],
-        reply_to: REPLY_TO,
-        subject: mail.subject,
-        html: mail.html,
-        text: mail.text,
-        headers: {
-          "List-Unsubscribe": `<${oneClick}>`,
-          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-        },
-      }),
-      signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
-    });
-    const data = await r.json().catch(() => ({})) as { id?: string; message?: string };
-    if (r.ok && data.id) return { ok: true, id: data.id };
-    return { ok: false, error: `status ${r.status}: ${String(data.message ?? "").slice(0, 200)}` };
+    const r = await posliMail({
+      from: FROM,
+      to: [to],
+      reply_to: REPLY_TO,
+      subject: mail.subject,
+      html: mail.html,
+      text: mail.text,
+      headers: {
+        "List-Unsubscribe": `<${oneClick}>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
+    }, { resendKey: apiKey, signal: AbortSignal.timeout(RESEND_TIMEOUT_MS) });
+    if (r.ok && r.providerId) return { ok: true, id: r.providerId };
+    // `message` se driv cetlo z JSON tela. `posliMail` telo vraci v `chyba`.
+    let message = "";
+    const c = r.chyba ?? "";
+    const prefixR = "resend_" + r.status + ":";
+    const prefixS = "ses_" + r.status + ":";
+    const telo = c.startsWith(prefixR) ? c.slice(prefixR.length) : c.startsWith(prefixS) ? c.slice(prefixS.length) : c;
+    try {
+      const j = JSON.parse(telo) as { message?: unknown };
+      message = String(j?.message ?? "");
+    } catch { /* prazdne, jako driv kdyz telo nebyl JSON */ }
+    if (r.status === 0 && !message) message = c;
+    return { ok: false, error: `status ${r.status}: ${message.slice(0, 200)}` };
   } catch (e) {
     return { ok: false, error: (e instanceof Error ? e.name + ": " + e.message : String(e)).slice(0, 200) };
   }
@@ -124,7 +130,7 @@ Deno.serve(async (req: Request) => {
     console.error("en-mailing: chybí SUPABASE_URL nebo SUPABASE_SERVICE_ROLE_KEY");
     return json({ ok: false, error: "config" }, 500);
   }
-  const resendKey = Deno.env.get("RESEND_API_KEY") ?? "";
+  const resendKey = mailKlic();
 
   // --- Testovací mail: jen na TEST_EMAIL, nic se nezapisuje, vypínač se neřeší. ---
   if (testStep !== undefined) {

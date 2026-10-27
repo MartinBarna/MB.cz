@@ -12,6 +12,7 @@
 
 import { preflagMessage } from './preflag.ts';
 import { notifyCapReached, type CapKind } from './cap-notify.ts';
+import { mailKlic } from '../_shared/mail-provider.ts';
 
 const NL = String.fromCharCode(10);
 // Provider abstrakce (Anthropic default / xAI Grok) — přepínatelné přes AI_MARTIN_PROVIDER,
@@ -623,7 +624,7 @@ async function alertMartinCap(
       kind,
       supabaseUrl: SUPABASE_URL,
       serviceRole: SERVICE_ROLE,
-      resendKey: Deno.env.get('RESEND_API_KEY') ?? '',
+      resendKey: mailKlic(),
       notifyFrom: Deno.env.get('NOTIFY_FROM') ?? '',
       zapisZnacku: () => logCapped(userId, feature),
     });

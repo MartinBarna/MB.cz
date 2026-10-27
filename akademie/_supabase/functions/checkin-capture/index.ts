@@ -7,10 +7,11 @@ import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 // 14. 9. 2026: chyba čtení není odpověď (guard secretu i příjemci s opakováním, při trvalé chybě 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 import { analyzeCheckin, type Checkin } from "./analysis.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_API_KEY = mailKlic();
 const SITE = "https://martinbarna.cz";
 const FROM = "Martin Barna <news@martinbarna.cz>";
 
@@ -54,11 +55,10 @@ const btn = (text: string, href: string) =>
 
 async function sendResend(to: string, subject: string, html: string, text: string, replyTo: string): Promise<void> {
   if (!RESEND_API_KEY) throw new Error("no_resend_key");
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_API_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, text, reply_to: replyTo || undefined }),
-  });
+  const res = await posliMail(
+    { from: FROM, to: [to], subject, html, text, reply_to: replyTo || undefined },
+    { resendKey: RESEND_API_KEY },
+  );
   if (!res.ok) throw new Error("resend_" + res.status);
 }
 

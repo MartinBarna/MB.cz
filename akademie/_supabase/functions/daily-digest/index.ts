@@ -10,10 +10,11 @@ import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.
 // [5. 10. 2026, fáze 2] Kadence reportů klienta: táž pravidla jako `client-remind`.
 import { dnesPraha, kadenceKlienta } from "../_shared/report-obdobi.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
@@ -777,15 +778,11 @@ Deno.serve(async (req) => {
     `<p style="margin:14px 0 0;font-size:13px"><a href="https://martinbarna.cz/akademie/admin/" style="color:#c45e00">Otevřít admin →</a></p></div>`;
 
   if (!RESEND_KEY) return json({ error: "missing_resend" }, 500);
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: "Barna Academy <news@martinbarna.cz>", to: [to],
-      subject: `🌅 Ranní přehled: ${leadsYc} leadů, ${salesYc} prodejů Academy` + (appkaPocet ? `, ${appkaPocet}× appka` : "") + (wdrPending ? `, ⚠️ ${wdrPending} odstoupení` : ""),
-      html,
-    }),
-  });
+  const res = await posliMail({
+    from: "Barna Academy <news@martinbarna.cz>", to: [to],
+    subject: `🌅 Ranní přehled: ${leadsYc} leadů, ${salesYc} prodejů Academy` + (appkaPocet ? `, ${appkaPocet}× appka` : "") + (wdrPending ? `, ⚠️ ${wdrPending} odstoupení` : ""),
+    html,
+  }, { resendKey: RESEND_KEY });
   if (!res.ok) return json({ error: "resend_" + res.status }, 500);
   return json({ ok: true, to, leads: leadsYc, leads_reaktivace: leadsStari, sales: salesYc, app_subs: appkaPocet, app_subs_text: appkaPredplatna, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead, kanarek: { ok: kanarekOk, chyba: kanarekChyba } } });
 });

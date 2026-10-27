@@ -16,11 +16,12 @@
 //     zachranna sit pro storno (flags bit 8 -> zneplatni referral pres order_id).
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const WEBHOOK_SECRET = Deno.env.get("SIMPLESHOP_WEBHOOK_SECRET") ?? "";
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const PRODUCT_MAP = safeJson(Deno.env.get("PRODUCT_MAP")) ?? {};
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
@@ -85,15 +86,11 @@ async function alertAdmin(admin: any, subject: string, detail: Record<string, un
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "Barna Academy <news@martinbarna.cz>", to: [to],
-        subject: "⚠️ " + subject,
-        html: `<p>SimpleShop webhook nedokázal automaticky udělit přístup.</p><ul>${rows}</ul><p>Uděl přístup ručně v adminu (Rychlé udělení), nebo mrkni do logů funkce simpleshop-webhook.</p>`,
-      }),
-    });
+    await posliMail({
+      from: "Barna Academy <news@martinbarna.cz>", to: [to],
+      subject: "⚠️ " + subject,
+      html: `<p>SimpleShop webhook nedokázal automaticky udělit přístup.</p><ul>${rows}</ul><p>Uděl přístup ručně v adminu (Rychlé udělení), nebo mrkni do logů funkce simpleshop-webhook.</p>`,
+    }, { resendKey: RESEND_KEY });
   } catch { /* best-effort */ }
 }
 

@@ -53,10 +53,11 @@ import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { preskocitVyzvuKReportu } from "./cerstvy-klient.ts";
 import { NEJDELSI_OKNO_DNI, obdobiDoMailu, planVyzvy, tydnySlovy, uzDostalNedavno as uzDostalNedavnoKadence, type PlanVyzvy } from "./kadence.ts";
 import { dnesPraha, kadenceKlienta, popisObdobi, pridejDny, type RadekReportu } from "../_shared/report-obdobi.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const CTA_URL = "https://martinbarna.cz/akademie/klient/";
 // ?tab=up otevre rovnou zalozku "Vytvorit ucet" (prihlaseni/index.html startuje jinak na "Prihlasit se",

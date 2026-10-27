@@ -53,6 +53,7 @@ import {
 // ⛔ Alerty Martinovi (`alertAdmin`) přes helper NEJDOU schválně: jeho adresa do
 //    `email_events` nepatří a stopa by jen zašuměla čísla.
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s ruční pozvánkou v adminu (`admin-api`,
 // akce `client_invite`). Zaplacený klient musí dostat přesně totéž co ten ruční:
 // nárok, appku, kontakt v CRM a uvítací mail s odkazem na vstupní dotazník.
@@ -95,7 +96,7 @@ const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET") ?? "";
 //    ze po dobu testovani neposloucham ostre platby platicich zakazniku.
 // ⚠️ Prazdna promenna = test mod nenastaven a funkce se chova presne jako driv.
 const STRIPE_WEBHOOK_SECRET_TEST = Deno.env.get("STRIPE_WEBHOOK_SECRET_TEST") ?? "";
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
 // ⚠️ RESTRICTED klíč, NE plný secret. Práva jen Subscriptions:Write (+Read, co si
@@ -754,16 +755,12 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "Barna Academy <news@martinbarna.cz>", to: [to],
-        subject: "⚠️ " + predmet,
-        html: `<p>Upozornění ze Stripe webhooku (Academy/produkty).</p><ul>${rows}</ul>`
-          + `<p>Zkontroluj platbu ve Stripu a případně uděl přístup ručně v adminu.</p>`,
-      }),
-    });
+    await posliMail({
+      from: "Barna Academy <news@martinbarna.cz>", to: [to],
+      subject: "⚠️ " + predmet,
+      html: `<p>Upozornění ze Stripe webhooku (Academy/produkty).</p><ul>${rows}</ul>`
+        + `<p>Zkontroluj platbu ve Stripu a případně uděl přístup ručně v adminu.</p>`,
+    }, { resendKey: RESEND_KEY });
   } catch { /* best-effort */ }
 }
 

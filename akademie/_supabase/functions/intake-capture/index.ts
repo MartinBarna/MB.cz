@@ -27,10 +27,11 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { celeCislo, proAlert, vahaNaCislo } from "./cisla.ts";
 import { otiskOdpovedi } from "./otisk.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
@@ -69,11 +70,10 @@ function atribuce(v: unknown): Record<string, string> | null {
 
 async function resend(to: string, subject: string, html: string, replyTo?: string) {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, reply_to: replyTo || undefined }),
-  });
+  const res = await posliMail(
+    { from: FROM, to: [to], subject, html, reply_to: replyTo || undefined },
+    { resendKey: RESEND_KEY },
+  );
   if (!res.ok) throw new Error("resend_" + res.status);
 }
 

@@ -16,10 +16,11 @@ import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { odesliPresResend, type StopaOdeslani } from "../_shared/resend-odeslat.ts";
 // 14. 9. 2026: chyba cteni neni odpoved (guard secretu i cteni splatek s opakovanim, pri trvale chybe 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 // Adresa pro odpoved cloveka. ⛔ NENI to `from`: odesila se z rozesilaci adresy
 // `news@martinbarna.cz`, kterou Martin necte. Viz komentar u `sendMail`.
 const REPLY_TO = "martin@martinbarna.cz";

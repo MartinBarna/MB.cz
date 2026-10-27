@@ -37,10 +37,11 @@ import {
   handleGrant,
 } from "./core.ts";
 import { loadSuppressionFromSupabase } from "../_shared/mailing-guard.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const REPLY_TO = "fitness.barna@gmail.com";
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
@@ -81,15 +82,11 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>): Pro
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "Barna Academy <news@martinbarna.cz>", to: [to],
-        subject: "⚠️ " + predmet,
-        html: `<p>Upozornění z grantu videokurzu (Tvůj Coach VIP → Academy).</p><ul>${rows}</ul>`,
-      }),
-    });
+    await posliMail({
+      from: "Barna Academy <news@martinbarna.cz>", to: [to],
+      subject: "⚠️ " + predmet,
+      html: `<p>Upozornění z grantu videokurzu (Tvůj Coach VIP → Academy).</p><ul>${rows}</ul>`,
+    }, { resendKey: RESEND_KEY });
   } catch { /* best-effort */ }
 }
 
@@ -177,17 +174,18 @@ const deps: GrantDeps = {
   },
   async posliMail({ to, subject, html, text, unsub }) {
     if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: FROM, to: [to], subject, html, text, reply_to: REPLY_TO,
-        headers: { "List-Unsubscribe": "<" + unsub + ">", "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
-      }),
-    });
-    const b = await res.json().catch(() => ({}));
-    if (!res.ok) throw new Error("resend_" + res.status + ":" + JSON.stringify(b));
-    return (b as { id?: string }).id ?? "";
+    const res = await posliMail({
+      from: FROM, to: [to], subject, html, text, reply_to: REPLY_TO,
+      headers: { "List-Unsubscribe": "<" + unsub + ">", "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
+    }, { resendKey: RESEND_KEY });
+    if (!res.ok) {
+      const c = res.chyba ?? "";
+      const prefixR = "resend_" + res.status + ":";
+      const prefixS = "ses_" + res.status + ":";
+      const telo = c.startsWith(prefixR) ? c.slice(prefixR.length) : c.startsWith(prefixS) ? c.slice(prefixS.length) : c;
+      throw new Error("resend_" + res.status + ":" + telo);
+    }
+    return res.providerId;
   },
   async zalogujOdeslani({ leadId, providerId, email, userId, eventId, subscriptionId }) {
     const { error } = await admin.from("email_events").insert({

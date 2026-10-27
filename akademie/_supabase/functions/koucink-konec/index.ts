@@ -51,6 +51,7 @@ import {
   type KoucinkRadek,
 } from "../_shared/koucink-konec.ts";
 import { buildOffboardMail } from "../_shared/offboard-mail.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 import {
   type BehDeps,
   type RazitkoRadek,
@@ -62,7 +63,7 @@ import {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const STRIPE_PROMO_KEY = Deno.env.get("STRIPE_RESTRICTED_PROMO_KEY") ?? "";
 const FROM = "Martin Barna <news@martinbarna.cz>";
 

@@ -21,12 +21,23 @@
 
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SB_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const SECRET = Deno.env.get("AFFILIATE_REPORT_SECRET") ?? "";
 const TEST_INBOX = "fitness.barna@gmail.com";
+
+// `posliMail` uz telo precetl. Z `chyba` (`resend_<status>:<telo>` nebo `ses_...`)
+// vrati jen telo, aby chybovy retezec volajiciho zustal `resend_<status> <telo>`.
+function teloZPosliMail(status: number, chyba: string | undefined): string {
+  const c = chyba ?? "";
+  for (const p of ["resend_" + status + ":", "ses_" + status + ":"]) {
+    if (c.startsWith(p)) return c.slice(p.length);
+  }
+  return c;
+}
 
 const admin = createClient(SB_URL, SB_KEY, { auth: { persistSession: false } });
 
@@ -175,19 +186,18 @@ Deno.serve(async (req) => {
         functionName: "affiliate-mesicni-report",
         path: "affiliate-mesicni-report",
       }, async () => {
-        const res = await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-          body: JSON.stringify({
-            from: "Martin Barna <news@martinbarna.cz>",
-            to: [prijemce],
-            bcc: test ? undefined : [TEST_INBOX],
-            reply_to: "martin@martinbarna.cz",
-            subject: (test ? "[TEST] " : "") + `Tvůj partnerský přehled za ${jmeno}`,
-            html,
-          }),
-        });
-        if (!res.ok) throw new Error("resend_" + res.status + " " + (await res.text()).slice(0, 120));
+        const res = await posliMail({
+          from: "Martin Barna <news@martinbarna.cz>",
+          to: [prijemce],
+          bcc: test ? undefined : [TEST_INBOX],
+          reply_to: "martin@martinbarna.cz",
+          subject: (test ? "[TEST] " : "") + `Tvůj partnerský přehled za ${jmeno}`,
+          html,
+        }, { resendKey: RESEND_KEY });
+        if (!res.ok) {
+          const telo = teloZPosliMail(res.status, res.chyba);
+          throw new Error("resend_" + res.status + " " + telo.slice(0, 120));
+        }
       });
       if (d.action === "skip") {
         zaznam.stav = "preskoceno-guard:" + d.reason;

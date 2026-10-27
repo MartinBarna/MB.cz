@@ -39,6 +39,11 @@
 //    Ale loguje se HLASITĚ (`console.error`), protože tichý `catch {}` u zápisu
 //    skipů je přesně důvod, proč se o bráně za celou dobu nedalo nic zjistit.
 
+// 27. 10. 2026: HTTP volani zije v `posliMail` (prepinac `MAIL_PROVIDER`).
+// Tady zustava evidencni obal: prazdny klic, `email_events`, znacka `bcc`
+// a tvar chyby, ktery cte jistic v DB.
+import { posliMail, type MailPayload } from "./mail-provider.ts";
+
 // deno-lint-ignore no-explicit-any
 type Admin = any;
 
@@ -210,35 +215,27 @@ export async function odesliPresResend(
   stopa?: StopaOdeslani,
 ): Promise<ResendOdpoved> {
   if (!resendKey) return { ok: false, status: 0, providerId: "", chyba: "missing_RESEND_API_KEY" };
-  let res: Response;
-  try {
-    res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + resendKey, "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-  } catch (e) {
-    const chyba = "sit:" + String(e).slice(0, 180);
+  // `posliMail` nikdy nehazi. `status 0` je dnesni vetev `sit:` (sit, timeout,
+  // chybejici klic SES, neznamy provider). Telo uz precetl a vraci ho v `chyba`.
+  const r = await posliMail(payload as MailPayload, { resendKey });
+  if (r.status === 0) {
+    const chyba = r.chyba ?? "sit:";
     await zapisChybu(stopa, 0, chyba);
     return { ok: false, status: 0, providerId: "", chyba };
   }
-  if (!res.ok) {
-    const telo = await res.text().catch(() => "");
+  if (!r.ok) {
     // ⛔ [R1, N-5] TVAR RETEZCE NENI KOSMETIKA. Zivy jistic `followups_circuit_breaker`
     //    (cron 3) hleda PRESNE prefix `resend_429:` a podretezec `quota_exceeded`
-    //    v `detail->>'error'`. Jiny tvar znamena, ze rate limit ani vycerpana kvota
-    //    z techhle cest branu follow-upu nezavrou. Stejny tvar sklada `drip-send`.
-    const chyba = "resend_" + res.status + ":" + telo.slice(0, 180);
-    await zapisChybu(stopa, res.status, chyba);
-    return { ok: false, status: res.status, providerId: "", chyba };
+    //    v `detail->>'error'`. `posliMail` ho pro Resend sklada sam (`resend_<status>:<telo>`,
+    //    telo oriznute na 180). U SES prefix neni `resend_`: nechame `chyba` jak prisla
+    //    (`ses_<status>:<telo>`), jinak by jistic reagoval na cizi provider.
+    const chyba = r.chyba && (r.chyba.startsWith("resend_") || r.chyba.startsWith("ses_"))
+      ? r.chyba
+      : "resend_" + r.status + ":" + (r.chyba ?? "");
+    await zapisChybu(stopa, r.status, chyba);
+    return { ok: false, status: r.status, providerId: "", chyba };
   }
-  // ⚠️ Tělo odpovědi jde přečíst JEN JEDNOU. Když se to nepovede, mail stejně
-  //    odešel: vrací se `ok: true` s prázdným `providerId` a stopa to zakřičí.
-  let providerId = "";
-  try {
-    const j = await res.json();
-    providerId = String((j as { id?: unknown })?.id ?? "");
-  } catch { /* viz komentář výš */ }
+  const providerId = r.providerId;
   if (stopa) {
     // ⛔⛔ [R2, nalez R2-3] ZASILKA S BCC SE MUSI POZNAT ZE STOPY.
     //    `resend-webhook` porovnava adresu ze stopy s `ev.data.to` z payloadu, jenze
@@ -257,5 +254,5 @@ export async function odesliPresResend(
       providerId,
     );
   }
-  return { ok: true, status: res.status, providerId };
+  return { ok: true, status: r.status, providerId };
 }

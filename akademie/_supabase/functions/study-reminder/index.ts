@@ -17,10 +17,11 @@ import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 // 14. 9. 2026: chyba čtení není odpověď (guard secretu i příjemci s opakováním, při trvalé chybě 500).
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const SITE = "https://www.martinbarna.cz";
 const MAX_PER_RUN = 20;          // pojistka pod denní limit Resendu

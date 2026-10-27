@@ -35,11 +35,12 @@ import { handleStripeEvent, type CoreDeps, type ExistingVoucher, type StripeEven
 import { generateVoucherCode } from './lib/codes.ts';
 import { buildVoucherPdf } from './lib/pdf.ts';
 import { sendVoucherMail } from './lib/mail.ts';
+import { mailKlic } from '../_shared/mail-provider.ts';
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 const WEBHOOK_SECRET = Deno.env.get('POUKAZ_WEBHOOK_SECRET') ?? '';
-const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
+const RESEND_KEY = mailKlic();
 const OSTRY = Deno.env.get('POUKAZ_OSTRY') === '1';
 const TEST_RECIPIENT = 'fitness.barna@gmail.com';
 const MAIL_FROM = 'Martin Barna <news@martinbarna.cz>';

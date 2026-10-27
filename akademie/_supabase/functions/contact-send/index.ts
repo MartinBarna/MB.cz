@@ -8,6 +8,7 @@
 // aby ji Martin viděl v adminu. Off-site boti (cizí/chybějící Origin) se NELOGUJÍ
 // (jinak by šel endpoint zaplavit řádky). Zápis je best-effort — nikdy neblokuje e-mail.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const ALLOWED_ORIGINS = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 
@@ -87,7 +88,7 @@ Deno.serve(async (req) => {
 
   if (spam) return json({ ok: true }, 200, origin);
 
-  const key = Deno.env.get("RESEND_API_KEY");
+  const key = mailKlic();
   if (!key) return json({ ok: false, error: "config" }, 500, origin);
 
   const html =
@@ -98,17 +99,13 @@ Deno.serve(async (req) => {
     `<tr><td valign="top"><b>Zpráva</b></td><td>${esc(message).replace(/\n/g, "<br>")}</td></tr>` +
     `</table>`;
 
-  const r = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: "Web MB.cz <news@martinbarna.cz>",
-      to: ["martin@martinbarna.cz"],
-      reply_to: email,
-      subject: "Nová poptávka z webu (MB.cz)",
-      html,
-    }),
-  });
+  const r = await posliMail({
+    from: "Web MB.cz <news@martinbarna.cz>",
+    to: ["martin@martinbarna.cz"],
+    reply_to: email,
+    subject: "Nová poptávka z webu (MB.cz)",
+    html,
+  }, { resendKey: key });
   if (!r.ok) return json({ ok: false, error: "send" }, 502, origin);
   return json({ ok: true }, 200, origin);
 });
