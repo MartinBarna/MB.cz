@@ -22,7 +22,7 @@ Snídaně dva rohlíky s máslem a šunkou, svačina chleba se sýrem, večer ob
 
 ## Studie: chleba v dietě hubnutí nevadil
 
-Španělský pokus (Loria Kohen a kol., Nutr Hosp 2011, PMID 22072367) dal 122 ženám s nadváhou na 16 týdnů nízkokalorickou dietu. Jedna skupina měla v jídelníčku chleba, druhá ho měla nahrazený rýží nebo těstovinami se stejnými kaloriemi. Po 16 týdnech hlásila skupina s chlebem po testovacím jídle **vyšší sytost** hodinu a půl po jídle. Autoři výslovně píší, že výsledky jdou proti doporučení vyřazovat chleba z hubnoucího plánu.
+Španělský pokus (Loria Kohen a kol., Nutr Hosp 2011, PMID 22072367) zařadil 122 žen s nadváhou nebo obezitou (BMI od 25 do méně než 40) a 104 z nich dokončilo 16 týdnů nízkokalorické diety. Jedna skupina měla v jídelníčku chleba, druhá ho měla nahrazený rýží nebo těstovinami se stejnými kaloriemi. Po 16 týdnech měla skupina s chlebem po testovacím jídle **vyšší sytost** v 60. i v 90. minutě. Autoři výslovně píší, že výsledky jdou proti doporučení vyřazovat chleba z hubnoucího plánu.
 
 Je to jedna studie a sytost hodnotily ženy samy na škále. Sedí to ale s tím, co vidím v praxi: lidé, kteří si v plánu pečivo nechají, ho drží déle a míň „ujíždějí".
 
@@ -30,7 +30,7 @@ Je to jedna studie a sytost hodnotily ženy samy na škále. Sedí to ale s tím
 
 Ve slavné studii sytosti (Holt a kol., Eur J Clin Nutr 1995, PMID 7498104) se srovnávalo 38 potravin se stejnými 240 kcal a bílý chléb byl měřítko se skóre 100 %. Croissant skončil úplně poslední se 47 %. Celozrnný chléb sytil výrazně víc než bílý. Obecně platilo, že víc sytily potraviny s víc vlákninou, vodou a bílkovinami, a méně ty s víc tukem.
 
-Velký přehled v Lancetu (Reynolds a kol. 2019, PMID 30638909) pak ukázal, že lidé s vyšším příjmem vlákniny a celozrnných obilovin mají nižší riziko srdečních onemocnění, cukrovky 2. typu i rakoviny tlustého střeva. V klinických studiích měli vyšší příjem vlákniny spojený i s nižší hmotností. Nejlépe vycházelo 25 až 29 g vlákniny denně, víc o ní [tady](https://martinbarna.cz/clanky/vlaknina.html).
+Velký přehled v Lancetu (Reynolds a kol. 2019, PMID 30638909) pak ukázal, že lidé s vyšším příjmem vlákniny a celozrnných obilovin mají nižší riziko srdečních onemocnění, cukrovky 2. typu i rakoviny tlustého střeva. V klinických studiích měli vyšší příjem vlákniny spojený i s nižší hmotností. U řady závažných výsledků byl pokles rizika největší při 25 až 29 g vlákniny denně. Křivky dávky naznačily, že ještě vyšší příjem může chránit víc před srdečními chorobami, cukrovkou 2. typu a rakovinou tlustého střeva a prsu. Víc o ní [tady](https://martinbarna.cz/clanky/vlaknina.html).
 
 Pro praxi z toho plyne: celozrnný nebo žitný chleba s viditelnými zrny tě zasytí víc než bílý rohlík a máslový croissant.
 

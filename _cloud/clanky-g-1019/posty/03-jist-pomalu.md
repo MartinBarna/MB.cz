@@ -16,7 +16,7 @@ Lunch in seven minutes at the computer. Dinner standing up. When I ask clients h
 
 A meta-analysis of 22 experiments (Robinson et al. 2014): when people ate more slowly, they ate less. And here is the interesting part: they were not hungrier at the end of the meal or 3.5 hours later.
 
-A meta-analysis of 23 studies (Ohkuma et al. 2015): self described fast eaters had about twice the odds of obesity. Observational, self reported, so not proof of cause. But it fits.
+A meta-analysis of 23 studies (Ohkuma et al. 2015): people who ate quickly had 2.15 times the odds of obesity. Observational, so not proof of cause. But it fits.
 
 Fullness signals take a while to reach the brain. Finish the plate in five minutes and you can eat an extra portion before you notice.
 

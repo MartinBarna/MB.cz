@@ -43,12 +43,11 @@ tahle data nepodporují. Rozhoduje, co si pod „zhubnu" člověk představí.
 
 ## „Budu cvičit třikrát týdně" není plán
 
-Španělská metaanalýza 70 intervencí s 9 689 lidmi (Carrero 2019, PMID 31125588) srovnávala
-obecná odhodlání s plány typu „když nastane X, udělám Y". Konkrétní plány měly na zdravé
-stravování střední efekt (d = 0,33), a čím jednodušší a konkrétnější plán, tím větší.
-Složité plány fungovaly hůř, stejně jako plány, které někdo účastníkům kontroloval.
+Španělská metaanalýza 70 intervencí s 9 689 lidmi (Carrero 2019, PMID 31125588) hodnotila
+plány typu „když nastane X, udělám Y". Na zdravé stravování měly střední efekt (d = 0,33).
+Konkrétní plány vycházely líp než složité a plány, které někdo účastníkům kontroloval, fungovaly hůř.
 
-Střední efekt zní skromně. Je to ale rozdíl mezi „budu jíst zdravě" a „v pondělí a ve čtvrtek
+Střední efekt zní skromně. V praxi z toho dělám rozdíl mezi „budu jíst zdravě" a „v pondělí a ve čtvrtek
 večer si uvařím dvě porce, jednu na středu do práce". První věta se nedá splnit ani porušit.
 Druhá ano, a to je celý smysl.
 
@@ -71,15 +70,14 @@ A protože takový týden přijde vždycky, předsevzetí padne na první přek�
 
 ## Baví tě to? Jinak z toho návyk nebude
 
-Britská studie sledovala 118 lidí šestnáct týdnů, jak jim vzniká nový návyk (Judah 2018,
+Britská studie sledovala 118 lidí šestnáct týdnů, jak jim vzniká návyk u čištění zubů nití a u tablety vitaminu C (Judah 2018,
 PMID 30572936). Opakování samo návyk buduje, to nikoho nepřekvapí. Překvapilo, co
 opakování zesilovalo: **potěšení z činnosti a vnitřní motivace**. Vnímaná užitečnost
 („vím, že je to zdravé") nepomohla vůbec. A silné odhodlání vztah dokonce oslabovalo.
 
 Dvanáctitýdenní denní měření u 135 lidí (Di Maio 2022, PMID 35580819) to potvrdilo z druhé
 strany: dny, kdy člověk cítil z jídla, které si zvolil, vnitřní odměnu, byly dny s vyšší
-automatičností. Prakticky: trénink, který si zvolíš, protože „se to má", se návykem nestane.
-Trénink, který tě baví, ano. Proto se v generátoru tréninku v appce vybírá i to, jestli tě
+automatičností. Na trénink to přenáším sám. Judah měřil nit a vitamin, ne trénink, a činnost, kterou děláš jen proto, že „se to má", se návykem stát nemusí. Proto se v generátoru tréninku v appce vybírá i to, jestli tě
 baví těžké váhy, nebo delší série, a proto nechávám klienty vyměnit cvik, který nesnášejí.
 
 ## Co z toho plyne pro tvoje předsevzetí
@@ -88,7 +86,7 @@ baví těžké váhy, nebo delší série, a proto nechávám klienty vyměnit c
 2. **Přepiš předsevzetí na dvě až tři konkrétní věty**, které se dají porušit.
    „Snídaně s 30 g bílkovin v pracovní dny." „Dva silové tréninky týdně, pondělí a čtvrtek."
 3. **Ke každé větě napiš, co uděláš, když to nevyjde.** Tohle je ta část, kterou
-   všichni přeskakují, a podle dat jediná, na které záleží.
+   všichni přeskakují. Mezi plánem akce a plánem překážek měl v datech efekt jen ten druhý.
 4. **Stejné místo, stejný čas.** Stabilní kontext návyk urychluje (Judah 2018).
    Trénink „někdy během týdne" je trénink nikdy.
 5. **Vyber si formu, která tě baví.** Chůze místo běhu, těžké váhy místo kruháče,

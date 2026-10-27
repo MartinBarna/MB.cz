@@ -23,7 +23,7 @@ Breakfast at home is under control, dinner too. In the middle of the day it is s
 The best data come from a large BMJ study (Roberts et al. 2018, PMID 30541752). Researchers bought 223 frequently ordered meals from 111 randomly selected restaurants in five countries and measured their energy directly in a lab, by burning samples in a calorimeter. No estimates from tables.
 
 - 94% of meals from full service restaurants had at least 600 calories, and 72% of fast food meals.
-- One full service meal plus one fast food meal a day covered 70 to 120% of a sedentary woman's daily needs, without drinks, starters or dessert.
+- A model found that one full service meal plus one fast food meal a day would cover 70 to 120% of a sedentary woman's daily needs, except in China, and that is without other meals, snacks, drinks, starters or dessert.
 - In Finland they also measured ten meals from workplace canteens. They averaged 880 calories against 1,166 in restaurants, about a quarter less.
 
 A fried main with fries and a creamy sauce reaches a thousand calories easily. And that is one meal out of the four or five you eat in a day.

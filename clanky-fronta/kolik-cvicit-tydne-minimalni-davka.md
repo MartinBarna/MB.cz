@@ -33,14 +33,14 @@ vědět, kde je podlaha a co za ni koupíš.
 ## Dvakrát týdně na partii poráží jednou
 
 Metaanalýza deseti studií (Schoenfeld 2016, PMID 27102172) srovnávala, kolikrát týdně
-se trénuje jedna svalová partie při stejném celkovém objemu. Dvakrát týdně vyšlo lépe
-než jednou (velikost efektu 0,49 proti 0,30). Jestli je třikrát lepší než dvakrát,
-data neuměla říct.
+se trénuje jedna svalová partie při stejném celkovém objemu. Vyšší frekvence měla
+větší efekt než nižší (0,49 proti 0,30). V závěru autoři píšou, že dvakrát týdně
+vychází lépe než jednou. Jestli je třikrát lepší než dvakrát, data neuměla říct.
 
 To je pro člověka s málem času dobrá zpráva: dva tréninky týdně, každý na celé tělo,
 už splňují to, co metaanalýza doporučuje. A víc dnů podle novější analýzy 67 studií
-(Pelland 2025, PMID 41343037) pomáhá hlavně síle; u růstu svalů byl efekt frekvence
-tak malý, že se dá považovat za zanedbatelný. Frekvence tedy rozděluje práci do menších
+(Pelland 2025, PMID 41343037) pomáhá hlavně síle. U růstu svalů jsou data slučitelná
+i se zanedbatelným efektem frekvence. Frekvence tedy rozděluje práci do menších
 kusů, ale svaly staví objem.
 
 ## Podlaha: zhruba čtyři série na sval týdně
@@ -52,11 +52,9 @@ cviky přes víc kloubů: nějaký tlak nohama (dřep), nějaký tah horní čá
 a nějaký tlak horní částí těla (bench, kliky). S tímhle základem se dá celé tělo odbavit
 dvakrát týdně za 35 až 45 minut.
 
-Kolik toho ztratíš proti někomu, kdo dělá dvojnásobek? Podle meta-regrese 15 studií
-(Schoenfeld 2017, PMID 27433992) přidala každá série týdně navíc asi 0,37 % k přírůstku
-svalu, a rozdíl mezi nižším a vyšším objemem dělal v součtu asi 3,9 %. Víc objemu funguje,
-ale s klesajícím výnosem. Kdo dělá minimum, neztrácí polovinu výsledku. Ztrácí jednotky
-procent a získává hodiny týdne.
+Podle meta-regrese 15 studií (Schoenfeld 2017, PMID 27433992) přidala každá série
+týdně navíc asi 0,37 % k přírůstku svalu. Rozdíl mezi vyšším a nižším objemem
+uvnitř studií dělal asi 3,9 %. Víc objemu funguje, ale s klesajícím výnosem.
 
 ## Jak daleko od selhání: jedno až dvě opakování v záloze
 
@@ -64,9 +62,9 @@ Nejnovější analýza k blízkosti selhání (Robinson 2024, PMID 38970765) roz
 U síly vyšel vztah mezi tím, jak blízko k selhání série končí, a přírůstkem jako zanedbatelný.
 U růstu svalů naopak platí: čím blíž k selhání, tím větší přírůstek. Autoři upozorňují,
 že počet opakování v záloze v původních studiích jen odhadovali z popisů, takže to není
-laboratorní měření. Směr je ale jasný a sedí s tím, co v generátoru tréninku v appce
-předepisuju: **poslední série s 1 až 2 opakováními v záloze**. Dost blízko selhání, aby
-svaly rostly. Dost daleko, aby se to dalo trénovat celý rok bez rozbitých kloubů.
+laboratorní měření. Přesný počet opakování v záloze analýza neřekla. V appce přesto
+předepisuju **poslední sérii s 1 až 2 opakováními v záloze**. To je moje volba pro praxi,
+ne číslo z té analýzy.
 
 Na 3 až 4 opakování v záloze se jde jen tehdy, když je toho v týdnu moc a tělo neregeneruje.
 To je lehčí týden, ne jiný trénink.
@@ -84,7 +82,8 @@ těžké váhy. Proto je v appce volba „opakování a váha" preference, ne ú
 
 Analýza šesti studií u trénovaných mužů (Androulakis-Korakakis 2020, PMID 31797219) ukázala,
 že i **jedna série 6 až 12 opakování dvakrát až třikrát týdně** po 8 až 12 týdnů zvedla
-sílu v dřepu a benchi, celkem v průměru o 12 kg. Autoři to výslovně nazvali suboptimální
+sílu v dřepu a v benchi. Metaanalýza pěti studií vyšla na plus 12,09 kg u celkového
+maximálního zdvihu, plus 17,48 kg u dřepu a plus 8,25 kg u benchpressu. Autoři to výslovně nazvali suboptimální
 dávkou, šlo jen o sílu, jen o muže a série se dělaly do úplného selhání. Beru to jako
 důkaz, že podlaha je opravdu nízko. Na sval to ale za minimum nepovažuju.
 
@@ -115,6 +114,6 @@ Minimum, které v přehledech ještě funguje, jsou zhruba 4 série týdně. Roz
 většinu lidí je 6 až 12. Nad to rostou přírůstky pomaleji a rychleji roste únava.
 
 ### Mám jít do selhání?
-Ne v každé sérii. Poslední série s jedním až dvěma opakováními v záloze dává podle dat
-skoro stejný růst svalů a mnohem menší únavu. Do úplného selhání jen občas u cviků,
+Ne v každé sérii. U růstu svalů byl přírůstek větší, čím blíž k selhání série končila.
+Jak přesně, analýza neřekla, a únavu neřešila. Do úplného selhání jen občas u cviků,
 u kterých se nic nestane, když to nevyjde (izolované cviky, stroje).

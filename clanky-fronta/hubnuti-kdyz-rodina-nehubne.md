@@ -28,7 +28,7 @@ Parťáka k hubnutí mít nemusíš. Stojí ale za to s lidmi doma mluvit a zís
 
 ## Tvoje hubnutí se doma přenáší
 
-Tohle mě baví nejvíc. Ve velké studii Look AHEAD sledovali i manžele a manželky účastníků, kteří sami žádnou léčbu nedostali (Gorin a kol., Int J Obes 2008, PMID 18762804). Partneři lidí v intenzivním programu zhubli za rok v průměru 2,2 kg, partneři kontrolní skupiny 0,2 kg. Snížili příjem a doma ubylo kalorických potravin.
+Tohle mě baví nejvíc. Ve velké studii Look AHEAD sledovali i manžele a manželky účastníků, kteří sami žádnou léčbu nedostali (Gorin a kol., Int J Obes 2008, PMID 18762804). Partneři lidí v intenzivním programu zhubli za rok v průměru 2,2 kg, partneři kontrolní skupiny 0,2 kg. Víc jim klesl hlášený příjem energie. Úbytek jejich váhy souvisel s úbytkem účastníka a s úbytkem tučných potravin v domácnosti.
 
 Novější pokus (Gorin a kol., Obesity 2018, PMID 29388385) našel podobný efekt u 130 párů. Neléčení partneři zhubli za půl roku zhruba 2 kg a skoro třetina z nich aspoň 3 % hmotnosti. Váha partnerů se v čase hýbala spolu.
 

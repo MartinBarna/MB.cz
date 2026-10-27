@@ -36,7 +36,7 @@ větou, která by mohla viset nad každým stolem s cukrovím: „průměrný sv
 je menší, než se běžně tvrdí."
 
 Přehled dalších studií (Díaz-Zavala 2017, PMID 28744374) dává u dospělých rozmezí
-**0,4 až 0,9 kg**. U lidí s obezitou, kteří zrovna hubli, to bylo 0,3 až 0,9 kg.
+**0,4 až 0,9 kg**. U lidí s obezitou, kteří se snažili zhubnout, to bylo 0,3 až 0,9 kg, průkazné jen v části studií.
 
 Dvě věci k tomu. Za prvé, průměr není osud. Rozptyl v Yanovského studii byl větší než
 sám průměr (0,37 ± 1,52 kg), takže část lidí přibrala výrazně víc a část dokonce zhubla.
@@ -57,12 +57,12 @@ stojí prosinec, který se nedorovnal.
 ## Kdo už zhubl, je zranitelnější, ne odolnější
 
 Tenhle výsledek mě překvapil. Studie z registru úspěšných hubnoucích (Phelan 2008,
-PMID 18540737) srovnala 178 lidí, kteří v průměru shodili 35 kg a drželi to skoro
-šest let, se 101 lidmi s normální váhou, kteří nikdy nehubli.
+PMID 18540737) srovnala 178 lidí, kteří v průměru shodili 34,9 kg a aspoň 13,6 kg
+z toho drželi v průměru 5,9 roku, se 101 lidmi s normální váhou bez historie obezity.
 
 Ti první se na svátky chystali víc: 27 % z nich plánovalo být v jídle extrémně přísní
-(z druhé skupiny nikdo) a 59 % v pohybu. Přesto přibralo kilo a víc **39 %** z nich proti
-**17 %** lidí bez historie hubnutí, a o měsíc později to platilo pořád. Autoři píší,
+(z druhé skupiny nikdo) a 59 % v pohybu. Přesto přibralo kilo a víc **38,9 %** z nich proti
+**16,7 %** z druhé skupiny. O měsíc později to bylo 28,3 % proti 10,7 %. Autoři píší,
 že úspěšní hubnoucí na sobě pracovali tvrději, a přesto byli přes svátky zranitelnější.
 
 Z praxe vím proč. Kdo drží váhu systémem (zápis, pravidelné vážení, plán), o svátcích
@@ -79,13 +79,13 @@ jak přes svátky váhu udržet, a tabulku, kolik pohybu odpovídá svátečním
 (kolik minut chůze je jeden kousek cukroví nebo sklenka svařáku).
 
 Výsledek: kontrolní skupina přibrala 0,37 kg, přesně jako v americké studii. Skupina
-s vážením zhubla 0,13 kg. Rozdíl **půl kila**, statisticky jasný. Zázrak to není. Je to
+s celým balíčkem zhubla 0,13 kg. Rozdíl **půl kila**, statisticky jasný. Zázrak to není. Je to
 přesně ta půlka kila, která by jinak zůstala do léta.
 
 Poctivě dodám, že metaanalýza intervencí přes svátky u dospělých (Guerrero-Magaña 2024,
 PMID 39275907) vyšla nejednoznačně, se spoustou nesourodých studií. Takže žádné „program
-X funguje". Funguje jedna konkrétní věc: nepřestat se vážit a zapisovat, i když čísla
-nejsou hezká.
+X funguje". V tomhle pokusu zabral celý balíček: vážení se zápisem, rady k udržení váhy
+a tabulka pohybu ke svátečnímu jídlu.
 
 ## Jak to dělám s klienty
 

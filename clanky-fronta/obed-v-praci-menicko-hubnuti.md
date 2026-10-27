@@ -27,7 +27,7 @@ Nejlepší data k tomu máme z velké studie v BMJ (Roberts a kol. 2018, PMID 30
 Co vyšlo:
 
 - 94 % jídel z klasických restaurací mělo aspoň 600 kcal, u fast foodu 72 %.
-- Jedno jídlo z restaurace plus jedno z fast foodu denně pokrylo 70 až 120 % celodenní potřeby sedavé ženy, a to bez nápojů, předkrmu a dezertu.
+- Model vyšel tak, že jedno jídlo z restaurace plus jedno z fast foodu denně pokryje 70 až 120 % celodenní potřeby sedavé ženy, kromě Číny, a to bez dalších jídel, svačin, nápojů, předkrmu a dezertu.
 - Ve Finsku změřili i deset jídel z firemních jídelen. Vyšla v průměru na 880 kcal proti 1 166 kcal v restauracích, tedy o čtvrtinu méně.
 
 Česká data tam nejsou, ale naše meníčko s polévkou do té tabulky zapadá. Smažák s hranolky a tatarkou se k tisícovce kalorií dostane snadno, svíčková se šesti knedlíky taky. A to je jedno jídlo z pěti, které za den sníš.

@@ -3,11 +3,11 @@
 Klíčové slovo: eat slowly to lose weight
 Navržená URL: martinbarna.cz/en/blog/eat-slowly-fat-loss.html
 CZ URL: martinbarna.cz/clanky/rychlost-jidla-jist-pomalu.html
-X teaser: Fast eaters had about twice the odds of obesity in a meta-analysis of 23 studies. When people slowed down in experiments, they ate less and were not hungrier. Five easy steps.
+X teaser: Fast eaters had 2.15 times the odds of obesity in a meta-analysis of 23 studies. When people slowed down in experiments, they ate less and were not hungrier. Five easy steps.
 Kategorie: Fat loss
 SEO title: Eat Slowly to Lose Weight: Does Eating Speed Matter?
 Emoji: ⏱️
-Meta: Fast eaters had twice the odds of obesity in a meta-analysis of 23 studies. What happens when you slow down, plus five simple steps to eat more slowly.
+Meta: Fast eaters had 2.15 times the odds of obesity in a meta-analysis of 23 studies. What happens when you slow down, plus five simple steps to eat more slowly.
 Popis: What studies say about eating speed, food intake and body weight, and how to slow down your meals on a normal day without timers or counting bites.
 Datum: 2027-02-04
 CTA: koučink
@@ -23,7 +23,7 @@ A British meta-analysis of 22 experiments (Robinson et al., Am J Clin Nutr 2014,
 
 An interesting detail: hunger at the end of the meal and three and a half hours later did not differ between fast and slow eating. People ate less and did not feel hungrier.
 
-A Japanese meta-analysis of 23 studies (Ohkuma et al., Int J Obes 2015, PMID 26100137) looked from the other side. People who described themselves as fast eaters had on average a BMI 1.78 higher and about twice the odds of obesity compared with slow eaters. Careful here: this is observational, not an experiment. It does not prove that fast eating causes obesity, and people rated their own speed.
+A Japanese meta-analysis of 23 studies (Ohkuma et al., Int J Obes 2015, PMID 26100137) looked from the other side. People who ate quickly had on average a BMI 1.78 higher and 2.15 times the odds of obesity compared with people who ate slowly. Careful here: this is observational, not an experiment. It does not prove that fast eating causes obesity.
 
 Put together, it makes sense. It takes a while for fullness signals from the stomach and gut to reach the brain. When the plate is gone in five minutes, you can easily eat an extra portion before you notice.
 

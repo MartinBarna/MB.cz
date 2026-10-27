@@ -20,7 +20,7 @@ You do not need a buddy. But it is worth getting one ally at home.
 
 **Your changes spread**
 
-In the Look AHEAD trial (Gorin et al. 2008), untreated spouses of people in the intensive program lost 2.2 kg in a year vs 0.2 kg in the control group. Less high fat food ended up in the house. A 2018 trial in 130 couples found partners' weights moved together.
+In the Look AHEAD trial (Gorin et al. 2008), untreated spouses of people in the intensive program lost 2.2 kg in a year vs 0.2 kg in the control group. Their weight loss was linked to the participant's weight loss and to fewer high fat foods in the home. A 2018 trial in 130 couples found partners' weights moved together.
 
 **One meal, different portions**
 

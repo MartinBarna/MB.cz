@@ -36,8 +36,8 @@ na kole v teple, dokud neztratili 2,5 % hmotnosti, a pak dva dny jedli hodně sa
 Měřilo se přístrojem DXA, který rozliší tuk, svaly a kosti.
 
 Po zátěži klesla váha o 1,93 kg. Po dvou dnech sacharidů stoupla o **2,53 kg**. A tuková
-hmota se **nezměnila ani v jednom bodě měření**. Celý ten výkyv, skoro čtyři a půl kila
-mezi minimem a maximem, byla voda vázaná ve svalech.
+hmota se **nezměnila ani v jednom bodě měření**. Beztuková hmota na DXA klesla o 1,69 kg
+a pak stoupla o 2,36 kg.
 
 Mechanismus je jednoduchý. Sacharidy se ukládají jako glykogen a glykogen na sebe váže vodu.
 Ve svalové biopsii vyšlo, že na každý gram glykogenu se uloží **nejméně 3 gramy vody**
@@ -78,12 +78,12 @@ Nic z toho není tuk a nic z toho neřekne, jestli za týden hubneš.
 ## Vážení hubne jen s programem kolem
 
 Buďme přesní, protože se o vážení říká leccos. V metaanalýze (Madigan 2015) nemělo vážení
-jako **jediná** strategie prokazatelný efekt (asi půl kila, statisticky nic). Přidané
-k programu (zápis jídla, plán, kontrola) dalo 1,7 kg, a celý program s vážením proti ničemu
-3,4 kg. Váha je měřidlo. Dietu za tebe neudělá a bez zápisu jídla ti řekne, že se něco děje, ale ne co.
+jako **jediná** strategie prokazatelný efekt (asi půl kila, statisticky nic). Když se vážení
+a techniky sebekontroly přidaly k programu, vyšlo to na 1,7 kg. Celý program s vážením
+proti žádné nebo jen malé kontrole dal 3,4 kg. Váha je měřidlo. Dietu za tebe neudělá a bez zápisu jídla ti řekne, že se něco děje, ale ne co.
 
 Studie 47 lidí (Steinberg 2015, PMID 25683820) sice ukázala, že ti, kdo se vážili každý den,
-zhubli za půl roku o 6 kg víc, ale byl to malý vzorek a lidé se do skupin rozdělili sami.
+zhubli za půl roku o 6,1 kg víc než ti, kdo se vážili v průměru 5,4 dne v týdnu. Byl to malý vzorek a lidé se do skupin rozdělili sami.
 Číslo se nedá slibovat. Co se slibovat dá: kdo svoje čísla někomu posílá, dopadá lépe.
 V metaanalýze byl efekt větší tam, kde byl prvek odpovědnosti druhému člověku. Proto
 klienti v koučinku posílají check-in mně a proto ho appka vyžaduje jednou týdně.
