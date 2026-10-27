@@ -20,7 +20,7 @@ Two rolls with butter and ham for breakfast, a cheese sandwich as a snack, open 
 
 ## Study: bread did not get in the way of fat loss
 
-A Spanish trial (Loria Kohen et al., Nutr Hosp 2011, PMID 22072367) put 122 overweight women on a low calorie diet for 16 weeks. One group had bread in their meal plan, the other had it replaced with rice or pasta at the same calories. After 16 weeks, the bread group reported **higher satiety** ninety minutes after a test meal. The authors state plainly that the results go against the advice to remove bread from weight loss plans.
+A Spanish trial (Loria Kohen et al., Nutr Hosp 2011, PMID 22072367) enrolled 122 women with overweight or obesity (BMI from 25 to less than 40), and 104 of them completed 16 weeks of a low calorie diet. One group had bread in their meal plan, the other had it replaced with rice or pasta at the same calories. After 16 weeks, the bread group had **higher satiety** after a test meal at both 60 and 90 minutes. The authors state plainly that the results go against the advice to remove bread from weight loss plans.
 
 It is one study and the women rated satiety themselves on a scale. It matches what I see in practice though: people who keep bread in their plan stick to it longer and slip less.
 
@@ -28,7 +28,7 @@ It is one study and the women rated satiety themselves on a scale. It matches wh
 
 In the well known satiety study (Holt et al., Eur J Clin Nutr 1995, PMID 7498104), 38 foods with the same 240 calories were compared, with white bread as the reference at 100%. The croissant came last at 47%. Wholegrain bread was clearly more filling than white. In general, foods with more fibre, water and protein filled people more, foods with more fat filled them less.
 
-A large review in The Lancet (Reynolds et al. 2019, PMID 30638909) then showed that people with higher fibre and wholegrain intake have lower risk of heart disease, type 2 diabetes and colorectal cancer. In clinical trials, higher fibre intake was also linked to lower body weight. The best results came at 25 to 29 g of fibre a day.
+A large review in The Lancet (Reynolds et al. 2019, PMID 30638909) then showed that people with higher fibre and wholegrain intake have lower risk of heart disease, type 2 diabetes and colorectal cancer. In clinical trials, higher fibre intake was also linked to lower body weight. For a range of critical outcomes, the drop in risk was greatest at 25 to 29 g of fibre a day. Dose-response curves suggested that an even higher intake may protect more against heart disease, type 2 diabetes, and colorectal and breast cancer.
 
 For practice: wholegrain or rye bread with visible grains will fill you more than a white roll or a buttery croissant.
 

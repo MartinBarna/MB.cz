@@ -14,7 +14,7 @@ Bread is the first thing people cut on a diet. With clients it usually ends the 
 
 **What a trial found**
 
-A Spanish trial put 122 overweight women on a low calorie diet for 16 weeks. One group kept bread, the other had it swapped for rice or pasta at the same calories. The bread group reported higher satiety after a test meal (Loria Kohen et al. 2011). One study, self rated, but it matches what I see: people who keep bread stick to the plan longer.
+A Spanish trial enrolled 122 women with overweight or obesity (BMI from 25 to less than 40), and 104 of them completed 16 weeks of a low calorie diet. One group kept bread, the other had it swapped for rice or pasta at the same calories. The bread group reported higher satiety after a test meal (Loria Kohen et al. 2011). One study, self rated, but it matches what I see: people who keep bread stick to the plan longer.
 
 **Which bread**
 
@@ -39,7 +39,7 @@ Full article: https://martinbarna.cz/en/blog/bread-and-fat-loss.html
 
 Pečivo se při hubnutí škrtá jako první. A u klientů to pak končí stejně: tři týdny bez chleba a víkend, kdy se dožene všechno.
 
-Ve španělské studii mělo 122 žen 16 týdnů nízkokalorickou dietu. Jedna skupina s chlebem, druhá bez něj se stejnými kaloriemi. Skupina s chlebem hlásila vyšší sytost. Autoři výslovně píší, že výsledky jdou proti doporučení chleba vyřazovat.
+Ve španělské studii zařadili 122 žen s nadváhou nebo obezitou (BMI od 25 do méně než 40) a 104 z nich dokončilo 16 týdnů nízkokalorické diety. Jedna skupina s chlebem, druhá bez něj se stejnými kaloriemi. Skupina s chlebem hlásila vyšší sytost. Autoři výslovně píší, že výsledky jdou proti doporučení chleba vyřazovat.
 
 Problém skoro nikdy není v rohlíku. Je v tom, co na něm je a co k němu chybí:
 • vrstva másla „jak to mám rád" klidně 25 g

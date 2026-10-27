@@ -17,7 +17,7 @@ When I go through a client's food log, lunch is usually the meal that is guessed
 A BMJ study (Roberts et al. 2018) bought 223 popular meals from 111 random restaurants in five countries and measured their energy in a lab calorimeter. No estimates.
 
 - 94% of full service restaurant meals had at least 600 calories. Fast food: 72%.
-- One restaurant meal plus one fast food meal covered 70 to 120% of a sedentary woman's daily needs, before drinks and dessert.
+- A model found that one restaurant meal plus one fast food meal a day would cover 70 to 120% of a sedentary woman's daily needs, except in China, without other meals, snacks, drinks, starters or dessert.
 - Workplace canteens in Finland averaged 880 calories against 1,166 in restaurants. About a quarter less.
 
 **Why "I'll eat until full" does not work**

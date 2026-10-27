@@ -26,7 +26,7 @@ You do not need a weight loss buddy. It is worth talking to the people at home a
 
 ## Your fat loss spreads at home
 
-This is my favourite part. The large Look AHEAD trial also followed the spouses of participants, who got no treatment themselves (Gorin et al., Int J Obes 2008, PMID 18762804). Spouses of people in the intensive program lost 2.2 kg in a year on average, spouses in the control group 0.2 kg. They ate less and there was less high fat food at home.
+This is my favourite part. The large Look AHEAD trial also followed the spouses of participants, who got no treatment themselves (Gorin et al., Int J Obes 2008, PMID 18762804). Spouses of people in the intensive program lost 2.2 kg in a year on average, spouses in the control group 0.2 kg. Their reported energy intake fell more. Their weight loss was linked to the participant's weight loss and to fewer high fat foods in the home.
 
 A newer trial (Gorin et al., Obesity 2018, PMID 29388385) found a similar effect in 130 couples. Untreated spouses lost about 2 kg in six months and almost a third of them at least 3% of their weight. The partners' weights moved together.
 
