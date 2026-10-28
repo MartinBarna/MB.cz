@@ -31,10 +31,11 @@
 // Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
 // Klíčové stránky, které v šablonách být nemusí, ale jejich pád je stejně drahý.
@@ -185,17 +186,13 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "Barna Academy <news@martinbarna.cz>", to: [to],
-        subject: "🔴 " + predmet,
-        html: `<p>Denní kontrola odkazů našla problém. Tohle je přesně ten případ, `
-          + `kvůli kterému 22. až 27. 7. pět dní nefungovaly odkazy ve všech mailech.</p>`
-          + `<ul>${rows}</ul><p>Zkontroluj to, než odejde další vlna mailů.</p>`,
-      }),
-    });
+    await posliMail({
+      from: "Barna Academy <news@martinbarna.cz>", to: [to],
+      subject: "🔴 " + predmet,
+      html: `<p>Denní kontrola odkazů našla problém. Tohle je přesně ten případ, `
+        + `kvůli kterému 22. až 27. 7. pět dní nefungovaly odkazy ve všech mailech.</p>`
+        + `<ul>${rows}</ul><p>Zkontroluj to, než odejde další vlna mailů.</p>`,
+    }, { resendKey: RESEND_KEY });
   } catch { /* best-effort */ }
 }
 

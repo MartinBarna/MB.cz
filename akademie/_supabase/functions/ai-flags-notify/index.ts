@@ -18,10 +18,11 @@
 // Env: FLAGS_NOTIFY_SECRET (povinný, jinak 403 na vše), RESEND_API_KEY, SOURCE_LABEL, ADMIN_URL, NOTIFY_FROM.
 // Deploy: supabase functions deploy ai-flags-notify --no-verify-jwt (v obou projektech).
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const SECRET = Deno.env.get("FLAGS_NOTIFY_SECRET") ?? "";
 const SOURCE = Deno.env.get("SOURCE_LABEL") ?? "AI chat";
 const ADMIN_URL = Deno.env.get("ADMIN_URL") ?? "https://martinbarna.cz/akademie/admin/";
@@ -180,15 +181,11 @@ Deno.serve(async (req: Request) => {
   //    a flag by zůstal orazítkovaný BEZ MAILU natrvalo. U kategorií `crisis`
   //    a `eating_disorder` je to přesně ta ztráta, kvůli které rollback existuje.
   //    Stejně to má sesterská `access-expiry-mail` (`posliResend`).
-  const r = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: FROM, to: [TO], bcc: [BCC],
-      subject: `${hard ? "🔴" : "⚠️"} AI chat (${SOURCE}): ${posilame.length}× riziková zpráva`,
-      html,
-    }),
-  }).catch(() => null);
+  const r = await posliMail({
+    from: FROM, to: [TO], bcc: [BCC],
+    subject: `${hard ? "🔴" : "⚠️"} AI chat (${SOURCE}): ${posilame.length}× riziková zpráva`,
+    html,
+  }, { resendKey: RESEND_KEY }).catch(() => null);
   // Mail neodešel → VRAŤ značku, ať to další běh cronu zkusí znovu a upozornění
   // se neztratí. Vrací se jen ta NAŠE (`eq('notified_at', znacka)`), aby se
   // nesmazalo cizí, novější razítko.

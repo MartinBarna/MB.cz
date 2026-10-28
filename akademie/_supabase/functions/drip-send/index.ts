@@ -33,13 +33,14 @@ import { ostopkuj } from './stopa.ts';
 // Ceny v sablonach (23. 9. 2026): ceny appky z `pricing_plans`, ceny Academy z `app_config`.
 // ⛔ Nenactena cena NENI cena: mail s cenovou promennou pocka na dalsi beh, viz `_shared/ceny.ts`.
 import { alertCeny, chybejiciCeny, nactiCeny, slevyVideokurzu } from '../_shared/ceny.ts';
+import { mailKlic, posliMail } from '../_shared/mail-provider.ts';
 
 const NL = String.fromCharCode(10);   
 const DQ = String.fromCharCode(34);   
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-const RESEND_KEY = Deno.env.get('RESEND_API_KEY') ?? '';
+const RESEND_KEY = mailKlic();
 
 const MAIL_TRACK_SECRET = Deno.env.get('MAIL_TRACK_SECRET') ?? '';
 const FROM = 'Martin Barna <news@martinbarna.cz>';
@@ -297,14 +298,20 @@ function renderEmail(tpl: Tpl, seg: Seg, v: Record<string, string>, footer: { ht
 async function sendViaResend(to: string, subject: string, html: string, text: string, unsub: string, replyTo: string, archiveBcc: string): Promise<string> {
   if (!RESEND_KEY) throw new Error('missing_RESEND_API_KEY');
   const bcc = archiveBcc && archiveBcc.toLowerCase() !== to.toLowerCase() ? [archiveBcc] : undefined;
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: 'Bearer ' + RESEND_KEY, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: FROM, to: [to], subject, html, text, reply_to: replyTo || undefined, bcc, headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' } }),
-  });
-  const body = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error('resend_' + res.status + ':' + JSON.stringify(body));
-  return (body as { id?: string }).id ?? '';
+  const res = await posliMail({
+    from: FROM, to: [to], subject, html, text, reply_to: replyTo || undefined, bcc,
+    headers: { 'List-Unsubscribe': '<' + unsub + '>', 'List-Unsubscribe-Post': 'List-Unsubscribe=One-Click' },
+  }, { resendKey: RESEND_KEY });
+  if (!res.ok) {
+    // Tvar `resend_<status>:<telo>` sklada tahle funkce sama (cte ho jistic).
+    // Telo uz precetl `posliMail` a vraci ho v `chyba`.
+    const c = res.chyba ?? '';
+    const prefixR = 'resend_' + res.status + ':';
+    const prefixS = 'ses_' + res.status + ':';
+    const telo = c.startsWith(prefixR) ? c.slice(prefixR.length) : c.startsWith(prefixS) ? c.slice(prefixS.length) : c;
+    throw new Error('resend_' + res.status + ':' + telo);
+  }
+  return res.providerId;
 }
 
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });

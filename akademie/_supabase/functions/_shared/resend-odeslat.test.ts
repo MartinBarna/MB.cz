@@ -238,6 +238,27 @@ for (const [jmeno, cesta] of FUNKCE) {
     'chybi ve webhooku: ' + chybejici.join(',') + ' | nalezeno: ' + [...nalezene].join(','));
 }
 
+// --- 10) ses-events ma STEJNY seznam TYPY_ODESLANI jako resend-webhook ---
+{
+  // Re-parse zde (vSeznamu z predchoziho bloku neni videt).
+  const seznamRaw = /const TYPY_ODESLANI = \[([\s\S]*?)\];/.exec(rw);
+  const vSeznamu2 = new Set(
+    seznamRaw ? [...seznamRaw[1].matchAll(/"([a-z_]+)"/g)].map((m) => m[1]) : [],
+  );
+  const se = ctiZPracovniho('ses-events/core.ts');
+  const seRaw = /const TYPY_ODESLANI = \[([\s\S]*?)\];/.exec(se);
+  const vSe = new Set(
+    seRaw ? [...seRaw[1].matchAll(/"([a-z_]+)"/g)].map((m) => m[1]) : [],
+  );
+  check('T1g ses-events/core.ts seznam TYPY_ODESLANI se podarilo vycist', vSe.size > 0,
+    [...vSe].join(','));
+  const chybiVSe = [...vSeznamu2].filter((t) => !vSe.has(t));
+  const navicVSe = [...vSe].filter((t) => !vSeznamu2.has(t));
+  check('T1h ses-events/core.ts ma STEJNY seznam TYPY_ODESLANI jako resend-webhook (bod 10)',
+    chybiVSe.length === 0 && navicVSe.length === 0,
+    'chybi: ' + chybiVSe.join(',') + ' | navic: ' + navicVSe.join(','));
+}
+
 // --- 5) S-2: MARTINOVY ADRESY --------------------------------------------
 check('M1 Martinovy adresy se poznaji (presna i `+znacka`)',
   jeMartinovaAdresa('fitness.barna@gmail.com')

@@ -106,7 +106,29 @@ for (const dir of SCAN_DIRS) {
 //    další cestu, která si musí sama hlídat bránu i `provider_id`.
 // ⛔ Kdo tohle číslo ZVYŠUJE, přidává cestu mimo helper a musí napsat proč.
 // ⚠️ 23. 9. 2026 KLESLO Z 8 NA 7: smazaná funkce `videokurz-onboarding` měla vlastní fetch.
-check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 7 && sites.length <= 8, String(sites.length));
+// ⭐ 27. 10. 2026 KLESLO NA 1: vsechna odeslani jdou pres `posliMail` v `_shared/mail-provider.ts`
+//    (prepinac `MAIL_PROVIDER`, Resend nebo Amazon SES). Jediny primy fetch na Resend
+//    je tam. Brana a `provider_id` se dal hlidaji u volajicich, viz kontroly nize.
+check("jediný přímý Resend fetch je v mail-provider.ts",
+  sites.length === 1 && sites[0].file === "_shared/mail-provider.ts",
+  sites.map((s) => s.file + ":" + s.line).join(", "));
+
+// ⛔ 27. 10. 2026: totez pro CELOU slozku `functions/`, ne jen pro devet cest vyse.
+//    Novy primy fetch kdekoli by obesel prepinac a pri SES by tise posilal dal pres Resend.
+{
+  const mimo: string[] = [];
+  for await (const top of Deno.readDir(ROOT)) {
+    if (!top.isDirectory) continue;
+    for (const file of await walk(top.name)) {
+      if (file.endsWith(".test.ts") || file.endsWith("_test.ts") || file.includes("/__tests__/")) continue;
+      if (file === "_shared/mail-provider.ts") continue;
+      const text = await Deno.readTextFile(new URL(file, ROOT));
+      const kod = text.split("\n").filter((l) => !/^\s*(\/\/|\*)/.test(l)).join("\n");
+      if (kod.includes(RESEND)) mimo.push(file);
+    }
+  }
+  check("žádný přímý Resend fetch mimo mail-provider.ts (celé functions/)", mimo.length === 0, mimo.join(", "));
+}
 
 // ⛔ AUTOMAT NESMI ODESILAT PRIMO. Cely smysl `_shared/resend-odeslat.ts` je, ze
 //    kazde odeslani nechava `provider_id`, podle ktereho se paruje bounce. Kdyby si
@@ -316,6 +338,8 @@ check("počet přímých Resend fetchů v rozsahu neroste", sites.length >= 7 &&
 const ALLOW_WITHOUT_LOCAL_GUARD = new Set([
   // Transport. Guard je v poukaz-vydat/core.ts + index.ts před sendMail.
   "poukaz-vydat/lib/mail.ts",
+  // Transport (27. 10. 2026). Brana je u kazdeho volajiciho `posliMail`, ne tady.
+  "_shared/mail-provider.ts",
 ]);
 
 const ALERT_ONLY = new Set([
@@ -333,11 +357,16 @@ for (const s of sites) {
 }
 
 const grantIndex = sites.filter((s) => s.file === "grant-videokurz-z-appky/index.ts");
-check("grant index má 2 Resend fecthy (alert + posliMail)", grantIndex.length === 2, String(grantIndex.length));
+// 27. 10. 2026: grant uz Resend primo nevola, obe odeslani (alert + zakaznik) jdou pres `posliMail`.
+{
+  const gi = await Deno.readTextFile(new URL("grant-videokurz-z-appky/index.ts", ROOT));
+  check("grant index nevola Resend primo", grantIndex.length === 0 && !gi.includes(RESEND), String(grantIndex.length));
+  check("grant index posila 2x pres posliMail (alert + zakaznik)", (gi.match(/await posliMail\(/g) ?? []).length === 2);
+}
 check("grant core importuje guard (customer send)", true);
 
 const koucink = await Deno.readTextFile(new URL("_shared/koucink-onboarding.ts", ROOT));
-predTim("koucink-onboarding vola guardSend pred Resendem", koucink, "guardSend", RESEND);
+predTim("koucink-onboarding vola guardSend pred odeslanim", koucink, "guardSend(", "await posliMail(");
 
 const offboard = await Deno.readTextFile(new URL("admin-api/index.ts", ROOT));
 const salesAt = offboard.lastIndexOf('path: "admin-api.client_offboard.sales"');

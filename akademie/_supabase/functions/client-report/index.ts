@@ -31,11 +31,12 @@ import {
 import { kontrolaObdobi, odpovedObdobi } from "./obdobi-kontrola.ts";
 // Čtení historie s jedním opakováním: chyba čtení není „první report" (CLAUDE.md 13).
 import { ctiSOpakovanim } from "../_shared/secret-guard.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const FROM = "Martin Barna <news@martinbarna.cz>";
 const COACH = "martin@martinbarna.cz";
 const NL = String.fromCharCode(10);

@@ -25,6 +25,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 import { BridgeError, type BridgeDeps, handleAppPurchase, PRAVIDLO_BONUSU } from "./core.ts";
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -34,7 +35,7 @@ const BRIDGE_SECRET = Deno.env.get("APP_PURCHASE_BRIDGE_SECRET") ?? "";
 // používá `academy-stripe-webhook`; schválně se nesdílí přes app_config, ať se
 // tajemství nedostane do tabulky, kterou čte admin.
 const STRIPE_PROMO_KEY = Deno.env.get("STRIPE_RESTRICTED_PROMO_KEY") ?? "";
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const ALERT_FALLBACK = "fitness.barna@gmail.com";
 
 const admin = createClient(SUPABASE_URL, SERVICE_ROLE, { auth: { persistSession: false } });
@@ -71,15 +72,11 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>): Pro
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + RESEND_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "Barna Academy <news@martinbarna.cz>", to: [to],
-        subject: "⚠️ " + predmet,
-        html: `<p>Upozornění z mostu nákupů appky (Tvůj Coach → Academy).</p><ul>${rows}</ul>`,
-      }),
-    });
+    await posliMail({
+      from: "Barna Academy <news@martinbarna.cz>", to: [to],
+      subject: "⚠️ " + predmet,
+      html: `<p>Upozornění z mostu nákupů appky (Tvůj Coach → Academy).</p><ul>${rows}</ul>`,
+    }, { resendKey: RESEND_KEY });
   } catch { /* best-effort */ }
 }
 

@@ -1,5 +1,5 @@
 // =============================================================================
-// poukaz-vydat: mail s PDF přílohou přes přímý Resend fetch (vzor appčino
+// poukaz-vydat: mail s PDF přílohou přes `posliMail` (vzor appčino
 // stripe-webhook/withdrawal-request, `_shared` v appce). Resend `attachments`
 // (base64 content) appka/Academy dosud NEPOUŽÍVALY (potvrzeno v průzkumu
 // 25. 8. 2026), tohle je první nasazení té cesty, proto testovací mail
@@ -8,6 +8,8 @@
 // ⛔ Text mailu je PŘESNĚ podle zadání od šéfa, NEMĚNIT bez jeho svolení.
 // Žádná dlouhá pomlčka (—) nikde v textu pro lidi.
 // =============================================================================
+
+import { posliMail } from "../../_shared/mail-provider.ts";
 
 export type VoucherMailInput = {
   to: string;
@@ -77,33 +79,27 @@ export async function sendVoucherMail(
   });
 
   try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json', authorization: `Bearer ${resendApiKey}` },
-      body: JSON.stringify({
-        from: input.fromLabel,
-        to: [input.to],
-        reply_to: 'martin@martinbarna.cz',
-        subject: input.subject,
-        text: body.text,
-        html: body.html,
-        attachments: [
-          { filename: input.pdfFilename, content: bytesToBase64(input.pdfBytes) },
-        ],
-      }),
-    });
+    const res = await posliMail({
+      from: input.fromLabel,
+      to: [input.to],
+      reply_to: 'martin@martinbarna.cz',
+      subject: input.subject,
+      text: body.text,
+      html: body.html,
+      attachments: [
+        { filename: input.pdfFilename, content: bytesToBase64(input.pdfBytes) },
+      ],
+    }, { resendKey: resendApiKey });
     if (!res.ok) {
-      const errText = await res.text();
+      // Telo uz precetl `posliMail` (oriznute na 180) a vraci ho v `chyba`.
+      const c = res.chyba ?? '';
+      const prefixR = 'resend_' + res.status + ':';
+      const prefixS = 'ses_' + res.status + ':';
+      const errText = c.startsWith(prefixR) ? c.slice(prefixR.length) : c.startsWith(prefixS) ? c.slice(prefixS.length) : c;
       return { ok: false, error: `Resend ${res.status}: ${errText}` };
     }
-    // ⚠️ Tělo odpovědi jde přečíst jen jednou a mail už odešel: když se to
-    // nepovede, vrací se `ok: true` s prázdným `providerId` a zakřičí to volající.
-    let providerId = '';
-    try {
-      const j = await res.json();
-      providerId = String((j as { id?: unknown })?.id ?? '');
-    } catch { /* viz komentář výš */ }
-    return { ok: true, providerId };
+    // Prazdne `providerId`: mail odesel, ale id neslo precist. Zakrici to volajici.
+    return { ok: true, providerId: res.providerId };
   } catch (e) {
     return { ok: false, error: String(e) };
   }

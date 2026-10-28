@@ -23,6 +23,8 @@
 //
 // NÁVRH TEXTU, přepíše Claude.
 
+import { posliMail } from '../_shared/mail-provider.ts';
+
 export const CAP_NOTIFY_TIMEOUT_MS = 5_000;
 export const NAME_LOOKUP_TIMEOUT_MS = 2_000;
 
@@ -211,21 +213,18 @@ export async function notifyCapReached(opts: CapNotifyOpts): Promise<CapNotifyRe
     const from = (opts.notifyFrom && opts.notifyFrom.trim()) || 'Martin Barna <news@martinbarna.cz>';
     const t = withTimeout(CAP_NOTIFY_TIMEOUT_MS);
     try {
-      const r = await doFetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${opts.resendKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from,
-          // ⛔ Jen adresa, kterou Martin zadal. Dávka sem přidala i bcc na jeho gmail;
-          // druhý příjemce nebyl v zadání, tak jsem ho vzal pryč. Až ho bude chtít, doplní se.
-          to: ['martin@martinbarna.cz'],
-          subject: capNotifySubject(ctx.email),
-          html: capNotifyHtml({ ctx, feature: opts.feature, kind: opts.kind }),
-        }),
-        signal: t.signal,
-      });
-      if (!r || r.status !== 200) {
-        console.error('[cap-notify] Resend odmítl upozornění, status:', r?.status);
+      // 27. 10. 2026: odeslání přes `posliMail` (přepínač Resend / SES). Pád sítě
+      // nevyhazuje, vrací `status: 0`, takže výsledek je dál `failed`.
+      const r = await posliMail({
+        from,
+        // ⛔ Jen adresa, kterou Martin zadal. Dávka sem přidala i bcc na jeho gmail;
+        // druhý příjemce nebyl v zadání, tak jsem ho vzal pryč. Až ho bude chtít, doplní se.
+        to: ['martin@martinbarna.cz'],
+        subject: capNotifySubject(ctx.email),
+        html: capNotifyHtml({ ctx, feature: opts.feature, kind: opts.kind }),
+      }, { resendKey: opts.resendKey, fetch: doFetch as unknown as typeof fetch, signal: t.signal });
+      if (r.status !== 200) {
+        console.error('[cap-notify] Resend odmítl upozornění, status:', r.status);
         return 'failed';
       }
       return 'sent';

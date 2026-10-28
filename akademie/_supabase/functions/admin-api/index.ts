@@ -74,6 +74,7 @@ import { overStart } from "./start-klienta.ts";
 // Ceny v sablonach (23. 9. 2026): nahled a validace pri ulozeni musi znat tytez promenne
 // jako `drip-send`, jinak by ulozeni sablony s `{{cena_*}}` spadlo na `unresolved_token`.
 import { type Ceny, chybejiciCeny, nactiCeny, slevyVideokurzu } from "../_shared/ceny.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -3981,7 +3982,7 @@ Deno.serve(async (req) => {
       //    „Konec koučinku"). Prázdné pole na sloupec nesáhá, takže prodloužení
       //    koupené přes Stripe o své datum nepřijde. Do 22. 9. se odsud neposílalo
       //    nikdy a byl to důvod, proč se koučink nikomu nezavřel sám.
-      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      const RESEND_KEY = mailKlic();
       if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
       // ⭐ START KOUČINKU (dávka 9, 15. 9. 2026). Nepovinný: prázdné pole = na sloupec se
       //    nesahá a `client-remind` padá na náhradu z `granted_at` jako dosud.
@@ -4068,7 +4069,7 @@ Deno.serve(async (req) => {
       if (entErr) return json({ error: "db", detail: String(entErr.message ?? entErr).slice(0, 160) }, 500);
       if (!ent) return json({ error: "neni_klient" }, 404);        // mail o koučinku nekoučinkovi ne
       if (ent.active !== true) return json({ error: "ukonceny_klient" }, 409);
-      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      const RESEND_KEY = mailKlic();
       if (!RESEND_KEY) return json({ error: "no_resend" }, 500);
       const r = await posliUvitaciMail(admin, {
         email,
@@ -4427,7 +4428,7 @@ Deno.serve(async (req) => {
       //    `odesliSRazitkem` stejně jako v cronu: `odesliPresResend` bez klíče
       //    Resend nevolá a vrátí `missing_RESEND_API_KEY`, sdílená funkce z toho
       //    udělá `odmitnuto` + `opakovat`. Jedna cesta zápisu pro týž stav.
-      const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+      const RESEND_KEY = mailKlic();
 
       // ⚠️ Zamerne tu NENI zadna cena (spec §9): sleva jen v procentech.
       const includeSales = salesDecision?.action === "send" && !!promoKod;

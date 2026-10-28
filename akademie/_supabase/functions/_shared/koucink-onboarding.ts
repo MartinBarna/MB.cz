@@ -15,6 +15,7 @@
 // deno-lint-ignore-file no-explicit-any
 
 import { guardSend, logMailSkip } from "./mailing-guard.ts";
+import { posliMail } from "./mail-provider.ts";
 
 /** Balíček koučinku. Rozdíl je v ceně a v tom, co je v ní (hovor, Academy, hlasovky). */
 export type KoucinkPlan = "gold" | "diamond";
@@ -405,15 +406,11 @@ export async function posliUvitaciMail(admin: any, v: {
     }
   } catch (_e) { /* příloha je bonus */ }
 
-  const rs = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${v.resendKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html,
-      reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"],
-      ...(attachments ? { attachments } : {}),
-    }),
-  });
+  const rs = await posliMail({
+    from: "Martin Barna <news@martinbarna.cz>", to: [email], subject, html,
+    reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"],
+    ...(attachments ? { attachments } : {}),
+  }, { resendKey: v.resendKey });
 
   return {
     ok: rs.status === 200,

@@ -21,10 +21,11 @@ import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.
 // promenne: `{{neco}}`, ktere nezna, poslal cloveku doslova. S cenami v promennych by
 // zachranny mail k objednavce nesl text „{{cena_academy_mesic}} Kc". Kontrola je PRED razitkem.
 import { alertCeny, chybejiciPromenne, nactiCeny } from "../_shared/ceny.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 // ⛔ Secret na podpis mericich odkazu. Jen z env. Kdyz chybi, mail odejde nezmereny.
 const MAIL_TRACK_SECRET = Deno.env.get("MAIL_TRACK_SECRET") ?? "";
 const FROM = "Martin Barna <news@martinbarna.cz>";

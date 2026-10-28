@@ -238,6 +238,7 @@ Martin LOCK 7. 9. 2026: po hard unsub (`odhlaseni_trvale` / `leads` unsubscribed
 `client_offboard` prodejní blok = `marketing`. `grant-videokurz` nesmí založit aktivní marketingový lead trvale odhlášenému, přístup doručí.
 
 Nový `fetch` na `api.resend.com/emails` v těch funkcích až po `guardSend` / `sendIfAllowed`. Inventář a test: `_shared/resend-call-sites.md`. Deploy musí nahrát i `_shared` (ne jen `index.ts`).
+⛔ **Od 27. 10. 2026 se mail posílá JEN přes `posliMail` (`_shared/mail-provider.ts`, přepínač `MAIL_PROVIDER` Resend/SES), přímý `fetch` na Resend nikde jinde.** Klíč pro kontrolu „mail je nastavený" bere `mailKlic()`, ne `RESEND_API_KEY`. Stejný soubor je bajt po bajtu v appce (`tvuj-coach/supabase/functions/_shared/`), měň oba. Hlídá `resend-call-sites.test.ts`.
 
 ## ⛔ STANDING RULE: každá mailová trať musí mít VÝSTUP, ne jen konec (6. 8. 2026)
 

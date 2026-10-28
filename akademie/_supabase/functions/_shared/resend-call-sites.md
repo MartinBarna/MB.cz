@@ -7,6 +7,14 @@ Politika: `_shared/mailing-guard.ts` (Martin LOCK 7. 9. 2026)
 Žádný z těchto call site se nenasazuje v tomhle commitu. Inventář je kontrola,
 že customer send má před Resendem `mailing-guard`.
 
+⭐ **Od 27. 10. 2026 (větev `ses-mailing`) nevolá Resend přímo nikdo.** Každé odeslání jde
+přes `posliMail` v `_shared/mail-provider.ts`, který podle env `MAIL_PROVIDER` posílá přes
+Resend (výchozí) nebo Amazon SES. Sloupec „Soubor s fetch" níž tedy znamená „místo odeslání".
+Brána (`mailing-guard`) zůstává u volajícího, ne v `posliMail`. Klíč pro kontroly
+„mail je nastavený" vrací `mailKlic()` (u SES klíč Resendu potřeba není).
+`resend-call-sites.test.ts` hlídá, že přímý fetch na `api.resend.com/emails` je v celé
+složce `functions/` jen v `mail-provider.ts`.
+
 ## Cesty v rozsahu (9 pojmenovaných, 10 send větví)
 
 | # | Funkce / větev | Soubor s fetch | Třída | Guard |

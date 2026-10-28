@@ -10,14 +10,16 @@
 //
 // ⛔ Zapisuje do public.en_leads, NIKDY do `leads` (na ni jsou navázané české automatické maily).
 // ⛔ Nic neposílá mailem. EN maily se spouští zvlášť, až je Martin schválí.
-// ⛔ Jeden soubor, žádný import z ../_shared: postup nasazení Academy kopíruje jen index.ts
-//    (paměť mb-deploy-kopiruje-jen-index-past). Nasazovat celou složku: rm -rf + cp -r.
+// ⛔ Nasazovat celou složku (rm -rf + cp -r) a s ni i `_shared`: od 27. 10. 2026
+//    upozorneni Martinovi jde pres `posliMail`. Samotny index.ts by spadl na importu.
 //
 // Secrets (Supabase projekt Academy uhmrpfsdcujbhbtumqye):
 //   EN_LEAD_IP_SALT            volitelný; bez něj se sůl odvodí ze SUPABASE_SERVICE_ROLE_KEY.
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY  dodává platforma sama.
 // IP se neukládá: ip_hash = sha256(sůl + '|' + IP). Limit: 5 záznamů za hodinu z jednoho ip_hash.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// 27. 10. 2026: odeslani jde pres `_shared/mail-provider.ts`. Deploy musi nahrat i `_shared`.
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 
 const ALLOWED_ORIGINS = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 const RATE_LIMIT = 5;
@@ -248,7 +250,7 @@ function esc(s: unknown): string {
 }
 
 async function upozorniMartina(l: { firstName: string; email: string; goal: string | null; message: string | null; utm_source: string | null; utm_campaign: string | null }): Promise<void> {
-  const key = Deno.env.get("RESEND_API_KEY") ?? "";
+  const key = mailKlic();
   if (!key) {
     console.error("en-lead: RESEND_API_KEY chybí, upozornění na přihlášku neodešlo");
     return;
@@ -257,17 +259,13 @@ async function upozorniMartina(l: { firstName: string; email: string; goal: stri
 <p>Jméno: ${esc(l.firstName)}<br>E-mail: ${esc(l.email)}<br>Cíl: ${esc(l.goal)}<br>Zpráva: ${esc(l.message)}<br>Zdroj: ${esc(l.utm_source ?? "-")} / ${esc(l.utm_campaign ?? "-")}</p>
 <p>Celý záznam: Academy tabulka en_leads. Odpověď: koncept od Coache, odesílá Martin.</p>`;
   try {
-    const r = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: "Web MB.cz <news@martinbarna.cz>",
-        to: ["martin@martinbarna.cz"],
-        bcc: ["fitness.barna@gmail.com"],
-        subject: `🇬🇧 EN přihláška: ${l.firstName}`.slice(0, 120),
-        html,
-      }),
-    });
+    const r = await posliMail({
+      from: "Web MB.cz <news@martinbarna.cz>",
+      to: ["martin@martinbarna.cz"],
+      bcc: ["fitness.barna@gmail.com"],
+      subject: `🇬🇧 EN přihláška: ${l.firstName}`.slice(0, 120),
+      html,
+    }, { resendKey: key });
     if (r.status !== 200) console.error("en-lead: upozornění Resend status", r.status);
   } catch (e) {
     console.error("en-lead: upozornění selhalo", e instanceof Error ? e.message : String(e));

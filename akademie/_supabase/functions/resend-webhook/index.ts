@@ -32,10 +32,11 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // všechno dál (nález V1: ze 22 bounců se 7 nespárovalo vůbec).
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 const json = (b: unknown, status = 200) =>
   new Response(JSON.stringify(b), { status, headers: { "Content-Type": "application/json" } });
 

@@ -20,6 +20,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
+import { mailKlic } from "../_shared/mail-provider.ts";
 import {
   coPoslat,
   type Druh,
@@ -31,7 +32,7 @@ import {
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-const RESEND_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
+const RESEND_KEY = mailKlic();
 
 const FROM = "Martin Barna <news@martinbarna.cz>";
 // Adresa pro odpověď člověka. ⛔ NENÍ to `from`: `news@` je rozesílací adresa.
