@@ -1,4 +1,3 @@
-// Spuštění: deno test --no-lock akademie/_supabase/functions/_shared/test-lead.test.ts
 import { jeTestLead, jeTestovaciEmail, maMetaTest, testLeadMaJenUvitacku, zarazeniDoSerie } from "./test-lead.ts";
 
 function check(nazev: string, podminka: boolean): void {

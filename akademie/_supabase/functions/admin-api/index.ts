@@ -1260,7 +1260,7 @@ Deno.serve(async (req) => {
       ]);
       const leadById = new Map<string, string>();
       const map = new Map<string, Record<string, unknown>>();
-      // Testovací formulář (meta.test nebo fitness.barna+tester*@gmail.com) do dlaždic ani tabulky nepatří.
+      // jeTestLead do dlaždic a tabulky nepatří.
       const testEmaily = new Set<string>();
       for (const l of ldsRows) if (jeTestLead(l)) testEmaily.add(low(l.email));
       for (const c of ccRows) if (jeTestovaciEmail(c.email)) testEmaily.add(low(c.email));
@@ -1660,6 +1660,13 @@ Deno.serve(async (req) => {
       if (q) lq = lq.ilike("email", "%" + q.replace(/[%_*\\]/g, (m) => "\\" + m) + "%");
       if (fTrack) lq = lq.eq("track", fTrack);
       const { data: lds, count } = await lq.order("next_send_at", { ascending: true }).range(offset, offset + limit - 1);
+      let metaQ = admin.from("leads").select("id", { count: "exact", head: true })
+        .eq("status", "active").not("next_send_at", "is", null)
+        .not("email", "ilike", "fitness.barna+tester%@gmail.com")
+        .in("meta->>test", ["true", "t", "1"]);
+      if (q) metaQ = metaQ.ilike("email", "%" + q.replace(/[%_*\\]/g, (m) => "\\" + m) + "%");
+      if (fTrack) metaQ = metaQ.eq("track", fTrack);
+      const { count: metaTestN, error: metaTestErr } = await metaQ;
       const { data: tpls } = await admin.from("email_templates").select("track,step,subject");
       const subjMap = new Map<string, string>();
       for (const t of tpls ?? []) subjMap.set(String(t.track) + ":" + t.step, String(t.subject ?? ""));
@@ -1673,7 +1680,11 @@ Deno.serve(async (req) => {
         overdue: String(l.next_send_at) < nowI,
       }));
       const odfiltrovano = (lds ?? []).length - rows.length;
-      return json({ ok: true, rows, total: Math.max(0, (count ?? rows.length) - odfiltrovano), offset, limit });
+      const zaklad = count ?? rows.length;
+      const total = metaTestErr
+        ? Math.max(0, zaklad - odfiltrovano)
+        : Math.max(0, zaklad - (metaTestN ?? 0));
+      return json({ ok: true, rows, total, offset, limit });
     }
 
     // 📈 VLASTNI MERENI MAILU (pixel + presmerovani prokliku).
@@ -2038,9 +2049,7 @@ Deno.serve(async (req) => {
         updated_at: t.updated_at,
       }));
       rows.sort((a, b) => a.track === b.track ? a.step - b.step : a.track.localeCompare(b.track));
-      // Počty leadů na trati. Dřív RPC `admin_leads_by_track()` (group-by, bez stropu 1000).
-      // Tělo té funkce v repu není a testovací řádky nezná, proto se počítá tady
-      // ze stránkovaného výpisu a `jeTestLead` je vynechá. RPC se nespouští.
+      // Počty na trati tady, bez jeTestLead. RPC admin_leads_by_track se nevolá.
       const leadRows = await fetchAllRows((f, t) =>
         admin.from("leads").select("track,status,email,meta").order("id").range(f, t));
       const onTrack: Record<string, { active: number; other: number }> = {};

@@ -281,12 +281,22 @@ Deno.serve(async (req) => {
     // ⛔ Reaktivacni a importni radky se sem NEPOCITAJI. Detektor ticha ma hlidat, jestli
     // chodi NOVI lide z reklam. Jedna hromadna vlna by ho jinak umlcela na dalsi dny
     // a rozbity lead-capture by se schoval za nasi vlastni akci.
-    admin.from("leads").select("created_at,email,meta").not("source", "like", "reaktivace-%").not("source", "like", "import%").order("created_at", { ascending: false }).limit(30),
+    (async () => {
+      for (let od = 0; od < 400; od += 40) {
+        const { data } = await admin.from("leads").select("created_at,email,meta")
+          .not("source", "like", "reaktivace-%").not("source", "like", "import%")
+          .order("created_at", { ascending: false }).range(od, od + 39);
+        const radky = data ?? [];
+        const nasel = radky.find((r) => !jeTestLead(r));
+        if (nasel) return nasel;
+        if (radky.length < 40) return undefined;
+      }
+      return undefined;
+    })(),
   ]);
   const daysSince = (v: unknown) => v ? Math.floor((now.getTime() - new Date(String(v)).getTime()) / 86400000) : 9999;
   const dContact = daysSince(lastContact.data?.[0]?.created_at);
-  const posledniSkutecnyLead = (lastLead.data ?? []).find((r) => !jeTestLead(r));
-  const dLead = daysSince(posledniSkutecnyLead?.created_at);
+  const dLead = daysSince(lastLead?.created_at);
 
   const dY = yStart.toLocaleDateString("cs-CZ", { timeZone: "Europe/Prague", day: "numeric", month: "long" });
   const row = (label: string, val: string) => `<tr><td style="padding:7px 12px;color:#666">${label}</td><td style="padding:7px 12px;font-weight:700;text-align:right">${val}</td></tr>`;

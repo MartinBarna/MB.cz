@@ -5,8 +5,7 @@
 -- Žádný UPDATE/DELETE do leads, customer_contacts, entitlements, profiles.
 --
 -- ⛔ TENTO SOUBOR NEAPLIKUJ na živou DB z agenta. Viz README-CRM.md.
--- Součty ve shrnutí volají public.lead_je_test. Nejdřív test-lead-filtr.sql
--- (také až s DEPLOY-ZAMEK, ne z agenta).
+-- Součty volají lead_je_test. Nejdřív test-lead-filtr.sql.
 --
 -- Signatura (NESMĚŇ bez DROP FUNCTION): 
 --   public.crm_refresh_from_academy() RETURNS jsonb
@@ -126,9 +125,7 @@ begin
      and i.value_normalized = e.email_norm;
 
   -- is_test přepočítat z aktuálních e-mailových identit (ne z prázdna).
-  -- Plus-adresa a fitness.barna@ řeší crm_is_test_email. meta.test na leadu
-  -- (formulářový tester, i kdyby adresa vzoru neodpovídala) taky.
-  -- Vyžaduje public.lead_je_test z test-lead-filtr.sql (nasadit před tímhle refreshem).
+  -- is_test i podle lead_je_test.
   update public.crm_persons p
      set is_test = exists (
            select 1 from public.crm_identifiers i

@@ -156,8 +156,7 @@ Deno.serve(async (req) => {
     if (utmId) meta.utm_id = utmId;
     if (gclid) meta.gclid = gclid;
     if (fbclid) meta.fbclid = fbclid;
-    // fitness.barna+tester*@gmail.com: uložit hned mimo sérii (paused, bez termínu,
-    // meta.test). Uvítací mail s PDF jde dál přes only_email, drip-send ho neposune dál.
+    // Tester: paused, bez termínu, meta.test. PDF jde dál přes only_email.
     const testovaci = jeTestovaciEmail(email);
     if (testovaci) meta.test = true;
     const zarazeni = zarazeniDoSerie(email, tool ? 24 * 3600000 : 0);
@@ -185,10 +184,7 @@ Deno.serve(async (req) => {
     if (duplicate && phone) {
       await supa.from("leads").update({ phone }).eq("email", email).is("phone", null);
     }
-    // Opakovaný test na stejné adrese nesmí lead vrátit do série. Meta se sloučí,
-    // ať nezmizí UTM. Odhlášenou nebo bounce adresu na paused nepřepisujeme.
-    // Nový lead (kromě nástrojových, ty mají uvítání až za 24 h) dostane only_email.
-    // Opakovaný test, kterému uvítání ještě neodešlo, ho dostane znovu. Do série ne.
+    // Duplicita testera nevrací do série. Uvítání znovu, jen když tenhle krok ještě neodešel.
     let poslatUvitacku = !duplicate && !tool;
     if (duplicate && testovaci) {
       const { data: ex } = await supa.from("leads").select("id,meta,status,track,step").eq("email", email).maybeSingle();
@@ -202,11 +198,11 @@ Deno.serve(async (req) => {
         patch.next_send_at = null;
       }
       await supa.from("leads").update(patch).eq("email", email);
-      // /start duplicita má vlastní oneoff níž. Tady by se uvítání poslalo dvakrát.
+      // /start duplicita má vlastní oneoff níž.
       if (!tool && !startVars && ex?.id && stav !== "unsubscribed" && stav !== "bounced") {
         const { data: uz } = await supa.from("email_events").select("id")
-          .eq("lead_id", ex.id).eq("step", ex.step).eq("type", "sent").eq("detail->>track", ex.track).maybeSingle();
-        if (!uz) poslatUvitacku = true;
+          .eq("lead_id", ex.id).eq("step", ex.step).eq("type", "sent").eq("detail->>track", ex.track).limit(1);
+        if (!(uz ?? []).length) poslatUvitacku = true;
       }
     }
     // Duplicitni lead z /start: cisla se doplni do vars (ostatni trate se nemeni) a posle se
@@ -237,9 +233,7 @@ Deno.serve(async (req) => {
     //  zatimco existujici e-mail tenhle blok preskocil a odpovedel hned. Ted cely drip trigger
     //  vcetne cteni secretu bezi na POZADI pres EdgeRuntime.waitUntil; kdyz neni k dispozici,
     //  fire-and-forget. Fallback: hodinovy cron stejne projede leady s next_send_at=now().)
-    // Testovací adresa je paused a bez next_send_at. only_email jí přesto pošle
-    // aktuální krok (PDF) a drip-send další krok nenaplánuje. Nástrojové leady
-    // (`tool`) uvítání odkládají o 24 h; tester do té odložené série nevstoupí.
+    // Tester je paused. only_email pošle PDF a dál ho neposune. tool čeká 24 h, tester do toho nevstoupí.
     if (poslatUvitacku) {   // tool leady nemaji okamzitou uvitacku (odlozena o 24 h)
       const drip = (async () => {
         try {

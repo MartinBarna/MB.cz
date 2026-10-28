@@ -379,15 +379,13 @@ Deno.serve(async (req: Request) => {
     const { data: due, error: dueErr } = await dueBase().eq('email', onlyEmail);
     if (dueErr) return json({ error: 'db_due', detail: dueErr.message }, 500);
     leads = due ?? [];
-    // Testovací adresa je v lead-capture paused a bez next_send_at, takže dueBase ji nevidí.
-    // only_email jí přesto pošle aktuální krok (uvítačka s PDF). Cron ji nebere.
-    // Už odeslaný krok se neposílá znovu a další krok se nenaplánuje (viz advance).
+    // Paused tester bez termínu: only_email pošle krok, pokud sent na tom kroku ještě není.
     if (leads.length === 0 && jeTestovaciEmail(onlyEmail)) {
       const { data: t, error: tErr } = await admin.from('leads').select(FIELDS).eq('email', onlyEmail).maybeSingle();
       if (tErr) return json({ error: 'db_due', detail: tErr.message }, 500);
       if (t && jeTestLead(t) && String(t.status) === 'paused' && t.next_send_at == null) {
-        const { data: uz } = await admin.from('email_events').select('id').eq('lead_id', t.id).eq('step', t.step).eq('type', 'sent').eq('detail->>track', t.track).maybeSingle();
-        if (!uz) leads = [t];
+        const { data: uz } = await admin.from('email_events').select('id').eq('lead_id', t.id).eq('step', t.step).eq('type', 'sent').eq('detail->>track', t.track).limit(1);
+        if (!(uz ?? []).length) leads = [t];
       }
     }
   } else { const { data: onb, error: e1 } = await dueBase().ilike('track', 'onboarding%'); if (e1) return json({ error: 'db_due', detail: e1.message }, 500); let nonOnb: any[] = []; if (followupsEnabled) { const { data: no, error: e2 } = await dueBase().not('track', 'ilike', 'onboarding%'); if (e2) return json({ error: 'db_due', detail: e2.message }, 500); nonOnb = no ?? []; } const freshCut = Date.now() - 2 * 86400000; const onbAll = onb ?? []; const freshOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() >= freshCut); const staleOnb = onbAll.filter((l: { next_send_at: string }) => new Date(String(l.next_send_at)).getTime() < freshCut); poolInfo = { followups: nonOnb.length, fresh_onboarding: freshOnb.length, backlog_onboarding: staleOnb.length }; leads = [...nonOnb, ...freshOnb, ...staleOnb]; }
@@ -426,7 +424,7 @@ Deno.serve(async (req: Request) => {
   // Maily, ktere cekaji na ceny, a sablony s neznamou promennou. Obe veci konci alertem Martinovi.
   let odlozenoCeny = 0; const chybiCenyNazvy = new Set<string>(); const odlozenoCenyKde = new Set<string>(); const neznamePromenne = new Set<string>();
   for (const l of leads) {
-    // Mimo only_email na tuhle adresu testovací lead neposílat a nenechat ho ve frontě.
+    // Tester mimo tenhle only_email zaparkovat a neposílat.
     if (jeTestLead(l) && !testLeadMaJenUvitacku(l.email, l.meta, onlyEmail)) {
       await admin.from('leads').update({ status: 'paused', next_send_at: null, updated_at: nowIso }).eq('id', l.id);
       finished++;
