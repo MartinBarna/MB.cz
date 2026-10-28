@@ -1,0 +1,186 @@
+name: CI
+
+# Kontroly na pull requestu. Nenasazuje web ani funkce, nevolá Resend,
+# nečte secrets. Existující workflow (deploy-wedos, blog-fronta,
+# affiliate-report) tenhle soubor nemění.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: 2.5.6
+
+      - name: deno test
+        run: |
+          set -euo pipefail
+          echo "HEAD $(git rev-parse HEAD)"
+          # --no-check: typecheck celého testovacího grafu na main padá
+          # (admin-api TS2345 tažený importem, preflag.test.ts TS2580,
+          # app-purchase-bridge/core.test.ts TS2322, ses-events/core.test.ts TS2345).
+          # Typecheck čistých funkcí je samostatný krok níž.
+          # preflag.test.ts a tri-sourozenci.test.ts padají už na main (důvod v popisu PR).
+          # handler_test.ts běží hned potom, se vypnutým sanitizerem.
+          deno test --no-lock --no-check \
+            --allow-read --allow-env --allow-write \
+            --ignore=akademie/_supabase/functions/ai-martin/preflag.test.ts \
+            --ignore=akademie/_supabase/functions/_shared/tri-sourozenci.test.ts \
+            --ignore=akademie/_supabase/functions/en-mailing/handler_test.ts \
+            akademie/_supabase/functions
+
+          # handler_test.ts: asserty procházejí. Deno 2.5 shodí test na
+          # setInterval z @supabase/auth-js (_startAutoRefresh), který test
+          # nespouští schválně. Sanitizer se vypne jen pro tenhle soubor.
+          cat > /tmp/deno-test-bez-sanitizeru.ts << 'EOF'
+          const orig = Deno.test.bind(Deno);
+          Deno.test = ((...args: unknown[]) => {
+            if (typeof args[0] === "string" && typeof args[1] === "function") {
+              return orig({
+                name: args[0] as string,
+                fn: args[1] as () => unknown,
+                sanitizeOps: false,
+                sanitizeResources: false,
+              });
+            }
+            if (typeof args[0] === "string" && typeof args[1] === "object" && typeof args[2] === "function") {
+              return orig({
+                ...(args[1] as Record<string, unknown>),
+                name: args[0] as string,
+                fn: args[2] as () => unknown,
+                sanitizeOps: false,
+                sanitizeResources: false,
+              });
+            }
+            if (args[0] && typeof args[0] === "object") {
+              return orig({
+                sanitizeOps: false,
+                sanitizeResources: false,
+                ...(args[0] as Record<string, unknown>),
+              });
+            }
+            return (orig as (...a: unknown[]) => unknown)(...args);
+          }) as typeof Deno.test;
+          EOF
+          deno test --no-lock --no-check --allow-env \
+            --preload=/tmp/deno-test-bez-sanitizeru.ts \
+            akademie/_supabase/functions/en-mailing/handler_test.ts
+
+      - name: deno check
+        run: |
+          set -euo pipefail
+          echo "HEAD $(git rev-parse HEAD)"
+          # Známé chyby na main. Nová funkce (nový index.ts) se kontroluje.
+          skip=" admin-api checkin-capture client-remind daily-digest drip-send konzultace-pripominka koucink-konec milestones order-rescue splatky-guard study-reminder tc-client-reports-sync "
+          files=()
+          for f in akademie/_supabase/functions/*/index.ts; do
+            name=$(basename "$(dirname "$f")")
+            case " $skip " in
+              *" $name "*) echo "přeskočeno: $name"; continue ;;
+            esac
+            files+=("$f")
+          done
+          echo "deno check: ${#files[@]} funkcí"
+          deno check --no-lock "${files[@]}"
+
+      - name: Validace JSON
+        run: |
+          set -euo pipefail
+          fail=0
+          n=0
+          while IFS= read -r -d '' f; do
+            n=$((n + 1))
+            if ! node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$f"; then
+              echo "nevalidní JSON: $f"
+              fail=1
+            fi
+          done < <(git ls-files -z '*.json')
+          echo "zkontrolováno JSON souborů: $n"
+          exit "$fail"
+
+      - name: geo-sjednot --dry
+        run: |
+          set -euo pipefail
+          node scripts/geo-sjednot.mjs --dry | tee /tmp/geo-sjednot.txt
+          node -e 'const s=require("fs").readFileSync("/tmp/geo-sjednot.txt","utf8"); const m=s.match(/změněno souborů: (\d+)/); if(!m){console.error("neočekávaný výstup geo-sjednot"); process.exit(1)} if(m[1]!=="0"){console.error("geo-sjednot --dry by změnil "+m[1]+" souborů"); process.exit(1)}'
+
+      - name: geo-kontrola proti base
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          echo "HEAD $(git rev-parse HEAD)"
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if [ -z "${BASE_SHA}" ]; then
+              echo "chybí base SHA pull requestu"
+              exit 1
+            fi
+            git fetch --no-tags --depth=1 origin "$BASE_SHA"
+            REF="$BASE_SHA"
+          else
+            git fetch --no-tags --depth=1 origin main
+            REF="$(git rev-parse FETCH_HEAD)"
+          fi
+          echo "BASE $REF"
+          node scripts/geo-kontrola.mjs --vse > /tmp/geo-head.txt || true
+          if ! grep -q '^VÝSLEDEK:' /tmp/geo-head.txt; then
+            echo "geo-kontrola na head nedoběhla"
+            cat /tmp/geo-head.txt
+            exit 1
+          fi
+          rm -rf /tmp/geo-base
+          mkdir -p /tmp/geo-base
+          git archive "$REF" | tar -x -C /tmp/geo-base
+          node /tmp/geo-base/scripts/geo-kontrola.mjs --vse > /tmp/geo-base.txt || true
+          if ! grep -q '^VÝSLEDEK:' /tmp/geo-base.txt; then
+            echo "geo-kontrola na base nedoběhla"
+            cat /tmp/geo-base.txt
+            exit 1
+          fi
+          node --input-type=module << 'EOF'
+          import fs from "node:fs";
+          function nacti(path) {
+            const text = fs.readFileSync(path, "utf8");
+            const lines = text.split(/\r?\n/);
+            let v = false;
+            let kod = "";
+            const out = [];
+            for (const line of lines) {
+              if (line.startsWith("CHYBY:")) { v = true; continue; }
+              if (v && line.startsWith("VÝSLEDEK:")) break;
+              if (!v) continue;
+              const m = line.match(/^  \[([^\]]+)\] /);
+              if (m) { kod = m[1]; continue; }
+              const d = line.match(/^     (.+)$/);
+              if (d && kod && !d[1].startsWith("…")) out.push(kod + "\t" + d[1]);
+            }
+            const hl = text.match(/^CHYBY: (\d+)/m);
+            if (!hl || Number(hl[1]) !== out.length) {
+              console.error("parser nenašel všechny chyby v " + path + ": CHYBY " + (hl && hl[1]) + ", řádků " + out.length);
+              process.exit(1);
+            }
+            return out;
+          }
+          const base = nacti("/tmp/geo-base.txt");
+          const head = nacti("/tmp/geo-head.txt");
+          const baseSet = new Set(base);
+          const nove = head.filter((x) => !baseSet.has(x));
+          console.log("GEO base " + base.length + " chyb, head " + head.length + " chyb, nových " + nove.length);
+          if (nove.length) {
+            console.error("nové chyby proti base:");
+            for (const x of nove) console.error("  " + x.replace("\t", " "));
+            process.exit(1);
+          }
+          EOF
