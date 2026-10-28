@@ -2,6 +2,7 @@
 // Auth stejne jako admin-api: user JWT + allowlist admin_emails z app_config.
 // Vraci: maily dnes (vs stropy), fronta dripu, leadi 7 dni, prodeje, affiliate.
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { jeTestLead } from "../_shared/test-lead.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -40,8 +41,8 @@ Deno.serve(async (req) => {
     const [evToday, gateCfg, due, leads7, ents, refs, credit, wdr] = await Promise.all([
       admin.from("email_events").select("type,detail,created_at").gte("created_at", dayStart.toISOString()),
       admin.from("app_config").select("key,value").in("key", ["followups_enabled", "drip_daily_cap"]),
-      admin.from("leads").select("track").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", nowI),
-      admin.from("leads").select("source,created_at").gte("created_at", d7),
+      admin.from("leads").select("track,email,meta").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", nowI),
+      admin.from("leads").select("source,created_at,email,meta").gte("created_at", d7),
       admin.from("entitlements").select("product,active,granted_at,source").eq("active", true),
       admin.from("referrals").select("status"),
       admin.from("referral_credit").select("credit_confirmed,credit_pending"),
@@ -65,13 +66,15 @@ Deno.serve(async (req) => {
       }
     }
 
+    const dueRadky = ((due.data ?? []) as Array<{ track?: unknown; email?: unknown; meta?: unknown }>).filter((l) => !jeTestLead(l));
     const queueByTrack: Record<string, number> = {};
-    for (const l of due.data ?? []) queueByTrack[String(l.track)] = (queueByTrack[String(l.track)] ?? 0) + 1;
+    for (const l of dueRadky) queueByTrack[String(l.track)] = (queueByTrack[String(l.track)] ?? 0) + 1;
 
     const days: Record<string, number> = {};
     const todayBySource: Record<string, number> = {};
     const todayKey = dayStart.toISOString().slice(0, 10);
-    for (const l of leads7.data ?? []) {
+    for (const l of (leads7.data ?? []) as Array<{ source?: unknown; created_at?: unknown; email?: unknown; meta?: unknown }>) {
+      if (jeTestLead(l)) continue;
       const d = String(l.created_at).slice(0, 10);
       days[d] = (days[d] ?? 0) + 1;
       if (d === todayKey) {
@@ -123,7 +126,7 @@ Deno.serve(async (req) => {
       // (Martin 20. 7. 2026). Číslo tedy nikde nežilo a jen mátlo, proto ho neposíláme.
       // `daily_cap` naopak žije v app_config.drip_daily_cap a mění se výhradně tam.
       emails_today: { ...em, daily_cap: dailyCap },
-      queue: { due_now: (due.data ?? []).length, by_track: queueByTrack, followups_enabled: (gmap.followups_enabled ?? "") === "true" },
+      queue: { due_now: dueRadky.length, by_track: queueByTrack, followups_enabled: (gmap.followups_enabled ?? "") === "true" },
       leads: { days, today_by_source: todayBySource },
       sales,
       referral,

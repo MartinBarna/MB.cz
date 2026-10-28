@@ -5,6 +5,8 @@
 -- Žádný UPDATE/DELETE do leads, customer_contacts, entitlements, profiles.
 --
 -- ⛔ TENTO SOUBOR NEAPLIKUJ na živou DB z agenta. Viz README-CRM.md.
+-- Součty ve shrnutí volají public.lead_je_test. Nejdřív test-lead-filtr.sql
+-- (také až s DEPLOY-ZAMEK, ne z agenta).
 --
 -- Signatura (NESMĚŇ bez DROP FUNCTION): 
 --   public.crm_refresh_from_academy() RETURNS jsonb
@@ -124,12 +126,22 @@ begin
      and i.value_normalized = e.email_norm;
 
   -- is_test přepočítat z aktuálních e-mailových identit (ne z prázdna).
+  -- Plus-adresa a fitness.barna@ řeší crm_is_test_email. meta.test na leadu
+  -- (formulářový tester, i kdyby adresa vzoru neodpovídala) taky.
+  -- Vyžaduje public.lead_je_test z test-lead-filtr.sql (nasadit před tímhle refreshem).
   update public.crm_persons p
      set is_test = exists (
            select 1 from public.crm_identifiers i
             where i.person_id = p.id
               and i.kind = 'email'
-              and public.crm_is_test_email(i.value_normalized)
+              and (
+                public.crm_is_test_email(i.value_normalized)
+                or exists (
+                  select 1 from public.leads l
+                   where public.crm_norm_email(l.email) = i.value_normalized
+                     and public.lead_je_test(l.email, l.meta)
+                )
+              )
          ),
          updated_at = now()
    where p.status = 'active';
@@ -718,15 +730,18 @@ begin
   -- ----------------------------------------------------------
   -- I) Shrnutí (čísla pro README / ruční ověření)
   -- ----------------------------------------------------------
-  select count(*) into v_leads from public.leads;
+  select count(*) into v_leads from public.leads l
+   where not public.lead_je_test(l.email, l.meta);
 
   select count(*) into v_union_four
     from (
       select public.crm_norm_email(email) from public.leads
        where public.crm_norm_email(email) is not null
+         and not public.lead_je_test(email, meta)
       union
       select public.crm_norm_email(email) from public.customer_contacts
        where public.crm_norm_email(email) is not null
+         and not public.lead_je_test(email, null)
       union
       select public.crm_norm_email(email) from public.entitlements
        where public.crm_norm_email(email) is not null
@@ -756,15 +771,18 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.leads
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, meta)
           intersect
           select public.crm_norm_email(email) from public.customer_contacts
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, null)
         ) x
       ),
       'leads_n_entitlements', (
         select count(*) from (
           select public.crm_norm_email(email) from public.leads
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, meta)
           intersect
           select public.crm_norm_email(email) from public.entitlements
            where public.crm_norm_email(email) is not null
@@ -774,6 +792,7 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.customer_contacts
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, null)
           intersect
           select public.crm_norm_email(email) from public.entitlements
            where public.crm_norm_email(email) is not null
@@ -783,9 +802,11 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.leads
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, meta)
           intersect
           select public.crm_norm_email(email) from public.customer_contacts
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, null)
           intersect
           select public.crm_norm_email(email) from public.entitlements
            where public.crm_norm_email(email) is not null
@@ -795,6 +816,7 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.leads
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, meta)
           intersect
           select public.crm_norm_email(email) from public.profiles
            where public.crm_norm_email(email) is not null
@@ -804,6 +826,7 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.customer_contacts
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, null)
           intersect
           select public.crm_norm_email(email) from public.profiles
            where public.crm_norm_email(email) is not null
@@ -822,9 +845,11 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.leads
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, meta)
           except
           select public.crm_norm_email(email) from public.customer_contacts
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, null)
           except
           select public.crm_norm_email(email) from public.entitlements
            where public.crm_norm_email(email) is not null
@@ -837,9 +862,11 @@ begin
         select count(*) from (
           select public.crm_norm_email(email) from public.customer_contacts
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, null)
           except
           select public.crm_norm_email(email) from public.leads
            where public.crm_norm_email(email) is not null
+             and not public.lead_je_test(email, meta)
           except
           select public.crm_norm_email(email) from public.entitlements
            where public.crm_norm_email(email) is not null
@@ -854,7 +881,7 @@ end;
 $crm$;
 
 comment on function public.crm_refresh_from_academy() is
-  'Denní synk Academy tabulek do crm_*. Jen SELECT ze zdrojů. purchased ignoruje. Auto-merge jen lower(email).';
+  'Denní synk Academy tabulek do crm_*. Jen SELECT ze zdrojů. purchased ignoruje. Auto-merge jen lower(email). Součty ve shrnutí vynechávají lead_je_test.';
 
 revoke all on function public.crm_refresh_from_academy() from public, anon, authenticated;
 grant execute on function public.crm_refresh_from_academy() to postgres, service_role;

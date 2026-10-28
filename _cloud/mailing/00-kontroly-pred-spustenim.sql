@@ -54,7 +54,9 @@ select
   from leads l
  where l.status = 'active'
    and lower(l.email) not in (select email from appka)
-   and not exists (select 1 from odhlaseni_trvale o where o.email = lower(l.email));
+   and not exists (select 1 from odhlaseni_trvale o where o.email = lower(l.email))
+   -- Testovací formulář. Funkce: akademie/_supabase/test-lead-filtr.sql (až je v DB).
+   and not public.lead_je_test(l.email, l.meta);
 
 -- 7) VÝCHOZÍ STAV PENĚZ (severka, CLAUDE.md 25. 7.: měří se na prodeji, ne na prokliku).
 --    První platba VIP v appce = bonusový videokurz se source 'rocni-vip-bonus' (od 30. 9. jen VIP).

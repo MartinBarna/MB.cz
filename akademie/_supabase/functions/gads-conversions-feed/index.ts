@@ -6,6 +6,7 @@
 // Vrací text/csv v PŘESNÉM formátu Google Ads offline importu.
 // NIC nemění: jen čte app_config a leads.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { jeTestLead } from "../_shared/test-lead.ts";
 
 Deno.serve(async (req: Request) => {
   const url = new URL(req.url);
@@ -43,7 +44,7 @@ Deno.serve(async (req: Request) => {
   const since = new Date(Date.now() - 90 * 24 * 3600 * 1000).toISOString();
   const { data: leads, error } = await supa
     .from("leads")
-    .select("meta, created_at")
+    .select("email, meta, created_at")
     .not("meta->>gclid", "is", null)
     .gt("created_at", since)
     .order("created_at", { ascending: true });
@@ -63,7 +64,8 @@ Deno.serve(async (req: Request) => {
     "Parameters:TimeZone=+0000",
     "Google Click ID,Conversion Name,Conversion Time,Conversion Value,Conversion Currency",
   ];
-  for (const row of (leads || []) as Array<{ meta: Record<string, unknown>; created_at: string }>) {
+  for (const row of (leads || []) as Array<{ email?: string; meta: Record<string, unknown>; created_at: string }>) {
+    if (jeTestLead(row)) continue;
     const gclid = row.meta && typeof row.meta.gclid === "string" ? row.meta.gclid : "";
     if (!gclid) continue;
     // <gclid>,<conversion_name>,<time>,,   (hodnota a měna prázdné)
