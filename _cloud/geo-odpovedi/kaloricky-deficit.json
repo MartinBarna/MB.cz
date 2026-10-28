@@ -14,7 +14,7 @@
     },
     {
       "otazka": "Jak v deficitu neztratit svaly?",
-      "odpoved": "Drží tě před tím dvě věci: dost bílkovin, zhruba 1,6 až 2 g na kilo váhy, a silový trénink. Bílkoviny tě navíc zasytí, takže s hladem bojuješ míň."
+      "odpoved": "Drží tě před tím dvě věci: dost bílkovin, zhruba 1,6 až 2,2 g na kilo váhy, a silový trénink. Bílkoviny tě navíc zasytí, takže s hladem bojuješ míň."
     },
     {
       "otazka": "Proč nehubnu, i když se snažím jíst míň?",
@@ -34,7 +34,7 @@
     {"pro": "faq[0]", "citace": "Tvoje tělo každý den něco spálí. Na dýchání, trávení, pohyb, trénink. Celému tomu výdeji se říká TDEE. Když v jídle přijmeš míň, než kolik vydáš, tělo si rozdíl vezme z vlastních zásob, hlavně z tuku. A ty hubneš."},
     {"pro": "faq[1]", "citace": "Vrhnou se do extrému ve stylu „budu jíst 800 kalorií denně\". Výsledek bývá pokaždé stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt."},
     {"pro": "faq[1]", "citace": "Pomaleji = víc svalů zachováno a větší šance, že ti výsledek vydrží."},
-    {"pro": "faq[2]", "citace": "V deficitu ti hrozí, že kromě tuku spálíš i svaly. Drží tě před tím dvě věci. Dost bílkovin, zhruba 1,6 až 2 g na kilo váhy, a silový trénink. Bílkoviny tě k tomu pěkně zasytí, takže s hladem bojuješ míň."},
+    {"pro": "faq[2]", "citace": "V deficitu ti hrozí, že kromě tuku spálíš i svaly. Drží tě před tím dvě věci. Dost bílkovin, zhruba 1,6 až 2,2 g na kilo váhy, a silový trénink. Bílkoviny tě k tomu pěkně zasytí, takže s hladem bojuješ míň."},
     {"pro": "faq[3]", "citace": "Zapomínáš na „neviditelné\" kalorie: olej, máslo, slazené nápoje, ujídání při vaření."},
     {"pro": "faq[3]", "citace": "Víkendy mažou celý týden: pět dní v deficitu a dva dny nadbytek = stagnace."},
     {"pro": "faq[3]", "citace": "Soustředíš se jen na váhu: voda kolísá, sleduj trend za týdny, ne jedno ráno."}
