@@ -46,7 +46,7 @@ Zdroj: clanky/bilkoviny.html · Návrh publikace: sobota 5. 9. 2026
 
 Kdybych u jídelníčku hlídal jedinou věc, byly by to bílkoviny. V deficitu drží svaly, takže hubneš spíš tuk. Po bílkovinném jídle vydržíš déle bez hladu. Tělo na jejich trávení spálí víc energie než u tuků a sacharidů.
 
-Pro většinu aktivních lidí se osvědčuje 1,6-2,2 g na kilogram tělesné hmotnosti denně. Při 80 kg je to zhruba 130-175 g za den. Když hubneš, klidně miř k horní hranici. Líp tě to zasytí.
+Pro většinu aktivních lidí se osvědčuje 1,6 až 2,2 g na kilo denně. Při 80 kg je to zhruba 130-175 g za den. Když hubneš, klidně miř k horní hranici. Líp tě to zasytí.
 
 Nejjednodušší cesta, jak se na to číslo dostat: zdroj bílkovin do každého jídla. Snídaně, oběd, večeře. Pokaždé něco bílkovinného na talíři. Maso, ryby, vejce, tvaroh, skyr, luštěniny. Když se to nestíhá, syrovátkový protein je v pohodě pomůcka, ne zázrak.
 
@@ -118,7 +118,7 @@ Zhubl jsi, oslavil, a za pár měsíců máš kila zpátky. Někdy i s úroky. V
 
 Tvrdá dieta, rychlý úbytek, návrat ke starým návykům. Příliš velký deficit, ztráta svalů a jídelníček, který se nedá žít. Tělo po hladovce drží míň svalu, výdej klesne, hlad stoupne. A stará rutina je pořád ve dveřích.
 
-Co u lidí drží výsledek líp: mírný deficit 15-20 procent pod výdejem, ne hladovka. Dost bílkovin, zhruba 1,6-2 g na kilo. Silový trénink, ať má tělo důvod sval si nechat. Postupné změny místo revoluce přes noc. Trend za týdny, ne výkyv na váze ze dne na den.
+Co u lidí drží výsledek líp: mírný deficit 15-20 procent pod výdejem, ne hladovka. Dost bílkovin, zhruba 1,6 až 2,2 g na kilo. Silový trénink, ať má tělo důvod sval si nechat. Postupné změny místo revoluce přes noc. Trend za týdny, ne výkyv na váze ze dne na den.
 
 Nejdůležitější část začíná ve chvíli, kdy už jsi u cíle. Tam se rozhoduje, jestli to bylo na měsíc, nebo na život.
 
