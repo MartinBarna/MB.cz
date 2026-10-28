@@ -7,7 +7,8 @@
 //
 // Soubor se kopiruje bajt po bajtu do appky, kde ho `tsc` preklada do CommonJS
 // (`moduleResolution: node`). Proto zadny staticky import z URL: `aws4fetch`
-// se cte dynamicky az ve vetvi ses. Env se cte pri kazdem volani, testy ho meni.
+// se cte dynamicky az ve vetvi ses (doslovnym retezcem, jinak ho Supabase bundler
+// nezabali, viz komentar u `import()`). Env se cte pri kazdem volani, testy ho meni.
 
 export type MailPriloha = { filename: string; content: string /* base64 */ };
 
@@ -39,8 +40,6 @@ export type MailVolby = {
   signal?: AbortSignal;
 };
 
-// Retezec v konstante, ne jako literal v `import()`: tsc by ho jinak resil jako modul.
-const AWS4FETCH_URL = "https://esm.sh/aws4fetch@1.0.20";
 
 const ZAKAZANE_HLAVICKY = new Set([
   "from",
@@ -179,7 +178,15 @@ async function posliSes(payload: MailPayload, volby?: MailVolby): Promise<MailOd
   const url = "https://email." + region + ".amazonaws.com/v2/email/outbound-emails";
 
   try {
-    const { AwsClient } = await import(AWS4FETCH_URL) as { AwsClient: AwsKlientTrida };
+    // ⛔⛔ [28. 10. 2026] URL MUSI BYT DOSLOVNY RETEZEC PRIMO V `import()`.
+    //    Prvni verze mela URL v konstante. Supabase bundler takovy import nezabali
+    //    a ostry runtime hlasil `Module not found: https://esm.sh/aws4fetch@1.0.20`,
+    //    takze vetev SES by po prepnuti neposlala ANI JEDEN mail (chyceno testem
+    //    pres docasnou funkci ses-test, testy s podvrzenym fetch to videt nemohly).
+    //    `@ts-ignore` je tu kvuli `tsc` v appce (moduleResolution node URL nezna);
+    //    v Node testech se vetev SES nespousti.
+    // @ts-ignore: viz vyse
+    const { AwsClient } = await import("https://esm.sh/aws4fetch@1.0.20") as { AwsClient: AwsKlientTrida };
     const aws = new AwsClient({ accessKeyId, secretAccessKey, region, service: "ses" });
     const req = await aws.sign(url, {
       method: "POST",
