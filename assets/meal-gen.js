@@ -483,11 +483,13 @@
   // ⛔ Taz logika je v appce, hlida parita.
   var SYR_RE = /^(eidam|gouda|mozzarella|cedar|emental|feta|brie|hermelin|niva|parmazan|balkansky-syr|kozi-syr|uzeny-syr|taveny-syr|halloumi|bryndza|olomoucke-tvaruzky|ricotta|lucina|zerve)/;
   // Pečivo jako příloha ke slanému základu. Vločky a müsli tu schválně NEJSOU.
-  var PECIVO_RE = /chleb|rohlik|houska|knackebrot|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy/;
+  var PECIVO_RE = /chleb|rohlik|houska|knackebrot|knackebrod|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy/;
   // [R6 2026-09-03] Strop na JEDNO jídlo u pečiva, vloček a müsli. Bez něj vyšel
   // toustový chléb celozrnný 350 g a müsli 320 g jako jedna položka snídaně
   // (profil d, seedy 6 a 7); to je třetina kila. Vařené přílohy si strop 320/500 g drží.
-  var PECIVO_VLOCKY_RE = /chleb|rohlik|houska|knackebrot|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy|ovesne-vlocky|musli|granola|krekry|lupinky|otruby|tortilla/;
+  // `knackebrod` je v regexu schválně vedle `knackebrot`: id se liší o poslední písmeno
+  // a bez něj by křupavý žitný krekr prošel jako vařená příloha.
+  var PECIVO_VLOCKY_RE = /chleb|rohlik|houska|knackebrot|knackebrod|toustovy|pita|bageta|dalamanek|kaiserka|grahamovy|ovesne-vlocky|musli|granola|krekry|lupinky|otruby|tortilla/;
   var STROP_PECIVO_G = 120;
   // [R6 2026-09-03] Ovoce v jednom jídle. 250 g pomeranče k obědu je miska, ne ozdoba.
   var STROP_OVOCE_G = 200;
@@ -1194,6 +1196,11 @@
      *  zatímco web PŘED ním. Dokud jsou všechny stropy násobky pěti, vyjde to stejně. */
     var vetsiTalir = function (g) { return stropTalire === 1 ? g : Math.round((g * stropTalire) / 5) * 5; };
     var stropG = function (f) {
+      // [2026-10-28] Křupavý chléb, knäckebröd a rýžové chlebíčky: nejvýš 4 kusy.
+      // Není to strop velikosti talíře, proto se nenásobí `stropTalire`.
+      // 120 g knäckebrotu je 12 plátků a v plánu to vyšlo i jako 11,5 ks.
+      var krupaveG = stropKrupaveG(f.id);
+      if (krupaveG != null) return krupaveG;
       if (FOOD_CAP[f.id] != null) return FOOD_CAP[f.id];
       if (PECIVO_VLOCKY_RE.test(f.id)) return vetsiTalir(STROP_PECIVO_G);
       if (f.cat === 'fruit') return vetsiTalir(STROP_OVOCE_G);
@@ -1241,7 +1248,12 @@
         all.forEach(function (it) {
           if (it.food.cat === 'protein' && it.grams < 30) it.grams = 30;
           // podlaha přílohy drží i proti křížovému škálování (viz [fix 2026-08-05 večer])
-          if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) it.grams = podlahaPrilohy(it.food);
+          if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) {
+            var podl = podlahaPrilohy(it.food);
+            var krPodl = stropKrupaveG(it.food.id);
+            if (krPodl != null && podl > krPodl) podl = krPodl;
+            it.grams = podl;
+          }
         });
       }
     }
@@ -1551,6 +1563,8 @@
       // ⛔ Stejná změna je v appce (`src/engine/meal-gen-core.ts`), hlídá parita.
       if (!lowCarb && it.food.cat === 'carb' && it.grams < podlahaPrilohy(it.food)) {
         var want = podlahaPrilohy(it.food);
+        var krWant = stropKrupaveG(it.food.id);
+        if (krWant != null && want > krWant) want = krWant;
         var kcalPerG = (it.food.per100.kcal || 0) / 100;
         var room = targets.kcal * 1.05 - totalKey('kcal');
         if (kcalPerG > 0 && room > 0) {
@@ -1636,6 +1650,111 @@
     // tím trefila, jenže vyrobila snídani s 250 g moruší a 190 g banánu a sacharidy přestřelila
     // o 27 %. Metrika se zlepšila a talíř zhoršil. Proto se nejdřív sahá na přílohu.
     var PRILOHY = ['ryze-natural-varena', 'brambory-varene', 'testoviny-celozrnne-varene', 'bulgur-vareny'];
+    // [2026-10-28] Druhá příloha, když den pořád chybí kalorie. Volá se i po ořezu
+    // křupavého chleba, knäckebrödu a rýžových chlebíčků na 4 kusy: další plátek
+    // už přidat nesmí, schodek doplní rýže, brambory, těstoviny nebo bulgur.
+    function doplnJinouPrilohu() {
+      if (lowCarb || chybiKcal() <= targets.kcal * 0.05) return;
+      for (var p2 = 0; p2 < PRILOHY.length; p2++) {
+        if (chybiKcal() <= targets.kcal * 0.05) break;
+        var f2 = byId(PRILOHY[p2]);
+        if (!f2) continue;
+        var uz2 = all.some(function (it) { return it.food.id === f2.id; });
+        if (uz2) continue;
+        var naGram2 = f2.per100.kcal / 100;
+        if (naGram2 <= 0) continue;
+        // Nejdriv hlavni jidlo BEZ prilohy. Kdyz takove neni a den je porad vic nez 5 %
+        // pod cilem, smi dostat druhou prilohu i talir, ktery uz jednu ma.
+        // ⚠️ VEDOMY ustupek: dve skrobove prilohy na jednom taliři jsou kucharsky sporne,
+        // ale jeste horsi je den, ktery o 20 az 40 % mine cil u objemoveho profilu
+        // (115 kg, narust, 3 jidla = 4 598 kcal). Jen jako posledni zachrana, nikdy pri
+        // beznem skladani dne, a nejvys dve prilohy na jedno hlavni jidlo.
+        var cil2 = -1;
+        for (var m2 = 0; m2 < out.length; m2++) {
+          if (out[m2].kind !== 'lunch' && out[m2].kind !== 'dinner') continue;
+          var maC2 = out[m2].items.some(function (it) { return it.food.cat === 'carb'; });
+          if (!maC2) { cil2 = m2; break; }
+        }
+        if (cil2 < 0) {
+          for (var m2b = 0; m2b < out.length; m2b++) {
+            if (out[m2b].kind !== 'lunch' && out[m2b].kind !== 'dinner') continue;
+            var pocetC = out[m2b].items.filter(function (it) { return it.food.cat === 'carb'; }).length;
+            if (pocetC < 2) { cil2 = m2b; break; }
+          }
+        }
+        if (cil2 < 0) break;
+        var cap2 = stropG(f2);
+        var g2 = Math.min(cap2 != null ? cap2 : Infinity, Math.ceil(chybiKcal() / naGram2 / 5) * 5);
+        if (g2 < MIN_PORCE_G) continue;
+        var it2 = { food: f2, grams: g2 };
+        out[cil2].items.push(it2);
+        all.push(it2);
+      }
+    }
+    // Drobný kus (plátek do 80 g, vejce, rohlík) na celé kusy. Velký kus
+    // (jablko, banán, bageta) na půlky, desetiny ne. Konzerva a balení se
+    // na talíři nepočítají. Velké maso a sýr se dál váží v gramech.
+    // Křupavé plátky se ořežou vždy, nejvýš na 4 kusy, i když tím den
+    // na chvíli spadne pod cíl: schodek hned doplní `doplnJinouPrilohu`.
+    function srovnejKusovePorce() {
+      var pasmo = targets.kcal * 0.05;
+      out.forEach(function (m) {
+        m.items.forEach(function (it) {
+          var pc = PIECES[it.food.id];
+          var krok = krokKusu(pc);
+          if (!krok) return;
+          // Velké maso a velký sýr se v plánu váží. Půlka prsa není porce, kterou by engine měl vnucovat.
+          if ((it.food.cat === 'protein' || it.food.cat === 'dairy') && pc[0] > 80) return;
+          var cap = stropG(it.food);
+          if (UZENINA_RE.test(it.food.id)) cap = cap == null ? UZENINA_MAX_G : Math.min(cap, UZENINA_MAX_G);
+          var kcalNaG = (it.food.per100.kcal || 0) / 100;
+          var minG = it.food.cat === 'fat' ? 5 : 8;
+          var krupave = !!KRUPAVE_ID[it.food.id];
+          // Křupavé plátky: nejbližší počet, ale nikdy nad 4. Směr neřeší kalorie,
+          // schodek doplní jiná příloha.
+          if (krupave) {
+            var ksK = Math.round((it.grams / pc[0]) / krok) * krok;
+            if (ksK < krok) ksK = krok;
+            if (ksK > STROP_KRUPAVE_KS) ksK = STROP_KRUPAVE_KS;
+            while (cap && ksK > krok && ksK * pc[0] > cap + 0.01) ksK -= krok;
+            if (cap && ksK * pc[0] > cap + 0.01) return;
+            var gK = Math.round(ksK * pc[0] * 100) / 100;
+            if (gK >= minG) it.grams = gK;
+            return;
+          }
+          // Ostatní kusy: dolů i nahoru na nejbližší rozumný krok (celé, nebo půlka).
+          // Bere se ten směr, který den nechá blíž cíli a pokud to jde, v pásmu ±5 %.
+          var presne = it.grams / pc[0] / krok;
+          var dolu = Math.floor(presne + 1e-9) * krok;
+          var nahoru = Math.ceil(presne - 1e-9) * krok;
+          var ted = chybiKcal();
+          var nej = null;
+          [dolu, nahoru].forEach(function (ks) {
+            if (ks < krok) return;
+            if (cap && ks * pc[0] > cap + 0.01) return;
+            var g = Math.round(ks * pc[0] * 100) / 100;
+            if (g < minG) return;
+            var dKcal = (g - it.grams) * kcalNaG;
+            if (Math.abs(dKcal) > 60) return;
+            var po = ted - dKcal;
+            var vPasmu = Math.abs(po) <= pasmo + 1;
+            var lepsi = !nej
+              || (vPasmu && !nej.vPasmu)
+              || (vPasmu === nej.vPasmu && Math.abs(po) < Math.abs(nej.po) - 0.01);
+            if (lepsi) nej = { g: g, po: po, vPasmu: vPasmu };
+          });
+          // Velký skok, který by den vystrčil z pásma ±5 %, se neudělá.
+          // Drobná oprava do 25 kcal (jeden plátek, kousek vejce) se udělá i tak:
+          // 130 g vajec je 2,2 kusu a to je horší vada než 20 kcal.
+          if (!nej) return;
+          if (Math.abs(ted) <= pasmo && !nej.vPasmu) {
+            var drobne = Math.abs((nej.g - it.grams) * kcalNaG) <= 25;
+            if (!drobne) return;
+          }
+          it.grams = nej.g;
+        });
+      });
+    }
     if (chybiKcal() > targets.kcal * 0.05) {
       // 1) Zvětši přílohy, které mají do stropu rezervu. Víc rýže je normální rada.
       out.forEach(function (m) {
@@ -1680,43 +1799,7 @@
       // skoncilo 6 az 10 % pod cilem (zmereno 12 dnu z 768). Kucharsky spravna odpoved
       // neni hora ryze na jednom taliři, ale priloha i ke druhemu hlavnimu jidlu.
       // ⛔ Jen do OBEDA nebo VECERE, ktere prilohu jeste nemaji, a jen mimo keto.
-      if (chybiKcal() > targets.kcal * 0.05 && !lowCarb) {
-        for (var p2 = 0; p2 < PRILOHY.length; p2++) {
-          if (chybiKcal() <= targets.kcal * 0.05) break;
-          var f2 = byId(PRILOHY[p2]);
-          if (!f2) continue;
-          var uz2 = all.some(function (it) { return it.food.id === f2.id; });
-          if (uz2) continue;
-          var naGram2 = f2.per100.kcal / 100;
-          if (naGram2 <= 0) continue;
-          // Nejdriv hlavni jidlo BEZ prilohy. Kdyz takove neni a den je porad vic nez 5 %
-          // pod cilem, smi dostat druhou prilohu i talir, ktery uz jednu ma.
-          // ⚠️ VEDOMY ustupek: dve skrobove prilohy na jednom taliři jsou kucharsky sporne,
-          // ale jeste horsi je den, ktery o 20 az 40 % mine cil u objemoveho profilu
-          // (115 kg, narust, 3 jidla = 4 598 kcal). Jen jako posledni zachrana, nikdy pri
-          // beznem skladani dne, a nejvys dve prilohy na jedno hlavni jidlo.
-          var cil2 = -1;
-          for (var m2 = 0; m2 < out.length; m2++) {
-            if (out[m2].kind !== 'lunch' && out[m2].kind !== 'dinner') continue;
-            var maC2 = out[m2].items.some(function (it) { return it.food.cat === 'carb'; });
-            if (!maC2) { cil2 = m2; break; }
-          }
-          if (cil2 < 0) {
-            for (var m2b = 0; m2b < out.length; m2b++) {
-              if (out[m2b].kind !== 'lunch' && out[m2b].kind !== 'dinner') continue;
-              var pocetC = out[m2b].items.filter(function (it) { return it.food.cat === 'carb'; }).length;
-              if (pocetC < 2) { cil2 = m2b; break; }
-            }
-          }
-          if (cil2 < 0) break;
-          var cap2 = stropG(f2);
-          var g2 = Math.min(cap2 != null ? cap2 : Infinity, Math.ceil(chybiKcal() / naGram2 / 5) * 5);
-          if (g2 < MIN_PORCE_G) continue;
-          var it2 = { food: f2, grams: g2 };
-          out[cil2].items.push(it2);
-          all.push(it2);
-        }
-      }
+      doplnJinouPrilohu();
       // 2c) ⛔ [R8 2026-09-03] CHYBEJICI KALORIE DOROVNA TUK, NE HORA PRILOHY.
       // Presne to rika rozhodnuti sefa u R8: „chybejici tuk se dorovnava tucnejsim zdrojem
       // bilkoviny nebo avokadem, ne litrem oleje". Kdyz je den i po prilohach pod cilem
@@ -2208,6 +2291,12 @@
       }
     }
 
+    // [2026-10-28] Kusové potraviny na celé kusy. Drobný kus (plátek, vejce, rohlík)
+    // na celé, velký kus (jablko, banán) na půlky. Křupavý chléb, knäckebröd a rýžové
+    // chlebíčky nejvýš 4 kusy. Když ořez den podstřelí, schodek doplní jiná příloha.
+    srovnejKusovePorce();
+    doplnJinouPrilohu();
+
     // přepočítej totály po normalizaci
     out.forEach(function (m) {
       m.totals = m.items.reduce(function (s, it) {
@@ -2302,13 +2391,22 @@
 
   // Kusové jednotky pro nákupní seznam: hmotnost jednoho kusu/balení (vychází z porcí v DB).
   // Jen položky, kde kus dává v obchodě smysl; ostatní zůstávají v gramech.
+  // [2026-10-28] Křupavý chléb, knäckebröd a rýžové chlebíčky mají strop 4 kusy
+  // na jedno jídlo (`stropKrupaveG`). 120 g knäckebrotu je 12 plátků, v plánu
+  // to vyšlo i jako 11,5 ks. Chybějící kalorie doplní jiná příloha, ne další plátek.
+  // ⛔ Táž logika je v appce (src/engine/meal-gen-core.ts, tvuj-coach PR 57).
+  var STROP_KRUPAVE_KS = 4;
+  var KRUPAVE_ID = {
+    knackebrot: 1, knackebrod: 1, 'bezlepkovy-knackebrot': 1,
+    'ryzove-chlebicky': 1, 'detske-ryzove-chlebicky': 1
+  };
   var PIECES = {
     vejce: [60, 'ks'], bilek: [33, 'ks'],
     rohlik: [43, 'ks'], 'grahamovy-rohlik': [60, 'ks'], houska: [50, 'ks'], 'houska-celozrnna': [60, 'ks'],
     tortilla: [60, 'ks'], 'tortilla-kukuricna': [30, 'ks'], 'bezlepkova-tortilla': [30, 'ks'], 'low-carb-tortilla-wrap': [45, 'ks'],
-    knackebrot: [10, 'ks'], 'bezlepkovy-knackebrot': [15, 'ks'],
+    knackebrot: [10, 'ks'], knackebrod: [10, 'ks'], 'bezlepkovy-knackebrot': [15, 'ks'],
     'toustovy-chleb-celozrnny': [28, 'ks'], 'chleb-toustovy-celozrnny-tmavy': [25, 'ks'], 'bezlepkovy-chleb-toustovy': [30, 'ks'],
-    'ryzove-chlebicky': [9, 'ks'],
+    'ryzove-chlebicky': [9, 'ks'], 'detske-ryzove-chlebicky': [10, 'ks'],
     banan: [120, 'ks'], jablko: [150, 'ks'], hruska: [150, 'ks'], 'nashi-hruska': [120, 'ks'],
     pomeranc: [150, 'ks'], kiwi: [75, 'ks'], broskev: [120, 'ks'], nektarinka: [130, 'ks'], avokado: [140, 'ks'],
     mozzarella: [125, 'bal.'],
@@ -2325,6 +2423,17 @@
     mandarinka: [80, 'ks'], rajce: [100, 'ks'], paprika: [150, 'ks'], okurka: [300, 'ks'], mrkev: [80, 'ks'], brambory: [150, 'ks']
   };
 
+  // Drobný kus na celé kusy, velký (nad 80 g) na půlky. Konzerva a balení krok nemají.
+  function krokKusu(pc) {
+    if (!pc || pc[1] !== 'ks') return 0;
+    return pc[0] <= 80 ? 1 : 0.5;
+  }
+  function stropKrupaveG(id) {
+    var pc = PIECES[id];
+    if (!pc || !KRUPAVE_ID[id]) return null;
+    return pc[0] * STROP_KRUPAVE_KS;
+  }
+
   // Sloučí položky z více dní na nákupní seznam (stejná potravina = součet gramáže),
   // seřazeno po odděleních (maso/mléčné/přílohy/zelenina/…), v oddělení od největší porce.
   // U kusových položek doplní přepočet na kusy/balení (pieces + pieceLabel).
@@ -2339,7 +2448,12 @@
       s.grams = Math.round(s.grams);
       var pc = PIECES[s.id];
       if (pc && s.grams >= pc[0] * 0.75) {
-        s.pieces = Math.max(1, Math.round(s.grams / pc[0]));
+        // Týdenní součet se na 4 kusy neořezává: strop platí pro jedno jídlo.
+        // Drobné kusy na celé, velké na půlky, ať nákup neříká 11,5 plátku.
+        var krok = krokKusu(pc) || 1;
+        var ks = Math.round((s.grams / pc[0]) / krok) * krok;
+        if (ks < krok) ks = krok;
+        s.pieces = Math.round(ks * 100) / 100;
         s.pieceLabel = pc[1];
       }
     });
