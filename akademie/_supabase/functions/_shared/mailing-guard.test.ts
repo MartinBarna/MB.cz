@@ -117,6 +117,8 @@ async function main(): Promise<void> {
     PATH_CLASS["koucink-konec.confirm"] === "client_operational");
   check("PATH_CLASS: koucink-konec sales je marketing",
     PATH_CLASS["koucink-konec.sales"] === "marketing");
+  check("PATH_CLASS: kosik-pripominka je marketing",
+    PATH_CLASS["kosik-pripominka"] === "marketing");
   check("classForPath zná obě cesty automatu",
     classForPath("koucink-konec.confirm") === "client_operational" &&
       classForPath("koucink-konec.sales") === "marketing");

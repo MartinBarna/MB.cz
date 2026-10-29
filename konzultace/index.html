@@ -265,7 +265,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <span class="tagx">jednorázově, bez předplatného. V ceně videokurz výživy, kuchařka a dva e-booky.</span>
             </div>
             <div class="btn-row">
-                <a class="btn btn-acc" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat online konzultaci →</a>
+                <a class="btn btn-acc" data-kosik="konzultace" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat online konzultaci →</a>
                 <a class="btn btn-ghost" href="#odecet">Jak funguje odečet z koučinku</a>
             </div>
             <div class="trust">
@@ -358,7 +358,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <li>Dva až tři konkrétní kroky na první týden</li>
                 <li>Odečtu ti ji z koučinku, objednáš-li do 14 dní</li>
             </ul>
-            <a class="btn btn-acc" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat online konzultaci →</a>
+            <a class="btn btn-acc" data-kosik="konzultace" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat online konzultaci →</a>
             <p class="microtrust">Platba kartou přes Stripe. Termín doladíme e-mailem.</p>
         </div>
 
@@ -469,7 +469,7 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
                 <h2>Pojďme to rozseknout</h2>
                 <p style="color:var(--warm);">Za hodinu budeš vědět, kolik máš jíst, proč to dosud nefungovalo a co uděláš tenhle týden. A když pak navážeš koučinkem, cenu konzultace ti odečtu.</p>
                 <div class="btn-row">
-                    <a class="btn btn-acc" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat za 2 990 Kč →</a>
+                    <a class="btn btn-acc" data-kosik="konzultace" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat za 2 990 Kč →</a>
                 </div>
                 <p style="color:var(--mut); font-size:.88rem; margin-top:1rem;">Jedna platba. Nic se neobnovuje ani nestrhává znovu.</p>
             </div>
@@ -494,11 +494,12 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
 
 <!-- mobilní lišta -->
 <div class="mbar" aria-label="Rychlé objednání">
-    <a class="m1" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat 2 990 Kč →</a>
+    <a class="m1" data-kosik="konzultace" href="https://buy.stripe.com/bJe6oG8bdc3wcjCdBZ3ks08?utm_source=web&amp;utm_medium=konzultace&amp;utm_campaign=konzultace-primo&amp;locale=cs">Objednat 2 990 Kč →</a>
     <a class="m2" href="#kontakt">Mám dotaz</a>
 </div>
 
 <script defer src="/assets/analytics.js?v=g23"></script>
+<script type="module" src="/assets/kosik-checkout.js?v=k1" data-kosik-zapnuto="false"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
 <script defer src="/assets/scroll-top.js?v=g13"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/theme-light.css?v=w12"></body>
