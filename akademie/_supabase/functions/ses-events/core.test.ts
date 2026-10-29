@@ -551,5 +551,191 @@ function clearCertCache() {
   resetFetch();
 }
 
+const MAIL_ENV = [
+  "RESEND_API_KEY",
+  "MAIL_PROVIDER",
+  "AWS_SES_ACCESS_KEY_ID",
+  "AWS_SES_SECRET_ACCESS_KEY",
+  "AWS_SES_REGION",
+  "SES_CONFIGURATION_SET",
+];
+
+function bezKlicuNaMail(fn: () => Promise<void>): Promise<void> {
+  const puv = MAIL_ENV.map((k) => [k, Deno.env.get(k)] as const);
+  for (const k of MAIL_ENV) Deno.env.delete(k);
+  return fn().finally(() => {
+    for (const [k, v] of puv) {
+      if (v === undefined) Deno.env.delete(k);
+      else Deno.env.set(k, v);
+    }
+  });
+}
+
+// Admin, ktery umi vratit konkretni stopu a zapamatuje si zasah do leads.
+function adminSeStopou(orig: Record<string, unknown> | null, leadZAdresy: { id: string } | null) {
+  const zapsane: Record<string, unknown>[] = [];
+  const leadZmeny: Record<string, unknown>[] = [];
+  const admin = {
+    zapsane,
+    leadZmeny,
+    from(t: string) {
+      if (t === "leads") {
+        return {
+          select() {
+            return {
+              eq() { return this; },
+              limit() {
+                return { maybeSingle() { return Promise.resolve({ data: leadZAdresy, error: null }); } };
+              },
+            };
+          },
+          update(u: Record<string, unknown>) {
+            leadZmeny.push(u);
+            return { eq() { return Promise.resolve({ error: null }); } };
+          },
+        };
+      }
+      if (t === "app_config") {
+        return {
+          select() {
+            return {
+              eq() {
+                return {
+                  maybeSingle() {
+                    return Promise.resolve({ data: { value: "fitness.barna@gmail.com" }, error: null });
+                  },
+                };
+              },
+            };
+          },
+        };
+      }
+      if (t === "email_events") {
+        return {
+          select() {
+            const conds: Array<[string, unknown]> = [];
+            const q: any = {
+              eq(f: string, v: unknown) { conds.push([f, v]); return q; },
+              in() { return q; },
+              gte() { return q; },
+              limit() {
+                const p: any = Promise.resolve({ data: [], error: null });
+                p.maybeSingle = () => {
+                  const podleId = conds.some(([f]) => f === "provider_id");
+                  return Promise.resolve({ data: podleId ? orig : null, error: null });
+                };
+                return p;
+              },
+            };
+            return q;
+          },
+          insert(r: Record<string, unknown>) {
+            zapsane.push(r);
+            return Promise.resolve({ error: null });
+          },
+        };
+      }
+      return {
+        insert() { return Promise.resolve({ error: null }); },
+      };
+    },
+  };
+  return admin;
+}
+
+{
+  // 18) Stopa type=test se sparuje (sparovano_podle != nesparovano) a lead se nemeni,
+  //     ani kdyz na radku stopy lead_id je a adresa by v leads lead nasla.
+  await bezKlicuNaMail(async () => {
+    const admin = adminSeStopou({
+      lead_id: "lead-nesmi-se-pouzit",
+      step: 0,
+      type: "test",
+      detail: { test: true, email: "bounce@simulator.amazonses.com", via: "ses-test" },
+    }, { id: "lead-z-adresy" });
+    const { body } = await makeSignedMsg("Notification", {
+      eventType: "Bounce",
+      mail: { messageId: "mid-test-stopa" },
+      bounce: {
+        bounceType: "Permanent",
+        bounceSubType: "General",
+        bouncedRecipients: [{ emailAddress: "bounce@simulator.amazonses.com" }],
+      },
+    });
+    const calls: string[] = [];
+    podvrhniFetchForCert(certPem, calls);
+    const res = await handleSns("POST", body, {
+      admin, fetch: globalThis.fetch, now: () => new Date(),
+      env: (k) => k === "SES_SNS_TOPIC_ARN" ? "arn:aws:sns:eu-central-1:123:mb-mailing" : "",
+    });
+    const spar = String(res.body.sparovano_podle ?? "");
+    check("18 type=test status 200", res.status === 200, JSON.stringify(res.body));
+    check("18 sparovano_podle != nesparovano", spar !== "" && spar !== "nesparovano", spar);
+    check("18 lead se nezmenil", admin.leadZmeny.length === 0, JSON.stringify(admin.leadZmeny));
+    const bounce = admin.zapsane.find((r) => r.type === "bounce");
+    check("18 bounce ma lead_id null", !!bounce && bounce.lead_id == null, JSON.stringify(bounce));
+    check("18 of=test", !!bounce && (bounce.detail as any).of === "test");
+    resetFetch();
+  });
+}
+
+{
+  // 19) Bounce bez leadu (stopa bez lead_id a adresa v leads neni) leads nemeni.
+  await bezKlicuNaMail(async () => {
+    const admin = adminSeStopou({
+      lead_id: null,
+      step: 0,
+      type: "sent",
+      detail: { email: "nikdo@example.com", via: "checkin-capture" },
+    }, null);
+    const { body } = await makeSignedMsg("Notification", {
+      eventType: "Bounce",
+      mail: { messageId: "mid-bez-leadu" },
+      bounce: {
+        bounceType: "Permanent",
+        bounceSubType: "General",
+        bouncedRecipients: [{ emailAddress: "nikdo@example.com" }],
+      },
+    });
+    const calls: string[] = [];
+    podvrhniFetchForCert(certPem, calls);
+    const res = await handleSns("POST", body, {
+      admin, fetch: globalThis.fetch, now: () => new Date(),
+      env: (k) => k === "SES_SNS_TOPIC_ARN" ? "arn:aws:sns:eu-central-1:123:mb-mailing" : "",
+    });
+    check("19 bounce bez leadu je 200", res.status === 200, JSON.stringify(res.body));
+    check("19 sparovano_podle je nesparovano", res.body.sparovano_podle === "nesparovano", String(res.body.sparovano_podle));
+    check("19 leads se nezmenily", admin.leadZmeny.length === 0, JSON.stringify(admin.leadZmeny));
+    const bounce = admin.zapsane.find((r) => r.type === "bounce");
+    check("19 bounce nema lead_id", !!bounce && bounce.lead_id == null);
+    resetFetch();
+  });
+}
+
+{
+  // 19b) Bounce bez jakekoli stopy taky do leads nesahne, i kdyby dohledani neco vratilo.
+  await bezKlicuNaMail(async () => {
+    const admin = adminSeStopou(null, { id: "lead-ktery-se-nema-chytit" });
+    const { body } = await makeSignedMsg("Notification", {
+      eventType: "Bounce",
+      mail: { messageId: "mid-bez-stopy" },
+      bounce: {
+        bounceType: "Permanent",
+        bounceSubType: "General",
+        bouncedRecipients: [{ emailAddress: "neznamy@example.com" }],
+      },
+    });
+    const calls: string[] = [];
+    podvrhniFetchForCert(certPem, calls);
+    const res = await handleSns("POST", body, {
+      admin, fetch: globalThis.fetch, now: () => new Date(),
+      env: (k) => k === "SES_SNS_TOPIC_ARN" ? "arn:aws:sns:eu-central-1:123:mb-mailing" : "",
+    });
+    check("19b bez stopy 200", res.status === 200, JSON.stringify(res.body));
+    check("19b leads se nezmenily", admin.leadZmeny.length === 0, JSON.stringify(admin.leadZmeny));
+    resetFetch();
+  });
+}
+
 console.log(chyb === 0 ? "\nVSE ZELENE" : `\nPADLO ${chyb} kontrol`);
 if (chyb > 0) Deno.exit(1);
