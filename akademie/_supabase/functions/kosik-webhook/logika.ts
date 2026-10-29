@@ -26,7 +26,26 @@ export type StripeObjekt = {
 export type PlanExpirace =
   | { akce: "ignoruj" }
   | { akce: "uz_expirovano" }
+  | { akce: "nesedi" }
   | { akce: "zapis"; id: string; patch: Record<string, unknown> };
+
+/**
+ * Ulozene stripe_session_id musi sedet na udalost.
+ * Expirace a platba puvodni session: obj.id.
+ * Obnovena session ma nove id, puvodni je v recovered_from. Bez toho by zaplaceny
+ * kosik dal posilal maily. Prazdne session id jeste neni zapsane, udalost ho doplni.
+ */
+export function sessionSedi(
+  radek: { stripe_session_id: string | null },
+  obj: StripeObjekt,
+): boolean {
+  const ulozena = radek.stripe_session_id;
+  if (!ulozena) return true;
+  const id = typeof obj.id === "string" ? obj.id : "";
+  if (ulozena === id) return true;
+  const recovered = typeof obj.recovered_from === "string" ? obj.recovered_from : "";
+  return recovered !== "" && ulozena === recovered;
+}
 
 function metaId(obj: StripeObjekt): string {
   const meta = obj.metadata;
@@ -51,6 +70,7 @@ function recovery(obj: StripeObjekt): { url: string | null; expiresAt: string | 
 
 export function planExpirace(radek: RadekKosiku | null, obj: StripeObjekt, ted: Date): PlanExpirace {
   if (!radek) return { akce: "ignoruj" };
+  if (!sessionSedi(radek, obj)) return { akce: "nesedi" };
   if (radek.expirovano_at) return { akce: "uz_expirovano" };
   const rec = recovery(obj);
   const souhlas = maUplnySouhlas({
@@ -78,10 +98,12 @@ export function planExpirace(radek: RadekKosiku | null, obj: StripeObjekt, ted: 
 
 export type PlanPlatby =
   | { akce: "ignoruj" }
+  | { akce: "nesedi" }
   | { akce: "zapis"; id: string; patch: Record<string, unknown> };
 
 export function planPlatby(radek: RadekKosiku | null, obj: StripeObjekt, ted: Date): PlanPlatby {
   if (!radek) return { akce: "ignoruj" };
+  if (!sessionSedi(radek, obj)) return { akce: "nesedi" };
   const stavPlatby = typeof obj.payment_status === "string" ? obj.payment_status : "paid";
   if (stavPlatby !== "paid") return { akce: "ignoruj" };
   const recovered = typeof obj.recovered_from === "string" && obj.recovered_from ? obj.recovered_from : null;
@@ -142,6 +164,7 @@ export async function zpracujWebhook(raw: string, hlavicka: string, deps: Webhoo
   if (typ === "checkout.session.expired") {
     const plan = planExpirace(radek, obj, deps.ted);
     if (plan.akce === "ignoruj") return { status: 200, body: { ok: true, ignored: "cizi" } };
+    if (plan.akce === "nesedi") return { status: 200, body: { ok: true, ignored: "session" } };
     if (plan.akce === "uz_expirovano") return { status: 200, body: { ok: true, ignored: "duplicita" } };
     const vysledek = await deps.zapisExpiraci(plan.id, plan.patch);
     if (vysledek === "uz_bylo") return { status: 200, body: { ok: true, ignored: "duplicita" } };
@@ -150,6 +173,20 @@ export async function zpracujWebhook(raw: string, hlavicka: string, deps: Webhoo
 
   const plan = planPlatby(radek, obj, deps.ted);
   if (plan.akce === "ignoruj") return { status: 200, body: { ok: true, ignored: "cizi" } };
+  if (plan.akce === "nesedi") return { status: 200, body: { ok: true, ignored: "session" } };
   await deps.zapisPlatbu(plan.id, plan.patch);
   return { status: 200, body: { ok: true, stav: "zaplaceno", obnoveno: plan.patch.obnoveno } };
+}
+
+/** Chyba DB (vyjimka z najdi nebo zapisu) vrati 500, at Stripe udalost zopakuje. */
+export async function obalWebhook(
+  raw: string,
+  hlavicka: string,
+  deps: WebhookDeps,
+): Promise<WebhookOdpoved> {
+  try {
+    return await zpracujWebhook(raw, hlavicka, deps);
+  } catch {
+    return { status: 500, body: { error: "db" } };
+  }
 }

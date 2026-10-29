@@ -1,15 +1,15 @@
 // Cron odesilace pripominky kosiku. Vola se s x-drip-secret.
 // kosik_mail_zapnuto je ve vychozim stavu vypnute, kosik_dry_run zapnute.
-// Mail jde pres odesliPresResend (Resend). Dry-run Resend nevola.
+// Odeslani jde pres posliMail (MAIL_PROVIDER, vychozi resend). Dry-run posliMail nevola.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { nactiKosikFlagy } from "../_shared/kosik-flagy-db.ts";
-import { guardSend, sendIfAllowed } from "../_shared/mailing-guard.ts";
+import { escapeIlikeExact, guardSend, sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { mailKlic } from "../_shared/mail-provider.ts";
-import { aplikujFiltrSouhlasu, castiPraha, prahaNaUtc, produktEntitlement } from "../_shared/kosik-pravidla.ts";
+import { aplikujFiltrSouhlasu, castiPraha, jeMarketingovaUdalost, prahaNaUtc, produktEntitlement } from "../_shared/kosik-pravidla.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { overSecret } from "../_shared/secret-guard.ts";
 import { ODESILATEL, REPLY_TO } from "../_shared/kosik-texty.ts";
-import { zpracujPripominku, type Kandidat, type VysledekMailu } from "./logika.ts";
+import { filtryKroku, zpracujPripominku, type Kandidat, type VysledekMailu } from "./logika.ts";
 
 const admin = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -29,15 +29,11 @@ async function nactiKrok(krok: 0 | 1, dry: boolean, tedIso: string): Promise<Kan
     "id,created_at,email,produkt_klic,castka_halere,souhlas,souhlas_at,souhlas_text,souhlas_verze,stripe_session_id,test,zaplaceno_at,odpoved_at,odhlaseno_at,recovery_url,recovery_expires_at,odhlaseni_token,mail1_due_at,mail1_odeslan_at,mail1_dry_at,mail2_due_at,mail2_odeslan_at,mail2_dry_at",
   );
   q = aplikujFiltrSouhlasu(q);
-  if (krok === 0) {
-    q = q.is("mail1_odeslan_at", null).not("mail1_due_at", "is", null).lte("mail1_due_at", tedIso);
-    if (dry) q = q.is("mail1_dry_at", null);
-  } else if (dry) {
-    q = q.not("mail1_dry_at", "is", null).is("mail1_odeslan_at", null).is("mail2_dry_at", null)
-      .not("mail2_due_at", "is", null).lte("mail2_due_at", tedIso);
-  } else {
-    q = q.not("mail1_odeslan_at", "is", null).is("mail2_odeslan_at", null)
-      .not("mail2_due_at", "is", null).lte("mail2_due_at", tedIso);
+  const filtr = filtryKroku(krok, dry);
+  for (const col of filtr.jeNull) q = q.is(col, null);
+  for (const col of filtr.neniNull) {
+    q = q.not(col, "is", null);
+    if (col === filtr.due) q = q.lte(col, tedIso);
   }
   const { data, error } = await q.limit(40);
   if (error) throw new Error(error.message);
@@ -84,18 +80,30 @@ Deno.serve(async (req) => {
         const jinaSerie = serie && serie[0]?.mail1_odeslan_at ? new Date(serie[0].mail1_odeslan_at) : null;
         const den = castiPraha(ted);
         const odDne = prahaNaUtc(den.year, den.month, den.day, 0, 0, 0).toISOString();
-        const { data: maily, error: mErr } = await admin.from("email_events").select("id,detail")
-          .eq("detail->>email", r.email)
-          .in("type", ["sent", "odeslano", "px_odeslano"])
-          .gte("created_at", odDne)
-          .limit(20);
+        const { data: lead, error: leadErr } = await admin.from("leads").select("id")
+          .ilike("email", escapeIlikeExact(r.email)).limit(1);
         let dostalMarketingDnes = false;
-        if (mErr) dostalMarketingDnes = true;
-        else {
-          dostalMarketingDnes = (maily ?? []).some((e) => {
-            const d = e.detail as { track?: string } | null;
-            return !String(d?.track ?? "").startsWith("kosik-");
-          });
+        if (leadErr) {
+          dostalMarketingDnes = true;
+        } else {
+          const leadId = lead && lead[0]?.id ? String(lead[0].id) : null;
+          const typy = ["sent", "odeslano", "px_odeslano"];
+          const podleLeadu = leadId
+            ? await admin.from("email_events").select("lead_id,type,detail")
+              .eq("lead_id", leadId).in("type", typy).gte("created_at", odDne).limit(30)
+            : { data: [], error: null };
+          const podleEmailu = await admin.from("email_events").select("lead_id,type,detail")
+            .eq("detail->>email", r.email).in("type", typy).gte("created_at", odDne).limit(30);
+          if (podleLeadu.error || podleEmailu.error) {
+            dostalMarketingDnes = true;
+          } else {
+            const vse = [...(podleLeadu.data ?? []), ...(podleEmailu.data ?? [])];
+            dostalMarketingDnes = vse.some((e) => jeMarketingovaUdalost({
+              type: e.type,
+              lead_id: e.lead_id,
+              detail: e.detail as { email?: string; track?: string } | null,
+            }, r.email, leadId));
+          }
         }
         const g = await guardSend(admin, {
           email: r.email,

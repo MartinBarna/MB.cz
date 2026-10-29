@@ -283,6 +283,27 @@ export function platnyPromo(s: string): boolean {
   return /^[A-Za-z0-9_-]{1,64}$/.test(s);
 }
 
+/**
+ * Událost z dnešního dne patří tomuhle e-mailu.
+ * Drip píše type `sent` jen s `lead_id` (detail.email tam není).
+ * Cesty, které email do detailu dávají, sedí i bez leadu.
+ * Vlastní kosik-* track se nepočítá, ať suchý běh neposouvá sám sebe.
+ */
+export function jeMarketingovaUdalost(
+  e: { type?: string | null; lead_id?: string | null; detail?: { email?: string; track?: string } | null },
+  email: string,
+  leadId: string | null,
+): boolean {
+  const typ = String(e.type ?? "");
+  if (typ !== "sent" && typ !== "odeslano" && typ !== "px_odeslano") return false;
+  if (String(e.detail?.track ?? "").startsWith("kosik-")) return false;
+  const detailEmail = String(e.detail?.email ?? "").trim().toLowerCase();
+  const cil = email.trim().toLowerCase();
+  const sediEmail = detailEmail !== "" && detailEmail === cil;
+  const sediLead = !!leadId && e.lead_id != null && String(e.lead_id) === leadId;
+  return sediEmail || sediLead;
+}
+
 /** Filtr, ktery musi mit SQL dotaz odesilace. Test ho pousti pres zapisovac volani. */
 export const SLOUPCE_SOUHLASU = ["souhlas_at", "souhlas_text", "souhlas_verze", "stripe_session_id"] as const;
 

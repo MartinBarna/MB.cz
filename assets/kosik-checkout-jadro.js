@@ -1,5 +1,7 @@
 // Ciste funkce formulare kosiku. Stejne zneni souhlasu jako na serveru
 // (akademie/_supabase/functions/kosik-checkout/logika.ts, SOUHLAS_TEXT).
+// Pripona je .js schvalne: WEDOS posila .mjs bez Content-Type a s nosniff,
+// prohlizec takovy import odmitne.
 
 export const SOUHLAS_VERZE = "kosik-v1-2026-11";
 export const SOUHLAS_TEXT =
@@ -35,6 +37,26 @@ export function omezPromo(href) {
 
 export function maSePrepnout(zapnuto) {
   return zapnuto === true;
+}
+
+/**
+ * Do odkazu (checkout i fallback na puvodni platebni odkaz) doplni
+ * client_reference_id a promo z MBReferral.info. Bez platneho cref necha href byt.
+ * Stare parametry odkazu (vcetne utm na fallbacku) nemaze a nove utm nepridava.
+ */
+export function obohatOdkaz(href, info) {
+  if (!info || typeof info.cref !== "string" || !/^[A-Za-z0-9_-]{1,200}$/.test(info.cref)) return href;
+  let u;
+  try {
+    u = new URL(href, "https://martinbarna.cz");
+  } catch {
+    return href;
+  }
+  u.searchParams.set("client_reference_id", info.cref);
+  if (typeof info.promo === "string" && /^[A-Za-z0-9_-]{1,64}$/.test(info.promo)) {
+    u.searchParams.set("prefilled_promo_code", info.promo);
+  }
+  return u.toString();
 }
 
 /**

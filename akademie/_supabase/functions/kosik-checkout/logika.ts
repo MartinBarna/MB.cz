@@ -89,8 +89,29 @@ export function parametrySession(t: TeloSession): URLSearchParams {
   p.set("success_url", t.polozka.successUrl);
   p.set("cancel_url", t.polozka.cancelUrl);
   p.set("locale", "cs");
+  // Stripe nedovoli discounts a allow_promotion_codes naraz.
+  // Slevu davame jen kdyz je to promo, ktere webhook uzna (10 %). Jinak zadny kod
+  // a allow_promotion_codes false, at si clovek v pokladne nenapise jinou slevu.
   if (t.promoId) p.set("discounts[0][promotion_code]", t.promoId);
+  else p.set("allow_promotion_codes", "false");
   return p;
+}
+
+export type NalezenyPromo = {
+  id: string;
+  percentOff: number | null;
+  amountOff: number | null;
+};
+
+/** Webhook pusti plnou cenu, nebo slevu ze seznamu (konzultace 10 %). Pevna sleva v halerich ne. */
+export function kupoJePovolenaSleva(
+  kupon: { percentOff: number | null; amountOff: number | null } | null,
+  povolenaProcenta: number[],
+): boolean {
+  if (!kupon) return false;
+  if (kupon.amountOff != null && kupon.amountOff !== 0) return false;
+  if (kupon.percentOff == null) return false;
+  return povolenaProcenta.includes(kupon.percentOff);
 }
 
 export type CheckoutBody = {
@@ -118,7 +139,7 @@ export type CheckoutDeps = {
   pocetZaOkno: (dotaz: { email?: string; ipHash?: string; odIso: string }) => Promise<number>;
   vloz: (radek: Record<string, unknown>) => Promise<{ id: string } | { chyba: string }>;
   aktualizuj: (id: string, patch: Record<string, unknown>) => Promise<{ ok: boolean }>;
-  najdiPromo: (kod: string) => Promise<string | null>;
+  najdiPromo: (kod: string) => Promise<NalezenyPromo | null>;
   zalozSession: (form: URLSearchParams) => Promise<
     { ok: true; url: string; sessionId: string } | { ok: false; chyba: string }
   >;
@@ -174,7 +195,8 @@ export async function vytvorCheckout(body: CheckoutBody, deps: CheckoutDeps): Pr
   let promoId: string | null = null;
   if (promo) {
     try {
-      promoId = await deps.najdiPromo(promo);
+      const nalezene = await deps.najdiPromo(promo);
+      if (nalezene && kupoJePovolenaSleva(nalezene, polozka.slevyProcent)) promoId = nalezene.id;
     } catch {
       promoId = null;
     }

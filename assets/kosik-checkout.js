@@ -5,9 +5,10 @@ import {
   SOUHLAS_LABEL,
   kamDal,
   maSePrepnout,
+  obohatOdkaz,
   platnyEmail,
   sestavTelo,
-} from "./kosik-checkout-jadro.mjs";
+} from "./kosik-checkout-jadro.js";
 
 var ENDPOINT = "https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/kosik-checkout";
 var ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts";
@@ -32,8 +33,18 @@ if (!window.MBKosik.prevezme) {
     location.href = href;
   }
 
+  function odkazSReferralem(href) {
+    var info = null;
+    try {
+      if (window.MBReferral && window.MBReferral.info) info = window.MBReferral.info(href);
+    } catch (e) {
+      info = null;
+    }
+    return obohatOdkaz(href, info);
+  }
+
   function otevri(a) {
-    var href = a.getAttribute("href") || a.href;
+    var href = odkazSReferralem(a.getAttribute("href") || a.href);
     var klic = a.getAttribute("data-kosik") || "";
     if (!klic || !href) return;
     zavri();

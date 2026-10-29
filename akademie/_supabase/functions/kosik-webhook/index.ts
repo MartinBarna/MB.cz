@@ -2,7 +2,7 @@
 // Mail se tady neposila. Cizi session (appka, platebni odkazy) vrati 200 a nic nezapise.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { overPodpisStripe } from "./podpis.ts";
-import { zpracujWebhook, type RadekKosiku } from "./logika.ts";
+import { obalWebhook, type RadekKosiku } from "./logika.ts";
 
 const admin = createClient(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
     Deno.env.get("KOSIK_STRIPE_WEBHOOK_SECRET") ?? "",
     Deno.env.get("KOSIK_STRIPE_WEBHOOK_SECRET_TEST") ?? "",
   ];
-  const odpoved = await zpracujWebhook(raw, sig, {
+  const odpoved = await obalWebhook(raw, sig, {
     ted: new Date(),
     overPodpis: (telo, hlavicka) => overPodpisStripe(telo, hlavicka, secrety),
     najdi: async (dotaz) => {
@@ -36,7 +36,8 @@ Deno.serve(async (req) => {
       else if (dotaz.session) q = q.eq("stripe_session_id", dotaz.session);
       else return null;
       const { data, error } = await q.maybeSingle();
-      if (error || !data) return null;
+      if (error) throw new Error(error.message);
+      if (!data) return null;
       return data as RadekKosiku;
     },
     zapisExpiraci: async (id, patch) => {
@@ -45,11 +46,12 @@ Deno.serve(async (req) => {
         .eq("id", id)
         .is("expirovano_at", null)
         .select("id");
-      if (error) return "uz_bylo";
+      if (error) throw new Error(error.message);
       return data && data.length > 0 ? "ok" : "uz_bylo";
     },
     zapisPlatbu: async (id, patch) => {
-      await admin.from("kosik_checkouty").update(patch).eq("id", id).is("zaplaceno_at", null);
+      const { error } = await admin.from("kosik_checkouty").update(patch).eq("id", id).is("zaplaceno_at", null);
+      if (error) throw new Error(error.message);
     },
   });
   return json(odpoved.body, odpoved.status);

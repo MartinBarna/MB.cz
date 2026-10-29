@@ -1,5 +1,5 @@
 import { FLAGY_VYCHOZI, type KosikFlagy } from "../_shared/kosik-pravidla.ts";
-import { zpracujPripominku, type Kandidat, type PripominkaDeps } from "./logika.ts";
+import { filtryKroku, zpracujPripominku, type Kandidat, type PripominkaDeps } from "./logika.ts";
 
 function radek(over: Partial<Kandidat> = {}): Kandidat {
   return {
@@ -114,6 +114,51 @@ Deno.test("garance K1 pri flagu off v dry-runu neni v predmetu ani by se nedosta
   if (html.includes("vrátím ti celou částku")) throw new Error("garance odesla");
   if (html.includes("utm_")) throw new Error("utm");
   if (html.includes("{{")) throw new Error("promenna");
+});
+
+Deno.test("ostry vyber vynecha radky se suchym razitkem", () => {
+  const m1 = filtryKroku(0, false);
+  if (!m1.jeNull.includes("mail1_dry_at") || !m1.jeNull.includes("mail1_odeslan_at")) {
+    throw new Error(JSON.stringify(m1));
+  }
+  const m2 = filtryKroku(1, false);
+  if (!m2.jeNull.includes("mail2_dry_at") || !m2.jeNull.includes("mail2_odeslan_at")) {
+    throw new Error(JSON.stringify(m2));
+  }
+  const suchy = filtryKroku(0, true);
+  if (!suchy.jeNull.includes("mail1_dry_at")) throw new Error("suchy beh by se opakoval");
+});
+
+Deno.test("mimo okno 8 az 20 se mail neposle a due se posune", async () => {
+  const posuny: Record<string, unknown>[] = [];
+  const maily: unknown[] = [];
+  const deps: PripominkaDeps = {
+    ted: new Date("2026-01-15T20:30:00.000Z"),
+    flagy: flagy({ dryRun: false }),
+    nactiKandidaty: async () => [radek()],
+    kontext: async () => ({
+      aktivniEntitlement: false,
+      aktivniKoucink: false,
+      jinaSerie: null,
+      dostalMarketingDnes: false,
+      guardAkce: "send",
+      guardDuvod: "ok",
+    }),
+    oznac: async (_id, patch) => {
+      posuny.push(patch);
+      return { ok: true };
+    },
+    zapisUdalost: async () => {},
+    posliMail: async (p) => {
+      maily.push(p);
+      return { ok: true, status: 200, providerId: "re_nesmi" };
+    },
+    alert: async () => {},
+  };
+  const v = await zpracujPripominku(deps);
+  if (maily.length !== 0 || v.odeslano !== 0) throw new Error(JSON.stringify(v));
+  const due = String(posuny[0]?.mail1_due_at ?? "");
+  if (due !== "2026-01-16T07:00:00.000Z") throw new Error(due);
 });
 
 Deno.test("vypnuty mail flag nevola Resend", async () => {

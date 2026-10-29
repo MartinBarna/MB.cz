@@ -68,11 +68,18 @@
       var info = buyInfo(href);
       if (!info) return null;
       var ref = getRef();
+      var puvodni = "";
+      try {
+        puvodni = new URL(href, location.href).searchParams.get("client_reference_id") || "";
+      } catch (e) { puvodni = ""; }
+      // cref sklada kod partnera s atribuci, ktera na odkazu uz je (analytics.js).
+      // Koučink ma bezKuponu, promo tedy zustane prazdne, kod partnera v cref ne.
       return {
         prod: info.prod,
         bezKuponu: !!info.bezKuponu,
         ref: ref || "",
         promo: (!ref || info.bezKuponu) ? "" : slevovyKod(ref),
+        cref: ref ? slozClientRef(ref, puvodni) : puvodni,
       };
     },
   };

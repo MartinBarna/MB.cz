@@ -10,12 +10,44 @@ import {
   jeVOkne30Dni,
   maUplnySouhlas,
   mail2Po,
+  posunDoOkna,
   posunKvuliPromu,
   produktEntitlement,
   rozdelPodleCastky,
   sablonaProKlic,
 } from "../_shared/kosik-pravidla.ts";
 import { fnSpace, odkazOdhlaseni, renderKosikMail } from "../_shared/kosik-texty.ts";
+
+/**
+ * Ktere sloupce musi byt prazdne a ktere vyplnene, aby radek sel do behu.
+ * Ostry beh (dry false) vynecha radky s mail1_dry_at / mail2_dry_at:
+ * suchy beh uz "odeslal" a po vypnuti dry-runu se ty maily nesmi poslat znovu.
+ */
+export function filtryKroku(krok: 0 | 1, dry: boolean): {
+  jeNull: string[];
+  neniNull: string[];
+  due: "mail1_due_at" | "mail2_due_at";
+} {
+  if (krok === 0) {
+    return {
+      jeNull: ["mail1_odeslan_at", "mail1_dry_at"],
+      neniNull: ["mail1_due_at"],
+      due: "mail1_due_at",
+    };
+  }
+  if (dry) {
+    return {
+      jeNull: ["mail1_odeslan_at", "mail2_dry_at"],
+      neniNull: ["mail1_dry_at", "mail2_due_at"],
+      due: "mail2_due_at",
+    };
+  }
+  return {
+    jeNull: ["mail2_odeslan_at", "mail2_dry_at"],
+    neniNull: ["mail1_odeslan_at", "mail2_due_at"],
+    due: "mail2_due_at",
+  };
+}
 
 export type Kandidat = {
   id: string;
@@ -231,7 +263,7 @@ async function zpracujRadek(
   }
 
   const track = "kosik-" + (produktEntitlement(r.produkt_klic) ?? r.produkt_klic);
-  // Druha brana souhlasu, tesne pred zapisem dry-run i pred Resendem.
+  // Druha brana souhlasu, tesne pred zapisem dry-run i pred odeslanim.
   if (!maUplnySouhlas(r)) {
     await deps.oznac(r.id, { stav: "propadlo_bez_souhlasu", stop_duvod: "bez_souhlasu" });
     await deps.zapisUdalost({
@@ -240,6 +272,22 @@ async function zpracujRadek(
       email: r.email,
       duvod: "bez_souhlasu",
       kosik_id: r.id,
+    });
+    return "stop";
+  }
+  // Okno 8:00 az 20:00 Praha znovu tesne pred odeslanim. Cron mohl radek
+  // sebrat driv a dobehnout az v noci. Mimo okno se due posune, mail neodejde.
+  const tedVOkne = posunDoOkna(deps.ted);
+  if (tedVOkne.getTime() !== deps.ted.getTime()) {
+    const sloupec = r.krok === 0 ? "mail1_due_at" : "mail2_due_at";
+    await deps.oznac(r.id, { [sloupec]: tedVOkne.toISOString(), stop_duvod: "mimo_okno" });
+    await deps.zapisUdalost({
+      type: "kosik_stop",
+      step: r.krok,
+      email: r.email,
+      duvod: "mimo_okno",
+      kosik_id: r.id,
+      due: tedVOkne.toISOString(),
     });
     return "stop";
   }

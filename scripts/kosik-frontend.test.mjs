@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { SOUHLAS_TEXT, kamDal, maSePrepnout, sestavTelo } from "../assets/kosik-checkout-jadro.mjs";
+import { SOUHLAS_TEXT, kamDal, maSePrepnout, obohatOdkaz, sestavTelo } from "../assets/kosik-checkout-jadro.js";
 
 let chyb = 0;
 function check(nazev, ok, detail = "") {
@@ -41,6 +41,21 @@ check("url ze session ma prednost", kamDal({ url: "https://checkout.stripe.com/c
 
 check("zneni souhlasu je stejne na serveru", server.includes(SOUHLAS_TEXT));
 check("novy skript nema utm_", !js.includes("utm_"));
+check("import je .js, ne .mjs", js.includes("./kosik-checkout-jadro.js") && !js.includes(".mjs"));
+const obohaceny = obohatOdkaz(
+  "https://buy.stripe.com/x?client_reference_id=src-web",
+  { cref: "PARTNER10_src-web", promo: "" },
+);
+check("fallback nese cref z referralu", obohaceny.includes("client_reference_id=PARTNER10_src-web"));
+const sTelm = sestavTelo({
+  klic: "coaching-gold-1",
+  email: "a@b.cz",
+  souhlas: false,
+  href: obohaceny,
+  cesta: "/koucing/",
+  website: "",
+});
+check("checkout teleso ma stejny cref", sTelm.cref === "PARTNER10_src-web" && !sTelm.promo);
 
 if (chyb) {
   console.log(chyb + " FAIL");

@@ -2,6 +2,7 @@ import {
   FLAGY_VYCHOZI,
   duvodStopu,
   flagBool,
+  jeMarketingovaUdalost,
   jeVOkne30Dni,
   mail2Po,
   maUplnySouhlas,
@@ -150,6 +151,21 @@ Deno.test("flagy jsou ve vychozim stavu vypnute a dry-run zapnuty", () => {
   if (!vypnutyDry.dryRun) throw new Error("env 1 musi dry-run zapnout");
   if (flagBool("false", true) !== false) throw new Error("false");
   if (FLAGY_VYCHOZI.garanceK1 !== false) throw new Error("garance");
+});
+
+Deno.test("marketing z dripu sedi pres lead_id, ne jen detail.email", () => {
+  const drip = { type: "sent", lead_id: "lead-1", detail: { track: "lead-magnet", key: "0" } };
+  if (!jeMarketingovaUdalost(drip, "a@b.cz", "lead-1")) throw new Error("lead_id ma stacit");
+  if (jeMarketingovaUdalost(drip, "a@b.cz", "jiny-lead")) throw new Error("cizi lead");
+  if (!jeMarketingovaUdalost({ type: "sent", lead_id: null, detail: { email: "a@b.cz" } }, "a@b.cz", null)) {
+    throw new Error("detail.email");
+  }
+  if (jeMarketingovaUdalost({ type: "sent", lead_id: "lead-1", detail: { track: "kosik-konzultace", email: "a@b.cz" } }, "a@b.cz", "lead-1")) {
+    throw new Error("kosik track se nepocita");
+  }
+  if (jeMarketingovaUdalost({ type: "open", lead_id: "lead-1", detail: {} }, "a@b.cz", "lead-1")) {
+    throw new Error("open neni marketing");
+  }
 });
 
 Deno.test("videokurz a academy nemaji sablonu teto vlny", () => {

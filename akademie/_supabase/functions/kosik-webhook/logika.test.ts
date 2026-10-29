@@ -1,5 +1,5 @@
 import { podepis, overPodpisStripe } from "./podpis.ts";
-import { planExpirace, planPlatby, zpracujWebhook, type RadekKosiku } from "./logika.ts";
+import { obalWebhook, planExpirace, planPlatby, zpracujWebhook, type RadekKosiku } from "./logika.ts";
 
 const SECRET = "whsec_test_kosik_neni_produkce";
 
@@ -111,6 +111,36 @@ Deno.test("bez souhlasu se mail neplanuje", () => {
   if (plan.akce !== "zapis" || plan.patch.mail1_due_at != null || plan.patch.stav !== "propadlo_bez_souhlasu") {
     throw new Error(JSON.stringify(plan));
   }
+});
+
+Deno.test("jina stripe session se nezapise", () => {
+  const plan = planExpirace(
+    radek({ stripe_session_id: "cs_puvodni" }),
+    { id: "cs_cizi", metadata: { kosik_id: radek().id } },
+    new Date("2026-01-15T12:00:00.000Z"),
+  );
+  if (plan.akce !== "nesedi") throw new Error(JSON.stringify(plan));
+  const platba = planPlatby(
+    radek({ stripe_session_id: "cs_puvodni" }),
+    { id: "cs_jina", payment_status: "paid" },
+    new Date("2026-02-01T10:00:00.000Z"),
+  );
+  if (platba.akce !== "nesedi") throw new Error(JSON.stringify(platba));
+});
+
+Deno.test("chyba databaze vrati 500, at Stripe zkusi znovu", async () => {
+  const raw = JSON.stringify({ type: "checkout.session.expired", data: { object: { id: "cs_1", metadata: { kosik_id: "u" } } } });
+  const hlavicka = await podepis(SECRET, raw);
+  const odpoved = await obalWebhook(raw, hlavicka, {
+    ted: new Date(),
+    overPodpis: (t, h) => overPodpisStripe(t, h, [SECRET]),
+    najdi: async () => {
+      throw new Error("db down");
+    },
+    zapisExpiraci: async () => "ok",
+    zapisPlatbu: async () => {},
+  });
+  if (odpoved.status !== 500) throw new Error(JSON.stringify(odpoved));
 });
 
 Deno.test("completed s recovered_from zastavi serii", () => {

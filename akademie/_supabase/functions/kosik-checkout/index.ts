@@ -17,15 +17,24 @@ function json(body: unknown, status: number, cors: Record<string, string>): Resp
   });
 }
 
-async function najdiPromo(kod: string): Promise<string | null> {
-  const key = (Deno.env.get("STRIPE_RESTRICTED_PROMO_KEY") ?? "").trim();
-  if (!key) return null;
-  const url = "https://api.stripe.com/v1/promotion_codes?active=true&limit=1&code=" + encodeURIComponent(kod);
-  const res = await fetch(url, { headers: { Authorization: "Bearer " + key } });
+async function najdiPromo(kod: string): Promise<{ id: string; percentOff: number | null; amountOff: number | null } | null> {
+  const promoKlic = (Deno.env.get("STRIPE_RESTRICTED_PROMO_KEY") ?? "").trim();
+  if (!promoKlic) return null;
+  const url = "https://api.stripe.com/v1/promotion_codes?active=true&limit=1&expand[]=data.coupon&code="
+    + encodeURIComponent(kod);
+  const res = await fetch(url, { headers: { Authorization: "Bearer " + promoKlic } });
   if (!res.ok) return null;
-  const data = await res.json().catch(() => null) as { data?: { id?: string }[] } | null;
-  const id = data?.data?.[0]?.id;
-  return typeof id === "string" ? id : null;
+  const data = await res.json().catch(() => null) as {
+    data?: { id?: string; coupon?: { percent_off?: number | null; amount_off?: number | null } | string }[];
+  } | null;
+  const row = data?.data?.[0];
+  if (!row?.id) return null;
+  const kupon = row.coupon && typeof row.coupon === "object" ? row.coupon : null;
+  return {
+    id: row.id,
+    percentOff: typeof kupon?.percent_off === "number" ? kupon.percent_off : null,
+    amountOff: typeof kupon?.amount_off === "number" ? kupon.amount_off : null,
+  };
 }
 
 async function zalozSession(form: URLSearchParams) {
