@@ -136,7 +136,7 @@ Každý týden dostaneš upravený plán a odpovědi na WhatsAppu. Hovory navíc
 
 - Týdenní kontroly: analýza týdne, úprava cílů i aktivit
 
-- Podpora na e-mailu a WhatsApp (po–pá)
+- Podpora na e-mailu a WhatsApp (po-pá)
 
 - Novinka: moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu
 
@@ -1461,7 +1461,7 @@ Začít za 990 Kč měsíčně →
 
 Konečná cena, neplátce DPH. Členství zrušíš kdykoli v zákaznickém portálu, přístup ti doběhne do konce zaplaceného měsíce.
 
-Nejlepší hodnota · Prvních 50 zakládajících
+Nejlepší hodnota
 
 #### Doživotní přístup
 
@@ -1490,8 +1490,6 @@ Platíš kartou nebo Apple Pay. Máš už videokurz? Pak máš zvýhodněnou cen
 Appka Tvůj Coach je v ceně u obou variant. U doživotního přístupu dostaneš rok VIP verze, u měsíčního členství ji máš ve VIP po celou dobu, co ti členství běží.
 
 14denní záruka vrácení peněz: když ti Academy nesedne, do 14 dnů ti vrátím celou částku. Žádné riziko.
-
-Prvních 50 členů má status zakládajícího člena Academy.
 
 #### Ještě váháš? Začni startovacím kitem
 
@@ -1558,7 +1556,7 @@ Vybrat balíček → Nezávazně mi napsat
 
 600+ klientů ★★★★★ 100+ recenzí v oboru od roku 2013 bez jojo efektu
 
-Koučink beru jen v omezeném počtu, aby měl každý klient mou plnou pozornost a výsledky.
+Kdyby bylo plno, řeknu ti to rovnou.
 
 Martin Barna · od 2013
 
@@ -1626,17 +1624,15 @@ Spočítám ti kalorie a makra, postavíme jídelníček z jídel, která ti chu
 
 Jednou týdně pošleš krátký check-in. Já ho vyhodnotím, napíšu ti analýzu a upravím čísla. Až do cíle.
 
-Konzultace 2 990 Kč. A fakticky zdarma, když to myslíš vážně.
+Konzultace 2 990 Kč.
 
-Když si do 14 dní po konzultaci objednáš online koučink, cenu konzultace (2 990 Kč) ti odečtu z ceny balíčku. Buď je to start tvé proměny, nebo férová cena za můj čas. Plán, který si odneseš, ti zůstává tak jako tak.
+Buď je to start tvé proměny, nebo férová cena za můj čas. Plán, který si odneseš, ti zůstává tak jako tak.
 
 Objednat konzultaci →
 
 ### Vyber si svůj balíček
 
 Online koučink na míru s týdenním vedením. Doporučuju Gold, jde do něj většina lidí. Čím déle jdeme společně, tím víc ušetříš.
-
-Máš za sebou konzultaci? Když si Gold nebo Diamond objednáš do 14 dnů po ní, cenu konzultace 2 990 Kč ti z balíčku odečtu.
 
 ★ Nejčastější volba
 
@@ -1680,7 +1676,7 @@ Nezávazně, nejdřív si napíšeme a doladíme detaily.
 
 Diamond
 
-Pro ty, kdo chtějí navíc hovor každý týden. Beru do něj nejvýš 3 lidi najednou.
+Pro ty, kdo chtějí navíc hovor každý týden.
 
 11 900 Kč / měsíc
 
@@ -1701,6 +1697,16 @@ Pro ty, kdo chtějí navíc hovor každý týden. Beru do něj nejvýš 3 lidi n
 Chci Diamond
 
 Nezávazně, nejdřív si napíšeme a doladíme detaily.
+
+#### Jak to po zaplacení probíhá
+
+Zaplatíš kartou a obratem ti přijde mail s odkazem na vstupní dotazník. Vyplníš ho zhruba za deset minut: cíl, zdraví, co ti chutná, kdy stíháš trénovat.
+
+Do 48 hodin od tebe máš spočítané kalorie a makra, jídelníček a trénink. Zároveň ti naskočí klientská sekce a appka Tvůj Coach na stejný e-mail, kterým jsi platil.
+
+Pak jedeme týden po týdnu. Pošleš report za tři minuty z mobilu, já ho projdu, napíšu ti analýzu a upravím čísla.
+
+Platit kartou nechceš? Napiš mi a pošlu ti fakturu na převod. Cena je stejná.
 
 Nevíš, který balíček je pro tebe ten pravý? Napiš mi a poradím ti zdarma.
 
@@ -2221,7 +2227,7 @@ Video kurz v ceně
 
 ∞ doživotní přístup
 
-Nejlepší hodnota · Prvních 50 zakládajících
+Nejlepší hodnota
 
 990 Kč měsíčně · nebo 8 900 Kč jednorázově s doživotním přístupem
 
@@ -2801,7 +2807,7 @@ Kompletní vzdělání pro trenéry a výživové poradce: věda, vedení klient
 
 ∞ doživotní přístup
 
-Nejlepší hodnota · Prvních 50 zakládajících
+Nejlepší hodnota
 
 990 Kč měsíčně · nebo 8 900 Kč jednorázově s doživotním přístupem
 
@@ -4423,6 +4429,306 @@ Zdroje
 
 ---
 
+## Hubnutí a menstruační cyklus: proč váha před menstruací skáče a co s tím
+URL: https://martinbarna.cz/clanky/menstruacni-cyklus-a-hubnuti.html
+Autor: Martin Barna · Vydáno: 2026-10-29
+
+Tři týdny jde všechno podle plánu. Pak přijde týden před menstruací, váha ukáže o kilo víc, kalhoty tlačí a k tomu chuť na čokoládu, jakou jsi měsíc neměla. Tohle je přesně chvíle, kdy klientky píšou, že „to zase nefunguje". Funguje. Jen se díváš na číslo, které v tu chvíli o tuku neříká skoro nic.
+
+### Kilo navíc před menstruací je voda
+
+Kolem menstruace tělo drží víc vody. Kanadská studie sledovala 62 zdravých žen celý rok, dohromady 765 cyklů, a ženy si každý den zapisovaly pocit zadržování vody (White a kol., Obstet Gynecol Int 2011, PMID 21845193). Nejvyšší byl první den krvácení, nejnižší uprostřed folikulární fáze, tedy zhruba týden po menstruaci. Kolem ovulace se zase pomalu zvedal.
+
+Zajímavé je, že s hladinou estradiolu ani progesteronu to v té studii nesouviselo. Ženy hodnotily svůj pocit, váha se neměřila, takže z toho neber přesné gramy. Vzorec ale sedí s tím, co vidím u klientek: vyšší čísla pár dní před menstruací a na jejím začátku, pak pokles, často i pod úroveň před tím výkyvem.
+
+Tuk se za týden nepřidá o kilo, na to bys musela sníst zhruba 7 700 kcal navíc. Když se váha zvedne o kilo za tři dny, je to voda, obsah střev a sůl. A ta zase odejde.
+
+### Pálíš v luteální fázi víc? Trochu, a nespoléhej na to
+
+Na internetu koluje, že ve druhé polovině cyklu spálíš o 300 kcal víc. Data jsou střízlivější.
+
+Metaanalýza 26 studií s 318 ženami (Benton a kol., PLoS One 2020, PMID 32658929) našla malý efekt ve prospěch vyššího klidového výdeje v luteální fázi, tedy po ovulaci. U novějších studií od roku 2000 se ten rozdíl ještě zmenšil a přestal být statisticky průkazný. Autoři k tomu píšou, že studie byly malé a měření cyklu i výdeje často nepřesné.
+
+Novější pokus z roku 2025 (Smith a kol., Appetite, PMID 41005066) měřil u 18 mladých žen klidový výdej, hlad a příjem v laboratoři i doma. V luteální fázi vyšel klidový výdej v průměru o 104 kcal denně vyšší, jenže s takovým rozptylem, že to průkazné nebylo. Hlad, chutě ani snědené jídlo se mezi fázemi nelišily.
+
+Jinou optiku přinesla chilská studie (Maury-Sintjago a kol., Nutrients 2022, PMID 35631136): u štíhlých žen šel v luteální fázi nahoru klidový výdej asi o 120 kcal, ale příjem o 317 kcal. U žen s obezitou se klidový výdej nezměnil a o něco víc jedly sacharidů. Byl to jen průřez třiceti žen, takže ho beru jako signál a víc z něj nevyvozuju.
+
+Co z toho plyne pro praxi: rozdíl ve výdeji, pokud nějaký je, se počítá na desítky až nižší stovky kalorií. Když chuť na sladké přidá víc, než o kolik výdej stoupl, bilance jde na druhou stranu. Proto bych si na „pálím víc" v týdnu před menstruací nic nenapsal.
+
+### Chutě: s plánem, ne proti nim
+
+U části klientek se před menstruací chutě zvednou výrazně, u jiných skoro vůbec. Studie se tu rozcházejí, a to je asi nejpoctivější odpověď: záleží na tobě. Proto doporučuju jedno: dva tři cykly si zapisuj, kdy chutě přicházejí. Pak víš, který týden přijdou, a dá se na něj připravit.
+
+Co funguje v praxi:
+
+- Naplánuj si sladké dopředu. Dvě kostky hořké čokolády nebo jogurt s ovocem zapsané do dne ráno jsou lepší než půl tabulky ve stoje u linky večer.
+
+- Bílkoviny a objem ke každému jídlu. Tvaroh, skyr, vejce, kuřecí, k tomu zelenina nebo polévka. Hlad se pak drží líp i ve dnech, kdy se ozývá víc.
+
+- Klidně týden na udržovačce. Když víš, že tě ty dny pravidelně rozhodí, posuň příjem na udržovací hodnotu a deficit si nech na zbytek měsíce. Týdenní bilance rozhoduje víc než jeden týden.
+
+- Spánek. Kdo spí málo, má chutě vyšší vždycky. Před menstruací to platí dvojnásob.
+
+### Vážení podle cyklu
+
+Tady se dá ušetřit nejvíc nervů. Porovnávej váhu ve stejné fázi cyklu, ne týden po týdnu. Den před menstruací proti dni před menstruací minulý měsíc, týden po menstruaci proti týdnu po ní.
+
+Prakticky:
+
+- Važ se dál každé ráno, ale rozhoduj podle týdenního průměru.
+
+- V týdnu před menstruací a během ní nic neměň. Žádné škrtání kalorií kvůli číslu, které tě zítra pustí.
+
+- Vedle váhy si jednou za dva týdny změř pas a udělej fotku. Ty kolísají míň.
+
+### Trénink: poslouchej se, plán neměň
+
+Velký přehled 78 studií (McNulty a kol., Sports Med 2020, PMID 32661839) našel, že výkon v síle i vytrvalosti může být v časné folikulární fázi, tedy během menstruace, nepatrně nižší. Velikost efektu ale autoři označili za triviální a kvalitu důkazů za nízkou. Doporučují přístup podle jednotlivce, ne obecná pravidla „v téhle fázi necvič".
+
+Moje praxe s klientkami odpovídá: trénink se kvůli cyklu nepřeplánovává. Když ti je první dva dny zle, uber váhu nebo série a jdi radši projít. Když se cítíš dobře, cvič normálně. Silový trénink je pro ženy jedna z nejlepších investic, které má smysl držet celý měsíc, víc o tom tady.
+
+### Kdy s tím k lékařce
+
+Když ti při hubnutí menstruace vynechá nebo úplně zmizí, tělo hlásí, že má energie málo. To patří ke gynekoložce, i když se ti zrovna daří hubnout. Totéž platí pro velmi nepravidelný cyklus, velmi silné bolesti nebo krvácení a otoky, které nemizí.
+
+Kdo chce mít hubnutí nastavené na míru včetně týdnů, kdy cyklus hraje proti, tomu to ladím v koučinku. A když si to chceš umět nastavit sama, celý systém flexibilního stravování je ve videokurzu.
+
+### Časté otázky
+
+O kolik může váha před menstruací stoupnout?
+
+U klientek běžně vidím půl až jedno a půl kila, u některých i víc. Jde hlavně o vodu a po začátku menstruace odchází. Proto porovnávej stejné fáze cyklu, ne dva týdny vedle sebe.
+
+Mám v luteální fázi jíst víc, protože víc pálím?
+
+Nespoléhal bych na to. Rozdíl ve výdeji je podle metaanalýzy malý a v novějších studiích nejistý. Když ti v těch dnech udělá dobře vyšší příjem, posuň se na udržovačku vědomě a zapiš si to, ať víš, kde jsi.
+
+Platí tohle i při hormonální antikoncepci?
+
+Kombinovaná hormonální antikoncepce přirozené výkyvy hormonů tlumí, takže výkyvy váhy bývají menší. Pravidlo porovnávat průměry a stejné části měsíce ale platí pořád. Na otázky k samotné antikoncepci je správná adresa gynekoložka.
+
+📚 Zdroje, ať si to můžeš ověřit:
+
+1) White CP, Hitchcock CL, Vigna YM, Prior JC. Obstet Gynecol Int 2011:138451. PMID 21845193, DOI 10.1155/2011/138451
+
+2) Benton MJ, Hutchins AM, Dawes JJ. PLoS One 2020;15(7):e0236025. PMID 32658929, DOI 10.1371/journal.pone.0236025
+
+3) Smith M a kol. Appetite 2025;216:108314. PMID 41005066, DOI 10.1016/j.appet.2025.108314
+
+4) Maury-Sintjago E a kol. Nutrients 2022;14(10):1997. PMID 35631136, DOI 10.3390/nu14101997
+
+5) McNulty KL a kol. Sports Med 2020;50(10):1813-1827. PMID 32661839, DOI 10.1007/s40279-020-01319-3
+
+### Mohlo by tě zajímat
+
+- Kalorický deficit: kolik jíst
+
+- Silový trénink pro ženy
+
+- Menopauza a přibývání váhy
+
+Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.
+
+---
+
+## 22 otázek, které dostávám v koučinku nejčastěji
+URL: https://martinbarna.cz/clanky/nejcastejsi-otazky-v-koucinku.html
+Autor: Martin Barna · Vydáno: 2026-10-28
+
+Coach se ptá, já odpovídám. Bez omáčky, tak jak to s klienty fakt řešíme :)
+
+Coach: Kdy jsi naposledy viděl klienta, který tvrdil, že "skoro nic nejí a nehubne", a co se ukázalo, když jste začali vážit jídlo?
+
+Martin: "Skoro nic nejím a stejně nehubnu." Slyším to každý týden. Pak začneme příjem jídla sledovat přesněji. A vidíme, že jí více, než si myslel. Většinou to není o tom, že klient lže, jen to člověk bez praxe a know-how prostě nevidí: olej na pánvi, ořechy "jen hrst", oslazená káva se smetanou, víkend, který se do "skoro nic" nepočítá. Jakmile začneš vážit a zapisovat 7 ze 7 dní, rozdíl je vidět během pár dní. Nedávno jsem klientku chválil, že zapsala i den přes kalorie. Kdo něco vynechá, třeba protože se stydí, mívá ve skutečnosti víc kalorií než ten, kdo zapíše přesně a je trochu přes. Tělo fyzikální zákony neobejde. Vážení jídla alespoň na nějakou dobu ukáže pravdu, kterou hlava nevidí.
+
+Coach: Proč u tvých klientů přestane fungovat deficit, který první měsíc fungoval skvěle, a co s tím děláš?
+
+Martin: Zároveň se nenápadně rozvolní přesnost zápisu jídla/porcí a množství kroků... Koukáme na míry a fotky.
+
+Coach: Jak vysvětlíš klientovi rozdíl mezi "zhubnout na váze" a "zhubnout tuk" během jedné minuty?
+
+Martin: Deficit = dolů jde všechno (i svaly/tvary postavy). Deficit + bílkoviny + činky = dolů jde hlavně tuk (takže vypadáš pevnější).
+
+Coach: Jaký mýtus o bílkovinách slyšíš od klientů nejčastěji a odkud ho mají?
+
+Martin: Že víc bílkovin najednou tělo nevstřebá, nebo že ničí ledviny. Většinou z internetu a od známých, kteří to "někde četli". Tělo vstřebá všechno, jen to zpracuje pomaleji. Navíc otázkou by nemělo být, kolik bílkovin tělo vstřebá, ale kolik navíc ještě skutečně zvýší svalové přírůstky. A to je minimálně 1,6 g / kg hmotnosti, dle některých výzkumů i kolem 2 g / kg. Mám o tom detailnější články na webu, kde to rozmezí rozebírám, a klientům to vždy nastavuji individuálně. Každopádně nerozhoduje počet jídel a jestli klient snídá, rozhoduje součet bílkovin za den. U zdravého člověka se příliš vysokého příjmu bílkovin bát nemusíme.
+
+Coach: Kolik bílkovin reálně jedí tví klienti na začátku a jak jim pomáháš dostat se na cíl bez "jídla, co nechutná"?
+
+Martin: Na začátku bývají klidně o 30-50 % pod cílem. Nic nového jíst nemusíš. Vezmeme, co ti chutná, a ke každému jídlu přidáme bílkovinu: tvaroh, skyr, vajíčka, maso, luštěniny. A prostě toho dáme dostatečnou porci. Takže například ne jeden malý jogurt, ale celá vanička tvarohu + dochutíme. Ne maličká porce masa, ale třeba 200 g masa. Bílkoviny ke každému jídlu = větší sytost = menší chutě večer = snazší udržení deficitu při hubnutí a lepší výživa těla i svalů.
+
+Coach: Je protein v prášku "průmyslově zpracované jídlo", kterého se máme bát? Jak to řešíš s klienty, kteří se bojí "chemie"?
+
+Martin: Například syrovátkový protein v prášku je prostě mléčná bílkovina v nízkokalorické formě. Není povinný, je to pomocník, když nestíháš nebo máš problém sníst dost bílkovin z jídla. Kdo nechce, jí bílkoviny z normálního jídla a je to úplně v pohodě. O kvalitě stravy rozhoduje celý jídelníček, příjem všech živin a v případě hubnutí celkový průměr kcal týdne, ne jedna odměrka proteinu. Syrovátkový protein však jednoznačně škodlivý není, naopak mnoha lidem s podvýživou může pomoci zvýšit svůj příjem bílkovin na "zdravější míru".
+
+Coach: Kdo z tvých klientů dokázal zhubnout tuk a zároveň nabrat svaly, a čím se lišil od těch, kterým to nešlo?
+
+Martin: Nejčastěji začátečníci v posilovně a lidé, kteří se k tréninku vrací po pauze. Je to často klient, který cvičí a hubne, ale váha skoro stojí nebo jde lehce nahoru, ale míry za týden jdou dolů a vizuálně jasně hubne tělesný tuk. U chlapa, co cvičí, míry běžně kolísají, svaly a glykogen dělají své. Proto koukáme na trend, ne na jedno číslo. Rozdíl nebyl v genetice, ale v tom, že pravidelně silově trénovali, jedli dost bílkovin a nešli do extrémního deficitu.
+
+Coach: Co čeká člověka po první dietě? Proč první "cut" skoro nikdy nevypadá jako postava z "podle plánu"?
+
+Martin: Protože pod tukem je často méně svalů, než si ten člověk představoval. A vybudovat slušný svalový základ prostě trvá roky, ne měsíce. Po první dietě jsi štíhlejší, ale ne "fitness model". To není prohra nebo selhání, to je přirozený start. Další kapitola je nabírání síly a svalů, a teprve pak to začne vypadat jako ta "postava z časáku".
+
+Coach: Přišel za tebou klient, co bral léky na hubnutí (GLP1)? Co jste museli hlídat, aby nehubnul svaly?
+
+Martin: Pár mých klientů GLP1 používá a nemyslím si, že je to špatně. Lék tlumí apetit, což může být výhoda pro udržení deficitu dlouhodobě bez "food noise" (myšlenek na jídlo). Nevýhodou může být, že je pro ně těžší najíst dost bílkovin. A pokud necvičí a nejí dost bílkovin, neubývá jen tuk, ale i svalová hmota a hustota kostí. A to může být velký problém. Ale toto je stejně tak problém i u lidí, kteří GLP1 neberou a hubnou svižně, ale bez cvičení a bílkovin. Týká se to tedy všech. Spousta lidí čeká, že budu léky na hubnutí shazovat. Nebudu. Lék ti stáhne chuť k jídlu. Svaly ti ale sám o sobě neochrání. To je tvoje práce. Zda nasadit lék a jaké bude dávkování však vždy určuje lékař, ne já. Je to vždy o spolupráci.
+
+Coach: Co se podle tvé zkušenosti stane, když někdo vysadí lék na hubnutí a nezmění návyky?
+
+Martin: Chuť k jídlu se vrátí a staré návyky s ní. Když u toho nebyl silový trénink, bílkoviny a změna návyků toho, co člověk jí a jak se hýbe, kila jdou zpět nahoru a skončíš "skinny fat". Proto návyky stavíme už během léčby GLP1, ne až potom. Mimochodem stejný problém mají i lidé bez GLP1, kteří zhubnou, často hodně rychle, a nevytvoří si dostatečně pevné návyky ohledně stravování a pohybu/sportu, nenaučí se jíst dostatek bílkovin a správně cvičit.
+
+Coach: Jak se změnily návyky dětí nebo partnera u klientů, kteří začali hubnout?
+
+Martin: Například jedna klientka napsala z dovolené, že se za sebe poprvé nestydí a manžel si ji pořád fotí. Jiný klient cvičí se synem. A strašně je to sblížilo. Jeho cílem bylo od startu, že si přál, jako starší tatínek, stíhat adolescentnímu synovi a být mu blíž. A to se nám taky povedlo. Děti nedělají, co jim říkáme. Dělají to, co vidí dělat nás. Když začnete vařit jinak a chodit, rodina se často veze s vámi, aniž byste museli kázat. Když nemáte motivaci kvůli sobě, najděte si ji v druhých. Nakonec to bude prospěšné stejně i vám.
+
+Coach: Jak udržuješ formu ty sám na dovolené s rodinou, když nemáš posilovnu ani čas?
+
+Martin: Minimální verze. Hodně chodím. Bílkoviny ke každému jídlu a pár krátkých tréninků s vlastní vahou, když to jde. Není to všechno nebo nic. Dovolená je od toho, abyste si ji užili. Kdo trénuje celý rok, může si na dovolené dát v klidu oraz. Kdo na to celý rok kašle, toho cvičení na dovolené stejně nespasí.
+
+Coach: Kdyby ses mohl s klientem bavit jen 30 sekund, co mu řekneš?
+
+Martin: Silový trénink pravidelně. Hodně chůze. Přiměřené kalorie, dostatek bílkovin a vlákniny. Kvalitní spánek a hydratace.
+
+Coach: Jak vypadá úplně obyčejný den stravování, se kterým tví klienti hubnou nejčastěji?
+
+Martin: Nuda, a právě proto funguje. Snídaně s dostatkem bílkovin (pokud klient preferuje snídat, počet jídel je totiž individuální), třeba vajíčka nebo tvaroh s ovocem. Oběd maso nebo luštěniny, příloha, zelenina. Večeře podobně. Svačina skyr nebo ovoce. Množství podle tvých kalorií. Žádné zázraky, jen udržitelnost. Zpočátku si klient najde, co má rád a zároveň to má hodně bílkovin/vlákniny a přiměřeně kalorií. Tyto potraviny si kombinuje do jídel a svačin. Postupně nasadíme "rotování potravin", kde si každý týden zařazuje nové potraviny a jídla, pro pestrost stravy a zlepšení přehledu o kaloriích a živinách širšího spektra potravin a jídel.
+
+Coach: Kolik kroků denně chceš po klientech a proč zrovna tolik?
+
+Martin: Většina mých klientů se dostane alespoň na 8 až 12 tisíc, někteří však mají mnohem více! Začínáme ale vždy od jejich čísla (tedy kolik aktuálně zvládají v praxi), ne od mého, a přidáváme postupně, aby to pro daného klienta bylo udržitelné. Kroky jsou levné a časově flexibilní forma spalování a navíc pomáhají regulovat stres a redukovat špatnou náladu.
+
+Coach: Musí klient při hubnutí přestat svačit? Jaké svačiny u tvých klientů fungují?
+
+Martin: Nemusí. Rozhodují kalorie za celý den, ne počet jídel. Fungují svačiny s bílkovinami a vlákninou: skyr, tvaroh, jogurt, sušené maso, ovoce k tomu. Nebo třeba celozrnný toast se šunkou/sýrem/zeleninou. Zasytí a udržují pocit stabilní energie během dne.
+
+Coach: Klient snědl na oslavě pizzu a dort. Co mu napíšeš druhý den ráno?
+
+Martin: "Doufám, že chutnalo a užil sis to, kámo! :) Není to všechno nebo nic, jedeme dále a snažíme se to zohlednit na průměru kcal týdne, tedy doladit další dny tak, abychom aspoň cca týdenní příděl kcal trefili i tak. Pokud máš o víkendu čas, dáme navíc procházku či výlet, možná nějaké kolo nebo sport, co máš rád, navíc. Žádné hladovění, žádné tresty. Váha může být dočasně výš kvůli vodě a jídlu, koukáme však na dlouhodobý trend." Jedna oslava ti progres nezničí. Rozbije ho až "tak teď už je to stejně jedno, takže si dám všechno".
+
+Coach: Čím se liší hubnutí klientů po čtyřicítce od dvacátníků? Co děláš jinak?
+
+Martin: Zákony fyziky jsou stejné, život je jiný. Víc práce, rodina, horší spánek, často i více stresu. Dáváme větší důraz na silový trénink a bílkoviny, aby si klient udržel svaly, a plán stavíme na reálný kalendář. Ne teoreticky podle trenéra. Minimální verze na těžší týdny a služebky. A hlavně trpělivost a konzistentní práce. S tím však většina starších klientů nemá vůbec problém, jejich generace bývá zvyklá, že pro dosažení cíle je potřeba zabrat a vydržet.
+
+Coach: "Mentalita dietáře" vs "mentalita sportovce": jak klienta přepneš z honění váhy na budování síly?
+
+Martin: Dietář jí méně, bojí se sacharidů a honí se za číslem na váze. Sportovec jí na výkon, buduje svaly a sleduje sílu. Přepnutí je jednoduché: sledujeme silové výkony. Když vidíš, že zvedáš víc, přestaneš brát jedno ranní vážení jako známku pokroku či selhání. A když vidíš, že sílíš, často změníš i přístup k jídlu. Už to není jen sníst co nejméně, aby šla váha dolů. Ale třeba jím výživně, ať dále sílím, a k tomu si hlídám porce a ingredience, abych byl i pevnější. I ta motivace pracovat na postavě celkově je pak často vyšší.
+
+Coach: Kolik tvých klientů chtělo "nejdřív trochu zhubnout, než půjdou do fitka"? Co jim říkáš?
+
+Martin: Hodně. Jedné klientce jsem třeba poslal trénink na doma rovnou navázaný na fitko, ať může makat doma a pak se dřív hecnout do posilovny. Říkám jim: fitko není odměna za zhubnutí, je to nástroj, jak zhubnout (pro ženy = zpevnit) rychleji a mít i tak hezké tvary, místo plochého zadku. Začni jednoduše, pár cviků, malé váhy, nikdo tě tam nehodnotí. Všichni řeší hlavně sebe. Nečekej, až budeš "připravená". Připravená se staneš tím, že prostě začneš. A u chlapů je to to samé, jen jinými slovy.
+
+Coach: Jak vybrat dobrého trenéra nebo kouče? Podle čeho poznáš špatného?
+
+Martin: Dobrý kouč tě učí rybařit, neprodává ti jen ryby. Špatného poznáš podle zázračných slibů, zakázaných potravin, drahých suplementů jako základu a toho, že ti nevysvětlí "proč". Ptej se, jak měří progres a co dělá, když se to klientovi zasekne. Taky se dívej na hodnocení jeho klientů, třeba na Facebooku vidíš i profily těch klientů - napiš jim, jaký na něj mají názor i delší dobu po zhubnutí/spolupráci. To je nejlepší měřítko jeho know-how a skutečného dlouhodobého dopadu na ty lidi.
+
+Coach: Proč chceš, aby klient bral svaly jako "pojistku na stáří", a jak to vysvětlíš lidem, kterým jde jen o kila?
+
+Martin: Protože svaly ti jednou zvednou nákup, vnouče i tebe ze židle. A pro ty, co řeší kila: s více svaly vypadáš líp při stejné váze a hubnutí se s většími svaly a cvičením lépe udržuje. Jedna věc, dva výsledky. Často říkám: "Svalová hmota je jako peníze, chceme si ji vybudovat co nejvíce na stáří, aby pak bylo z čeho brát."
+
+Chceš to projít se mnou osobně? https://martinbarna.cz/koucing/
+
+Be Effective, Martin Barna
+
+Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.
+
+---
+
+## Váha stojí: co dělat, když se přestane hýbat
+URL: https://martinbarna.cz/clanky/vaha-stoji-plateau.html
+Autor: Martin Barna · Vydáno: 2026-10-22
+
+První tři týdny šla váha dolů skoro sama. Pak přišel týden, kdy se nehnula. A po něm další. Přitom jíš stejně jako předtím a nic jsi nezměnil. Tohle je moment, kdy mi klienti píšou nejčastěji, a taky moment, kdy se dá udělat první zbytečná chyba: sáhnout po kaloriích dřív, než se podíváš na čísla.
+
+### Nejdřív zjisti, jestli je to vůbec plateau
+
+Váha ze dne na den skáče o půl kila i víc a s tukem to nemá společného skoro nic. Sůl z večeře, plné střevo, doplněný glykogen po sacharidovém dni, tvrdý trénink, cyklus, málo spánku. Vidím u klientů, že velká část paniky vzniká z porovnávání dvou konkrétních rán. Proč váha kolísá, i když hubneš, mám podrobně rozepsané v samostatném e-booku.
+
+Pravidlo, které dávám všem: rozhoduje týdenní průměr, ne jedno číslo. Važ se každé ráno za stejných podmínek a porovnávej průměr tohoto týdne s průměrem toho minulého.
+
+A pak si dej klidně dva týdny, než začneš cokoli měnit. Když průměr klesá o 100 nebo 200 gramů týdně, hubneš, jen pomaleji, než by tě bavilo. O plateau má smysl mluvit, když se týdenní průměr nehne ani nahoru, ani dolů zhruba tři týdny po sobě.
+
+Sebekontrola má u hubnutí smysl, i když je to jen tužka a papír. Systematický přehled 22 studií (Burke a kol., J Am Diet Assoc 2011, PMID 21185970) našel konzistentní souvislost mezi zapisováním a úbytkem hmotnosti. Autoři zároveň dodávají, že síla toho důkazu je slabá, protože studie měly metodická omezení a zkoumaly hodně podobné skupiny lidí. Beru to tak, že zápis je levný nástroj se slušnou stopou v datech, a tak s ním i zacházím.
+
+### Než ubereš kalorie, zkontroluj zápis
+
+Tohle je nejnepohodlnější část a u mých klientů zároveň ta, která vyřeší nejvíc případů.
+
+Když hubneš, tvoje porce postupně rostou, aniž se to dostane do zápisu. Olej se přestane vážit a začne lít od oka. Ovoce se přestane počítat. Přibude ochutnávání při vaření, dojídání po dětech a víkend, který se do zápisu nedostane celý. Jestli sázíš na to, že rozdíl dohoníš kroky navíc, tady mám rozepsané, proč to obvykle prohraje s přesností jídla.
+
+Že to není maličkost, ukazuje stará, ale hezky konkrétní práce (Buhl a kol., J Am Diet Assoc 1995, PMID 7594141). Deset pacientů s dlouhodobými potížemi s hmotností hlásilo příjem pod 1 200 kcal denně. Všichni měli normální hodnoty hormonů štítné žlázy. Osm z deseti mělo klidový i celkový energetický výdej v rozmezí 15 % předpokládané hodnoty a svůj příjem výrazně podhodnocovali. Devátý měl nízký celkový výdej při normálním klidovém, tedy málo pohybu, a k tomu podhodnocoval příjem o 38 %. A desátý? Ten měl opravdu snížený výdej, klidový o 23 % a celkový o 25 %, a jeho zápis byl přesný. Jeden z deseti tedy nelhal sobě ani deníku, jeho tělo prostě pálilo míň.
+
+Praktický úkol na sedm dní: važ všechno, včetně tuků na vaření, nápojů a víkendu. Je to jednorázová revize, abys věděl, kde reálně jsi. Naprostá většina „plateau" končí právě tady, a pro ten zbytek jsou tu další dvě sekce.
+
+### Adaptace je reálná, jen menší, než se o ní píše
+
+Když ani po poctivém týdnu čísla nesedí, jsi u druhé příčiny. Tělo si během hubnutí sníží výdej, a to víc, než odpovídá jen úbytku hmotnosti. Odborně adaptivní termogeneze. Pozor, není to totéž co „pomalý metabolismus", se kterým za mnou lidi chodí ještě před prvním zhubnutým kilem; ten mýtus mám rozebraný tady.
+
+Přehledová práce z roku 2022 (Egan a Collins, Proc Nutr Soc, PMID 35103583) to popisuje takhle: běžné počítání, kdy si deficit vynásobíš počtem týdnů a vyjde ti úbytek, reálný výsledek konzistentně nadhodnocuje. Skutečný úbytek bývá menší a plateau přichází dřív, i když člověk dietu dodržuje přesně.
+
+Kolik to dělá, měřila menší studie na osmi obézních mužích (Tremblay a Chaput, Br J Nutr 2009, PMID 19660148). Po prvních 5 kg klesl jejich klidový výdej o 418 kJ denně (zhruba 100 kcal) víc, než se předpokládalo. Ve chvíli, kdy se váha zastavila, byl ten rozdíl 706 kJ denně (zhruba 170 kcal). Adaptivní snížení termogeneze tvořilo asi 31 % celé kompenzace, která zastavení způsobila.
+
+Dvě věci k tomu. Za prvé, osm mužů je pilotní studie a definitivní číslo bych z ní nedělal. Za druhé, i tak je vidět, o čem se bavíme: o desítkách až necelých dvou stovkách kalorií, ne o polovině tvého výdeje. Deficit pořád platí, jen se posunul cíl.
+
+### Kdy kalorie snížit a kdy je to chyba
+
+Rozhodovací pravidlo, které používám:
+
+Sniž, když týdenní průměr stojí tři týdny, zápis máš sedm dní poctivý a na váze i v zrcadle se nic neděje. Ubírej málo, 100 až 150 kcal denně, nejlépe ze sacharidů nebo tuků, a bílkoviny nech být. Pak zase čekej dva týdny.
+
+Nesnižuj, když platí kterákoli z těchto věcí:
+
+- Váha stojí méně než tři týdny.
+
+- Nemáš poctivý zápis, takže nevíš, z čeho ubíráš.
+
+- Klesá ti síla v tréninku, spíš hůř, jsi podrážděný a máš chutě po celý den.
+
+- Už jsi v posledních měsících snižoval dvakrát a pokaždé to zabralo na kratší dobu.
+
+- Přidal jsi silový trénink a obvod pasu jde dolů, i když váha stojí. Pak se ti mění složení těla a snižovat by byla škoda.
+
+Když se poznáváš ve spodní části druhého seznamu, patří tam pauza.
+
+### Diet break: pauza, která tě neposune zpátky
+
+Pauza znamená zvednout příjem zpátky na udržovací hodnotu na jeden až dva týdny, dál vážit jídlo a dál trénovat. Je to řízená fáze plánu, kterou jednou ukončíš a vrátíš se do deficitu.
+
+Nejznámější data k tomu dala australská studie MATADOR (Byrne a kol., Int J Obes 2018, PMID 28925405). Padesát jedna obézních mužů dostalo dietu na 67 % udržovacího příjmu. Jedna skupina ji držela 16 týdnů v kuse, druhá ji rozdělila na osm dvoutýdenních bloků diety proložených sedmi dvoutýdenními bloky v energetické rovnováze. Kdo dokončil podle protokolu (36 mužů z 51 randomizovaných, takže skoro třetina odpadla), zhubl v přerušované skupině 14,1 kg oproti 9,1 kg ve skupině průběžné, a to hlavně tuku (12,3 kg oproti 8,0 kg). Ztráta beztukové hmoty se mezi skupinami nelišila. Během těch dvoutýdenních pauz se váha měnila v průměru o 0,0 kg.
+
+K té studii patří dvě výhrady. Obě skupiny měly stejnou dobu diety, ale přerušovaná skupina byla v programu 30 týdnů místo 16. Ten rozdíl v kilech tedy platí pro stejný počet týdnů deficitu, na kalendáři to trvalo skoro dvakrát tak dlouho. Taky šlo výhradně o muže s obezitou, ne o člověka, který si chce shodit poslední čtyři kila.
+
+I tak z toho plyne užitečná zpráva: pauza tě nevrací na start. Průměrná změna hmotnosti během těch pauz byla nulová. Studie k diet breaks mám shrnuté v e-booku tady.
+
+### Časté otázky
+
+Jak dlouho musí váha stát, aby to bylo plateau?
+
+Zhruba tři týdny bez pohybu týdenního průměru. Kratší úseky bez pohybu jsou u hubnutí normální a jeden týden neříká skoro nic.
+
+Mám v plateau přidat kardio, nebo ubrat jídlo?
+
+Když už chodíš a trénuješ, sáhni radši po přesnosti zápisu a případně po malém snížení příjmu. Pohyb navíc si šetři jako páku na později, protože se dá přidávat jen do určité míry a čím dřív ji vyčerpáš, tím dřív ti dojdou možnosti.
+
+Kdy s tím jít k lékaři?
+
+Když máš poctivě zapsaný týden, váha stojí dlouhodobě a k tomu cítíš výraznou únavu, zimu, vypadávání vlasů nebo otoky. Tohle patří na vyšetření a odběry ke tvému lékaři. Ve zmíněné studii Buhla a kol. měl snížený výdej jeden pacient z deseti; skutečná zdravotní příčina se u části lidí najde a hádat se dá jen do chvíle, než ji někdo změří.
+
+📚 Zdroje, ať si to můžeš ověřit:
+
+1) Egan AM, Collins AL. Proc Nutr Soc 2022;81(2):199-212. PMID 35103583, DOI 10.1017/S0029665121003669
+
+2) Tremblay A, Chaput JP. Br J Nutr 2009;102(4):488-92. PMID 19660148, DOI 10.1017/S0007114508207245
+
+3) Byrne NM et al. (MATADOR). Int J Obes 2018;42(2):129-138. PMID 28925405, DOI 10.1038/ijo.2017.206
+
+4) Buhl KM et al. J Am Diet Assoc 1995;95(12):1393-400. PMID 7594141, DOI 10.1016/S0002-8223(95)00367-3
+
+5) Burke LE, Wang J, Sevick MA. J Am Diet Assoc 2011;111(1):92-102. PMID 21185970, DOI 10.1016/j.jada.2010.10.008
+
+Článek má informativní charakter a není lékařským doporučením. Při zdravotních potížích se poraď s lékařem.
+
+---
+
 ## Kolik kávy denně: co pro tebe káva dělá a co ne
 URL: https://martinbarna.cz/clanky/kolik-kavy-denne.html
 Autor: Martin Barna · Vydáno: 2026-10-08
@@ -5171,7 +5477,7 @@ Změny ze zadržené vody uvidíš do pár dnů. Úbytek tuku bývá na obličej
 
 ## Kalorický deficit: kolik jíst, abys hubla a přitom fungovala
 URL: https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html
-Autor: Martin Barna · Vydáno: 2026-08-07
+Autor: Martin Barna · Vydáno: 2026-08-07 · Aktualizováno: 2026-10-28
 
 O kalorickém deficitu už většina lidí, co za mnou přijde, slyšela. Zádrhel bývá jinde. Buď ubrali tak málo, že se za tři měsíce skoro nic nestalo, nebo ubrali tolik, že se v pátém týdnu složili a dojedli celou spíž. Tenhle článek je o tom, jak si to číslo nastavit tak, aby se s ním dalo normálně žít.
 
@@ -5224,6 +5530,8 @@ Nikdo z nich přitom nelhal schválně. Olej na pánvi, sousta při vaření, a 
 
 Zbytek už je opakování. Většina lidí, kterým to u mě vyšlo, neměla chytřejší plán, jen ho drželi déle.
 
+Na stejné téma mám kratší přehled kalorický deficit v kostce, článek o bílkovinách, svalech v kalorickém deficitu a ukázkový jídelníček na hubnutí. Když váha stojí, pokračuj článkem váha stojí.
+
 ### Časté otázky
 
 Musím počítat kalorie navždy?
@@ -5237,6 +5545,14 @@ Jeden týden sám o sobě moc neznamená, u žen do toho navíc mluví cyklus a 
 Je lepší ubrat sacharidy, nebo tuky?
 
 Pro hubnutí rozhoduje celkový deficit, takže ubírej z toho, co ti v jídle chybět nebude, a bílkoviny nech nahoře. U klientů, kteří milují pečivo, nechávám sacharidy vysoko a ubírám tuky. Obráceně to funguje stejně dobře.
+
+Jak zjistím svůj denní výdej (TDEE)?
+
+Nejrychleji kalkulačkou z výšky, váhy, věku a pohybu. Je to odhad, takže ho po 2 až 3 týdnech uprav podle toho, jak se hýbe průměrná váha.
+
+Jak rychle bych měla v deficitu hubnout?
+
+Rozumné tempo je 0,5 až 1 % tělesné hmotnosti týdně, při 70 kg tedy 350 až 700 g. Pomalejší tempo pomáhá udržet svaly.
 
 📚 Zdroje, ať si to můžeš ověřit:
 
@@ -5405,7 +5721,7 @@ Okamžitě, klidně na pohotovost, při ztrátě citu v rozkroku a kolem konečn
 
 ## Elonga a HRV náramek: co je věda a co marketing
 URL: https://martinbarna.cz/clanky/elonga-hrv-veda-nebo-marketing.html
-Autor: Martin Barna · Vydáno: 2026-07-20
+Autor: Martin Barna · Vydáno: 2026-07-20 · Aktualizováno: 2026-10-28
 
 Klient mi poslal reklamu na Elongu. „Měří regeneraci, stres, funkční věk, připravenost na trénink. Stojí za tím PhD a 30 let výzkumu. Mám si to koupit?" Odpověď je složitější než ano/ne. HRV je reálná věc. Velká část toho, co se z ní v appkách prodává jako jistota o tvém nervovém systému, už tak jistá není.
 
@@ -5573,6 +5889,8 @@ A když Elongu ještě nemáš a řešíš formu: nejdřív nastav základy. Pak
 - Elonga (oficiální science a literature stránky): elonga.com – pro srovnání s tím, co firma sama deklaruje
 
 Pozn.: Vycházím z veřejných firemních materiálů, standardních HRV guideline a peer-reviewed kritiky frekvenčních metrik. Nemám interní validační data Elongy, která nejsou publikovaná. Když je firma zveřejní proti EKG na lidech, rád tenhle článek doplním.
+
+Základy, které náramek nenahradí, jsou v článcích kolik spánku a jak pravidelně, objem tréninku v dietě a VO2max a delší život. Jak číst čísla z náramku bez přehánění, je v textu korelace není kauzalita.
 
 ### Časté otázky
 
@@ -6331,7 +6649,7 @@ Ano, hlavně když posiluješ: podle přehledu z roku 2025 kreatin u žen prosp�
 
 ### Proč zrovna ženy
 
-Ženy mají v těle přirozeně nižší zásoby kreatinu než muži a z běžné stravy (hlavně z masa) ho často přijímají míň. Právě proto můžou na doplnění reagovat citlivě. Nový velký přehled o kreatinu v ženském zdraví (2025) shrnuje, že kreatin u žen prospívá síle, výkonu a složení těla, hlavně v kombinaci se silovým tréninkem, a nadějně vypadá i u nálady a poznávacích funkcí, včetně možného zmírnění příznaků deprese.
+Ženy mají v těle přirozeně nižší zásoby kreatinu než muži a z běžné stravy (hlavně z masa) ho často přijímají míň. Právě proto můžou na doplnění reagovat citlivě. Velký přehled o kreatinu v ženském zdraví z roku 2025 shrnuje, že kreatin u žen prospívá síle, výkonu a složení těla, hlavně v kombinaci se silovým tréninkem, a nadějně vypadá i u nálady, paměti a soustředění, včetně možného zmírnění příznaků deprese.
 
 ### Nejen svaly: mozek a stárnutí
 
@@ -6339,9 +6657,9 @@ Systematický přehled z roku 2026 (přes 1 500 starších lidí) našel, že p�
 
 ### Po menopauze: 5 g denně a posilování
 
-U klientek po přechodu slýchám pořád tu samou věc: kreatin si berou spíš ženy z posilovny. Metaanalýza Naddafha a kol. (2026, PMID 42141930) shrnuje 7 randomizovaných studií u 608 žen po menopauze. Průměrný zisk: +0,37 kg svalové hmoty a +7,5 kg na leg-pressu. To je slušné číslo, když víš, jak po přechodu sval mizí. Platilo to u dávky 5 g denně v kombinaci se silovým tréninkem. Dávky do 3 g bez posilování v tomhle přehledu nefungovaly. Samotný prášek bez činky v těch datech nestačil.
+U klientek po přechodu slýchám pořád tu samou větu: „Kreatin je spíš pro ženy z posilovny.“ Metaanalýza Naddafha a kol. (2026, PMID 42141930) shrnuje 7 randomizovaných studií u 608 žen po menopauze. Průměrný zisk: +0,37 kg svalové hmoty a +7,5 kg na leg-pressu. To je slušné číslo, když víš, jak po přechodu sval mizí. Platilo to u dávky 5 g denně v kombinaci se silovým tréninkem. Dávky do 3 g bez posilování v tomhle přehledu nefungovaly. Samotný prášek bez činky v těch datech nestačil.
 
-Širší pohled dává Chilibeck a kol. (2017, PMID 29138605): 22 randomizovaných studií, 721 lidí ve věku 57-70 let. Se silovým tréninkem přidal kreatin v průměru +1,37 kg svalové hmoty. V těch studiích se neukázalo poškození jater ani ledvin. V koučinku to beru prakticky. Když po menopauze posiluješ, 5 g monohydrátu denně je dávka, u které tyhle přehledy ukazují zisk svalu i síly. Levné, podle těch dat bezpečné, a k základu (bílkoviny, spánek, konzistence) to sedí. Bez činky to u těchhle skupin skoro nehrálo.
+Širší pohled dává Chilibeck a kol. (2017, PMID 29138605): 22 randomizovaných studií, 721 lidí ve věku 57-70 let. Se silovým tréninkem přidal kreatin v průměru +1,37 kg svalové hmoty. V těch studiích se neukázalo poškození jater ani ledvin. V koučinku to beru prakticky. Když po menopauze posiluješ, 5 g monohydrátu denně je dávka, u které tyhle přehledy ukazují zisk svalu i síly. Levné, podle těch dat bezpečné, a k základu (bílkoviny, spánek, konzistence) to sedí. Bez posilování to ale v těchto studiích skoro nefungovalo.
 
 ### A co ty mýty?
 
@@ -7443,7 +7761,7 @@ Ano. Cvičení s vlastní vahou (dřepy, kliky, hip thrust, tahy s expandérem) 
 
 ## Vzorový jídelníček na hubnutí: ukázkový den kolem 1500–1700 kcal
 URL: https://martinbarna.cz/clanky/vzorovy-jidelnicek-na-hubnuti.html
-Autor: Martin Barna · Vydáno: 2026-07-02
+Autor: Martin Barna · Vydáno: 2026-07-02 · Aktualizováno: 2026-10-28
 
 Když se řekne jídelníček na hubnutí, většina lidí si představí seznam „povolených" potravin a hromadu zákazů. Realita je nudnější a zároveň mnohem přívětivější: hubneš, když dlouhodobě přijmeš míň energie, než vydáš. Nic víc, žádné zázračné potraviny. V tomhle článku ti ukážu konkrétní ukázkový den kolem 1500–1700 kcal, vysvětlím, proč jsou přesná čísla u každého individuální, a hlavně ti ukážu, jak si den upravit nahoru nebo dolů podle sebe.
 
@@ -7512,6 +7830,8 @@ Pokud bereš léky, jsi těhotná nebo kojíš, řešíš nějakou nemoc nebo m�
 
 Chceš do toho jít systematicky? Ve videokurzu výživy (1 490 Kč) tě provedu celým nastavením krok za krokem, nebo se mi ozvi na koučink na míru, kde ti jídelníček i tréninkový plán sestavím přímo na tvoje čísla a život.
 
+Až budeš chtít jít víc do hloubky, navazují na to články o tom, kolik v deficitu jíst a co jíst při hubnutí, dále makroživiny a hubnutí a víkendové přejídání.
+
 ### Časté otázky
 
 Kolik kalorií mám jíst na hubnutí?
@@ -7522,6 +7842,12 @@ Ne. Je to ukázka struktury, ne plán na míru. Pro aktivnějšího nebo větš�
 
 Musím se držet přesně tohohle jídelníčku?
 Vůbec ne. Jde o princip, ne o konkrétní potraviny. Můžeš si potraviny vyměnit za jiné s podobnými makry – to je podstata flexibilního stravování. Důležité je držet celkový příjem a dostatek bílkovin, ne jíst přesně tohle.
+
+Kolik bílkovin by měl mít jídelníček na hubnutí?
+Ukázkový den má kolem 110 g. Pro většinu aktivních lidí se osvědčuje 1,6 až 2,2 g na kilo váhy, víc se dočteš v článku o bílkovinách. Těch 110 g tak sedí zhruba na váhu 50 až 69 kg, a když vážíš víc, přidej si do dne porci bílkovin navíc.
+
+Co když mám po vzorovém dni hlad?
+Přidej porci bílkovin nebo zeleniny, nebo se posuň k 1700 kcal. Hlad každý den je signál, že je deficit moc velký.
 
 ### Mohlo by tě zajímat
 
@@ -13994,7 +14320,7 @@ Silový trénink dvakrát až třikrát týdně, 7 000 až 9 000 kroků denně a
 
 ## Bílkoviny: kolik jich jíst a proč
 URL: https://martinbarna.cz/clanky/bilkoviny.html
-Autor: Martin Barna · Vydáno: 2026-06-21
+Autor: Martin Barna · Vydáno: 2026-06-21 · Aktualizováno: 2026-10-28
 
 Kdybych měl u jídelníčku hlídat jedinou věc, byly by to bílkoviny. Pomáhají ti hubnout, drží ti svaly a zasytí tě líp než většina ostatního na talíři. Problém je, že jich většina lidí jí míň, než by potřebovala. Tak si to vyjasníme.
 
@@ -14029,6 +14355,8 @@ Pro většinu aktivních lidí se osvědčuje 1,6–2,2 g bílkovin na kilogram 
 
 Snaž se dát si zdroj bílkovin do každého jídla. Je to nejjednodušší způsob, jak se dostat na své číslo, aniž bys musel nad každým gramem počítat. Snídaně, oběd, večeře. Pokaždé něco bílkovinného na talíři.
 
+Když budeš chtít jít dál, mrkni na bílkoviny a ledviny, protein po tréninku, kolagen versus bílkoviny a maso versus proteinový prášek. Cenu porce spočítá kalkulačka, kolik stojí bílkoviny.
+
 ### Časté otázky
 
 Proč jsou bílkoviny při hubnutí tak důležité?
@@ -14042,6 +14370,14 @@ Z masa a ryb, vajec a mléčných výrobků (tvaroh, řecký jogurt, skyr, sýry
 Jak se dostat na svoje číslo bez počítání každého gramu?
 
 Dej si zdroj bílkovin do každého jídla: na snídani, oběd i večeři. Je to nejjednodušší způsob, jak se na své číslo dostat.
+
+Kolik bílkovin denně mám jíst?
+
+Pro většinu aktivních lidí 1,6 až 2,2 g na kilo váhy. Při 80 kg je to zhruba 130 až 175 g za den, při hubnutí klidně k horní hranici, líp tě to zasytí.
+
+Škodí hodně bílkovin ledvinám?
+
+Studie u lidí se zdravými ledvinami zhoršení funkce ledvin při vyšším příjmu bílkovin nenašly, co přesně ukazují a kde mají limity, rozebírám v článku o bílkovinách a ledvinách. Při onemocnění ledvin se poraď s lékařem.
 
 ### Mohlo by tě zajímat
 
@@ -14459,7 +14795,7 @@ Ne. Flexibilní neznamená cpát se celý den sladkým. Funguje to, když větš
 
 ## Kalorický deficit v kostce
 URL: https://martinbarna.cz/clanky/kaloricky-deficit.html
-Autor: Martin Barna · Vydáno: 2026-06-20 · Aktualizováno: 2026-06-21
+Autor: Martin Barna · Vydáno: 2026-06-20 · Aktualizováno: 2026-10-28
 
 Když chceš zhubnout, nejde to obejít. Musíš přijmout míň energie, než vydáš. Tomu se říká kalorický deficit a stojí za každým hubnutím, ať už ho člověk řeší přes čaj, prášek nebo cokoliv jiného. Žádná tajná potravina za tím není. Pojď si to projít tak, aby ti to dávalo smysl.
 
@@ -14484,7 +14820,7 @@ Tady většina lidí chybuje. Vrhnou se do extrému ve stylu „budu jíst 800 k
 
 ### Proč na bílkovinách záleží
 
-V deficitu ti hrozí, že kromě tuku spálíš i svaly. Drží tě před tím dvě věci. Dost bílkovin, zhruba 1,6 až 2 g na kilo váhy, a silový trénink. Bílkoviny tě k tomu pěkně zasytí, takže s hladem bojuješ míň.
+V deficitu ti hrozí, že kromě tuku spálíš i svaly. Drží tě před tím dvě věci. Dost bílkovin, zhruba 1,6 až 2,2 g na kilo váhy, a silový trénink. Bílkoviny tě k tomu pěkně zasytí, takže s hladem bojuješ míň.
 
 ### Nejčastější chyby
 
@@ -14498,6 +14834,8 @@ V deficitu ti hrozí, že kromě tuku spálíš i svaly. Drží tě před tím d
 
 Deficit není trest, je to nástroj. Když ho nastavíš s rozumem, hubneš, máš energii a netrpíš u toho.
 
+Delší návod, kolik ubrat, je v článku kolik jíst v deficitu. K tomu se hodí svaly v kalorickém deficitu, námitky proti kalorickému deficitu, víkendové přejídání a co dělat, když váha stojí.
+
 ### Časté otázky
 
 Co je kalorický deficit?
@@ -14510,11 +14848,15 @@ Výsledek bývá stejný: hlad, ztráta svalů, vyhoření a nakonec jojo efekt.
 
 Jak v deficitu neztratit svaly?
 
-Drží tě před tím dvě věci: dost bílkovin, zhruba 1,6 až 2 g na kilo váhy, a silový trénink. Bílkoviny tě navíc zasytí, takže s hladem bojuješ míň.
+Drží tě před tím dvě věci: dost bílkovin, zhruba 1,6 až 2,2 g na kilo váhy, a silový trénink. Bílkoviny tě navíc zasytí, takže s hladem bojuješ míň.
 
 Proč nehubnu, i když se snažím jíst míň?
 
 Častá chyba jsou „neviditelné“ kalorie: olej, máslo, slazené nápoje a ujídání při vaření. Pět dní v deficitu a dva dny nadbytek o víkendu dají stagnaci. A váhu ovlivňuje voda, sleduj trend za týdny.
+
+Jak dlouho můžu být v kalorickém deficitu?
+
+Tak dlouho, dokud ho zvládáš bez velkého hladu a únavy. Když se to začne sypat, může pomoct krátká pauza na udržovacím příjmu.
 
 ### Mohlo by tě zajímat
 
@@ -18440,7 +18782,7 @@ Výživa
 
 ### NABÍRÁNÍ TUKŮ NA BUNĚČNÉ ÚROVNI
 
-Vybral jsem pro tebe úryvek z mého článku „Dělá vás vaše dieta tlustšími?“. Celý si ho můžeš přečíst tady: Můj článek „Dělá Vás Vaše dieta tlustšími?“
+Vybral jsem pro tebe úryvek z mého staršího článku „Dělá vás vaše dieta tlustšími?“. Navazuje na něj článek: Jojo efekt: proč se váha vrací a jak ho porazit
 
 - Pokud nabíráte či hubnete tuky, máte určité množství tukových buněk a tyto buňky se zmenšují, když hubnete a zvětšují, když nabíráte.
 
@@ -18482,7 +18824,7 @@ Takže nejenže rychle nabereš zpátky všechen shozený tuk, ale nabereš ho d
 
 Takhle si dokonce můžeš vytvořit novou „výchozí hodnotu tělesného tuku“ = tzv. bodyfat set point.
 
-Celé to s dietami, které používá většina lidí, i s odpověďmi na otázky PROČ a JAK, rozebírám podrobně v celém článku tady: Můj článek „Delá Vás Vaše dieta tlustšími?“.
+Celé to s dietami, které používá většina lidí, i s odpověďmi na otázky PROČ a JAK, rozebírám podrobně v celém článku tady: Jojo efekt: proč se váha vrací a jak ho porazit.
 
 ### Časté otázky
 
