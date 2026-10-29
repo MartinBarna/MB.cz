@@ -3,7 +3,16 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 // Upozornění Martinovi na nový lead. Odeslání jen přes posliMail, přepínač
 // defaultně vypnutý. Deploy téhle složky musí nahrát i `_shared` (mail-provider).
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
-import { ALERT_TO, FROM_ALERT, KLIC_PREPINAC, KLIC_STROP, ohlasNovyLead } from "./upozorneni.ts";
+import {
+  ALERT_TO,
+  FROM_ALERT,
+  KLIC_PREPINAC,
+  KLIC_SOUHRN,
+  KLIC_STROP,
+  ohlasNovyLead,
+  pocetBezTestu,
+  zaberDen,
+} from "./upozorneni.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -229,7 +238,7 @@ Deno.serve(async (req) => {
 
     // Interní alert až PO uložení. Neawaitovat: výjimka v okolním try by z uloženého
     // leadu udělala 500 a formulář by to zkusil znovu. Vypnuto (výchozí) neposílá.
-    // Duplicita ani testovací lead (TEST, +tester) sem účelně nepatří jako „nový".
+    // Duplicita ani testovací lead (fitness.barna*, adresa s +, jméno TEST) sem jako „nový" nepatří.
     if (!duplicate) {
       const uloha = ohlasNovyLead({
         env: (k) => {
@@ -240,15 +249,39 @@ Deno.serve(async (req) => {
           if (error) throw new Error(String(error.message || "config").slice(0, 180));
           const mapa = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, String(r.value ?? "")]));
           return {
-            prepniac: mapa.has(KLIC_PREPINAC) ? (mapa.get(KLIC_PREPINAC) ?? null) : null,
+            prepinac: mapa.has(KLIC_PREPINAC) ? (mapa.get(KLIC_PREPINAC) ?? null) : null,
             strop: mapa.has(KLIC_STROP) ? (mapa.get(KLIC_STROP) ?? null) : null,
           };
         },
         spocitejOd: async (iso) => {
-          const { count, error } = await supa.from("leads").select("id", { count: "exact", head: true }).gte("created_at", iso);
-          if (error || typeof count !== "number") throw new Error(String(error?.message || "count").slice(0, 180));
-          return count;
+          // Testovací adresy vyřadí už dotaz (stejně jako daily-digest), ať nezaplní
+          // stránku. Jméno TEST dodá `pocetBezTestu`. Plná stránka = den je přes strop.
+          const { data, error } = await supa.from("leads").select("email,name")
+            .gte("created_at", iso)
+            .not("email", "ilike", "fitness.barna%")
+            .not("email", "like", "%+%")
+            .limit(2000);
+          if (error || !data) throw new Error(String(error?.message || "count").slice(0, 180));
+          const n = pocetBezTestu(data);
+          return data.length >= 2000 ? Math.max(n, 2000) : n;
         },
+        zaberSouhrn: (den) => zaberDen(den, {
+          zmenDen: async (d) => {
+            const upd = await supa.from("app_config")
+              .update({ value: d, updated_at: new Date().toISOString() })
+              .eq("key", KLIC_SOUHRN)
+              .neq("value", d)
+              .select("key");
+            if (upd.error) throw new Error(String(upd.error.message || "souhrn").slice(0, 180));
+            return (upd.data ?? []).length;
+          },
+          vloz: async (d) => {
+            const ins = await supa.from("app_config").insert({ key: KLIC_SOUHRN, value: d });
+            if (!ins.error) return "ok";
+            if (ins.error.code === "23505") return "duplicita";
+            throw new Error(String(ins.error.message || "souhrn").slice(0, 180));
+          },
+        }),
         posli: async (m) => {
           const r = await posliMail({
             from: FROM_ALERT,

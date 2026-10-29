@@ -4,14 +4,17 @@ import {
   ALERT_TO,
   casPraha,
   jeAno,
+  denPraha,
   jeTestovaciLead,
   jeZapnuto,
   ohlasNovyLead,
+  pocetBezTestu,
   pulnocPrahaIso,
   rozhodni,
   sestavMail,
   stropZHodnoty,
   VYCHOZI_STROP,
+  zaberDen,
   type Konfig,
   type Zavislosti,
 } from "./upozorneni.ts";
@@ -78,15 +81,32 @@ Deno.test("strop: nečíslo a extrém padají na výchozí 10", () => {
   check("zlomek", stropZHodnoty("10.5") === VYCHOZI_STROP);
 });
 
-Deno.test("testovací lead: TEST a +tester, ne obyčejné jméno", () => {
+Deno.test("testovací lead: jako daily-digest, plus jméno TEST i s podtržítkem", () => {
   check("TEST", jeTestovaciLead("jana@example.com", "TEST") === true);
   check("test-claude", jeTestovaciLead("jana@example.com", "test-claude") === true);
+  check("TEST_CLAUDE", jeTestovaciLead("jana@example.com", "TEST_CLAUDE") === true);
+  check("test_claude", jeTestovaciLead("jana@example.com", "test_claude") === true);
   check("A TEST", jeTestovaciLead("jana@example.com", "A TEST") === true);
   check("Tester není TEST", jeTestovaciLead("jana@example.com", "Tester") === false);
+  check("contest není TEST", jeTestovaciLead("contest@example.com", "Jana") === false);
+  check("+ kdekoli", jeTestovaciLead("jana+novinky@gmail.com", "Jana") === true);
   check("+tester", jeTestovaciLead("jana+tester@gmail.com", "Jana") === true);
-  check("+TESTER", jeTestovaciLead("Jana+TESTER@gmail.com", "Jana") === true);
-  check("contest", jeTestovaciLead("contest@example.com", "Jana") === false);
+  check("fitness.barna", jeTestovaciLead("fitness.barna@gmail.com", "Martin") === true);
+  check("fitness.barna+", jeTestovaciLead("Fitness.Barna+k@gmail.com", "Martin") === true);
+  check("cizí doména fitness.barna ne", jeTestovaciLead("jana@fitness.barna.cz", "Jana") === false);
   check("normální", jeTestovaciLead("jana@example.com", "Jana Nováková") === false);
+});
+
+Deno.test("testovací leady se do stropu nepočítají", () => {
+  const n = pocetBezTestu([
+    { email: "jana@example.com", name: "Jana" },
+    { email: "fitness.barna@gmail.com", name: "Martin" },
+    { email: "fitness.barna+k@gmail.com", name: "Martin" },
+    { email: "a+b@x.cz", name: "Anna" },
+    { email: "karel@x.cz", name: "TEST_CLAUDE" },
+    { email: "eva@x.cz", name: "Eva" },
+  ]);
+  check("dva skuteční", n === 2);
 });
 
 Deno.test("rozhodnutí: vypnuto, test, duplicita, strop, souhrn na hraně", () => {
@@ -141,16 +161,29 @@ Deno.test("souhrn řekne počet a taky poslední e-mail", () => {
   check("e-mail není v předmětu", !m.subject.includes("jana@"));
 });
 
-type Stopa = { konfig: number; pocet: number; maily: { subject: string; html: string; text: string }[] };
+type Stopa = { konfig: number; pocet: number; zaber: number; maily: { subject: string; html: string; text: string }[] };
 
-function deps(stopa: Stopa, opts: { env?: string; konfig?: Konfig; pocet?: number | "chyba"; konfigChyba?: boolean; posliChyba?: boolean }): Zavislosti {
+function deps(stopa: Stopa, opts: {
+  env?: string;
+  konfig?: Konfig;
+  pocet?: number | "chyba";
+  konfigChyba?: boolean;
+  posliChyba?: boolean;
+  zaber?: boolean | "chyba";
+}): Zavislosti {
   return {
     env: () => opts.env,
     ted: TED,
     prectiKonfig: async () => {
       stopa.konfig++;
       if (opts.konfigChyba) throw new Error("db config");
-      return opts.konfig ?? { prepniac: null, strop: null };
+      return opts.konfig ?? { prepinac: null, strop: null };
+    },
+    zaberSouhrn: async (den) => {
+      stopa.zaber++;
+      check("zábor nese dnešní den", den === denPraha(TED), den);
+      if (opts.zaber === "chyba") throw new Error("souhrn db");
+      return opts.zaber !== false;
     },
     spocitejOd: async (iso) => {
       stopa.pocet++;
@@ -167,7 +200,7 @@ function deps(stopa: Stopa, opts: { env?: string; konfig?: Konfig; pocet?: numbe
 }
 
 Deno.test("vypnutý přepínač nepočítá a neposílá", async () => {
-  const s: Stopa = { konfig: 0, pocet: 0, maily: [] };
+  const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
   const v = await ohlasNovyLead(deps(s, {}), LEAD);
   check("duvod", v.posilano === false && v.duvod === "vypnuto", v.duvod);
   check("config se četla", s.konfig === 1);
@@ -175,60 +208,101 @@ Deno.test("vypnutý přepínač nepočítá a neposílá", async () => {
 });
 
 Deno.test("env ne je kill switch bez čtení DB", async () => {
-  const s: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const v = await ohlasNovyLead(deps(s, { env: "ne", konfig: { prepniac: "ano", strop: "10" } }), LEAD);
+  const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v = await ohlasNovyLead(deps(s, { env: "ne", konfig: { prepinac: "ano", strop: "10" } }), LEAD);
   check("vypnuto", v.duvod === "vypnuto" && v.posilano === false);
   check("bez DB", s.konfig === 0 && s.pocet === 0 && s.maily.length === 0);
 });
 
 Deno.test("zapnuto pošle jeden mail se zdrojem a e-mailem", async () => {
-  const s: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const v = await ohlasNovyLead(deps(s, { konfig: { prepniac: "ano", strop: null } }), LEAD);
+  const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v = await ohlasNovyLead(deps(s, { konfig: { prepinac: "ano", strop: null } }), LEAD);
   check("odesláno", v.posilano === true && v.duvod === "jeden", v.duvod);
   check("jeden mail", s.maily.length === 1);
+  check("jednotlivý mail zábor nevolá", s.zaber === 0);
   check("tělo", s.maily[0].text.includes("jana@example.com") && s.maily[0].text.includes("kviz"));
 });
 
 Deno.test("TEST a +tester nevolají poštu ani počet", async () => {
   for (const lead of [
     { ...LEAD, name: "TEST" },
-    { ...LEAD, email: "a+tester@example.com" },
+    { ...LEAD, name: "TEST_CLAUDE" },
+    { ...LEAD, email: "a+novinky@example.com" },
+    { ...LEAD, email: "fitness.barna@gmail.com" },
   ]) {
-    const s: Stopa = { konfig: 0, pocet: 0, maily: [] };
-    const v = await ohlasNovyLead(deps(s, { konfig: { prepniac: "ano", strop: "10" } }), lead);
+    const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+    const v = await ohlasNovyLead(deps(s, { konfig: { prepinac: "ano", strop: "10" } }), lead);
     check("test " + lead.email, v.duvod === "test" && s.maily.length === 0 && s.pocet === 0 && s.konfig === 0);
   }
 });
 
 Deno.test("duplicita neposílá", async () => {
-  const s: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const v = await ohlasNovyLead(deps(s, { konfig: { prepniac: "ano", strop: "10" } }), { ...LEAD, duplicate: true });
+  const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v = await ohlasNovyLead(deps(s, { konfig: { prepinac: "ano", strop: "10" } }), { ...LEAD, duplicate: true });
   check("duplicita", v.duvod === "duplicita" && s.maily.length === 0 && s.konfig === 0);
 });
 
 Deno.test("jedenáctý lead je souhrn, dvanáctý ticho", async () => {
-  const s11: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const v11 = await ohlasNovyLead(deps(s11, { konfig: { prepniac: "ano", strop: "10" }, pocet: 11 }), LEAD);
+  const s11: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v11 = await ohlasNovyLead(deps(s11, { konfig: { prepinac: "ano", strop: "10" }, pocet: 11 }), LEAD);
   check("souhrn", v11.duvod === "souhrn" && s11.maily.length === 1 && s11.maily[0].subject.includes("11"));
-  const s12: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const v12 = await ohlasNovyLead(deps(s12, { konfig: { prepniac: "ano", strop: "10" }, pocet: 12 }), LEAD);
+  check("souhrn zabral den", s11.zaber === 1);
+  const s12: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v12 = await ohlasNovyLead(deps(s12, { konfig: { prepinac: "ano", strop: "10" }, pocet: 12 }), LEAD);
   check("ticho", v12.duvod === "strop" && v12.posilano === false && s12.maily.length === 0);
+  check("nad stropem se zábor nevolá", s12.zaber === 0);
+});
+
+Deno.test("druhý souběh souhrn neodešle, chyba záboru taky ne", async () => {
+  const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v = await ohlasNovyLead(deps(s, { konfig: { prepinac: "ano", strop: "10" }, pocet: 11, zaber: false }), LEAD);
+  check("už zabrané", v.posilano === false && v.duvod === "souhrn_uz" && s.maily.length === 0 && s.zaber === 1);
+  const s2: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const v2 = await ohlasNovyLead(deps(s2, { konfig: { prepinac: "ano", strop: "10" }, pocet: 11, zaber: "chyba" }), LEAD);
+  check("chyba záboru", v2.posilano === false && v2.duvod === "souhrn" && s2.maily.length === 0);
+});
+
+Deno.test("zábor dne pustí jen jednoho, i když oba vidí prázdný řádek", async () => {
+  let hodnota: string | null = null;
+  const db = {
+    zmenDen: async (den: string) => {
+      if (hodnota !== null && hodnota !== den) {
+        hodnota = den;
+        return 1;
+      }
+      return 0;
+    },
+    vloz: async (den: string) => {
+      if (hodnota !== null) return "duplicita" as const;
+      hodnota = den;
+      return "ok" as const;
+    },
+  };
+  const a = await zaberDen("2026-10-29", db);
+  const b = await zaberDen("2026-10-29", db);
+  check("první ano", a === true);
+  check("druhý ne", b === false);
+  check("v řádku je dnešek", hodnota === "2026-10-29");
+  hodnota = "2026-10-28";
+  const c = await zaberDen("2026-10-29", db);
+  const d = await zaberDen("2026-10-29", db);
+  check("nový den zase jeden", c === true && d === false);
 });
 
 Deno.test("chyba počtu ani pošty neshodí volajícího", async () => {
-  const s1: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const a = await ohlasNovyLead(deps(s1, { konfig: { prepniac: "ano", strop: "10" }, pocet: "chyba" }), LEAD);
+  const s1: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const a = await ohlasNovyLead(deps(s1, { konfig: { prepinac: "ano", strop: "10" }, pocet: "chyba" }), LEAD);
   check("pocet", a.duvod === "pocet" && a.posilano === false);
-  const s2: Stopa = { konfig: 0, pocet: 0, maily: [] };
-  const b = await ohlasNovyLead(deps(s2, { konfig: { prepniac: "ano", strop: "10" }, posliChyba: true }), LEAD);
+  const s2: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
+  const b = await ohlasNovyLead(deps(s2, { konfig: { prepinac: "ano", strop: "10" }, posliChyba: true }), LEAD);
   check("vyjimka", b.duvod === "vyjimka" && b.posilano === false);
-  const s3: Stopa = { konfig: 0, pocet: 0, maily: [] };
+  const s3: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
   const c = await ohlasNovyLead(deps(s3, { konfigChyba: true }), LEAD);
   check("config", c.duvod === "config" && s3.maily.length === 0 && s3.pocet === 0);
 });
 
 Deno.test("env ano funguje i když config spadne, strop zůstane výchozí", async () => {
-  const s: Stopa = { konfig: 0, pocet: 0, maily: [] };
+  const s: Stopa = { konfig: 0, pocet: 0, zaber: 0, maily: [] };
   const v = await ohlasNovyLead(deps(s, { env: "ano", konfigChyba: true, pocet: 11 }), LEAD);
   check("souhrn na výchozím stropu 10", v.duvod === "souhrn", v.duvod);
 });
@@ -242,6 +316,10 @@ Deno.test("lead-capture neawaituje alert, posílá přes posliMail a ne přes Re
   check("posliMail", kod.includes("posliMail("));
   check("žádný přímý Resend", !kod.includes("api.resend.com"));
   check("jen po úspěchu, ne při duplicate v téže větvi návratu 500", kod.includes("if (!duplicate)"));
+  check("počet bez testů", kod.includes("pocetBezTestu("));
+  check("zábor souhrnu", kod.includes("zaberDen(") && kod.includes("23505") && kod.includes('neq("value"'));
+  check("překlep prepniac je pryč", !kod.includes("prepniac"));
+  check("pole se jmenuje prepinac", kod.includes("prepinac:"));
 });
 
 Deno.test("děkovačka má tichý odkaz na Academy bez utm, ceny a slibu kapacity", async () => {
@@ -254,4 +332,6 @@ Deno.test("děkovačka má tichý odkaz na Academy bez utm, ceny a slibu kapacit
   check("bez ceny", !/Kč|Kc/.test(blok));
   check("bez prvních 50", !/prvních 50|prvnich 50/i.test(blok));
   check("bez dlouhé pomlčky", !blok.includes("—") && !blok.includes("–"));
+  check("nová věta", blok.includes("Videokurz máš, teď ho v klidu projdi."));
+  check("stará věta pryč", !blok.includes("je na řadě"));
 });

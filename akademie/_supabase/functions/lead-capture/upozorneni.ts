@@ -17,8 +17,11 @@
 //
 // Strop: `app_config.lead_alert_strop` (celé číslo 1 až 40), jinak 10.
 // Do stropu jeden mail na lead. Další lead téhož pražského dne je jednorázový
-// souhrn. Všechny další ten den jsou ticho. Ranní `daily-digest` je souhrn
-// za včerejšek, tenhle kód ho nenahrazuje a do DB kvůli tomu nic nezapisuje.
+// souhrn, ale jen když atomicky zabere `app_config.lead_alert_souhrn` (hodnota
+// = dnešní datum v Praze). Druhý souběžný běh souhrn nepošle. Všechny další
+// ten den jsou ticho. Testovací leady (stejné pravidlo jako `daily-digest`,
+// plus jméno TEST i s podtržítkem) se nehlásí a do stropu se nepočítají.
+// Ranní `daily-digest` je souhrn za včerejšek, tenhle kód ho nenahrazuje.
 //
 // ⛔ Tohle NENÍ zákaznický mail. Příjemce je natvrdo interní adresa, ne lead.
 //    `mailing-guard` se nevolá (stejně jako u `daily-digest` a alertů v
@@ -33,18 +36,22 @@
 export const ENV_PREPINAC = "LEAD_ALERT";
 export const KLIC_PREPINAC = "lead_alert";
 export const KLIC_STROP = "lead_alert_strop";
+/** Den (Praha, YYYY-MM-DD), kdy už odešel souhrn. Píše se až za běhu, když je přepínač zapnutý. */
+export const KLIC_SOUHRN = "lead_alert_souhrn";
 export const VYCHOZI_STROP = 10;
 export const ALERT_TO = "fitness.barna@gmail.com";
 export const FROM_ALERT = "Martin Barna <news@martinbarna.cz>";
 
 const ZAPNUTO = new Set(["ano", "1", "true", "on"]);
 
-export type Konfig = { prepniac: string | null; strop: string | null };
+export type Konfig = { prepinac: string | null; strop: string | null };
 
 export type Zavislosti = {
   env: (klic: string) => string | undefined;
   prectiKonfig: () => Promise<Konfig>;
   spocitejOd: (iso: string) => Promise<number>;
+  /** Jednou za pražský den. `false` = souhrn už dnes někdo odeslal. */
+  zaberSouhrn: (denPraha: string) => Promise<boolean>;
   posli: (m: { subject: string; html: string; text: string }) => Promise<{ ok: boolean; status: number }>;
   ted?: Date;
 };
@@ -66,9 +73,9 @@ export function jeAno(raw: string | null | undefined): boolean {
 }
 
 /** Neprázdný env vyhrává nad app_config. Prázdné nebo chybějící = čti DB, a když ani tam nic není, vypnuto. */
-export function jeZapnuto(env: string | undefined, prepniac: string | null | undefined): boolean {
+export function jeZapnuto(env: string | undefined, prepinac: string | null | undefined): boolean {
   if (env !== undefined && env.trim() !== "") return jeAno(env);
-  return jeAno(prepniac);
+  return jeAno(prepinac);
 }
 
 export function stropZHodnoty(raw: string | null | undefined): number {
@@ -78,17 +85,25 @@ export function stropZHodnoty(raw: string | null | undefined): number {
 }
 
 /**
- * Testovací lead se nehlásí.
- *  - jméno obsahuje samostatné slovo TEST (TEST, TEST-CLAUDE, „A TEST"),
- *  - místní část e-mailu obsahuje `+tester` (jana+tester@…).
- * „Tester" jako jméno a „contest@" se schválně nechytají: to nejsou naše testy.
+ * Testovací lead se nehlásí a nepočítá do stropu.
+ * Stejné adresy jako ranní přehled (`daily-digest`): prefix `fitness.barna`
+ * a každé `+` v adrese. Navíc jméno, ve kterém je TEST samostatně, i když je
+ * oddělené podtržítkem nebo pomlčkou (TEST_CLAUDE, TEST-CLAUDE).
+ * „Tester" a „contest@" se nechytají: to není naše testovací jméno.
  */
 export function jeTestovaciLead(email: string, name: string): boolean {
   const e = String(email ?? "").trim().toLowerCase();
-  const at = e.lastIndexOf("@");
-  const local = at >= 0 ? e.slice(0, at) : e;
-  if (local.includes("+tester")) return true;
-  return /\btest\b/i.test(String(name ?? "").trim());
+  if (e.startsWith("fitness.barna") || e.includes("+")) return true;
+  return /(^|[^a-z])test([^a-z]|$)/i.test(String(name ?? "").trim());
+}
+
+/** Kolik řádků z dneška není test. Počítá se tím strop, ať zkoušky Martinovi nevyčerpají alerty. */
+export function pocetBezTestu(radky: { email?: string | null; name?: string | null }[]): number {
+  let n = 0;
+  for (const r of radky) {
+    if (!jeTestovaciLead(String(r.email ?? ""), String(r.name ?? ""))) n++;
+  }
+  return n;
 }
 
 /** Posun Prahy proti UTC v minutách pro daný okamžik (zima 60, léto 120). */
@@ -116,9 +131,14 @@ export function prazskyPosunMinut(utcMs: number): number {
   return Math.round((jakoUtc - utcMs) / 60000);
 }
 
+/** Kalendářní den v Praze, YYYY-MM-DD. */
+export function denPraha(ted: Date): string {
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Prague" }).format(ted);
+}
+
 /** Půlnoc aktuálního pražského dne jako ISO v UTC. */
 export function pulnocPrahaIso(ted: Date): string {
-  const den = new Intl.DateTimeFormat("sv-SE", { timeZone: "Europe/Prague" }).format(ted);
+  const den = denPraha(ted);
   const [y, m, d] = den.split("-").map(Number);
   let utc = Date.UTC(y, m - 1, d, 0, 0, 0);
   for (let i = 0; i < 3; i++) {
@@ -153,6 +173,24 @@ export function rozhodni(o: {
   if (o.pocetDnes > o.strop + 1) return { poslat: false, duvod: "strop" };
   if (o.pocetDnes === o.strop + 1) return { poslat: true, druh: "souhrn" };
   return { poslat: true, druh: "jeden" };
+}
+
+export type ZaberDb = {
+  /** Kolik řádků se změnilo, když uložená hodnota ještě nebyla dnešek. */
+  zmenDen: (den: string) => Promise<number>;
+  /** `ok` = řádek vznikl teď. `duplicita` = klíč už držel souběžný běh. */
+  vloz: (den: string) => Promise<"ok" | "duplicita">;
+};
+
+/**
+ * Jeden pražský den, jeden souhrn.
+ * Update s podmínkou „hodnota není dnešek" drží zámek řádku: druhý běh,
+ * až se dostane na řadu, uvidí dnešek a nezmění nic. Když řádek ještě není,
+ * vloží ho. Unikátní `key` pustí jen jedno vložení, druhé dostane duplicitu.
+ */
+export async function zaberDen(den: string, db: ZaberDb): Promise<boolean> {
+  if ((await db.zmenDen(den)) > 0) return true;
+  return (await db.vloz(den)) === "ok";
 }
 
 function esc(s: string): string {
@@ -207,6 +245,7 @@ export function sestavMail(v: {
  * Nikdy nehází. Vypnuto a testovací lead nečtou počet a nevolají poštu.
  * Chyba počtu (nedá se poznat, jestli už je den plný) mail neodešle:
  * lepší jeden zmeškaný alert než desítky mailů, když dotaz mlčí.
+ * Souhrn se odešle jen tomu, kdo den atomicky zabral. Druhý souběžný běh mlčí.
  */
 export async function ohlasNovyLead(
   deps: Zavislosti,
@@ -220,14 +259,14 @@ export async function ohlasNovyLead(
     const envRozhoduje = env !== undefined && env.trim() !== "";
     if (envRozhoduje && !jeAno(env)) return { posilano: false, duvod: "vypnuto" };
 
-    let konfig: Konfig = { prepniac: null, strop: null };
+    let konfig: Konfig = { prepinac: null, strop: null };
     try {
       konfig = await deps.prectiKonfig();
     } catch (e) {
       console.error("lead-alert: config", String(e).slice(0, 180));
       if (!envRozhoduje) return { posilano: false, duvod: "config" };
     }
-    if (!jeZapnuto(env, konfig.prepniac)) return { posilano: false, duvod: "vypnuto" };
+    if (!jeZapnuto(env, konfig.prepinac)) return { posilano: false, duvod: "vypnuto" };
 
     const strop = stropZHodnoty(konfig.strop);
     const ted = deps.ted ?? new Date();
@@ -248,6 +287,17 @@ export async function ohlasNovyLead(
       strop,
     });
     if (!r.poslat) return { posilano: false, duvod: r.duvod };
+
+    if (r.druh === "souhrn") {
+      let zabran = false;
+      try {
+        zabran = await deps.zaberSouhrn(denPraha(ted));
+      } catch (e) {
+        console.error("lead-alert: souhrn", String(e).slice(0, 180));
+        return { posilano: false, duvod: "souhrn" };
+      }
+      if (!zabran) return { posilano: false, duvod: "souhrn_uz" };
+    }
 
     const mail = sestavMail({
       druh: r.druh,

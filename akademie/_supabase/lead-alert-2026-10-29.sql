@@ -8,6 +8,9 @@
 -- Klíče (text, tabulka public.app_config, čte jen service_role):
 --   lead_alert        ano / 1 / true / on = zapnuto, cokoliv jiného = vypnuto
 --   lead_alert_strop  celé číslo 1 až 40, jinak kód použije 10
+--   lead_alert_souhrn YYYY-MM-DD v Praze. Funkce ho zapíše SAMA, až poprvé
+--                     pošle denní souhrn (atomický zábor, ať souběh nepošle dva).
+--                     Do tohohle souboru nepatří a před GO v DB být nemusí.
 --
 -- Env `LEAD_ALERT` (neprázdné) přebíjí `lead_alert`. `LEAD_ALERT=ne` je
 -- kill switch i kdyby v DB zůstalo ano.
@@ -19,7 +22,7 @@
 -- KROK 0. Záloha. Spusť a ulož výstup (může být prázdný, to je taky záloha).
 -- select key, value, updated_at
 --   from public.app_config
---  where key in ('lead_alert', 'lead_alert_strop');
+--  where key in ('lead_alert', 'lead_alert_strop', 'lead_alert_souhrn');
 
 -- KROK 1. Volitelný zápis VYPNUTÉHO stavu. Existující hodnotu nepřepíše.
 --         Bez tohoto kroku je chování stejné: chybějící klíč = vypnuto.
@@ -48,5 +51,7 @@
 --  where key = 'lead_alert';
 -- -- nebo, když záloha řádek neměla:
 -- -- delete from public.app_config where key = 'lead_alert';
+-- -- Souhrnný zábor smaž, ať další den začíná čistě (klíč vzniká až za běhu):
+-- -- delete from public.app_config where key = 'lead_alert_souhrn';
 -- commit;
 -- Kill switch bez SQL, kdyby update nešel hned: env LEAD_ALERT=ne a restart funkce.
