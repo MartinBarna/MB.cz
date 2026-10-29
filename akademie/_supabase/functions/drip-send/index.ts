@@ -47,7 +47,7 @@ const FROM = 'Martin Barna <news@martinbarna.cz>';
 const SITE = 'https://martinbarna.cz';
 
 const COURSE_URL = 'https://buy.stripe.com/7sYeVc6356Jc4Ra8hF3ks0h?locale=cs';
-const FREE_LESSONS_URL = 'https://martinbarna.cz/videokurz?utm_source=email&utm_medium=drip#zdarma';
+const FREE_LESSONS_URL = 'https://martinbarna.cz/go/kurz-zdarma-m/';
 
 const DISCOUNT_CODE = 'ZACNI15';
 const DISCOUNT_PCT = 15;
