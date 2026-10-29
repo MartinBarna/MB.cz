@@ -1,15 +1,20 @@
 name: Deploy na Wedos (FTP)
 
 # Nasadí statický web na Wedos hosting přes FTP.
-# POZOR: spouští se POUZE ručně (workflow_dispatch), aby to neselhávalo a
-# nespamovalo maily, dokud nejsou nastavené FTP secrets. Po nastavení secrets
-# se spustí ručně: Actions → "Deploy na Wedos (FTP)" → Run workflow.
+# Spouští se dvěma způsoby:
+#   1) ručně (workflow_dispatch): Actions → "Deploy na Wedos (FTP)" → Run workflow,
+#   2) pushem do větve deploy/wedos (jen ta jedna větev, ne main), aby šlo
+#      nasadit bez klikání v Actions. Push do deploy/wedos = nasazení na web.
+# Nové secrets nejsou potřeba, používají se tytéž FTP secrets.
 # Vyžaduje 3 GitHub secrets (Settings → Secrets and variables → Actions):
 #   FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
 # A volitelnou proměnnou FTP_SERVER_DIR (default /www/).
 
 on:
   workflow_dispatch: {}
+  push:
+    branches:
+      - deploy/wedos
 
 jobs:
   deploy:
