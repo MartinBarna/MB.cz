@@ -75,6 +75,10 @@ zkontroluj('upsell-coaching stopne aktivniho klienta koucinku', shouldStop('upse
 zkontroluj('upsell-coaching stopne EX-klienta, i kdyz uz entitlement neni aktivni', shouldStop('upsell-coaching', 0, JA, NIC, JE_EX), true);
 zkontroluj('upsell-coaching stopne i kdyz plati obe cesty najednou', shouldStop('upsell-coaching', 1, JA, MA_COACHING, JE_EX), true);
 zkontroluj('upsell-coaching cloveka bez koucinku pusti (to je smysl te trate)', shouldStop('upsell-coaching', 0, JA, MA_VK, BEZ_EX), false);
+// Krok 4 = upsell-co-2, vyrazeno ve v5 (29. 10. 2026). Stop by z cloveka udelal
+// `purchased` a smazal termin. Preskok v preskoc.ts by zavolal advance() a pri
+// wait_days null premostil do evergreen-kupci. Ani jedno nechceme: pozdrzeni je SQL.
+zkontroluj('upsell-co-2 (krok 4) kod nestopuje: pozdrzeni neni shouldStop', shouldStop('upsell-coaching', 4, JA, MA_VK, BEZ_EX), false);
 zkontroluj('ex-klient NENI stopnuty na akvizicni trati (legitimni cil)', shouldStop('lead-magnet', 1, JA, NIC, JE_EX), false);
 zkontroluj('ex-klient NENI stopnuty na longtail-consumer', shouldStop('longtail-consumer', 3, JA, NIC, JE_EX), false);
 zkontroluj('ex-klient NENI stopnuty na tc-free', shouldStop('tc-free', 7, JA, NIC, JE_EX), false);
