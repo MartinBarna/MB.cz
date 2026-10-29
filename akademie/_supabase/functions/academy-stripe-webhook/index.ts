@@ -257,12 +257,11 @@ function datumCesky(iso: string): string {
 //    a člověk, který řádně zaplatil 8 100, by přístup nedostal.
 //
 // ⛔ A NESMÍ SE SLÉVAT S MĚSÍČNÍM SEZNAMEM. Podle toho, kudy člověk zaplatil, se liší
-// úplně všechno: expirace (NULL versus 36 dní), zdroj, uvítací trať, appka Tvůj Coach
-// i to, jestli se počítá do padesátky zakládajících. Jeden společný seznam by ty dvě
-// věci tiše prohodil a poznalo by se to až u zákazníka, kterému po 8 900 vyprší přístup.
+// úplně všechno: expirace (NULL versus 36 dní), zdroj, uvítací trať a appka Tvůj Coach.
+// Jeden společný seznam by ty dvě věci tiše prohodil a poznalo by se to až u zákazníka, kterému po 8 900 vyprší přístup.
 type JednorazovyProdukt = {
   produkt: string;    // entitlements.product
-  source: string;     // entitlements.source  (⚠️ počítá se do padesátky, viz daily-digest)
+  source: string;     // entitlements.source
   welcome: string;    // trať uvítacího e-mailu
   tcGrant: boolean;   // dostane appku Tvůj Coach na rok?
   nazev: string;      // jak se produkt jmenuje v rozlučkovém mailu
@@ -309,7 +308,7 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
   //    videokurzu se appka jen nabízí ke koupi, nedostávají ji v ceně. Kdo to přepne
   //    na true, rozdá roční VIP za 4 990 lidem, kteří zaplatili 800.
   // ⚠️ `source: "stripe-videokurz"` musí zůstat odlišný od Academy zdrojů, jinak by se
-  //    kupci videokurzu začali počítat do padesátky zakládajících členů (viz daily-digest).
+  //    kupci videokurzu smíchali s doživotní Academy.
   "videokurz": {
     produkt: "videokurz",
     source: "stripe-videokurz",
@@ -350,7 +349,7 @@ const KATALOG: Record<string, JednorazovyProdukt> = {
   // ⛔ `tcGrant: false` SCHVÁLNĚ. Kdo to přepne na true, rozdá roční VIP appky
   //    za 4 990 Kč lidem, kteří zaplatili 349.
   // ⚠️ `source: "stripe-balicek"` musí zůstat odlišný od Academy zdrojů, jinak by se
-  //    kupci balíčku začali počítat do padesátky zakládajících členů (viz daily-digest).
+  //    kupci balíčku smíchali s doživotní Academy.
   // ⚠️ `produkt: "balicek"` funguje jen díky tomu, že se 6. 8. rozšířil CHECK
   //    `entitlements_product_check`. Bez toho by zaplacený nákup spadl na 500 a NEPŘIŠEL
   //    BY ANI ALERT, přesně jako 30. 7. u konzultace.
@@ -471,10 +470,10 @@ function parsujOdkazy(s: string): Record<string, string> {
 }
 // ⚠️ Testovací odkaz vede na TÝŽ klíč katalogu jako ostrý, a je to schválně.
 // Kdyby měl vlastní `source`, test by neprošel tou cestou, která běží v provozu,
-// a neověřil by nic (mimo jiné ani to, jestli se prodej započítá do padesátky).
+// a neověřil by nic.
 // ⛔ CENA TOHO: 15Kč odkaz uděluje doživotní Academy za 8 900 Kč plus appku na rok.
 //    Po testu se MUSÍ zamknout ve Stripu a testovací nákup uklidit (entitlement,
-//    grant v appce, lead), jinak zůstane v počítadle zakládajících navíc jeden člověk.
+//    grant v appce, lead), jinak testovacímu účtu zůstane ostrý přístup.
 const ODKAZ_NA_PRODUKT = parsujOdkazy(
   Deno.env.get("STRIPE_ONETIME_LINKS") ??
     // ostrý odkaz, plná cena 8 900 („Barna Academy doživotní přístup")
@@ -485,7 +484,7 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // ceny videokurzu, tedy 8 900 minus 1 490 = 7 410, a platí pro všechny. Nahrazuje
     // odečet 8 100, který počítal ze staré ceny kurzu 800 Kč.
     // Dodává se ÚPLNĚ TOTÉŽ jako za plných 8 900, proto týž klíč katalogu: doživotní
-    // přístup, appka na rok, uvítačka, započítání do padesátky zakládajících.
+    // přístup, appka na rok a uvítačka.
     "plink_1UGeRQBq3rKubW9koXCY9M2F=academy-lifetime," +
     // ⭐ STARŠÍ UPGRADE Z VIDEOKURZU za 8 100 (`price_1TyUNl…`). Týž klíč katalogu,
     // dodává úplně totéž, jen za starou částku (8 900 minus tehdejších 800 za kurz).
@@ -500,7 +499,7 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     // (5 930 CZK, jednorázová, DPH v ceně) na produktu `prod_UyNGi6oRQPZLOe`, tedy na TÉMŽE
     // produktu jako plných 8 900. Redirect po platbě /akademie/vitejte/, Limited use No.
     // Dodává se ÚPLNĚ TOTÉŽ jako za 8 900, proto týž klíč katalogu: doživotní přístup,
-    // rok appky, uvítačka, započítání do padesátky. Předplatné zruší `udelDozivotni` samo.
+    // rok appky a uvítačka. Předplatné zruší `udelDozivotni` samo.
     // ⛔ Nabízí se VÝHRADNĚ v kroku 1 trati `onboarding-nakup-academy-mesicni`. Na web
     //    nepatří jako tlačítko: veřejná cena je 8 900 a odečet má vidět jen ten, komu náleží.
     "plink_1UBA1iBq3rKubW9kAcC0eIlq=academy-lifetime," +
@@ -535,8 +534,8 @@ const ODKAZ_NA_PRODUKT = parsujOdkazy(
     "plink_1TyphuBq3rKubW9k1CHEIgDS=konzultace-vk," +
     // ⛔⛔ [6. 9. 2026 pozdě večer] TESTOVACÍ ODKAZ ZA 15 Kč ODSUD ODSTRANĚN.
     // Byl tu od 30. 7. namapovaný na `academy-lifetime`, a to je klíč s `tcGrant: true`:
-    // doživotní Academy za 8 900 Kč, rok VIP appky za 4 990 Kč a započítání do padesátky
-    // zakládajících. Za patnáct korun. Zaškrtávátko „smazat, až doběhne testování" zůstalo
+    // doživotní Academy za 8 900 Kč a rok VIP appky za 4 990 Kč.
+    // Za patnáct korun. Zaškrtávátko „smazat, až doběhne testování" zůstalo
     // otevřené pět týdnů a dnešní dvě opravy mapy ten řádek obě minuly.
     // ⚠️ Jestli je odkaz ve Stripu pořád aktivní, JSEM NEOVĚŘIL (Stripe nejde ověřit
     //    holým fetchem). Tohle je proto opatření na straně, kterou ovládám: i kdyby

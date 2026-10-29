@@ -74,18 +74,17 @@ Pozn.: tohle nasadit AŽ ve chvíli, kdy šablony existují v DB — jinak by le
 ```
 
 ## Step 3 — Nabídka/urgence · wait_days: null (konec)
-**subject:** `Zaváděcí cena Academy: 8 900 místo 12 900{{fn_suffix}}`
-**preheader:** `Doživotní přístup. Než cena vyletí na plnou.`
+**subject:** `Barna Academy: doživotní přístup za 8 900 Kč{{fn_suffix}}`
+**preheader:** `Doživotní přístup. Videokurz je v ceně.`
 ```json
 [
   {"t":"p","html":"Ahoj{{fn_space}},"},
-  {"t":"p","html":"narovinu, ať nezdržuju. <strong>Barna Academy</strong> teď běží za <strong>zaváděcí cenu 8 900 Kč</strong> místo plných <strong>12 900 Kč</strong>."},
-  {"t":"p","html":"Není to umělá sleva na 14 dní. Je to <strong>zaváděcí cena</strong> — odměna pro lidi, co naskočí teď, na začátku. Až bude obsahu a referencí víc, cena půjde nahoru a zpátky už se nevrátí."},
+  {"t":"p","html":"narovinu, ať nezdržuju. <strong>Barna Academy</strong> stojí <strong>8 900 Kč</strong>, doživotně."},
   {"t":"p","html":"Co za to máš:"},
   {"t":"bullets","items":["<strong>256 lekcí ve 24 modulech</strong> + generátory v plné verzi","<strong>Přebrandovatelné klientské materiály</strong> — okamžitě použitelné","<strong>Audio lekce, certifikace, videokurz</strong>","<strong>Doživotní přístup</strong> — zaplatíš jednou, máš napořád, včetně aktualizací"]},
   {"t":"p","html":"Spočítej si to: jestli to děláš pro klienty, vrátí se Ti to na jednom dvou. Jestli pro sebe, je to zlomek toho, co stojí roky tápání a vyhozených peněz za nefunkční rady."},
   {"t":"btn","text":"Vzít Academy za 8 900 Kč","href":"https://martinbarna.cz/akademie/"},
-  {"t":"p","html":"Žádný „ideální pondělí" nebude. Buď do toho jdeš teď za zaváděcí cenu, nebo Ti budu fandit z dálky. Ale věřím, že to dáš. 💪"},
+  {"t":"p","html":"Žádný „ideální pondělí" nebude. Ale věřím, že to dáš. 💪"},
   {"t":"p","html":"<strong>Be Effective!</strong><br>Martin"},
   {"t":"ps","html":"P.S. Máš dotaz, jestli se Ti to vyplatí? Napiš mi jednou větou, co řešíš, a řeknu Ti narovinu, jestli do toho jít."}
 ]

@@ -698,7 +698,7 @@ html[data-theme="light"]{
    (.uk-note a) prohrávalo s `p a:not()x4`, proto stejný počet :not(). */
 [data-theme="light"] .uk-note a:not(.btn):not(.btn-gold):not(.cta):not(.btn-ghost){color:#fff !important;}
 
-/* /akademie/ „zakládajícího člena“: inline #e8d8c8 na krému (1,26). */
+/* Inline #e8d8c8 na krému je nečitelná (1,26). Platí pro cenové karty Academy. */
 [data-theme="light"] [style*="color:#e8d8c8"],
 [data-theme="light"] [style*="color:#E8D8C8"]{color:var(--muted,#5C564C) !important;}
 [data-theme="light"] .hero [style*="color:#e8d8c8"],
