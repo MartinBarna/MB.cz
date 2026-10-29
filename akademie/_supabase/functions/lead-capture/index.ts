@@ -1,5 +1,9 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// Upozornění Martinovi na nový lead. Odeslání jen přes posliMail, přepínač
+// defaultně vypnutý. Deploy téhle složky musí nahrát i `_shared` (mail-provider).
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { ALERT_TO, FROM_ALERT, KLIC_PREPINAC, KLIC_STROP, ohlasNovyLead } from "./upozorneni.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -221,6 +225,45 @@ Deno.serve(async (req) => {
       })();
       // @ts-ignore EdgeRuntime background task (dobehne i po odeslani odpovedi, neblokuje klienta)
       if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) EdgeRuntime.waitUntil(drip);
+    }
+
+    // Interní alert až PO uložení. Neawaitovat: výjimka v okolním try by z uloženého
+    // leadu udělala 500 a formulář by to zkusil znovu. Vypnuto (výchozí) neposílá.
+    // Duplicita ani testovací lead (TEST, +tester) sem účelně nepatří jako „nový".
+    if (!duplicate) {
+      const uloha = ohlasNovyLead({
+        env: (k) => {
+          try { return Deno.env.get(k); } catch { return undefined; }
+        },
+        prectiKonfig: async () => {
+          const { data, error } = await supa.from("app_config").select("key,value").in("key", [KLIC_PREPINAC, KLIC_STROP]);
+          if (error) throw new Error(String(error.message || "config").slice(0, 180));
+          const mapa = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, String(r.value ?? "")]));
+          return {
+            prepniac: mapa.has(KLIC_PREPINAC) ? (mapa.get(KLIC_PREPINAC) ?? null) : null,
+            strop: mapa.has(KLIC_STROP) ? (mapa.get(KLIC_STROP) ?? null) : null,
+          };
+        },
+        spocitejOd: async (iso) => {
+          const { count, error } = await supa.from("leads").select("id", { count: "exact", head: true }).gte("created_at", iso);
+          if (error || typeof count !== "number") throw new Error(String(error?.message || "count").slice(0, 180));
+          return count;
+        },
+        posli: async (m) => {
+          const r = await posliMail({
+            from: FROM_ALERT,
+            to: [ALERT_TO],
+            subject: m.subject,
+            html: m.html,
+            text: m.text,
+          }, { resendKey: mailKlic() });
+          return { ok: r.ok, status: r.status };
+        },
+      }, { email, name, source, track }).catch((e) => {
+        console.error("lead-alert: obal", String(e).slice(0, 180));
+      });
+      const rt = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+      if (rt?.waitUntil) rt.waitUntil(uloha);
     }
 
     return json({ ok: true, duplicate });

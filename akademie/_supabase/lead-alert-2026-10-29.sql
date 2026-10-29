@@ -1,0 +1,52 @@
+-- =============================================================================
+-- Upozornění na nový lead: přepínač v app_config (29. 10. 2026)
+--
+-- ⛔ TENHLE SOUBOR SE V PR NESPOUŠTÍ. Žádný zápis do živé DB k němu nepatří.
+--    Kód v `lead-capture` bere chybějící klíč jako VYPNUTO, takže nasazení
+--    funkce samo o sobě nic neposílá. Řádky níž jsou postup až po GO.
+--
+-- Klíče (text, tabulka public.app_config, čte jen service_role):
+--   lead_alert        ano / 1 / true / on = zapnuto, cokoliv jiného = vypnuto
+--   lead_alert_strop  celé číslo 1 až 40, jinak kód použije 10
+--
+-- Env `LEAD_ALERT` (neprázdné) přebíjí `lead_alert`. `LEAD_ALERT=ne` je
+-- kill switch i kdyby v DB zůstalo ano.
+--
+-- Záloha: nejdřív SELECT, výstup si ulož, a teprve pak případný UPDATE.
+-- Rollback vrací hodnotu ze zálohy, ne hádá „jak to bylo".
+-- =============================================================================
+
+-- KROK 0. Záloha. Spusť a ulož výstup (může být prázdný, to je taky záloha).
+-- select key, value, updated_at
+--   from public.app_config
+--  where key in ('lead_alert', 'lead_alert_strop');
+
+-- KROK 1. Volitelný zápis VYPNUTÉHO stavu. Existující hodnotu nepřepíše.
+--         Bez tohoto kroku je chování stejné: chybějící klíč = vypnuto.
+-- begin;
+-- insert into public.app_config (key, value)
+-- values ('lead_alert', 'ne'),
+--        ('lead_alert_strop', '10')
+-- on conflict (key) do nothing;
+-- commit;
+
+-- KROK 2. Až po výslovném GO („zapni upozornění na leady").
+--         Předtím znovu KROK 0, ať je z čeho vracet.
+-- begin;
+-- insert into public.app_config (key, value)
+-- values ('lead_alert', 'ano')
+-- on conflict (key) do update
+--    set value = excluded.value, updated_at = now();
+-- commit;
+-- Ověření (má vrátit ano):
+-- select value from public.app_config where key = 'lead_alert';
+
+-- ROLLBACK. Vrať hodnotu z KROKU 0. Když klíč předtím nebyl, smaž ho.
+-- begin;
+-- update public.app_config
+--    set value = '<hodnota ze zalohy>', updated_at = now()
+--  where key = 'lead_alert';
+-- -- nebo, když záloha řádek neměla:
+-- -- delete from public.app_config where key = 'lead_alert';
+-- commit;
+-- Kill switch bez SQL, kdyby update nešel hned: env LEAD_ALERT=ne a restart funkce.
