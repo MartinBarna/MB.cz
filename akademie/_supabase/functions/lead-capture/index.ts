@@ -1,5 +1,18 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+// Upozornění Martinovi na nový lead. Odeslání jen přes posliMail, přepínač
+// defaultně vypnutý. Deploy téhle složky musí nahrát i `_shared` (mail-provider).
+import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import {
+  ALERT_TO,
+  FROM_ALERT,
+  KLIC_PREPINAC,
+  KLIC_SOUHRN,
+  KLIC_STROP,
+  ohlasNovyLead,
+  pocetBezTestu,
+  zaberDen,
+} from "./upozorneni.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -221,6 +234,69 @@ Deno.serve(async (req) => {
       })();
       // @ts-ignore EdgeRuntime background task (dobehne i po odeslani odpovedi, neblokuje klienta)
       if (typeof EdgeRuntime !== "undefined" && EdgeRuntime.waitUntil) EdgeRuntime.waitUntil(drip);
+    }
+
+    // Interní alert až PO uložení. Neawaitovat: výjimka v okolním try by z uloženého
+    // leadu udělala 500 a formulář by to zkusil znovu. Vypnuto (výchozí) neposílá.
+    // Duplicita ani testovací lead (fitness.barna*, adresa s +, jméno TEST) sem jako „nový" nepatří.
+    if (!duplicate) {
+      const uloha = ohlasNovyLead({
+        env: (k) => {
+          try { return Deno.env.get(k); } catch { return undefined; }
+        },
+        prectiKonfig: async () => {
+          const { data, error } = await supa.from("app_config").select("key,value").in("key", [KLIC_PREPINAC, KLIC_STROP]);
+          if (error) throw new Error(String(error.message || "config").slice(0, 180));
+          const mapa = new Map((data ?? []).map((r: { key: string; value: string }) => [r.key, String(r.value ?? "")]));
+          return {
+            prepinac: mapa.has(KLIC_PREPINAC) ? (mapa.get(KLIC_PREPINAC) ?? null) : null,
+            strop: mapa.has(KLIC_STROP) ? (mapa.get(KLIC_STROP) ?? null) : null,
+          };
+        },
+        spocitejOd: async (iso) => {
+          // Testovací adresy vyřadí už dotaz (stejně jako daily-digest), ať nezaplní
+          // stránku. Jméno TEST dodá `pocetBezTestu`. Plná stránka = den je přes strop.
+          const { data, error } = await supa.from("leads").select("email,name")
+            .gte("created_at", iso)
+            .not("email", "ilike", "fitness.barna%")
+            .not("email", "like", "%+%")
+            .limit(2000);
+          if (error || !data) throw new Error(String(error?.message || "count").slice(0, 180));
+          const n = pocetBezTestu(data);
+          return data.length >= 2000 ? Math.max(n, 2000) : n;
+        },
+        zaberSouhrn: (den) => zaberDen(den, {
+          zmenDen: async (d) => {
+            const upd = await supa.from("app_config")
+              .update({ value: d, updated_at: new Date().toISOString() })
+              .eq("key", KLIC_SOUHRN)
+              .neq("value", d)
+              .select("key");
+            if (upd.error) throw new Error(String(upd.error.message || "souhrn").slice(0, 180));
+            return (upd.data ?? []).length;
+          },
+          vloz: async (d) => {
+            const ins = await supa.from("app_config").insert({ key: KLIC_SOUHRN, value: d });
+            if (!ins.error) return "ok";
+            if (ins.error.code === "23505") return "duplicita";
+            throw new Error(String(ins.error.message || "souhrn").slice(0, 180));
+          },
+        }),
+        posli: async (m) => {
+          const r = await posliMail({
+            from: FROM_ALERT,
+            to: [ALERT_TO],
+            subject: m.subject,
+            html: m.html,
+            text: m.text,
+          }, { resendKey: mailKlic() });
+          return { ok: r.ok, status: r.status };
+        },
+      }, { email, name, source, track }).catch((e) => {
+        console.error("lead-alert: obal", String(e).slice(0, 180));
+      });
+      const rt = (globalThis as { EdgeRuntime?: { waitUntil?: (p: Promise<unknown>) => void } }).EdgeRuntime;
+      if (rt?.waitUntil) rt.waitUntil(uloha);
     }
 
     return json({ ok: true, duplicate });
