@@ -18,6 +18,7 @@ const MUST_IMPORT_GUARD = [
   // Automat „konec koucinku" (22. 9. 2026): posila zakaznikovi tyz mail jako rucni
   // odchod z admina, takze pred nej patri tataz brana.
   "koucink-konec/index.ts",
+  "kosik-pripominka/index.ts",
 ];
 
 const SCAN_DIRS = [

@@ -700,8 +700,16 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
             function prekresli() {
                 var u = odkaz(plan, sel.value);
                 // Období bez odkazu se nenabízí jako slepá ulička: pošle se na formulář.
-                go.setAttribute('href', u || '#kontakt');
-                go.textContent = u ? 'Koupit hned →' : 'Napsat Martinovi →';
+                // data-kosik je priprava vlny 1b. Skript kosiku ma flag vypnuty, href zustava fallback.
+                if (u) {
+                    go.setAttribute('href', u);
+                    go.setAttribute('data-kosik', 'coaching-' + plan + '-' + sel.value);
+                    go.textContent = 'Koupit hned →';
+                } else {
+                    go.setAttribute('href', '#kontakt');
+                    go.removeAttribute('data-kosik');
+                    go.textContent = 'Napsat Martinovi →';
+                }
             }
             sel.addEventListener('change', prekresli);
             prekresli();
@@ -771,7 +779,8 @@ html:not([data-theme="light"]) .nav-burger { color:#cabfb4!important; border-col
     .catch(function () { /* blok zustane skryty, to je bezpecna varianta */ });
 })();
 </script>
-<script defer src="/assets/analytics.js?v=g23"></script><script defer src="/assets/referral.js?v=g9"></script>
+<script defer src="/assets/analytics.js?v=g23"></script><script defer src="/assets/referral.js?v=g10"></script>
+<script type="module" src="/assets/kosik-checkout.js?v=k1" data-kosik-zapnuto="false"></script>
 <script defer src="/assets/lead-popup.js?v=r4"></script>
 <script defer src="/assets/scroll-top.js?v=g13"></script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/theme-light.css?v=w12"></body>

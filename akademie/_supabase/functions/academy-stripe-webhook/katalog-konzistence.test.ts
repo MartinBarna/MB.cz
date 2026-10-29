@@ -897,6 +897,25 @@ check('RL22 komentar v provize.ts uz netvrdi, ze appka jede pres payment_intent'
   !/videokurz, konzultace, appka\)\n \*    ⇒ `payment_intent`/.test(zdrojProvize)
   && /APPKA SEM NEPATŘÍ A NEJDE JI SEM DOSTAT/.test(zdrojProvize), '');
 
+// --- 19) KOSIK: klice session z kodu musi byt v KATALOGU i v katalogu checkoutu ---
+const zdrojKosikKlice = await Deno.readTextFile(KOREN + 'akademie/_supabase/functions/kosik-checkout/katalog-klice.ts');
+const zdrojKosikKat = await Deno.readTextFile(KOREN + 'akademie/_supabase/functions/kosik-checkout/katalog.ts');
+const kosikKlice = [...zdrojKosikKlice.matchAll(/"([a-z0-9-]+)"/g)].map((m) => m[1]);
+check('KK1 KOSIK_KLICE nejsou prazdne a jsou jen konzultace a koucink',
+  kosikKlice.length === 8 && !kosikKlice.includes('videokurz') && !kosikKlice.includes('academy-lifetime'),
+  JSON.stringify(kosikKlice));
+for (const k of kosikKlice) {
+  check('KK2 klic ' + k + ' je v KATALOG webhooku', klice.includes(k), JSON.stringify(klice));
+  check('KK3 klic ' + k + ' je v kosik-checkout/katalog.ts',
+    new RegExp('(?:^|\\n)\\s*(?:"' + k + '"|' + k + '):\\s*\\{', 'm').test(zdrojKosikKat)
+      || zdrojKosikKat.includes('polozkaKoucink("' + k + '"'),
+    k);
+}
+check('KK4 webhook pozna session kosiku i bez payment_link',
+  zdrojWebhook.includes('rozpoznajJednorazovyKlic') && zdrojWebhook.includes('dohledatRecovered'), '');
+check('KK5 konzultace v kosik katalogu stoji 299000 haleru',
+  /castkaHalere:\s*299_000/.test(zdrojKosikKat), '');
+
 const failures = cases.filter((c) => !c.pass).length;
 for (const c of cases) console.log(`${c.pass ? '  ok' : 'FAIL'}  ${c.name}${c.pass ? '' : '  -> ' + c.detail}`);
 console.log(`\n${cases.length - failures}/${cases.length} proslo`);
