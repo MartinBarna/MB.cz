@@ -3,6 +3,7 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { overSecret } from '../_shared/secret-guard.ts';
 import { maPreskocitKrok, PRESKOC_KROK_KDYZ_VLASTNI } from './preskoc.ts';
+import { doplnPozvankuCheckinu } from './pozvanka-checkin.ts';
 
 import {
   konzultaceVBehu,
@@ -351,7 +352,7 @@ Deno.serve(async (req: Request) => {
   const tplCache = new Map<string, Tpl | null>();
   const getTpl = async (track: string, step: number): Promise<Tpl | null> => {
     const k = track + ':' + step;
-    if (!tplCache.has(k)) { const { data } = await admin.from('email_templates').select('subject,preheader,blocks,wait_days,key').eq('track', track).eq('step', step).maybeSingle(); tplCache.set(k, data ? { subject: data.subject, preheader: data.preheader, blocks: data.blocks as Block[], wait_days: data.wait_days, key: data.key } : null); }
+    if (!tplCache.has(k)) { const { data } = await admin.from('email_templates').select('subject,preheader,blocks,wait_days,key').eq('track', track).eq('step', step).maybeSingle(); tplCache.set(k, data ? { subject: data.subject, preheader: data.preheader, blocks: doplnPozvankuCheckinu(track, step, data.blocks as Block[]) as Block[], wait_days: data.wait_days, key: data.key } : null); }
     return tplCache.get(k)!;
   };
   const jeJedenPrijemce = (typeof body.test_email === 'string' && body.test_email.includes('@')) || (typeof body.only_email === 'string' && body.only_email.includes('@'));

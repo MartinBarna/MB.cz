@@ -143,6 +143,7 @@
     </div>
   </div>
 
+  <script src="/akademie/check-in/ulozit.js?v=20261029a"></script>
   <script src="/assets/ba-config.js?v=20260628b"></script>
   <script src="/assets/ba-academy.js?v=20260728a"></script>
   <script>
@@ -178,6 +179,29 @@
       });
     } else { showForm(false); }
 
+    var HLASKA_ULOZENI = (window.MBCheckinUloz && window.MBCheckinUloz.HLASKA) || 'Nepodařilo se uložit, zkus znovu';
+
+    function ukazUlozeno(res) {
+      form.style.display = 'none'; thanks.style.display = 'block';
+      var FALLBACK = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
+      var rt = document.getElementById('recoText');
+      if (rt) {
+        var pts = (res && res.reco_points && res.reco_points.length)
+          ? res.reco_points : [(res && res.reco) ? res.reco : FALLBACK];
+        rt.innerHTML = '';
+        pts.forEach(function (p, i) {
+          var el = document.createElement('p');
+          el.style.margin = (i === pts.length - 1) ? '0' : '0 0 .7rem';
+          el.textContent = p;
+          rt.appendChild(el);
+        });
+      }
+      if (res && res.credit) {
+        document.getElementById('creditBox').innerHTML = '🎁 Připsal jsem ti <b>+' + res.credit + ' Kč</b> na slevu. Celkem nasbíráno: <b>' + (res.credit_total || res.credit) + ' Kč</b>. Pokračuj a roste to dál!';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       err.style.display = 'none';
@@ -191,42 +215,29 @@
       if (!data.weight && !data.waist) { err.textContent = 'Vyplň aspoň váhu nebo pás, ať máme co sledovat.'; err.style.display = 'block'; return; }
       var btn = form.querySelector('button[type=submit]'); var orig = btn.textContent;
       btn.disabled = true; btn.textContent = 'Odesílám…';
-      var tokP = (window.BA && window.BA.getToken) ? window.BA.getToken() : Promise.resolve(null);
-      tokP.then(function (tok) {
-        return fetch(FN, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (tok || ANON), 'apikey': ANON },
-          body: JSON.stringify(data)
+      var uloz = (window.MBCheckinUloz && window.MBCheckinUloz.ulozSOpakovanim)
+        ? window.MBCheckinUloz.ulozSOpakovanim
+        : function (odesli) { return odesli().then(function (v) { return { ok: false, hlaseni: HLASKA_ULOZENI, body: v && v.body }; }); };
+      uloz(function () {
+        var tokP = (window.BA && window.BA.getToken) ? window.BA.getToken() : Promise.resolve(null);
+        return tokP.then(function (tok) {
+          return fetch(FN, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + (tok || ANON), 'apikey': ANON },
+            body: JSON.stringify(data)
+          });
+        }).then(function (r) {
+          return r.json().catch(function () { return null; }).then(function (body) {
+            return { status: r.status, body: body };
+          });
         });
-      }).then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
-        .then(function (res) {
-          // i kdyby backend ještě nebyl, lokálně potvrdíme (data se odešlou, až bude funkce live)
-          form.style.display = 'none'; thanks.style.display = 'block';
-          var FALLBACK = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
-          // engine vrací 2 až 4 body; každý jako vlastní odstavec, ať se to dá číst
-          var rt = document.getElementById('recoText');
-          if (rt) {
-            var pts = (res && res.reco_points && res.reco_points.length)
-              ? res.reco_points : [(res && res.reco) ? res.reco : FALLBACK];
-            rt.innerHTML = '';
-            pts.forEach(function (p, i) {
-              var el = document.createElement('p');
-              el.style.margin = (i === pts.length - 1) ? '0' : '0 0 .7rem';
-              el.textContent = p; // textContent, ne innerHTML: data jdou z DB
-              rt.appendChild(el);
-            });
-          }
-          if (res && res.credit) {
-            document.getElementById('creditBox').innerHTML = '🎁 Připsal jsem ti <b>+' + res.credit + ' Kč</b> na slevu. Celkem nasbíráno: <b>' + (res.credit_total || res.credit) + ' Kč</b>. Pokračuj a roste to dál!';
-          }
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        })
-        .catch(function () {
-          // síťová chyba - přesto poděkujeme (UX), data zkusí znovu příště
-          form.style.display = 'none'; thanks.style.display = 'block';
-          var rt = document.getElementById('recoText'); if (rt) rt.textContent = 'Drž to, co ti funguje, a přidej o kousek víc pohybu nebo jedno poctivé jídlo navíc. Maličkosti dělají výsledek. 💪';
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+      }).then(function (vys) {
+        if (vys && vys.ok) { ukazUlozeno(vys.body); return; }
+        err.textContent = (vys && vys.hlaseni) || HLASKA_ULOZENI;
+        err.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = orig;
+      });
     });
   </script>
 <link rel="stylesheet" href="/assets/vendor/fonts/barlow-condensed.css"><link rel="stylesheet" href="/assets/arena.css?v=a8"><link rel="stylesheet" href="/assets/ba-theme-light.css?v=l13"></body>
