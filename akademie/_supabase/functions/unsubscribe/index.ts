@@ -89,7 +89,8 @@ async function unsubscribe(token: string): Promise<boolean> {
   if (!lead) {
     const { data: k, error: chybaK } = await a.rpc('odhlas_kontakt', { p_token: token, p_zdroj: 'unsubscribe-link-kontakt' });
     if (chybaK) { console.error('[unsubscribe] odhlas_kontakt selhalo:', chybaK.message); return false; }
-    return Boolean((k as { ok?: boolean } | null)?.ok);
+    if ((k as { ok?: boolean } | null)?.ok) return true;
+    return await odhlasKosik(a, token, kdy);
   }
   // Datum i udalost jen pri PRVNIM odhlaseni. Opakovany klik na tyz odkaz (a mailove
   // skenery, ktere One-Click POST posilaji samy) nesmi prerazitkovat puvodni datum ani
@@ -122,6 +123,40 @@ async function unsubscribe(token: string): Promise<boolean> {
 // Znovupřihlášení (Martin 13. 9. 2026: odhlášení musí jít vzít zpět). RPC smaže e-mail z trvalého
 // seznamu a vrátí status active bez termínu: newsletter zase chodí, rozjetá trať se sama neprobudí.
 // Stížnost na spam zůstává trvalá (RPC vrátí duvod 'spam_complaint').
+// Token z kosik_checkouty (pripominka nedokoncene objednavky). GET sem nechodi, jen POST.
+// Zapise odhlaseno_at, tim se serie zastavi. Trvaly seznam je best-effort: schema se lisi
+// a migrace kosiku jeste nemusi byt nasazena, takze chyba zapisu se jen zaloguje.
+async function odhlasKosik(
+  a: ReturnType<typeof admin>,
+  token: string,
+  kdy: string,
+): Promise<boolean> {
+  const { data, error } = await a.from('kosik_checkouty')
+    .select('id,email,odhlaseno_at')
+    .eq('odhlaseni_token', token)
+    .maybeSingle();
+  if (error || !data) return false;
+  if (!data.odhlaseno_at) {
+    const { error: updErr } = await a.from('kosik_checkouty').update({
+      odhlaseno_at: kdy,
+      stav: 'stop_odhlaseno',
+      stop_duvod: 'odhlaseni',
+    }).eq('id', data.id);
+    if (updErr) {
+      console.error('[unsubscribe] kosik odhlaseni selhalo:', updErr.message);
+      return false;
+    }
+    const email = String(data.email ?? '').trim().toLowerCase();
+    if (email) {
+      const { error: trv } = await a.from('odhlaseni_trvale').insert({ email, zdroj: 'kosik-odhlaseni' });
+      if (trv && !/duplicate|unique/i.test(trv.message)) {
+        console.error('[unsubscribe] odhlaseni_trvale z kosiku:', trv.message);
+      }
+    }
+  }
+  return true;
+}
+
 async function resubscribe(token: string): Promise<{ ok: boolean; duvod?: string }> {
   if (!token || token === 'test-no-op') return { ok: false, duvod: 'token' };
   const { data, error } = await admin().rpc('prihlas_znovu', { p_token: token, p_zdroj: 'odhlasit-stranka' });

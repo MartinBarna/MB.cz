@@ -46,6 +46,7 @@ import {
   stavOpakovanehoNakupu,
   typUdalostiZnovu,
 } from "./opakovany-nakup.ts";
+import { rozpoznajJednorazovyKlic } from "./kosik-rozpoznani.ts";
 // ⭐ [16. 9. 2026] Odeslání přes společný helper, který si přečte `id` z odpovědi
 // Resendu a zapíše ho do `email_events`. Bez toho se u těchhle tří zákaznických
 // cest (doklad, opakované doručení balíčku, opakovaná konzultace) nedá spárovat
@@ -1954,9 +1955,42 @@ Deno.serve(async (req) => {
       // ⚠️ `mode` rozhoduje o VŠEM ostatním, proto se větví hned na začátku.
       if (obj.mode === "payment") {
         const plinkL = typeof obj.payment_link === "string" ? obj.payment_link : "";
-        // ⛔ Jen odkazy z naší mapy. Cizí jednorázové platby z téhož Stripe účtu
-        // (a je jich tam víc, účet je společný s appkou) sem chodí taky.
-        const klic = ODKAZ_NA_PRODUKT[plinkL];
+        // Platebni odkaz z mapy ma prednost (stavajici odkazy, vcetne slevy).
+        // Session z kosiku odkaz nema: klic je v metadata.kosik_klic a castka musi sedet.
+        // Obnovena session bez metadat se dohleda pres recovered_from.
+        const rozpoznani = await rozpoznajJednorazovyKlic({
+          obj,
+          odkazNaProdukt: ODKAZ_NA_PRODUKT,
+          katalogKlice: Object.keys(KATALOG),
+          dohledatRecovered: async (sessionId) => {
+            try {
+              const { data, error } = await admin.from("kosik_checkouty")
+                .select("produkt_klic")
+                .eq("stripe_session_id", sessionId)
+                .maybeSingle();
+              if (error || !data) return null;
+              const k = String((data as { produkt_klic?: string }).produkt_klic ?? "");
+              return k || null;
+            } catch {
+              return null;
+            }
+          },
+        });
+        if (!rozpoznani.ok && rozpoznani.duvod !== "zadny") {
+          const castkaSpatna = Number(obj.amount_total ?? 0);
+          await alertAdmin("🔴 Stripe: Checkout Session košíku, nárok NEUDĚLEN", {
+            duvod: rozpoznani.duvod,
+            kosik_klic: obj.metadata && typeof obj.metadata === "object"
+              ? String((obj.metadata as { kosik_klic?: string }).kosik_klic ?? "")
+              : "",
+            castka: castkaText(castkaSpatna, String(obj.currency ?? "czk")),
+            session: String(obj.id ?? ""),
+            recovered_from: String(obj.recovered_from ?? ""),
+            co_delat: "Částka nesedí s katalogem, nebo klíč není ve whitelistu. Přístup nedávej, dokud to nesedí.",
+          });
+          return json({ ok: true, ignored: rozpoznani.duvod, mode: "payment" });
+        }
+        const klic = rozpoznani.ok ? rozpoznani.klic : "";
         const def = klic ? KATALOG[klic] : undefined;
         if (!def) {
           // ⛔⛔ TICHO TADY STÁLO PENÍZE (oprava po revizi, 2. 9. 2026).

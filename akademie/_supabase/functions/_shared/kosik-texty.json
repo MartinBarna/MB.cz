@@ -1,0 +1,472 @@
+{
+  "zdroj": "akademie/_email/kosik-final-v2.md",
+  "paticka_web": [
+    "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+    "Martin Barna, martinbarna.cz"
+  ],
+  "paticka_app": [
+    "Tenhle e-mail ti přišel, protože u objednávky v appce Tvůj Coach byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+    "Martin Barna, martinbarna.cz"
+  ],
+  "maily": [
+    {
+      "klic": "kosik-konzultace",
+      "krok": 0,
+      "oznaceni": "K1",
+      "predmet": "Zaseklo se to u konzultace?",
+      "preheader": "Stačí mi odepsat jednou větou, čtu to sám.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "vidím, že objednávka konzultace zůstala nedokončená. Co tě zastavilo?"
+        },
+        {
+          "t": "p",
+          "text": "Klidně mi odepiš jednou větou. Čtu to sám a odpovím ti osobně."
+        },
+        {
+          "t": "p",
+          "text": "Od roku 2013 jsem vedl přes 600 klientů a přes 100 z nich mi napsalo hodnocení na Facebooku a Googlu. Nejčastěji ke mně chodí lidé, kteří už toho zkusili hodně a pokaždé se to vrátilo."
+        },
+        {
+          "t": "p",
+          "text": "Konzultace dává smysl, když chceš vědět, co dělat právě ty. Zázračnou dietu ani hotový jídelníček do šuplíku ode mě nečekej."
+        },
+        {
+          "t": "p",
+          "text": "Začneme tím, co ti dosud nefungovalo a proč. Pak spočítáme tvoje čísla a domluvíme dva až tři kroky, které zvládneš i v úterý po směně."
+        },
+        {
+          "t": "p",
+          "text": "Termín vybereme spolu až po objednávce. Přesunout ho můžeš zdarma do 24 hodin předem."
+        },
+        {
+          "t": "p",
+          "text": "Když z hovoru neodejdeš se spočítanými kaloriemi, bílkovinami a prvními kroky na týden, vrátím ti celou částku.",
+          "flag": "kosik_garance_k1"
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-konzultace",
+      "krok": 1,
+      "oznaceni": "K2",
+      "predmet": "Ještě jedna věc ke konzultaci",
+      "preheader": "Dvě věty, které slyším nejčastěji. Pak už ti k tomu nepíšu.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "naposledy k té nedokončené konzultaci, pak už ti k ní psát nebudu."
+        },
+        {
+          "t": "p",
+          "text": "Na začátku nejčastěji slyším dvě věty: „Zkoušel jsem už všechno“ a „Nemám na to čas“. Právě na tohle je konzultace. Plán stavíme na tvůj skutečný týden, ne na ideální."
+        },
+        {
+          "t": "p",
+          "text": "Jedna klientka, maminka dvou dětí, si na začátku myslela, že to nedá. V recenzi pak napsala, že se cítí skvěle a v kondici."
+        },
+        {
+          "t": "p",
+          "text": "A jestli uvažuješ i o koučinku: když si ho objednáš do 14 dní po konzultaci, cenu konzultace ti z balíčku odečtu."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "p",
+          "text": "Když se chceš nejdřív na něco zeptat, stačí odepsat na tenhle mail."
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-koucink",
+      "krok": 0,
+      "oznaceni": "KC1",
+      "predmet": "Zaseklo se to u koučinku?",
+      "preheader": "Napiš mi, co tě brzdí. Odpovím ti sám.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "vidím, že objednávka koučinku zůstala nedokončená. Koučink je velké rozhodnutí, takže chápu, že si to chceš ještě promyslet."
+        },
+        {
+          "t": "p",
+          "text": "Co tě zastavilo? Odepiš mi jednou větou, čtu to sám. Když řešíš, jestli si sedneme, nebo jak to zapadne do tvého týdne, vysvětlím ti to."
+        },
+        {
+          "t": "p",
+          "text": "Od roku 2013 jsem vedl víc než 600 klientů a přes 100 z nich mi napsalo hodnocení na Facebooku a Googlu."
+        },
+        {
+          "t": "p",
+          "text": "Nejedeš podle šablony. Každý týden se podívám na tvoje čísla a podle nich plán upravíme. Report naklikáš z mobilu za pár minut a appku Tvůj Coach máš v ceně."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-koucink",
+      "krok": 1,
+      "oznaceni": "KC2",
+      "predmet": "Nejdřív se jen potkat?",
+      "preheader": "Začni konzultací. Když navážeš, odečtu ti ji.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "naposledy ke koučinku, pak už ti k němu psát nebudu."
+        },
+        {
+          "t": "p",
+          "text": "Když nevíš, jestli si sedneme, dá se začít menším krokem. Dáme si hodinovou konzultaci, spočítáme tvoje čísla a domluvíme první kroky. Když si pak do 14 dní objednáš koučink, cenu konzultace ti z balíčku odečtu. Plán ti zůstane tak jako tak."
+        },
+        {
+          "t": "btn",
+          "text": "Podívat se na konzultaci",
+          "href": "https://martinbarna.cz/konzultace/"
+        },
+        {
+          "t": "p",
+          "text": "Nebo dokončit koučink rovnou: {{RECOVERY_URL}}"
+        },
+        {
+          "t": "p",
+          "text": "A když nevíš, co z toho, napiš mi pár řádků o tom, kde teď jsi. Poradím ti upřímně, i kdyby to mělo být „zatím nic“."
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-videokurz",
+      "krok": 0,
+      "oznaceni": "D1",
+      "predmet": "Zaseklo se to u videokurzu?",
+      "preheader": "Když ti kurz do 14 dnů nesedne, vrátím ti celou částku.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "vidím, že objednávka videokurzu zůstala nedokončená. Někdy zazlobí karta, jindy člověk jen neví, jestli je to pro něj. Obojí je v pořádku."
+        },
+        {
+          "t": "p",
+          "text": "Kurz jsem postavil na své praxi s víc než 600 klienty od roku 2013."
+        },
+        {
+          "t": "p",
+          "text": "Na rozhodnutí máš 14 dnů od nákupu. Když ti kurz nesedne, vyplníš krátký formulář a vrátím ti celou částku, bez vyptávání."
+        },
+        {
+          "t": "p",
+          "text": "Přístup máš pár minut po zaplacení a jedeš vlastním tempem, na mobilu i na počítači."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "p",
+          "text": "Kdyby něco nefungovalo, odepiš mi. Čtu to sám."
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-videokurz",
+      "krok": 1,
+      "oznaceni": "D2",
+      "predmet": "Tři otázky, které slyším nejčastěji",
+      "preheader": "Na čas, na diety a na to, jestli je to pro tebe.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "naposledy k videokurzu, pak už ti k němu psát nebudu. Tyhle tři otázky slyším nejčastěji:"
+        },
+        {
+          "t": "p",
+          "text": "„Nemám na to čas.“ Videa si pustíš, kdy se ti to hodí, i po kouscích cestou. Nemusíš to projet za týden. Stačí pochopit pár věcí, které ti pak zůstanou na celý život."
+        },
+        {
+          "t": "p",
+          "text": "„Zkoušel jsem už spoustu diet.“ Tohle není dieta. Neprodávám ryby, učím rybařit. Naučíš se, jak jídlo funguje, a pak si poradíš i na dovolené nebo v restauraci."
+        },
+        {
+          "t": "p",
+          "text": "„Je to vůbec pro mě?“ Když to do 14 dnů od nákupu tak necítíš, vrátím ti celou částku."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-academy",
+      "krok": 0,
+      "oznaceni": "D1 Academy",
+      "predmet": "Zaseklo se to u Academy?",
+      "preheader": "Když ti do 14 dnů nesedne, vrátím ti peníze.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "vidím, že objednávka Barna Academy zůstala nedokončená. Co tě zastavilo? Odepiš mi jednou větou, čtu to sám."
+        },
+        {
+          "t": "p",
+          "text": "V Academy je celá moje metodika z praxe s víc než 600 klienty a nástroje, které použiješ se svými klienty hned v pondělí. A když ti do 14 dnů nesedne, vrátím ti celou částku."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-academy",
+      "krok": 1,
+      "oznaceni": "D2 Academy",
+      "predmet": "Academy jde i měsíčně",
+      "preheader": "Zrušíš kdykoliv. Pak už ti k tomu nepíšu.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "naposledy k Academy. Jestli tě brzdila částka naráz, Academy jde i měsíčně a zrušíš ji kdykoliv. Garance 14 dní platí i tady."
+        },
+        {
+          "t": "btn",
+          "text": "Podívat se na měsíční členství",
+          "href": "https://martinbarna.cz/akademie/"
+        },
+        {
+          "t": "p",
+          "text": "Když máš otázku k certifikaci nebo k tomu, jestli je Academy pro tebe, stačí odepsat."
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-appka",
+      "krok": 0,
+      "oznaceni": "A1",
+      "predmet": "Zastavilo tě něco u předplatného?",
+      "preheader": "Napiš mi jednou větou, co ti chybělo. Čtu si to sám.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "vidím, že předplatné v appce zůstalo nedokončené. Zajímá mě jedna věc: co tě zastavilo?"
+        },
+        {
+          "t": "p",
+          "text": "Odpověz rovnou na tenhle mail, stačí jedna věta. Jestli to byla cena, napiš cenu. Jestli ti chyběla nějaká funkce, napiš která. Čtu si to sám a podle toho appku upravuju."
+        },
+        {
+          "t": "p",
+          "text": "Zrušíš to kdykoliv v profilu, a když ti to do 14 dnů od začátku předplatného nesedne, vrátím ti celou částku bez udání důvodu."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit předplatné",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "p",
+          "text": "A když ti appka zatím nesedla, taky dobře. Free verze ti zůstává napořád."
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky v appce Tvůj Coach byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    },
+    {
+      "klic": "kosik-appka",
+      "krok": 1,
+      "oznaceni": "A2",
+      "predmet": "Ještě jedna věc k appce",
+      "preheader": "Jak na to první týden. Pak už ti k tomu nepíšu.",
+      "bloky": [
+        {
+          "t": "p",
+          "text": "Ahoj{{fn_space}},"
+        },
+        {
+          "t": "p",
+          "text": "naposledy k předplatnému, pak už ti k němu psát nebudu."
+        },
+        {
+          "t": "p",
+          "text": "Nejčastěji slyším, že na zapisování jídla není čas. Proto stačí zapsat, co jíš, a appka ti to sama sečte a přepočítá cíle."
+        },
+        {
+          "t": "p",
+          "text": "První týden nemusíš nic měnit. Jen zapisuj, co jíš, a koukej na čísla. Až uvidíš, kde se kalorie schovávají, budeš vědět, co upravit."
+        },
+        {
+          "t": "p",
+          "text": "Platí totéž co minule: zrušíš kdykoliv v profilu, a když ti to do 14 dnů od začátku předplatného nesedne, vrátím ti celou částku."
+        },
+        {
+          "t": "btn",
+          "text": "Dokončit předplatné",
+          "href": "{{RECOVERY_URL}}"
+        },
+        {
+          "t": "p",
+          "text": "Když máš otázku, odepiš na tenhle mail. Čtu to sám."
+        },
+        {
+          "t": "podpis",
+          "radky": [
+            "Be Effective!",
+            "Martin Barna"
+          ]
+        }
+      ],
+      "paticka": [
+        "Tenhle e-mail ti přišel, protože u objednávky v appce Tvůj Coach byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}",
+        "Martin Barna, martinbarna.cz"
+      ]
+    }
+  ]
+}
