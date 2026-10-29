@@ -323,8 +323,8 @@ function vyberNabidky(slug, subject) {
 
 // UTM si u CTA lepíme sami: `sUtm` cizí doménu záměrně nešahá, a appka běží
 // na tvujcoach.cz. Bez toho by proklik z newsletteru spadl do organiky.
-// ⛔ NEPOUŽÍVAT https://martinbarna.cz/go/tc/: ten přesměrovač si utm_source
-// PŘEPÍŠE na youtube/pin-tc (viz go/tc/index.html), takže by newsletter měřil cizí kanál.
+// ⛔ NEPOUŽÍVAT https://martinbarna.cz/go/tc/: přesměrování jde na čistou
+// https://tvujcoach.cz/ a příchozí query (včetně newsletterových utm) zahodí.
 function ctaBloky(klic, kde, slug, utm) {
   const n = NABIDKY[klic];
   if (!n) throw new Error('neznama nabidka: ' + klic);
