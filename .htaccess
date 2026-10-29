@@ -143,6 +143,13 @@ RedirectMatch 301 (?i)^/prihlaseni/?$           https://martinbarna.cz/akademie/
 # krátké tvary, které lidi i testeři zkouší jako první)
 RedirectMatch 301 (?i)^/(podminky|vop|obchodni-podminky\.html)/?$         https://martinbarna.cz/obchodni-podminky/
 RedirectMatch 301 (?i)^/(soukromi|gdpr|zasady-ochrany-osobnich-udaju\.html)/?$ https://martinbarna.cz/zasady-ochrany-osobnich-udaju/
+# /kontakt a /kontakt/ nikdy nebyly stránka: v gitu žádný soubor toho jména,
+# žádný smazaný commit a pickaxe -S '/kontakt' je prázdný. Živý kontakt je kotva
+# na homepage (sekce #kontakt: formulář, mailto, telefon, WhatsApp). Interní
+# odkazy míří na kotvy, ne na tuhle cestu. 301 je jen pro externí adresy a
+# metadata, ať nekončí na 404. Stejný vzor jako /martin/ → /#omne (živý Location
+# hash udrží). Přesný regex, ne prefix Redirect, ať nesežere delší cestu.
+RedirectMatch 301 (?i)^/kontakt/?$              https://martinbarna.cz/#kontakt
 # staré WP články, které se nemigrovaly (odkazované jen textem) → blog
 RedirectMatch 301 ^/5-mytu-o-cukru/?$                                https://martinbarna.cz/clanky/
 RedirectMatch 301 ^/6-duvodu-proc-glykemicky-index-nehraje-roli/?$   https://martinbarna.cz/clanky/
