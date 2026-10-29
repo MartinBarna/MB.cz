@@ -75,6 +75,7 @@ import { overStart } from "./start-klienta.ts";
 // jako `drip-send`, jinak by ulozeni sablony s `{{cena_*}}` spadlo na `unresolved_token`.
 import { type Ceny, chybejiciCeny, nactiCeny, slevyVideokurzu } from "../_shared/ceny.ts";
 import { mailKlic } from "../_shared/mail-provider.ts";
+import { jeTestLead, jeTestovaciEmail } from "../_shared/test-lead.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -1252,28 +1253,35 @@ Deno.serve(async (req) => {
       // email_events uz preleze 1000 radku → vsechny selecty strankovane (fetchAllRows), zadny tichy orez
       const [ccRows, ldsRows, entsRows, evsRows, allUsers] = await Promise.all([
         fetchAllRows((f, t) => admin.from("customer_contacts").select("email,name,tags,status,audience,onboarding_sent_at").order("email").range(f, t)),
-        fetchAllRows((f, t) => admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at").order("id").range(f, t)),
+        fetchAllRows((f, t) => admin.from("leads").select("id,email,name,segment,source,track,step,status,next_send_at,meta").order("id").range(f, t)),
         fetchAllRows((f, t) => admin.from("entitlements").select("email,product,active,expires_at").order("email").order("product").range(f, t)),
         fetchAllRows((f, t) => admin.from("email_events").select("lead_id,type,created_at").not("lead_id", "is", null).order("id").range(f, t)),
         listAllUsers(admin),
       ]);
       const leadById = new Map<string, string>();
       const map = new Map<string, Record<string, unknown>>();
+      // jeTestLead do dlaždic a tabulky nepatří.
+      const testEmaily = new Set<string>();
+      for (const l of ldsRows) if (jeTestLead(l)) testEmaily.add(low(l.email));
+      for (const c of ccRows) if (jeTestovaciEmail(c.email)) testEmaily.add(low(c.email));
       const get = (email: string) => {
         const k = low(email);
         if (!map.has(k)) map.set(k, { email: k, name: "", tags: [], segment: "", sources: [], has_academy: false, has_videokurz: false, has_coaching: false, registered: false, last_sign_in: null, sent_count: 0, last_sent_at: null, opened_count: 0, lead_track: null, lead_step: null, lead_status: null, contact_status: null, onboarding_sent_at: null });
         return map.get(k)!;
       };
       for (const c of ccRows) {
+        if (testEmaily.has(low(c.email))) continue;
         const r = get(c.email); r.name = r.name || c.name || ""; r.tags = c.tags || []; r.contact_status = c.status; r.onboarding_sent_at = c.onboarding_sent_at;
         (r.sources as string[]).push("contact");
       }
       for (const l of ldsRows) {
+        if (testEmaily.has(low(l.email))) continue;
         leadById.set(String(l.id), low(l.email));
         const r = get(l.email); r.name = r.name || l.name || ""; r.segment = l.segment || r.segment; r.lead_track = l.track; r.lead_step = l.step; r.lead_status = l.status;
         (r.sources as string[]).push("lead:" + (l.source || "?"));
       }
       for (const e of entsRows) {
+        if (testEmaily.has(low(e.email))) continue;
         const r = get(e.email);
         // ⛔ Prosle `expires_at` = pristup NENI (`has_entitlement` ho cte), i kdyz `active` zustalo true.
         const ziveEnt = e.active && (!e.expires_at || Date.parse(String(e.expires_at)) > Date.now());
@@ -1293,7 +1301,7 @@ Deno.serve(async (req) => {
             && (!e.expires_at || new Date(e.expires_at).getTime() > Date.now())) r.has_coaching = true;
       }
       for (const u of allUsers) {
-        const k = low(u.email); if (!k) continue;
+        const k = low(u.email); if (!k || testEmaily.has(k)) continue;
         const r = get(k); r.registered = true; r.last_sign_in = u.last_sign_in_at ?? null;
       }
       for (const ev of evsRows) {
@@ -1628,9 +1636,12 @@ Deno.serve(async (req) => {
         else if (e.type === "error") bump(track, "error");
         else if (e.type === "test") bump(track, "test");
       }
-      const pend = await fetchAllRows((f, t) => admin.from("leads").select("track")
+      const pend = await fetchAllRows((f, t) => admin.from("leads").select("track,email,meta")
         .eq("status", "active").not("next_send_at", "is", null).lt("next_send_at", nowI).order("id").range(f, t));
-      for (const l of pend) bump(String(l.track ?? ""), "pending");
+      for (const l of pend) {
+        if (jeTestLead(l)) continue;
+        bump(String(l.track ?? ""), "pending");
+      }
       return json({ ok: true, rows: [...agg.values()].sort((a, b) => a.track.localeCompare(b.track)) });
     }
 
@@ -1643,15 +1654,23 @@ Deno.serve(async (req) => {
       const fTrack = body.track ? String(body.track) : "";
       const nowI = new Date().toISOString();
       let lq = admin.from("leads")
-        .select("email,name,track,step,next_send_at", { count: "exact" })
-        .eq("status", "active").not("next_send_at", "is", null);
+        .select("email,name,track,step,next_send_at,meta", { count: "exact" })
+        .eq("status", "active").not("next_send_at", "is", null)
+        .not("email", "ilike", "fitness.barna+tester%@gmail.com");
       if (q) lq = lq.ilike("email", "%" + q.replace(/[%_*\\]/g, (m) => "\\" + m) + "%");
       if (fTrack) lq = lq.eq("track", fTrack);
       const { data: lds, count } = await lq.order("next_send_at", { ascending: true }).range(offset, offset + limit - 1);
+      let metaQ = admin.from("leads").select("id", { count: "exact", head: true })
+        .eq("status", "active").not("next_send_at", "is", null)
+        .not("email", "ilike", "fitness.barna+tester%@gmail.com")
+        .in("meta->>test", ["true", "t", "1"]);
+      if (q) metaQ = metaQ.ilike("email", "%" + q.replace(/[%_*\\]/g, (m) => "\\" + m) + "%");
+      if (fTrack) metaQ = metaQ.eq("track", fTrack);
+      const { count: metaTestN, error: metaTestErr } = await metaQ;
       const { data: tpls } = await admin.from("email_templates").select("track,step,subject");
       const subjMap = new Map<string, string>();
       for (const t of tpls ?? []) subjMap.set(String(t.track) + ":" + t.step, String(t.subject ?? ""));
-      const rows = (lds ?? []).map((l) => ({
+      const rows = (lds ?? []).filter((l) => !jeTestLead(l)).map((l) => ({
         email: low(l.email),
         name: String(l.name || ""),
         track: l.track,
@@ -1660,7 +1679,12 @@ Deno.serve(async (req) => {
         subject: subjMap.get(String(l.track) + ":" + l.step) ?? "",
         overdue: String(l.next_send_at) < nowI,
       }));
-      return json({ ok: true, rows, total: count ?? rows.length, offset, limit });
+      const odfiltrovano = (lds ?? []).length - rows.length;
+      const zaklad = count ?? rows.length;
+      const total = metaTestErr
+        ? Math.max(0, zaklad - odfiltrovano)
+        : Math.max(0, zaklad - (metaTestN ?? 0));
+      return json({ ok: true, rows, total, offset, limit });
     }
 
     // 📈 VLASTNI MERENI MAILU (pixel + presmerovani prokliku).
@@ -1691,7 +1715,12 @@ Deno.serve(async (req) => {
       // Leady se tahaji CELE (ne jen za okno): stav trati je odpoved na otazku „kdo kde stoji
       // TED", ne „kdo se pohnul za 30 dni". Odhlaseni se z nich filtruje az podle `updated_at`.
       const leady = await fetchAllRows((f, t) =>
-        admin.from("leads").select("id,track,step,status,updated_at").order("id").range(f, t)
+        admin.from("leads").select("id,email,track,step,status,updated_at,meta").order("id").range(f, t)
+      );
+      const testLeadIds = new Set<string>(
+        (leady as { id?: unknown; email?: unknown; meta?: unknown }[])
+          .filter((l) => jeTestLead(l))
+          .map((l) => String(l.id)),
       );
 
       type Radek = {
@@ -1740,6 +1769,7 @@ Deno.serve(async (req) => {
 
       let poslednePxOdeslano = "", posledneSent = "", poslednePxUdalost = "";
       for (const e of evs) {
+        if (e.lead_id && testLeadIds.has(String(e.lead_id))) continue;
         const det = (e.detail && typeof e.detail === "object") ? (e.detail as Record<string, unknown>) : {};
         const track = String(det.track ?? "");
         const step = Number.isFinite(Number(e.step)) ? Number(e.step) : -1;
@@ -1883,6 +1913,7 @@ Deno.serve(async (req) => {
       const odMs = new Date(od).getTime();
       let odhlaseniCelkem = 0, odhlaseniNeprirazeno = 0, bounceLidi = 0;
       for (const l of leady) {
+        if (testLeadIds.has(String(l.id))) continue;
         const st = String(l.status ?? "");
         if (st !== "unsubscribed" && st !== "bounced") continue;
         const kdy = new Date(String(l.updated_at ?? "")).getTime();
@@ -1900,6 +1931,7 @@ Deno.serve(async (req) => {
       // (drip-send ho po odeslani posouva), proto sloupec v UI rika „ceka na krok".
       const stavTrati = new Map<string, { track: string; step: number; active: number; unsubscribed: number; bounced: number; paused: number; purchased: number; jine: number }>();
       for (const l of leady) {
+        if (testLeadIds.has(String(l.id))) continue;
         const t = String(l.track ?? "");
         const s = Number.isFinite(Number(l.step)) ? Number(l.step) : -1;
         const k = t + "|" + s;
@@ -2017,13 +2049,15 @@ Deno.serve(async (req) => {
         updated_at: t.updated_at,
       }));
       rows.sort((a, b) => a.track === b.track ? a.step - b.step : a.track.localeCompare(b.track));
-      // pocty leadu na tracku pres SQL group-by (zadny 1000-row strop PostgREST)
-      const { data: lcounts } = await admin.rpc("admin_leads_by_track");
+      // Počty na trati tady, bez jeTestLead. RPC admin_leads_by_track se nevolá.
+      const leadRows = await fetchAllRows((f, t) =>
+        admin.from("leads").select("track,status,email,meta").order("id").range(f, t));
       const onTrack: Record<string, { active: number; other: number }> = {};
-      for (const l of (lcounts ?? []) as { track: string; status: string; n: number }[]) {
+      for (const l of leadRows) {
+        if (jeTestLead(l)) continue;
         const k = String(l.track ?? "");
         if (!onTrack[k]) onTrack[k] = { active: 0, other: 0 };
-        if (l.status === "active") onTrack[k].active += Number(l.n); else onTrack[k].other += Number(l.n);
+        if (l.status === "active") onTrack[k].active += 1; else onTrack[k].other += 1;
       }
       return json({ ok: true, rows, leads_on_track: onTrack });
     }
@@ -2253,9 +2287,10 @@ Deno.serve(async (req) => {
     if (action === "qr_stats") {
       // Leady z letáků/QR: seskupené podle meta->>'utm_source'. (Skeny/pageviews řeší GA4.)
       // strankovane — leads porostou pres PostgREST strop 1000 (dnes 600+, s reklamami vic)
-      const data = await fetchAllRows((f, t) => admin.from("leads").select("meta,created_at").order("id").range(f, t));
+      const data = await fetchAllRows((f, t) => admin.from("leads").select("email,meta,created_at").order("id").range(f, t));
       const bySrc = new Map<string, { source: string; medium: string | null; leads: number; last: string | null }>();
-      for (const l of data as { meta: unknown; created_at: string }[]) {
+      for (const l of data as { email?: unknown; meta: unknown; created_at: string }[]) {
+        if (jeTestLead(l)) continue;
         const meta = (l.meta && typeof l.meta === "object") ? l.meta as Record<string, unknown> : {};
         const s = String(meta.utm_source ?? "").trim();
         if (!s) continue;
@@ -2272,9 +2307,10 @@ Deno.serve(async (req) => {
     if (action === "trener_funnel") {
       // 🎯 Trenéři — trychtýř: kit leady (track='trener-kit') → kroky sekvence → nákup Academy.
       // Konverze = match e-mailu leadu na aktivni entitlement product='academy'.
-      const leads = await fetchAllRows((f, t) =>
-        admin.from("leads").select("id,email,name,source,step,status,created_at")
-          .eq("track", "trener-kit").order("created_at", { ascending: false }).order("id", { ascending: false }).range(f, t));
+      const leads = (await fetchAllRows((f, t) =>
+        admin.from("leads").select("id,email,name,source,step,status,created_at,meta")
+          .eq("track", "trener-kit").order("created_at", { ascending: false }).order("id", { ascending: false }).range(f, t)))
+        .filter((l) => !jeTestLead(l));
       const total = leads.length;
       const active = leads.filter((l) => l.status === "active").length;
       const byStep: Record<string, number> = {};

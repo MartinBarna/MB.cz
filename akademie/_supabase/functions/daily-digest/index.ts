@@ -11,6 +11,7 @@ import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.
 import { dnesPraha, kadenceKlienta } from "../_shared/report-obdobi.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { jeTestLead, jeTestovaciEmail } from "../_shared/test-lead.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -43,10 +44,10 @@ Deno.serve(async (req) => {
   const d7 = new Date(now.getTime() - 7 * 86400000).toISOString();
 
   const [leadsY, leads7, evY, due, entsY, wdr, refs, acadSold] = await Promise.all([
-    admin.from("leads").select("email,source").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
-    admin.from("leads").select("created_at").gte("created_at", d7),
+    admin.from("leads").select("email,source,meta").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
+    admin.from("leads").select("created_at,email,meta").gte("created_at", d7),
     admin.from("email_events").select("type,detail").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
-    admin.from("leads").select("id").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", now.toISOString()),
+    admin.from("leads").select("id,email,meta").eq("status", "active").not("next_send_at", "is", null).lte("next_send_at", now.toISOString()),
     // Vcerejsi realne prodeje. `stripe-lifetime` = dozivotni Academy pres Stripe
     // (od 29. 7. 2026 nahrazuje SimpleShop), musi se pocitat stejne jako `simpleshop`.
     // ⛔ ROZŠÍŘENO 6. 8. 2026: seznam znal jen Academy, takže prodej videokurzu,
@@ -101,7 +102,8 @@ Deno.serve(async (req) => {
   // adres bylo v `customer_contacts`. Registr znamych kontaktu je tedy jediny spolehlivy
   // znak, proto se ptame jeho, ne `leads`.
   const lowEm = (v: unknown) => String(v ?? "").trim().toLowerCase();
-  const leadsYrows = (leadsY.data ?? []) as Array<{ email?: string; source?: string }>;
+  const leadsYrows = ((leadsY.data ?? []) as Array<{ email?: string; source?: string; meta?: unknown }>)
+    .filter((l) => !jeTestLead(l));
   const leadEmaily = [...new Set(leadsYrows.map((l) => lowEm(l.email)).filter((e) => e.includes("@")))];
   // ⛔ Ptame se JEN na vcerejsi adresy, ne na celou tabulku: `customer_contacts` ma pres
   // 800 radku a PostgREST vraci nanejvys 1000, takze dotaz bez filtru by se casem TISE usekl
@@ -177,7 +179,11 @@ Deno.serve(async (req) => {
   for (const r of refs.data ?? []) if (r.status === "pending") refPending++;
 
   const trend: Record<string, number> = {};
-  for (const l of leads7.data ?? []) { const d = String(l.created_at).slice(5, 10); trend[d] = (trend[d] ?? 0) + 1; }
+  for (const l of leads7.data ?? []) {
+    if (jeTestLead(l)) continue;
+    const d = String(l.created_at).slice(5, 10); trend[d] = (trend[d] ?? 0) + 1;
+  }
+  const duePocet = ((due.data ?? []) as Array<{ email?: unknown; meta?: unknown }>).filter((r) => !jeTestLead(r)).length;
   const trendStr = Object.keys(trend).sort().map((k) => k.split("-").reverse().join(".") + ". <b>" + trend[k] + "</b>").join(" &nbsp;·&nbsp; ");
 
   // ===== Hlidac konverznich kanalu (21. 7. 2026) =====
@@ -275,11 +281,22 @@ Deno.serve(async (req) => {
     // ⛔ Reaktivacni a importni radky se sem NEPOCITAJI. Detektor ticha ma hlidat, jestli
     // chodi NOVI lide z reklam. Jedna hromadna vlna by ho jinak umlcela na dalsi dny
     // a rozbity lead-capture by se schoval za nasi vlastni akci.
-    admin.from("leads").select("created_at").not("source", "like", "reaktivace-%").not("source", "like", "import%").order("created_at", { ascending: false }).limit(1),
+    (async () => {
+      for (let od = 0; od < 400; od += 40) {
+        const { data } = await admin.from("leads").select("created_at,email,meta")
+          .not("source", "like", "reaktivace-%").not("source", "like", "import%")
+          .order("created_at", { ascending: false }).range(od, od + 39);
+        const radky = data ?? [];
+        const nasel = radky.find((r) => !jeTestLead(r));
+        if (nasel) return nasel;
+        if (radky.length < 40) return undefined;
+      }
+      return undefined;
+    })(),
   ]);
   const daysSince = (v: unknown) => v ? Math.floor((now.getTime() - new Date(String(v)).getTime()) / 86400000) : 9999;
   const dContact = daysSince(lastContact.data?.[0]?.created_at);
-  const dLead = daysSince(lastLead.data?.[0]?.created_at);
+  const dLead = daysSince(lastLead?.created_at);
 
   const dY = yStart.toLocaleDateString("cs-CZ", { timeZone: "Europe/Prague", day: "numeric", month: "long" });
   const row = (label: string, val: string) => `<tr><td style="padding:7px 12px;color:#666">${label}</td><td style="padding:7px 12px;font-weight:700;text-align:right">${val}</td></tr>`;
@@ -358,13 +375,14 @@ Deno.serve(async (req) => {
     //    bez chybové události, se nikde neobjevil a Martin se to dozvěděl z reklamace.
     //    Je to týž vzorec „nová cesta, staré pravidlo": při každém dalším produktu
     //    zkontroluj, jestli ho existující pojistky vidí, ne jestli existují.
-    const { data: bezUvitacky } = await admin.from("leads")
-      .select("email,track")
+    const { data: bezUvitackyRaw } = await admin.from("leads")
+      .select("email,track,meta")
       .like("track", "onboarding-nakup-%")
       .eq("step", 0).eq("status", "active")
       .lt("updated_at", new Date(Date.now() - 2 * 3600000).toISOString())
       .limit(20);
-    if (bezUvitacky && bezUvitacky.length) {
+    const bezUvitacky = (bezUvitackyRaw ?? []).filter((l) => !jeTestLead(l) && !jeTestovaciEmail(l.email));
+    if (bezUvitacky.length) {
       alerts += warn(`${bezUvitacky.length}× zaplacený nákup BEZ uvítacího e-mailu (`
         + bezUvitacky.slice(0, 5).map((l: { email: string; track: string }) => l.email + " / " + l.track).join(", ")
         + `). Přístup mají, mail ne. Pošli ho ručně přes drip-send only_email a zjisti proč.`);
@@ -618,7 +636,7 @@ Deno.serve(async (req) => {
     const kupci: Kupec[] = (konzEnts ?? [])
       .map((r: { email: string; active: boolean | null; expires_at: string | null }): Kupec =>
         ({ email: lowK(r.email), active: r.active === true, exp: r.expires_at }))
-      .filter((r: Kupec) => !!r.email && r.active && (!r.exp || Date.parse(String(r.exp)) > nowK));
+      .filter((r: Kupec) => !!r.email && !jeTestovaciEmail(r.email) && r.active && (!r.exp || Date.parse(String(r.exp)) > nowK));
     if (kupci.length) {
       const emaily = kupci.map((k: Kupec) => k.email);
       const [callsC, leadsC] = await Promise.all([
@@ -768,7 +786,7 @@ Deno.serve(async (req) => {
       }
       return zaklad;
     })()) +
-    row("Fronta e-mailů teď", String((due.data ?? []).length)) +
+    row("Fronta e-mailů teď", String(duePocet)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +
     row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +

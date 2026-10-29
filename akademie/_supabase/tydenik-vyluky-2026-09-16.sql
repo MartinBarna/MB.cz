@@ -75,6 +75,7 @@ as $function$
     --    od zacatku, tydenik ne: rodina dostala 8 tydeniku (posledni 24. 8.).
     and lower(l.email) not in ('ivanabarnova@seznam.cz','barnamaro@gmail.com','barnaxxx@seznam.cz')
     and lower(l.email) not like 'fitness.barna%'
+    and coalesce(l.meta->>'test', '') not in ('true', 't', '1')
     and l.track not like 'blast%'
     and l.track not like 'rozlouceni-%'
     and l.track <> 'tydenik'

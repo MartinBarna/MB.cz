@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { jeTestovaciEmail, zarazeniDoSerie } from "../_shared/test-lead.ts";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -155,6 +156,10 @@ Deno.serve(async (req) => {
     if (utmId) meta.utm_id = utmId;
     if (gclid) meta.gclid = gclid;
     if (fbclid) meta.fbclid = fbclid;
+    // Tester: paused, bez termínu, meta.test. PDF jde dál přes only_email.
+    const testovaci = jeTestovaciEmail(email);
+    if (testovaci) meta.test = true;
+    const zarazeni = zarazeniDoSerie(email, tool ? 24 * 3600000 : 0);
     const { error } = await supa.from("leads").insert({
       email, name, segment, source, phone,   // phone -> vlastni sloupec (Cowork migrace add_phone_to_leads)
       track,
@@ -166,7 +171,8 @@ Deno.serve(async (req) => {
       //    je to záloha pro případ, že by ho někdy nějaký krok kvízové tratě potřeboval.
       ...(kvizProfil ? { vars: { [track]: { kviz_profil: kvizProfil } } } : {}),
       ...(startVars ? { vars: { [track]: startVars } } : {}),
-      next_send_at: new Date(Date.now() + (tool ? 24 * 3600000 : 0)).toISOString(),
+      ...(zarazeni.status ? { status: zarazeni.status } : {}),
+      next_send_at: zarazeni.next_send_at,
     });
     // 23505 = unique violation (e-mail uz je v seznamu) -> bereme jako uspech (idempotentni)
     const duplicate = !!(error && error.code === "23505");
@@ -178,13 +184,34 @@ Deno.serve(async (req) => {
     if (duplicate && phone) {
       await supa.from("leads").update({ phone }).eq("email", email).is("phone", null);
     }
+    // Duplicita testera nevrací do série. Uvítání znovu, jen když tenhle krok ještě neodešel.
+    let poslatUvitacku = !duplicate && !tool;
+    if (duplicate && testovaci) {
+      const { data: ex } = await supa.from("leads").select("id,meta,status,track,step").eq("email", email).maybeSingle();
+      const stare = (ex?.meta && typeof ex.meta === "object" && !Array.isArray(ex.meta))
+        ? ex.meta as Record<string, unknown>
+        : {};
+      const stav = String(ex?.status ?? "");
+      const patch: Record<string, unknown> = { meta: { ...stare, test: true } };
+      if (stav !== "unsubscribed" && stav !== "bounced") {
+        patch.status = "paused";
+        patch.next_send_at = null;
+      }
+      await supa.from("leads").update(patch).eq("email", email);
+      // /start duplicita má vlastní oneoff níž.
+      if (!tool && !startVars && ex?.id && stav !== "unsubscribed" && stav !== "bounced") {
+        const { data: uz } = await supa.from("email_events").select("id")
+          .eq("lead_id", ex.id).eq("step", ex.step).eq("type", "sent").eq("detail->>track", ex.track).limit(1);
+        if (!(uz ?? []).length) poslatUvitacku = true;
+      }
+    }
     // Duplicitni lead z /start: cisla se doplni do vars (ostatni trate se nemeni) a posle se
     // jen prvni mail jako jednorazovka. `drip_invoke_secret` je stejny jako u okamzite uvitacky.
     if (duplicate && startVars) {
       const { data: l } = await supa.from("leads").select("vars,status").eq("email", email).maybeSingle();
       const stare = (l?.vars && typeof l.vars === "object" && !Array.isArray(l.vars)) ? l.vars as Record<string, unknown> : {};
       await supa.from("leads").update({ vars: { ...stare, "tc-start": startVars } }).eq("email", email);
-      if (l?.status === "active") {
+      if (l?.status === "active" || testovaci) {
         const oneoff = (async () => {
           try {
             const { data: cfg } = await supa.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();
@@ -206,7 +233,8 @@ Deno.serve(async (req) => {
     //  zatimco existujici e-mail tenhle blok preskocil a odpovedel hned. Ted cely drip trigger
     //  vcetne cteni secretu bezi na POZADI pres EdgeRuntime.waitUntil; kdyz neni k dispozici,
     //  fire-and-forget. Fallback: hodinovy cron stejne projede leady s next_send_at=now().)
-    if (!duplicate && !tool) {   // tool leady nemaji okamzitou uvitacku (odlozena o 24 h)
+    // Tester je paused. only_email pošle PDF a dál ho neposune. tool čeká 24 h, tester do toho nevstoupí.
+    if (poslatUvitacku) {   // tool leady nemaji okamzitou uvitacku (odlozena o 24 h)
       const drip = (async () => {
         try {
           const { data: cfg } = await supa.from("app_config").select("value").eq("key", "drip_invoke_secret").maybeSingle();

@@ -7,6 +7,7 @@
 //   npx supabase functions deploy admin-crm --project-ref uhmrpfsdcujbhbtumqye --no-verify-jwt
 // Po deployi overit get_edge_function (ne jen hlasku Deployed). Stranka: /akademie/admin/crm/
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { jeTestLead, jeTestovaciEmail } from "../_shared/test-lead.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -88,7 +89,7 @@ Deno.serve(async (req) => {
     if (action === "list") {
       // Seznam: osoby + tagy. Plny pohled crm_person_card az na action=card
       // (lateraly na entitlements/leads/souhlasy by tady bezely zbytecne).
-      const [impRows, personRows, tagRows] = await Promise.all([
+      const [impRows, personRows, tagRows, leadRows] = await Promise.all([
         fetchAllRows((f, t) => admin.from("crm_import_kp2026").select("*").order("id").range(f, t)),
         fetchAllRows((f, t) =>
           admin.from("crm_persons").select(
@@ -99,7 +100,11 @@ Deno.serve(async (req) => {
           admin.from("crm_tags").select("person_id,tag").is("detached_at", null)
             .eq("tag", "ss-import-do-not-mail").order("id").range(f, t)
         ),
+        fetchAllRows((f, t) => admin.from("leads").select("email,meta").order("id").range(f, t)),
       ]);
+      const testEmaily = new Set<string>();
+      for (const l of leadRows) if (jeTestLead(l)) testEmaily.add(low(l.email));
+      const mimoPocty = (email: unknown) => testEmaily.has(low(email)) || jeTestovaciEmail(email);
 
       const cardById = new Map<string, Record<string, unknown>>();
       const cardByEmail = new Map<string, Record<string, unknown>>();
@@ -119,7 +124,7 @@ Deno.serve(async (req) => {
       for (const r of impRows) {
         const extra = emailsFrom(r.emaily_dalsi);
         const email = low(r.email);
-        if (email) importWithEmail++;
+        if (email && !mimoPocty(email)) importWithEmail++;
         const kc = numOrNull(r.soucet_kc) ?? 0;
         importSoucet += kc;
         let card: Record<string, unknown> | undefined;
@@ -140,7 +145,7 @@ Deno.serve(async (req) => {
           prvni_platba: strOrNull(r.prvni_platba),
           posledni_obdobi_konec: strOrNull(r.posledni_obdobi_konec),
           lifecycle: card ? strOrNull(card.lifecycle) : null,
-          is_test: Boolean(card?.is_test),
+          is_test: Boolean(card?.is_test) || mimoPocty(email),
           neposilat: card ? doNotMail.has(String(card.id)) : false,
           zdroj: card ? "oboje" : "koucink",
         });
@@ -160,7 +165,7 @@ Deno.serve(async (req) => {
           prvni_platba: null,
           posledni_obdobi_konec: null,
           lifecycle: strOrNull(c.lifecycle),
-          is_test: Boolean(c.is_test),
+          is_test: Boolean(c.is_test) || mimoPocty(c.primary_email),
           neposilat: doNotMail.has(String(c.id)),
           zdroj: "academy",
         });
@@ -179,9 +184,9 @@ Deno.serve(async (req) => {
         meta: {
           import_total: impRows.length,
           import_with_email: importWithEmail,
-          cards_total: personRows.length,
+          cards_total: personRows.filter((p) => !mimoPocty(p.primary_email)).length,
           import_soucet_kc: importSoucet,
-          rows_total: rows.length,
+          rows_total: rows.filter((r) => !mimoPocty(r.email)).length,
         },
       });
     }
