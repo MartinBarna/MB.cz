@@ -27,7 +27,7 @@
  *   --step <n>        krok tratě (výchozí: 0)
  *   --zkratit <n>     do mailu vzít jen prvních n sekcí (h2) a odkázat na web
  *   --obrazky         nevynechávat obrázky z těla článku
- *   --bez-utm         nepřidávat utm_* do odkazů na martinbarna.cz
+ *   --bez-utm         zastaralý přepínač, odkazy už kampanové parametry nedostávají
  *   --dalsi a,b,c     slugy článků do bloku "další ke čtení" (jinak se doplní z indexu)
  *   --tichy           nevypisovat souhrn, jen cesty k souborům
  */
@@ -126,14 +126,8 @@ function absolutni(href, slug) {
   return ORIGIN + '/clanky/' + h;              // sousední článek
 }
 
-function sUtm(url, slug, utm) {
-  if (!utm) return url;
-  if (!url.startsWith(ORIGIN)) return url;      // cizí doménu (PubMed, Stripe) nešaháme
-  if (url.includes('utm_source=')) return url;
-  const [zaklad, kotva] = url.split('#');
-  const spoj = zaklad.includes('?') ? '&' : '?';
-  const q = 'utm_source=newsletter&utm_medium=email&utm_campaign=clanek-' + slug;
-  return zaklad + spoj + q + (kotva ? '#' + kotva : '');
+function sUtm(url, _slug, _pridat) {
+  return url;
 }
 
 // Inline obsah odstavce: <a> se přepíše na absolutní odkaz s UTM, zbytek značek
@@ -203,7 +197,7 @@ const MAGNET = /(makro-plan|forma-zpet|plan-zeny|plan-muzi|plan-zdarma|\/kviz\/)
 const NABIDKY = {
   appka: {
     popis: 'APPKA (Tvůj Coach, Basic)',
-    url: 'https://tvujcoach.cz/?plan=basic',
+    url: 'https://martinbarna.cz/go/tc-basic-m/',
     hlavni: {
       p: 'Tohle za tebe spočítá appka <strong>Tvůj Coach</strong>. Zapíšeš jídlo, ona sečte den a po týdnu ti sama řekne, jestli má cíl zůstat, nebo se posunout. Zápis jídla i tréninku je zdarma a bez karty, týdenní přepočet cílů a oba generátory patří k Basicu, nejlevnějšímu placenému plánu.',
       btn: 'Vyzkoušet Tvůj Coach',
@@ -215,7 +209,7 @@ const NABIDKY = {
   },
   videokurz: {
     popis: 'VIDEOKURZ ({{course_price}} Kč jednorázově)',
-    url: 'https://martinbarna.cz/videokurz',
+    url: 'https://martinbarna.cz/go/kurz-m/',
     hlavni: {
       p: 'Jestli tohle chceš pochopit celé, a ne po kouskách, natočil jsem o tom <strong>videokurz výživy</strong>. 182 videí od kalorií a maker až po nákup a vaření. Jednorázově {{course_price}} Kč a zůstane ti napořád.',
       btn: 'Prohlédnout videokurz',
@@ -227,7 +221,7 @@ const NABIDKY = {
   },
   koucink: {
     popis: 'KOUČINK 1:1',
-    url: 'https://martinbarna.cz/koucing/',
+    url: 'https://martinbarna.cz/go/koucing-m/',
     hlavni: {
       p: 'Tohle se nejlíp ladí s někým, kdo ti na čísla kouká každý týden. Přesně to dělám v <strong>individuálním koučinku</strong>: plán na míru, pravidelné check-iny a úpravy podle toho, jak tělo reaguje.',
       btn: 'Jak koučink funguje',
@@ -239,7 +233,7 @@ const NABIDKY = {
   },
   konzultace: {
     popis: 'KONZULTACE (jednorázová)',
-    url: 'https://martinbarna.cz/konzultace/',
+    url: 'https://martinbarna.cz/go/konzultace-m/',
     hlavni: {
       p: 'Jestli tohle chceš probrat na tvoje čísla, a ne obecně, je na to <strong>jednorázová konzultace</strong>. Projdeme spolu jídelníček, trénink i to, co ti vychází z odběrů, a odcházíš s konkrétním plánem.',
       btn: 'Objednat konzultaci',
@@ -251,7 +245,7 @@ const NABIDKY = {
   },
   academy: {
     popis: 'BARNA ACADEMY (pro trenéry)',
-    url: 'https://martinbarna.cz/akademie/',
+    url: 'https://martinbarna.cz/go/akademie-m/',
     hlavni: {
       p: 'Jestli tohle učíš svoje klienty, mám to celé rozebrané v <strong>Barna Academy</strong>: 256 lekcí ve 24 modulech, generátory jídelníčků a tréninků pod tvou značkou a certifikace.',
       btn: 'Co všechno Academy obsahuje',
@@ -321,20 +315,13 @@ function vyberNabidky(slug, subject) {
   return { volba: VYCHOZI, zdroj: 'vychozi' };
 }
 
-// UTM si u CTA lepíme sami: `sUtm` cizí doménu záměrně nešahá, a appka běží
-// na tvujcoach.cz. Bez toho by proklik z newsletteru spadl do organiky.
-// ⛔ NEPOUŽÍVAT https://martinbarna.cz/go/tc/: přesměrování jde na čistou
-// https://tvujcoach.cz/ a příchozí query (včetně newsletterových utm) zahodí.
-function ctaBloky(klic, kde, slug, utm) {
+// CTA vede na kratkou cestu /go/<slug>-m. Socialni /go/tc/ sem nepatri:
+// ta jde na uvod appky, ne na Basic.
+function ctaBloky(klic, kde, _slug, _pridat) {
   const n = NABIDKY[klic];
   if (!n) throw new Error('neznama nabidka: ' + klic);
   const t = n[kde];
-  let url = n.url;
-  if (utm) {
-    const spoj = url.includes('?') ? '&' : '?';
-    url += spoj + 'utm_source=newsletter&utm_medium=email&utm_campaign=clanek-' + slug;
-  }
-  return [{ t: 'p', html: t.p }, { t: 'btn', text: t.btn, href: url }];
+  return [{ t: 'p', html: t.p }, { t: 'btn', text: t.btn, href: n.url }];
 }
 
 // Hlavní CTA patří do půlky článku, ale ne doprostřed myšlenky: hledáme nadpis

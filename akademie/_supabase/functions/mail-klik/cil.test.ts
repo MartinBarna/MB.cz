@@ -47,19 +47,20 @@ Deno.test('martinbarna.cz (Wedos CDN): UTM se z cile MAZOU, funkcni parametry zu
   assertEquals(new URL(bezUtm).searchParams.has('utm_source'), false);
 });
 
-Deno.test('tvujcoach.cz (Vercel): UTM ze sablony ZUSTAVAJI, bez nich se dolepi zdroj/trat/krok', () => {
+Deno.test('kampanove parametry se z cile sundavaji a nikam se nepridavaji', () => {
   const svoje = S('https://tvujcoach.cz/start?utm_source=email&utm_medium=blast&utm_campaign=start-dotaznik')!;
-  assertEquals(new URL(svoje).searchParams.get('utm_medium'), 'blast');
-  assertEquals(new URL(svoje).searchParams.get('utm_campaign'), 'start-dotaznik');
+  assertEquals(new URL(svoje).searchParams.has('utm_medium'), false);
+  assertEquals(new URL(svoje).searchParams.has('utm_campaign'), false);
+  assertEquals(new URL(svoje).searchParams.has('utm_source'), false);
+  assertEquals(new URL(svoje).pathname, '/start');
 
   const bez = S('https://tvujcoach.cz/?plan=basic')!;
-  assertEquals(new URL(bez).searchParams.get('utm_source'), 'email');
-  assertEquals(new URL(bez).searchParams.get('utm_campaign'), 'lead-magnet');
-  assertEquals(new URL(bez).searchParams.get('utm_content'), 'lm-3');
+  assertEquals(new URL(bez).searchParams.has('utm_source'), false);
   assertEquals(new URL(bez).searchParams.get('plan'), 'basic');
 
-  const stripe = S('https://buy.stripe.com/abc')!;
+  const stripe = S('https://buy.stripe.com/abc?utm_source=email')!;
   assertEquals(new URL(stripe).searchParams.has('utm_source'), false);
+  assertEquals(new URL(stripe).pathname, '/abc');
 });
 
 Deno.test('nouzovy cil je nas web, ne redirect nikam', () => {

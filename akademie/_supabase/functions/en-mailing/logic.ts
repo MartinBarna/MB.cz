@@ -201,14 +201,13 @@ export function maskEmail(email: string): string {
 // Texty mailů
 // ---------------------------------------------------------------------------
 export const SITE = "https://martinbarna.cz";
-const UTM = "utm_source=email&utm_medium=en-seq&utm_campaign=en-kit-1013";
 export const LINKS = {
-  playbook: `${SITE}/download/eating-out-playbook.pdf?${UTM}`,
-  calculator: `${SITE}/en/?${UTM}#calculator`,
-  weight: `${SITE}/en/blog/why-your-weight-fluctuates.html?${UTM}`,
-  steps: `${SITE}/en/blog/how-many-steps-a-day.html?${UTM}`,
-  weekend: `${SITE}/en/blog/weekend-overeating.html?${UTM}`,
-  apply: `${SITE}/en/?${UTM}#apply`,
+  playbook: `${SITE}/go/en-playbook-m/`,
+  calculator: `${SITE}/go/en-calc-m/`,
+  weight: `${SITE}/go/en-vaha-m/`,
+  steps: `${SITE}/go/en-kroky-m/`,
+  weekend: `${SITE}/go/en-vikend-m/`,
+  apply: `${SITE}/go/en-apply-m/`,
 };
 export const POSTAL_ADDRESS = "Martin Barna, IČO 76383032, Lumírova 489/11, 700 30 Ostrava-Výškovice, Czech Republic";
 
@@ -498,11 +497,10 @@ export function renderEmail(step: number, v: { firstName: string | null; calc: C
     link_kit: LINKS.calculator,
   };
   if (step >= 6) {
-    const nn = String(step - 5).padStart(2, "0");
     for (const part of [t.subject, t.preheader, t.body]) {
       for (const m of part.matchAll(/\{\{link_article:([^}]+)\}\}/g)) {
         const slug = m[1];
-        vars[`link_article:${slug}`] = `${SITE}/en/blog/${slug}.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-${nn}`;
+        vars[`link_article:${slug}`] = `${SITE}/en/blog/${slug}.html`;
       }
     }
   }
