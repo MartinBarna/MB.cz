@@ -1,5 +1,5 @@
 // Upozornění na nový lead. Spuštění (bez sítě, bez env):
-//   npx --yes deno@2 test --no-lock akademie/_supabase/functions/lead-capture/upozorneni.test.ts
+//   npx --yes deno@2 test --no-lock --allow-read akademie/_supabase/functions/lead-capture/upozorneni.test.ts
 import {
   ALERT_TO,
   casPraha,
@@ -322,16 +322,18 @@ Deno.test("lead-capture neawaituje alert, posílá přes posliMail a ne přes Re
   check("pole se jmenuje prepinac", kod.includes("prepinac:"));
 });
 
-Deno.test("děkovačka má tichý odkaz na Academy bez utm, ceny a slibu kapacity", async () => {
+Deno.test("děkovačka má jeden tichý odkaz na Academy bez utm, ceny a slibu kapacity", async () => {
   const html = await Deno.readTextFile(new URL("../../../../dekuji-videokurz/index.html", import.meta.url));
-  const m = html.match(/<div class="academy-tichy"[\s\S]*?<\/div>/);
-  check("blok je", !!m);
-  const blok = m![0];
+  const bloky = html.match(/<div class="academy-tichy"[\s\S]*?<\/div>/g) ?? [];
+  check("jeden blok", bloky.length === 1, String(bloky.length));
+  const blok = bloky[0]!;
   check("kanonická adresa", blok.includes('href="https://martinbarna.cz/akademie/"'));
   check("bez utm", !blok.includes("utm_"));
   check("bez ceny", !/Kč|Kc/.test(blok));
   check("bez prvních 50", !/prvních 50|prvnich 50/i.test(blok));
   check("bez dlouhé pomlčky", !blok.includes("—") && !blok.includes("–"));
-  check("nová věta", blok.includes("Videokurz máš, teď ho v klidu projdi."));
-  check("stará věta pryč", !blok.includes("je na řadě"));
+  check("nová věta", blok.includes("Videokurz máš. Teď si ho projdi."));
+  check("stará věta pryč", !blok.includes("je na řadě") && !blok.includes("v klidu projdi"));
+  check("starý blok s 7 410 pryč", !html.includes("7 410") && !html.includes("Chceš se v tom posunout"));
+  check("žádný druhý odkaz na Academy", (html.match(/href="[^"]*akademie\/"/g) ?? []).length === 1);
 });
