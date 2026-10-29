@@ -182,6 +182,14 @@ Deno.serve(async (req) => {
     });
     let sent = 0, skipped = 0, uvolneno = 0, nejiste = 0;
     const neprecteno = napln.neprecteno;
+    // Suchý běh nic nerezervuje a nic neposílá. V odpovědi nejsou adresy.
+    if (body.dry === true) {
+      return json({
+        ok: true, mode: "remind", dry: true, sent: 0, skipped, neprecteno, nejiste, uvolneno,
+        limit, tyden, fronta: fronta.length, davka: napln.davka.length, mimo_okno: napln.mimoOkno,
+        cap_read: capErr ? "chyba" : "ok", sent_today_read: cntErr ? "chyba" : "ok",
+      });
+    }
     for (const c of napln.davka) {
       const drzi = await rezervujTyden(admin, c.emailRaw, tyden);
       if (!drzi) { skipped++; continue; }
