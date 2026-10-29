@@ -485,7 +485,7 @@
 <section class="sec" id="coaching" style="background:rgba(255,255,255,.02); border-top:1px solid rgba(255,255,255,.06); border-bottom:1px solid rgba(255,255,255,.06);">
     <div class="wrap">
         <h2 class="center">How coaching works (all in writing)</h2>
-        <p class="sec-sub">One program for English-speaking clients: the same weekly system my Czech clients use, in writing. I take a limited number of clients so I can read every report in full.</p>
+        <p class="sec-sub">One program for English-speaking clients: the same weekly system my Czech clients use, in writing. If it's full, I'll tell you straight away, so I can read every report in full.</p>
         <div class="steps">
             <div class="step"><span class="n">1</span><h3>You apply in writing</h3><p>Fill out the form below. I usually reply within 24 hours on business days with a few questions, and we see if it's a fit.</p></div>
             <div class="step"><span class="n">2</span><h3>You get your plan</h3><p>After you pay, you fill out an intake questionnaire. Within 48 hours you have your calories, protein, and macros, a meal plan built around how you actually eat (restaurants included), and a training plan for your actual schedule.</p></div>
@@ -659,7 +659,7 @@
     return cur ? v + ' ' + cur : v;
   }
   // [13. 10. 2026] Martin schválil: 249 USD měsíčně, 649 USD za 12 týdnů předem, founding 499 USD
-  // za 12 týdnů pro prvních 5 klientů do 30. 11. 2026. Hodnoty jen v en-config.json, tady jen věty.
+  // za 12 týdnů do 30. 11. 2026. Počet míst se nepíše. Hodnoty jen v en-config.json, tady jen věty.
   // Founding řádek zmizí sám po `founding_until` (konec dne v Praze), nebo když se cena v konfiguraci smaže.
   // ⛔ Žádný platební odkaz: platí se až po přihlášce, odkaz posílá Martin ručně.
   function foundingValid(until) {
@@ -679,9 +679,8 @@
       : m ? money(m, cur) + ' a month.'
       : money(w, cur) + ' for 12 weeks paid upfront.';
     var fp = String(c.founding_price_12w || '').trim(), fu = String(c.founding_until || '').trim();
-    var spots = String(c.founding_spots || '').trim();
     var founding = fp && foundingValid(fu)
-      ? 'Founding price for the ' + (spots ? 'first ' + spots + ' clients' : 'first clients') + ': ' + money(fp, cur) + ' for 12 weeks, until ' + niceDate(fu) + '.'
+      ? 'Founding price: ' + money(fp, cur) + ' for 12 weeks, until ' + niceDate(fu) + '.'
       : '';
     var pay = "You don't pay here. Send me the application and if it's a fit, I reply with a payment link.";
     document.querySelectorAll('[data-price-block]').forEach(function (el) {

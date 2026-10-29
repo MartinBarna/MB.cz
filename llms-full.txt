@@ -108,7 +108,7 @@ Online koučink
 
 Koučink na míru s týdenním vedením. Doporučuju Gold, jde do něj většina lidí. Čím déle jdeme společně, tím víc ušetříš.
 
-Koučink beru jen v omezeném počtu, aby měl každý klient mou plnou pozornost a výsledky.
+Kdyby bylo plno, řeknu ti to rovnou.
 
 #### Konzultace 2 990 Kč. A fakticky zdarma, když to myslíš vážně.
 
@@ -136,7 +136,7 @@ Každý týden dostaneš upravený plán a odpovědi na WhatsAppu. Hovory navíc
 
 - Týdenní kontroly: analýza týdne, úprava cílů i aktivit
 
-- Podpora na e-mailu a WhatsApp (po-pá)
+- Podpora e-mailem a na WhatsAppu (po-pá)
 
 - Novinka: moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu
 
@@ -154,11 +154,11 @@ Každý týden dostaneš upravený plán a odpovědi na WhatsAppu. Hovory navíc
 
 Chci Gold
 
-Platba kartou přes Stripe, místa jsou omezená. Volný termín vidíš na stránce koučinku.
+Platba kartou přes Stripe.
 
 Diamond
 
-Pro ty, kdo chtějí navíc hovor každý týden. Beru do něj nejvýš 3 lidi najednou.
+Pro ty, kdo chtějí navíc hovor každý týden.
 
 11 900 Kč / měsíc
 
@@ -178,7 +178,7 @@ Pro ty, kdo chtějí navíc hovor každý týden. Beru do něj nejvýš 3 lidi n
 
 Chci Diamond
 
-Platba kartou přes Stripe, místa jsou omezená. Volný termín vidíš na stránce koučinku.
+Platba kartou přes Stripe.
 
 Nejdřív mi napíšeš, ozvu se do 24 hodin. Platba kartou přes Stripe je na stránce koučinku.
 
@@ -1654,7 +1654,7 @@ Každý týden dostaneš upravený plán a odpovědi na WhatsAppu. Hovory navíc
 
 - Týdenní kontroly: analýza týdne, úprava cílů i aktivit
 
-- Podpora na e-mailu a WhatsApp (po–pá)
+- Podpora e-mailem a na WhatsAppu (po–pá)
 
 - Novinka: moderní klientská sekce s grafy pokroku, report za 3 minuty z mobilu
 

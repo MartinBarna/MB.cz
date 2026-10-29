@@ -15,7 +15,7 @@ Then once a week you send a 3 minute report from your phone: weight, waist, food
 
 No calls and no video calls. You get every plan and every number in writing, and you can read it again on the plane.
 
-I take a limited number of clients so I can read every report properly.
+If it's full, I'll tell you straight away, so I can read every report properly.
 
 {{price_block}}
 

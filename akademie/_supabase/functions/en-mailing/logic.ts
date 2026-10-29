@@ -377,7 +377,7 @@ It's not for you if you want 10 kg gone in 3 weeks, if you want a fixed meal pla
 
 {{price_block}}
 
-I take a limited number of clients so I can read every report properly. Apply here: ${LINKS.apply}
+If it's full, I'll tell you straight away, so I can read every report properly. Apply here: ${LINKS.apply}
 
 Or just reply to this email with a few lines about you: age, job, how a normal week looks, what you tried. I'll tell you honestly if it makes sense, and if it doesn't, I'll tell you that too.
 
