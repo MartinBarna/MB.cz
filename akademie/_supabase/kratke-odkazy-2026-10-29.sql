@@ -3,8 +3,12 @@
 -- Záloha jen dotčených řádků. Když tabulka zálohy už existuje, skript skončí a nic nepřepíše.
 -- Platební odkazy buy.stripe.com a form.simpleshop.cz zůstanou, jen bez kampanových parametrů.
 -- Odkaz s e-mailem v query (přihlášení do appky) zůstane, jen bez kampanových parametrů.
--- Závislost: zkratky /go/ musí být na webu dřív, než tenhle UPDATE odjede v ostřem mailu.
--- Pořadí: nejdřív merge PR #628 (čisté /go/ bez dopisování parametrů), potom tenhle PR, potom nasazení webu, teprve potom tenhle SQL.
+-- Závislost: zkratky /go/ musí být na webu dřív, než tenhle UPDATE odjede v ostrém mailu.
+-- Pořadí: merge PR #628, potom tenhle PR, nasazení webu, potom edge funkce
+-- drip-send, mail-klik, offboard-mail a en-mailing, a teprve potom tenhle SQL.
+-- Nasazení webu ty funkce nenasadí. Spouští se zvlášť, ručně, až po webu a před tímhle souborem.
+-- Šablony lk-3-koucink (longtail-kupci, krok 5) a upsell-coaching kroky 2 a 4
+-- se nepřepisují. Text opravil hotfix PR #637 a tenhle soubor ho nesmí vrátit.
 
 begin;
 
@@ -127,49 +131,130 @@ begin
     amp := replace(r.stary, '&', '&amp;');
     update public.email_templates
        set blocks = replace(replace(blocks::text, r.stary, r.novy), amp, r.novy)::jsonb,
-           subject = replace(replace(coalesce(subject, ''), r.stary, r.novy), amp, r.novy),
-           preheader = replace(replace(coalesce(preheader, ''), r.stary, r.novy), amp, r.novy),
+           subject = case when subject is null then null
+                          else replace(replace(subject, r.stary, r.novy), amp, r.novy) end,
+           preheader = case when preheader is null then null
+                            else replace(replace(preheader, r.stary, r.novy), amp, r.novy) end,
            updated_at = now()
-     where blocks::text like '%' || r.stary || '%'
+     where (blocks::text like '%' || r.stary || '%'
         or blocks::text like '%' || amp || '%'
         or coalesce(subject, '') like '%' || r.stary || '%'
-        or coalesce(preheader, '') like '%' || r.stary || '%';
+        or coalesce(preheader, '') like '%' || r.stary || '%')
+       -- preskoc_hotfix_637: text z PR #637 se nesmí vrátit
+       and not (
+         key in ('lk-3-koucink', 'upsell-co-1', 'upsell-co-2')
+         or (track = 'longtail-kupci' and step = 5)
+         or (track = 'upsell-coaching' and step in (2, 4))
+       );
     get diagnostics n = row_count;
     raise notice 'par % radku: %', n, r.novy;
   end loop;
 end
 $mig$;
 
--- Pojistka pro odkaz, který ve výpisu repa nebyl. Sundá zbylé kampanové parametry
--- a funkční (plan, promo, email, locale, kotvu) nechá. Když parametr zůstane,
--- transakce se vrátí celá.
+-- Pojistka pro odkaz, který ve výpisu repa nebyl. Kampanový parametr sundá jen
+-- uvnitř URL (od https?:// po konec adresy). Ostatní parametry (plan, promo,
+-- email, locale) a kotva zůstanou. Otazník nebo ampersand zmizí jen když po něm
+-- v té URL nic nezbylo. Předmět a preheader mimo URL se nemění. Prázdný řetězec
+-- zůstane prázdný, NULL zůstane NULL. Když parametr v URL zůstane, nebo se
+-- předmět či preheader liší od zálohy, transakce se vrátí celá.
+
+create function pg_temp.mb_vycisti_url(url text) returns text
+language plpgsql as $url$
+declare
+  znacka text := 'u' || 'tm_';
+  telo text;
+  fragment text := '';
+  zaklad text;
+  dotaz text;
+  hash_at int;
+  q_at int;
+  amp_html boolean;
+  kousky text[];
+  kus text;
+  jmeno text;
+  rovnitko int;
+  nechane text[] := array[]::text[];
+  spojka text;
+begin
+  if url is null or url = '' then
+    return url;
+  end if;
+  hash_at := position('#' in url);
+  if hash_at > 0 then
+    fragment := substring(url from hash_at);
+    telo := substring(url from 1 for hash_at - 1);
+  else
+    telo := url;
+  end if;
+  q_at := position('?' in telo);
+  if q_at = 0 then
+    return url;
+  end if;
+  dotaz := substring(telo from q_at + 1);
+  if position(znacka in lower(dotaz)) = 0 then
+    return url;
+  end if;
+  zaklad := substring(telo from 1 for q_at - 1);
+  amp_html := position('&amp;' in dotaz) > 0;
+  kousky := regexp_split_to_array(replace(dotaz, '&amp;', '&'), '&');
+  foreach kus in array kousky loop
+    if kus is null or kus = '' then
+      continue;
+    end if;
+    rovnitko := position('=' in kus);
+    if rovnitko = 0 then
+      jmeno := kus;
+    else
+      jmeno := substring(kus from 1 for rovnitko - 1);
+    end if;
+    if jmeno ~* ('^' || znacka) then
+      continue;
+    end if;
+    nechane := array_append(nechane, kus);
+  end loop;
+  if coalesce(array_length(nechane, 1), 0) = 0 then
+    return zaklad || fragment;
+  end if;
+  spojka := case when amp_html then '&amp;' else '&' end;
+  return zaklad || '?' || array_to_string(nechane, spojka) || fragment;
+end
+$url$;
 
 create function pg_temp.mb_sundej_kampan(vstup text) returns text
 language plpgsql as $fn$
 declare
-  t text := vstup;
-  nova text;
+  zbytek text := vstup;
+  vystup text := '';
+  m text[];
+  url text;
+  cista text;
+  kde int;
   kolo int := 0;
-  znacka text := 'u' || 'tm_';
 begin
-  if t is null or t = '' then
-    return t;
+  if vstup is null or vstup = '' then
+    return vstup;
   end if;
   loop
     kolo := kolo + 1;
-    if kolo > 12 then
-      raise exception 'kampanovy parametr nesel sundat';
+    if kolo > 4000 then
+      raise exception 'prilis mnoho odkazu v jedne sablone';
     end if;
-    nova := regexp_replace(t, '&amp;' || znacka || '[A-Za-z0-9_]+=[^&#''"<>[:space:]]*', '', 'gi');
-    nova := regexp_replace(nova, '&' || znacka || '[A-Za-z0-9_]+=[^&#''"<>[:space:]]*', '', 'gi');
-    nova := regexp_replace(nova, '\?' || znacka || '[A-Za-z0-9_]+=[^&#''"<>[:space:]]*', '?', 'gi');
-    nova := replace(nova, '?&amp;', '?');
-    nova := replace(nova, '?&', '?');
-    nova := regexp_replace(nova, $re$\?(["']|$)$re$, $re$\1$re$, 'g');
-    exit when nova = t;
-    t := nova;
+    -- Zpětné lomítko končí adresu: blocks::text ho dává před uvozovku v JSON.
+    m := regexp_match(zbytek, $re$https?://[^[:space:]'"<>\\]+$re$, 'i');
+    if m is null then
+      return vystup || zbytek;
+    end if;
+    url := m[1];
+    kde := position(url in zbytek);
+    if kde = 0 then
+      raise exception 'odkaz se v textu nenasel';
+    end if;
+    cista := pg_temp.mb_vycisti_url(url);
+    vystup := vystup || substring(zbytek from 1 for kde - 1) || cista;
+    zbytek := substring(zbytek from kde + length(url));
   end loop;
-  return t;
+  return vystup;
 end
 $fn$;
 
@@ -179,34 +264,90 @@ declare
   b text;
   s text;
   p text;
+  znacka text := 'u' || 'tm_';
+  vzor text := 'https?://[^[:space:]''"<>]*\?[^[:space:]''"<>#]*' || znacka;
+  kampani int;
+  zmena int;
 begin
   for r in
-    select id, blocks::text as b, subject, preheader
+    select track, step, blocks::text as b, subject, preheader
     from public.email_templates
-    where blocks::text ~ ('u' || 'tm_')
-       or coalesce(subject, '') ~ ('u' || 'tm_')
-       or coalesce(preheader, '') ~ ('u' || 'tm_')
+    where (
+      blocks::text ~* znacka
+      or coalesce(subject, '') ~* znacka
+      or coalesce(preheader, '') ~* znacka
+    )
+    -- preskoc_hotfix_637: text z PR #637 se nesmí vrátit
+    and not (
+      key in ('lk-3-koucink', 'upsell-co-1', 'upsell-co-2')
+      or (track = 'longtail-kupci' and step = 5)
+      or (track = 'upsell-coaching' and step in (2, 4))
+    )
   loop
     b := pg_temp.mb_sundej_kampan(r.b);
     s := pg_temp.mb_sundej_kampan(r.subject);
     p := pg_temp.mb_sundej_kampan(r.preheader);
+    if b is not distinct from r.b
+       and s is not distinct from r.subject
+       and p is not distinct from r.preheader then
+      continue;
+    end if;
     update public.email_templates
        set blocks = b::jsonb,
            subject = s,
            preheader = p,
            updated_at = now()
-     where id = r.id;
+     where track = r.track and step = r.step;
   end loop;
 
-  if exists (
-    select 1 from public.email_templates
-    where blocks::text ~ ('u' || 'tm_')
-       or coalesce(subject, '') ~ ('u' || 'tm_')
-       or coalesce(preheader, '') ~ ('u' || 'tm_')
-  ) then
-    raise exception 'po nahrade v email_templates kampanovy parametr zustal';
+  select count(*) into kampani
+  from public.email_templates
+  where blocks::text ~* vzor
+     or coalesce(subject, '') ~* vzor
+     or coalesce(preheader, '') ~* vzor;
+  if kampani <> 0 then
+    raise exception 'po nahrade zustal kampanovy parametr v URL, radku %', kampani;
+  end if;
+
+  select count(*) into zmena
+  from public.email_templates t
+  join public.email_templates_zaloha_kratke_odkazy_20261029 z
+    on z.track = t.track and z.step = t.step
+  where t.subject is distinct from z.subject
+     or t.preheader is distinct from z.preheader;
+  if zmena <> 0 then
+    raise exception 'subject nebo preheader se lisil od zalohy, radku %', zmena;
   end if;
 end
 $zamet$;
 
+-- Ověření. Obě čísla musí být 0. Když nejsou, blok výš transakci vrátí dřív, než sem dojde.
+select count(*) as sablon_s_kampani_v_url
+from public.email_templates
+where blocks::text ~* ('https?://[^[:space:]''"<>]*\?[^[:space:]''"<>#]*' || 'u' || 'tm_')
+   or coalesce(subject, '') ~* ('https?://[^[:space:]''"<>]*\?[^[:space:]''"<>#]*' || 'u' || 'tm_')
+   or coalesce(preheader, '') ~* ('https?://[^[:space:]''"<>]*\?[^[:space:]''"<>#]*' || 'u' || 'tm_');
+
+select count(*) as zmeneny_subject_nebo_preheader
+from public.email_templates t
+join public.email_templates_zaloha_kratke_odkazy_20261029 z
+  on z.track = t.track and z.step = t.step
+where t.subject is distinct from z.subject
+   or t.preheader is distinct from z.preheader;
+
 commit;
+
+-- Návrat ze zálohy. Nespouštět spolu s migrací výš. Samostatně, jen když se má
+-- vrátit stav uložený na začátku. Klíč je track, step (tabulka sloupec id nemá).
+-- begin;
+-- update public.email_templates t
+--    set key = z.key,
+--        subject = z.subject,
+--        preheader = z.preheader,
+--        blocks = z.blocks,
+--        wait_days = z.wait_days,
+--        updated_at = z.updated_at
+--   from public.email_templates_zaloha_kratke_odkazy_20261029 z
+--  where t.track = z.track
+--    and t.step = z.step;
+-- commit;
