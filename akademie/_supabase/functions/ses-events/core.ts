@@ -186,7 +186,51 @@ const TYPY_ODESLANI = [
   "odeslano",
   "konzultace_znovu_doruceno",
   "balicek_znovu_doruceno",
+  "oneoff",
+  "affiliate_report",
+  "affiliate_report-test",
 ];
+
+// Záloha, když `provider_id` řádek nenajde (starší zásilka, nebo zápis stopy selhal).
+// Nejnovější odeslání na tu adresu v okně. Delší okno chytí i stížnost o pár dní
+// později, kratší by ji minulo. Martinovy adresy se nehledají: jeho lead se
+// k bounce alertu nesmí přilepit.
+export const OKNO_PRIJEMCE_MS = 14 * 24 * 60 * 60 * 1000;
+
+async function najdiPodlePrijemce(
+  admin: Admin,
+  adresy: string[],
+  now: Date,
+): Promise<{ radek: Record<string, unknown> | null; chyba: { message?: string } | null }> {
+  const cile = [...new Set(adresy.map((a) => a.trim().toLowerCase()).filter((a) => a && !jeMartinovaAdresa(a)))];
+  if (!cile.length) return { radek: null, chyba: null };
+  const od = new Date(now.getTime() - OKNO_PRIJEMCE_MS).toISOString();
+  let nej: Record<string, unknown> | null = null;
+  for (const adresa of cile) {
+    let data: Record<string, unknown> | null = null;
+    let error: { message?: string } | null = null;
+    try {
+      const vysledek = await admin.from("email_events")
+        .select("lead_id,step,type,detail,created_at")
+        .in("type", TYPY_ODESLANI)
+        .eq("detail->>email", adresa)
+        .gte("created_at", od)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      data = vysledek?.data ?? null;
+      error = vysledek?.error ?? null;
+    } catch (e) {
+      return { radek: null, chyba: { message: String((e as Error)?.message ?? e) } };
+    }
+    if (error) return { radek: null, chyba: error };
+    if (!data) continue;
+    const cas = String(data.created_at ?? "");
+    const nejCas = nej ? String(nej.created_at ?? "") : "";
+    if (!nej || cas > nejCas) nej = data;
+  }
+  return { radek: nej, chyba: null };
+}
 
 async function alertNesparovano(
   admin: Admin,
@@ -277,6 +321,10 @@ async function alertNesparovano(
       + `<p style="font-size:13px;color:#666">Další takový alert přijde nejdřív za hodinu, `
       + `ať se z toho nestane lavina. Všechny případy jsou v <code>email_events</code> `
       + `pod typem <code>alert_nesparovano</code>.</p></div>`,
+  }, {
+    admin,
+    via: "ses-events.alert",
+    email: komu,
   });
 }
 
@@ -381,10 +429,12 @@ export async function handleSns(method: string, rawBody: string, deps: Deps): Pr
     }
   }
 
-  // Párování PŘESNĚ jako v resend-webhook.
-  const { data: orig, error: chybaOrig } = await deps.admin.from("email_events")
+  // Párování nejdřív podle provider_id, stejně jako v resend-webhook.
+  const origDotaz = await deps.admin.from("email_events")
     .select("lead_id,step,type,detail").eq("provider_id", providerId)
     .in("type", TYPY_ODESLANI).limit(1).maybeSingle();
+  let orig = origDotaz?.data ?? null;
+  const chybaOrig = origDotaz?.error ?? null;
 
   const rozhodujeOZmrazeni = t === "bounce" || t === "complaint";
   if (chybaOrig) {
@@ -392,11 +442,7 @@ export async function handleSns(method: string, rawBody: string, deps: Deps): Pr
     if (rozhodujeOZmrazeni) return json({ error: "orig_read_failed", retry: true }, 500);
   }
 
-  const detailStopy = (orig?.detail && typeof orig.detail === "object")
-    ? (orig.detail as Record<string, unknown>) : {};
-  const isTest = orig?.type === "test" || detailStopy.test === true;
-
-  // Adresy z payloadu (Bounce/Complaint/Delivery).
+  // Adresy z payloadu (Bounce/Complaint/Delivery). Záloha podle příjemce je potřebuje.
   let adresyRaw: unknown[] = [];
   if (t === "bounce") adresyRaw = (inner?.bounce?.bouncedRecipients || []) as unknown[];
   else if (t === "complaint") adresyRaw = (inner?.complaint?.complainedRecipients || []) as unknown[];
@@ -407,11 +453,32 @@ export async function handleSns(method: string, rawBody: string, deps: Deps): Pr
     return (m ? m[1] : s).toLowerCase();
   }).filter((a) => a.length > 0);
 
+  // provider_id nic nenašel (dotaz se povedl). Záloha: nejnovější odeslání na
+  // příjemce v okně. Chyba téhle četby není „není řádek".
+  let nalezenoPodlePrijemce = false;
+  if (!chybaOrig && !orig) {
+    const zaloha = await najdiPodlePrijemce(deps.admin, adresyZPayloadu, deps.now());
+    if (zaloha.chyba) {
+      console.error("[ses-events] zaloha podle prijemce selhala: " + (zaloha.chyba.message ?? ""));
+      if (rozhodujeOZmrazeni) return json({ error: "orig_prijemce_failed", retry: true }, 500);
+    } else if (zaloha.radek) {
+      orig = zaloha.radek;
+      nalezenoPodlePrijemce = true;
+    }
+  }
+
+  const detailStopy = (orig?.detail && typeof orig.detail === "object")
+    ? (orig.detail as Record<string, unknown>) : {};
+  const isTest = orig?.type === "test" || detailStopy.test === true;
+
   let lead_id = (!isTest && orig?.lead_id) ? String(orig.lead_id) : null;
   // Stopa type=test (ses-test, nebo detail.test) se nasla podle provider_id.
   // Lead se k ni schvalne nepripojuje, ale parovani to je. Jinak by bounce
   // simulatoru vypadal jako nesparovano, i kdyz radek v email_events lezi.
-  let sparovanoPodle = (lead_id || (isTest && orig)) ? "provider_id" : "nesparovano";
+  // Záloha podle příjemce si značku `prijemce` drží i když řádek lead má.
+  let sparovanoPodle = nalezenoPodlePrijemce
+    ? "prijemce"
+    : (lead_id || (isTest && orig)) ? "provider_id" : "nesparovano";
   const adresaZeStopy = String(detailStopy.email ?? "").trim().toLowerCase();
   const adresaSedi = adresyZPayloadu.length === 0 || !adresaZeStopy || adresyZPayloadu.includes(adresaZeStopy);
 
@@ -422,7 +489,10 @@ export async function handleSns(method: string, rawBody: string, deps: Deps): Pr
       console.error("[ses-events] dohledani leada podle adresy selhalo: " + chybaLeada.message);
       if (rozhodujeOZmrazeni) return json({ error: "lead_lookup_failed", retry: true }, 500);
     }
-    if (l?.id) { lead_id = String(l.id); sparovanoPodle = "email"; }
+    if (l?.id) {
+      lead_id = String(l.id);
+      if (!nalezenoPodlePrijemce) sparovanoPodle = "email";
+    }
   } else if (!adresaSedi) {
     sparovanoPodle = "adresa_nesedi";
   }

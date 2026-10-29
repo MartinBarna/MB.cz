@@ -99,7 +99,7 @@ function mailKlientovi(terminIso: string, druh: Druh, maDotaznik: boolean) {
  * Brána chrání adresu zákazníka; kdyby na seznamu jednou skončila Martinova adresa,
  * přestal by se dozvídat právě to, kvůli čemu tahle funkce vznikla.
  * (Stejné zdůvodnění jako u `splatky-guard` a `poukaz-vydat`.)
- * ⚠️ Bez `stopa`: Martinova adresa do `email_events` nepatří, viz `resend-odeslat.ts`.
+ * Stopa se píše. Martinovu adresu do `detail.email` helper nedává, viz `resend-odeslat.ts`.
  */
 // deno-lint-ignore no-explicit-any
 async function souhrnMartinovi(admin: any, radky: string[], nedoslo: string[]): Promise<boolean> {
@@ -130,7 +130,7 @@ async function souhrnMartinovi(admin: any, radky: string[], nedoslo: string[]): 
           : "") +
         `<p style="font-size:13px;color:#666">Termíny zadáváš v adminu, sekce Konzultace. Komu připomínka odešla, dostal ji dnes.</p>`,
     ),
-  });
+  }, { admin, via: "konzultace-pripominka.souhrn", email: to });
   return r.ok;
 }
 

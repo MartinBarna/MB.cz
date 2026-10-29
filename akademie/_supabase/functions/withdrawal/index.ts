@@ -13,6 +13,7 @@
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -60,13 +61,14 @@ const PRODUCT_LABEL: Record<string, string> = {
   jine: "Jiný produkt",
 };
 
-async function resend(to: string, subject: string, html: string, replyTo?: string) {
+async function resend(to: string, subject: string, html: string, replyTo?: string): Promise<string> {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
   const res = await posliMail(
     { from: FROM, to: [to], subject, html, reply_to: replyTo || undefined },
     { resendKey: RESEND_KEY },
   );
   if (!res.ok) throw new Error("resend_" + res.status);
+  return res.providerId;
 }
 
 Deno.serve(async (req: Request) => {
@@ -168,7 +170,7 @@ Deno.serve(async (req: Request) => {
   // Potvrzeni zakaznikovi — zakon vyzaduje potvrzeni o prijeti s obsahem a datem a casem.
   // Posila se az TADY, po vsech anti-abuse kontrolach vyse.
   try {
-    await resend(email, "Potvrzení: přijali jsme tvé odstoupení od smlouvy",
+    const providerId = await resend(email, "Potvrzení: přijali jsme tvé odstoupení od smlouvy",
       `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:16px;line-height:1.55;color:#222;max-width:560px">` +
       `<p>Dobrý den,</p>` +
       `<p>potvrzuji <b>přijetí odstoupení od smlouvy</b> s tímto obsahem:</p>` + summary +
@@ -176,6 +178,7 @@ Deno.serve(async (req: Request) => {
       `<p>Kdyby cokoliv, stačí odpovědět na tento e-mail.</p>` +
       `<p>Martin Barna<br>martinbarna.cz · IČO 76383032</p></div>`,
       "martin@martinbarna.cz");
+    await zapisOdeslani({ admin, via: "withdrawal.potvrzeni", email }, providerId);
   } catch { /* zapis v DB je zdrojem pravdy; admin dostane alert nize */ }
 
   // Upozorneni Martinovi.
@@ -183,7 +186,7 @@ Deno.serve(async (req: Request) => {
     let to = ALERT_FALLBACK;
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
-    await resend(to, "⚠️ Odstoupení od smlouvy: " + email,
+    const providerIdAlert = await resend(to, "⚠️ Odstoupení od smlouvy: " + email,
       `<p>Zákazník podal online odstoupení od smlouvy:</p>` + summary +
       (productNeznamy
         ? `<p style="background:#fdecea;border-left:3px solid #b0372c;padding:8px 12px">` +
@@ -197,6 +200,7 @@ Deno.serve(async (req: Request) => {
       //    jedine PLNY refund ve Stripu; castecny refund je taky nezastavi.
       `<p><b>Co udělat:</b> vrátit peníze do 14 dnů ve <b>Stripu</b> (Payments → najít platbu podle e-mailu → Refund, <b>celou částku</b>).</p>` +
       `<p style="font-size:14px;color:#555">Ponákupní maily k tomuhle produktu jsou už zaparkované od chvíle, kdy zákazník formulář odeslal. <b>Plný</b> refund ve Stripu pak doošetří zbytek (odebere přístup a pošle rozlučkový mail). Částečný refund nestačí, ten se chová jako by se nic nestalo.</p>`);
+    await zapisOdeslani({ admin, via: "withdrawal.alert", email: to }, providerIdAlert);
   } catch { /* best-effort */ }
 
   return json({ ok: true, id: row.id, submitted_at: row.created_at, when }, 200, origin);

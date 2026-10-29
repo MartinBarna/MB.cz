@@ -189,7 +189,8 @@ async function oznacNejiste(
  * Alert Martinovi. ⛔ Jde PŘÍMO přes Resend, NE přes `guardSend`: brána chrání adresu
  * klienta, ne Martinovu, a kdyby jeho adresa jednou skončila na seznamu, přestal by se
  * dozvídat právě ta selhání, kvůli kterým alert existuje. (Týž vzor jako `splatky-guard`.)
- * ⛔ Bez `stopa`: Martinova adresa do `email_events` nepatří (`resend-odeslat.ts`).
+ * Stopa se píše (`via: client-remind.alert`). Martinovu adresu do `detail.email`
+ * nedává helper (`resend-odeslat.ts`), jinak by bounce zmrazil jeho lead.
  */
 async function alertMartinovi(
   // deno-lint-ignore no-explicit-any
@@ -208,7 +209,7 @@ async function alertMartinovi(
     to: [to],
     subject,
     html: `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`,
-  });
+  }, { admin, via: "client-remind.alert", email: to });
   return r.ok;
 }
 

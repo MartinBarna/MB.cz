@@ -22,6 +22,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SB_URL = Deno.env.get("SUPABASE_URL") ?? "";
 const SB_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
@@ -180,6 +181,7 @@ Deno.serve(async (req) => {
         + `<p>Díky, že v tom jedeš se mnou.<br>Martin Barna<br>martinbarna.cz</p></div>`;
 
       const prijemce = test ? TEST_INBOX : ownerEmail;
+      let providerId = "";
       const d = await sendIfAllowed(admin, {
         email: prijemce,
         mailClass: "partner_report",
@@ -198,6 +200,7 @@ Deno.serve(async (req) => {
           const telo = teloZPosliMail(res.status, res.chyba);
           throw new Error("resend_" + res.status + " " + telo.slice(0, 120));
         }
+        providerId = res.providerId;
       });
       if (d.action === "skip") {
         zaznam.stav = "preskoceno-guard:" + d.reason;
@@ -205,10 +208,16 @@ Deno.serve(async (req) => {
         continue;
       }
 
-      await admin.from("email_events").insert({
-        lead_id: null, step: 0, type: typUdalosti,
-        detail: { mesic, code, prijemce, nakupu, provize },
-      });
+      await zapisOdeslani({
+        admin,
+        via: "affiliate-mesicni-report",
+        email: prijemce,
+        typ: typUdalosti,
+        detail: {
+          mesic, code, nakupu, provize,
+          ...(test ? { test: true } : { bcc: true }),
+        },
+      }, providerId);
       zaznam.stav = "odeslano";
       zaznam.prijemce = prijemce;
     } catch (e) {

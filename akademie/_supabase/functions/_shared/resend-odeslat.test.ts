@@ -146,6 +146,18 @@ function podvrhniFetch(odpoved: { status: number; telo?: unknown; hodit?: boolea
   const ok = await zapisOdeslani({ admin: null, via: 'test-fn', email: 'a@b.cz' }, 're_x');
   check('H16 bez klienta databaze se nic nedeje', ok === false);
 }
+{
+  const admin = {
+    from() {
+      return { insert() { throw new Error("db-down"); } };
+    },
+  };
+  let ok = true;
+  let hodilo = false;
+  try { ok = await zapisOdeslani({ admin, via: 'test-fn', email: 'a@b.cz' }, 're_x'); }
+  catch { hodilo = true; }
+  check('H17 vyjimka zapisu vraci false a nehazi', ok === false && hodilo === false);
+}
 globalThis.fetch = puvodniFetch;
 
 // --- 2) resend-webhook -----------------------------------------------------

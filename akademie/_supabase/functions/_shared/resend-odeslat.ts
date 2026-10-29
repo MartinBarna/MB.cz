@@ -131,20 +131,31 @@ export async function zapisOdeslani(stopa: StopaOdeslani, providerId: string): P
     );
   }
   if (!stopa.admin || typeof stopa.admin.from !== "function") return false;
-  const { error } = await stopa.admin.from("email_events").insert({
-    lead_id: jeMartin ? null : (stopa.leadId ?? null),
-    step: stopa.step ?? 0,
-    type: stopa.typ ?? "odeslano",
-    provider_id: providerId || null,
-    detail: {
-      via: stopa.via,
-      // ⛔ U Martina `null`, ne jeho adresa: podle tohohle pole se dohledava lead
-      //    a `fitness.barna@gmail.com` v `leads` JE a je `active`.
-      email: jeMartin ? null : email,
-      komu: jeMartin ? "martin" : "zakaznik",
-      ...(stopa.detail ?? {}),
-    },
-  });
+  // ⛔ Zápis nesmí shodit akci, která už mail odeslala. Supabase chybu obvykle
+  //    vrátí v `error`, ale shozený klient (nebo test) umí i vyhodit výjimku.
+  let error: { message?: string } | null = null;
+  try {
+    const vysledek = await stopa.admin.from("email_events").insert({
+      lead_id: jeMartin ? null : (stopa.leadId ?? null),
+      step: stopa.step ?? 0,
+      type: stopa.typ ?? "odeslano",
+      provider_id: providerId || null,
+      detail: {
+        via: stopa.via,
+        // ⛔ U Martina `null`, ne jeho adresa: podle tohohle pole se dohledava lead
+        //    a `fitness.barna@gmail.com` v `leads` JE a je `active`.
+        email: jeMartin ? null : email,
+        komu: jeMartin ? "martin" : "zakaznik",
+        ...(stopa.detail ?? {}),
+      },
+    });
+    error = vysledek?.error ?? null;
+  } catch (e) {
+    console.error(
+      `[resend-odeslat] ${stopa.via}: zapis stopy shodil vyjimku: ` + String((e as Error)?.message ?? e),
+    );
+    return false;
+  }
   if (error) {
     console.error(`[resend-odeslat] ${stopa.via}: zapis stopy selhal: ` + error.message);
     return false;

@@ -121,8 +121,9 @@ function suspendEmail(name: string | null, seg = "other") {
   };
 }
 
-// ⚠️ `stopa` je volitelna SCHVALNE: zakaznicky mail ji ma (jinak se nesparuje
-// bounce, nalez V1), alert Martinovi ne. Martinova adresa do `email_events` nepatri.
+// ⚠️ `stopa` je volitelna SCHVALNE u volajiciho: zakaznicky mail ji ma (jinak se
+// nesparuje bounce, nalez V1). Alert Martinovi ji ma taky, ale helper adresu
+// do `detail.email` nepise (`jeMartinovaAdresa`).
 async function sendMail(
   to: string,
   subject: string,
@@ -165,7 +166,9 @@ async function alertAdmin(
     const prvni = String(data?.value || "").split(",").map((s: string) => s.trim()).filter(Boolean)[0];
     if (prvni) to = prvni;
   } catch { /* zustava fallback */ }
-  return await sendMail(to, subject, `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`);
+  return await sendMail(to, subject, `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`, {
+    admin, via: "splatky-guard.alert", email: to,
+  });
 }
 
 async function sendMailGuarded(

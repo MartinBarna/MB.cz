@@ -36,6 +36,7 @@ import {
   unsubToken,
 } from "./logic.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const FROM = "Martin Barna <news@martinbarna.cz>";
 // Mail 1 a 5 žádají o odpověď: odpovědi musí dojít Martinovi, ne na news@.
@@ -132,7 +133,8 @@ Deno.serve(async (req: Request) => {
   }
   const resendKey = mailKlic();
 
-  // --- Testovací mail: jen na TEST_EMAIL, nic se nezapisuje, vypínač se neřeší. ---
+  // --- Testovací mail: jen na TEST_EMAIL. en_mail_log se nerazítkuje (krok série se nespálí).
+  // Stopa email_events type=test ano, ať bounce simulatoru jde spárovat. Vypínač se neřeší.
   if (testStep !== undefined) {
     if (!resendKey) return json({ ok: false, error: "resend_key_missing" }, 500);
     const token = await unsubToken(TEST_EMAIL, unsubKey);
@@ -143,6 +145,13 @@ Deno.serve(async (req: Request) => {
     });
     mail.subject = "[TEST] " + mail.subject;
     const r = await sendResend(resendKey, TEST_EMAIL, mail, unsubOneClickUrl(url, TEST_EMAIL, token));
+    if (r.ok) {
+      const supaTest = createClient(url, key, { auth: { persistSession: false } });
+      await zapisOdeslani({
+        admin: supaTest, via: "en-mailing", email: TEST_EMAIL, typ: "test",
+        step: testStep as number, detail: { test: true },
+      }, r.id);
+    }
     return json({ ok: r.ok, test: true, step: testStep, to: TEST_EMAIL, ...(r.ok ? { provider_id: r.id } : { error: r.error }) }, r.ok ? 200 : 502);
   }
 
@@ -252,6 +261,10 @@ Deno.serve(async (req: Request) => {
     if (r.ok) {
       res.sent++;
       res.by_step[String(item.step)] = (res.by_step[String(item.step)] ?? 0) + 1;
+      await zapisOdeslani({
+        admin: supa, via: "en-mailing", email: item.email, step: item.step,
+        detail: { step: item.step },
+      }, r.id);
     } else {
       res.failed++;
       console.error("en-mailing: Resend selhal (neopakuje se)", item.lead_id, item.step, r.error);

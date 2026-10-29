@@ -120,12 +120,12 @@ Kontrola, že ostré odeslání (když v okně nějaké je) nese SES id a že se
 select created_at, type, provider_id, lead_id, detail->>'via' as via
 from email_events
 where created_at > now() - interval '40 minutes'
-  and type in ('sent', 'test', 'odeslano', 'px_odeslano', 'bounce', 'complaint', 'alert_nesparovano')
+  and type in ('sent', 'test', 'odeslano', 'px_odeslano', 'oneoff', 'affiliate_report', 'affiliate_report-test', 'bounce', 'complaint', 'alert_nesparovano')
 order by created_at desc
 limit 100;
 ```
 
-Cesty bez stopy jsou v `docs/MAIL-ODESILANI.md`. Jejich bounce přijde jako `alert_nesparovano` a lead nesáhne. To není důvod k rollbacku, je to známá díra. Důvod k rollbacku je chyba odeslání u cest, které stopu mají, nebo zmrazení leadu, které select výš nečekal.
+Inventura stop je v `docs/MAIL-ODESILANI.md`. Nové odeslání má `provider_id`. Když id řádek nenajde, `ses-events` zkusí adresu příjemce v okně 14 dní a zapíše `sparovano_podle=prijemce`. `nesparovano` u mailu odeslaného až po tomhle nasazení je důvod nepokračovat: stopa se nezapsala, nebo záloha nic nenašla. Důvod k rollbacku je chyba odeslání, nebo zmrazení leadu, které select výš nečekal. Bounce simulátoru a bounce jen Martinovy adresy lead nemění.
 
 ## 3. Rollback
 

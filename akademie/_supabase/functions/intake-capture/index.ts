@@ -28,6 +28,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { celeCislo, proAlert, vahaNaCislo } from "./cisla.ts";
 import { otiskOdpovedi } from "./otisk.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -68,13 +69,14 @@ function atribuce(v: unknown): Record<string, string> | null {
   return Object.keys(out).length ? out : null;
 }
 
-async function resend(to: string, subject: string, html: string, replyTo?: string) {
+async function resend(to: string, subject: string, html: string, replyTo?: string): Promise<string> {
   if (!RESEND_KEY) throw new Error("missing_RESEND_API_KEY");
   const res = await posliMail(
     { from: FROM, to: [to], subject, html, reply_to: replyTo || undefined },
     { resendKey: RESEND_KEY },
   );
   if (!res.ok) throw new Error("resend_" + res.status);
+  return res.providerId;
 }
 
 Deno.serve(async (req: Request) => {
@@ -196,7 +198,7 @@ Deno.serve(async (req: Request) => {
     let to = ALERT_FALLBACK;
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
-    await resend(to, "📋 Dotazník před konzultací: " + email,
+    const providerId = await resend(to, "📋 Dotazník před konzultací: " + email,
       `<div style="font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;color:#222;max-width:640px">` +
       `<p><b>${esc(email)}</b> vyplnil dotazník před konzultací.<br>` +
       `<span style="color:#666">Odesláno ${kdy} · ${parovani}</span></p>` +
@@ -220,6 +222,7 @@ Deno.serve(async (req: Request) => {
       `</table>` +
       `<p style="color:#666;font-size:13px">Zdraví v dotazníku není schválně, patří na hovor.</p></div>`,
       email);
+    await zapisOdeslani({ admin, via: "intake-capture", email: to }, providerId);
   } catch { /* zápis v DB je zdroj pravdy */ }
 
   return json({ ok: true, id: ins.data.id }, 200, origin);
