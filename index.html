@@ -583,6 +583,30 @@ footer a{color:var(--gold-light)}
 @media(prefers-reduced-motion:no-preference){.fab-wa::before{animation:fabPulse 2.6s ease-out infinite}}
 @keyframes fabPulse{0%{transform:scale(1);opacity:.55}70%{transform:scale(1.7);opacity:0}100%{opacity:0}}
 @media(max-width:900px){.cta-bar.show~.fab-wa{bottom:calc(94px + env(safe-area-inset-bottom))}}
+/* W07-04, jen úzký displej: cookie lišta nesedí přes hlavičku a MB/WhatsApp nekryjí hero.
+   Do 480 px lišta jde dolů (nad mobilní CTA, jakmile ta vyjede). Bubliny do 900 px
+   jsou schované, dokud hero neodjede a lišta nezmizí. Nad 900 px se to neaplikuje. */
+@media(max-width:480px){
+  html{--mb-cookie-lift:calc(8px + env(safe-area-inset-bottom,0px))}
+  html body #mb-cookie{
+    top:auto!important;
+    bottom:var(--mb-cookie-lift)!important;
+    left:8px!important;
+    right:8px!important;
+    z-index:3200!important;
+  }
+  html:has(#mb-cookie) .hero{padding-top:16px;padding-bottom:20px}
+  html:has(#mb-cookie) .hero h1{margin:.35rem 0 .55rem}
+  html:has(#mb-cookie) .hero-cta{margin:.75rem 0 .3rem}
+  html:has(#mb-cookie) .hero .quiz-line{margin:0 0 .35rem}
+  html:has(#mb-cookie) .hero .trust{margin-top:.35rem}
+}
+@media(max-width:900px){
+  html:not(.mb-fab-on) .fab-wa,
+  html:not(.mb-fab-on) button[aria-label="Zeptej se AI Martina"]{
+    opacity:0!important;visibility:hidden!important;pointer-events:none!important;
+  }
+}
 .wa-modal{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:4000;display:none;align-items:center;justify-content:center;padding:20px;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 .wa-modal.open{display:flex}
 .wa-card{background:#fff;border-radius:24px;max-width:360px;width:100%;padding:30px 26px 26px;text-align:center;position:relative;box-shadow:0 12px 32px rgba(0,0,0,.28);animation:fadeUp .35s ease both;color:#161616}
@@ -1323,5 +1347,49 @@ footer a{color:var(--gold-light)}
 </script>
 <script src="/assets/ai-martin.js?v=g10" defer></script>
 <script defer src="/assets/scroll-top.js?v=g13"></script>
+<script>
+/* W07-04: do 900 px ukázat MB a WhatsApp až po heru a až po zavření cookie lišty.
+   Do 480 px lištu zvednout nad spodní CTA. Nad 900 px se nic nemění. */
+(function(){
+  var repositioning = false;
+  function sync(){
+    var w = window.innerWidth;
+    var narrow = w <= 480;
+    var mobile = w <= 900;
+    var hero = document.querySelector('header.hero');
+    var nav = document.querySelector('.nav');
+    var navBottom = nav ? nav.getBoundingClientRect().bottom : 72;
+    var past = !!(hero && hero.getBoundingClientRect().bottom <= navBottom + 4);
+    var cookie = document.getElementById('mb-cookie');
+    var show = mobile && past && !cookie;
+    var was = document.documentElement.classList.contains('mb-fab-on');
+    document.documentElement.classList.toggle('mb-fab-on', show);
+    var cta = document.getElementById('ctaBar');
+    var ctaH = 0;
+    if (cta && mobile && cta.classList.contains('show')) {
+      var cs = getComputedStyle(cta);
+      if (cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity || '1') !== 0) ctaH = cta.offsetHeight || 0;
+    }
+    if (narrow) {
+      document.documentElement.style.setProperty('--mb-cookie-lift', ctaH ? (ctaH + 8) + 'px' : 'calc(8px + env(safe-area-inset-bottom, 0px))');
+    }
+    if (show && !was && !repositioning) {
+      repositioning = true;
+      requestAnimationFrame(function(){
+        window.dispatchEvent(new Event('scroll'));
+        repositioning = false;
+      });
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function(){
+    sync();
+    window.addEventListener('scroll', sync, {passive:true});
+    window.addEventListener('resize', sync);
+    setTimeout(sync, 450);
+    setTimeout(sync, 1300);
+    if (window.MutationObserver) new MutationObserver(sync).observe(document.body, {childList:true});
+  });
+})();
+</script>
 </body>
 </html>
