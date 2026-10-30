@@ -85,7 +85,8 @@ Deno.serve(async (req) => {
     // ⛔ ROZSIRENO 29. 7. 2026 o 'stripe-lifetime': dozivotni Academy se toho dne
     // presunula ze SimpleShopu na Stripe. Bez toho by Martinovi tenhle prehled po
     // migraci hlasil NULA prodanych Academy, i kdyby se prodavaly kazdy den.
-    // ⚠️ Tataz zmena patri i do `daily-digest` (pocitadlo zakladajicich X/50).
+    // Pocitadlo zakladajicich (X/50) v daily-digest uz neni. Tenhle seznam zdroju
+    // je jen pro prodeje za 7 a 30 dni, ne pro strop mist.
     // ⛔ NEPRIDAVAT sem 'stripe-monthly': to je mesicni clenstvi, ne prodej dozivotni
     // varianty, a smichalo by dve ruzne veci do jednoho cisla.
     const sales = { videokurz_7d: 0, videokurz_30d: 0, academy_30d: 0, academy_total: 0, videokurz_total: 0 };

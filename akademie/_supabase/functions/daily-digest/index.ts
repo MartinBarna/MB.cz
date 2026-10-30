@@ -28,7 +28,7 @@ Deno.serve(async (req) => {
   if (!brana.ok) return json(brana.body, brana.status);
   // Zbytek konfigurace taky s opakovanim: prazdna mapa by poslala prehled s fallbacky (adresa, strop).
   const cfgR = await ctiSOpakovanim<{ data: { key: string; value: string }[] | null; error: unknown }>(() =>
-    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "academy_founders_offset", "clenske_track_prefixy", "pocet_cisel_mereno_v", "client_remind_hlidka", "client_remind_14d"]));
+    admin.from("app_config").select("key,value").in("key", ["admin_emails", "followups_enabled", "followups_breaker_reason", "drip_daily_cap", "clenske_track_prefixy", "pocet_cisel_mereno_v", "client_remind_hlidka", "client_remind_14d"]));
   if (cfgR.error) return json(chybaCteni("app_config", cfgR.error), 500);
   const cmap = Object.fromEntries((cfgR.data ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const to = String(cmap.admin_emails || "fitness.barna@gmail.com").split(",")[0].trim();
@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
   const yStart = new Date(dayStart.getTime() - 86400000);
   const d7 = new Date(now.getTime() - 7 * 86400000).toISOString();
 
-  const [leadsY, leads7, evY, due, entsY, wdr, refs, acadSold] = await Promise.all([
+  const [leadsY, leads7, evY, due, entsY, wdr, refs] = await Promise.all([
     admin.from("leads").select("email,source").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
     admin.from("leads").select("created_at").gte("created_at", d7),
     admin.from("email_events").select("type,detail").gte("created_at", yStart.toISOString()).lt("created_at", dayStart.toISOString()),
@@ -56,35 +56,9 @@ Deno.serve(async (req) => {
     admin.from("entitlements").select("product").eq("active", true).in("source", ["simpleshop", "stripe-lifetime", "stripe-videokurz", "stripe-videokurz-upgrade", "stripe-konzultace", "stripe-balicek", "stripe-koucink"]).gte("granted_at", yStart.toISOString()),
     admin.from("withdrawals").select("status"),
     admin.from("referrals").select("status"),
-    // ⛔ OPRAVA 28. 7. 2026: bylo tu `select("id")`, jenze `entitlements` sloupec `id`
-    // NEMA (PK je email+product). Dotaz tise selhal, `count` vyslo null a radek nize
-    // ho prebil nulou -> pocitadlo zakladajicich hlasilo jen rucni offset. Nebylo to
-    // videt, protoze skutecny pocet byl taky 0. Tataz chyba byla 27. 7. opravena
-    // v `admin-api`, tady se prehledla. Detail: pamet `feedback-select-neexistujiciho-sloupce`.
-    // ⚠️ Filtr na zdroj je ZAMERNY a musi zustat: do padesatky zakladajicich se pocitaji
-    // jen DOZIVOTNI prodeje, ne mesicni clenstvi (source='stripe-monthly').
-    // ⛔ ROZSIRENO 29. 7. 2026 o 'stripe-lifetime'. Dozivotni varianta se toho dne
-    // presunula ze SimpleShopu na Stripe; kdyby tu zustal jen 'simpleshop', pocitadlo
-    // by od te chvile TISE STALO na miste a Martin by podle nej nikdy nezdrazil,
-    // prestoze verejne slibil cenu 8 900 jen pro prvnich 50 lidi. Nic by nespadlo.
-    // ⚠️ Kdo sem prida dalsi zdroj dozivotniho prodeje, musi ho pridat i v `admin-pulse`
-    // (30denni prodeje) — jsou to DVE ruzna mista a nic je nedrzi v synci.
-    // ⛔ A MUSÍ SE POČÍTAT JEN TEN, KOMU PŘÍSTUP OPRAVDU PLATÍ.
-    // Refund nastavuje `expires_at` do minulosti, ale `active` nechává na true (řádek se
-    // schválně drží kvůli historii). Bez podmínky na expiraci by se tedy vrácené nákupy
-    // počítaly dál a Martin by zdražil na 12 900 dřív, než má 50 skutečných zakládajících.
-    // Změřeno 29. 7. 2026 na testovacím nákupu: počítadlo hlásilo 1, správně mělo 0.
-    // ⚠️ Táž slepota vůči expiraci byla 28. 7. opravena v `drip-send` (seznam kupců).
-    // Tady se přehlédla, protože to je JINÝ dotaz v JINÉ funkci. NULL = doživotní, platí vždy.
-    admin.from("entitlements").select("email", { count: "exact", head: true }).eq("product", "academy").eq("active", true).in("source", ["simpleshop", "stripe-lifetime"]).or("expires_at.is.null,expires_at.gt." + new Date().toISOString()),
   ]);
-
-  // zakladajici clenove: realne prodeje pres SimpleShop + rucni offset (app_config
-  // academy_founders_offset: prodeje grantnute rucne, testovaci ucty se nepocitaji).
-  // Prvnich 50 = zakladajici clenove (status a pocta). ⛔ Slib o zdrazeni na 12 900
-  // po 50. clenovi Martin 8. 8. 2026 ZRUSIL, cena je 8 900 natrvalo.
-  const founders = (acadSold.count ?? 0) + (Number(cmap.academy_founders_offset ?? "") || 0);
-  const foundersLeft = Math.max(0, 50 - founders);
+  // Pocitadlo „zakladajici clenove X/50, zbyva N" tu bylo do 29. 10. 2026.
+  // Martin: prvních 50 se nepočítá a na webu ani v přehledu nemá být.
 
   // ===== Nove leady vs. reaktivace (2. 9. 2026) =====
   // ⛔ PROC: 2. 9. rano hlasil prehled „52 leadů za 24 h" a vypadalo to jako nejlepsi den
@@ -337,10 +311,8 @@ Deno.serve(async (req) => {
       Array.from(gaveUpTracks).join(", ") + "). U follow-upů je to v pořádku, jen ať o tom víš.");
   }
   // ⛔ 8. 8. 2026 tu byl alert „blíží se 50. člen, připrav zdražení na 12 900 Kč".
-  // Martin toho dne zdražení ZRUŠIL, cena zůstává 8 900 natrvalo, takže ten alert
-  // vyzýval k akci, která už neplatí. Počítadlo zůstává jako informace (řádek níž),
-  // protože „zakládající člen" žije dál jako status a pocta prvním padesáti.
-  // Kdo by chtěl alert vrátit, musí nejdřív obnovit veřejný slib o ceně.
+  // Martin toho dne zdražení zrušil, cena zůstává 8 900. 29. 10. 2026 zmizel
+  // i řádek s počtem a veřejný status na webu. Alert ani počítadlo se nevrací.
 
   // --- Zaplatil Academy a nedostal uvítačku? -------------------------------
   // ⛔ Přibylo 29. 7. 2026 NÁHRADOU za alert, který posílal `academy-stripe-webhook`
@@ -771,7 +743,6 @@ Deno.serve(async (req) => {
     row("Fronta e-mailů teď", String((due.data ?? []).length)) +
     row("Follow-upy", cmap.followups_enabled === "true" ? "zapnuté" : "vypnuté") +
     row("Affiliate čeká na potvrzení", String(refPending)) +
-    row("Zakládající členové Academy", founders + " / 50 · zbývá " + foundersLeft) +
     row("Odkazy v mailech a na webu", odkazyRadek) +
     `</table>` + hlidkyHtml + konzultaceHtml + koucinkHtml +
     `<p style="margin:14px 0 4px;color:#666;font-size:13px">Leadi 7 dní: ${trendStr || "—"}</p>` +

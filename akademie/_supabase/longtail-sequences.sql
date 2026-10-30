@@ -14,8 +14,8 @@
 --  • longtail-consumer (12 mailů à 14 dní) — po dojetí nurture-videokurz / lead-magnet-tool
 --    (nekoupili). Rytmus hodnota→hodnota→prodej; 2 dárky; prodejní momenty: koučink (m6),
 --    Academy+appka (m12). ŽÁDNÁ nová sleva na videokurz (nurture slíbil „víc už slevu nedám").
---  • longtail-trener (6 mailů à 30 dní) — po dojetí trener-kit. Každý mail jiná páka na Academy;
---    finále = reálná urgence zaváděcí ceny (8 900 do 50. člena, pak 12 900).
+--  • longtail-trener (6 mailů à 30 dní) — po dojetí trener-kit. Každý mail jiná páka na Academy.
+--    Finále už neslibuje prvních 50 ani zdražení. Cena v textu zůstává 8 900 Kč.
 --  • longtail-kupci (6 mailů à 21 dní) — po dojetí onboarding-videokurz (368 kupců, jinak by
 --    zmlkli 18. den!). Aktivace + koučink + Academy upgrade (kupón UPGRADE800).
 --
@@ -132,9 +132,9 @@ INSERT INTO email_templates (track, step, key, subject, preheader, blocks, wait_
  30),
 
 ('longtail-trener', 5, 'lt-5-cena',
- $s$Zaváděcí cena Academy končí u 50. člena$s$,
- $h$8 900 Kč platí pro zakládající členy. Pak 12 900.$h$,
- $j$[{"t": "p", "html": "Ahoj{{fn_space}},"}, {"t": "p", "html": "poslední mail téhle série, tak narovinu: <strong>Barna Academy stojí 8 900 Kč jen pro prvních 50 zakládajících členů</strong>. Pak jde cena na 12 900 Kč — a to není marketingový trik, je to plán, který dodržím."}, {"t": "p", "html": "Co za to: 256 lekcí napříč 24 moduly (výživa, trénink, práce s klientem, byznys, AI), generátory jídelníčků a tréninků pod tvou značkou, appka Tvůj Coach pro tvoje klienty, certifikace. Doživotně, včetně všeho, co přibude."}, {"t": "p", "html": "Jde to i na splátky 3× 3 000 Kč."}, {"t": "btn", "href": "https://martinbarna.cz/akademie/", "text": "Přidat se za zaváděcí cenu"}, {"t": "p", "html": "<strong>Be Effective!</strong><br>Martin"}, {"t": "ps", "html": "P.S. Jestli váháš, jestli je Academy pro tebe — odepiš mi, na co konkrétně se chceš zeptat. Odpovídám osobně."}]$j$::jsonb,
+ $s$Barna Academy: doživotní vstup za 8 900 Kč$s$,
+ $h$256 lekcí, generátory a certifikace, doživotně.$h$,
+ $j$[{"t": "p", "html": "Ahoj{{fn_space}},"}, {"t": "p", "html": "poslední mail téhle série, tak narovinu: <strong>Barna Academy stojí 8 900 Kč</strong>, doživotně."}, {"t": "p", "html": "Co za to: 256 lekcí napříč 24 moduly (výživa, trénink, práce s klientem, byznys, AI), generátory jídelníčků a tréninků pod tvou značkou, appka Tvůj Coach pro tvoje klienty, certifikace. Doživotně, včetně všeho, co přibude."}, {"t": "p", "html": "Jde to i na splátky 3× 3 000 Kč."}, {"t": "btn", "href": "https://martinbarna.cz/akademie/", "text": "Otevřít Academy"}, {"t": "p", "html": "<strong>Be Effective!</strong><br>Martin"}, {"t": "ps", "html": "P.S. Jestli váháš, jestli je Academy pro tebe — odepiš mi, na co konkrétně se chceš zeptat. Odpovídám osobně."}]$j$::jsonb,
  null),
 
 -- ================= LONGTAIL-KUPCI (6× à 21 dní, kupci videokurzu po onboardingu) =================
@@ -172,7 +172,7 @@ INSERT INTO email_templates (track, step, key, subject, preheader, blocks, wait_
 ('longtail-kupci', 5, 'lk-5-academy',
  $s$Chytlo tě to? Máš slevu 800 Kč na Academy$s$,
  $h$Upgrade z videokurzu: kupón UPGRADE800.$h$,
- $j$[{"t": "p", "html": "Ahoj{{fn_space}},"}, {"t": "p", "html": "poslední mail téhle série. Jestli tě výživa a trénink chytly natolik, že chceš jít do hloubky — nebo dokonce pomáhat ostatním — je tu <strong>Barna Academy</strong>: 256 lekcí napříč 24 moduly, generátory jídelníčků a tréninků, AI kouč a appka Tvůj Coach v ceně."}, {"t": "p", "html": "A protože už máš videokurz, <strong>odečtu ti ho z ceny</strong>: s kupónem <strong>UPGRADE800</strong> máš Academy o 800 Kč levněji. Platí zaváděcí cena pro prvních 50 členů, pak zdražuji."}, {"t": "btn", "href": "https://martinbarna.cz/akademie/", "text": "Upgradovat na Academy"}, {"t": "p", "html": "<strong>Be Effective!</strong><br>Martin"}, {"t": "ps", "html": "P.S. Nevíš, jestli je Academy pro tebe? Odepiš mi, co tě láká — poradím upřímně."}]$j$::jsonb,
+ $j$[{"t": "p", "html": "Ahoj{{fn_space}},"}, {"t": "p", "html": "poslední mail téhle série. Jestli tě výživa a trénink chytly natolik, že chceš jít do hloubky — nebo dokonce pomáhat ostatním — je tu <strong>Barna Academy</strong>: 256 lekcí napříč 24 moduly, generátory jídelníčků a tréninků, AI kouč a appka Tvůj Coach v ceně."}, {"t": "p", "html": "A protože už máš videokurz, <strong>odečtu ti ho z ceny</strong>: s kupónem <strong>UPGRADE800</strong> máš Academy o 800 Kč levněji."}, {"t": "btn", "href": "https://martinbarna.cz/akademie/", "text": "Upgradovat na Academy"}, {"t": "p", "html": "<strong>Be Effective!</strong><br>Martin"}, {"t": "ps", "html": "P.S. Nevíš, jestli je Academy pro tebe? Odepiš mi, co tě láká — poradím upřímně."}]$j$::jsonb,
  null)
 
 ON CONFLICT (track, step) DO UPDATE SET
