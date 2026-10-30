@@ -112,6 +112,16 @@ const CASES: Case[] = [
     track: '', step: 2, email: 'kupec@example.com', owns: MA_VK,
     expect: null, why: 'prazdny track nesmi spadnout ani nic preskocit',
   },
+  // upsell-co-2 (krok 4) je vyrazeny ve v5 (29. 10. 2026) jen posunem next_send_at.
+  // Preskok by advance() posunul krok a pri wait_days null premostil do evergreen-kupci.
+  {
+    track: 'upsell-coaching', step: 4, email: 'kupec@example.com', owns: MA_VK,
+    expect: null, why: 'upsell-co-2 se kodem nepreskakuje, jinak by clovek dostal jiny mail',
+  },
+  {
+    track: 'longtail-kupci', step: 5, email: 'kupec@example.com', owns: MA_VK,
+    expect: null, why: 'lk-3 se kodem nepreskakuje, hotfix je jen text sablony',
+  },
 ];
 
 let selhalo = 0;

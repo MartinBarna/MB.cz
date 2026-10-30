@@ -72,6 +72,16 @@ export function shouldStop(
   // "Videokurz mas. Chces pomoc i ode me osobne?". Pamet `mb-koucink-offboard-automat`.
   // ⛔ NEROZSIROVAT tim `vlastniCokoli` ani ostatni trate: ex-klient je legitimni cil
   // akvizice (obsah, appka, Academy). Zakazana mu je jen nabidka koucinku, ktery dokoncil.
+  // [29. 10. 2026] Krok 4 (sablona upsell-co-2) je vyrazeny ve v5. Kod ho ZAMERNE
+  // nepreskakuje, nemaze a nemeni mu wait_days. Drip-send bere due jen podle
+  // `leads.next_send_at` (status active a next_send_at <= now). `wait_days` predchozi
+  // sablony (krok 3, uc-hodnota-checkin) ridi jen posun PO odeslani kroku 3.
+  // Kdyby byl null, `advance()` by po kroku 3 zavolal most do evergreen-kupci
+  // (`app_config.navazujici_trate`) a lidi, kteri uz na kroku 4 sedi, by to vubec
+  // nezastavilo. Chybejici sablona by u due leada taky spustila most, nebo zhasla
+  // `next_send_at` (a clovek by vypadal jako volny pro blast). Pozdrzeni je jen SQL
+  // `akademie/_supabase/urgent-drip-2026-10-30.sql` blok B: posun `next_send_at`,
+  // stejny krok, stejna sablona, zadny jiny mail.
   if (t === 'upsell-coaching') return !!owns?.coaching?.has(em) || !!exCoaching?.has(em);
   // [2026-08-06] TRATE APPKY (tc-free = registrace v appce, tc-magnet = jidelnickovy magnet).
   // Prodavaji predplatne Tvuj Coach. Kdo si koupi predplatne PRIMO v appce, prepne se pryc
