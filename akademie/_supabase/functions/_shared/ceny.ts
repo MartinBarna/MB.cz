@@ -29,7 +29,7 @@
 // ============================================================================
 
 import { ctiSOpakovanim } from "./secret-guard.ts";
-import { odesliPresResend } from "./resend-odeslat.ts";
+import { odesliPresResend, zapisOdeslani } from "./resend-odeslat.ts";
 
 // deno-lint-ignore no-explicit-any
 type Admin = any;
@@ -236,7 +236,8 @@ export const ALERT_CENY_ODSTUP_MS = 6 * 3600 * 1000;
  * Nejvýš jeden za 6 h na `klic` (funkce + druh problému): cron `drip-send` jede
  * každou hodinu a výpadek ceníku by jinak nasypal alert do každého běhu.
  * Značka odstupu je řádek `email_events` typu `alert_ceny` (bez `provider_id`,
- * takže ho `resend-webhook` ani denní strop nevidí; jistič čte jen `error`).
+ * takže ho párování ani denní strop nevidí; jistič čte jen `error`).
+ * Samotné odeslání má vedle toho řádek `odeslano` s `provider_id` (`via=alert-ceny`).
  * Značka vzniká JEN po úspěšném odeslání: neodeslaný alert se v dalším běhu zkusí znovu.
  * ⛔ Když se značka nedá přečíst, alert se POŠLE: radši dva alerty než žádný.
  * ⛔ Nejde přes `sendIfAllowed`: brána chrání adresu zákazníka, ne Martinovu.
@@ -266,6 +267,7 @@ export async function alertCeny(admin: Admin, resendKey: string, klic: string, p
     console.error("[ceny] ALERT MARTINOVI NEODESEL, znacka se nezapisuje: " + klic + " " + (r.chyba ?? ""));
     return false;
   }
+  await zapisOdeslani({ admin, via: "alert-ceny", email: to, detail: { klic } }, r.providerId);
   const { error: zapErr } = await admin.from("email_events").insert({
     lead_id: null, step: 0, type: "alert_ceny",
     detail: { klic, odeslano: true, status: r.status, predmet: predmet.slice(0, 120) },

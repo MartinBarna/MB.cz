@@ -11,6 +11,7 @@ import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.
 import { dnesPraha, kadenceKlienta } from "../_shared/report-obdobi.ts";
 import { emailySeznam } from "../_shared/mail-seznam.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -784,5 +785,6 @@ Deno.serve(async (req) => {
     html,
   }, { resendKey: RESEND_KEY });
   if (!res.ok) return json({ error: "resend_" + res.status }, 500);
+  await zapisOdeslani({ admin, via: "daily-digest", email: to }, res.providerId);
   return json({ ok: true, to, leads: leadsYc, leads_reaktivace: leadsStari, sales: salesYc, app_subs: appkaPocet, app_subs_text: appkaPredplatna, sent, errors: errs, withdrawals_pending: wdrPending, watchdog: { corsBad, dContact, dLead, kanarek: { ok: kanarekOk, chyba: kanarekChyba } } });
 });

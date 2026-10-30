@@ -10,7 +10,7 @@ import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 // u teto cesty NEDAJI SPAROVAT a nic je nezastavi (nalez V1).
 // ⛔ Stopa se tu NEZAPISUJE helperem: `order-rescue` uz svuj radek `px_odeslano`
 // pise samo a druhy by ho zdvojil. Helper jen vrati `provider_id` do toho zapisu.
-import { odesliPresResend } from "../_shared/resend-odeslat.ts";
+import { odesliPresResend, type StopaOdeslani } from "../_shared/resend-odeslat.ts";
 // VLASTNI mereni otevreni a prokliku (protejsky: edge funkce mail-pixel a mail-klik).
 // ⛔ Soubor je KOPIE, drz ho bajt na bajt shodny s drip-send/stopa.ts a milestones/stopa.ts;
 //    hlida to test `drip-send/stopa.test.ts`.
@@ -186,11 +186,12 @@ function vars(name: string): Record<string, string> {
  *    `reminded_at` vrati zpet (a cron to za dve hodiny zkusi znovu), nebo zustane.
  *    Proto se vraci cely vysledek, ne jen ID.
  */
-async function send(to: string, subject: string, html: string): Promise<{ ok: boolean; status: number; providerId: string; chyba: string }> {
+async function send(to: string, subject: string, html: string, stopa?: StopaOdeslani): Promise<{ ok: boolean; status: number; providerId: string; chyba: string }> {
   if (!RESEND_KEY) return { ok: false, status: 0, providerId: "", chyba: "missing_RESEND_API_KEY" };
   const r = await odesliPresResend(
     RESEND_KEY,
     { from: FROM, to: [to], subject, html, reply_to: "martin@martinbarna.cz" },
+    stopa,
   );
   return { ok: r.ok, status: r.status, providerId: r.providerId, chyba: r.chyba ?? "" };
 }
@@ -212,7 +213,9 @@ async function alertMartinovi(
     const prvni = String(data?.value || "").split(",").map((s: string) => s.trim()).filter(Boolean)[0];
     if (prvni) to = prvni;
   } catch { /* zustava fallback */ }
-  const r = await send(to, subject, `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`);
+  const r = await send(to, subject, `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`, {
+    admin, via: "order-rescue.alert", email: to,
+  });
   return r.ok;
 }
 

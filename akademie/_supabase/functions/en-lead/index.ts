@@ -20,6 +20,7 @@
 import { createClient } from "jsr:@supabase/supabase-js@2";
 // 27. 10. 2026: odeslani jde pres `_shared/mail-provider.ts`. Deploy musi nahrat i `_shared`.
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const ALLOWED_ORIGINS = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 const RATE_LIMIT = 5;
@@ -241,7 +242,7 @@ Deno.serve(async (req: Request) => {
   }
   // Přihláška = upozornění Martinovi hned (Elon 13. 10.: rychlost na lead je nejvíc peněz).
   // Jen Martinovi, nikdy klientovi. Jeden pokus; selhání mailu nesmí shodit uložený lead.
-  if (kind === "application") await upozorniMartina({ firstName, email, goal, message, utm_source: utm(b.utm_source), utm_campaign: utm(b.utm_campaign) });
+  if (kind === "application") await upozorniMartina(supa, { firstName, email, goal, message, utm_source: utm(b.utm_source), utm_campaign: utm(b.utm_campaign) });
   return json({ ok: true }, 200, origin);
 });
 
@@ -249,7 +250,8 @@ function esc(s: unknown): string {
   return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 }
 
-async function upozorniMartina(l: { firstName: string; email: string; goal: string | null; message: string | null; utm_source: string | null; utm_campaign: string | null }): Promise<void> {
+// deno-lint-ignore no-explicit-any
+async function upozorniMartina(admin: any, l: { firstName: string; email: string; goal: string | null; message: string | null; utm_source: string | null; utm_campaign: string | null }): Promise<void> {
   const key = mailKlic();
   if (!key) {
     console.error("en-lead: RESEND_API_KEY chybí, upozornění na přihlášku neodešlo");
@@ -267,6 +269,9 @@ async function upozorniMartina(l: { firstName: string; email: string; goal: stri
       html,
     }, { resendKey: key });
     if (r.status !== 200) console.error("en-lead: upozornění Resend status", r.status);
+    else await zapisOdeslani({
+      admin, via: "en-lead", email: "martin@martinbarna.cz", detail: { bcc: true },
+    }, r.providerId);
   } catch (e) {
     console.error("en-lead: upozornění selhalo", e instanceof Error ? e.message : String(e));
   }

@@ -220,7 +220,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   // Alerty. ⛔ Jdou PŘÍMO přes Resend, NE přes `guardSend`: brána chrání adresu
   //    klienta, ne Martinovu, a kdyby jeho adresa skončila na seznamu, přestal by
   //    se dozvídat právě ta selhání, kvůli kterým alert existuje.
-  // ⛔ Bez `stopa`: Martinova adresa do `email_events` nepatří.
+  // Stopa alertu jde přes helper. Martinovu adresu do `detail.email` nepíše.
   // ---------------------------------------------------------------------------
   let alertuPoslano = 0, alertuPotlaceno = 0;
   const alertySelhaly: string[] = [];
@@ -232,7 +232,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
       to: [adminMail],
       subject: predmet,
       html: `<pre style="font-family:inherit;white-space:pre-wrap">${text}</pre>`,
-    });
+    }, { admin, via: "koucink-konec.alert", email: adminMail });
     if (!r.ok) {
       console.error("[koucink-konec] ALERT NEODESEL: " + predmet);
       alertySelhaly.push(klic || predmet);

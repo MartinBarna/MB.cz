@@ -29,6 +29,7 @@ function reset() {
   db.en_leads = [];
   db.en_mail_log = [];
   db.en_unsubscribes = [];
+  db.email_events = [];
   events.length = 0;
   resendCalls.length = 0;
   resendFail = false;
@@ -74,6 +75,10 @@ async function mockPostgrest(req: Request): Promise<Response> {
         created.push(r);
       } else if (table === "en_unsubscribes") {
         if (!rows.some((r) => r.email === b.email)) { rows.push({ ...b }); created.push(b); }
+      } else {
+        const r = { ...b };
+        rows.push(r);
+        created.push(r);
       }
     }
     if (single) return resp(201, created[0]);
@@ -168,6 +173,10 @@ Deno.test("zapnuto: razítko PŘED Resendem, jen skutečný lead, odhlašovací 
   assertEquals(db.en_mail_log.length, 1);
   assertEquals(db.en_mail_log[0].status, "sent");
   assertEquals(db.en_mail_log[0].provider_id, "re_1");
+  assertEquals(db.email_events.length, 1);
+  assertEquals(db.email_events[0].type, "odeslano");
+  assertEquals(db.email_events[0].provider_id, "re_1");
+  assertEquals((db.email_events[0].detail as Row).email, "anna@example.com");
   const c = resendCalls[0];
   assertEquals(c.reply_to, "martin@martinbarna.cz");
   assertEquals(c.headers["List-Unsubscribe-Post"], "List-Unsubscribe=One-Click");
@@ -208,7 +217,7 @@ Deno.test("Resend selže: status failed, žádné opakování ve stejném ani da
   assertEquals(db.en_mail_log.length, 1);
 });
 
-Deno.test("test_step: jen na fitness.barna@gmail.com, nic se nezapisuje, i při vypnutém vypínači", async () => {
+Deno.test("test_step: jen na fitness.barna@gmail.com, sérii nerazítkuje, stopa testu ano", async () => {
   reset(); seedLeads();
   const r = await call({ test_step: 1, test_no_calc: true });
   assertEquals(r.status, 200);
@@ -216,6 +225,10 @@ Deno.test("test_step: jen na fitness.barna@gmail.com, nic se nezapisuje, i při 
   assertEquals(resendCalls[0].to, "fitness.barna@gmail.com");
   assert(resendCalls[0].subject.startsWith("[TEST] "));
   assertEquals(db.en_mail_log.length, 0);
+  assertEquals(db.email_events.length, 1);
+  assertEquals(db.email_events[0].type, "test");
+  assertEquals(db.email_events[0].provider_id, "re_1");
+  assertEquals((db.email_events[0].detail as Row).email, null);
   assertEquals((await call({ test_step: STEPS + 1 })).status, 400);
 });
 

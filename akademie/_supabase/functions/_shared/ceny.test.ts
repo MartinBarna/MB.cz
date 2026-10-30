@@ -195,8 +195,11 @@ console.log("\n== R1/N4: značka alertu jen po úspěšném odeslání ==");
     // Resend přijme => značka s odeslano=true.
     globalThis.fetch = (() => { odeslano++; return Promise.resolve(new Response(JSON.stringify({ id: "re_1" }), { status: 200 })); }) as typeof fetch;
     const r2 = await alertCeny(admin, "klic", "test:k", "p", "t");
-    check("odeslaný alert vrací true a zapíše značku", r2 === true && vlozeno.length === 1);
-    check("značka má odeslano=true", JSON.stringify(vlozeno[0]).includes('"odeslano":true'));
+    const znacka = vlozeno.find((z) => (z as { type?: string }).type === "alert_ceny");
+    const stopa = vlozeno.find((z) => (z as { type?: string }).type === "odeslano");
+    check("odeslaný alert vrací true a zapíše značku i stopu", r2 === true && !!znacka && !!stopa, String(vlozeno.length));
+    check("značka má odeslano=true", JSON.stringify(znacka).includes('"odeslano":true'));
+    check("stopa alertu nese provider_id", (stopa as { provider_id?: string })?.provider_id === "re_1", JSON.stringify(stopa));
     // Značka existuje => v okně 6 h se neposílá.
     znackaExistuje = true;
     const pred = odeslano;

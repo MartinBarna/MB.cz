@@ -16,6 +16,7 @@
 
 import { guardSend, logMailSkip } from "./mailing-guard.ts";
 import { posliMail } from "./mail-provider.ts";
+import { zapisOdeslani } from "./resend-odeslat.ts";
 
 /** Balíček koučinku. Rozdíl je v ceně a v tom, co je v ní (hovor, Academy, hlasovky). */
 export type KoucinkPlan = "gold" | "diamond";
@@ -411,6 +412,12 @@ export async function posliUvitaciMail(admin: any, v: {
     reply_to: "martin@martinbarna.cz", bcc: ["fitness.barna@gmail.com"],
     ...(attachments ? { attachments } : {}),
   }, { resendKey: v.resendKey });
+  if (rs.ok) {
+    await zapisOdeslani({
+      admin, via: "koucink-onboarding", email,
+      detail: { kind, bcc: true },
+    }, rs.providerId);
+  }
 
   return {
     ok: rs.status === 200,

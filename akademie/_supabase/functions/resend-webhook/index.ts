@@ -112,6 +112,9 @@ Deno.serve(async (req) => {
   //   `konzultace_znovu_doruceno` / `balicek_znovu_doruceno`
   //               opakovany nakup; na techhle radcich stoji i IDEMPOTENCE
   //               pres `detail->>payment_intent`, proto maji vlastni typ
+  //   `oneoff`    jednorazovy krok drip-send; provider_id uz mel, v seznamu chybel
+  //   `affiliate_report` / `affiliate_report-test`
+  //               mesicni report partnera (idempotence stoji na tomhle typu)
   const TYPY_ODESLANI = [
     "sent",
     "test",
@@ -119,6 +122,9 @@ Deno.serve(async (req) => {
     "odeslano",
     "konzultace_znovu_doruceno",
     "balicek_znovu_doruceno",
+    "oneoff",
+    "affiliate_report",
+    "affiliate_report-test",
   ];
   const { data: orig, error: chybaOrig } = await admin.from("email_events")
     .select("lead_id,step,type,detail").eq("provider_id", emailId)
@@ -376,5 +382,9 @@ async function alertNesparovano(
       + `<p style="font-size:13px;color:#666">Další takový alert přijde nejdřív za hodinu, `
       + `ať se z toho nestane lavina. Všechny případy jsou v <code>email_events</code> `
       + `pod typem <code>alert_nesparovano</code>.</p></div>`,
+  }, {
+    admin,
+    via: "resend-webhook.alert",
+    email: komu,
   });
 }

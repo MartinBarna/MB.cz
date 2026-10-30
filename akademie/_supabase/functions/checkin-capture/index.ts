@@ -8,6 +8,7 @@ import { sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { chybaCteni, ctiSOpakovanim, overSecret } from "../_shared/secret-guard.ts";
 import { analyzeCheckin, type Checkin } from "./analysis.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -53,13 +54,14 @@ function wrapHtml(preheader: string, body: string, footerHtml: string): string {
 const btn = (text: string, href: string) =>
   `<p style='margin:6px 0 16px'><a href='${href}' style='display:inline-block;background:#EBB12C;color:#1A1222;text-decoration:none;padding:13px 24px;border-radius:50px;font-weight:700'>${esc(text)}</a></p>`;
 
-async function sendResend(to: string, subject: string, html: string, text: string, replyTo: string): Promise<void> {
+async function sendResend(to: string, subject: string, html: string, text: string, replyTo: string): Promise<string> {
   if (!RESEND_API_KEY) throw new Error("no_resend_key");
   const res = await posliMail(
     { from: FROM, to: [to], subject, html, text, reply_to: replyTo || undefined },
     { resendKey: RESEND_API_KEY },
   );
   if (!res.ok) throw new Error("resend_" + res.status);
+  return res.providerId;
 }
 
 Deno.serve(async (req) => {
@@ -134,13 +136,15 @@ Deno.serve(async (req) => {
       );
       const text = "Ahoj, čas na týdenní check-in: " + SITE + "/akademie/check-in/\n\nBe Effective! Martin";
       try {
+        let providerId = "";
         const d = await sendIfAllowed(admin, {
           email,
           mailClass: "optional_reminder",
           functionName: "checkin-capture",
           path: "checkin-capture.remind",
-        }, () => sendResend(email, "Čas na týdenní check-in 💪", html, text, replyTo));
+        }, async () => { providerId = await sendResend(email, "Čas na týdenní check-in 💪", html, text, replyTo); });
         if (d.action === "skip") { skipped++; continue; }
+        await zapisOdeslani({ admin, via: "checkin-capture.remind", email }, providerId);
         sent++;
       } catch { /* skip */ }
     }

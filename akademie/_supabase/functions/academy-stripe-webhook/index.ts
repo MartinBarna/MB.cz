@@ -53,7 +53,7 @@ import { rozpoznajJednorazovyKlic } from "./kosik-rozpoznani.ts";
 // bounce ani stížnost na spam a nic je nezastaví (nález V1).
 // ⛔ Alerty Martinovi (`alertAdmin`) přes helper NEJDOU schválně: jeho adresa do
 //    `email_events` nepatří a stopa by jen zašuměla čísla.
-import { odesliPresResend } from "../_shared/resend-odeslat.ts";
+import { odesliPresResend, zapisOdeslani } from "../_shared/resend-odeslat.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
 // ⛔ Onboarding koučinku je SPOLEČNÝ s ruční pozvánkou v adminu (`admin-api`,
 // akce `client_invite`). Zaplacený klient musí dostat přesně totéž co ten ruční:
@@ -756,12 +756,13 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await posliMail({
+    const res = await posliMail({
       from: "Barna Academy <news@martinbarna.cz>", to: [to],
       subject: "⚠️ " + predmet,
       html: `<p>Upozornění ze Stripe webhooku (Academy/produkty).</p><ul>${rows}</ul>`
         + `<p>Zkontroluj platbu ve Stripu a případně uděl přístup ručně v adminu.</p>`,
     }, { resendKey: RESEND_KEY });
+    if (res.ok) await zapisOdeslani({ admin, via: "academy-stripe-webhook.alert", email: to }, res.providerId);
   } catch { /* best-effort */ }
 }
 
