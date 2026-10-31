@@ -408,7 +408,10 @@ export async function handleSns(method: string, rawBody: string, deps: Deps): Pr
   }).filter((a) => a.length > 0);
 
   let lead_id = (!isTest && orig?.lead_id) ? String(orig.lead_id) : null;
-  let sparovanoPodle = lead_id ? "provider_id" : "nesparovano";
+  // Stopa type=test (ses-test, nebo detail.test) se nasla podle provider_id.
+  // Lead se k ni schvalne nepripojuje, ale parovani to je. Jinak by bounce
+  // simulatoru vypadal jako nesparovano, i kdyz radek v email_events lezi.
+  let sparovanoPodle = (lead_id || (isTest && orig)) ? "provider_id" : "nesparovano";
   const adresaZeStopy = String(detailStopy.email ?? "").trim().toLowerCase();
   const adresaSedi = adresyZPayloadu.length === 0 || !adresaZeStopy || adresyZPayloadu.includes(adresaZeStopy);
 
