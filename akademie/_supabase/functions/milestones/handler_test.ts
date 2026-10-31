@@ -22,6 +22,8 @@ const db: Record<string, Row[]> = {};
 let users: Row[] = [];
 // PostgREST max_rows: TICHY strop radku na jeden dotaz (Supabase vychozi 1000), .limit() ho neprebije.
 let serverMaxRows = 1000;
+// GoTrue: kolik uzivatelu pusti na jednu stranku nejvys (strop serveru, i kdyz se chce vic).
+let serverMaxUsers = 1000;
 const failTables = new Set<string>();
 // Selze jen pokracovaci stranka (offset > 0) dane tabulky.
 let failPageTable: string | null = null;
@@ -36,6 +38,7 @@ function reset() {
   for (const t of ["progress", "entitlements", "milestone_sent", "leads", "odhlaseni_trvale", "mail_skip_log", "email_events"]) db[t] = [];
   users = [];
   serverMaxRows = 1000;
+  serverMaxUsers = 1000;
   failTables.clear();
   failPageTable = null;
   resendCalls.length = 0;
@@ -137,7 +140,12 @@ async function mockPostgrest(req: Request): Promise<Response> {
 globalThis.fetch = async (input: Request | URL | string, init?: RequestInit) => {
   const req = new Request(input, init);
   if (req.url.startsWith(SUPA + "/rest/v1/")) return mockPostgrest(req);
-  if (req.url.startsWith(SUPA + "/auth/v1/admin/users")) return resp(200, { users });
+  if (req.url.startsWith(SUPA + "/auth/v1/admin/users")) {
+    // Jako GoTrue: offset = (page - 1) * per_page, za posledni strankou prazdny seznam.
+    const q = new URL(req.url).searchParams;
+    const page = Number(q.get("page") || 1), per = Math.min(Number(q.get("per_page") || 50), serverMaxUsers);
+    return resp(200, { users: users.slice((page - 1) * per, page * per) });
+  }
   // Cenik appky (`_shared/ceny.ts`): sablony testu zadnou cenu nemaji, staci prazdny cenik.
   if (req.url.startsWith("https://kfkmghvhqwqtsalqjmrp.supabase.co/rest/v1/pricing_plans")) return resp(200, []);
   if (req.url === "https://api.resend.com/emails") {
@@ -188,7 +196,7 @@ test("clen nad 30 %: gratulace odejde s odhlasovacim odkazem a milnik se zapise"
   assertEquals(db.mail_skip_log.length, 0);
 });
 
-test("trvale odhlaseny (odhlaseni_trvale) s aktivnim leadem: nic neodejde, skip je v mail_skip_log", async () => {
+test("trvale odhlaseny (odhlaseni_trvale) s aktivnim leadem: nic neodejde, skip je v mail_skip_log jen jednou", async () => {
   reset();
   clen(JANA, JANA_ID, 60, { status: "active" });
   db.odhlaseni_trvale.push({ email: "Jana@Example.com" }); // velikost pismen nevadi
@@ -197,9 +205,15 @@ test("trvale odhlaseny (odhlaseni_trvale) s aktivnim leadem: nic neodejde, skip 
   assertEquals(j.sends, 0);
   assertEquals(resendCalls.length, 0);
   assertEquals(db.mail_skip_log.map((r) => [r.fn, r.mail_class, r.reason]), [["milestones", "marketing", "hard_unsubscribe"]]);
-  // Nevyrizeny milnik se nezapisuje (a v odpovedi neni e-mail odhlaseneho).
-  assertEquals(db.milestone_sent.length, 0);
+  // V odpovedi neni e-mail odhlaseneho. Milnik je vyrizeny bez mailu, jako prekonany nizsi milnik.
   assertEquals(j.results, [{ milestone: 30, skip: "hard_unsubscribe" }]);
+  assertEquals(db.milestone_sent.map((r) => r.milestone), [30]);
+  assertEquals(j.marked_skipped, 1);
+  // Dalsi denni beh uz tohoto cloveka nevyhodnocuje ani neloguje znovu.
+  const druhy = await call();
+  assertEquals(druhy.j.results, []);
+  assertEquals(resendCalls.length, 0);
+  assertEquals(db.mail_skip_log.length, 1);
 });
 
 test("trvale odhlaseny bez leadu: taky nic", async () => {
@@ -210,6 +224,20 @@ test("trvale odhlaseny bez leadu: taky nic", async () => {
   assertEquals(j.sends, 0);
   assertEquals(resendCalls.length, 0);
   assertEquals(db.mail_skip_log.map((r) => r.reason), ["hard_unsubscribe"]);
+  // 100 lekci = 50 %: vyrizene jsou 30 i 50, at se k cloveku smycka uz nevraci.
+  assertEquals(db.milestone_sent.map((r) => r.milestone).sort(), [30, 50]);
+});
+
+test("clen bez leada: bez odkazu na odhlaseni gratulace neodejde a nic se nezapisuje", async () => {
+  reset();
+  clen(JANA, JANA_ID, 60); // zadny radek v leads = neni token na odhlaseni
+  const { status, j } = await call();
+  assertEquals(status, 200);
+  assertEquals(j.sends, 0);
+  assertEquals(resendCalls.length, 0);
+  assertEquals(j.results, [{ milestone: 30, skip: "bez_odhlaseni" }]);
+  assertEquals(db.milestone_sent.length, 0); // az lead vznikne, gratulace prijde
+  assertEquals(db.mail_skip_log.length, 0);
 });
 
 test("stav odhlaseni nejde precist: nic neodejde (fail-closed) a dalsi beh to zkusi znovu", async () => {
@@ -284,4 +312,28 @@ test("chyba az na druhe strance = 500 a nic neodejde", async () => {
   assertEquals(j.kde, "progress");
   assertEquals(resendCalls.length, 0);
   assertEquals(db.milestone_sent.length, 0);
+});
+
+// --- Posun stranek: radek nebo uzivatel, ktery prijde dvakrat, nesmi poslat mail navic. ---
+
+test("tentyz radek postupu dvakrat (posun offsetu) neprida lekci: 54 lekci zustane pod 30 %", async () => {
+  reset();
+  clen(JANA, JANA_ID, 54, { status: "active" });
+  db.progress.push({ user_id: JANA_ID, lesson_id: "vk-001", completed: true }); // duplicita na hranici stranky
+  const { j } = await call();
+  assertEquals(j.sends, 0); // radek po radku by to bylo 55 = 30 % a gratulace by odesla o lekci driv
+  assertEquals(resendCalls.length, 0);
+});
+
+test("uzivatele po strankach: server pusti mene, nez se chce, a clen za prvni strankou mail dostane jednou", async () => {
+  reset(); serverMaxUsers = 1;
+  users.push({ id: "b0000000-0000-0000-0000-000000000009", email: "cizi@example.com", user_metadata: {} });
+  clen(JANA, JANA_ID, 60, { status: "active" });
+  users.push({ ...users[1] }); // tentyz uzivatel znovu (posun stranky pri soubezne registraci)
+  const { status, j } = await call();
+  assertEquals(status, 200);
+  // Stary kod skoncil po prvni strance, protoze byla kratsi nez 1000, a jana@ by mail nedostala.
+  assertEquals(resendCalls.map((c) => c.to), [JANA]);
+  assertEquals(j.sends, 1);
+  assertEquals(db.milestone_sent.map((r) => r.milestone), [30]);
 });

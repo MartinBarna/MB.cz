@@ -256,6 +256,12 @@ Deno.serve(async (req) => {
   //    `milestone_sent` by poslal tutez gratulaci ZNOVU. Razeni podle CELEHO primarniho
   //    klice, jinak stranky pres offset nejsou stabilni. Konec = PRAZDNA stranka a posun
   //    o pocet skutecne prijatych radku, takze nezalezi na tom, kolik jich server pusti.
+  // ⚠️ Offset se posune, kdyz mezi dvema strankami nekdo zapise radek PRED kurzor (napr.
+  //    dokonci lekci): jeden radek pak prijde dvakrat, smazany se preskoci. Proto se vse
+  //    nize sklada do mnozin (duplicita nic nezmeni) a postup se pocita jako pocet RUZNYCH
+  //    lekci. Preskoceny radek milnik jen o den odlozi. Do `milestone_sent` za behu nikdo
+  //    jiny nepise a nic z nej nemaze. Keyset (jako en-mailing) tu jednoduse nejde, tri
+  //    ze ctyr tabulek maji slozeny primarni klic.
   const vsechnyRadky = async <T>(dotaz: (od: number, az: number) => PromiseLike<Radky<T>>): Promise<Radky<T>> => {
     const out: T[] = [];
     for (let strana = 0; strana < 500; strana++) {
@@ -288,15 +294,19 @@ Deno.serve(async (req) => {
   if (sent.error) return json(chybaCteni("milestone_sent", sent.error), 500);
   // auth uzivatele pres VSECHNY stranky (jen page 1 = tichy vypadek clenu nad 1000)
   // ⛔ Chyba auth API = 500, ne „zadni uzivatele".
+  // ⛔ [31. 10. 2026] Konec = PRAZDNA stranka, ne stranka kratsi nez 1000. Stejne pravidlo
+  //    jako u tabulek vys: kdyby server pustil mene, nez se chce, smycka by skoncila po prvni.
   type AuthUser = { id: string; email?: string; user_metadata?: Record<string, unknown> };
   const users: AuthUser[] = [];
+  let vsichniUzivatele = false;
   for (let page = 1; page <= 50; page++) {
     const { data: ud, error: uerr } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
     if (uerr) return json({ error: "auth_list_failed", detail: String(uerr.message ?? uerr).slice(0, 120) }, 500);
     const batch = (ud?.users ?? []) as AuthUser[];
+    if (!batch.length) { vsichniUzivatele = true; break; }
     users.push(...batch);
-    if (batch.length < 1000) break;
   }
+  if (!vsichniUzivatele) return json({ error: "auth_list_failed", detail: "prilis mnoho stranek" }, 500);
   // leads = zdroj odhlaseni/bounce + unsubscribe tokenu (strankovane po 1000)
   // ⛔ Neuplny seznam = odhlaseny by dostal vk-complete s prodejnim blokem. Chyba = 500.
   // ⚠️ Do 31. 10. tu byla vlastni smycka, ktera koncila na strance kratsi nez 1000. Se serverem,
@@ -308,8 +318,15 @@ Deno.serve(async (req) => {
   for (const l of lr.data ?? []) leadInfo.set(low(l.email), { id: String(l.id ?? ""), status: String(l.status ?? ""), token: String(l.unsubscribe_token ?? "") });
   const members = new Set((ents.data ?? []).map((e) => low(e.email)));
   const already = new Set((sent.data ?? []).map((s) => low(s.email) + ":" + s.milestone));
-  const cnt = new Map<string, number>();
-  for (const p of prg.data ?? []) cnt.set(String(p.user_id), (cnt.get(String(p.user_id)) ?? 0) + 1);
+  // Pocet RUZNYCH dokoncenych lekci na uzivatele: radek, ktery prisel dvakrat (posun
+  // offsetu, viz vsechnyRadky), nesmi pridat lekci navic a poslat milnik predcasne.
+  const lekce = new Map<string, Set<string>>();
+  for (const p of prg.data ?? []) {
+    const uid = String(p.user_id);
+    const s = lekce.get(uid) ?? new Set<string>();
+    s.add(String(p.lesson_id));
+    lekce.set(uid, s);
+  }
 
   const tpl30 = await getTpl(30), tpl50 = await getTpl(50), tpl100 = await getTpl(100);
   if (!tpl30 || !tpl50 || !tpl100) return json({ error: "no_templates" }, 500);
@@ -362,16 +379,24 @@ Deno.serve(async (req) => {
     const { error } = await admin.from("milestone_sent").insert({ email, product: "videokurz", milestone });
     if (error) { console.error("[milestones] zapis milestone_sent selhal: " + email + ":" + milestone); results.push({ email, milestone, zapis_selhal: String(error.message ?? error).slice(0, 80) }); }
   };
+  // Tentyz uzivatel dvakrat v seznamu (posun stranek pri soubezne registraci) by dostal
+  // tentyz mail dvakrat: `already` je snimek z doby pred smyckou.
+  const zpracovani = new Set<string>();
   for (const u of users) {
     if (sends >= MAX_PER_RUN) break;
     const email = low(u.email);
     if (!email || !members.has(email)) continue;
+    if (zpracovani.has(email)) continue;
+    zpracovani.add(email);
     // respektuj odhlaseni/bounce z drip enginu (vk-complete obsahuje prodejni blok)
+    // Zustava i vedle brany nize: je bez dotazu a e-mail porovnava oriznuty, takze chytne
+    // i lead s mezerou v adrese, ktery presna shoda brany (ilike) mine. Neloguje se,
+    // zaznam o odhlaseni je uz v `leads.status`.
     const li = leadInfo.get(email);
     if (li && (li.status === "unsubscribed" || li.status === "bounced")) continue;
     const unsub = li?.token ? unsubLink(li.token) : "";
-    const leadId = li?.id ? li.id : null;   // bez leada se mail posle dal, jen nebude komu pripsat
-    const done = cnt.get(String(u.id)) ?? 0;
+    const leadId = li?.id ? li.id : null;   // pro mereni; bez leada mail neodejde (neni odhlaseni, viz nize)
+    const done = lekce.get(String(u.id))?.size ?? 0;
     // 30 % (55 lekci): vetsina lidi kurz nedokonci a necekame to. Zmereno 22. 8. 2026:
     // 100 % nemel NIKDO, 50 az 99 % dva lide, a sest lidi skoncilo na 1 az 3 lekcich.
     const milnik = done >= VK_TOTAL && !already.has(email + ":100") ? 100
@@ -384,14 +409,28 @@ Deno.serve(async (req) => {
     try {
       // ⛔ Brana PRED odeslanim, jen u toho, komu by mail opravdu odesel (nejvys MAX_PER_RUN
       //    za beh). Milnik je marketing: trvale odhlaseni nebo bounce = nic, a kdyz se stav
-      //    odhlaseni neda precist, taky nic (fail-closed). Skip se do `milestone_sent`
-      //    NEZAPISUJE: chybu cteni zkusi dalsi beh a skip je dohledatelny v `mail_skip_log`.
-      //    Trvale odhlaseny se tam tak objevi pri kazdem behu, dokud v kurzu nepostoupi
-      //    (zmereno 31. 10. 2026: takovi lide jsou 0, trvale odhlasenych clenu je 23).
+      //    odhlaseni neda precist, taky nic (fail-closed).
       const brana = await guardSend(admin, { email, mailClass: "marketing", functionName: "milestones" });
       if (brana.action === "skip") {
         await logMailSkip(admin, brana);
+        // Trvaly duvod (odhlaseni, bounce, neplatny e-mail) = milnik je vyrizeny bez mailu,
+        // stejne jako prekonane nizsi milniky niz. Jinak by se tentyz clovek vyhodnocoval
+        // a logoval pri kazdem dennim behu bez konce (zmereno 31. 10. 2026: trvale
+        // odhlasenych clenu je 23). Chyba cteni stavu odhlaseni se NEZAPISUJE, zkusi ji dalsi beh.
+        if (brana.reason !== "suppression_load_failed") {
+          for (const m of [30, 50, 100]) {
+            if (m <= milnik && !already.has(email + ":" + m)) { await zapisMilnik(email, m); marked++; }
+          }
+        }
         results.push({ milestone: milnik, skip: brana.reason }); // bez e-mailu, ten je v mail_skip_log
+        continue;
+      }
+      // ⛔ Marketingovy mail pod Martinovym jmenem bez odhlaseni neodchazi (CLAUDE.md: paticka
+      //    marketingovych mailu vzdy s odhlasenim). Odkaz je jen z `leads.unsubscribe_token`,
+      //    takze clen bez leada gratulaci nedostane (31. 10. 2026: 3 clenove, 1 z nich s uctem).
+      //    Nic se nezapisuje: kdyz lead vznikne, mail prijde dalsi den.
+      if (!unsub) {
+        results.push({ milestone: milnik, skip: "bez_odhlaseni" });
         continue;
       }
       if (milnik === 100) {
