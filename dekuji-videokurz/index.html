@@ -29,6 +29,13 @@
   .btn:hover { background:var(--green-dark); color:#fff; transform:translateY(-2px); }
   .muted { font-size:.9rem; color:#888; margin-top:1.4rem; }
   a.plain { color:var(--green); font-weight:600; }
+  .checkin-pozvanka { margin:1.9rem 0 0; padding:20px 22px; background:#241c14; border:1px solid rgba(235,177,44,.55); border-radius:16px; text-align:left; }
+  .checkin-pozvanka p { margin:0 0 .9rem; font-size:.92rem; }
+  .checkin-pozvanka .nadpis { margin:0 0 .35rem; font-weight:700; font-size:1rem; }
+  .checkin-pozvanka .btn { margin-top:0; font-size:.95rem; padding:11px 26px; }
+  html:not([data-theme="light"]) .card .checkin-pozvanka { background:#241c14!important; color:#F0EADF!important; }
+  html:not([data-theme="light"]) .card .checkin-pozvanka p { color:#F0EADF!important; }
+  html:not([data-theme="light"]) .card .checkin-pozvanka .nadpis { color:#F6CD63!important; }
   .academy-tichy a { overflow-wrap:anywhere; }
   @media (max-width:420px) {
     body { padding:16px; }
@@ -57,6 +64,12 @@
     <p class="muted">⚠️ Důležité: registruj se <strong>stejným e-mailem jako u platby</strong>. Podle něj se přístup spáruje. Heslo si teď vytváříš nové.</p>
     <p class="muted" style="margin-top:.4rem;">Kdyby cokoliv nešlo, napiš mi na <a class="plain" href="mailto:martin@martinbarna.cz">martin@martinbarna.cz</a> a vyřešíme to.</p>
     <p class="muted" style="margin-top:.6rem;font-size:.82rem;">Máš <strong>14 dní na odstoupení od smlouvy</strong> a garanci vrácení peněz. Kdyby ses rozmyslel, stačí <a class="plain" href="/odstoupeni/?product=videokurz">odstoupit od smlouvy online</a> (potvrzení přijde hned e-mailem). · <a class="plain" href="/">Zpět na web</a></p>
+
+    <div class="checkin-pozvanka">
+      <p class="nadpis">První check-in, 30 vteřin</p>
+      <p>Než se pustíš do lekcí, vyplň si první check-in. Naklikáš, jak se ti vede, a hned dostaneš doporučení na míru na další týden. Za každý další se ti po troškách načítá sleva.</p>
+      <a class="btn" href="/akademie/check-in/">Vyplnit první check-in</a>
+    </div>
 
     <div style="margin:1.9rem 0 0;padding:20px 22px;background:rgba(235,177,44,.09);border:1px solid rgba(235,177,44,.35);border-radius:16px;text-align:left;">
       <p style="margin:0 0 .3rem;font-weight:700;color:#fff;">🤝 Chceš to vzít se mnou osobně?</p>
