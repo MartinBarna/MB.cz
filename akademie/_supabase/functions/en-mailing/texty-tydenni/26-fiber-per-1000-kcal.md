@@ -5,11 +5,11 @@ Body:
 
 Hi {{first_name}},
 
-Look at a typical business lunch: meat, a white side, a sauce. The protein is there. The fiber isn't, and that's one reason you're hungry again so soon.
+Look at a typical business lunch: meat, white rice or fries, a sauce. The protein is there. The fiber isn't, and that's one reason you're hungry again so soon.
 
-Fiber is the part of plant food your body can't digest. It brings almost no calories and it still does a lot. It fills you up, so you go longer without hunger and pick at food less. It slows down how fast sugar gets absorbed, so you get fewer energy swings and fewer sweet cravings.
+Fiber is the part of plant food your body can't digest. It brings almost no calories and it still does a lot. It fills you up, so you go longer without hunger and pick at food less. Some types also slow down how fast sugar from the meal gets absorbed.
 
-The target is about 30 to 38 g a day. Easy rule: about 14 g per 1,000 kcal. On 2,000 kcal a day that's about 28 g.
+Guidelines land around 25 to 38 g a day, depending on how much you eat. Easy rule: about 14 g per 1,000 kcal. On 2,000 kcal a day that's about 28 g.
 
 Where to find it on a menu or a hotel buffet:
 
@@ -21,7 +21,7 @@ Where to find it on a menu or a hotel buffet:
 
 You don't have to eat like a rabbit. A portion of vegetables at each meal and pulses a few times a week is enough to start.
 
-One warning: don't go from almost nothing to a lot overnight. You can feel bloated for the first few days. Add it step by step and drink enough water.
+Go slowly, though. Going from almost nothing to a lot overnight can leave you bloated for the first few days. Add it step by step and drink enough water.
 
 The full article: {{link_article:fiber-and-fat-loss}}
 
@@ -32,4 +32,4 @@ You get this email because you asked for the Fat Loss Kit at martinbarna.cz/en/.
 Unsubscribe: {{unsubscribe_url}}
 {{postal_address}}
 
-Source: fiber-and-fat-loss.md (30 to 38 g a day, about 14 g per 1,000 kcal, the three reasons it helps, the food list, the bloating warning). The 2,000 kcal line is plain arithmetic on the article's rule (2 x 14 = 28). Email 01 covered ordering out in general, and email 13 named fibre at a late dinner in one line. This is the first email on fiber as its own topic.
+Source: fiber-and-fat-loss.md (about 14 g per 1,000 kcal, the food list, the bloating warning). The daily range is given as 25 to 38 g (IOM: 25 g for women, 38 g for men; EFSA: 25 g for adults) instead of the article's 30 to 38 g, because 30 g sat above the article's own 2,000 kcal result; the article's wording still needs a check by a person. The absorption line is narrowed to some fiber types, and the energy swings and cravings claim is left out. The 2,000 kcal line is plain arithmetic on the article's rule (2 x 14 = 28). Email 01 covered ordering out in general, and email 13 named fibre at a late dinner in one line. This is the first email on fiber as its own topic.

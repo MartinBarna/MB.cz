@@ -7,15 +7,15 @@ Hi {{first_name}},
 
 Someone else booked the restaurant. The toast is already on the agenda. You can still lose fat. You need the decision before you sit down.
 
-Alcohol has 7 kcal per gram. Protein and carbs have 4 kcal per gram. Fat has 9. The stronger the drink, the more alcohol in the glass, and the more energy. Your body doesn't need it. It's still energy, same as the rest of the day.
+Alcohol has 7 kcal per gram. Protein and carbs have 4 kcal per gram. Fat has 9. The stronger the drink, the more alcohol per sip, and the more energy. Sweet mixers add their own. Your body doesn't need the alcohol. It's still energy, same as the rest of the day.
 
 Before the dinner, write one line for the drink you'll actually order: the name, the pour, the kcal. Use that line again at the next event. Brands differ, so check yours once, not from memory at the table.
 
 On the night, stick to that one kind. Drink it after you've eaten. If you drink, write it down. A couple of lighter drinks, counted, is a different evening from one that ends drunk.
 
-If you trained that day, a drunk finish is the expensive version. Your liver clears the alcohol first. Muscle recovery waits. Stay below drunk and the load is far smaller. The feeling is the guide. The rest depends on what you care about this month.
+If you trained that day, a drunk finish is the expensive version. Your body burns the alcohol first, and heavy drinking after training slows muscle repair. Stay well below drunk and the load is much smaller.
 
-Nobody needs alcohol for the deficit to work. If you've some, count it, and the week can still go down.
+You don't have to drink at all. If you do, count it, and the week can still trend down.
 
 The numbers and the rules: {{link_article:drinks-dinners-and-social-events}}
 

@@ -6,7 +6,7 @@ Kategorie: Hubnutí
 SEO title: Hubnutí, když rodina nehubne: partner, děti a jídlo
 Emoji: 🏠
 Filtr: vyziva
-Meta: Ty hubneš, partner chce řízek a děti sušenky. Jak vařit jedno jídlo pro všechny, co s „jen ochutnej" a proč podpora doma podle studií pomáhá udržet výsledky.
+Meta: Ty hubneš, partner chce řízek a děti sušenky. Jak vařit jedno jídlo pro všechny, co s „jen ochutnej" a co říkají studie o podpoře od lidí kolem tebe.
 Popis: Jak hubnout, když zbytek rodiny nehubne: jedno jídlo pro všechny, sladkosti doma, rozhovor s partnerem a co říkají studie o podpoře.
 CTA: koučink
 Související:
@@ -18,32 +18,32 @@ Zdroje:
 - Gorin AA a kol. Int J Obes 2008;32(11):1678-84. PMID 18762804, DOI 10.1038/ijo.2008.150
 - Gorin AA a kol. Obesity 2018;26(3):499-504. PMID 29388385, DOI 10.1002/oby.22098
 
-„Já bych to zvládla, kdybych bydlela sama." Tuhle větu slyším od klientek i klientů hodně často. Partner chce k večeři řízek, děti mají v šuplíku sušenky a v sobotu se u babičky peče. Ty hubneš a všichni ostatní ne. Dobrá zpráva: dá se to zvládnout bez dvou různých kuchyní a bez hádek u stolu.
+„Já bych to zvládla, kdybych bydlela sama." Tuhle větu slyším od klientek i klientů hodně často. Partner chce k večeři řízek, děti mají v šuplíku sušenky a v sobotu se u babičky peče. Ty hubneš a všichni ostatní ne. Dá se to zvládnout bez dvou kuchyní a bez hádek u stolu.
 
-## Podpora doma má v datech váhu
+## Lidi kolem tebe hrají roli
 
-Americká studie z roku 1999 (Wing a Jeffery, J Consult Clin Psychol, PMID 10028217) rozdělila 166 lidí na ty, kteří přišli do hubnoucího programu sami, a ty, kteří přišli se třemi přáteli nebo členy rodiny. Polovina navíc dostala trénink podpory. Rozdíl byl velký. Ze samotných bez podpory program dokončilo 76 % a výsledek mezi 4. a 10. měsícem plně udrželo 24 %. Ve skupině s přáteli a podporou dokončilo 95 % a udrželo 66 %.
+Americká studie z roku 1999 (Wing a Jeffery, J Consult Clin Psychol, PMID 10028217) rozdělila 166 lidí na ty, kteří přišli do hubnoucího programu sami, a ty, kteří přišli se třemi přáteli nebo členy rodiny. Část z nich navíc náhodně dostala trénink podpory. Mezi krajními skupinami byl velký rozdíl a je v něm obojí: hubnutí s přáteli i trénink podpory. Z těch, kdo přišli sami a podporu nedostali, program dokončilo 76 % a celý úbytek si mezi 4. a 10. měsícem udrželo 24 %. Ve skupině s přáteli a podporou dokončilo 95 % a udrželo 66 %.
 
-Parťáka k hubnutí mít nemusíš. Stojí ale za to s lidmi doma mluvit a získat aspoň jednoho spojence.
+Pozor, tihle lidé hubli spolu. Parťáka k hubnutí mít nemusíš. Pro tebe z toho plyne hlavně to, že se vyplatí s lidmi doma mluvit a mít aspoň jednoho spojence.
 
 ## Tvoje hubnutí se doma přenáší
 
-Tohle mě baví nejvíc. Ve velké studii Look AHEAD sledovali i manžele a manželky účastníků, kteří sami žádnou léčbu nedostali (Gorin a kol., Int J Obes 2008, PMID 18762804). Partneři lidí v intenzivním programu zhubli za rok v průměru 2,2 kg, partneři kontrolní skupiny 0,2 kg. Víc jim klesl hlášený příjem energie. Úbytek jejich váhy souvisel s úbytkem účastníka a s úbytkem tučných potravin v domácnosti.
+Tohle mě baví nejvíc. Ve velké studii Look AHEAD (dospělí s nadváhou a diabetem 2. typu) sledovali i manžele a manželky účastníků, kteří sami žádnou léčbu nedostali (Gorin a kol., Int J Obes 2008, PMID 18762804). Partneři lidí v intenzivním programu zhubli za rok v průměru 2,2 kg, partneři kontrolní skupiny 0,2 kg. Hlášený příjem energie jim klesl víc než partnerům z kontrolní skupiny. Kolik zhubli, souviselo s tím, kolik zhubl jejich manžel nebo manželka v programu, a s tím, o kolik ubylo tučných potravin doma.
 
-Novější pokus (Gorin a kol., Obesity 2018, PMID 29388385) našel podobný efekt u 130 párů. Neléčení partneři zhubli za půl roku zhruba 2 kg a skoro třetina z nich aspoň 3 % hmotnosti. Váha partnerů se v čase hýbala spolu.
+Novější pokus (Gorin a kol., Obesity 2018, PMID 29388385) našel podobný efekt u 130 párů. Neléčení partneři zhubli za půl roku zhruba 2 kg a skoro třetina z nich aspoň 3 % hmotnosti. Efekt se ukázal bez ohledu na to, jakým programem partner hubl. Váha partnerů se v čase hýbala spolu.
 
 Takže ty změny, které děláš pro sebe, se doma často přelijí i na ostatní. Bez přemlouvání.
 
 ## Jedno jídlo, různé porce
 
-Vařit dvě večeře je cesta, která do měsíce skončí. Lepší je vařit jedno jídlo, které si každý poskládá podle sebe. Tak to ostatně učím i ve [flexibilním stravování](https://martinbarna.cz/clanky/flexibilni-stravovani.html).
+Vidím to u klientů často: kdo vaří dvě večeře, většinou to do měsíce vzdá. Lepší je vařit jedno jídlo, které si každý poskládá podle sebe. Tak to ostatně učím i ve [flexibilním stravování](https://martinbarna.cz/clanky/flexibilni-stravovani.html).
 
 Jak to vypadá v praxi:
 
 - **Bílkovina, příloha a zelenina zvlášť.** Pečené kuře, brambory, zelenina. Ty si dáš víc masa a zeleniny a méně brambor, partner si naloží, jak je zvyklý.
 - **Omáčka a tuk až na talíř.** Smetanu, máslo nebo sýr si přidá každý sám. Ty si dáš lžíci, ostatní kolik chtějí.
-- **Rodinné klasiky v lehčí verzi.** Řízek z kuřecích prsou upečený v troubě, guláš s víc masa a méně tuku. Většině rodin to chutná stejně a ty nemusíš vařit zvlášť.
-- **Na víkendový oběd u babičky se připrav.** Lehčí snídaně, menší porce přílohy a jeden kousek koláče, který si užiješ bez výčitek. Jeden oběd tě nerozhodí, rozhodí tě až víkendový vzorec, o kterém píšu [tady](https://martinbarna.cz/clanky/vikendove-prejidani.html).
+- **Rodinné klasiky v lehčí verzi.** Řízek z kuřecích prsou upečený v troubě, guláš s větším podílem masa a méně tuku. U klientů to doma většinou projde bez protestů a ty nevaříš zvlášť.
+- **Na víkendový oběd u babičky se připrav.** Lehčí snídaně, menší porce přílohy a jeden kousek koláče, který si užiješ bez výčitek. Jeden oběd s tebou nic neudělá. Problém začíná, když se z víkendu stane vzorec, víc o tom [tady](https://martinbarna.cz/clanky/vikendove-prejidani.html).
 
 ## Sladkosti doma
 
@@ -57,15 +57,15 @@ Jak nastavit jídlo dětem rozumně a bez diet, mám rozepsané v článku o [v�
 
 ## Rozhovor s partnerem
 
-Z praxe vím, že nejvíc pomůže jeden otevřený rozhovor, ne sto narážek. Pár vět, které fungují:
+Z praxe vím, že jeden otevřený rozhovor udělá víc než sto narážek. Pár vět, které klientům doma pomohly:
 
 - „Nechci, abys kvůli mně jedl jinak. Jen mi nenabízej, když řeknu ne."
 - „Pomůže mi, když budeme sladké držet ve skříňce."
 - „Můžeme jít v neděli místo do cukrárny na procházku a pak na kafe?"
 
-Když partner říká „jen kousek, nic se nestane", většinou to nemyslí zle. Neví, co pro tebe znamená. Řekni mu to konkrétně a zopakuj to klidně třikrát.
+Když partner říká „jen kousek, nic se nestane", většinou to nemyslí zle. Neví, co to pro tebe znamená. Řekni mu to konkrétně a zopakuj to klidně třikrát.
 
-A pokud doma podporu nemáš a nebude, hledej ji jinde. Kamarádka, která taky hubne, kolega na obědě, komunita lidí se stejným cílem. V [koučinku](https://martinbarna.cz/koucing) ten rozhovor s klienty běžně řešíme a nastavujeme jídlo tak, aby fungovalo pro celou domácnost, ne jen pro jednoho.
+A pokud doma podporu nemáš a nebude, hledej ji jinde. Kamarádka, která taky hubne, kolega na obědě, komunita lidí se stejným cílem. V [koučinku](https://martinbarna.cz/koucing) ten rozhovor s klienty běžně řešíme a nastavujeme jídlo tak, aby fungovalo pro celou domácnost.
 
 ## Časté otázky
 
@@ -73,7 +73,7 @@ A pokud doma podporu nemáš a nebude, hledej ji jinde. Kamarádka, která taky 
 Nemusíš. Vař normální jídla, jen je rozděl na složky, ať si každý naloží podle sebe. Ty si dáš víc bílkovin a zeleniny, ostatní jedí jako obvykle.
 
 ### Co když mě partner sabotuje?
-Často to není zlý úmysl, spíš obava ze změny nebo pocit, že teď bude jíst „dietně" taky. Řekni mu konkrétně, co ti pomáhá a co ne. Když to nepomáhá opakovaně, stojí za to se podívat, co za tím je, klidně s odborníkem na vztahy.
+U klientů za tím většinou bývá obava ze změny nebo pocit, že teď bude jíst „dietně" taky. Řekni mu konkrétně, co ti pomáhá a co ne. Když to nepomáhá opakovaně, stojí za to se podívat, co za tím je, klidně s odborníkem na vztahy.
 
 ### Mám děti zapojit do hubnutí?
-Do hubnutí ne, do zdravějšího stylu klidně. Společné vaření, víc pohybu venku, ovoce na stole. Váhu dětí a jejich jídelníček řeš s pediatrem, ne podle svého plánu.
+Do hubnutí ne, do zdravějšího stylu klidně. Společné vaření, víc pohybu venku, ovoce na stole. Váhu dětí a jejich jídelníček řeš s pediatrem.

@@ -1,4 +1,4 @@
-# Brambory a hubnutí: proč je nemusíš vyškrtnout, spíš naopak
+# Brambory a hubnutí: proč patří k nejsytějším přílohám
 
 Klíčové slovo: brambory a hubnutí
 Navržená URL: martinbarna.cz/clanky/brambory-a-hubnuti.html
@@ -24,39 +24,39 @@ Zdroje:
 
 Australští vědci v roce 1995 dali lidem 38 běžných potravin, vždy porci se stejnými 240 kcal, a dvě hodiny měřili, jak moc je zasytí (Holt a kol., Eur J Clin Nutr, PMID 7498104). Pak jim nabídli jídlo a sledovali, kolik snědí.
 
-Vítěz s velkým náskokem: vařené brambory. Sytily víc než trojnásobně oproti bílému chlebu a sedmkrát víc než croissant, který skončil poslední. Potraviny, které sytily víc, měly víc vody, vlákniny a bílkovin. Ty s víc tukem sytily méně.
+Vítěz: vařené brambory. Sytily víc než třikrát lépe než bílý chléb a zhruba sedmkrát lépe než croissant, který skončil poslední. Potraviny, které sytily víc, měly víc vody, vlákniny a bílkovin. Ty s víc tukem sytily méně.
 
-Důvod je jednoduchý. 100 g vařených brambor má kolem 80 kcal. Za stejných 240 kcal tak sníš celý talíř brambor, nebo pár soust croissantu. Žaludek pozná objem, ne kalorie.
+Důvod je jednoduchý. 100 g vařených brambor má kolem 80 kcal. Za stejných 240 kcal tak sníš celý talíř brambor, nebo zhruba jeden croissant. Na sytost má velký vliv objem a voda v jídle a brambory jsou z velké části voda.
 
 ## Co ukázaly studie s bramborami při dietě
 
-Studie z Kalifornie (Randolph a kol., J Am Coll Nutr 2014, PMID 25302575) rozdělila 90 lidí s nadváhou do tří skupin. Dvě skupiny měly ubrat 500 kcal denně, třetí nic neměnila. **Všechny tři měly jíst brambory pět až sedmkrát týdně.** Za 12 týdnů zhubly všechny skupiny mírně a rozdíl mezi nimi nebyl. Autoři to shrnují střízlivě: hubnutí šlo s příjmem energie a brambory přibírání nezpůsobily.
+Studie z Kalifornie (Randolph a kol., J Am Coll Nutr 2014, PMID 25302575) rozdělila 90 lidí s nadváhou do tří skupin. Dvě skupiny měly ubrat 500 kcal denně a lišily se glykemickým indexem jídelníčku, třetí nic neměnila. **Všechny tři měly jíst pět až sedm porcí brambor týdně.** Za 12 týdnů zhubly všechny skupiny mírně a rozdíl mezi nimi nebyl. Mezi skupinami s nízkým a vysokým glykemickým indexem rozdíl nebyl, předepsaný glykemický index se ale lidem v běžném životě dařilo dodržet jen těžko. Autoři to shrnují střízlivě: hubnutí šlo s příjmem energie a brambory přibírání nezpůsobily.
 
-Novější kontrolovaný pokus (Rebello a kol., J Med Food 2022, PMID 36367708) dával 36 lidem s inzulinovou rezistencí osm týdnů jídlo s nízkou energetickou hustotou, buď s bramborami, nebo s luštěninami. Obě skupiny zhubly, bramborová o 5,6 % hmotnosti, luštěninová o 4,1 %, rozdíl nebyl průkazný. Šlo o malou studii a lidé dostávali jídlo připravené. Na zázrak brambor to není, jako doklad, že brambory a hubnutí jdou dohromady, to stačí.
+Novější kontrolovaný pokus (Rebello a kol., J Med Food 2022, PMID 36367708) dával 36 lidem s inzulinovou rezistencí osm týdnů jídlo s nízkou energetickou hustotou, buď s bramborami, nebo s luštěninami. Obě skupiny zhubly, bramborová o 5,6 % hmotnosti, luštěninová o 4,1 %, rozdíl nebyl průkazný. Šlo o malou studii a lidé dostávali jídlo připravené. Obě studie beru jen jako doplněk k Holtovi. Na zázrak to není. Na důkaz, že brambory hubnutí nekazí, to stačí.
 
 ## Výkrm z nich dělá úprava
 
-Problém s bramborami vzniká v kuchyni, ne na poli. Orientačně na 200 g porce:
+Orientačně na 200 g porce:
 
 - **Vařené brambory:** kolem 160 kcal.
 - **Bramborová kaše s máslem a mlékem:** podle množství tuku klidně dvakrát tolik.
-- **Hranolky:** kolem 600 kcal, protože nasají olej.
-- **Bramborový salát s majonézou:** podle receptu 400 až 500 kcal.
-- **Chipsy:** 200 g je přes 1 000 kcal a nezasytí skoro vůbec.
+- **Smažené hranolky:** kolem 600 kcal, protože nasají olej.
+- **Bramborový salát s majonézou:** podle receptu zhruba 300 až 500 kcal.
+- **Chipsy:** 200 g je přes 1 000 kcal. Ve stejné studii sytily tučnější potraviny méně.
 
 Vidíš to? Sama brambora za nic nemůže. Kalorie přidává tuk, kterým ji poliješ, upečeš nebo smícháš.
 
 ## Jak brambory jíst při hubnutí
 
-- **Vařené, pečené ve slupce nebo na páře.** Pečené v troubě s lžičkou oleje a kořením chutnají jako hranolky a mají zlomek kalorií.
+- **Vařené, pečené ve slupce nebo na páře.** Pečené v troubě s lžičkou oleje a kořením připomínají hranolky a mají zhruba třetinu kalorií.
 - **Kaši dělej s mlékem nebo s trochou vody z vaření** a máslo si přidej až na talíř, ať víš kolik.
-- **Brambory místo pečiva k večeři.** Nasytí víc za míň kalorií.
+- **Brambory místo pečiva k večeři.** Nasytí víc za méně kalorií.
 - **Studené brambory do salátu** s jogurtovým dresinkem místo majonézy.
 - **Klidně denně.** Pokud se vejdou do tvých kalorií, není důvod je škrtat.
 
 A když tě straší glykemický index, podívej se, [proč u celého jídla tolik neznamená](https://martinbarna.cz/clanky/glykemicky-index-mytus.html).
 
-Tohle je přesně flexibilní stravování, které učím: žádné zakázané potraviny, jen chytré porce a úpravy. Celý systém máš ve [videokurzu](https://martinbarna.cz/videokurz).
+Tohle je přesně flexibilní stravování, které učím: jíš, co máš rád, a hlídáš porce a úpravu. Celý systém máš ve [videokurzu](https://martinbarna.cz/videokurz).
 
 ## Časté otázky
 
@@ -64,7 +64,7 @@ Tohle je přesně flexibilní stravování, které učím: žádné zakázané p
 Na stejné kalorie zasytí víc, protože obsahují víc vody. Vařené brambory mají kolem 80 kcal na 100 g, vařená rýže kolem 130 a těstoviny kolem 150. Rýže ani těstoviny ale nejsou špatně. Rozhoduje porce a co k nim přidáš.
 
 ### Můžu jíst brambory večer?
-Ano. Čas jídla na hubnutí vliv skoro nemá, rozhoduje celkový příjem za den. Brambory k večeři navíc dobře zasytí a pomůžou ti vydržet do rána bez mlsání.
+Ano. Čas jídla na hubnutí vliv skoro nemá, rozhoduje celkový příjem za den. Brambory k večeři navíc dobře zasytí a můžou ti pomoct vydržet do rána bez mlsání.
 
 ### Nevykrmí mě brambory kvůli škrobu?
-Škrob je sacharid se 4 kcal na gram jako každý jiný. Brambory mají škrobu kolem 15 až 17 g na 100 g, protože zbytek je hlavně voda. Přibírá se z přebytku energie, ne z jedné konkrétní přílohy.
+Škrob má 4 kcal na gram, stejně jako ostatní stravitelné sacharidy. Brambory mají škrobu kolem 12 až 16 g na 100 g, protože zbytek je hlavně voda. Přibírá se z přebytku energie a brambory se do něj vejdou stejně jako rýže.

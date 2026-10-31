@@ -1,19 +1,19 @@
 Subject: The minimum when the hotel has no gym
-Preheader: Log the meal when you eat it. From 3,000 steps, aim at 6,000. Not 12,000.
+Preheader: Log the meal when you eat it. Walking 3,000 steps? Aim for 6,000, not 12,000.
 
 Body:
 
 Hi {{first_name}},
 
-No gym this week. The hotel one is closed, or you already know you won't use it. Fat loss doesn't close with it. You lose a lever, so the food has to be more accurate, and you pay for the missing training somewhere else.
+No gym this week. The hotel one is closed, or you already know you won't use it. Fat loss can keep going without it. You lose a lever, so the food has to be more accurate, and you pay for the missing training somewhere else.
 
 Log the meal when you eat it, not at midnight from memory. The misses are the oil, the bites, the drink you didn't write down. Looking back is where the day goes soft.
 
-Protein is the weaker stand-in for the gym, not a replacement. A meta-analysis of 24 studies and 1,063 people compared diets with the same calories and the same fat, and more protein versus less (Wycherley, 2012). Higher protein meant 0.79 kg more weight loss and 0.87 kg more fat loss. It softened the loss of fat-free mass by 0.43 kg, and it softened the drop in resting energy use by 595 kJ a day, about 142 kcal. The authors call that modest. So do I. Think of it as insurance, then put a protein food in the meals you can actually get.
+Protein can cover a little of what the gym does. A meta-analysis of 24 studies and 1,063 people compared low-fat diets with the same calories but different amounts of protein (Wycherley, 2012). Higher protein meant 0.79 kg more weight loss and 0.87 kg more fat loss. It softened the loss of fat-free mass by 0.43 kg, and it softened the drop in resting energy use by 595 kJ a day, about 142 kcal. The authors call that modest. So do I. Think of it as insurance, then put a protein food in the meals you can actually get.
 
-Steps: move from where you're. If you walk 3,000 now, a goal of 6,000 will do more than a fantasy 12,000. Stairs and the walk between meetings count. You don't need a sports session to change that line.
+Steps: start from where you are. If you walk 3,000 now, 6,000 is a better first target than a fantasy 12,000. The 8,000 from the kit can come after. Stairs and the walk between meetings count. You don't need a sports session to change that line.
 
-One warning. A study that showed a large drop from diet alone used about 600 kcal a day for 8 weeks. That's an extreme diet, far from this minimum. Don't copy it in a hotel.
+One warning. The study behind the big diet-only results ran people on a very low energy diet. Leave that one in the paper.
 
 When the week is normal again, add the lifting back. Until then, food and steps still move the result.
 

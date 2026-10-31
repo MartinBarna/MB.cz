@@ -1,19 +1,19 @@
-Subject: 21% with lifting. 40% with lifting plus walking.
-Preheader: 11 studies, 370,256 people. I write the hour into your real week.
+Subject: Lifting: 21% lower risk of death. Add cardio: 40%.
+Preheader: A 2019 review, two numbers. I write the hour into your real week.
 
 Body:
 
 Hi {{first_name}},
 
-A 2019 review pooled 11 studies and 370,256 people, followed for a mean of just under nine years (Saeidifard and colleagues).
+A 2019 review pooled studies on strength training and the risk of death (Saeidifard and colleagues).
 
-Strength training on its own was linked to a 21% lower risk of death from all causes. Strength training plus aerobic activity was linked to a 40% lower risk. About double. The papers say aerobic activity, not a step target. The same article's practical line is that weights and walking add up, so walking is the aerobic part I'd keep.
+Strength training on its own was linked to a 21% lower risk of death from all causes. Strength training plus aerobic activity was linked to a 40% lower risk. The papers measured aerobic activity in general. Walking is the easiest kind to fit into a busy week, so that's what I'd keep.
 
-This is observational. It shows a link. It doesn't prove the gym caused the difference. Another review doesn't agree on the cancer numbers, so I'd not treat 21 or 40 as an exact promise. The direction is the part I use. Lifting and walking add up. The lifting doesn't have to be five days in the gym.
+This is observational. It shows a link. It doesn't prove the gym caused the difference. Another review came out with different numbers, so I wouldn't treat 21 or 40 as an exact promise. I go by the direction: weights and walking add up. And the lifting doesn't have to be five days in the gym.
 
-These papers count deaths, not centimeters off a waist. They are still why a crowded week doesn't need a new sport. About one hour of lifting, plus the steps you already collect. An earlier email covered how to split that hour when the week breaks. This one is about keeping both: the hour and the walking.
+These papers count deaths. Your waist is a separate question. Still, they're the reason a crowded week doesn't need a new sport. About one hour of lifting, plus the steps you already collect. An earlier email covered how to split that hour when the week breaks. This one is about keeping both: the hour and the walking.
 
-If you want that hour written onto the days you actually have, that's the coaching. I set the training for your real schedule, in writing. Once a week you send a 3 minute report from your phone, training included. I answer in writing with the next week.
+If you want that hour written onto the days you actually have, that's the coaching. I set the training for your real schedule, in writing. Once a week you send a 3-minute report from your phone, training included. I answer in writing with the next week.
 
 No calls and no video calls.
 

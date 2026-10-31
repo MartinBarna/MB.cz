@@ -2,8 +2,9 @@
   "_napoveda": "Fronta blogu. Kazda polozka: date (YYYY-MM-DD, den vydani) + draft (jmeno .md souboru v teto slozce). Slug a titulek se berou Z DRAFTU, sem se nepisou. Postup: clanky-fronta/README.md",
   "clanky": [
     {
-      "date": "2026-11-05",
-      "draft": "jak-zhubnout-po-porodu.md"
+      "date": "2027-02-11",
+      "draft": "jak-zhubnout-po-porodu.md",
+      "poznamka": "posunuto 31. 10. 2026: druhe cteni nasel rizika (kojeni), ceka na overenou opravu"
     },
     {
       "date": "2026-11-12",
@@ -61,9 +62,9 @@
       "poznamka": "davka G 19. 10. 2026, ceka na Martinovo schvaleni (merge PR)"
     },
     {
-      "date": "2027-02-11",
+      "date": "2026-11-05",
       "draft": "orechy-a-hubnuti.md",
-      "poznamka": "davka G 19. 10. 2026, ceka na Martinovo schvaleni (merge PR)"
+      "poznamka": "posunuto 31. 10. 2026 na misto po-porodu"
     }
   ]
 }
