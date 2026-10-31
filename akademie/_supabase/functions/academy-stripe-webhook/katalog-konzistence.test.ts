@@ -546,6 +546,9 @@ check('RH6 ostatni produkty berou sazbu partnera beze zmeny',
   sazbaProvize({ product: 'academy', partnerRate: 0.30, configRate: 0.10 }) === 0.30
   && sazbaProvize({ product: 'videokurz', partnerRate: 0.20, configRate: 0.10 }) === 0.20
   && sazbaProvize({ product: 'appka', partnerRate: 0.30, configRate: null }) === 0.30, '');
+check('RH6b konzultace bere 10 % z app_config, ne sazbu partnera (Martin 31. 10. 2026)',
+  sazbaProvize({ product: 'konzultace', partnerRate: 0.40, configRate: 0.10 }) === 0.10
+  && sazbaProvize({ product: 'konzultace', partnerRate: 0.30, configRate: null }) === 0.10, '');
 check('RH7 chybejici sazba partnera u jinych produktu je 0, ne 0.10',
   sazbaProvize({ product: 'academy', partnerRate: null, configRate: 0.10 }) === 0, '');
 check('RH8 zaporna sazba se nikdy nevrati',
