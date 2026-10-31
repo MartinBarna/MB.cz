@@ -341,20 +341,26 @@ console.log('\n5b) Stranky videokurzu nacitaji oba skripty');
 console.log('\n6) Zkratky /go/* miri, kam maji');
 {
   const ocekavane = [
-    ['go/lucie/index.html', 'https://tvujcoach.cz/?ref=LUCIE10&utm_source=lucik.en&utm_medium=affiliate'],
-    ['go/kristina/index.html', 'https://tvujcoach.cz/?ref=KRISTINA10&utm_source=kristinadittrich&utm_medium=affiliate'],
-    ['go/jirka/index.html', 'https://tvujcoach.cz/?ref=JIRKA10&utm_source=jirka-langmajer&utm_medium=affiliate'],
-    ['go/marek/index.html', 'https://tvujcoach.cz/?ref=MAREK10&utm_source=marek-barna&utm_medium=affiliate'],
-    ['go/lucie-academy/index.html', 'https://martinbarna.cz/akademie/?ref=LUCIE10&utm_source=lucik.en&utm_medium=affiliate'],
-    ['go/kristina-academy/index.html', 'https://martinbarna.cz/akademie/?ref=KRISTINA10&utm_source=kristinadittrich&utm_medium=affiliate'],
-    ['go/jirka-academy/index.html', 'https://martinbarna.cz/akademie/?ref=JIRKA10&utm_source=jirka-langmajer&utm_medium=affiliate'],
-    ['go/marek-academy/index.html', 'https://martinbarna.cz/akademie/?ref=MAREK10&utm_source=marek-barna&utm_medium=affiliate'],
+    ['go/lucie/index.html', 'https://tvujcoach.cz/?ref=LUCIE10'],
+    ['go/kristina/index.html', 'https://tvujcoach.cz/?ref=KRISTINA10'],
+    ['go/jirka/index.html', 'https://tvujcoach.cz/?ref=JIRKA10'],
+    ['go/marek/index.html', 'https://tvujcoach.cz/?ref=MAREK10'],
+    ['go/lucie-academy/index.html', 'https://martinbarna.cz/akademie/?ref=LUCIE10'],
+    ['go/kristina-academy/index.html', 'https://martinbarna.cz/akademie/?ref=KRISTINA10'],
+    ['go/jirka-academy/index.html', 'https://martinbarna.cz/akademie/?ref=JIRKA10'],
+    ['go/marek-academy/index.html', 'https://martinbarna.cz/akademie/?ref=MAREK10'],
   ];
   for (const [soubor, cil] of ocekavane) {
     const s = fs.readFileSync(soubor, 'utf8');
     // location.replace, <noscript> refresh i klikaci zaloha musi mirit na TOTEZ.
-    const holy = s.split(cil).length - 1;
-    const escapovany = s.split(cil.replace(/&/g, '&amp;')).length - 1;
+    // Hranice za cílem (uvozovka), ať kratší URL neprojde jako prefix delší adresy s utm.
+    const pocet = (hay, needle) => {
+      const re = new RegExp(needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?=["\'\\s<]|$)', 'g');
+      return (hay.match(re) || []).length;
+    };
+    const escapovanyCil = cil.replace(/&/g, '&amp;');
+    const holy = pocet(s, cil);
+    const escapovany = escapovanyCil === cil ? 0 : pocet(s, escapovanyCil);
     overit(`${soubor} miri 3x na spravny cil`, holy + escapovany === 3,
       `holy ${holy}, s &amp; ${escapovany}`);
     overit(`${soubor} ma noindex`, s.indexOf('<meta name="robots" content="noindex, nofollow">') > -1);

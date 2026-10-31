@@ -1,5 +1,5 @@
 Subject: Decide the default before you're hungry
-Preheader: A plan you never touch goes stale. A plan you edit every week keeps working.
+Preheader: Meals decided in the morning beat whatever's closest at 6 pm.
 
 Body:
 
@@ -9,13 +9,13 @@ On a busy day, food decisions happen at the worst moment. You're hungry, you're 
 
 Planning moves the decision earlier. When the meals are decided ahead of time, you know what the day holds, and the random snack you grab in a rush is easier to skip. Same on a trip: decide the default before you're hungry.
 
-The deficit doesn't need to be dramatic. 300 to 500 kcal below what your day burns is a deficit you can actually keep. A steady rhythm helps, for example 3 main meals and 1 or 2 snacks. The number of meals won't speed up your metabolism. It only has to fit your calendar.
+The deficit doesn't need to be dramatic. 300 to 500 kcal below what your day burns is a deficit you can actually keep. A steady rhythm helps, for example 3 main meals and 1 or 2 snacks. Meal frequency doesn't change your metabolism, so pick the number that fits your calendar.
 
-The part people skip is the edit. A plan you never touch goes stale. A plan you look at again each week keeps working.
+The part people skip is the edit. A plan you never touch goes stale. One you revisit each week holds up much better.
 
-That weekly edit is the core of written coaching. Once a week you send me a 3 minute report from your phone. I answer in writing with the plan for next week, built on what the last week actually did. The minimum version for a messy week is agreed before that week arrives, so you're not making it up in the middle of it.
+That weekly edit is the core of written coaching. Once a week you send me a 3-minute report from your phone. I answer in writing with the plan for next week, based on how last week actually went. For a messy week, we agree on a minimum plan in advance, so you're not improvising halfway through it.
 
-No calls and no video calls.
+It all happens in writing, on your schedule.
 
 {{price_block}}
 

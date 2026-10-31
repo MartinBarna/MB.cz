@@ -61,6 +61,28 @@
   // ⛔ Klíče `ba_ref`/`ba_ref_t` definuje JEN tenhle soubor; druhá definice jinde
   // by se dřív nebo později rozešla (jiná expirace, jiný tvar kódu).
   window.MBRef = { get: getRef, jeClensky: jeClensky };
+  // Kosik cte slevu a kod z uz dekorovaneho odkazu. Klik na data-kosik obsluhuje
+  // kosik-checkout.js, ale jen kdyz je flag zapnuty (window.MBKosik.prevezme).
+  window.MBReferral = {
+    info: function (href) {
+      var info = buyInfo(href);
+      if (!info) return null;
+      var ref = getRef();
+      var puvodni = "";
+      try {
+        puvodni = new URL(href, location.href).searchParams.get("client_reference_id") || "";
+      } catch (e) { puvodni = ""; }
+      // cref sklada kod partnera s atribuci, ktera na odkazu uz je (analytics.js).
+      // Koučink ma bezKuponu, promo tedy zustane prazdne, kod partnera v cref ne.
+      return {
+        prod: info.prod,
+        bezKuponu: !!info.bezKuponu,
+        ref: ref || "",
+        promo: (!ref || info.bezKuponu) ? "" : slevovyKod(ref),
+        cref: ref ? slozClientRef(ref, puvodni) : puvodni,
+      };
+    },
+  };
 
   // ---- 2) je to buy odkaz produktu v referralu? ----
   // ⛔ Od 29. 7. 2026 jde Academy přes STRIPE, ne SimpleShop. Bez řádku pro Stripe
@@ -301,6 +323,7 @@
     var t = ev.target;
     var a = (t && t.closest) ? t.closest('a[href]') : null;
     if (!a) return;
+    if (a.hasAttribute('data-kosik') && window.MBKosik && window.MBKosik.prevezme) return;
     var info = buyInfo(a.getAttribute('href') || a.href || '');
     if (!info) return;
     var ref = getRef();

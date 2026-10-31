@@ -206,7 +206,7 @@ Deno.test("mail 1 s čísly i bez nich, všech 5 kroků bez {{ }} a bez dlouhé 
   assert(s1.text.includes("2,150 kcal a day") && s1.text.includes("160 g of protein a day"));
   const s1b = renderEmail(1, { firstName: "Anna", calc: null, unsubscribeUrl: url });
   assertFalse(/\d kcal a day/.test(s1b.text));
-  assert(s1b.text.includes("#calculator"));
+  assert(s1b.text.includes(LINKS.calculator));
   // cena v mailu 5 není (price_block prázdný) a nezůstala po něm trojitá mezera
   const s5 = renderEmail(5, { firstName: "Anna", calc: null, unsubscribeUrl: url });
   assertFalse(s5.text.includes("\n\n\n"));
@@ -264,8 +264,9 @@ Deno.test("týdenní šablony 6..41: bez {{, s odhlášením, odkaz na článek,
     const slugs = [...src.body.matchAll(/\{\{link_article:([^}]+)\}\}/g)].map((x) => x[1]);
     assert(slugs.length >= 1, `krok ${step} (soubor ${nn}) nemá odkaz na článek`);
     for (const slug of slugs) {
-      const link = `https://martinbarna.cz/en/blog/${slug}.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-${nn}`;
+      const link = `https://martinbarna.cz/en/blog/${slug}.html`;
       assert(m.text.includes(link), `krok ${step}: ${link}`);
+      assertFalse(m.text.includes("utm_"), `krok ${step}: v mailu zustal kampanovy parametr`);
     }
     if (src.body.includes("{{price_block}}")) {
       priced++;
@@ -278,9 +279,9 @@ Deno.test("týdenní šablony 6..41: bez {{, s odhlášením, odkaz na článek,
   assert(priced > 0, "žádná šablona neměla {{price_block}}");
   assertEquals(fill("A{{price_block}}B", { price_block: "" }), "AB");
   const m6 = renderEmail(6, { firstName: "Anna", calc: null, unsubscribeUrl: url });
-  assert(m6.text.includes("https://martinbarna.cz/en/blog/what-to-eat-to-lose-fat.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-01"));
+  assert(m6.text.includes("https://martinbarna.cz/en/blog/what-to-eat-to-lose-fat.html"));
   const m41 = renderEmail(41, { firstName: "Anna", calc: null, unsubscribeUrl: url });
-  assert(m41.text.includes("https://martinbarna.cz/en/blog/fruit-and-weight-loss.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-36"));
+  assert(m41.text.includes("https://martinbarna.cz/en/blog/fruit-and-weight-loss.html"));
 });
 
 Deno.test("fill: neznámý placeholder s dvojtečkou = výjimka, nedokončený {{ taky", () => {

@@ -53,6 +53,8 @@ export const PATH_CLASS = {
   // odhlášení, prodejní blok ne.
   "koucink-konec.confirm": "client_operational",
   "koucink-konec.sales": "marketing",
+  // Pripominka nedokoncene objednavky. Souhlas je propagacni, hard unsub ji zastavi.
+  "kosik-pripominka": "marketing",
 } as const;
 
 export type GuardPath = keyof typeof PATH_CLASS;

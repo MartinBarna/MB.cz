@@ -13,12 +13,12 @@ Whole fruit is mostly water and fiber. A big volume brings few calories. An appl
 
 Fruit gets away from you in two forms:
 
-- Juice and smoothies. Once the fruit is blended or pressed, much of what made it filling is gone. A few pieces you'd chew for a while go down in half a minute.
+- Juice and smoothies. Pressing strips out most of the fiber. Blending keeps it, but you skip the chewing, and that's a big part of what made the fruit filling. A few pieces you'd chew for a while go down in half a minute.
 - Dried fruit. The water is gone, so a small handful holds a lot of calories and sugar, and fills you less.
 
-So on a trip: the fruit bowl at reception, yes. The big airport smoothie is a drink with calories. Count it that way.
+At the hotel, take from the fruit bowl at reception. The big airport smoothie is a drink with calories, so count it like one.
 
-What I use: two or three portions of whole fruit a day, counted inside the day's calories like everything else. Fruit counts like any other food, and one banana won't wreck a diet.
+What I recommend to clients: two or three portions of whole fruit a day, counted inside the day's calories. One banana won't wreck a diet.
 
 The full article: {{link_article:fruit-and-weight-loss}}
 
@@ -29,4 +29,4 @@ You get this email because you asked for the Fat Loss Kit at martinbarna.cz/en/.
 Unsubscribe: {{unsubscribe_url}}
 {{postal_address}}
 
-Source: fruit-and-weight-loss.md (2 to 3 portions of whole fruit a day counted inside calories; water, fiber and volume; fructose worry is about liquid, concentrated sugar; juice, smoothies and dried fruit as the leaks; the half-minute line; one banana). The airport smoothie and the reception fruit bowl are my scenes for the article's juice and whole-fruit rule. Email 25 covered sugary soft drinks vs diet drinks and is not repeated. Email 34 covered eating speed and leaves the apple-vs-juice swap to this email.
+Source: fruit-and-weight-loss.md (2 to 3 portions of whole fruit a day counted inside calories; water, fiber and volume; fructose worry is about liquid, concentrated sugar; juice, smoothies and dried fruit as the leaks; the half-minute line; one banana). The juice vs smoothie split (pressing removes fiber, blending removes the chewing) corrects the earlier wording. The airport smoothie and the reception fruit bowl are my scenes for the article's juice and whole-fruit rule. Email 25 covered sugary soft drinks vs diet drinks and is not repeated. Email 34 covered eating speed and leaves the apple-vs-juice swap to this email.

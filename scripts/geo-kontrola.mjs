@@ -16,7 +16,8 @@
  *   [PERSON_KOPIE]       Martin Barna jako Person bez @id (kopie místo odkazu)
  *   [ORG_JINE_ID] [ORG_KOPIE]  totéž pro Organization (https://martinbarna.cz/#org)
  *   [KANON_MIMO_DOMOVA]  plná definice entity s @id „URL#něco" jinde než na stránce URL
- *                        (#martin, #org, #website patří jen do index.html, jinde jen odkaz)
+ *                        (#martin, #org, #website patří jen do index.html, jinde jen odkaz;
+ *                        u recenzí smí být navíc name a url, ale jen shodné s homepage)
  *   [KANON_CHYBI]        homepage nedefinuje #martin, #org nebo #website
  *   [ODKAZ_NEDEFINOVAN]  odkaz na @id „https://martinbarna.cz/…#…", který na své stránce není definovaný
  *   [CENA_MIMO_TEXT]     cena v JSON-LD, která není ve viditelném textu stránky
@@ -105,7 +106,22 @@ const ORG_TYPY = new Set(['Organization', 'ProfessionalService', 'LocalBusiness'
 const CLANEK_TYPY = new Set(['Article', 'BlogPosting', 'NewsArticle']);
 /** Mimo domovskou stránku smí uzel s @id nést jen tyhle klíče (doplnění, ne kopie údajů). */
 const POVOLENE_MIMO_DOMOVA = new Set(['@context', '@id', '@type', 'review', 'aggregateRating']);
-const jeDefinice = (u) => Object.keys(u).some((k) => !POVOLENE_MIMO_DOMOVA.has(k));
+/**
+ * Google Search Console (úryvky recenzí) vyžaduje u rodiče review/aggregateRating pole name.
+ * url je stejný identifikátor jako na homepage. Obojí smí stát jen na uzlu s recenzemi
+ * a hodnota se musí shodovat s definicí na domovské stránce (jinak KANON_MIMO_DOMOVA).
+ */
+const POVOLENE_U_RECENZI = new Set(['name', 'url']);
+
+function kliceMimoPovoleni(u) {
+  const maRecenze = u.review != null || u.aggregateRating != null;
+  return Object.keys(u).filter((k) => {
+    if (POVOLENE_MIMO_DOMOVA.has(k)) return false;
+    if (maRecenze && POVOLENE_U_RECENZI.has(k)) return false;
+    return true;
+  });
+}
+const jeDefinice = (u) => kliceMimoPovoleni(u).length > 0;
 /** Stránka, na které je entita s @id „URL#fragment" doma (= soubor té URL). */
 const domov = (id) => urlNaSoubor(id.split('#')[0]);
 const DNES = new Date().toISOString().slice(0, 10);
@@ -137,10 +153,16 @@ const indexovane = stranky.filter((s) => !s.noindex && !VYJIMKY.MIMO_SITEMAP[s.r
 
 // Kde je která entita s @id definovaná (id → množina stránek).
 const definice = new Map();
+/** name a url z definice na domovské stránce (id → {name, url}). */
+const kanonUdaje = new Map();
 for (const s of stranky) {
   for (const b of s.bloky) {
     kazdyUzel(b.data, (u) => {
-      if (typeof u['@id'] !== 'string' || !jeDefinice(u)) return;
+      if (typeof u['@id'] !== 'string') return;
+      if (domov(u['@id']) === s.rel && (u.name != null || u.url != null)) {
+        kanonUdaje.set(u['@id'], { name: u.name ?? null, url: u.url ?? null });
+      }
+      if (!jeDefinice(u)) return;
       if (!definice.has(u['@id'])) definice.set(u['@id'], new Set());
       definice.get(u['@id']).add(s.rel);
     });
@@ -176,8 +198,18 @@ for (const s of stranky) {
       const id = u['@id'];
       const fragment = typeof id === 'string' && id.startsWith(ORIGIN) && id.includes('#');
       if (fragment) odkazy.push(id);
-      if (fragment && jeDefinice(u) && domov(id) !== rel) {
-        chyba('KANON_MIMO_DOMOVA', rel, `${cesta}: ${id} s vlastními údaji (${Object.keys(u).filter((k) => !POVOLENE_MIMO_DOMOVA.has(k)).join(', ')}); definice patří jen do ${domov(id)}, jinde jen odkaz`);
+      if (fragment && domov(id) !== rel) {
+        const navic = kliceMimoPovoleni(u);
+        if (navic.length) {
+          chyba('KANON_MIMO_DOMOVA', rel, `${cesta}: ${id} s vlastními údaji (${navic.join(', ')}); definice patří jen do ${domov(id)}, jinde jen odkaz`);
+        }
+        const kanon = kanonUdaje.get(id);
+        if (typeof u.name === 'string' && u.name !== kanon?.name) {
+          chyba('KANON_MIMO_DOMOVA', rel, `${cesta}: name „${u.name}" se neshoduje s definicí na ${domov(id)}`);
+        }
+        if (typeof u.url === 'string' && u.url !== kanon?.url) {
+          chyba('KANON_MIMO_DOMOVA', rel, `${cesta}: url „${u.url}" se neshoduje s definicí na ${domov(id)}`);
+        }
       }
 
       if (t.includes('Person')) {

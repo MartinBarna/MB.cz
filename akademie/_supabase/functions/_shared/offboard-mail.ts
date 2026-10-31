@@ -54,8 +54,7 @@ function escd(s: string): string {
 
 /** Odkaz do pokladny appky s předvybraným ročním VIP a s kódem. */
 export function vipOdkaz(promoKod: string): string {
-  return "https://tvujcoach.cz/koupit?plan=vip-rok&promo=" + encodeURIComponent(promoKod) +
-    "&utm_source=mail&utm_medium=offboard&utm_campaign=koucink-konec";
+  return "https://tvujcoach.cz/koupit?plan=vip-rok&promo=" + encodeURIComponent(promoKod);
 }
 
 /**
@@ -122,7 +121,7 @@ export function buildOffboardInner(input: OffboardMailInput): string {
       ) + " Celý systém výživy a tréninku vysvětlený od základů. " +
         vt("Jako " + rd("můj klient", "moje klientka") + " na ni máš", "Jako klient koučinku na ni máš") +
         " <strong>slevu 20 % s kódem KLIENT20</strong> a ten ti platí dál.") +
-      btn2("https://martinbarna.cz/akademie/?utm_source=mail&utm_medium=offboard&utm_campaign=koucink-konec", "Mrknout na Academy")
+      btn2("https://martinbarna.cz/go/akademie-m/", "Mrknout na Academy")
     : "";
 
   const closing =

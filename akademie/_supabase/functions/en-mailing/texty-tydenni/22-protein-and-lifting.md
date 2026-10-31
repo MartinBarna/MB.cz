@@ -1,5 +1,5 @@
 Subject: Protein and lifting worked together
-Preheader: 0.6 kg of fat-free mass in the group that did both. I set both in writing.
+Preheader: In a 10-week study, only the group doing both significantly gained fat-free mass while losing weight.
 
 Body:
 
@@ -7,11 +7,11 @@ Hi {{first_name}},
 
 A Dutch study put 100 people, aged 55 to 80, on a calorie deficit for ten weeks. Four groups: more protein or not, weight training three times a week or not (Verreijen, 2017).
 
-In the main analysis, protein alone didn't change fat-free mass in a clear way. Training alone didn't either. The only group whose fat-free mass went up during the loss did both, by 0.6 kg (p = 0.011).
+In the main analysis, protein alone didn't change fat-free mass in a clear way. Training alone didn't either. The only group whose fat-free mass went up significantly during the loss did both, by 0.6 kg (p = 0.011).
 
-Read the small print before you quote 0.6 kg at anyone. The people were older than many readers of that paper. The result sat inside one group. It wasn't the headline effect of the whole study. The direction is what I take from it. The two levers work together. Each one on its own pulls less.
+Read the small print before you quote 0.6 kg at anyone. Everyone in the study was 55 to 80, older than many people reading this. The result sat inside one group. It wasn't the headline effect of the whole study. The direction is what I take from it. The two levers work together. Each one on its own pulls less.
 
-That's how the written start is built. After payment you fill in an intake. Within 48 hours you've calories, protein and a training plan together, not one of them and a promise about the other. The minimum version for a messy week is agreed before that week arrives. One short guide each week: the thing your last report actually needs.
+That's how the coaching plan is built. After payment you fill in an intake form. Within 48 hours you have your calories, protein and training plan, all at once. The minimum version for a messy week is agreed before that week arrives. Each week, one short guide based on your last check-in.
 
 No calls and no video calls. You get the plan and the numbers in writing.
 

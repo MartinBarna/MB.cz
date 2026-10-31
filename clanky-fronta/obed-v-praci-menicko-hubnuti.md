@@ -6,8 +6,8 @@ Kategorie: Hubnutí
 SEO title: Oběd v práci a hubnutí: meníčko, jídelna, krabička
 Emoji: 🍽️
 Filtr: vyziva
-Meta: Polední menu umí mít víc kalorií než celá večeře. Co říkají měření jídel z restaurací a jídelen a jak si v práci vybrat, aby hubnutí nestálo na obědě.
-Popis: Kolik kalorií má běžný oběd venku, proč jídelna vychází líp než restaurace a jak si vybrat z meníčka i nachystat krabičku.
+Meta: Jedno jídlo z restaurace mívá přes 600 kcal. Co ukázala měření jídel z restaurací a jídelen a jak si v práci vybrat, aby ti oběd hubnutí nebrzdil.
+Popis: Kolik kalorií má běžný oběd venku, co ukázala měření jídel z restaurací a jídelen a jak si vybrat z meníčka i nachystat krabičku.
 CTA: koučink
 Související:
 - [Co jíst při hubnutí](co-jist-pri-hubnuti.html)
@@ -18,7 +18,7 @@ Zdroje:
 - Rolls BJ, Morris EL, Roe LS. Am J Clin Nutr 2002;76(6):1207-13. PMID 12450884, DOI 10.1093/ajcn/76.6.1207
 - Bezerra IN, Curioni C, Sichieri R. Nutr Rev 2012;70(2):65-79. PMID 22300594, DOI 10.1111/j.1753-4887.2011.00459.x
 
-Snídaně doma pod kontrolou, večeře taky. A uprostřed dne polévka a hlavní jídlo z meníčka, protože v práci se jinak nedá. Když s klientem procházíme jeho zápis, oběd bývá nejčastěji to jídlo, které je odhadnuté nejvíc „od oka" a zároveň má největší porci dne. Tady je, co s tím dělám já.
+Snídaně doma pod kontrolou, večeře taky. A uprostřed dne polévka a hlavní jídlo z meníčka, protože v práci se jinak nedá. Když s klientem procházíme jeho zápis, oběd bývá nejčastěji to jídlo, které je odhadnuté nejvíc „od oka" a zároveň má největší porci dne.
 
 ## Kolik má oběd venku
 
@@ -27,16 +27,16 @@ Nejlepší data k tomu máme z velké studie v BMJ (Roberts a kol. 2018, PMID 30
 Co vyšlo:
 
 - 94 % jídel z klasických restaurací mělo aspoň 600 kcal, u fast foodu 72 %.
-- Model vyšel tak, že jedno jídlo z restaurace plus jedno z fast foodu denně pokryje 70 až 120 % celodenní potřeby sedavé ženy, kromě Číny, a to bez dalších jídel, svačin, nápojů, předkrmu a dezertu.
-- Ve Finsku změřili i deset jídel z firemních jídelen. Vyšla v průměru na 880 kcal proti 1 166 kcal v restauracích, tedy o čtvrtinu méně.
+- Jedno jídlo z restaurace a jedno z fast foodu za den pokryje 70-120 % denní potřeby ženy se sedavým životem (ve všech zemích kromě Číny). A to bez dalších jídel, svačin, pití, předkrmu a dezertu.
+- Ve Finsku změřili navíc deset jídel z firemních jídelen, malý vzorek z jedné země. Vyšla v průměru na 880 kcal proti 1 166 kcal v restauracích, tedy zhruba o čtvrtinu méně.
 
-Česká data tam nejsou, ale naše meníčko s polévkou do té tabulky zapadá. Smažák s hranolky a tatarkou se k tisícovce kalorií dostane snadno, svíčková se šesti knedlíky taky. A to je jedno jídlo z pěti, které za den sníš.
+Česká data tam nejsou. Odhadem ale meníčko s polévkou patří spíš k vyšším číslům z těch měření. Smažák s hranolky a tatarkou se k tisícovce kalorií dostane snadno, svíčková se šesti knedlíky taky. A to je pořád jen jedno jídlo dne.
 
-## Velká porce = víc snědeného, i když nemáš hlad
+## Z větší porce sníš víc
 
-Proč to nevyřeší „sním jen do sytosti"? Protože velikost porce sama mění, kolik sníme. V americkém pokusu (Rolls a kol., Am J Clin Nutr 2002, PMID 12450884) dostávalo 51 lidí jednou týdně k obědu makarony se sýrem, pokaždé jinak velkou porci. Z největší porce snědli o 30 % víc energie než z nejmenší, a necítili se o nic sytější. Nezáleželo na tom, jestli si nabírali sami, ani na pohlaví nebo váze.
+Proč to nevyřeší „sním jen do sytosti"? Protože velikost porce sama mění, kolik sníme. V americkém pokusu (Rolls a kol., Am J Clin Nutr 2002, PMID 12450884) dostávalo 51 lidí jednou týdně k obědu makarony se sýrem, pokaždé jinak velkou porci. Z největší porce snědli o 30 % víc energie než z nejmenší. Nezáleželo na tom, jestli si nabírali sami, ani na pohlaví nebo váze.
 
-Restaurace i jídelny vaří porce na „aby nikdo neodešel hladový". Takže spoléhat na pocit sytosti nad plným talířem je plán, který prohraje.
+Restaurace i jídelny vaří porce na „aby nikdo neodešel hladový". Takže spoléhat na pocit sytosti nad plným talířem většinou nevychází.
 
 ## Jak si vybrat z meníčka
 
@@ -44,25 +44,25 @@ Tohle je postup, který dávám klientům:
 
 1. **Polévku ber podle typu.** Vývar, zeleninová nebo česnečka jsou fajn a zasytí. Krémové a zahuštěné polévky s jíškou a smetanou, třeba kulajda nebo gulášovka, nesou kalorie jako malé hlavní jídlo. Když je v menu jen ta, vynech ji.
 2. **Hlavní jídlo vybírej podle bílkovin.** Pečené maso, ryba, kuřecí, vejce, luštěniny. Něco, co tě reálně zasytí do odpoledne.
-3. **Přílohu si uber, nebo ji nech ležet.** Půl porce brambor nebo rýže je u hubnutí ten nejjednodušší krok. Klidně se zeptej, jestli můžeš mít místo hranolků vařené brambory nebo zeleninu. Často to jde.
+3. **Přílohu si uber, nebo ji nech ležet.** Půl porce brambor nebo rýže je u hubnutí jeden z nejjednodušších kroků. Klidně se zeptej, jestli můžeš mít místo hranolků vařené brambory nebo zeleninu. Často to jde.
 4. **Omáčky a smažené ber jako výjimku.** Klidně jednou týdně, s plným vědomím, a ten den se se zbytkem jídel přizpůsobíš.
-5. **Pití k obědu bez kalorií.** Voda, neslazený čaj, nebo limonáda bez cukru. Půllitr slazeného pití je 200 kcal, které si nikdo nezapíše.
+5. **Pití k obědu bez kalorií.** Voda, neslazený čaj, nebo limonáda bez cukru. Půllitr slazené limonády má kolem 200 kcal a do zápisu se často nedostane.
 
 A největší páka? Vědět, kolik toho jíš. Když oběd zapisuješ, zapiš ho po složkách: kus masa, příloha, omáčka. Na první pohled nepřesné, ale pořád výrazně lepší než „oběd venku, nevím kolik".
 
 ## Jídelna, nebo krabička
 
-Firemní jídelna vyšla ve finských měřeních jako nejlehčí varianta, a odpovídá to i tomu, co vidím já: menší porce, víc zeleniny, míň smaženého. Pokud ji máš, jsi ve výhodě.
+Ve finských měřeních vyšla firemní jídelna lehčeji než restaurace. U českých jídelen záleží na tom, co vaří: kde je na výběr maso se zeleninou, máš to jednodušší.
 
-Krabička z domova má jinou výhodu: víš přesně, co v ní je, a navážíš si to. Ale neber ji jako povinnost. Klienti, kteří vydrží, si krabičku chystají třikrát týdně a dvakrát jdou na oběd s kolegy. Kvůli hubnutí přestat chodit s lidmi na oběd je cesta, která dlouho nevydrží.
+Krabička z domova má jinou výhodu: víš přesně, co v ní je, a navážíš si to. Ale neber ji jako povinnost. Klidně třeba třikrát týdně krabička a zbytek dní oběd s kolegy. Kvůli hubnutí přestat chodit s lidmi na oběd je cesta, která dlouho nevydrží.
 
 Praktický tip na krabičku: navař dvakrát týdně na tři dny. Maso nebo luštěniny, příloha a zelenina zvlášť, ať si porce skládáš podle dne. Jak takový den vypadá v číslech, najdeš ve [vzorovém jídelníčku](https://martinbarna.cz/clanky/vzorovy-jidelnicek-na-hubnuti.html).
 
 ## Co říkají studie o jídle mimo domov a váze
 
-Systematický přehled 28 studií (Bezerra a kol., Nutr Rev 2012, PMID 22300594) našel souvislost mezi častým jídlem mimo domov a vyšší váhou ve všech prospektivních studiích kromě jedné a asi v polovině průřezových. Autoři zároveň upozorňují, že každá studie definovala „jídlo venku" jinak a nikdo nesledoval, co ti lidé jedli doma. Je to tedy souvislost, ne důkaz, že oběd v restauraci sám o sobě vykrmuje.
+Systematický přehled 28 studií (Bezerra a kol., Nutr Rev 2012, PMID 22300594) našel souvislost mezi častým jídlem mimo domov a vyšší váhou v 7 z 8 prospektivních studií a asi v polovině z 20 průřezových. Autoři zároveň upozorňují, že se studie hodně lišily i v tom, jak „jídlo venku" definovaly, a žádná nesledovala, co ti lidé jedli doma. Je to souvislost. Jestli za tím stojí samotný oběd v restauraci, nebo to, jak ti lidé jedli doma, z těch dat nevyčteš.
 
-Pro mě z toho plyne prosté: nemusíš přestat chodit na oběd. Musíš vědět, co si objednáváš, a mít pár osvědčených voleb, po kterých sáhneš bez přemýšlení. Tomu se v koučinku věnujeme hned v prvních týdnech, protože u lidí se sedavou prací je oběd často jediné jídlo, které se dá rychle zlepšit. Kdo si to chce postavit sám, ve [videokurzu](https://martinbarna.cz/videokurz) je celý postup, jak si sestavit jídelníček i s jídly venku.
+Pro mě z toho plyne prosté: na oběd s kolegy chodit můžeš dál. Pomůže vědět, co si objednáváš, a mít pár osvědčených voleb, po kterých sáhneš bez přemýšlení. Tomu se v koučinku věnujeme hned v prvních týdnech, protože u lidí se sedavou prací je oběd často jediné jídlo, které se dá rychle zlepšit. Kdo si to chce postavit sám, ve [videokurzu](https://martinbarna.cz/videokurz) je celý postup, jak si sestavit jídelníček i s jídly venku.
 
 ## Časté otázky
 
@@ -73,4 +73,4 @@ Vývar nebo zeleninová polévka před hlavním jídlem zasytí a kalorií má m
 Rozlož ho na složky a každou odhadni: kus masa, příloha, omáčka, olej. Pomůže, když si doma párkrát zvážíš podobnou porci, ať víš, jak 150 gramů masa nebo 200 gramů brambor vypadá na talíři.
 
 ### Můžu hubnout, i když každý den obědvám v restauraci?
-Ano. Jen si oběd musíš započítat poctivě a zbytek dne mu přizpůsobit. Lidé, kteří obědvají venku každý den a hubnou, si většinou vybírají z několika osvědčených jídel a přílohu si uberou.
+Ano. Jen je potřeba oběd poctivě započítat a zbytek dne mu přizpůsobit. Pomůže vybírat z několika osvědčených jídel a ubrat si přílohu.

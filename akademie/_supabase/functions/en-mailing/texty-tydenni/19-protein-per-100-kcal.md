@@ -19,13 +19,13 @@ If it says 10 g of protein and 200 kcal:
 
 10 / 200 x 100 = 5 g per 100 kcal.
 
-The first line gives you 4 times as much protein for the calories. Those two lines are examples of the arithmetic, not two foods from a shop. Use the numbers printed on the pack in front of you.
+The first line gives you 4 times as much protein for the calories. Those two lines only show the arithmetic. Use the numbers printed on the pack in front of you.
 
-That's the same ranking as the protein tool. It sorts common foods by protein per 100 kcal, so you can see which ones reach your grams without spending the whole day of calories. You can also type the price and the pack size from your own shop and see what 100 g of protein costs you.
+That's the same ranking as the protein tool. It sorts common foods by protein per 100 kcal, so you can see which foods get you to your protein target without eating up your calorie budget. You can also type the price and the pack size from your own shop and see what 100 g of protein costs you.
 
 https://martinbarna.cz/en/protein/
 
-An earlier email set the daily grams. This one is how to pick the food that buys those grams.
+You already have your daily protein target. The label tells you which foods get you there cheapest in calories.
 
 The article: {{link_article:how-much-protein}}
 

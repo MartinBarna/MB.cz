@@ -63,7 +63,7 @@ Mezera od předchozího mailu: kroky 1 až 5 aspoň 20 h, kroky 6 až 41 aspoň 
 Placeholdery v těle doplňuje `renderEmail` přes `fill`. Generátor je v textu nechává:
 
 - `{{first_name}}` stejně jako u kroků 1 až 5
-- `{{link_article:SLUG}}` na `https://martinbarna.cz/en/blog/SLUG.html?utm_source=email&utm_medium=en-weekly&utm_campaign=en-weekly-NN`. NN je dvoumístné číslo týdne, tedy krok minus 5 doplněný nulou (krok 6 je 01, krok 41 je 36)
+- `{{link_article:SLUG}}` na `https://martinbarna.cz/en/blog/SLUG.html` bez kampanových parametrů v adrese
 - `{{link_apply}}` je `LINKS.apply`, `{{link_kit}}` je `LINKS.calculator`
 - `{{price_block}}` je prázdný řetězec
 - neznámý placeholder, včetně tvaru s dvojtečkou, shodí sestavení mailu. V hotovém mailu nezůstane `{{`
