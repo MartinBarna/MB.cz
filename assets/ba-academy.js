@@ -72,11 +72,15 @@
       return client.auth.getUser().then(function (r) { return (r && r.data && r.data.user) || null; }).catch(function () { return null; });
     },
 
-    signUp: function (email, password, fullName) {
+    // ⛔ Od 31. 10. 2026 je v Supabase zapnuté potvrzení e-mailu: registrace NEVRACÍ session,
+    //    člověk dostane potvrzovací odkaz. `emailRedirectTo` = kam ho odkaz vrátí (už přihlášeného).
+    //    Stejný tvar adresy jako u signInWithOtp, takže sedí do allowlistu Redirect URLs.
+    signUp: function (email, password, fullName, redirectTo) {
       if (!LIVE) return Promise.resolve({ ok: true, demo: true });
+      var dest = (redirectTo || (location.origin + "/akademie/moje/")).replace("://www.", "://");
       return client.auth.signUp({
         email: email, password: password,
-        options: { data: { full_name: fullName || "" } }
+        options: { data: { full_name: fullName || "" }, emailRedirectTo: dest }
       }).then(function (r) { return { ok: !r.error, error: r.error && r.error.message, data: r.data }; });
     },
 

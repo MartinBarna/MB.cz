@@ -126,7 +126,7 @@
   </div>
 
   <script src="/assets/ba-config.js?v=20260628b"></script>
-  <script src="/assets/ba-academy.js?v=20260909a"></script>
+  <script src="/assets/ba-academy.js?v=20261031a"></script>
   <script>
     (function () {
       var mode = 'in';
@@ -225,7 +225,7 @@
         if (s.indexOf('weak') >= 0 || s.indexOf('pwned') >= 0 || s.indexOf('leaked') >= 0)
           return 'Tohle heslo je moc slabé nebo se často objevuje v únicích dat. Zvol prosím jiné.';
         if (s.indexOf('not confirmed') >= 0 || s.indexOf('email not confirmed') >= 0)
-          return 'Účet ještě není potvrzený. Mrkni do e-mailu (i do spamu), nebo napiš na martin@martinbarna.cz.';
+          return 'Účet ještě není potvrzený. Klikni na odkaz v potvrzovacím e-mailu (mrkni i do spamu). Nepřišel? Dej níž „Přihlásit se e-mailem (bez hesla)“ a pošleme ti nový odkaz.';
         if (s.indexOf('otp_expired') >= 0 || s.indexOf('is invalid or has expired') >= 0
           || s.indexOf('token has expired') >= 0 || s.indexOf('token not found') >= 0)
           return 'Přihlašovací odkaz ani kód už neplatí. Platí jednu hodinu a jdou použít jen jednou. Nech si poslat nový a použij NEJNOVĚJŠÍ mail.';
@@ -307,7 +307,8 @@
               else show('err', friendlyErr(r.error));
             });
           } else if (mode === 'up') {
-            window.BA.signUp(email, pass, fname).then(function (r) {
+            var cilPoPotvrzeni = location.origin + (need === 'videokurz' ? '/akademie/videokurz/' : nextUrl);
+            window.BA.signUp(email, pass, fname, cilPoPotvrzeni).then(function (r) {
               if (!r.ok) {
                 submit.disabled = false;
                 // ⛔ Tady se dřív ukazovala HOLÁ anglická věta ze Supabase
@@ -316,7 +317,23 @@
                 show('err', friendlyErr(r.error));
                 return;
               }
+              // ⛔ Potvrzení e-mailu zapnuté (31. 10. 2026): existující potvrzený účet Supabase
+              //    neprozradí chybou. Vrátí uživatele s prázdným `identities` a žádný mail nepošle.
+              //    Bez téhle větve by člověk čekal na potvrzení, které nepřijde.
+              var novy = r.data && r.data.user;
+              if (novy && Array.isArray(novy.identities) && novy.identities.length === 0) {
+                submit.disabled = false;
+                posliNastaveniHesla(email);
+                return;
+              }
               if (window.mbTrackLead) window.mbTrackLead('registrace', { value: 0, currency: 'CZK' });
+              // Potvrzení e-mailu zapnuté: session ještě není, přijde až po kliknutí na odkaz,
+              // který vede přes `cilPoPotvrzeni` rovnou dovnitř.
+              if (r.data && !r.data.session) {
+                submit.disabled = false;
+                show('ok', '📧 Skoro hotovo! Na ' + email + ' jsme ti poslali potvrzovací odkaz. Klikni na něj a pustíme tě rovnou dovnitř (mrkni i do spamu). Nic nepřišlo ani po pár minutách? Přepni nahoře na „Přihlásit se“ a dej „Přihlásit se e-mailem (bez hesla)“.');
+                return;
+              }
               // Autoconfirm: po registraci je uživatel rovnou přihlášený → pusť ho dovnitř bez druhého kroku.
               // (Kdyby bylo ověření e-mailu zapnuté, getUser vrátí null → ukáž instrukci k přihlášení.)
               window.BA.getUser().then(function (u) {
