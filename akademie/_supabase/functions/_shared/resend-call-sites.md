@@ -30,6 +30,7 @@ složce `functions/` jen v `mail-provider.ts`.
 | 9a | admin-api client_invite | `_shared/koucink-onboarding.ts` | client_operational | `guardSend` před fetch |
 | 9b | admin-api client_offboard | `admin-api/index.ts` | confirm = client_operational, sales = marketing | confirm skip = žádný mail; sales skip = mail bez prodejního bloku |
 | 10 | koucink-konec (automat) | `koucink-konec/index.ts` | confirm = client_operational, sales = marketing | `guardSend` před stavbou mailu, rozhodování v `koucink-konec/core.ts` |
+| 11 | milestones (gratulace za postup ve videokurzu, od 31. 10. 2026) | `milestones/index.ts` `posliMilnik` → `odesliPresResend` | marketing | `guardSend` ve smyčce, jen u toho, komu by milník opravdu odešel; skip = `logMailSkip`, `milestone_sent` se nezapisuje. TEST režim (`test_email`) bránou nejde, posílá jen na zadanou adresu |
 
 ## Call sites mimo customer send (v týchž složkách, bez marketing guardu)
 

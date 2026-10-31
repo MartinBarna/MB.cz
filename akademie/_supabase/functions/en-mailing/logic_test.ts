@@ -1,8 +1,9 @@
 // Testy čistých funkcí en-mailing. Spuštění (z této složky):
 //   deno test --no-lock logic_test.ts
-import { assert, assertEquals, assertFalse, assertThrows } from "jsr:@std/assert@1";
+import { assert, assertEquals, assertFalse, assertRejects, assertThrows } from "jsr:@std/assert@1";
 import {
   cleanCalc,
+  CteniSelhalo,
   deriveUnsubKey,
   fill,
   type Lead,
@@ -10,9 +11,11 @@ import {
   LINKS,
   MAX_PER_RUN,
   MAX_START_AGE_DAYS,
+  nactiVse,
   nextStep,
   planRun,
   renderEmail,
+  type Stranka,
   STEPS,
   TEST_EMAIL,
   unsubPageUrl,
@@ -339,4 +342,62 @@ Deno.test("token: en-mailing a en-unsubscribe dávají totéž (kopie se nerozje
 Deno.test("odkaz na odhlášení: e-mail i token zakódované", () => {
   const u = unsubPageUrl("a+b@example.com", "tok_-");
   assertEquals(u, "https://martinbarna.cz/en/unsubscribe/?e=a%2Bb%40example.com&t=tok_-");
+});
+
+// --- nactiVse: celá tabulka po stránkách (tichý strop PostgRESTu) ---
+
+/** Napodobenina PostgRESTu: řádky seřazené podle id, filtr id > po, server pustí nejvýš `strop` řádků. */
+function tabulka(n: number, strop: number) {
+  const radky = Array.from({ length: n }, (_, i) => ({ id: i + 1 }));
+  const dotazy: (number | string | null)[] = [];
+  const stranka = (po: number | string | null): Promise<Stranka<{ id: number }>> => {
+    dotazy.push(po);
+    const zbytek = radky.filter((r) => po === null || r.id > Number(po));
+    return Promise.resolve({ data: zbytek.slice(0, strop), error: null });
+  };
+  return { stranka, dotazy };
+}
+
+Deno.test("nactiVse: strop serveru menší než stránka, přesto přečte všechno a skončí na prázdné stránce", async () => {
+  const t = tabulka(2500, 1000);
+  const r = await nactiVse("t", t.stranka, (x) => x.id, 10_000);
+  assertEquals(r.length, 2500);
+  assertEquals(new Set(r.map((x) => x.id)).size, 2500);
+  assertEquals(t.dotazy, [null, 1000, 2000, 2500]);
+  // strop 3: stránka je „kratší než PAGE_SIZE“, a přesto to není konec
+  const t3 = tabulka(7, 3);
+  assertEquals((await nactiVse("t", t3.stranka, (x) => x.id, 100)).map((x) => x.id), [1, 2, 3, 4, 5, 6, 7]);
+});
+
+Deno.test("nactiVse: prázdná tabulka = prázdný výsledek jedním dotazem", async () => {
+  const t = tabulka(0, 1000);
+  assertEquals(await nactiVse("t", t.stranka, (x) => x.id, 10), []);
+  assertEquals(t.dotazy, [null]);
+});
+
+Deno.test("nactiVse: chyba kterékoli stránky = výjimka, nikdy částečný výsledek", async () => {
+  let volani = 0;
+  const stranka = (_po: number | string | null): Promise<Stranka<{ id: number }>> =>
+    Promise.resolve(++volani === 1 ? { data: [{ id: 1 }], error: null } : { data: null, error: { code: "PGRST000", message: "down" } });
+  const e = await assertRejects(() => nactiVse("en_unsubscribes", stranka, (x) => x.id, 10), CteniSelhalo);
+  assertEquals(e.tabulka, "en_unsubscribes");
+  assertEquals(e.duvod, "db_read");
+  // data, která nejsou pole
+  const divna = () => Promise.resolve({ data: "x" as unknown as { id: number }[], error: null });
+  assertEquals((await assertRejects(() => nactiVse("t", divna, (x) => x.id, 10), CteniSelhalo)).duvod, "db_read");
+});
+
+Deno.test("nactiVse: víc řádků než maxRows = too_many_rows, přesně maxRows projde", async () => {
+  assertEquals((await nactiVse("t", tabulka(10, 4).stranka, (x) => x.id, 10)).length, 10);
+  const e = await assertRejects(() => nactiVse("en_mail_log", tabulka(11, 4).stranka, (x) => x.id, 10), CteniSelhalo);
+  assertEquals(e.duvod, "too_many_rows");
+});
+
+Deno.test("nactiVse: server, který filtr ignoruje, nezacyklí běh", async () => {
+  const stejna = (_po: number | string | null) => Promise.resolve({ data: [{ id: 1 }, { id: 2 }], error: null });
+  const e = await assertRejects(() => nactiVse("t", stejna, (x) => x.id, 1_000_000), CteniSelhalo);
+  assertEquals(e.duvod, "db_read");
+  // chybějící klíč v řádku (sloupec se nevybral) taky
+  const bezKlice = () => Promise.resolve({ data: [{ id: 1 }], error: null });
+  await assertRejects(() => nactiVse("t", bezKlice, () => undefined as unknown as number, 10), CteniSelhalo);
 });

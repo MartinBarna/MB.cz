@@ -19,6 +19,8 @@ const MUST_IMPORT_GUARD = [
   // odchod z admina, takze pred nej patri tataz brana.
   "koucink-konec/index.ts",
   "kosik-pripominka/index.ts",
+  // Milnikove gratulace za videokurz (31. 10. 2026): marketing, do te doby jen `leads.status`.
+  "milestones/index.ts",
 ];
 
 const SCAN_DIRS = [
@@ -129,6 +131,17 @@ check("jediný přímý Resend fetch je v mail-provider.ts",
     }
   }
   check("žádný přímý Resend fetch mimo mail-provider.ts (celé functions/)", mimo.length === 0, mimo.join(", "));
+}
+
+// ⛔ [31. 10. 2026] Milniky: brana PRED prvnim odeslanim a skip se zapise. Hlida se poradi
+//    v kodu, protoze `importuje mailing-guard` by proslo i s branou, ktera se nikdy nezavola.
+{
+  const mil = await Deno.readTextFile(new URL("milestones/index.ts", ROOT));
+  predTim("milestones: brana PRED odeslanim milniku", mil,
+    'await guardSend(admin, { email, mailClass: "marketing", functionName: "milestones" })',
+    "await posliMilnik(email");
+  predTim("milestones: skip se zapise a mail neodejde", mil,
+    "await logMailSkip(admin, brana);", "await posliMilnik(email");
 }
 
 // ⛔ AUTOMAT NESMI ODESILAT PRIMO. Cely smysl `_shared/resend-odeslat.ts` je, ze

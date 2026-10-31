@@ -30,6 +30,7 @@ Pravidla (vše v `logic.ts`, každé má test v `logic_test.ts`):
 - Max 50 mailů za běh, nejstarší starty první. Běh se zastaví po 3 selháních Resendu nebo po 100 s.
 - Testovací řádky (`first_name` TEST-CLAUDE, e-mail fitness.barna@gmail.com) jen v náhledu.
 - Razítko `en_mail_log` (unique `lead_email` + `step`) se zapisuje **před** Resendem. Souběžný běh dostane konflikt a mail nepošle.
+- ⛔ Tabulky `en_leads`, `en_mail_log` a `en_unsubscribes` se čtou **celé, po stránkách** (`nactiVse`, klíč `id` / `id` / `email`). Jeden dotaz s `.limit()` Supabase tiše utne na 1000 řádků bez chyby a běh by neviděl odhlášení a razítka za prvním tisícem (opraveno 31. 10. 2026). Chyba kterékoli stránky = 500 a nic se neposílá. Víc než `FETCH_LIMIT` (10 000) řádků v jedné tabulce = 500 `too_many_rows`: první na řadě je `en_mail_log` (41 razítek na člověka), pak zvednout strop nebo log číst agregovaný.
 - Mail 1 bez výsledku kalkulačky (typicky workout) jde ve variantě bez čísel s odkazem na kalkulačku. Tahle varianta je dopsaná v kódu, v .md doslova není. Hlasem prošlá 19. 10. 2026 (oba mail 1 i maily 2 až 5), schválení Martin.
 - `{{price_block}}` je prázdný (ceny nikdy v kódu), v mailu 5 ani v týdenních se nezobrazí.
 - Odesílatel `Martin Barna <news@martinbarna.cz>`, `reply_to` `martin@martinbarna.cz` (mail 1 a 5 žádají o odpověď).
@@ -86,7 +87,7 @@ Než smí odejít krok 6, musí v DB platit check `step between 1 and 41`. Soubo
 
 ```
 cd akademie/_supabase/functions/en-mailing
-deno test --no-lock --allow-env          # logic_test.ts (32) + handler_test.ts (10)
+deno test --no-lock --allow-env          # logic_test.ts (37) + handler_test.ts (14)
 deno check --no-lock index.ts ../en-unsubscribe/index.ts
 ```
 `handler_test.ts` zachytí `Deno.serve`, Supabase napodobí v paměti a Resend jen počítá.
