@@ -328,7 +328,9 @@ Deno.serve(async (req: Request) => {
   const { data: fRows } = await admin.from('app_config').select('key,value').in('key', ['footer_html', 'footer_text', 'reply_to_email', 'archive_bcc', 'followups_enabled', 'drip_daily_cap', 'drip_send_gap_ms', 'drip_max_tries', 'drip_run_deadline_ms', 'clenske_track_prefixy', 'navazujici_trate', 'pocet_potravin', 'pocet_receptu']);
   const fMap = Object.fromEntries((fRows ?? []).map((r: { key: string; value: string }) => [r.key, r.value]));
   const footer = { html: fMap.footer_html ?? '', text: fMap.footer_text ?? '' };
-  const replyTo = fMap.reply_to_email ?? '';
+  // 29. 10. 2026: podpora je martin@martinbarna.cz. Hodnota z app_config má přednost,
+  // prázdný nebo chybějící klíč spadne sem, ať odpověď nezmizí do news@.
+  const replyTo = (fMap.reply_to_email ?? '').trim() || 'martin@martinbarna.cz';
   const archiveBcc = fMap.archive_bcc ?? '';
   // CENY (23. 9. 2026). Nactou se jednou za beh; co se nenacetlo, v CISLA CHYBI (zadna zaloha).
   const ceny = await nactiCeny(admin);

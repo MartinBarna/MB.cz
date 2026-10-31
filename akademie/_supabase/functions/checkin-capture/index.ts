@@ -72,7 +72,9 @@ Deno.serve(async (req) => {
   const perCheckin = Number(cfg.coach_credit_per_checkin ?? 30) || 30;
   const milestoneBonus = Number(cfg.coach_milestone_2cm_bonus ?? 100) || 100;
   const cap = Number(cfg.coach_credit_cap_czk ?? 400) || 400;
-  const replyTo = cfg.reply_to_email ?? "";
+  // 29. 10. 2026: podpora je martin@martinbarna.cz. Hodnota z app_config má přednost,
+  // prázdný nebo chybějící klíč spadne sem, ať odpověď nezmizí do news@.
+  const replyTo = (cfg.reply_to_email ?? "").trim() || "martin@martinbarna.cz";
   const footerHtml = cfg.footer_html ?? "Barna Academy · Martin Barna · martinbarna.cz";
 
   // ---- OPT-OUT (GET ?stop=<reminder_token>) ----
