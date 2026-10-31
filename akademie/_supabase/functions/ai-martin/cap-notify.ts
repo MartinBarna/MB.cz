@@ -24,6 +24,7 @@
 // NÁVRH TEXTU, přepíše Claude.
 
 import { posliMail } from '../_shared/mail-provider.ts';
+import { zapisOdeslani } from '../_shared/resend-odeslat.ts';
 
 export const CAP_NOTIFY_TIMEOUT_MS = 5_000;
 export const NAME_LOOKUP_TIMEOUT_MS = 2_000;
@@ -109,6 +110,30 @@ export function capNotifyHtml(opts: {
     (clen ? `<p style='margin:0 0 12px'>${clen}</p>` : '') +
     `<p style='margin:0 0 12px'>Tohle je člověk, který AI na webu opravdu používá. Stojí za to napsat.</p>` +
     `${mailto}</body></html>`;
+}
+
+function adminZFetch(supabaseUrl: string, serviceRole: string, fetchImpl: FetchLike) {
+  return {
+    from(table: string) {
+      return {
+        async insert(row: unknown) {
+          try {
+            const r = await fetchImpl(`${supabaseUrl}/rest/v1/${table}`, {
+              method: 'POST',
+              headers: { ...restHeaders(serviceRole), Prefer: 'return=minimal' },
+              body: JSON.stringify(row),
+            });
+            if (!r || r.status >= 400) {
+              return { error: { message: 'http_' + String(r?.status ?? 0) } };
+            }
+            return { error: null };
+          } catch (e) {
+            return { error: { message: String((e as Error)?.message ?? e) } };
+          }
+        },
+      };
+    },
+  };
 }
 
 function restHeaders(serviceRole: string): Record<string, string> {
@@ -227,6 +252,11 @@ export async function notifyCapReached(opts: CapNotifyOpts): Promise<CapNotifyRe
         console.error('[cap-notify] Resend odmítl upozornění, status:', r.status);
         return 'failed';
       }
+      await zapisOdeslani({
+        admin: adminZFetch(opts.supabaseUrl, opts.serviceRole, doFetch),
+        via: 'ai-martin.cap-notify',
+        email: 'martin@martinbarna.cz',
+      }, r.providerId);
       return 'sent';
     } finally {
       t.stop();

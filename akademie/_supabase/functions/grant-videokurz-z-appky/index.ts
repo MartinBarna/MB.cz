@@ -38,6 +38,7 @@ import {
 } from "./core.ts";
 import { loadSuppressionFromSupabase } from "../_shared/mailing-guard.ts";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -82,11 +83,12 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>): Pro
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await posliMail({
+    const res = await posliMail({
       from: "Barna Academy <news@martinbarna.cz>", to: [to],
       subject: "⚠️ " + predmet,
       html: `<p>Upozornění z grantu videokurzu (Tvůj Coach VIP → Academy).</p><ul>${rows}</ul>`,
     }, { resendKey: RESEND_KEY });
+    if (res.ok) await zapisOdeslani({ admin, via: "grant-videokurz-z-appky.alert", email: to }, res.providerId);
   } catch { /* best-effort */ }
 }
 

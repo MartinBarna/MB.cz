@@ -19,6 +19,7 @@
 // Deploy: supabase functions deploy ai-flags-notify --no-verify-jwt (v obou projektech).
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -189,6 +190,11 @@ Deno.serve(async (req: Request) => {
   // Mail neodešel → VRAŤ značku, ať to další běh cronu zkusí znovu a upozornění
   // se neztratí. Vrací se jen ta NAŠE (`eq('notified_at', znacka)`), aby se
   // nesmazalo cizí, novější razítko.
+  if (r && r.status === 200) {
+    await zapisOdeslani({
+      admin, via: "ai-flags-notify", email: TO, detail: { bcc: true },
+    }, r.providerId);
+  }
   if (!r || r.status !== 200) {
     const { error: vratErr } = await admin.from("ai_flags")
       .update({ notified_at: null })

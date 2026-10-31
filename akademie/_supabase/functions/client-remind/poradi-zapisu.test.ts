@@ -81,8 +81,8 @@ check("potlacene alerty jsou videt v odpovedi", SRC.includes("alerty_potlaceno: 
 // Alert nesmi jit pres branu: Martinova adresa na seznamu by umlcela prave ty alerty.
 const teloAlertu = SRC.split("async function alertMartinovi(")[1]?.split("function mailHtml(")[0] ?? "";
 check("alertMartinovi nejde pres guardSend", teloAlertu.length > 0 && !teloAlertu.includes("guardSend"));
-check("alertMartinovi nepise stopu do email_events (Martinova adresa)",
-  teloAlertu.includes("odesliPresResend(RESEND_KEY, {") && !teloAlertu.includes("admin, via:"));
+check("alertMartinovi pise stopu pres helper (adresu z nej Martinovi vyradi sam)",
+  teloAlertu.includes("via: \"client-remind.alert\"") && teloAlertu.includes("email: to"));
 
 // Kdyz neprojde ani alert, nesmi to zapadnout uplne (cron nema retry).
 check("selhany alert se pozna a hlasi v odpovedi",

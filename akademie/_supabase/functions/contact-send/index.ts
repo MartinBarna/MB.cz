@@ -9,6 +9,7 @@
 // (jinak by šel endpoint zaplavit řádky). Zápis je best-effort — nikdy neblokuje e-mail.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const ALLOWED_ORIGINS = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 
@@ -107,5 +108,13 @@ Deno.serve(async (req) => {
     html,
   }, { resendKey: key });
   if (!r.ok) return json({ ok: false, error: "send" }, 502, origin);
+  try {
+    const url = Deno.env.get("SUPABASE_URL");
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (url && serviceKey) {
+      const admin = createClient(url, serviceKey, { auth: { persistSession: false } });
+      await zapisOdeslani({ admin, via: "contact-send", email: "martin@martinbarna.cz" }, r.providerId);
+    }
+  } catch { /* stopa nesmi z odeslane poptavky udelat chybu */ }
   return json({ ok: true }, 200, origin);
 });

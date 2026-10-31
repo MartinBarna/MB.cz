@@ -51,9 +51,18 @@ let ro = "";
 try { ro = cti("_shared/resend-odeslat.ts"); } catch { /* viz komentar vys */ }
 check("A5 sendMail nechava smycku dojet (pad site nehazi vyjimku)",
   /const r = await odesliPresResend\(/.test(sg) && /return r\.ok;/.test(sg));
-check("A5b helper `odesliPresResend` ma try/catch kolem fetch",
-  /try \{\s*res = await fetch\("https:\/\/api\.resend\.com\/emails"/.test(ro)
-  && /return \{ ok: false, status: 0, providerId: "", chyba:/.test(ro));
+// 27. 10. 2026: fetch uz neni v `resend-odeslat.ts`. `odesliPresResend` vola `posliMail`
+// a try/catch kolem site je v `mail-provider.ts` (`sitChyba`, status 0). Stary regex
+// hledal `fetch("https://api.resend.com/emails")` v helperu, ktery ho uz nema, takze
+// kontrola padala i nad spravnym kodem. Prazdny soubor (kontrast, kde mail-provider
+// jeste neni) necha A5b spravne spadnout.
+let mp = "";
+try { mp = cti("_shared/mail-provider.ts"); } catch { /* kontrast: soubor chybi */ }
+const zaResend = mp.split('f("https://api.resend.com/emails"')[1] ?? "";
+check("A5b pad site nehazi: try/catch je v mail-provider (sitChyba)",
+  /^,\s*\{[\s\S]{0,800}?catch \(e\) \{\s*return sitChyba\(e\);/.test(zaResend)
+  && /return \{ ok: false, status: 0, providerId: "", chyba: "sit:"/.test(mp)
+  && ro.includes("await posliMail("));
 // Alert nesmi jit pres branu: Martinova adresa na seznamu by umlcela prave ty alerty.
 const telo = sg.split("async function alertAdmin(")[1] ?? "";
 const teloAlert = telo.split(NL + "}" + NL)[0];

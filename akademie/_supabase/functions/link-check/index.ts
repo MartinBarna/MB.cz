@@ -32,6 +32,7 @@
 // ============================================================
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { mailKlic, posliMail } from "../_shared/mail-provider.ts";
+import { zapisOdeslani } from "../_shared/resend-odeslat.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -186,13 +187,14 @@ async function alertAdmin(predmet: string, detail: Record<string, unknown>) {
     const { data } = await admin.from("app_config").select("value").eq("key", "admin_emails").maybeSingle();
     if (data?.value) to = String(data.value).split(",")[0].trim() || ALERT_FALLBACK;
     const rows = Object.entries(detail).map(([k, v]) => `<li><b>${k}</b>: ${String(v)}</li>`).join("");
-    await posliMail({
+    const res = await posliMail({
       from: "Barna Academy <news@martinbarna.cz>", to: [to],
       subject: "🔴 " + predmet,
       html: `<p>Denní kontrola odkazů našla problém. Tohle je přesně ten případ, `
         + `kvůli kterému 22. až 27. 7. pět dní nefungovaly odkazy ve všech mailech.</p>`
         + `<ul>${rows}</ul><p>Zkontroluj to, než odejde další vlna mailů.</p>`,
     }, { resendKey: RESEND_KEY });
+    if (res.ok) await zapisOdeslani({ admin, via: "link-check", email: to }, res.providerId);
   } catch { /* best-effort */ }
 }
 
