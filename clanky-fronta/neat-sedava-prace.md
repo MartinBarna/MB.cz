@@ -49,13 +49,13 @@ ukazuje, jak pohyb mimo trénink souvisí s tím, kolik kdo z přebytku uloží.
 někdo na dietě nehubne, nevypovídá. Tam je odpověď jinde, nejčastěji v zápisu jídla, a mám ji rozepsanou
 [v článku o pomalém metabolismu](https://martinbarna.cz/clanky/pomaly-metabolismus-mytus.html).
 
-## Dvě hodiny sezení navíc za den
+## Skoro tři hodiny sezení navíc za den
 
 O šest let později (PMID 15681386) Levine oblékl deset štíhlých a deset mírně obézních
 lidí do senzorů, které deset dní každou půl sekundu zaznamenávaly polohu těla. Všichni
 byli sedaví dobrovolníci.
 
-Obézní účastníci seděli v průměru **o 2 hodiny denně déle**. Zajímavé bylo, že rozložení
+Obézní účastníci seděli v průměru **o 164 minut denně déle**, tedy skoro o tři hodiny (v souhrnu studie autoři zaokrouhlují na dvě). Zajímavé bylo, že rozložení
 poloh se nezměnilo, ani když obézní zhubli, ani když štíhlí přibrali. Autoři to vykládají
 tak, že sklon sedět nebo se vrtět je do velké míry daný. Podle jejich propočtu by obézní
 vydali navíc asi 350 kcal denně, kdyby se hýbali jako štíhlí.
