@@ -66,12 +66,18 @@ Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   const email = await emailFromToken(req.headers.get('Authorization') ?? '');
   if (!email) return json({ error: 'unauthorized' }, 401);
+  // ⛔ BEZPEČNOST (revize 31. 10. 2026): dotazy níž jdou přes `ilike`, kde `*`, `%` a `_`
+  // jsou zástupné znaky. Registrace je bez potvrzení e-mailu, takže účet `*@gmail.com`
+  // by prošel kontrolou nároku cizího kupujícího a přečetl jeho kód a kredit.
+  // Adresy s `*` nebo `%` neexistují u žádného kupujícího, `_` a `\\` se escapují.
+  if (/[*%]/.test(email)) return json({ error: 'unauthorized' }, 401);
+  const emailPresne = email.replace(/\\/g, '\\\\').replace(/_/g, '\\_');
 
   // entitlement check (aktivni academy nebo videokurz)
   try {
     // Expirace: referral kod smi generovat jen clen s PLATNYM pristupem (NULL = dozivotni).
     // Bez toho by expirovany mesicni clen dal vydelaval na provizich. Viz `mb-academy-pricing-mise`.
-    const er = await rest('entitlements?select=product&active=eq.true&email=ilike.' + encodeURIComponent(email)
+    const er = await rest('entitlements?select=product&active=eq.true&email=ilike.' + encodeURIComponent(emailPresne)
       + '&or=(expires_at.is.null,expires_at.gt.' + encodeURIComponent(new Date().toISOString()) + ')&limit=1');
     const ents = await er.json().catch(() => []);
     if (!Array.isArray(ents) || ents.length === 0) return json({ error: 'no_entitlement' }, 403);
@@ -80,7 +86,7 @@ Deno.serve(async (req: Request) => {
   // get-or-create kod
   let code = '';
   try {
-    const gr = await rest('referral_codes?select=code&owner_email=ilike.' + encodeURIComponent(email) + '&limit=1');
+    const gr = await rest('referral_codes?select=code&owner_email=ilike.' + encodeURIComponent(emailPresne) + '&limit=1');
     const rows = await gr.json().catch(() => []);
     if (Array.isArray(rows) && rows.length) code = rows[0].code;
     if (!code) {
@@ -93,7 +99,7 @@ Deno.serve(async (req: Request) => {
         });
         if (ir.status === 201) { code = cand; break; }
         // 409 owner uidx → kod uz existuje pro tento email, nacti ho
-        const re = await rest('referral_codes?select=code&owner_email=ilike.' + encodeURIComponent(email) + '&limit=1');
+        const re = await rest('referral_codes?select=code&owner_email=ilike.' + encodeURIComponent(emailPresne) + '&limit=1');
         const rr = await re.json().catch(() => []);
         if (Array.isArray(rr) && rr.length) { code = rr[0].code; break; }
         // jinak 409 kvuli kolizi code → zkus jiny
@@ -124,7 +130,7 @@ Deno.serve(async (req: Request) => {
     referrals_confirmed: 0, referrals_pending: 0,
   };
   try {
-    const sr = await rest('referral_credit?owner_email=ilike.' + encodeURIComponent(email) + '&limit=1');
+    const sr = await rest('referral_credit?owner_email=ilike.' + encodeURIComponent(emailPresne) + '&limit=1');
     const sd = await sr.json().catch(() => []);
     if (Array.isArray(sd) && sd.length) {
       // ⚠️ Baseline schvalne i pro `credit_confirmed`, i kdyz ho nize prepise
@@ -139,7 +145,7 @@ Deno.serve(async (req: Request) => {
     }
   } catch { /* stav je best-effort */ }
   try {
-    const br = await rest('referral_balances?owner_email=ilike.' + encodeURIComponent(email) + '&limit=1');
+    const br = await rest('referral_balances?owner_email=ilike.' + encodeURIComponent(emailPresne) + '&limit=1');
     const bd = await br.json().catch(() => []);
     if (Array.isArray(bd) && bd.length) {
       status.credit_confirmed = Number(bd[0].confirmed ?? 0);
