@@ -5,9 +5,9 @@ Navržená URL: martinbarna.cz/clanky/jak-zhubnout-po-porodu.html
 Meta: Kdy začít hubnout po porodu, kolik se dá bezpečně ubrat při kojení a jak do toho mluví spánek. Shrnutí studií a praxe z koučinku.
 Popis: Hubnutí po porodu podle studií: mírný deficit, bílkoviny, spánek a poporodní kontrola dřív než dieta.
 CTA:
-Chceš si spočítat vlastní čísla?
-Stáhni si zdarma 7denní makro plán. Spočítá ti příjem i rozložení bílkovin, sacharidů a tuků, takže nemusíš hádat, kolik toho vlastně máš jíst. Pokud kojíš, ber výsledek jen jako podklad pro poporodní kontrolu a konkrétní příjem si nech nastavit lékařem.
-[7denní makro plán zdarma](https://martinbarna.cz/makro-plan/)
+Chceš čísla nastavená přímo pro sebe?
+Když kojíš, obecný jídelníček ani kalkulačka na hubnutí nestačí. V koučinku ti po poporodní kontrole nastavím příjem tak, aby počítal s kojením, spánkem i tím, jak teď vypadá tvůj den, a každý týden ho podle výsledků upravíme.
+[Koučink s Martinem](https://martinbarna.cz/koucing/)
 Zdroje:
 - Lovelady CA a kol., N Engl J Med 2000;342(7):449-53. PMID 10675424, DOI 10.1056/NEJM200002173420701
 - Rooney BL, Schauberger CW, Obstet Gynecol 2002;100(2):245-52. PMID 12151145, DOI 10.1016/s0029-7844(02)02125-7
