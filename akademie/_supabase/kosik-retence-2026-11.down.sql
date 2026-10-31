@@ -1,6 +1,6 @@
 -- akademie/_supabase/kosik-retence-2026-11.down.sql
 -- NESPOUSTET spolu s migraci. Jen rucni navrat, kdyz se ma retence zase vypnout
--- a radky vratit ze zalohy. Zalohu tabulku tenhle soubor nemaze.
+-- a radky vratit ze zalohy. Vrací jen řádky zálohované za posledních 7 dní. Zalohu tabulku tenhle soubor nemaze.
 
 do $$
 begin

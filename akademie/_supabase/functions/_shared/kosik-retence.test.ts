@@ -111,4 +111,19 @@ Deno.test("SQL retence ma stejna pravidla, zalohu, a cron je vypnuty", async () 
     throw new Error("down skript nema navrat");
   }
   if (!down.includes("kosik_retence_zapnuto")) throw new Error("down musi umet flag vypnout");
+  const deleteZalohy =
+    "delete from public.kosik_checkouty_zaloha_retence where zaloha_at < now() - interval '7 days';";
+  if (!sql.includes(deleteZalohy)) throw new Error("SQL chybi delete zalohy 7 dni");
+  const zacatekTela = sql.indexOf("as $$");
+  const konecTela = sql.indexOf("$$;", zacatekTela);
+  const telo = sql.slice(zacatekTela, konecTela);
+  const poDiag = telo.indexOf("get diagnostics");
+  const poFlagu = telo.indexOf("coalesce(zapnuto, 'false') <> 'true'");
+  const kdeDelete = telo.indexOf(deleteZalohy);
+  if (poDiag < 0 || kdeDelete < poDiag) {
+    throw new Error("delete zalohy neni v tele funkce za get diagnostics");
+  }
+  if (poFlagu < 0 || kdeDelete < poFlagu) {
+    throw new Error("delete zalohy neni za kontrolou coalesce(zapnuto, 'false') <> 'true'");
+  }
 });

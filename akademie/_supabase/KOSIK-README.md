@@ -15,7 +15,7 @@ Draft. Nic z tohoto se nenasazuje, dokud neprojde právní kontrola a Claude ned
 | `kosik_web_zapnuto` | `false` | Endpoint A vrací fallback, prohlížeč jde na původní `buy.stripe.com`. |
 | `kosik_mail_zapnuto` | `false` | Cron nic neposílá. |
 | `kosik_dry_run` | `true` | Místo Resendu se zapíše `email_events` typu `kosik_dry_run`. |
-| `kosik_garance_k1` | `false` | Věta o vrácení částky v mailu K1 se vypustí celá. |
+| `kosik_garance_k1` | `false` | Věta o vrácení částky v mailu K1 se vypustí celá. Do Martinova rozhodnutí o garanci musí zůstat false (Claude 31. 10. 16:20). |
 | `kosik_produkty` | `konzultace` | Které klíče smí checkout a odesílač. |
 
 Na webu je navíc `data-kosik-zapnuto="false"` na skriptu. Bez toho se modal neotevře, i kdyby byl server zapnutý. Env `KOSIK_DRY_RUN=1` umí dry-run jen zapnout, ne vypnout.

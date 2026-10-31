@@ -35,7 +35,7 @@ Mazání:
 
 Cron `kosik-retence-denne` je v souboru zakomentovaný (`15 3 * * *`). Funkce navíc vrátí 0, dokud `app_config.kosik_retence_zapnuto` není `true`. Odkomentovaný cron bez flagu tedy nic nesmaže.
 
-Zapnutí spolu s košíkem: ve stejném kroku jako mailový cron odkomentovat `cron.schedule` a nastavit `kosik_retence_zapnuto` na `true`. Vypnutí: flag zpět na `false`, nebo `cron.unschedule('kosik-retence-denne')`. Obojí je v down skriptu `kosik-retence-2026-11.down.sql`, který taky vrátí smazané řádky ze zálohy. Down skript se nespouští spolu s migrací.
+Zapnutí spolu s košíkem: ve stejném kroku jako mailový cron odkomentovat `cron.schedule` a nastavit `kosik_retence_zapnuto` na `true`. Vypnutí: flag zpět na `false`, nebo `cron.unschedule('kosik-retence-denne')`. Obojí je v down skriptu `kosik-retence-2026-11.down.sql`, který taky vrátí smazané řádky ze zálohy. Záloha se po 7 dnech maže (`zaloha_at`), takže down skript vrátí jen řádky smazané za posledních 7 dní. Down skript se nespouští spolu s migrací.
 
 ## Pořadí, až bude GO
 

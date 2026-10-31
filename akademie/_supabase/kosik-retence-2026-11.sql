@@ -13,6 +13,7 @@
 -- 4. souhlas true, nezaplaceno: smazat 90 dni od posledniho odeslaneho mailu
 --    (mail1_odeslan_at / mail2_odeslan_at). Kdyz mail nesel, od created_at.
 --    Sucha razitka mail*_dry_at se nepocitaji.
+-- 5. záloha kosik_checkouty_zaloha_retence starší než 7 dní (zaloha_at) se maže.
 -- Presne na hranici radek zustava (porovnani < now() - interval).
 
 create table if not exists public.kosik_checkouty_zaloha_retence (
@@ -73,6 +74,7 @@ begin
   where d.id = k.id;
 
   get diagnostics n = row_count;
+  delete from public.kosik_checkouty_zaloha_retence where zaloha_at < now() - interval '7 days';
   return n;
 end;
 $$;
