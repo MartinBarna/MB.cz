@@ -33,8 +33,10 @@ jobs:
           # Typecheck čistých funkcí je samostatný krok níž.
           # preflag.test.ts a tri-sourozenci.test.ts padají už na main (důvod v popisu PR).
           # handler_test.ts běží hned potom, se vypnutým sanitizerem.
+          # kosik-texty.test.ts spouští `node scripts/kosik-texty-z-md.mjs`.
+          # Bez oprávnění Deno spadne na NotCapable. Povoleno je jen program node.
           deno test --no-lock --no-check \
-            --allow-read --allow-env --allow-write \
+            --allow-read --allow-env --allow-write --allow-run=node \
             --ignore=akademie/_supabase/functions/ai-martin/preflag.test.ts \
             --ignore=akademie/_supabase/functions/_shared/tri-sourozenci.test.ts \
             --ignore=akademie/_supabase/functions/en-mailing/handler_test.ts \
