@@ -1,4 +1,4 @@
-# Jak vážit jídlo: syrové, nebo vařené? Chyba, která ti sní celý deficit
+# Jak vážit jídlo: syrové, nebo vařené? Chyba, která ti umí sníst deficit
 
 Klíčové slovo: vážit jídlo syrové nebo vařené
 Navržená URL: martinbarna.cz/clanky/jak-vazit-jidlo-syrove-vs-varene.html
@@ -6,7 +6,7 @@ Kategorie: Hubnutí
 SEO title: Vážit jídlo syrové, nebo vařené? Jak na to při hubnutí
 Emoji: ⚖️
 Filtr: vyziva
-Meta: 150 gramů vařené rýže zapsaných jako syrové je rozdíl přes 300 kcal. Jak vážit rýži, těstoviny, maso i olej, aby zápis seděl a deficit nezmizel.
+Meta: Syrová rýže zapsaná jako vařená: z 80 g zmizí v aplikaci přes 170 kcal. Jak vážit rýži, těstoviny, maso i olej, aby zápis seděl a deficit nezmizel.
 Popis: Syrová, nebo vařená váha? Jak vážit rýži, těstoviny a maso, kam se ztrácí olej a jak dlouho má smysl jídlo vážit.
 CTA: videokurz
 Související:
@@ -18,17 +18,17 @@ Zdroje:
 - Burke LE, Wang J, Sevick MA. J Am Diet Assoc 2011;111(1):92-102. PMID 21185970, DOI 10.1016/j.jada.2010.10.008
 - Matthews RH, Garrison YJ. Food Yields Summarized by Different Stages of Preparation. USDA Agriculture Handbook No. 102, 1975
 
-Klientka mi poslala zápis: přesně 1 600 kcal každý den, tři týdny, a váha se ani nehnula. Na první pohled vzorný deník. Na druhý pohled u oběda „rýže 150 g" s hodnotami syrové rýže, jenže vážená byla uvařená. A olej na pánvi nezapsaný vůbec. Jen tyhle dvě věci dělaly stovky kalorií denně. Vážit se vyplatí, ale musíš vědět, co vlastně vážíš.
+V zápisech klientů vidím pořád dokola stejnou věc: vzorný deník, každý den třeba 1 600 kcal, a váha se týdny nehne. U oběda je rýže zapsaná jako vařená, jenže vážená syrová. 80 g vařené rýže dělá kolem 105 kcal, 80 g syrové kolem 280. A olej na pánvi nezapsaný vůbec. Jen tyhle dvě věci umí udělat klidně 250 až 300 kcal denně. Vážit se vyplatí, ale musíš vědět, co vlastně vážíš.
 
 ## Proč vůbec vážit
 
 Odhad od oka selhává i lidem, kteří to myslí poctivě. Klasická studie v NEJM (Lichtman a kol. 1992, PMID 1454084) změřila deset lidí, kteří tvrdili, že jedí pod 1 200 kcal a nehubnou. Jejich výdej byl normální, do 5 % předpokládaných hodnot. Rozdíl byl v zápisu: příjem podhodnotili v průměru o 47 % a pohyb nadhodnotili o 51 %. Nemusí za tím být žádný záměr, odhad od oka prostě ujíždí.
 
-Přehled 22 studií o sebekontrole (Burke a kol., J Am Diet Assoc 2011, PMID 21185970) pak ukázal, že zapisování jídla se konzistentně pojí s větším úbytkem hmotnosti. Autoři dodávají, že kvalita těch studií byla omezená. Pro praxi mi to stačí: zápis je levný nástroj a funguje líp, když čísla v něm sedí.
+Přehled 22 studií o sebemonitorování, tedy zapisování jídla, pohybu a vážení (Burke a kol., J Am Diet Assoc 2011, PMID 21185970), pak ukázal, že sebemonitorování se konzistentně pojí s úbytkem hmotnosti. Autoři dodávají, že kvalita těch studií byla omezená. Pro praxi mi to stačí: zápis je levný nástroj a funguje lépe, když čísla v něm sedí.
 
 ## Syrové, nebo vařené: obojí jde, jen to nemíchej
 
-Tohle je nejčastější chyba, kterou v zápisech vidím. Rýže, těstoviny, luštěniny a obiloviny při vaření nasají vodu, takže zvážená porce je pak těžší, ale kalorií má pořád stejně jako suchá. Maso naopak vodu ztratí, takže upečené váží méně.
+Tuhle chybu vidím v zápisech pořád dokola. Rýže, těstoviny, luštěniny a obiloviny při vaření nasají vodu, takže zvážená porce je pak těžší, ale kalorií má pořád stejně jako suchá. Maso naopak vodu ztratí, takže upečené váží méně.
 
 Orientační čísla (přesné hodnoty závisí na druhu a délce vaření, tabulky výtěžnosti vydává například americké ministerstvo zemědělství):
 
@@ -37,7 +37,7 @@ Orientační čísla (přesné hodnoty závisí na druhu a délce vaření, tabu
 - **Kuřecí prsa:** ze 100 g syrových zbyde po upečení zhruba 70 až 75 g. Kalorie v kousku zůstávají, jen se rozpočítají na menší hmotnost.
 - **Brambory vařené ve slupce:** hmotnost se mění málo, tady chybu skoro neuděláš.
 
-Kde je past: 150 g uvařené rýže má zhruba 195 kcal. Když ji zapíšeš s hodnotou syrové, aplikace ti připíše přes 500 kcal. A naopak, když vážíš syrovou a v aplikaci vybereš vařenou, ubereš si skoro dvě třetiny kalorií, které jsi reálně snědl.
+Kde je past: když vážíš syrovou rýži a v aplikaci vybereš vařenou, zapíšeš si zhruba třetinu toho, co jsi snědl. Z 75 g syrové (kolem 260 kcal) se v aplikaci stane necelých 100. Opačně to taky nesedí: uvařená zapsaná jako syrová má v aplikaci skoro trojnásobek a ty si myslíš, že jíš víc, než jíš.
 
 Pravidlo, které dávám klientům: **važ tak, jak máš zapsanou položku.** Nejjednodušší je vážit syrové a suché, protože hodnota na obalu je skoro vždy pro suchý produkt. U položek v aplikaci si vždycky přečti, jestli je to „vařené", nebo „syrové".
 
@@ -54,16 +54,16 @@ Stejně to funguje u guláše, rizota nebo polévky. Spočítáš celý hrnec je
 
 ## Kam mizí kalorie, které nikdo neváží
 
-Rýže je jedna věc. Mnohem častější díra jsou malé věci, které člověk nepovažuje za jídlo:
+Rýže je jedna věc. Ještě větší díra bývají malé věci, které člověk nepovažuje za jídlo:
 
 - **Olej a máslo.** Polévková lžíce oleje má kolem 120 kcal. Kdo lije od oka, nalije snadno dvě. Olej važ, nebo měř lžící, a zapiš ho ke každému jídlu.
 - **Ochutnávání při vaření a dojídání.** Pár soust z talíře dětí, kousek sýra z lednice. Za den to může být jídlo navíc.
-- **Pomazánky a dresinky.** Tenká vrstva másla na chlebu a „tenká vrstva" se často liší o desítky gramů.
+- **Pomazánky a dresinky.** „Tenká vrstva" másla bývá klidně 15 g místo 5, tedy rozdíl kolem 70 kcal na jednom krajíci.
 - **Pití.** Džus, mléko do kávy, víkendové pivo.
 
 ## Jak dlouho má smysl jídlo vážit
 
-Neříkám, že máš vážit celý život. Váha je nástroj na kalibraci oka. U klientů to dělám takhle: dva až čtyři týdny se váží všechno. Pak si člověk umí představit, jak vypadá 150 g masa nebo 200 g brambor, a stačí vážit jen kalorické věci, tedy oleje, ořechy, sýry, přílohy. Když se váha zastaví, vrátíme se na týden k plnému vážení a podíváme se, kde se oko rozjelo. Víc o tom, proč se hubnutí zastaví, mám v článku o [kalorickém deficitu](https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html).
+Váha slouží hlavně ke kalibraci oka. U klientů to dělám takhle: dva až čtyři týdny se váží všechno. Pak si člověk umí představit, jak vypadá 150 g masa nebo 200 g brambor, a stačí vážit jen kalorické věci, tedy oleje, ořechy, sýry, přílohy. Když se váha zastaví, vrátíme se na týden k plnému vážení a podíváme se, kde se oko rozjelo. Víc o tom, proč se hubnutí zastaví, mám v článku o [kalorickém deficitu](https://martinbarna.cz/clanky/kaloricky-deficit-kolik-jist.html).
 
 Celý systém, jak si jídlo zapisovat, sestavit vlastní jídelníček a postupně se z vážení vymanit, je ve [videokurzu Flexibilní stravování](https://martinbarna.cz/videokurz). Cílem je, abys to jednou uměl sám a nepotřeboval k tomu mě.
 
@@ -76,4 +76,4 @@ Syrové, pokud ho tak máš i v aplikaci. Je to přesnější, protože se nemě
 Stačí obyčejná digitální váha s funkcí tára a přesností na gram. Tára ti umožní vynulovat talíř nebo hrnec a vážit jen jídlo.
 
 ### Neudělá ze mě vážení jídla posedlého člověka?
-U většiny klientů vidím opak: po pár týdnech vážení odhadují mnohem líp a přestanou se jídla bát. Pokud ale u tebe vážení vyvolává úzkost nebo pocit, že nad jídlem ztrácíš kontrolu, přestaň a obrať se na odborníka. Linka první psychické pomoci 116 123 funguje nonstop.
+U většiny klientů vidím opak: po pár týdnech vážení odhadují mnohem lépe a přestanou se jídla bát. Pokud ale u tebe vážení vyvolává úzkost nebo pocit, že nad jídlem ztrácíš kontrolu, přestaň a promluv si o tom s lékařem nebo psychologem, klidně i se mnou. Linka první psychické pomoci 116 123 funguje nonstop.
