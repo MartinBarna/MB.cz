@@ -72,8 +72,8 @@ intenzivní pohyb. V době studie to byla méně než pětina. Odhadovaný výde
 100 kcal denně**, u mužů konkrétně o 142 kcal. Když to autoři vložili do modelu, vyšla jim
 hmotnost velmi blízká té, kterou v populaci reálně naměřili.
 
-Je to populační model a o tobě konkrétně neříká nic. Ale pokud jsi před deseti lety dělal
-ve skladu a dnes sedíš u počítače a jíš stejně, chybí ti ve výdeji kolem sta kalorií denně.
+Je to populační model a o tobě konkrétně neříká nic. Ale pokud tvoje práce před deseti lety
+znamenala sklad, dnes znamená počítač a jíš pořád stejně, chybí ti ve výdeji kolem sta kalorií denně.
 Na papíře to za rok dělá skoro pět kilo, ve skutečnosti méně, protože s váhou roste i výdej.
 Směr ale sedí.
 
@@ -97,8 +97,8 @@ chůze.
 které zvládneš bez převlékání:
 
 - **Telefonáty v chůzi.** Kdo za den protelefonuje hodinu a u toho chodí, má hodinu chůze navíc.
-- **Schody místo výtahu**, pokaždé. Jedno patro nic, deset pater za den už je pohyb, který
-  by sis jinak musel naplánovat.
+- **Schody místo výtahu**, pokaždé. Jedno patro nic, deset pater za den už je pohyb, na který
+  by jinak padl kus tréninku.
 - **Kus cesty do práce pěšky.** Vystoupit o zastávku dřív, zaparkovat na konci parkoviště.
 - **Oběd venku**, ne u stolu. Deset minut tam, deset zpátky.
 - **Přerušit sezení každou hodinu** aspoň na dvě minuty. Tady pomáhá i ten stůl na stání.
