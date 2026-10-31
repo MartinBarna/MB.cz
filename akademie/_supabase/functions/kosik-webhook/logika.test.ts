@@ -10,7 +10,7 @@ function radek(over: Partial<RadekKosiku> = {}): RadekKosiku {
     souhlas: true,
     souhlas_at: "2026-01-01T00:00:00.000Z",
     souhlas_text: "zneni",
-    souhlas_verze: "kosik-v1-2026-11",
+    souhlas_verze: "kosik-v2-2026-11",
     stripe_session_id: "cs_puvodni",
     expirovano_at: null,
     zaplaceno_at: null,

@@ -30,7 +30,7 @@ Konzultace dává smysl, když chceš vědět, co dělat právě ty. Zázračnou
 
 Začneme tím, co ti dosud nefungovalo a proč. Pak spočítáme tvoje čísla a domluvíme dva až tři kroky, které zvládneš i v úterý po směně.
 
-Termín vybereme spolu až po objednávce. Přesunout ho můžeš zdarma do 24 hodin předem.
+Termín vybereme spolu až po objednávce.
 
 Když z hovoru neodejdeš se spočítanými kaloriemi, bílkovinami a prvními kroky na týden, vrátím ti celou částku.
 

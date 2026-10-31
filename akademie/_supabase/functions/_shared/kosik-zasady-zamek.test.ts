@@ -1,0 +1,54 @@
+const root = new URL("../../../../", import.meta.url);
+
+async function soubor(cesta: string): Promise<string> {
+  return await Deno.readTextFile(new URL(cesta, root));
+}
+
+const NADPIS = "4b. Připomínka nedokončené objednávky";
+const SES = "Amazon Web Services EMEA SARL";
+const ODSTAVCE = [
+  "Když na prodejní stránce před platbou zadáte e-mail, použijeme ho k předvyplnění platby ve Stripe. Jde o krok před uzavřením smlouvy na vaši žádost (čl. 6 odst. 1 písm. b) GDPR). Spolu s e-mailem ukládáme vybraný produkt, čas a stránku, ze které jste přišli, a kvůli ochraně před zneužitím zkrácený otisk (hash) vaší IP adresy a typ prohlížeče (oprávněný zájem, čl. 6 odst. 1 písm. f) GDPR).",
+  "Pokud zaškrtnete souhlas, pošleme vám nejvýš dva e-maily s připomínkou, že objednávka zůstala nedokončená (souhlas podle čl. 6 odst. 1 písm. a) GDPR a § 7 zákona č. 480/2004 Sb.). Souhlas není podmínkou nákupu a můžete ho kdykoli odvolat odkazem v každém e-mailu. Ukládáme přesné znění souhlasu, čas a stránku, kde jste ho udělili.",
+  "Údaje bez souhlasu smažeme do 30 dnů od zadání. Údaje se souhlasem smažeme do 90 dnů od posledního e-mailu, nebo hned po odvolání souhlasu. Po odvolání si ponecháme jen e-mailovou adresu na seznamu odhlášených, abychom vám už nic neposlali. E-maily odesíláme přes poskytovatele uvedené v čl. 3.",
+];
+
+Deno.test("4b a cl. 3 nejsou na webu, dokud je kosik vypnuty", async () => {
+  const zasady = await soubor("zasady-ochrany-osobnich-udaju/index.html");
+  const konzultace = await soubor("konzultace/index.html");
+  const koucing = await soubor("koucing/index.html");
+  const pravidla = await soubor("akademie/_supabase/functions/_shared/kosik-pravidla.ts");
+  const sql = await soubor("akademie/_supabase/kosik-2026-11.sql");
+  const pripravene = await soubor("docs/kosik/zasady-4b-a-cl3.md");
+  const navrh = await soubor("docs/kosik/ZASADY-4B-NAVRH.md");
+  const skript = await soubor("scripts/kosik-zasady-aplikuj.mjs");
+  const deploy = await soubor(".github/workflows/deploy-wedos.yml");
+
+  const zapnutoHtml = konzultace.includes('data-kosik-zapnuto="true"')
+    || koucing.includes('data-kosik-zapnuto="true"');
+  const zapnutoKod = /export const FLAGY_VYCHOZI[\s\S]{0,400}webZapnuto:\s*true/.test(pravidla);
+  const zive = zapnutoHtml || zapnutoKod;
+  const ma4b = zasady.includes(NADPIS);
+  const maSes = zasady.includes(SES);
+
+  if (!zive && (ma4b || maSes)) {
+    throw new Error("4b nebo SES jsou na zive strance, kosik je vypnuty");
+  }
+  if (zive && (!ma4b || !maSes)) {
+    throw new Error("zapnuty kosik bez 4b nebo bez SES v zasadech");
+  }
+  if (!konzultace.includes('data-kosik-zapnuto="false"')) throw new Error("konzultace flag");
+  if (!koucing.includes('data-kosik-zapnuto="false"')) throw new Error("koucing flag");
+  if (!sql.includes("('kosik_web_zapnuto','false')")) throw new Error("sql flag");
+  if (!/webZapnuto:\s*false/.test(pravidla)) throw new Error("vychozi web");
+
+  for (const odst of ODSTAVCE) {
+    if (!pripravene.includes(odst) || !navrh.includes(odst)) throw new Error("chybi odstavec v pripravenem zneni");
+    if (zasady.includes(odst)) throw new Error("odstavec 4b je na webu");
+  }
+  if (!pripravene.includes(SES) || !pripravene.includes("eu-central-1")) throw new Error("chybi SES v priprave");
+  if (!zasady.includes("<b>Resend</b>")) throw new Error("Resend ma v cl. 3 zustat");
+  if (!skript.includes("--az-pri-zapnuti-kosik-web") || !skript.includes("process.exit(2)")) {
+    throw new Error("skript nema tvrdou branu");
+  }
+  if (deploy.includes("kosik-zasady-aplikuj")) throw new Error("deploy nesmi skript volat");
+});
