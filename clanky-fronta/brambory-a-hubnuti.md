@@ -26,7 +26,7 @@ Australští vědci v roce 1995 dali lidem 38 běžných potravin, vždy porci s
 
 Vítěz: vařené brambory. Sytily víc než třikrát lépe než bílý chléb a zhruba sedmkrát lépe než croissant, který skončil poslední. Potraviny, které sytily víc, měly víc vody, vlákniny a bílkovin. Ty s víc tukem sytily méně.
 
-Důvod je jednoduchý. 100 g vařených brambor má kolem 80 kcal. Za stejných 240 kcal tak sníš celý talíř brambor, nebo pár soust croissantu. Na sytost má velký vliv objem a voda v jídle a brambory jsou z velké části voda.
+Důvod je jednoduchý. 100 g vařených brambor má kolem 80 kcal. Za stejných 240 kcal tak sníš celý talíř brambor, nebo zhruba jeden croissant. Na sytost má velký vliv objem a voda v jídle a brambory jsou z velké části voda.
 
 ## Co ukázaly studie s bramborami při dietě
 
