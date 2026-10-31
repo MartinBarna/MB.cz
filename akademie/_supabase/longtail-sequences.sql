@@ -157,6 +157,9 @@ INSERT INTO email_templates (track, step, key, subject, preheader, blocks, wait_
  $j$[{"t": "p", "html": "Ahoj{{fn_space}},"}, {"t": "p", "html": "když se klientů ptám, kde se jim to sype, skoro nikdy to není jídelníček z týdne. Jsou to <strong>víkendy</strong> — přes týden systém, o víkendu chaos, v pondělí výčitky."}, {"t": "p", "html": "Řešení je počítat <strong>týdenní průměr</strong> místo denní dokonalosti a víkend do plánu zabudovat dopředu. Přesný postup máš v kurzu v přílohách — průvodce <strong>Jak zvládnout víkendové přejídání</strong>:"}, {"t": "btn", "href": "https://martinbarna.cz/akademie/videokurz/", "text": "Stáhnout v přílohách kurzu"}, {"t": "p", "html": "<strong>Be Effective!</strong><br>Martin"}]$j$::jsonb,
  21),
 
+-- ⚠️ 29. 10. 2026: tohle NENI ziva sablona. V DB je lk-3-koucink na kroku 5 (jiny text).
+-- Opakovane spusteni tohohle INSERTu by prepsalo krok 3, kde dnes sedi lk-2-vikendy.
+-- Zivy hotfix: akademie/_supabase/urgent-drip-2026-10-30.sql
 ('longtail-kupci', 3, 'lk-3-koucink',
  $s$Kurz ti dal systém. Chceš, ať ti ho nastavím já?$s$,
  $h$Koučink 1:1 — plán na míru + týdenní vedení.$h$,
