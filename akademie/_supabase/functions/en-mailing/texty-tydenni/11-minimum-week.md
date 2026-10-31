@@ -1,5 +1,5 @@
 Subject: One hour of lifting in a bad week
-Preheader: Two times 30 minutes. The big jump was between zero and some.
+Preheader: Two 30-minute sessions. From zero to some.
 
 Body:
 
@@ -7,11 +7,11 @@ Hi {{first_name}},
 
 Sixty minutes in the whole week. That's two workouts of 30 minutes, or three of 20.
 
-The number comes from a 2022 meta-analysis on strength training and risk of death (Shailendra and colleagues). Any lifting, compared with none, was linked to a 15% lower risk of death from all causes. In the studies that could show dose, the lowest risk was about 27% lower, around 60 minutes a week. Above that, the advantage got smaller.
+A 2022 meta-analysis on strength training and risk of death (Shailendra and colleagues) linked any lifting, compared with none, to a lower risk of death from all causes.
 
-This is observational. It shows a link, and it isn't proof that lifting causes a longer life. People who lift also sleep more, smoke less, and have different access to doctors. The papers are about risk of death, not about kilos of fat.
+This is observational. It shows a link, and it isn't proof that lifting causes a longer life. People who lift may also sleep better, smoke less or see a doctor more often. The papers are about risk of death, not about kilos of fat.
 
-For a week that breaks, the useful part is the size. One hour fits. And the biggest difference in that research was between no lifting and some lifting.
+When a week falls apart, this is the useful part: one hour fits. And in that research, the link was with any lifting compared with none.
 
 A simple hour:
 
@@ -19,7 +19,7 @@ Two full-body workouts, 30 minutes each. Four or five exercises: something for t
 
 At home, body weight and a band are enough at the start. A gym helps later, when you need more load.
 
-If you've had surgery, heart problems, or back pain that limits you, talk to your doctor or a physiotherapist before you start.
+If you're pregnant, have had surgery, heart problems, or back pain that limits you, talk to your doctor or a physiotherapist first.
 
 More: {{link_article:strength-training-one-hour-a-week}}
 

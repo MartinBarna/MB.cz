@@ -1,5 +1,5 @@
 Subject: The fridge after a hard day
-Preheader: Sweet food is the fast fix. It doesn't build a belly against a deficit.
+Preheader: Stress makes the deficit harder to hold. A few things make it easier.
 
 Body:
 
@@ -9,7 +9,7 @@ A long day, then the kitchen. The thing you want is sweet, and you want it now.
 
 Chronic stress and short sleep can slow fat loss, and they can add to fat stored around the belly. Cortisol, the stress hormone, gets the blame, and people call the result a hormonal belly. But there's a limit. Hormones don't build a belly on their own against a calorie deficit. They make the deficit harder to hold. Sleep and stress change how easily you stay under your number, and how much you eat. They don't get around the number.
 
-A very hard cut pushes the same door from the other side. Heavy tiredness and hunger are the body asking for more food, and spending less energy. Sweet food is the fastest energy, so that's the signal. Beans do the other job: protein and fiber with the carbs, slower digestion, steadier blood sugar.
+A very strict diet does the same from the other side. Exhausted and hungry, you're pushed to eat more and move less. Sweet food is the fastest energy, so that's what you crave. A meal with beans lands slower: protein and fiber with the carbs, steadier energy.
 
 For a week like that:
 
@@ -18,6 +18,8 @@ Keep a regular time to sleep and to get up. Fewer screens in the evening. A walk
 Put protein and fiber in the meal before the hour when the cravings usually show up.
 
 If you're very tired and very hungry, a diet break can help. That means a planned pause from dieting, not a blow-up and a restart on Monday.
+
+If stress feels like more than a hard week, or eating feels out of your control, talk to your doctor or a mental health professional. In the Czech Republic, you can call the psychological first aid line on 116 123.
 
 If you suspect a hormone problem, or you take medication, talk to your doctor. I'm a coach, not a doctor.
 

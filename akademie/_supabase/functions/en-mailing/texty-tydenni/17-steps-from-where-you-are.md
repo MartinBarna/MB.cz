@@ -5,19 +5,19 @@ Body:
 
 Hi {{first_name}},
 
-The number 10,000 didn't come from a fat loss study. In Japan in the 1960s it was a marketing line for a pedometer. The device was called manpo-kei, a "10,000 steps meter". A round number that sold.
+The number 10,000 didn't come from a fat loss study. In Japan it was a marketing line for a pedometer. The device was called manpo-kei, a "10,000 steps meter". A round number that sold.
 
-What the health research shows is earlier than that. In a pooled analysis of 15 studies, the drop in the risk of dying leveled off around 6,000 to 8,000 steps for people aged 60 and over, and around 8,000 to 10,000 for younger adults (Paluch, 2022). In about 16,700 older women, about 4,400 steps a day already meant a lower risk than about 2,700, and the benefit leveled off around 7,500 (Lee, 2019). Both papers are about dying, not about kilos of fat. Miss 10,000 and you haven't missed the point.
+What the health research shows is earlier than that. In a pooled analysis of 15 studies, the drop in the risk of dying leveled off around 6,000 to 8,000 steps for people aged 60 and over, and around 8,000 to 10,000 for younger adults (Paluch, 2022). In older women, about 4,400 steps a day already meant a lower risk than about 2,700 (Lee, 2019). Both papers measured the risk of dying. Fat loss wasn't part of them. Miss 10,000 and you haven't missed the point.
 
-For fat loss, start from your own average, not from a stranger's target. Add 2,000 to 3,000 steps. If you walk 4,000 now, 6,000 to 7,000 is the next step. A long-term guide for most active people is 7,000 to 10,000 a day. Use it as a guide.
+For fat loss, start from your own average. Add 2,000 to 3,000 steps. If you walk 4,000 now, 6,000 to 7,000 is the next step. From there, build toward 8,000. A long-term guide for most people is 7,000 to 10,000 a day. Use it as a guide.
 
 7,000 steps every day for a year beats 20,000 once a week and a chair the other days.
 
 You don't need a free hour. Take a call while you walk. Get off one stop early. Use the stairs. The steps sit in the gaps you already have.
 
-One workout is one hour out of twenty-four. The rest of the day's movement, walking included, often burns more than that hour. Hard intervals also raise hunger. A walk usually doesn't, so you're less likely to eat the session back.
+One workout is one hour out of twenty-four. The rest of the day's movement, walking included, often burns more than that hour. Some people come out of a hard session starving. A walk rarely does that, so it's easier not to eat it back.
 
-Food still sets the rest of the deficit. Steps are the part you can repeat.
+Food still sets most of the deficit. Walking is the easy part to keep doing.
 
 More: {{link_article:how-many-steps-a-day}}
 

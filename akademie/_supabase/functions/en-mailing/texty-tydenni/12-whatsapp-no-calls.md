@@ -1,5 +1,5 @@
 Subject: When the same menu stops working
-Preheader: The shift is small. WhatsApp Monday to Friday, usually within 24 hours.
+Preheader: After a long diet the body adapts a little. Here's how we adjust.
 
 Body:
 
@@ -7,11 +7,11 @@ Hi {{first_name}},
 
 You've held the same menu for a long time, and now the weight just sits there.
 
-If the diet has been long, the body does adapt. The name for it's adaptive thermogenesis. Resting energy use goes down a bit, and you move a bit less without noticing. The menu that used to work now holds your weight.
+After a long diet, the body does adapt. It's called adaptive thermogenesis. Resting energy use goes down a bit, and you move a bit less without noticing. The menu that used to work now holds your weight.
 
-The size of that shift matters. It's small, nowhere near half of your energy use. The deficit still works. You may need to fine-tune the number. When you raise intake again, the adaptation fades. Nothing is permanently broken.
+The size of that shift matters. It's smaller than it feels when the scale stops. The deficit still works. You may need to fine-tune the number. In most studies, the adaptation shrinks once people eat more again. It's an adjustment, and it can be undone.
 
-That fine-tune is what the written check-in is for. Once a week you send a 3 minute report from your phone. I answer in writing with the plan for next week, and I move calories and macros from what the week actually did.
+That fine-tune is what the written check-in is for. You already know the weekly report from an earlier email. What changes here is what I do with it: when the week shows adaptation, I adjust the number based on how the week actually went, so you don't have to push harder on a menu that has stopped working.
 
 Between reports, WhatsApp Monday to Friday. A menu, a hotel breakfast, a week that broke. I usually reply within 24 hours on working days. You write when it suits you. I'm in Czechia. Nothing needs us online at the same time.
 
@@ -23,7 +23,7 @@ Apply here: {{link_apply}}
 
 Want more support? Message me for VIP options.
 
-If something feels seriously off (marked fatigue, feeling cold, hair loss, dry skin, swelling, a very low mood), don't guess, and don't read forums. See a doctor. I'm a coach, not a doctor.
+If something feels seriously off (marked fatigue, feeling cold, hair loss, dry skin, swelling, a very low mood), don't guess, and don't read forums. See a doctor. If your mood is very low, talk to someone today: in Czechia you can call 116 123, elsewhere your local crisis line.
 
 More on this: {{link_article:slow-metabolism-myth}}
 

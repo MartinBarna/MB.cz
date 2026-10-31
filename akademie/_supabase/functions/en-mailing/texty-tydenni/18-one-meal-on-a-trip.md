@@ -11,9 +11,9 @@ Then a day with no brakes. 2,000 to 3,000 kcal extra is easy. Take the middle:
 
 2,500 / 500 = 5
 
-Five days of the deficit are gone in one afternoon.
+Five days of the deficit, gone in one day.
 
-A work trip is where this happens without anyone calling it a cheat day. Breakfast at the hotel, lunch with the team, dinner with the client, and a drink after. Four exceptions is a day off the plan, repeated.
+A work trip is where this happens without anyone calling it a cheat day. Breakfast at the hotel, lunch with the team, dinner with the client, and a drink after. Four exceptions in one day is a day off the plan. On a five-day trip, that's five of them.
 
 One relaxed meal fits. A whole day doesn't. Pick the one meal before you fly. Pizza, the tasting menu, whatever you actually want. The next meal is a normal meal. One dinner isn't a free pass for the rest of the city.
 
@@ -29,7 +29,7 @@ Apply here: {{link_apply}}
 
 Want more support? Message me for VIP options.
 
-The maths: {{link_article:cheat-day-or-cheat-meal}}
+The math: {{link_article:cheat-day-or-cheat-meal}}
 
 Be Effective!
 Martin

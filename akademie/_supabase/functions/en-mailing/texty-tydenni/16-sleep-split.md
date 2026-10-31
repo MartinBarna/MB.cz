@@ -1,5 +1,5 @@
 Subject: 8.5 hours vs 5.5. Same 3 kg, different split.
-Preheader: 10 people, 14 days in a lab. Short sleep took more muscle than fat.
+Preheader: 10 people, 14 days in a lab. Short sleep took more lean mass than fat.
 
 Body:
 
@@ -9,11 +9,11 @@ Same diet, 14 days, 10 people in a lab. The scale dropped about 3 kg both times.
 
 With 8.5 hours in bed they lost 1.4 kg of fat and 1.5 kg of lean mass. With 5.5 hours in bed they lost 0.6 kg of fat and 2.4 kg of lean mass. Short sleep, and most of what left wasn't fat. It was a small study. Everything in it was controlled.
 
-Other work points the same way. I won't add numbers the papers didn't print. People with overweight who slept longer ate less. One night without sleep lowered how much muscle protein the body built. In an 8-week diet, about an hour less sleep on five nights a week, less of the weight lost came from fat.
+Other work points the same way. People with overweight who slept longer ate less. One night without sleep lowered how much muscle protein the body built. In another diet study where people cut back on sleep on several nights a week, less of the weight they lost came from fat.
 
 Outside a lab you also move less when you're tired, and the food log usually runs low. The gap is probably bigger.
 
-I put sleep in the top four, with the deficit, protein, and strength training. One bad night won't wreck the diet. If you already sleep 7 to 9 hours most nights, work on something else. The people who truly do well on very little sleep are rare. We're talking about single families. You're almost certainly not one of them.
+I put sleep in the top four, with the deficit, protein, and strength training. One bad night won't wreck the diet. If you already sleep 7 to 9 hours most nights, work on something else. Very few people do well on very little sleep. A few families carry a gene for natural short sleep. It's rare enough that you're very unlikely to be one of them.
 
 The study: {{link_article:sleep-and-fat-loss}}
 

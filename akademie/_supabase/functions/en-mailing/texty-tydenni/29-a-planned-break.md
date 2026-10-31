@@ -1,19 +1,19 @@
 Subject: A planned week at maintenance isn't quitting
-Preheader: One study liked diet breaks a lot. Studies from 2021 didn't. The pause still has a use.
+Preheader: The early data on diet breaks looked great, later studies less so. A planned pause still has its uses.
 
 Body:
 
 Hi {{first_name}},
 
-A conference week, or the family visiting. In weeks like that I usually hear about two options: push the diet through, or drop everything. There's a third one. A planned break at maintenance.
+Some weeks the diet just doesn't fit. I usually hear about two options then: push through, or drop everything. There's a third one: a planned break at maintenance.
 
-One study compared two groups. Group 1 dieted for 16 weeks at 67% of their usual calories. Group 2 also dieted for 16 weeks, but after every two weeks of diet they ate at maintenance for two weeks, so their whole diet took 30 weeks. Group 2 lost almost twice the fat over that period, kept more muscle, and regained much less fat afterwards.
+One study in men with obesity compared two groups. Group 1 dieted for 16 weeks at 67% of their usual calories. Group 2 also dieted for 16 weeks, but after every two weeks of diet they ate at maintenance for two weeks, so their whole diet took 30 weeks. Group 2 lost noticeably more fat.
 
-Then came studies in 2021. They found no advantage for breaks over steady fat loss. So I don't sell a break as a fat-loss trick.
+Later research didn't back that up. A review of nine trials found planned pauses no more or less effective than steady dieting for weight loss. So I don't sell a break as a fat-loss trick.
 
-It still earns its place. A hard week, a party, a stretch where you need rest and don't want to gain. Eat at your current maintenance and you don't put fat back on. You just pause the loss.
+It still earns its place. A hard week, a party, a stretch where you need rest and don't want to gain. Eat at your current maintenance and you shouldn't regain fat. You just pause the loss. The scale may still go up a kilo or two from water and glycogen. That isn't fat, and it usually comes off again once the diet resumes.
 
-One catch. Maintenance drops as your weight drops. If you held your weight on 2,000 kcal at the start, a few weeks later that number is lower. The break week isn't the menu from before the diet.
+Keep in mind that maintenance drops as your weight drops. If you held your weight on 2,000 kcal at the start, a few weeks later that number is lower. The break week isn't the menu from before the diet.
 
 Changing your body takes months. You don't have to lose weight every single week.
 
@@ -26,4 +26,4 @@ You get this email because you asked for the Fat Loss Kit at martinbarna.cz/en/.
 Unsubscribe: {{unsubscribe_url}}
 {{postal_address}}
 
-Source: diet-breaks.md (16 weeks at 67%, two-week blocks, 30 weeks, almost twice the fat, more muscle, less regain; studies from 2021 with no advantage; maintenance falls with weight, the 2,000 kcal example; not a sprint). The article prints no author, year or DOI for the first study, so none is given here. Email 14 named a diet break as a planned pause in one line, with no length. This email is the full version and does not repeat the stress or craving content.
+Source: diet-breaks.md (16 weeks at 67%, two-week blocks, 30 weeks, more fat lost; maintenance falls with weight, the 2,000 kcal example; not a sprint). The first study is MATADOR (Byrne et al., Int J Obes 2018, PMC5803575, men with obesity): fat loss 12.3 vs 8.0 kg, about 1.5 times, so the article's "almost twice" needs fixing; fat-free mass loss was similar (P=0.4), so "more muscle" stays out. The abstract reports no follow-up, so "regained less" is removed. The article's unnamed 2021 studies are replaced by a systematic review of planned pauses vs continuous dieting (nine arms, 796 participants, PMC11423418). The water and glycogen line is a standard coaching caveat, not from the article. Email 14 named a diet break as a planned pause in one line, with no length. This email is the full version and does not repeat the stress or craving content.
