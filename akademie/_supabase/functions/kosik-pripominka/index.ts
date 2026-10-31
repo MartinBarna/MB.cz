@@ -5,7 +5,7 @@ import { createClient } from "jsr:@supabase/supabase-js@2";
 import { nactiKosikFlagy } from "../_shared/kosik-flagy-db.ts";
 import { escapeIlikeExact, guardSend, sendIfAllowed } from "../_shared/mailing-guard.ts";
 import { mailKlic } from "../_shared/mail-provider.ts";
-import { aplikujFiltrSouhlasu, castiPraha, jeMarketingovaUdalost, prahaNaUtc, produktEntitlement } from "../_shared/kosik-pravidla.ts";
+import { aplikujFiltrSouhlasu, dostalMarketingVDen, leadIdSeznam, oknoDnePraha, produktEntitlement } from "../_shared/kosik-pravidla.ts";
 import { odesliPresResend } from "../_shared/resend-odeslat.ts";
 import { overSecret } from "../_shared/secret-guard.ts";
 import { ODESILATEL, REPLY_TO } from "../_shared/kosik-texty.ts";
@@ -78,31 +78,39 @@ Deno.serve(async (req) => {
           .eq("email", r.email).neq("id", r.id).not("mail1_odeslan_at", "is", null).gte("mail1_odeslan_at", od30).limit(1);
         if (sErr) throw new Error(sErr.message);
         const jinaSerie = serie && serie[0]?.mail1_odeslan_at ? new Date(serie[0].mail1_odeslan_at) : null;
-        const den = castiPraha(ted);
-        const odDne = prahaNaUtc(den.year, den.month, den.day, 0, 0, 0).toISOString();
+        const dueRaw = r.krok === 0 ? r.mail1_due_at : r.mail2_due_at;
+        const due = dueRaw ? new Date(dueRaw) : null;
         const { data: lead, error: leadErr } = await admin.from("leads").select("id")
-          .ilike("email", escapeIlikeExact(r.email)).limit(1);
+          .ilike("email", escapeIlikeExact(r.email));
         let dostalMarketingDnes = false;
-        if (leadErr) {
+        if (leadErr || !due || !Number.isFinite(due.getTime())) {
           dostalMarketingDnes = true;
         } else {
-          const leadId = lead && lead[0]?.id ? String(lead[0].id) : null;
+          const leadIds = leadIdSeznam((lead ?? []).map((row) => String(row.id ?? "")));
+          const okno = oknoDnePraha(due);
+          const odDne = okno.od.toISOString();
+          const doDne = okno.do.toISOString();
           const typy = ["sent", "odeslano", "px_odeslano"];
-          const podleLeadu = leadId
-            ? await admin.from("email_events").select("lead_id,type,detail")
-              .eq("lead_id", leadId).in("type", typy).gte("created_at", odDne).limit(30)
+          const podleLeadu = leadIds.length
+            ? await admin.from("email_events").select("lead_id,type,detail,created_at")
+              .in("lead_id", leadIds).in("type", typy)
+              .gte("created_at", odDne).lt("created_at", doDne)
+              .limit(80)
             : { data: [], error: null };
-          const podleEmailu = await admin.from("email_events").select("lead_id,type,detail")
-            .eq("detail->>email", r.email).in("type", typy).gte("created_at", odDne).limit(30);
+          const podleEmailu = await admin.from("email_events").select("lead_id,type,detail,created_at")
+            .eq("detail->>email", r.email).in("type", typy)
+            .gte("created_at", odDne).lt("created_at", doDne)
+            .limit(80);
           if (podleLeadu.error || podleEmailu.error) {
             dostalMarketingDnes = true;
           } else {
             const vse = [...(podleLeadu.data ?? []), ...(podleEmailu.data ?? [])];
-            dostalMarketingDnes = vse.some((e) => jeMarketingovaUdalost({
+            dostalMarketingDnes = dostalMarketingVDen(vse.map((e) => ({
               type: e.type,
               lead_id: e.lead_id,
+              created_at: e.created_at,
               detail: e.detail as { email?: string; track?: string } | null,
-            }, r.email, leadId));
+            })), r.email, leadIds, due);
           }
         }
         const g = await guardSend(admin, {
@@ -126,12 +134,14 @@ Deno.serve(async (req) => {
       },
       zapisUdalost: async (detail) => {
         const { type, step, email, ...zbytek } = detail;
+        const telo: Record<string, unknown> = { via: "kosik-pripominka", ...zbytek };
+        if (typeof email === "string" && email.trim()) telo.email = email.trim();
         await admin.from("email_events").insert({
           lead_id: null,
           step,
           type,
           provider_id: typeof zbytek.provider_id === "string" ? zbytek.provider_id : null,
-          detail: { via: "kosik-pripominka", email, ...zbytek },
+          detail: telo,
         });
       },
       posliMail: async (payload) => {

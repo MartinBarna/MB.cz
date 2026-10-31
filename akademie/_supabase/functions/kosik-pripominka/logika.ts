@@ -100,7 +100,7 @@ export type PripominkaDeps = {
   nactiKandidaty: () => Promise<Kandidat[]>;
   kontext: (r: Kandidat) => Promise<KontextRadku>;
   oznac: (id: string, patch: Record<string, unknown>) => Promise<{ ok: boolean; chyba?: string }>;
-  zapisUdalost: (detail: Record<string, unknown> & { type: string; step: number; email: string }) => Promise<void>;
+  zapisUdalost: (detail: Record<string, unknown> & { type: string; step: number; email?: string | null }) => Promise<void>;
   posliMail: (payload: {
     to: string;
     subject: string;
@@ -171,7 +171,6 @@ async function zpracujRadek(
     await deps.zapisUdalost({
       type: "kosik_stop",
       step: r.krok,
-      email: r.email,
       duvod: "bez_souhlasu",
       kosik_id: r.id,
     });
@@ -269,7 +268,6 @@ async function zpracujRadek(
     await deps.zapisUdalost({
       type: "kosik_stop",
       step: r.krok,
-      email: r.email,
       duvod: "bez_souhlasu",
       kosik_id: r.id,
     });

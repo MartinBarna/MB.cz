@@ -283,16 +283,37 @@ export function platnyPromo(s: string): boolean {
   return /^[A-Za-z0-9_-]{1,64}$/.test(s);
 }
 
+/** Pulnoc az dalsi pulnoc v Praze pro den, do ktereho patri okamzik. */
+export function oknoDnePraha(okamzik: Date): { od: Date; do: Date } {
+  const c = castiPraha(okamzik);
+  const od = prahaNaUtc(c.year, c.month, c.day, 0, 0, 0);
+  const dalsi = new Date(Date.UTC(c.year, c.month - 1, c.day) + MS_24H);
+  const konec = prahaNaUtc(dalsi.getUTCFullYear(), dalsi.getUTCMonth() + 1, dalsi.getUTCDate(), 0, 0, 0);
+  return { od, do: konec };
+}
+
+export function leadIdSeznam(leadId: readonly string[] | string | null | undefined): string[] {
+  if (leadId == null) return [];
+  const arr = typeof leadId === "string" ? [leadId] : [...leadId];
+  const out: string[] = [];
+  for (const id of arr) {
+    const s = String(id).trim();
+    if (s && !out.includes(s)) out.push(s);
+  }
+  return out;
+}
+
 /**
- * Událost z dnešního dne patří tomuhle e-mailu.
+ * Událost patří tomuhle e-mailu.
  * Drip píše type `sent` jen s `lead_id` (detail.email tam není).
  * Cesty, které email do detailu dávají, sedí i bez leadu.
  * Vlastní kosik-* track se nepočítá, ať suchý běh neposouvá sám sebe.
+ * leadId muze byt jedno id, nebo vsechna id toho e-mailu. Zadne se neorizne.
  */
 export function jeMarketingovaUdalost(
   e: { type?: string | null; lead_id?: string | null; detail?: { email?: string; track?: string } | null },
   email: string,
-  leadId: string | null,
+  leadId: readonly string[] | string | null,
 ): boolean {
   const typ = String(e.type ?? "");
   if (typ !== "sent" && typ !== "odeslano" && typ !== "px_odeslano") return false;
@@ -300,8 +321,37 @@ export function jeMarketingovaUdalost(
   const detailEmail = String(e.detail?.email ?? "").trim().toLowerCase();
   const cil = email.trim().toLowerCase();
   const sediEmail = detailEmail !== "" && detailEmail === cil;
-  const sediLead = !!leadId && e.lead_id != null && String(e.lead_id) === leadId;
+  const ids = leadIdSeznam(leadId);
+  const sediLead = e.lead_id != null && ids.includes(String(e.lead_id));
   return sediEmail || sediLead;
+}
+
+export type MarketingUdalost = {
+  type?: string | null;
+  lead_id?: string | null;
+  created_at?: string | null;
+  detail?: { email?: string; track?: string } | null;
+};
+
+/**
+ * Marketing v kalendarnim dni planovaneho odeslani (due) v Praze.
+ * Den "dnes" se nepouziva. Událost mimo <od, do) se nepocita.
+ */
+export function dostalMarketingVDen(
+  udalosti: readonly MarketingUdalost[],
+  email: string,
+  leadIds: readonly string[],
+  due: Date,
+): boolean {
+  const okno = oknoDnePraha(due);
+  const od = okno.od.getTime();
+  const konec = okno.do.getTime();
+  return udalosti.some((e) => {
+    if (!e.created_at) return false;
+    const t = new Date(e.created_at).getTime();
+    if (!Number.isFinite(t) || t < od || t >= konec) return false;
+    return jeMarketingovaUdalost(e, email, leadIds);
+  });
 }
 
 /** Filtr, ktery musi mit SQL dotaz odesilace. Test ho pousti pres zapisovac volani. */

@@ -20,7 +20,9 @@ Draft. Nic z tohoto se nenasazuje, dokud neprojde právní kontrola a Claude ned
 
 Na webu je navíc `data-kosik-zapnuto="false"` na skriptu. Bez toho se modal neotevře, i kdyby byl server zapnutý. Env `KOSIK_DRY_RUN=1` umí dry-run jen zapnout, ne vypnout.
 
-Souhlas není podmínka nákupu. Mail se pošle jen když je v řádku `souhlas`, `souhlas_at`, `souhlas_text`, `souhlas_verze` a `stripe_session_id`. Kontrola je v SQL dotazu a znovu v kódu těsně před odesláním.
+Souhlas není podmínka nákupu. Verze souhlasu je jen `kosik-v2-2026-11`. Starší znění se neukládá a není fallback. Mail se pošle jen když je v řádku `souhlas`, `souhlas_at`, `souhlas_text`, `souhlas_verze` a `stripe_session_id`. Kontrola je v SQL dotazu a znovu v kódu těsně před odesláním. Řádek bez souhlasu do události s e-mailem nepatří.
+
+Sekce 4b zásad a položka Amazon SES v čl. 3 na webu nejsou. Vloží je až skript při zapnutí, ve stejném deployi jako `data-kosik-zapnuto`. Postup: `docs/kosik/RUNBOOK.md`. Retence (`kosik-retence-2026-11.sql`) se v tomhle stavu nespouští, cron je zakomentovaný a funkce maže jen při `kosik_retence_zapnuto=true`.
 
 ## Pořadí nasazení (až po GO)
 

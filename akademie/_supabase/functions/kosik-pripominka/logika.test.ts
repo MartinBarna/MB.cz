@@ -11,7 +11,7 @@ function radek(over: Partial<Kandidat> = {}): Kandidat {
     souhlas: true,
     souhlas_at: "2026-01-01T00:00:00.000Z",
     souhlas_text: "presne zneni",
-    souhlas_verze: "kosik-v1-2026-11",
+    souhlas_verze: "kosik-v2-2026-11",
     stripe_session_id: "cs_1",
     test: false,
     zaplaceno_at: null,
@@ -38,7 +38,7 @@ function flagy(over: Partial<KosikFlagy> = {}): KosikFlagy {
 
 async function beh(radky: Kandidat[], f: KosikFlagy) {
   const maily: unknown[] = [];
-  const udalosti: { type: string; duvod?: string }[] = [];
+  const udalosti: { type: string; duvod?: string; email?: string }[] = [];
   const deps: PripominkaDeps = {
     ted: new Date("2026-01-15T13:00:00.000Z"),
     flagy: f,
@@ -53,7 +53,11 @@ async function beh(radky: Kandidat[], f: KosikFlagy) {
     }),
     oznac: async () => ({ ok: true }),
     zapisUdalost: async (d) => {
-      udalosti.push({ type: d.type, duvod: typeof d.duvod === "string" ? d.duvod : undefined });
+      udalosti.push({
+        type: d.type,
+        duvod: typeof d.duvod === "string" ? d.duvod : undefined,
+        email: typeof d.email === "string" ? d.email : undefined,
+      });
     },
     posliMail: async (p) => {
       maily.push(p);
@@ -78,6 +82,7 @@ Deno.test("bez uplneho souhlasu je 0 mailu i v dry-runu", async () => {
   if (!udalosti.every((u) => u.type === "kosik_stop" && u.duvod === "bez_souhlasu")) {
     throw new Error(JSON.stringify(udalosti));
   }
+  if (udalosti.some((u) => u.email)) throw new Error("bez souhlasu nesmi jit email do udalosti");
 });
 
 Deno.test("dry-run s souhlasem nevola Resend", async () => {
@@ -159,6 +164,18 @@ Deno.test("mimo okno 8 az 20 se mail neposle a due se posune", async () => {
   if (maily.length !== 0 || v.odeslano !== 0) throw new Error(JSON.stringify(v));
   const due = String(posuny[0]?.mail1_due_at ?? "");
   if (due !== "2026-01-16T07:00:00.000Z") throw new Error(due);
+});
+
+Deno.test("dotaz na leady bere vsechna id a den due", async () => {
+  const src = await Deno.readTextFile(new URL("./index.ts", import.meta.url));
+  const od = src.indexOf('from("leads")');
+  const rozhod = src.lastIndexOf("dostalMarketingVDen");
+  if (od < 0 || rozhod < 0) throw new Error("chybi parovani");
+  const blok = src.slice(od, rozhod);
+  if (blok.includes(".limit(1)")) throw new Error("leads nesmi byt limit 1");
+  if (!blok.includes(".in(\"lead_id\", leadIds)")) throw new Error("musi brat vsechna lead id");
+  if (!src.includes("oknoDnePraha(due)")) throw new Error("okno musi byt den due");
+  if (src.includes("castiPraha(ted)")) throw new Error("okno nesmi byt z dneska");
 });
 
 Deno.test("vypnuty mail flag nevola Resend", async () => {

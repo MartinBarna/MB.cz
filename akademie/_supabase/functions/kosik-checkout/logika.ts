@@ -14,9 +14,11 @@ import {
   platnyPromo,
 } from "../_shared/kosik-pravidla.ts";
 
-export const SOUHLAS_VERZE = "kosik-v1-2026-11";
+export const SOUHLAS_VERZE = "kosik-v2-2026-11";
+export const SOUHLAS_LABEL =
+  "Pošli mi e-mail, když objednávku nedokončím (nejvýš 2 připomínky). Souhlas můžu kdykoli odvolat odkazem v e-mailu.";
 export const SOUHLAS_TEXT =
-  "Pošli mi e-mail, když objednávku nedokončím, a občas tipy a nabídky od Martina Barny. Souhlas můžu kdykoli odvolat odkazem v každém e-mailu. Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
+  SOUHLAS_LABEL + " Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
 
 export const POVOLENE_ORIGINS = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 
@@ -37,7 +39,11 @@ export type SouhlasZaznam = {
   souhlas_at: string | null;
 };
 
-/** Souhlas je true jen kdyz verze sedi na kanonicke zneni. Text z klienta se neuklada. */
+/**
+ * Souhlas je true jen kdyz verze sedi na kanonicke zneni.
+ * Text z klienta se neuklada. Jina verze, prazdna verze i chybejici verze
+ * jsou souhlas false. Zadny fallback na starsi zneni.
+ */
 export function souhlasZVstupu(souhlas: unknown, verze: unknown, ted: Date): SouhlasZaznam {
   if (souhlas === true && verze === SOUHLAS_VERZE) {
     return {

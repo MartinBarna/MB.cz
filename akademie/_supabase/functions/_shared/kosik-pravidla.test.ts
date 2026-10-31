@@ -2,7 +2,10 @@ import {
   FLAGY_VYCHOZI,
   duvodStopu,
   flagBool,
+  dostalMarketingVDen,
   jeMarketingovaUdalost,
+  leadIdSeznam,
+  oknoDnePraha,
   jeVOkne30Dni,
   mail2Po,
   maUplnySouhlas,
@@ -165,6 +168,41 @@ Deno.test("marketing z dripu sedi pres lead_id, ne jen detail.email", () => {
   }
   if (jeMarketingovaUdalost({ type: "open", lead_id: "lead-1", detail: {} }, "a@b.cz", "lead-1")) {
     throw new Error("open neni marketing");
+  }
+});
+
+Deno.test("marketing bere vsechna lead id a den due, ne dnesek", () => {
+  const ids = leadIdSeznam(["lead-stary", "lead-novy", "lead-stary", ""]);
+  if (ids.join() !== "lead-stary,lead-novy") throw new Error(ids.join());
+  const due = new Date("2026-01-14T13:00:00.000Z");
+  const dnes = new Date("2026-01-15T13:00:00.000Z");
+  const oknoDue = oknoDnePraha(due);
+  const oknoDnes = oknoDnePraha(dnes);
+  if (oknoDue.od.getTime() === oknoDnes.od.getTime()) throw new Error("due a dnes jsou jiny den");
+  const udalosti = [
+    { type: "sent", lead_id: "lead-novy", created_at: "2026-01-14T10:00:00.000Z", detail: { track: "lead-magnet" } },
+    { type: "sent", lead_id: "lead-stary", created_at: "2026-01-15T10:00:00.000Z", detail: { track: "lead-magnet" } },
+    { type: "sent", lead_id: "cizi", created_at: "2026-01-14T11:00:00.000Z", detail: { email: "jiny@b.cz" } },
+  ];
+  if (!dostalMarketingVDen(udalosti, "a@b.cz", ids, due)) {
+    throw new Error("druhe lead id v den due ma stacit, limit 1 by ho zahodil");
+  }
+  if (dostalMarketingVDen(
+    [{ type: "sent", lead_id: "lead-stary", created_at: "2026-01-15T10:00:00.000Z", detail: {} }],
+    "a@b.cz",
+    ids,
+    due,
+  )) {
+    throw new Error("dnesni udalost se v den due nepocita");
+  }
+  const tesnePred = new Date(oknoDue.od.getTime() - 1).toISOString();
+  if (dostalMarketingVDen(
+    [{ type: "sent", lead_id: "lead-novy", created_at: tesnePred, detail: {} }],
+    "a@b.cz",
+    ["lead-novy"],
+    due,
+  )) {
+    throw new Error("udalost pred pulnoci dne due se nepocita");
   }
 });
 
