@@ -81,22 +81,22 @@ Nejedeš podle šablony. Každý týden se podívám na tvoje čísla a podle ni
 Be Effective!
 Martin Barna
 
-### KC2: Koučink, mail 2 (48 h po KC1, poslední, měkký downsell)
+### KC2: Koučink, mail 2 (48 h po KC1, poslední)
 
-**Předmět:** Nejdřív se jen potkat?
-**Preheader:** Začni konzultací. Když navážeš, odečtu ti ji.
+**Předmět:** Ještě jedna věc ke koučinku
+**Preheader:** Dvě otázky, které slyším nejčastěji. Pak už ti k tomu nepíšu.
 
 Ahoj{{fn_space}},
 
-naposledy ke koučinku, pak už ti k němu psát nebudu.
+naposledy k tomu nedokončenému koučinku, pak už ti k němu psát nebudu.
 
-Když nevíš, jestli si sedneme, dá se začít menším krokem. Dáme si hodinovou konzultaci, spočítáme tvoje čísla a domluvíme první kroky. Když si pak do 14 dní objednáš koučink, cenu konzultace ti z balíčku odečtu. Plán ti zůstane tak jako tak.
+Před startem slyším nejčastěji dvě otázky: „Zvládnu to vedle práce a rodiny?“ a „Co když mi to zase nevydrží?“
 
-[Podívat se na konzultaci] → https://martinbarna.cz/konzultace/
+Právě proto plán nestavíme na ideální týden, ale na ten tvůj. Každý týden se podívám na tvoje čísla a upravíme jen to, co je potřeba. Cílem je, aby ti to jednou šlo i beze mě.
 
-Nebo dokončit koučink rovnou: {{RECOVERY_URL}}
+[Dokončit objednávku] → {{RECOVERY_URL}}
 
-A když nevíš, co z toho, napiš mi pár řádků o tom, kde teď jsi. Poradím ti upřímně, i kdyby to mělo být „zatím nic“.
+Když se chceš nejdřív na něco zeptat, stačí odepsat na tenhle mail. Čtu to sám.
 
 Be Effective!
 Martin Barna
