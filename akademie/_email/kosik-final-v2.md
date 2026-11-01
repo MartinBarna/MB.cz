@@ -8,7 +8,7 @@ Stav: FINÁL v2. Zapracováno předběžné čtení Coache (8 bodů) i finální
 - {{fn_space}} = mezera a křestní jméno, když ho známe, jinak nic. {{RECOVERY_URL}} = odkaz obnovy košíku ze Stripe (bez utm_).
 - Patička (stejná u všech, u appky místo „na martinbarna.cz“ „v appce Tvůj Coach“):
 
-> Tenhle e-mail ti přišel, protože při objednávce na martinbarna.cz byl zaškrtnutý souhlas s připomínkou nedokončené objednávky. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}
+> Tenhle e-mail ti přišel, protože tvoje objednávka na martinbarna.cz zůstala nedokončená. Další připomínky nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}
 > Martin Barna, IČO 76383032, Lumírova 489/11, 700 30 Ostrava, martinbarna.cz
 
 - Tykání malým písmenem, spisovně, rodově neutrálně, bez slevy, bez cen, bez zdravotních slibů, bez dlouhých pomlček.
