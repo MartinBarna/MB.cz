@@ -49,13 +49,13 @@ ukazuje, jak pohyb mimo trénink souvisí s tím, kolik kdo z přebytku uloží.
 někdo na dietě nehubne, nevypovídá. Tam je odpověď jinde, nejčastěji v zápisu jídla, a mám ji rozepsanou
 [v článku o pomalém metabolismu](https://martinbarna.cz/clanky/pomaly-metabolismus-mytus.html).
 
-## Dvě hodiny sezení navíc za den
+## Skoro tři hodiny sezení navíc za den
 
 O šest let později (PMID 15681386) Levine oblékl deset štíhlých a deset mírně obézních
 lidí do senzorů, které deset dní každou půl sekundu zaznamenávaly polohu těla. Všichni
 byli sedaví dobrovolníci.
 
-Obézní účastníci seděli v průměru **o 2 hodiny denně déle**. Zajímavé bylo, že rozložení
+Obézní účastníci seděli v průměru **o 164 minut denně déle**, tedy skoro o tři hodiny (v souhrnu studie autoři zaokrouhlují na dvě). Zajímavé bylo, že rozložení
 poloh se nezměnilo, ani když obézní zhubli, ani když štíhlí přibrali. Autoři to vykládají
 tak, že sklon sedět nebo se vrtět je do velké míry daný. Podle jejich propočtu by obézní
 vydali navíc asi 350 kcal denně, kdyby se hýbali jako štíhlí.
@@ -72,8 +72,8 @@ intenzivní pohyb. V době studie to byla méně než pětina. Odhadovaný výde
 100 kcal denně**, u mužů konkrétně o 142 kcal. Když to autoři vložili do modelu, vyšla jim
 hmotnost velmi blízká té, kterou v populaci reálně naměřili.
 
-Je to populační model a o tobě konkrétně neříká nic. Ale pokud jsi před deseti lety dělal
-ve skladu a dnes sedíš u počítače a jíš stejně, chybí ti ve výdeji kolem sta kalorií denně.
+Je to populační model a o tobě konkrétně neříká nic. Ale pokud tvoje práce před deseti lety
+znamenala sklad, dnes znamená počítač a jíš pořád stejně, chybí ti ve výdeji kolem sta kalorií denně.
 Na papíře to za rok dělá skoro pět kilo, ve skutečnosti méně, protože s váhou roste i výdej.
 Směr ale sedí.
 
@@ -97,8 +97,8 @@ chůze.
 které zvládneš bez převlékání:
 
 - **Telefonáty v chůzi.** Kdo za den protelefonuje hodinu a u toho chodí, má hodinu chůze navíc.
-- **Schody místo výtahu**, pokaždé. Jedno patro nic, deset pater za den už je pohyb, který
-  by sis jinak musel naplánovat.
+- **Schody místo výtahu**, pokaždé. Jedno patro nic, deset pater za den už je pohyb, na který
+  by jinak padl kus tréninku.
 - **Kus cesty do práce pěšky.** Vystoupit o zastávku dřív, zaparkovat na konci parkoviště.
 - **Oběd venku**, ne u stolu. Deset minut tam, deset zpátky.
 - **Přerušit sezení každou hodinu** aspoň na dvě minuty. Tady pomáhá i ten stůl na stání.
