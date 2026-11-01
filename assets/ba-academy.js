@@ -200,6 +200,28 @@
         .catch(function () { return null; });
     },
 
+    // Smazání vlastního účtu. Volá edge funkci academy-delete-account.
+    // Identitu si vezme server z JWT, sem se žádné cizí id neposílá.
+    // V demo režimu (chybí BA_CONFIG) na síť nesahá.
+    deleteAccount: function () {
+      if (!LIVE) return Promise.resolve({ ok: false, error: "demo" });
+      return BA.getToken().then(function (token) {
+        if (!token) return { ok: false, error: "unauthorized" };
+        return fetch(cfg.url + "/functions/v1/academy-delete-account", {
+          method: "POST",
+          headers: { Authorization: "Bearer " + token, apikey: cfg.anonKey }
+        }).then(function (r) {
+          return r.json().catch(function () { return { ok: false, error: "bad_response" }; })
+            .then(function (body) {
+              if (!r.ok || !body || body.ok !== true) {
+                return { ok: false, error: (body && body.error) || "delete_failed" };
+              }
+              return { ok: true };
+            });
+        }).catch(function () { return { ok: false, error: "network" }; });
+      });
+    },
+
     // YouTube ID lekce videokurzu z manifestu v DB. RLS: free lekce čte kdokoliv,
     // placené jen přihlášený s aktivním přístupem (has_entitlement) — ID placených
     // videí tak nejsou ve statickém HTML.
