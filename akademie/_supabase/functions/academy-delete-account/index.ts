@@ -45,7 +45,10 @@ const STRIPE_SUBS_KEY = Deno.env.get("STRIPE_RESTRICTED_SUBS_KEY") ?? "";
 
 const ALLOWED = ["https://martinbarna.cz", "https://www.martinbarna.cz"];
 
-type Admin = ReturnType<typeof createClient>;
+// Typ any jako v ses-events/core.ts a _shared: bez vygenerovaných typů DB by createClient
+// vrátil schéma never a deno check by spadl na každém .from().
+// deno-lint-ignore no-explicit-any
+type Admin = any;
 type DbErr = { code?: string; message?: string } | null;
 
 function cors(req: Request): Record<string, string> {
