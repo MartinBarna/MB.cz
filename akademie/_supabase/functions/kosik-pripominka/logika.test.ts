@@ -94,6 +94,7 @@ Deno.test("dry-run s souhlasem nevola Resend", async () => {
 
 Deno.test("garance K1 pri flagu off v dry-runu neni v predmetu ani by se nedostala do tela", async () => {
   let html = "";
+  let hlavicky: Record<string, string> = {};
   const deps: PripominkaDeps = {
     ted: new Date("2026-01-15T13:00:00.000Z"),
     flagy: flagy({ garanceK1: false, dryRun: false, mailZapnuto: true }),
@@ -110,6 +111,7 @@ Deno.test("garance K1 pri flagu off v dry-runu neni v predmetu ani by se nedosta
     zapisUdalost: async () => {},
     posliMail: async (p) => {
       html = p.html;
+      hlavicky = (p.headers ?? {}) as Record<string, string>;
       return { ok: true, status: 200, providerId: "re_test_neni_sit" };
     },
     alert: async () => {},
@@ -119,6 +121,12 @@ Deno.test("garance K1 pri flagu off v dry-runu neni v predmetu ani by se nedosta
   if (html.includes("vrátím ti celou částku")) throw new Error("garance odesla");
   if (html.includes("utm_")) throw new Error("utm");
   if (html.includes("{{")) throw new Error("promenna");
+  // Odhlaseni „jednim klikem" (zasady 4b, okno, paticka): One-Click POST hlavicka pro Gmail
+  // a odkaz v paticce, ktery stranka /odhlasit/ odhlasi bez dalsiho potvrzeni.
+  const lu = hlavicky["List-Unsubscribe"] ?? "";
+  if (!lu.startsWith("<https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/unsubscribe?token=")) throw new Error("List-Unsubscribe: " + lu);
+  if (hlavicky["List-Unsubscribe-Post"] !== "List-Unsubscribe=One-Click") throw new Error("chybi List-Unsubscribe-Post");
+  if (!/odhlasit\/\?token=[^"&]+&(amp;)?kosik=1/.test(html)) throw new Error("odkaz v paticce neni jednim klikem");
 });
 
 Deno.test("ostry vyber vynecha radky se suchym razitkem", () => {

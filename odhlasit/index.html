@@ -54,7 +54,11 @@
 <script>
 (function () {
   var ENDPOINT = "https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/unsubscribe";
-  var token = new URLSearchParams(location.search).get("token") || "";
+  var qs = new URLSearchParams(location.search);
+  var token = qs.get("token") || "";
+  // Pripominka nedokoncene objednavky slibuje odhlaseni „jednim klikem" (zasady 4b),
+  // proto odkaz z ni (?kosik=1) odhlasi hned po otevreni, bez tlacitka.
+  var kosik = qs.get("kosik") === "1";
   var ttl = document.getElementById("ttl");
   var msg = document.getElementById("msg");
   var act = document.getElementById("act");
@@ -156,7 +160,23 @@
     });
   }
 
-  render();
+  function kosikHned() {
+    if (!token) { broken(); return; }
+    show("Odhlašuji…", "Chvilku strpení.");
+    post("").then(function (res) {
+      if (res && res.ok) {
+        show("Odhlášeno",
+          "Hotovo, připomínky k téhle objednávce ti už nepřijdou.");
+      } else { broken(); }
+    }).catch(function () {
+      show("Nepovedlo se to",
+        "Odhlášení se teď nepodařilo. Zkus to prosím za chvíli znovu, nebo nám napiš na tenhle e-mail a vyřešíme to.",
+        '<button class="btn" id="go2">Zkusit znovu</button>');
+      document.getElementById("go2").addEventListener("click", function () { location.reload(); });
+    });
+  }
+
+  if (kosik) { kosikHned(); } else { render(); }
 })();
 </script>
 <script src="/assets/scroll-top.js?v=g13" defer></script>

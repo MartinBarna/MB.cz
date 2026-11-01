@@ -16,7 +16,7 @@ import {
   rozdelPodleCastky,
   sablonaProKlic,
 } from "../_shared/kosik-pravidla.ts";
-import { fnSpace, odkazOdhlaseni, renderKosikMail } from "../_shared/kosik-texty.ts";
+import { fnSpace, hlavickyOdhlaseni, odkazOdhlaseni, renderKosikMail } from "../_shared/kosik-texty.ts";
 
 /**
  * Ktere sloupce musi byt prazdne a ktere vyplnene, aby radek sel do behu.
@@ -316,9 +316,7 @@ async function zpracujRadek(
     subject: mail.subject,
     html: mail.html,
     text: mail.text,
-    headers: {
-      "List-Unsubscribe": "<https://martinbarna.cz/odhlasit/?token=" + encodeURIComponent(r.odhlaseni_token) + ">",
-    },
+    headers: hlavickyOdhlaseni(r.odhlaseni_token),
   });
   if (odpoved.preskoceno) {
     await deps.oznac(r.id, { [razSloupec]: null, stav: "stop_" + odpoved.preskoceno, stop_duvod: odpoved.preskoceno });
