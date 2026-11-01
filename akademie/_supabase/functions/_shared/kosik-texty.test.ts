@@ -100,6 +100,27 @@ Deno.test("K1 garance je cela pryc, kdyz je flag vypnuty", () => {
   }
 });
 
+Deno.test("K1 nema presun terminu, pri flagu false ani vetu o vraceni", () => {
+  const vars = {
+    fn_space: "",
+    RECOVERY_URL: "https://checkout.stripe.com/c/pay/cs_test_recovery",
+    ODKAZ_ODHLASENI: "https://martinbarna.cz/odhlasit/?token=abc",
+  };
+  const vyp = renderKosikMail("kosik-konzultace", 0, vars, { kosik_garance_k1: false });
+  const zap = renderKosikMail("kosik-konzultace", 0, vars, { kosik_garance_k1: true });
+  if (!vyp || !zap) throw new Error("render");
+  for (const r of [vyp, zap]) {
+    const cele = r.subject + "\n" + r.preheader + "\n" + r.html + "\n" + r.text;
+    if (cele.includes("Přesunout")) throw new Error("K1 obsahuje Přesunout");
+    if (cele.includes("24 hodin")) throw new Error("K1 obsahuje 24 hodin");
+  }
+  const vypCele = vyp.html + "\n" + vyp.text;
+  if (vypCele.includes("vrátím ti celou částku")) throw new Error("garance pri flagu false");
+  if (!vyp.text.includes("Termín vybereme spolu až po objednávce.")) {
+    throw new Error("veta o terminu chybi");
+  }
+});
+
 Deno.test("A2 nema fotku, ctecku ani tarif", () => {
   const a2 = vsechnyMaily().find((m) => m.oznaceni === "A2");
   if (!a2) throw new Error("A2");

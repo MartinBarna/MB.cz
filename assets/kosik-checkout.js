@@ -8,7 +8,7 @@ import {
   obohatOdkaz,
   platnyEmail,
   sestavTelo,
-} from "./kosik-checkout-jadro.js";
+} from "./kosik-checkout-jadro.js?v=k2";
 
 var ENDPOINT = "https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/kosik-checkout";
 var ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVobXJwZnNkY3VqYmhidHVtcXllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MDA5ODgsImV4cCI6MjA5Nzk3Njk4OH0.6d7mDJtzPvdXxvFQEd6xL9n1ph6PYTrJiyDYOjlYYts";
@@ -73,7 +73,7 @@ if (!window.MBKosik.prevezme) {
       + '<input type="text" id="mb-kosik-hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">'
       + '<label class="row"><input type="checkbox" id="mb-kosik-souhlas"><span>'
       + SOUHLAS_LABEL
-      + ' <a href="/zasady-ochrany-osobnich-udaju/">Zásady ochrany osobních údajů</a></span></label>'
+      + ' <a href="https://martinbarna.cz/zasady-ochrany-osobnich-udaju/">Zásady ochrany osobních údajů</a></span></label>'
       + "<p>" + DROBNY_TEXT + "</p>"
       + '<div class="err" id="mb-kosik-err"></div>'
       + '<button type="button" class="go" id="mb-kosik-go">Pokračovat k platbě →</button>'

@@ -1,5 +1,5 @@
 import { KOSIK_KATALOG, castkaSedi } from "../kosik-checkout/katalog.ts";
-import { rozpoznajJednorazovyKlic } from "./kosik-rozpoznani.ts";
+import { rozhodniLivemodeKosiku, rozpoznajJednorazovyKlic } from "./kosik-rozpoznani.ts";
 
 const KATALOG_KLICE = [
   "academy-lifetime",
@@ -89,4 +89,59 @@ Deno.test("stavajici platebni odkaz vyhraje i pri jine castce a cizi session je 
     dohledatRecovered: async () => null,
   });
   if (cizi.ok || cizi.duvod !== "zadny") throw new Error(JSON.stringify(cizi));
+});
+
+Deno.test("kosik expired a completed s jinym livemode nez prostredi se ignoruji", () => {
+  const kosik = { metadata: { kosik_klic: "konzultace", kosik_id: "u1" } };
+  const liveMimo = rozhodniLivemodeKosiku({
+    typ: "checkout.session.completed",
+    livemode: false,
+    obj: kosik,
+    prostredi: "live",
+  });
+  if (!liveMimo.ignoruj || liveMimo.duvod !== "livemode") throw new Error(JSON.stringify(liveMimo));
+  const testMimo = rozhodniLivemodeKosiku({
+    typ: "checkout.session.expired",
+    livemode: true,
+    obj: kosik,
+    prostredi: "test",
+  });
+  if (!testMimo.ignoruj) throw new Error(JSON.stringify(testMimo));
+  const sedi = rozhodniLivemodeKosiku({
+    typ: "checkout.session.completed",
+    livemode: true,
+    obj: kosik,
+    prostredi: "live",
+  });
+  if (sedi.ignoruj) throw new Error("shoda livemode se nema ignorovat");
+  const bezLivemode = rozhodniLivemodeKosiku({
+    typ: "checkout.session.expired",
+    livemode: "true",
+    obj: kosik,
+    prostredi: "live",
+  });
+  if (!bezLivemode.ignoruj) throw new Error("livemode musi byt boolean");
+  const odkaz = rozhodniLivemodeKosiku({
+    typ: "checkout.session.completed",
+    livemode: false,
+    obj: { payment_link: "plink_1Tyrn5Bq3rKubW9k8n2VoeWL" },
+    prostredi: "live",
+  });
+  if (odkaz.ignoruj) throw new Error("platebni odkaz neni udalost kosiku");
+  const obnova = rozhodniLivemodeKosiku({
+    typ: "checkout.session.completed",
+    livemode: false,
+    obj: { recovered_from: "cs_puvodni" },
+    prostredi: "live",
+  });
+  if (!obnova.ignoruj) throw new Error("obnovena session kosiku ma jit pres filtr");
+});
+
+Deno.test("webhook kosik livemode vola filtr driv, nez udeli narok", async () => {
+  const zdroj = await Deno.readTextFile(new URL("./index.ts", import.meta.url));
+  const filtr = zdroj.indexOf("rozhodniLivemodeKosiku");
+  const narok = zdroj.indexOf('if (typ === "checkout.session.completed")');
+  if (filtr < 0 || narok < 0 || filtr > narok) throw new Error("filtr musi byt pred completed");
+  if (!zdroj.includes('ignored: "livemode"')) throw new Error("ignorovani se ma vratit");
+  if (!zdroj.includes("kosik livemode ignorovano")) throw new Error("musi se logovat");
 });

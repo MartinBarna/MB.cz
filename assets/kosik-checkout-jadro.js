@@ -3,15 +3,14 @@
 // Pripona je .js schvalne: WEDOS posila .mjs bez Content-Type a s nosniff,
 // prohlizec takovy import odmitne.
 
-export const SOUHLAS_VERZE = "kosik-v1-2026-11";
-export const SOUHLAS_TEXT =
-  "Pošli mi e-mail, když objednávku nedokončím, a občas tipy a nabídky od Martina Barny. Souhlas můžu kdykoli odvolat odkazem v každém e-mailu. Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
-
+export const SOUHLAS_VERZE = "kosik-v2-2026-11";
 export const SOUHLAS_LABEL =
-  "Pošli mi e-mail, když objednávku nedokončím, a občas tipy a nabídky od Martina Barny. Souhlas můžu kdykoli odvolat odkazem v každém e-mailu.";
+  "Pošli mi e-mail, když objednávku nedokončím (nejvýš 2 připomínky). Souhlas můžu kdykoli odvolat odkazem v e-mailu.";
+export const SOUHLAS_TEXT =
+  SOUHLAS_LABEL + " Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
 
 export const DROBNY_TEXT =
-  "E-mail použijeme k předvyplnění platby ve Stripe. Bez zaškrtnutí ti připomínku neposíláme.";
+  "E-mail použijeme k předvyplnění platby ve Stripe. Bez zaškrtnutí ti žádnou připomínku nepošleme.";
 
 export function platnyEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 320;

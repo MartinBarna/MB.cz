@@ -58,3 +58,42 @@ export async function rozpoznajJednorazovyKlic(vstup: VstupRozpoznani): Promise<
 
   return { ok: false, duvod: "zadny" };
 }
+
+export type ProstrediStripe = "live" | "test";
+
+/**
+ * Udalost kosiku: metadata kosik_klic / kosik_id, nebo obnovena session
+ * (recovered_from) bez platebniho odkazu. Obycejny Payment Link se nemeni.
+ */
+export function jeUdalostKosiku(
+  typ: string,
+  obj: { metadata?: unknown; recovered_from?: unknown; payment_link?: unknown },
+): boolean {
+  if (typ !== "checkout.session.expired" && typ !== "checkout.session.completed") return false;
+  const meta = obj.metadata;
+  if (meta && typeof meta === "object") {
+    const m = meta as { kosik_klic?: unknown; kosik_id?: unknown };
+    if (typeof m.kosik_klic === "string" && m.kosik_klic.trim()) return true;
+    if (typeof m.kosik_id === "string" && m.kosik_id.trim()) return true;
+  }
+  const recovered = typeof obj.recovered_from === "string" ? obj.recovered_from.trim() : "";
+  const plink = typeof obj.payment_link === "string" ? obj.payment_link.trim() : "";
+  return recovered !== "" && plink === "";
+}
+
+/** livemode udalosti musi sedet na rezim tajemstvi, ktere podpis overilo. */
+export function livemodeSedi(eventLivemode: unknown, prostredi: ProstrediStripe): boolean {
+  if (typeof eventLivemode !== "boolean") return false;
+  return prostredi === "live" ? eventLivemode === true : eventLivemode === false;
+}
+
+export function rozhodniLivemodeKosiku(vstup: {
+  typ: string;
+  livemode: unknown;
+  obj: { metadata?: unknown; recovered_from?: unknown; payment_link?: unknown };
+  prostredi: ProstrediStripe;
+}): { ignoruj: false } | { ignoruj: true; duvod: "livemode" } {
+  if (!jeUdalostKosiku(vstup.typ, vstup.obj)) return { ignoruj: false };
+  if (livemodeSedi(vstup.livemode, vstup.prostredi)) return { ignoruj: false };
+  return { ignoruj: true, duvod: "livemode" };
+}
