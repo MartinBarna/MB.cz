@@ -6,6 +6,8 @@
    Zapnutí chatu: Martin doplní ANTHROPIC_API_KEY do edge funkce, pak členům naskočí. */
 (function () {
   'use strict';
+  // Název poskytovatele AI. Před sloučením ověř, že sedí s tím, co běží na serveru.
+  var AI_POSKYTOVATEL = 'Anthropic';
   var CFG = {
     ENABLED: true,
     ENDPOINT: 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/ai-martin',
@@ -70,7 +72,11 @@
       'html[data-theme="light"] #amIn{background:#fff!important;border-color:var(--bd-line,rgba(22,19,16,.20))!important;color:var(--mb-text,#161310)!important;}' +
       'html[data-theme="light"] #amCam{background:#fff!important;border-color:var(--bd-line,rgba(22,19,16,.20))!important;}' +
       'html[data-theme="light"] .am-bot{background:#fff!important;color:var(--mb-text,#161310)!important;border-color:var(--bd-line,rgba(22,19,16,.12))!important;}' +
-      'html[data-theme="light"] .am-src{color:var(--bd-muted,#5C564C)!important;}';
+      'html[data-theme="light"] .am-src{color:var(--bd-muted,#5C564C)!important;}' +
+      'html[data-theme="light"] #amSouhlas{background:var(--mb-surface,#ffffff)!important;}' +
+      'html[data-theme="light"] #amSouhlas .am-souhlas-text{color:var(--mb-text,#161310)!important;}' +
+      'html[data-theme="light"] #amSouhlas a{color:#6B4A00!important;}' +
+      'html[data-theme="light"] #amSouhlasNe{color:var(--mb-text,#161310)!important;border-color:var(--bd-line,rgba(22,19,16,.28))!important;}';
     document.head.appendChild(amCss);
   }
 
@@ -348,23 +354,133 @@
     sendToServer(userText);
   }
 
+  // Souhlas, než se dotaz (text i fotka) pošle poskytovateli. Bez něj se nic neodešle.
+  // Když localStorage nejde, souhlas platí jen do zavření panelu.
+  var SOUHLAS_KLIC = 'ai_souhlas_v1';
+  var souhlasVTomhleOtevreni = false;
+  var ulozisteNejde = false;
+  var cekajiciAkce = null;
+
+  function zjistiUloziste() {
+    var k = SOUHLAS_KLIC + '_zkouska';
+    try { localStorage.setItem(k, '1'); }
+    catch (e) { ulozisteNejde = true; return; }
+    try { localStorage.removeItem(k); }
+    catch (e2) { ulozisteNejde = true; }
+  }
+  function prectiSouhlas() {
+    try {
+      var v = localStorage.getItem(SOUHLAS_KLIC);
+      return (v && String(v).trim()) ? String(v) : '';
+    } catch (e) {
+      ulozisteNejde = true;
+      return '';
+    }
+  }
+  function zapisSouhlas() {
+    try {
+      localStorage.setItem(SOUHLAS_KLIC, new Date().toISOString());
+      return true;
+    } catch (e) {
+      ulozisteNejde = true;
+      return false;
+    }
+  }
+  function maSouhlas() {
+    if (prectiSouhlas()) return true;
+    return !!souhlasVTomhleOtevreni;
+  }
+  zjistiUloziste();
+
+  var souhlasBox = E('div', 'display:none;flex:1;min-height:0;overflow:auto;padding:16px 16px 18px;background:#141210;box-sizing:border-box;');
+  souhlasBox.id = 'amSouhlas';
+  souhlasBox.setAttribute('role', 'dialog');
+  souhlasBox.setAttribute('aria-modal', 'true');
+  souhlasBox.setAttribute('aria-label', 'Souhlas se zpracováním dotazu');
+  var souhlasText = E('p', 'margin:0 0 12px;color:#ece3d8;font-size:.88rem;line-height:1.5;');
+  souhlasText.className = 'am-souhlas-text';
+  souhlasText.textContent = 'AI Martin je umělá inteligence, ne skutečný Martin. Když mu napíšeš, tvůj dotaz a předchozí zprávy z tohoto chatu se pošlou ke zpracování poskytovateli AI (' + AI_POSKYTOVATEL + ', USA). Nepiš sem nic, co nechceš sdílet. Nejsem lékař, se zdravotními potížemi běž za odborníkem.';
+  souhlasBox.appendChild(souhlasText);
+  var souhlasLink = document.createElement('a');
+  souhlasLink.href = '/zasady-ochrany-osobnich-udaju/';
+  souhlasLink.target = '_blank';
+  souhlasLink.rel = 'noopener';
+  souhlasLink.textContent = 'Zásady ochrany osobních údajů';
+  souhlasLink.style.cssText = 'color:#EBB12C;font-size:.84rem;font-weight:600;display:inline-block;margin-bottom:16px;';
+  souhlasBox.appendChild(souhlasLink);
+  var souhlasBtns = E('div', 'display:flex;gap:8px;flex-wrap:wrap;');
+  var btnSouhlas = document.createElement('button');
+  btnSouhlas.type = 'button';
+  btnSouhlas.id = 'amSouhlasAno';
+  btnSouhlas.textContent = 'Souhlasím';
+  btnSouhlas.style.cssText = 'flex:1;min-width:120px;background:#EBB12C;border:none;border-radius:50px;color:#1A1222;font-weight:800;font-family:inherit;font-size:.92rem;padding:12px 16px;cursor:pointer;';
+  var btnPozdeji = document.createElement('button');
+  btnPozdeji.type = 'button';
+  btnPozdeji.id = 'amSouhlasNe';
+  btnPozdeji.textContent = 'Teď ne';
+  btnPozdeji.style.cssText = 'flex:1;min-width:120px;background:transparent;border:1px solid rgba(255,255,255,.22);border-radius:50px;color:#cabfb4;font-family:inherit;font-size:.92rem;padding:12px 16px;cursor:pointer;';
+  souhlasBtns.appendChild(btnSouhlas);
+  souhlasBtns.appendChild(btnPozdeji);
+  souhlasBox.appendChild(souhlasBtns);
+  panel.appendChild(souhlasBox);
+
+  function ukazSouhlas() {
+    var body = panel.querySelector('#amBody');
+    var foot = panel.querySelector('#amFoot');
+    if (body) body.style.display = 'none';
+    if (foot) foot.style.display = 'none';
+    souhlasBox.style.display = 'block';
+    setTimeout(function () { btnSouhlas.focus(); }, 30);
+  }
+  function skryjSouhlas() {
+    souhlasBox.style.display = 'none';
+    var body = panel.querySelector('#amBody');
+    var foot = panel.querySelector('#amFoot');
+    if (body) body.style.display = 'flex';
+    if (foot) foot.style.display = '';
+  }
+  function vyzadejSouhlas(akce) {
+    if (maSouhlas()) { akce(); return; }
+    if (souhlasBox.style.display === 'block' && cekajiciAkce) return;
+    cekajiciAkce = akce;
+    ukazSouhlas();
+  }
+  btnSouhlas.addEventListener('click', function () {
+    if (!zapisSouhlas()) souhlasVTomhleOtevreni = true;
+    var akce = cekajiciAkce;
+    cekajiciAkce = null;
+    skryjSouhlas();
+    if (akce) akce();
+  });
+  btnPozdeji.addEventListener('click', function () {
+    cekajiciAkce = null;
+    skryjSouhlas();
+  });
+
   function bindForm() {
     var form = panel.querySelector('#amForm');
     if (!form) return;
     form.addEventListener('submit', function (e) {
       e.preventDefault(); if (busy) return;
       var inp = panel.querySelector('#amIn'); var t = (inp.value || '').trim(); if (!t) return;
-      inp.value = ''; add('user', t); reply(t);
+      vyzadejSouhlas(function () {
+        inp.value = ''; add('user', t); reply(t);
+      });
     });
     var cam = panel.querySelector('#amCam'), file = panel.querySelector('#amFile');
     if (cam && file) {
-      cam.addEventListener('click', function () { if (!busy) file.click(); });
+      cam.addEventListener('click', function () {
+        if (busy) return;
+        vyzadejSouhlas(function () { file.click(); });
+      });
       file.addEventListener('change', function () {
         var f = file.files && file.files[0]; file.value = '';
         if (!f || busy) return;
-        compressImage(f, function (dataUri) {
-          if (!dataUri) { add('assistant', 'Tuhle fotku se mi nepodařilo načíst, zkus jinou (JPEG/PNG).'); return; }
-          addImage(dataUri); sendImage(dataUri);
+        vyzadejSouhlas(function () {
+          compressImage(f, function (dataUri) {
+            if (!dataUri) { add('assistant', 'Tuhle fotku se mi nepodařilo načíst, zkus jinou (JPEG/PNG).'); return; }
+            addImage(dataUri); sendImage(dataUri);
+          });
         });
       });
     }
@@ -376,9 +492,18 @@
       if (access === false) { add('assistant', CFG.LOCKED_INTRO); }
       else { add('assistant', CFG.GREETING); }
     }
-    setTimeout(function () { var i = panel.querySelector('#amIn'); if (i) i.focus(); }, 80);
+    if (ulozisteNejde && access !== false && !maSouhlas()) ukazSouhlas();
+    setTimeout(function () {
+      if (souhlasBox.style.display === 'block') { btnSouhlas.focus(); return; }
+      var i = panel.querySelector('#amIn'); if (i) i.focus();
+    }, 80);
   }
-  function closePanel() { OPEN = false; panel.style.display = 'none'; btn.style.display = 'flex'; }
+  function closePanel() {
+    OPEN = false; panel.style.display = 'none'; btn.style.display = 'flex';
+    cekajiciAkce = null;
+    skryjSouhlas();
+    if (!prectiSouhlas()) souhlasVTomhleOtevreni = false;
+  }
 
   // Posadí bublinu (i panel) NAD plovoucí WhatsApp + šipku „nahoru", ať se nic nepřekrývá.
   // Pozici počítá měřením (reaguje na scroll, spodní lištu i skrytou šipku), ne pevným offsetem.
