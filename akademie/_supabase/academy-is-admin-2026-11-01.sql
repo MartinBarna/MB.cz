@@ -1,6 +1,7 @@
 -- Academy: správce přes academy_is_admin() + náhodná čísla certifikátů (C-1, 2. kolo revize)
--- STAV: připraveno 1. 11. 2026, čeká na Martinovo GO („nasaď migraci správce Academy“).
---       Po nasazení přepsat na: NASAZENO <datum> jako migrace academy_is_admin_c1_hardening.
+-- STAV: NASAZENO 1. 11. 2026 01:43:04 UTC jako migrace academy_is_admin_c1_hardening
+--       (verze 20261101014304), na Martinovo „nasaď migraci správce Academy“ 01:38:43 UTC.
+--       Výsledek ověření po nasazení je na konci souboru.
 -- Projekt: Barna Academy (uhmrpfsdcujbhbtumqye). Živá DB je zdroj pravdy, tohle je záznam.
 --
 -- Why
@@ -174,3 +175,27 @@ end $function$;
 --        using (((select auth.jwt()) ->> 'email') = any (array['fitness.barna@gmail.com']));
 --    (same for the other 5 policies; in both functions replace public.academy_is_admin()
 --    with lower(coalesce(auth.jwt() ->> 'email', '')) = 'fitness.barna@gmail.com').
+--
+-- =====================================================================================
+-- Verified 2026-11-01 right after apply (counts only, simulated JWTs, nothing written)
+-- =====================================================================================
+--   1) One variant each of academy_is_admin(), admin_issue_certificate(uuid,text,text) and
+--      checkin_loyalty(uuid). The two existing functions kept their ACL (postgres,
+--      authenticated, service_role); academy_is_admin: postgres, anon, authenticated, service_role.
+--   2) 0 policies and 0 public functions still mention martin@; all 6 admin policies call
+--      academy_is_admin() (ai_flags_update_admin in USING and WITH CHECK).
+--   3) Fake martin@ JWT: is_admin false, 0 rows in client_reports, client_targets, checkins,
+--      test_attempts and ai_flags.
+--   4) fitness.barna@gmail.com with its real uid: is_admin true, full table counts,
+--      checkin_loyalty for another user works.
+--   +) A real client (matched by e-mail): sees exactly their own reports, not the others.
+--      anon: 0 rows and no permission error (needs EXECUTE because ai_flags policies are TO public).
+--   5) admin_issue_certificate: attacker gets 'not-admin'; admin with a target that has no
+--      Academy gets 'target-no-access'; checkin_loyalty for someone else as non-admin gets
+--      'forbidden'. Still 0 certificates. Generated IDs: format ok, 6 of 6 distinct.
+--   Supabase advisor lists academy_is_admin under anon_ and
+--   authenticated_security_definer_function_executable. Intended: RLS evaluates it as the
+--   calling role, so both roles need EXECUTE, and it only tells callers whether they
+--   themselves are admin.
+--   Exact pre-migration definitions (with martin@, never restore 1:1) are kept outside git in
+--   the project files: bezpecnost/zaloha-pred-academy-is-admin-20261101.sql.
