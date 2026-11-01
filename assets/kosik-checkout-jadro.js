@@ -1,16 +1,20 @@
-// Ciste funkce formulare kosiku. Stejne zneni souhlasu jako na serveru
+// Ciste funkce formulare kosiku. Stejne zneni informace jako na serveru
 // (akademie/_supabase/functions/kosik-checkout/logika.ts, SOUHLAS_TEXT).
+// Od v3 (1. 11. 2026, Martin: "policko nikdo nezaklikne") neni zaskrtavaci policko.
+// Pravni zaklad pripominky je opravneny zajem (cl. 6/1 f GDPR) s informaci u e-mailu,
+// nazvy SOUHLAS_* a sloupce souhlas* zustaly kvuli DB a odesilaci: souhlas=true
+// znamena "clovek dostal tuhle informaci a e-mail vyplnil".
 // Pripona je .js schvalne: WEDOS posila .mjs bez Content-Type a s nosniff,
 // prohlizec takovy import odmitne.
 
-export const SOUHLAS_VERZE = "kosik-v2-2026-11";
+export const SOUHLAS_VERZE = "kosik-oz-v3-2026-11";
 export const SOUHLAS_LABEL =
-  "Pošli mi e-mail, když objednávku nedokončím (nejvýš 2 připomínky). Souhlas můžu kdykoli odvolat odkazem v e-mailu.";
+  "Když objednávku nedokončíš, pošlu ti na tenhle e-mail nejvýš 2 připomínky k téhle objednávce. Odhlásíš se jedním klikem v e-mailu.";
 export const SOUHLAS_TEXT =
   SOUHLAS_LABEL + " Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
 
 export const DROBNY_TEXT =
-  "E-mail použijeme k předvyplnění platby ve Stripe. Bez zaškrtnutí ti žádnou připomínku nepošleme.";
+  "E-mail použijeme k předvyplnění platby ve Stripe. Nechceš připomínky? Pokračuj bez e-mailu.";
 
 export function platnyEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 320;
@@ -59,15 +63,16 @@ export function obohatOdkaz(href, info) {
 }
 
 /**
- * Telo pro endpoint A. Souhlas je true jen kdyz je zaskrtnuto.
+ * Telo pro endpoint A. Informace je u e-mailu vzdy videt, takze s e-mailem jde souhlas true
+ * a verze v3. Bez e-mailu se telo neposila vubec (tlacitko Pokracovat bez e-mailu).
  * utm se do tela nedava, i kdyz jsou na puvodnim odkazu.
  */
 export function sestavTelo(vstup) {
   const telo = {
     klic: vstup.klic,
     email: String(vstup.email || "").trim().toLowerCase(),
-    souhlas: vstup.souhlas === true,
-    souhlas_verze: vstup.souhlas === true ? SOUHLAS_VERZE : "",
+    souhlas: true,
+    souhlas_verze: SOUHLAS_VERZE,
     zdroj_url: "https://martinbarna.cz" + (vstup.cesta || "/"),
     website: vstup.website || "",
   };

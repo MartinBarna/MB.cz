@@ -14,9 +14,9 @@ import {
   platnyPromo,
 } from "../_shared/kosik-pravidla.ts";
 
-export const SOUHLAS_VERZE = "kosik-v2-2026-11";
+export const SOUHLAS_VERZE = "kosik-oz-v3-2026-11";
 export const SOUHLAS_LABEL =
-  "Pošli mi e-mail, když objednávku nedokončím (nejvýš 2 připomínky). Souhlas můžu kdykoli odvolat odkazem v e-mailu.";
+  "Když objednávku nedokončíš, pošlu ti na tenhle e-mail nejvýš 2 připomínky k téhle objednávce. Odhlásíš se jedním klikem v e-mailu.";
 export const SOUHLAS_TEXT =
   SOUHLAS_LABEL + " Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
 
