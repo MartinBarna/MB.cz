@@ -73,4 +73,4 @@ Před zapnutím ještě:
 4. Druhé čtení 4b a souhlasu (Heavy nebo Jev, podmínka f z 31. 10.).
 5. Až potom deploy webu s atributem a 4b (body výše) a flagy postupně.
 
-Koučink (KC1, KC2) zatím nezapínat: KC2 nabízí místo koučinku konzultaci, tedy jinou nabídku, než jakou člověk nedokončil. Přepsat před vlnou koučinku.
+Koučink (KC1, KC2): KC2 přepsán 1. 11. 2026 (Martin „dořeš i ten koučink“), nabízí už jen dokončení téže objednávky, hlídá test „K2 a KC2 nabizi jen dokonceni tehoz nakupu“. Před zapnutím koučinku zbývá doplnit šest cen STRIPE_PRICE_COACHING_* a přidat klíče do `kosik_produkty`.
