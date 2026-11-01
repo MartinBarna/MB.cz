@@ -37,6 +37,10 @@
   .ba .card .lockbadge.gift svg{stroke:#fff;}
 </style>
 <style id="a11y-fix">.topr a{display:inline-block;padding:13px 0;margin:-13px 0}@media(max-width:480px){.ba .top .in{row-gap:14px}.ba .topr{row-gap:14px}}:root:not([data-theme="light"]){--foot:#8a8078;--foot-link:#a89e94}a:focus-visible,button:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,[role=button]:focus-visible{outline:2px solid #EBB12C;outline-offset:2px}</style>
+<link rel="manifest" href="/akademie/site.webmanifest">
+<meta name="apple-mobile-web-app-title" content="Barna Academy">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="/assets/apple-touch-g3.png">
 </head>
 <body class="ba">
   <div class="top"><div class="in">
@@ -45,6 +49,40 @@
   </div></div>
 
   <div class="wrap">
+    <style>
+      .ba .pwa-plocha{display:none;align-items:flex-start;gap:10px;margin:0 0 18px;padding:12px 8px 12px 14px;background:rgba(235,177,44,.10);color:var(--ink);border:1px solid rgba(235,177,44,.45);border-radius:16px;font-size:.92rem;line-height:1.45;}
+      .ba .pwa-plocha.is-on{display:flex;}
+      .ba .pwa-plocha p{margin:0;flex:1;padding-top:11px;}
+      .ba .pwa-plocha button{flex:none;width:44px;height:44px;border:0;border-radius:12px;background:transparent;color:var(--muted-2);font-family:inherit;font-size:1.5rem;line-height:1;cursor:pointer;}
+      .ba .pwa-plocha button:hover{color:var(--ink);}
+    </style>
+    <div id="pwa-plocha" class="pwa-plocha" hidden>
+      <p>Chceš Academy na ploše jako appku? V Safari ťukni na Sdílet a pak Přidat na plochu.</p>
+      <button type="button" id="pwa-plocha-zavrit" aria-label="Zavřít">×</button>
+    </div>
+    <script>
+      (function(){
+        var box=document.getElementById('pwa-plocha');
+        if(!box) return;
+        var ua=navigator.userAgent||'';
+        var iphone=ua.indexOf('iPhone')!==-1;
+        var jinyProhlizec=/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
+        var safari=ua.indexOf('Safari')!==-1 && ua.indexOf('Version/')!==-1;
+        if(!iphone || !safari || jinyProhlizec) return;
+        if(navigator.standalone===true) return;
+        var klic='academy_plocha_skryto';
+        try{ if(localStorage.getItem(klic)==='1') return; }catch(e){}
+        box.hidden=false;
+        box.className+=' is-on';
+        var btn=document.getElementById('pwa-plocha-zavrit');
+        if(!btn) return;
+        btn.addEventListener('click', function(){
+          box.hidden=true;
+          box.className=box.className.replace(' is-on','');
+          try{ localStorage.setItem(klic,'1'); }catch(e){}
+        });
+      })();
+    </script>
     <span class="kick"><span class="dot"></span> Vítej zpět</span>
     <h1>Tvoje <span class="hl">Barna Academy</span></h1>
     <p class="lead">Pokračuj tam, kde jsi přestal(a). Všechno tvé studium, videa i materiály na jednom místě.</p>
