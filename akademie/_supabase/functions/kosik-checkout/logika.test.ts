@@ -1,6 +1,6 @@
 import { FLAGY_VYCHOZI } from "../_shared/kosik-pravidla.ts";
 import { DROBNY_TEXT as DROBNY_KLIENT, SOUHLAS_LABEL as LABEL_KLIENT, SOUHLAS_TEXT as TEXT_KLIENT, SOUHLAS_VERZE as VERZE_KLIENT } from "../../../../assets/kosik-checkout-jadro.js";
-import { SOUHLAS_LABEL, SOUHLAS_TEXT, SOUHLAS_VERZE, kupoJePovolenaSleva, parametrySession, souhlasZVstupu, vytvorCheckout } from "./logika.ts";
+import { SOUHLAS_LABEL, SOUHLAS_TEXT, SOUHLAS_VERZE, TEXT_PRED_PLATBOU, kupoJePovolenaSleva, parametrySession, souhlasZVstupu, vytvorCheckout } from "./logika.ts";
 import { KOSIK_KATALOG } from "./katalog.ts";
 
 Deno.test("vypnuty flag, honeypot a souhlas false nezakladaji session a neblokuji nakup", async () => {
@@ -177,4 +177,32 @@ Deno.test("souhlas je jen kosik-v2 a starsi verze neni fallback", () => {
   if (ok.souhlas !== true || ok.souhlas_verze !== SOUHLAS_VERZE || ok.souhlas_text !== SOUHLAS_TEXT) {
     throw new Error("v2 ma projit");
   }
+});
+
+Deno.test("session nese predsmluvni text u tlacitka a fakturu jen na flag", () => {
+  const zaklad = {
+    klic: "konzultace",
+    email: "a@b.cz",
+    kosikId: "u1",
+    cref: null,
+    promoId: null,
+    polozka: KOSIK_KATALOG.konzultace,
+    price: "price_test",
+  };
+  const bez = parametrySession(zaklad);
+  const text = bez.get("custom_text[submit][message]") ?? "";
+  if (text !== TEXT_PRED_PLATBOU) throw new Error("chybi text u Zaplatit");
+  if (text.length > 1200) throw new Error("Stripe bere max 1200 znaku, mam " + text.length);
+  for (const kus of [
+    "https://martinbarna.cz/obchodni-podminky/",
+    "https://martinbarna.cz/odstoupeni/",
+    "https://martinbarna.cz/zasady-ochrany-osobnich-udaju/",
+    "14 dnů",
+    "poměrná část ceny",
+  ]) {
+    if (!text.includes(kus)) throw new Error("v textu chybi: " + kus);
+  }
+  if (bez.get("invoice_creation[enabled]")) throw new Error("faktura bez flagu");
+  const s = parametrySession({ ...zaklad, faktura: true });
+  if (s.get("invoice_creation[enabled]") !== "true") throw new Error("faktura s flagem chybi");
 });

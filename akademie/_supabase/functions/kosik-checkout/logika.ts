@@ -77,7 +77,23 @@ export type TeloSession = {
   promoId: string | null;
   polozka: KosikPolozka;
   price: string;
+  /** Faktura jako u platebniho odkazu. Zapina env KOSIK_FAKTURA=1, vychozi vypnuto. */
+  faktura?: boolean;
 };
+
+/**
+ * Predsmluvni informace u tlacitka Zaplatit (custom_text.submit, Stripe max 1200 znaku).
+ * Platebni odkaz je ma z nastaveni v Dashboardu, session z kodu je musi poslat sama:
+ * odkaz na VOP (§ 1751 OZ), odstoupeni do 14 dnu a pomerna uhrada u sluzby (§ 1834 OZ, VOP 7.3).
+ * Plati pro konzultaci i koucink, oboje je sluzba s terminem po zaplaceni.
+ * Pravni kontrola Claude 1. 11. 2026. Zmena zneni = nova pravni kontrola.
+ */
+export const TEXT_PRED_PLATBOU =
+  "Odesláním objednávky přijímáš [obchodní podmínky](https://martinbarna.cz/obchodni-podminky/). "
+  + "Termín domluvíme e-mailem po zaplacení. Od smlouvy můžeš odstoupit do 14 dnů, "
+  + "nejjednodušeji přes [formulář](https://martinbarna.cz/odstoupeni/). Když konzultace nebo koučink "
+  + "na tvou žádost začne dřív, při odstoupení mi náleží poměrná část ceny za to, co už proběhlo (čl. 7.3 podmínek). "
+  + "[Zásady ochrany osobních údajů](https://martinbarna.cz/zasady-ochrany-osobnich-udaju/)";
 
 /** Formular pro Stripe POST /v1/checkout/sessions. Zadne utm. */
 export function parametrySession(t: TeloSession): URLSearchParams {
@@ -95,6 +111,8 @@ export function parametrySession(t: TeloSession): URLSearchParams {
   p.set("success_url", t.polozka.successUrl);
   p.set("cancel_url", t.polozka.cancelUrl);
   p.set("locale", "cs");
+  p.set("custom_text[submit][message]", TEXT_PRED_PLATBOU);
+  if (t.faktura === true) p.set("invoice_creation[enabled]", "true");
   // Stripe nedovoli discounts a allow_promotion_codes naraz.
   // Slevu davame jen kdyz je to promo, ktere webhook uzna (10 %). Jinak zadny kod
   // a allow_promotion_codes false, at si clovek v pokladne nenapise jinou slevu.
@@ -216,6 +234,7 @@ export async function vytvorCheckout(body: CheckoutBody, deps: CheckoutDeps): Pr
     promoId,
     polozka,
     price,
+    faktura: (deps.env("KOSIK_FAKTURA") ?? "").trim() === "1",
   });
   const session = await deps.zalozSession(form);
   if (!session.ok || !session.url) {
