@@ -1954,6 +1954,24 @@ Deno.serve(async (req) => {
   const typ = String(ev?.type ?? "");
   const obj = ev?.data?.object ?? {};
 
+  // ⛔ BEZPEČNOST (revize 31. 10. 2026): podpis přijímá i testovací tajemství (sandbox),
+  // ale testovací platbu kartou 4242 umí zaplatit kdokoli, kdo zná testovací odkaz.
+  // Sandbox událost proto smí udělit přístup JEN testerům. Ostatní se potvrdí 200
+  // (ať Stripe neopakuje) a nic se nezapíše. Ostré události (livemode=true) beze změny.
+  if (ev?.livemode === false) {
+    const testEmail = String(
+      obj.customer_details?.email ?? obj.customer_email ?? obj.billing_details?.email ?? obj.receipt_email ?? "",
+    ).trim().toLowerCase();
+    const povoleni = (Deno.env.get("STRIPE_TEST_EMAILS") ?? "")
+      .split(",").map((e) => e.trim().toLowerCase()).filter(Boolean);
+    const jeTester = !!testEmail && (
+      povoleni.includes(testEmail) ||
+      /^fitness\.barna(\+[^@]*)?@gmail\.com$/.test(testEmail) ||
+      testEmail.endsWith("@martinbarna.cz")
+    );
+    if (!jeTester) return json({ ok: true, ignored: "sandbox-mimo-testery" });
+  }
+
   try {
     // Kosik: checkout.session.expired a completed musi mit livemode prostredi,
     // ktere podpis overilo. Jine livemode se ignoruje a zaloguje, narok se neudeli.

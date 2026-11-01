@@ -156,13 +156,18 @@ Deno.serve(async (req: Request) => {
 
   const when = new Date(row.created_at).toLocaleString("cs-CZ", { timeZone: "Europe/Prague", dateStyle: "long", timeStyle: "short" });
   const label = PRODUCT_LABEL[product];
+  // ⛔ BEZPEČNOST (revize 31. 10. 2026): formulář je veřejný a adresát i číslo objednávky
+  // jsou od volajícího. Bez escapování šlo poslat z naší domény „potvrzení odstoupení“
+  // s cizím odkazem komukoli. Escapuje se VŠE, co přišlo zvenku.
+  const esc = (v: string) => v.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;").replaceAll("'", "&#39;");
   const summary =
     `<ul style="margin:8px 0 14px;padding-left:20px">` +
     `<li>Produkt: <b>${label}</b></li>` +
-    `<li>Číslo objednávky: <b>${orderNumber || "neuvedeno"}</b></li>` +
-    `<li>E-mail: <b>${email}</b></li>` +
+    `<li>Číslo objednávky: <b>${orderNumber ? esc(orderNumber) : "neuvedeno"}</b></li>` +
+    `<li>E-mail: <b>${esc(email)}</b></li>` +
     `<li>Datum a čas podání: <b>${when}</b></li>` +
-    (message ? `<li>Zpráva: ${message.replaceAll("<", "&lt;")}</li>` : "") +
+    (message ? `<li>Zpráva: ${esc(message)}</li>` : "") +
     `</ul>`;
 
   // Potvrzeni zakaznikovi — zakon vyzaduje potvrzeni o prijeti s obsahem a datem a casem.
