@@ -46,7 +46,7 @@ import {
   stavOpakovanehoNakupu,
   typUdalostiZnovu,
 } from "./opakovany-nakup.ts";
-import { rozpoznajJednorazovyKlic } from "./kosik-rozpoznani.ts";
+import { rozhodniLivemodeKosiku, rozpoznajJednorazovyKlic } from "./kosik-rozpoznani.ts";
 // ⭐ [16. 9. 2026] Odeslání přes společný helper, který si přečte `id` z odpovědi
 // Resendu a zapíše ho do `email_events`. Bez toho se u těchhle tří zákaznických
 // cest (doklad, opakované doručení balíčku, opakovaná konzultace) nedá spárovat
@@ -683,11 +683,17 @@ async function podpisSedi(tajemstvi: string, ts: string, raw: string, v1: string
   return rozdil === 0;
 }
 
-async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
+async function overPodpis(
+  raw: string,
+  hlavicka: string,
+): Promise<{ ok: true; prostredi: "live" | "test" } | { ok: false }> {
   // ⛔ Ostre I testovaci tajemstvi soucasne, viz komentar u STRIPE_WEBHOOK_SECRET_TEST.
   // Nenastavene se odfiltruje, takze prazdny test secret nikdy nic nepropusti.
-  const tajemstvi = [STRIPE_WEBHOOK_SECRET, STRIPE_WEBHOOK_SECRET_TEST].filter(Boolean);
-  if (!tajemstvi.length || !hlavicka) return false;
+  // Prostredi udalosti = rezim tajemstvi, ktere podpis overilo.
+  const tajemstvi: { secret: string; prostredi: "live" | "test" }[] = [];
+  if (STRIPE_WEBHOOK_SECRET) tajemstvi.push({ secret: STRIPE_WEBHOOK_SECRET, prostredi: "live" });
+  if (STRIPE_WEBHOOK_SECRET_TEST) tajemstvi.push({ secret: STRIPE_WEBHOOK_SECRET_TEST, prostredi: "test" });
+  if (!tajemstvi.length || !hlavicka) return { ok: false };
 
   const casti = Object.fromEntries(
     hlavicka.split(",").map((p) => {
@@ -697,17 +703,17 @@ async function overPodpis(raw: string, hlavicka: string): Promise<boolean> {
   );
   const ts = casti["t"];
   const v1 = casti["v1"];
-  if (!ts || !v1) return false;
+  if (!ts || !v1) return { ok: false };
 
   // Ochrana proti přehrání starého požadavku (Stripe doporučuje 5 minut).
   const stariS = Math.abs(Date.now() / 1000 - Number(ts));
-  if (!Number.isFinite(stariS) || stariS > 300) return false;
+  if (!Number.isFinite(stariS) || stariS > 300) return { ok: false };
 
   // Staci, kdyz sedi JEDNO z tajemstvi: ostre pro platby zakazniku, testovaci pro sandbox.
   for (const t of tajemstvi) {
-    if (await podpisSedi(t, ts, raw, v1)) return true;
+    if (await podpisSedi(t.secret, ts, raw, v1)) return { ok: true, prostredi: t.prostredi };
   }
-  return false;
+  return { ok: false };
 }
 
 // Je tenhle platební odkaz DÁRKOVÝ POUKAZ? Poukazy obsluhuje funkce `poukaz-vydat`,
@@ -1932,7 +1938,8 @@ Deno.serve(async (req) => {
 
   const raw = await req.text();
   const sig = req.headers.get("stripe-signature") ?? "";
-  if (!(await overPodpis(raw, sig))) {
+  const podpis = await overPodpis(raw, sig);
+  if (!podpis.ok) {
     return json({ error: "bad-signature" }, 400);
   }
 
@@ -1966,6 +1973,24 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Kosik: checkout.session.expired a completed musi mit livemode prostredi,
+    // ktere podpis overilo. Jine livemode se ignoruje a zaloguje, narok se neudeli.
+    const filtrLivemode = rozhodniLivemodeKosiku({
+      typ,
+      livemode: ev?.livemode,
+      obj,
+      prostredi: podpis.prostredi,
+    });
+    if (filtrLivemode.ignoruj) {
+      console.error(
+        "[academy-stripe-webhook] kosik livemode ignorovano typ=" + typ
+          + " id=" + String(ev?.id ?? "")
+          + " livemode=" + String(ev?.livemode)
+          + " prostredi=" + podpis.prostredi,
+      );
+      return json({ ok: true, ignored: "livemode", typ });
+    }
+
     // --- 1) První zaplacení z Payment Linku -------------------------------
     if (typ === "checkout.session.completed") {
       // --- 1a) DOŽIVOTNÍ 8 900 Kč: jednorázová platba ---------------------

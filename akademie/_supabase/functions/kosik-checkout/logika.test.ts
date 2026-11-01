@@ -1,5 +1,6 @@
 import { FLAGY_VYCHOZI } from "../_shared/kosik-pravidla.ts";
-import { SOUHLAS_TEXT, SOUHLAS_VERZE, kupoJePovolenaSleva, parametrySession, souhlasZVstupu, vytvorCheckout } from "./logika.ts";
+import { DROBNY_TEXT as DROBNY_KLIENT, SOUHLAS_LABEL as LABEL_KLIENT, SOUHLAS_TEXT as TEXT_KLIENT, SOUHLAS_VERZE as VERZE_KLIENT } from "../../../../assets/kosik-checkout-jadro.js";
+import { SOUHLAS_LABEL, SOUHLAS_TEXT, SOUHLAS_VERZE, kupoJePovolenaSleva, parametrySession, souhlasZVstupu, vytvorCheckout } from "./logika.ts";
 import { KOSIK_KATALOG } from "./katalog.ts";
 
 Deno.test("vypnuty flag, honeypot a souhlas false nezakladaji session a neblokuji nakup", async () => {
@@ -155,4 +156,25 @@ Deno.test("parametry session nemaji utm a cena je z katalogu", () => {
   if (p.get("success_url") !== "https://martinbarna.cz/dekuji-konzultace/") throw new Error("success");
   const s = souhlasZVstupu(true, "jina-verze", new Date());
   if (s.souhlas !== false) throw new Error("cizi verze nesmi byt souhlas");
+});
+
+Deno.test("souhlas je jen kosik-v2 a starsi verze neni fallback", () => {
+  const label = "Pošli mi e-mail, když objednávku nedokončím (nejvýš 2 připomínky). Souhlas můžu kdykoli odvolat odkazem v e-mailu.";
+  const text = label + " Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/";
+  const drobny = "E-mail použijeme k předvyplnění platby ve Stripe. Bez zaškrtnutí ti žádnou připomínku nepošleme.";
+  if (SOUHLAS_VERZE !== "kosik-v2-2026-11" || VERZE_KLIENT !== SOUHLAS_VERZE) throw new Error(SOUHLAS_VERZE);
+  if (SOUHLAS_LABEL !== label || LABEL_KLIENT !== label) throw new Error("label");
+  if (SOUHLAS_TEXT !== text || TEXT_KLIENT !== text) throw new Error(SOUHLAS_TEXT);
+  if (DROBNY_KLIENT !== drobny) throw new Error(DROBNY_KLIENT);
+  if (SOUHLAS_TEXT.includes("tipy") || SOUHLAS_LABEL.includes("nabídky")) throw new Error("tipy v souhlasu");
+  for (const verze of ["kosik-v1-2026-11", "", undefined, "kosik-v2-2026-11 "]) {
+    const vysledek = souhlasZVstupu(true, verze, new Date("2026-01-15T12:00:00.000Z"));
+    if (vysledek.souhlas !== false || vysledek.souhlas_text !== null || vysledek.souhlas_verze !== null) {
+      throw new Error("verze nesmi projit: " + String(verze));
+    }
+  }
+  const ok = souhlasZVstupu(true, SOUHLAS_VERZE, new Date("2026-01-15T12:00:00.000Z"));
+  if (ok.souhlas !== true || ok.souhlas_verze !== SOUHLAS_VERZE || ok.souhlas_text !== SOUHLAS_TEXT) {
+    throw new Error("v2 ma projit");
+  }
 });

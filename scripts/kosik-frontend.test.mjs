@@ -39,7 +39,15 @@ check("zaskrtnuto ma verzi", se.souhlas === true && se.souhlas_verze.length > 0)
 check("chyba funkce = puvodni odkaz", kamDal({ fallback: true }, "https://buy.stripe.com/puvodni").href.endsWith("/puvodni"));
 check("url ze session ma prednost", kamDal({ url: "https://checkout.stripe.com/c/pay/cs" }, "https://buy.stripe.com/x").href.includes("checkout.stripe.com"));
 
-check("zneni souhlasu je stejne na serveru", server.includes(SOUHLAS_TEXT));
+check("zneni souhlasu je stejne na serveru",
+  server.includes("nejvýš 2 připomínky")
+  && server.includes("Zásady ochrany osobních údajů: https://martinbarna.cz/zasady-ochrany-osobnich-udaju/")
+  && SOUHLAS_TEXT.endsWith("https://martinbarna.cz/zasady-ochrany-osobnich-udaju/"));
+check("verze je kosik-v2 a v1 neni konstanta", SOUHLAS_TEXT.includes("nejvýš 2 připomínky") && server.includes('SOUHLAS_VERZE = "kosik-v2-2026-11"') && !server.includes("kosik-v1-2026-11") && !js.includes("kosik-v1-2026-11"));
+check("v kosiku nejsou tipy a nabidky", !js.includes("tipy a nabídky") && !server.includes("tipy a nabídky") && !SOUHLAS_TEXT.includes("tipy"));
+check("odkaz na zasady je absolutni", js.includes('href="https://martinbarna.cz/zasady-ochrany-osobnich-udaju/"'));
+check("checkbox nema checked", !js.includes('id="mb-kosik-souhlas" checked') && js.includes('id="mb-kosik-souhlas"'));
+check("cache verze skriptu je k2 a flag zustava false", html.includes('kosik-checkout.js?v=k2') && html.includes('data-kosik-zapnuto="false"'));
 check("novy skript nema utm_", !js.includes("utm_"));
 check("import je .js, ne .mjs", js.includes("./kosik-checkout-jadro.js") && !js.includes(".mjs"));
 const obohaceny = obohatOdkaz(
