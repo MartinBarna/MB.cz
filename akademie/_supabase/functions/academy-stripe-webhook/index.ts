@@ -1391,7 +1391,8 @@ async function atribuujReferral(
     // je to 10 % z `app_config.provize_koucink`. U ostatních produktů se nemění nic.
     // Dotaz do `app_config` se dělá JEN u koučinku affiliate partnera, ať se
     // ostatním nákupům nepřidává čtení navíc.
-    const sazbaKonfig = produkt === "coaching" && partnerType === "affiliate"
+    // Od 31. 10. 2026 platí totéž pro konzultaci (Martin: „koučink nebo konzultace má 10 %").
+    const sazbaKonfig = (produkt === "coaching" || produkt === "konzultace") && partnerType === "affiliate"
       ? await nactiSazbuKoucinku(admin)
       : null;
     const sazbaJednoraz = sazbaProvize({
