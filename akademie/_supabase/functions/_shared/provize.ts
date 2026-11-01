@@ -17,6 +17,13 @@
 /** Fallback, když `app_config.provize_koucink` chybí nebo není číslo. */
 export const PROVIZE_KOUCINK_FALLBACK = 0.10;
 
+// ⭐ ROZHODNUTÍ MARTINA (1. 11. 2026): KONZULTACE se řídí stejně jako koučink, tedy
+//    10 % jen z první platby, ne sazba partnera. Do té doby brala `rate_oneoff`
+//    (0,20, u PETRA10 0,40). Webhook čte `app_config` jen u koučinku, takže konzultace
+//    jede vždy na `PROVIZE_KOUCINK_FALLBACK`.
+/** Produkty s pevnou sazbou 10 % jen z první platby (sazba partnera se ignoruje). */
+const PEVNA_SAZBA = ["coaching", "konzultace"];
+
 export type SazbaVstup = {
   /** Produkt řádku v `referrals`: 'coaching', 'academy', 'videokurz', ... */
   product: string;
@@ -29,7 +36,7 @@ export type SazbaVstup = {
 /**
  * Vrátí procento provize (0,10 = 10 %) pro jeden řádek `referrals`.
  *
- * - `coaching`: sazba z `app_config`, jinak 10 %. Sazba partnera se ignoruje.
+ * - `coaching` a `konzultace`: sazba z `app_config`, jinak 10 %. Sazba partnera se ignoruje.
  * - ostatní produkty: sazba partnera beze změny (0, když chybí).
  *
  * Vrácená hodnota je vždy podíl mezi 0 a 1. Záporná, nečíselná ani větší než 1 se
@@ -39,7 +46,7 @@ export type SazbaVstup = {
 export function sazbaProvize(vstup: SazbaVstup): number {
   // ⛔ `Number(null)` je NULA, ne NaN. Bez téhle explicitní kontroly by chybějící klíč
   //    v `app_config` znamenal provizi 0 Kč místo fallbacku 10 % (chyceno testem RH2).
-  if (vstup.product === "coaching") {
+  if (PEVNA_SAZBA.includes(vstup.product)) {
     const z = cislo(vstup.configRate);
     return z === null ? PROVIZE_KOUCINK_FALLBACK : z;
   }
@@ -112,7 +119,8 @@ export const PRESKOCENO_DB_CHYBA = "db-neodpovedela";
 
 /** Kdy se má kontrolovat, jestli kupující už řádek na tenhle produkt má. */
 export function kontrolovatRadekProduktu(v: Pick<PreskoceniVstup, "product" | "partnerType" | "orderId">): boolean {
-  return v.product === "coaching" || v.partnerType !== "affiliate" || !v.orderId;
+  // Konzultace: druhý nákup téhož člověka už provizi nedává (jen z první platby).
+  return PEVNA_SAZBA.includes(v.product) || v.partnerType !== "affiliate" || !v.orderId;
 }
 
 /**
