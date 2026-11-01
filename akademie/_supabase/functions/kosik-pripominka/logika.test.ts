@@ -11,7 +11,7 @@ function radek(over: Partial<Kandidat> = {}): Kandidat {
     souhlas: true,
     souhlas_at: "2026-01-01T00:00:00.000Z",
     souhlas_text: "presne zneni",
-    souhlas_verze: "kosik-v2-2026-11",
+    souhlas_verze: "kosik-oz-v3-2026-11",
     stripe_session_id: "cs_1",
     test: false,
     zaplaceno_at: null,

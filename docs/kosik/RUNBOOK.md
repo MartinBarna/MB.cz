@@ -57,7 +57,7 @@ Opraveno v tomto PR:
 - K2 bez věty o koučinku. Mail k nedokončené objednávce smí nabízet jen dokončení téže objednávky (rozhodnutí 31. 10.).
 - Patička mailů říká pravdu o souhlasu („souhlas s připomínkou nedokončené objednávky“, ne „se zasíláním e-mailů“) a nese identifikaci odesílatele (IČO a adresa jako ve VOP, § 7 odst. 4 zákona 480/2004 Sb.).
 
-Zkontrolováno a v pořádku: okno s e-mailem (políčko nezaškrtnuté, souhlas není podmínkou, „Pokračovat bez e-mailu“), znění souhlasu v2, 4b a čl. 3 zásad, retence 30/90 dní, strop 2 maily, okno 8 až 20 h, odhlášení jedním klikem a List-Unsubscribe, K1 bez garance (flag `kosik_garance_k1` zůstává false, VOP 7.3 garanci nemá).
+Zkontrolováno a v pořádku: okno s e-mailem (od 1. 11. bez políčka: informace u e-mailu na základě oprávněného zájmu, „Pokračovat bez e-mailu“, verze `kosik-oz-v3-2026-11`), 4b a čl. 3 zásad, retence 30/90 dní, strop 2 maily, okno 8 až 20 h, odhlášení jedním klikem a List-Unsubscribe, K1 bez garance (flag `kosik_garance_k1` zůstává false, VOP 7.3 garanci nemá).
 
 Živý stav 1. 11. 2026 3:20 Praha (jen čtení):
 
@@ -73,4 +73,4 @@ Před zapnutím ještě:
 4. Druhé čtení 4b a souhlasu (Heavy nebo Jev, podmínka f z 31. 10.).
 5. Až potom deploy webu s atributem a 4b (body výše) a flagy postupně.
 
-Koučink (KC1, KC2) zatím nezapínat: KC2 nabízí místo koučinku konzultaci, tedy jinou nabídku, než jakou člověk nedokončil. Přepsat před vlnou koučinku.
+Koučink (KC1, KC2): KC2 přepsán 1. 11. 2026 (Martin „dořeš i ten koučink“), nabízí už jen dokončení téže objednávky, hlídá test „K2 a KC2 nabizi jen dokonceni tehoz nakupu“. Před zapnutím koučinku zbývá doplnit šest cen STRIPE_PRICE_COACHING_* a přidat klíče do `kosik_produkty`.

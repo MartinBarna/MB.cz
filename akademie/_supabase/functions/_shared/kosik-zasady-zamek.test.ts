@@ -8,8 +8,8 @@ const NADPIS = "4b. Připomínka nedokončené objednávky";
 const SES = "Amazon Web Services EMEA SARL";
 const ODSTAVCE = [
   "Když na prodejní stránce před platbou zadáte e-mail, použijeme ho k předvyplnění platby ve Stripe. Jde o krok před uzavřením smlouvy na vaši žádost (čl. 6 odst. 1 písm. b) GDPR). Spolu s e-mailem ukládáme vybraný produkt, čas a stránku, ze které jste přišli, a kvůli ochraně před zneužitím zkrácený otisk (hash) vaší IP adresy a typ prohlížeče (oprávněný zájem, čl. 6 odst. 1 písm. f) GDPR).",
-  "Pokud zaškrtnete souhlas, pošleme vám nejvýš dva e-maily s připomínkou, že objednávka zůstala nedokončená (souhlas podle čl. 6 odst. 1 písm. a) GDPR a § 7 zákona č. 480/2004 Sb.). Souhlas není podmínkou nákupu a můžete ho kdykoli odvolat odkazem v každém e-mailu. Ukládáme přesné znění souhlasu, čas a stránku, kde jste ho udělili.",
-  "Údaje bez souhlasu smažeme do 30 dnů od zadání. Údaje se souhlasem smažeme do 90 dnů od posledního e-mailu, nebo hned po odvolání souhlasu. Po odvolání si ponecháme jen e-mailovou adresu na seznamu odhlášených, abychom vám už nic neposlali. E-maily odesíláme přes poskytovatele uvedené v čl. 3.",
+  "Pokud objednávku nedokončíte, pošleme vám na zadaný e-mail nejvýš dva e-maily s připomínkou téže objednávky a odkazem na její dokončení. Jiné nabídky v nich nejsou. Děláme to na základě oprávněného zájmu (čl. 6 odst. 1 písm. f) GDPR), o kterém vás informujeme přímo u pole pro e-mail. Připomínky nechcete? Pokračujte k platbě bez e-mailu, nebo se odhlaste jedním klikem v kterémkoli z nich. Proti zpracování můžete kdykoli vznést námitku, po ní vám už nic nepošleme. Ukládáme znění informace, kterou jste viděli, a čas zadání.",
+  "Údaje smažeme do 90 dnů od posledního e-mailu (když žádný neodešel, od zadání), nebo hned po odhlášení či námitce. Po odhlášení si ponecháme jen e-mailovou adresu na seznamu odhlášených, abychom vám už nic neposlali. E-maily odesíláme přes poskytovatele uvedené v čl. 3.",
 ];
 
 Deno.test("4b a cl. 3 nejsou na webu, dokud je kosik vypnuty", async () => {

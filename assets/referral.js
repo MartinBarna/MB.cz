@@ -136,7 +136,11 @@
     // Odkazy s odečtem videokurzu dodávají TÝŽ produkt, jen levněji, proto stejný `prod`.
     // 7 410 Kč (plink_1UGeRQ…) je od 17. 9. 2026 ten živý; 8 100 Kč (plink_1TyUPQ…) je starší
     // částka, která dál chodí v rozeslaných mailech, takže tu MUSÍ zůstat taky.
-    if (href.indexOf('7sY14m4Z19Vo2J2eG33ks0r') >= 0) return { url: href, prod: 'academy', stripe: true };
+    // ⛔ 7 410 Kč KUPÓNY NEBERE (změřeno v pokladně 31. 10. 2026 s PETRA10 i KRISTINA10,
+    //    po zapnutí promo kódů na videokurzu a Academy 8 900 / 990). Je to už zvýhodněná
+    //    cena (odečet videokurzu), dvojí sleva se nezapíná. `bezKuponu` vypne slib slevy
+    //    v modalu i `prefilled_promo_code`; provize jede dál přes `client_reference_id`.
+    if (href.indexOf('7sY14m4Z19Vo2J2eG33ks0r') >= 0) return { url: href, prod: 'academy', stripe: true, bezKuponu: true };
     if (href.indexOf('9B6aEW6356Jc4Ra55t3ks05') >= 0) return { url: href, prod: 'academy', stripe: true };
     /* ⭐⭐ KOUČINK GOLD A DIAMOND (2. 9. 2026), šest odkazů, 1/3/6 měsíců.
        ⛔ ŠEST ŽIVÝCH ID JE V `KOUCINK_ODKAZY` výš. Táž ID musí být i v `koucing/index.html`
