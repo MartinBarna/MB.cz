@@ -137,3 +137,26 @@ Deno.test("A2 nema fotku, ctecku ani tarif", () => {
   const r = renderKosikMail("kosik-appka", 1, vars, { kosik_garance_k1: false });
   if (!r || r.chybi.length || r.html.includes("{{")) throw new Error("render A2");
 });
+
+Deno.test("K2 a KC2 nabizi jen dokonceni tehoz nakupu (pravni kontrola 1. 11. 2026)", () => {
+  // Mail k nedokoncene objednavce smi vest jen na dokonceni teze objednavky.
+  // KC2 driv nabizel konzultaci misto koucinku, K2 koucink misto konzultace.
+  const cizi: Record<string, string[]> = {
+    K2: ["koučink", "koucing"],
+    KC2: ["konzultac", "odečtu"],
+  };
+  for (const [oznaceni, zakazane] of Object.entries(cizi)) {
+    const m = vsechnyMaily().find((x) => x.oznaceni === oznaceni);
+    if (!m) throw new Error(oznaceni);
+    const text = [m.predmet, m.preheader, ...m.bloky.map((b) => JSON.stringify(b))].join("\n").toLowerCase();
+    for (const kus of zakazane) {
+      if (text.includes(kus)) throw new Error(oznaceni + " obsahuje " + kus);
+    }
+    const odkazy = [...text.matchAll(/https?:\/\/[^\s"]+/g)].map((x) => x[0]);
+    if (odkazy.length) throw new Error(oznaceni + " ma odkaz mimo obnovu: " + odkazy.join(", "));
+    const tlacitka = m.bloky.filter((b) => (b as { t: string }).t === "btn") as { href?: string }[];
+    if (tlacitka.length !== 1 || tlacitka[0].href !== "{{RECOVERY_URL}}") {
+      throw new Error(oznaceni + " musi mit jedine tlacitko na obnovu");
+    }
+  }
+});

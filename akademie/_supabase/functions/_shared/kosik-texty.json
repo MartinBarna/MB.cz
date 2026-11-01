@@ -161,8 +161,8 @@
       "klic": "kosik-koucink",
       "krok": 1,
       "oznaceni": "KC2",
-      "predmet": "Nejdřív se jen potkat?",
-      "preheader": "Začni konzultací. Když navážeš, odečtu ti ji.",
+      "predmet": "Ještě jedna věc ke koučinku",
+      "preheader": "Dvě otázky, které slyším nejčastěji. Pak už ti k tomu nepíšu.",
       "bloky": [
         {
           "t": "p",
@@ -170,24 +170,24 @@
         },
         {
           "t": "p",
-          "text": "naposledy ke koučinku, pak už ti k němu psát nebudu."
+          "text": "naposledy k tomu nedokončenému koučinku, pak už ti k němu psát nebudu."
         },
         {
           "t": "p",
-          "text": "Když nevíš, jestli si sedneme, dá se začít menším krokem. Dáme si hodinovou konzultaci, spočítáme tvoje čísla a domluvíme první kroky. Když si pak do 14 dní objednáš koučink, cenu konzultace ti z balíčku odečtu. Plán ti zůstane tak jako tak."
+          "text": "Před startem slyším nejčastěji dvě otázky: „Zvládnu to vedle práce a rodiny?“ a „Co když mi to zase nevydrží?“"
+        },
+        {
+          "t": "p",
+          "text": "Právě proto plán nestavíme na ideální týden, ale na ten tvůj. Každý týden se podívám na tvoje čísla a upravíme jen to, co je potřeba. Cílem je, aby ti to jednou šlo i beze mě."
         },
         {
           "t": "btn",
-          "text": "Podívat se na konzultaci",
-          "href": "https://martinbarna.cz/konzultace/"
+          "text": "Dokončit objednávku",
+          "href": "{{RECOVERY_URL}}"
         },
         {
           "t": "p",
-          "text": "Nebo dokončit koučink rovnou: {{RECOVERY_URL}}"
-        },
-        {
-          "t": "p",
-          "text": "A když nevíš, co z toho, napiš mi pár řádků o tom, kde teď jsi. Poradím ti upřímně, i kdyby to mělo být „zatím nic“."
+          "text": "Když se chceš nejdřív na něco zeptat, stačí odepsat na tenhle mail. Čtu to sám."
         },
         {
           "t": "podpis",
