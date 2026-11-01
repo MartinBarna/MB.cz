@@ -14,7 +14,10 @@ const js = readFileSync(new URL("../assets/kosik-checkout.js", import.meta.url),
 const html = readFileSync(new URL("../konzultace/index.html", import.meta.url), "utf8");
 const server = readFileSync(new URL("../akademie/_supabase/functions/kosik-checkout/logika.ts", import.meta.url), "utf8");
 
-check("flag ve vychozim stavu je false", html.includes('data-kosik-zapnuto="false"'));
+const zapnuto = html.includes('data-kosik-zapnuto="true"');
+const zasady = readFileSync(new URL("../zasady-ochrany-osobnich-udaju/index.html", import.meta.url), "utf8");
+check("atribut je jen true nebo false", zapnuto || html.includes('data-kosik-zapnuto="false"'));
+check("zapnuty kosik ma 4b v zasadach, vypnuty ne", zapnuto === zasady.includes("4b. Připomínka nedokončené objednávky"));
 check("ctyri tlacitka konzultace maji data-kosik a puvodni href",
   (html.match(/data-kosik="konzultace"/g) || []).length === 4
   && (html.match(/buy\.stripe\.com\/bJe6oG8bdc3wcjCdBZ3ks08/g) || []).length === 4);
@@ -46,7 +49,7 @@ check("verze je kosik-oz-v3 a v1/v2 nejsou konstanta", SOUHLAS_TEXT.includes("ne
 check("v kosiku nejsou tipy a nabidky", !js.includes("tipy a nabídky") && !server.includes("tipy a nabídky") && !SOUHLAS_TEXT.includes("tipy"));
 check("odkaz na zasady je absolutni", js.includes('href="https://martinbarna.cz/zasady-ochrany-osobnich-udaju/"'));
 check("informace je u e-mailu videt s odkazem na zasady", js.includes('<p class="info">') && js.includes("SOUHLAS_LABEL"));
-check("cache verze skriptu je k3 a flag zustava false", html.includes('kosik-checkout.js?v=k3') && js.includes("kosik-checkout-jadro.js?v=k3") && html.includes('data-kosik-zapnuto="false"'));
+check("cache verze skriptu je k3", html.includes('kosik-checkout.js?v=k3') && js.includes("kosik-checkout-jadro.js?v=k3"));
 check("novy skript nema utm_", !js.includes("utm_"));
 check("import je .js, ne .mjs", js.includes("./kosik-checkout-jadro.js") && !js.includes(".mjs"));
 const obohaceny = obohatOdkaz(

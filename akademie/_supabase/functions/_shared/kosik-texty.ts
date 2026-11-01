@@ -126,8 +126,22 @@ export function renderKosikMail(
   return { subject, preheader, html, text: textCasti.join("\n\n"), chybi };
 }
 
+// Odkaz v paticce. `kosik=1` rekne strance /odhlasit/, ze ma odhlasit hned po otevreni
+// (bez tlacitka „Potvrdit"). Zasady 4b, okno i paticka slibuji odhlaseni „jednim klikem",
+// tak to tak musi byt i doopravdy (test Groka 1. 11. 2026 nasel, ze nebylo).
 export function odkazOdhlaseni(token: string): string {
-  return "https://martinbarna.cz/odhlasit/?token=" + encodeURIComponent(token);
+  return "https://martinbarna.cz/odhlasit/?token=" + encodeURIComponent(token) + "&kosik=1";
+}
+
+// RFC 8058 One-Click: Gmail a dalsi klienti POSTnou primo sem (tlacitko „Odhlasit" u odesilatele).
+// GET na stejnou adresu jen presmeruje na /odhlasit/, takze skener odkazu nikoho tise neodhlasi.
+export const UNSUBSCRIBE_ENDPOINT = "https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/unsubscribe";
+
+export function hlavickyOdhlaseni(token: string): Record<string, string> {
+  return {
+    "List-Unsubscribe": "<" + UNSUBSCRIBE_ENDPOINT + "?token=" + encodeURIComponent(token) + ">",
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+  };
 }
 
 export function fnSpace(jmeno: string | null | undefined): string {
