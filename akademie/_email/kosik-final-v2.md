@@ -8,8 +8,8 @@ Stav: FINÁL v2. Zapracováno předběžné čtení Coache (8 bodů) i finální
 - {{fn_space}} = mezera a křestní jméno, když ho známe, jinak nic. {{RECOVERY_URL}} = odkaz obnovy košíku ze Stripe (bez utm_).
 - Patička (stejná u všech, u appky místo „na martinbarna.cz“ „v appce Tvůj Coach“):
 
-> Tenhle e-mail ti přišel, protože u objednávky na martinbarna.cz byl zaškrtnutý souhlas se zasíláním e-mailů. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}
-> Martin Barna, martinbarna.cz
+> Tenhle e-mail ti přišel, protože při objednávce na martinbarna.cz byl zaškrtnutý souhlas s připomínkou nedokončené objednávky. Další už nechceš? Odhlásit se můžeš jedním klikem: {{ODKAZ_ODHLASENI}}
+> Martin Barna, IČO 76383032, Lumírova 489/11, 700 30 Ostrava, martinbarna.cz
 
 - Tykání malým písmenem, spisovně, rodově neutrálně, bez slevy, bez cen, bez zdravotních slibů, bez dlouhých pomlček.
 
@@ -53,8 +53,6 @@ naposledy k té nedokončené konzultaci, pak už ti k ní psát nebudu.
 Na začátku nejčastěji slyším dvě věty: „Zkoušel jsem už všechno“ a „Nemám na to čas“. Právě na tohle je konzultace. Plán stavíme na tvůj skutečný týden, ne na ideální.
 
 Jedna klientka, maminka dvou dětí, si na začátku myslela, že to nedá. V recenzi pak napsala, že se cítí skvěle a v kondici.
-
-A jestli uvažuješ i o koučinku: když si ho objednáš do 14 dní po konzultaci, cenu konzultace ti z balíčku odečtu.
 
 [Dokončit objednávku] → {{RECOVERY_URL}}
 

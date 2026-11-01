@@ -20,6 +20,10 @@ const db: Record<string, Row[]> = {};
 const events: string[] = [];
 let resendFail = false;
 let failConfigRead = false;
+// PostgREST max_rows: TICHÝ strop řádků na jeden dotaz (Supabase výchozí 1000), .limit() ho nepřebije.
+let serverMaxRows = 1000;
+// Selže jen pokračovací stránka (dotaz s filtrem gt.) dané tabulky.
+let failPageTable: string | null = null;
 const conflictEmails = new Set<string>();
 const resendCalls: { to: string; subject: string; headers: Record<string, string>; reply_to: string; text: string }[] = [];
 let nextId = 1;
@@ -33,6 +37,8 @@ function reset() {
   resendCalls.length = 0;
   resendFail = false;
   failConfigRead = false;
+  serverMaxRows = 1000;
+  failPageTable = null;
   conflictEmails.clear();
 }
 
@@ -45,6 +51,14 @@ function eqFilters(u: URL): [string, string][] {
   return out;
 }
 const matches = (r: Row, f: [string, string][]) => f.every(([k, v]) => String(r[k]) === v);
+function gtFilters(u: URL): [string, string][] {
+  const out: [string, string][] = [];
+  for (const [k, v] of u.searchParams) if (v.startsWith("gt.")) out.push([k, v.slice(3)]);
+  return out;
+}
+// Porovnání jako v Postgresu: čísla číselně, text po znacích (u ASCII totéž co kolace C).
+const cmp = (a: unknown, b: unknown) =>
+  typeof a === "number" ? a - Number(b) : String(a) < String(b) ? -1 : String(a) > String(b) ? 1 : 0;
 
 async function mockPostgrest(req: Request): Promise<Response> {
   const u = new URL(req.url);
@@ -55,7 +69,17 @@ async function mockPostgrest(req: Request): Promise<Response> {
   const f = eqFilters(u);
   if (req.method === "GET") {
     if (table === "en_mailing_config" && failConfigRead) return resp(503, { code: "PGRST000", message: "down" });
-    const out = rows.filter((r) => matches(r, f));
+    const gt = gtFilters(u);
+    if (table === failPageTable && gt.length) return resp(503, { code: "PGRST000", message: "down" });
+    let out = rows.filter((r) => matches(r, f) && gt.every(([k, v]) => cmp(r[k], v) > 0));
+    const order = u.searchParams.get("order");
+    if (order) {
+      const [col, dir] = order.split(".");
+      out = [...out].sort((a, b) => cmp(a[col], b[col]) * (dir === "desc" ? -1 : 1));
+    }
+    const offset = Number(u.searchParams.get("offset") ?? 0);
+    const limit = u.searchParams.has("limit") ? Number(u.searchParams.get("limit")) : Infinity;
+    out = out.slice(offset, offset + Math.min(limit, serverMaxRows));
     if (single) return out.length === 1 ? resp(200, out[0]) : resp(406, { code: "PGRST116", message: "rows " + out.length });
     return resp(200, out);
   }
@@ -247,4 +271,54 @@ Deno.test("po odhlášení přes odkaz už další mail neodejde", async () => {
   assertEquals(j.sent, 0);
   assertEquals(j.skipped.unsubscribed, 2);
   assertEquals(resendCalls.length, 0);
+});
+
+// --- Tichý strop PostgRESTu (max_rows). Starý kód četl jedním dotazem s .limit(10000): server vrátil
+//     jen prvních max_rows řádků bez chyby a pojistka „>= 10000“ nikdy nesepnula. Strop je tu 3. ---
+
+Deno.test("tichý strop: odhlášení za prvními řádky se načte, odhlášený mail nedostane", async () => {
+  reset(); seedLeads(); db.en_mailing_config[0].enabled = true; serverMaxRows = 3;
+  // Čtyři cizí odhlášení PŘED anna@ (podle e-mailu i podle pořadí vložení), anna@ až za stropem.
+  for (let i = 0; i < 4; i++) db.en_unsubscribes.unshift({ email: `a${i}@example.com` });
+  db.en_unsubscribes.push({ email: "anna@example.com" });
+  const j = await (await call({})).json();
+  assertEquals(j.sent, 0);
+  assertEquals(j.skipped.unsubscribed, 2);
+  assertEquals(resendCalls.length, 0);
+  assertEquals(db.en_mail_log.length, 0);
+});
+
+Deno.test("tichý strop: razítko za prvními řádky se načte, krok se nezkouší znovu", async () => {
+  reset(); seedLeads(); db.en_mailing_config[0].enabled = true; serverMaxRows = 3;
+  for (let i = 0; i < 4; i++) db.en_mail_log.push({ id: nextId++, lead_email: `jiny${i}@example.com`, step: 1, sent_at: now(), status: "sent" });
+  db.en_mail_log.push({ id: nextId++, lead_email: "anna@example.com", step: 1, sent_at: now(), status: "sent" });
+  const j = await (await call({})).json();
+  // Bez razítka by plán chtěl krok 1 znovu, narazil na 23505 a lead by na tom visel navždy.
+  assertEquals(j.conflicts, 0);
+  assertEquals(j.sent, 0);
+  assertEquals(j.skipped.not_yet, 1); // krok 2 až druhý den série
+  assertEquals(events, []);
+});
+
+Deno.test("tichý strop: lead za prvními řádky se načte a mail dostane", async () => {
+  reset(); db.en_mailing_config[0].enabled = true; serverMaxRows = 3;
+  const hodinaZpet = new Date(Date.now() - 3_600_000).toISOString();
+  for (let i = 0; i < 3; i++) {
+    db.en_leads.push({ id: `00000000-0000-0000-0000-00000000000${i}`, created_at: hodinaZpet, kind: "application", first_name: "Pat", email: `p${i}@example.com`, consent: true, calc: null });
+  }
+  db.en_leads.push({ id: "11111111-0000-0000-0000-000000000001", created_at: now(), kind: "kit", first_name: "Anna", email: "anna@example.com", consent: true, calc: { kcal: 2000, protein_g: 150 } });
+  const j = await (await call({})).json();
+  assertEquals(j.sent, 1);
+  assertEquals(resendCalls.map((c) => c.to), ["anna@example.com"]);
+});
+
+Deno.test("chyba až na druhé stránce = 500 a nic se neposílá ani nerazítkuje", async () => {
+  reset(); seedLeads(); db.en_mailing_config[0].enabled = true; serverMaxRows = 1; failPageTable = "en_unsubscribes";
+  const r = await call({});
+  assertEquals(r.status, 500);
+  const j = await r.json();
+  assertEquals(j.error, "db_read");
+  assertEquals(j.table, "en_unsubscribes");
+  assertEquals(resendCalls.length, 0);
+  assertEquals(db.en_mail_log.length, 0);
 });

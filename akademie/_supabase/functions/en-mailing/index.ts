@@ -21,11 +21,14 @@
 // Nasazení: CELÁ složka (rm -rf + cp -r), deploy --no-verify-jwt. Viz README.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import {
+  CteniSelhalo,
   deriveUnsubKey,
   type Lead,
   type LogRow,
   maskEmail,
   MAX_PER_RUN,
+  nactiVse,
+  PAGE_SIZE,
   planRun,
   renderEmail,
   type RenderedMail,
@@ -44,6 +47,9 @@ const SEND_GAP_MS = 600; // Resend má výchozí limit 2 požadavky za sekundu
 const RESEND_TIMEOUT_MS = 15_000;
 const MAX_FAILURES = 3; // po třetím selhání Resendu v jednom běhu se běh zastaví (další by jen pálily kroky)
 const DEADLINE_MS = 100_000; // pod timeoutem cronu (120 s) i limitem edge funkce
+// Strop CELÉ tabulky (čte se po stránkách, viz nactiVse). Víc řádků = 500 too_many_rows a nic se
+// neposílá, ne useknutý obraz. Dnes jednotky řádků; razítka rostou o 41 na člověka, takže dřív
+// než lidi dojde na en_mail_log: pak strop zvednout, nebo log číst agregovaný (max krok na e-mail).
 const FETCH_LIMIT = 10_000;
 
 function json(body: unknown, status = 200): Response {
@@ -156,27 +162,36 @@ Deno.serve(async (req: Request) => {
   }
   const enabled = cfg.enabled === true;
 
-  const [leadsQ, logQ, unsubQ] = await Promise.all([
-    supa.from("en_leads").select("id,created_at,kind,first_name,email,consent,calc").order("created_at", { ascending: true }).limit(FETCH_LIMIT),
-    supa.from("en_mail_log").select("lead_email,step,sent_at,status").limit(FETCH_LIMIT),
-    supa.from("en_unsubscribes").select("email").limit(FETCH_LIMIT),
-  ]);
+  // ⛔ Celé tabulky PO STRÁNKÁCH (nactiVse v logic.ts). Jeden dotaz s .limit(FETCH_LIMIT) PostgREST
+  //    tiše utne na max_rows (1000) a běh by neviděl odhlášení ani razítka za prvním tisícem.
   // ⛔ Neúplný obraz = nic neposílat (chybějící log nebo odhlášení by znamenalo mail navíc).
-  for (const [name, q] of [["en_leads", leadsQ], ["en_mail_log", logQ], ["en_unsubscribes", unsubQ]] as const) {
-    if (q.error || !Array.isArray(q.data)) {
-      console.error("en-mailing: čtení selhalo", name, q.error?.code ?? "", q.error?.message ?? "");
-      return json({ ok: false, error: "db_read", table: name }, 500);
-    }
-    if (q.data.length >= FETCH_LIMIT) {
-      console.error("en-mailing: tabulka dosáhla FETCH_LIMIT, obraz by nebyl úplný", name);
-      return json({ ok: false, error: "too_many_rows", table: name }, 500);
-    }
+  const cteni = await Promise.all([
+    nactiVse<Lead>("en_leads", (po) => {
+      const q = supa.from("en_leads").select("id,created_at,kind,first_name,email,consent,calc");
+      return (po === null ? q : q.gt("id", po)).order("id", { ascending: true }).limit(PAGE_SIZE);
+    }, (r) => r.id, FETCH_LIMIT),
+    nactiVse<LogRow & { id: number }>("en_mail_log", (po) => {
+      const q = supa.from("en_mail_log").select("id,lead_email,step,sent_at,status");
+      return (po === null ? q : q.gt("id", po)).order("id", { ascending: true }).limit(PAGE_SIZE);
+    }, (r) => r.id, FETCH_LIMIT),
+    nactiVse<{ email: string }>("en_unsubscribes", (po) => {
+      const q = supa.from("en_unsubscribes").select("email");
+      return (po === null ? q : q.gt("email", po)).order("email", { ascending: true }).limit(PAGE_SIZE);
+    }, (r) => r.email, FETCH_LIMIT),
+  ]).then((v) => ({ ok: true as const, v }), (e: unknown) => ({ ok: false as const, e }));
+  if (!cteni.ok) {
+    const e = cteni.e;
+    const table = e instanceof CteniSelhalo ? e.tabulka : null;
+    const error = e instanceof CteniSelhalo ? e.duvod : "db_read";
+    console.error("en-mailing: čtení selhalo, nic se neposílá", e instanceof Error ? e.message : String(e));
+    return json({ ok: false, error, table }, 500);
   }
+  const [leads, log, unsubRows] = cteni.v;
 
   const plan = planRun({
-    leads: leadsQ.data as Lead[],
-    log: logQ.data as LogRow[],
-    unsubscribed: (unsubQ.data as { email: string }[]).map((r) => r.email),
+    leads,
+    log,
+    unsubscribed: unsubRows.map((r) => r.email),
     now: new Date(),
     enabled,
     dryRun,

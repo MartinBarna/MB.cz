@@ -198,6 +198,66 @@ export function maskEmail(email: string): string {
 }
 
 // ---------------------------------------------------------------------------
+// Čtení celé tabulky po stránkách
+// ---------------------------------------------------------------------------
+/**
+ * ⛔ PostgREST vrátí nejvýš `max_rows` řádků (na Supabase výchozí 1000) a `.limit(10000)` ten strop
+ * TIŠE nepřebije: přijde 1000 řádků a žádná chyba. Pojistka „přišlo >= FETCH_LIMIT“ by pak nikdy
+ * nesepnula a běh by pracoval s useknutým obrazem: odhlášení za prvním tisícem = mail odhlášenému,
+ * chybějící razítko = lead navždy zaseknutý na konfliktu 23505, chybějící lead = žádný mail.
+ * Proto se čte po stránkách podle klíče (keyset): další stránka začíná ZA posledním přečteným
+ * klíčem. Nezáleží tak na tom, kolik řádků server na stránku pustí, a souběžné smazání řádku
+ * nezpůsobí přeskočení jiného (stránkování přes offset by zbytek posunulo o jeden).
+ * Konec = PRÁZDNÁ stránka, ne „kratší než PAGE_SIZE“: strop serveru může být menší než stránka.
+ */
+export const PAGE_SIZE = 1000;
+
+export type Klic = string | number;
+export type Stranka<T> = { data: T[] | null; error: { code?: string; message?: string } | null };
+
+export class CteniSelhalo extends Error {
+  readonly tabulka: string;
+  readonly duvod: "db_read" | "too_many_rows";
+  constructor(tabulka: string, duvod: "db_read" | "too_many_rows", detail = "") {
+    super(`${tabulka}: ${duvod}${detail ? " (" + detail + ")" : ""}`);
+    this.name = "CteniSelhalo";
+    this.tabulka = tabulka;
+    this.duvod = duvod;
+  }
+}
+
+/**
+ * Přečte celou tabulku. `stranka(po)` vrátí dotaz seřazený VZESTUPNĚ podle unikátního `klic`,
+ * omezený na PAGE_SIZE a (když po !== null) jen s klíčem větším než `po`.
+ * ⛔ Neúplný obraz = výjimka CteniSelhalo, nikdy částečný výsledek: chyba kterékoli stránky,
+ *    stránka, která se neposune dál, i víc než maxRows řádků (pak by běh nestihl doběhnout).
+ */
+export async function nactiVse<T>(
+  tabulka: string,
+  stranka: (po: Klic | null) => PromiseLike<Stranka<T>>,
+  klic: (r: T) => Klic,
+  maxRows: number,
+): Promise<T[]> {
+  const out: T[] = [];
+  let po: Klic | null = null;
+  for (;;) {
+    const q = await stranka(po);
+    if (q.error || !Array.isArray(q.data)) {
+      throw new CteniSelhalo(tabulka, "db_read", `${q.error?.code ?? ""} ${q.error?.message ?? "data nejsou pole"}`.trim());
+    }
+    if (q.data.length === 0) return out;
+    const posledni = klic(q.data[q.data.length - 1]);
+    // Server, který filtr ignoruje (nebo chybějící klíč), by vracel pořád tutéž stránku.
+    if ((typeof posledni !== "string" && typeof posledni !== "number") || posledni === po) {
+      throw new CteniSelhalo(tabulka, "db_read", "stránkování se neposouvá");
+    }
+    out.push(...q.data);
+    if (out.length > maxRows) throw new CteniSelhalo(tabulka, "too_many_rows");
+    po = posledni;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Texty mailů
 // ---------------------------------------------------------------------------
 export const SITE = "https://martinbarna.cz";
