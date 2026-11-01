@@ -207,6 +207,14 @@ jako **reálné UTF-8**, ne `\u` kódy, překlep `ď`(ď)→`ğ`(ğ) udělal „
   (dočasně přemapuj 15Kč testovací payment link na nový klíč katalogu, Stripe Workbench →
   Event deliveries → Resend). Ostrá cesta, ostrý podpis, nula korun. Přesně tohle odhalilo ten
   CHECK výš. Postup a pasti: paměť `feedback-test-vetve-prehranim-zaplacene-udalosti`.
+- ⛔ **Správce Academy v DB pozná jen `public.academy_is_admin()`** (C-1, záznam
+  `akademie/_supabase/academy-is-admin-2026-11-01.sql`). Čte `app_config.admin_emails`, tedy
+  TENTÝŽ seznam jako `admin-api`, `admin-crm` a `admin-pulse`. Do politik ani funkcí už nikdy
+  nepiš e-mail natvrdo: přesně tak v nich zůstal `martin@martinbarna.cz` bez účtu a falešný
+  login by viděl všechny reporty a cíle klientů koučinku. **Do `admin_emails` patří jen adresy
+  existujících, potvrzených účtů**, jinak se správcem stane ten, kdo se tou adresou zaregistruje.
+  ⛔ `profiles.role` na oprávnění NIKDY: klient si ho přepíše sám (`profiles_update_own` +
+  UPDATE na sloupci pro anon i authenticated).
 - Marketingové kontakty = `public.customer_contacts` (oddělené od `leads`). Segmenty přes `tags`:
   `early-customer` (WordPress kupci), `manual-add`, `coaching-active`, `coaching-ex`.
   `onboarding_sent_at`: razítko uvítacího mailu. Funkce `videokurz-onboarding`, která podle něj
