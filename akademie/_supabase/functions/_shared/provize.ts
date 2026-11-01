@@ -10,6 +10,12 @@
 //    nasazování funkce. Jediné natvrdo zapsané číslo je FALLBACK pro případ,
 //    že klíč v tabulce chybí nebo v něm není číslo.
 //
+// ⭐ ROZHODNUTÍ MARTINA (31. 10. 2026): totéž platí pro KONZULTACI. „Koučink nebo
+//    konzultace má 10 %", i u partnera se speciální sazbou (Petra, PETRA10 = 40 %
+//    na appku, Academy a videokurz). Do té doby brala konzultace `rate_oneoff`
+//    partnera (20, 30 nebo 40 %). „Jen z první platby" se konzultace NETÝKÁ:
+//    každá další konzultace je normální prodej a provizi dává.
+//
 // ⛔ ČLENSKÝ KREDIT (BARNA kódy, `partner_type='member'`) se tímhle NEŘÍDÍ. Ten je
 //    pevná částka z `ODMENA` ve webhooku a zůstává na 300 Kč. Tady jde jen o procento,
 //    kterým se násobí reálně zaplacená částka u affiliate partnera.
@@ -29,7 +35,7 @@ export type SazbaVstup = {
 /**
  * Vrátí procento provize (0,10 = 10 %) pro jeden řádek `referrals`.
  *
- * - `coaching`: sazba z `app_config`, jinak 10 %. Sazba partnera se ignoruje.
+ * - `coaching` a `konzultace`: sazba z `app_config`, jinak 10 %. Sazba partnera se ignoruje.
  * - ostatní produkty: sazba partnera beze změny (0, když chybí).
  *
  * Vrácená hodnota je vždy podíl mezi 0 a 1. Záporná, nečíselná ani větší než 1 se
@@ -39,7 +45,7 @@ export type SazbaVstup = {
 export function sazbaProvize(vstup: SazbaVstup): number {
   // ⛔ `Number(null)` je NULA, ne NaN. Bez téhle explicitní kontroly by chybějící klíč
   //    v `app_config` znamenal provizi 0 Kč místo fallbacku 10 % (chyceno testem RH2).
-  if (vstup.product === "coaching") {
+  if (vstup.product === "coaching" || vstup.product === "konzultace") {
     const z = cislo(vstup.configRate);
     return z === null ? PROVIZE_KOUCINK_FALLBACK : z;
   }
