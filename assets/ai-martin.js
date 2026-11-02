@@ -6,8 +6,9 @@
    Zapnutí chatu: Martin doplní ANTHROPIC_API_KEY do edge funkce, pak členům naskočí. */
 (function () {
   'use strict';
-  // Název poskytovatele AI. Před sloučením ověř, že sedí s tím, co běží na serveru.
-  var AI_POSKYTOVATEL = 'Anthropic';
+  // Poskytovatel AI. Edge funkce ai-martin přepíná podle AI_MARTIN_PROVIDER / XAI_API_KEY
+  // mezi xAI (Grok) a Anthropic. Živá DB (ai_usage) k 2. 11. 2026 ukazuje grok, proto oba názvy.
+  var AI_POSKYTOVATEL = 'xAI, případně Anthropic';
   var CFG = {
     ENABLED: true,
     ENDPOINT: 'https://uhmrpfsdcujbhbtumqye.supabase.co/functions/v1/ai-martin',
