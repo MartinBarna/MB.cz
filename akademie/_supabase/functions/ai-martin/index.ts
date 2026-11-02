@@ -563,6 +563,9 @@ async function logCapped(userId: string | null, feature: string): Promise<void> 
 //    takže jednou za 7 dní ubere členovi 1 z 60 zpráv. Vědomý kompromis za nulovou migraci.
 const COACHING_OFFER_FEATURE = 'coaching_offer_web';
 const COACHING_OFFER_COOLDOWN_DNI = 7;
+// Martin 2. 11. 2026: nabídka až po pár výměnách, ne hned v první odpovědi.
+// Počítají se dotazy člena v tomhle rozhovoru (klient posílá posledních 12 zpráv, tedy max ~6 dotazů).
+const COACHING_OFFER_MIN_DOTAZU = 5;
 
 /** true = za posledních 7 dní člen značku nedostal, tedy nabídka smí. Fail-safe je MLČET. */
 async function coachingOfferThrottleOk(userId: string | null): Promise<boolean> {
@@ -812,10 +815,12 @@ Deno.serve(async (req: Request) => {
   // ať se členům nepřidává dotaz do DB na každou zprávu.
   const stavPeek = via === 'coaching' ? await peekStav(email) : { pouzito: 0, lekce: new Set<string>() };
   // NABÍDKA KONZULTACE: jen člen Academy, ne klient koučinku, ne v rizikové konverzaci,
-  // a max 1× za 7 dní. Značku zapisujeme PŘED voláním modelu a blok přidáme, JEN když zápis
+  // nejdřív u 5. dotazu v rozhovoru a max 1× za 7 dní. Značku zapisujeme PŘED voláním modelu a blok přidáme, JEN když zápis
   // prošel (jinak by throttle příště nic nenašel a nabídka by šla v každé zprávě).
   // ⚠️ Fotka jídla se sem nedostane, vision větev se vrací výš, takže značku nepálí.
+  const dotazuVRozhovoru = msgs.filter((m) => m.role === 'user').length;
   const nabidka = (via === 'academy' && !risky
+    && dotazuVRozhovoru >= COACHING_OFFER_MIN_DOTAZU
     && await coachingOfferThrottleOk(userId)
     && await zapisNabidkuKoucinku(userId)) ? NABIDKA_KOUCINKU : '';
   const volatile = ragContext + safeSuffix + peekPoznamka(via, stavPeek) + nabidka;
