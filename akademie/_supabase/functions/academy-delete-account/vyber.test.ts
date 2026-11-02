@@ -10,6 +10,8 @@ import {
   jeStripeSubscriptionId,
   SMAZAT_CLIENT_EMAIL,
   SMAZAT_EMAIL,
+  SMAZAT_USER_EMAIL,
+  SMAZAT_USER_ID,
 } from "./vyber.ts";
 
 let selhalo = 0;
@@ -107,16 +109,22 @@ const zakaz = [
   "leads",
   "email_events",
   "crm_persons",
-  "client_reports",
-  "client_intake",
   "withdrawals",
-  "ai_flags",
-  "ai_usage",
   "kosik_checkouty",
 ];
 const maze = new Set<string>([...SMAZAT_EMAIL, ...SMAZAT_CLIENT_EMAIL]);
 for (const t of zakaz) {
   check(t + " neni v obecnem mazacim seznamu", !maze.has(t));
+}
+for (const t of ["client_reports", "client_intake", "test_attempts"]) {
+  check(t + " se maze podle emailu", (SMAZAT_EMAIL as readonly string[]).includes(t));
+}
+for (const t of ["ai_flags", "ai_usage", "test_attempts"]) {
+  check(t + " se maze podle user_id", (SMAZAT_USER_ID as readonly string[]).includes(t));
+}
+check("ai_flags se maze podle user_email", (SMAZAT_USER_EMAIL as readonly string[]).includes("ai_flags"));
+for (const t of zakaz) {
+  check(t + " neni v mazani podle user_id", !(SMAZAT_USER_ID as readonly string[]).includes(t));
 }
 check("seznamy nejsou prazdne", SMAZAT_EMAIL.length > 0 && SMAZAT_CLIENT_EMAIL.length === 2);
 

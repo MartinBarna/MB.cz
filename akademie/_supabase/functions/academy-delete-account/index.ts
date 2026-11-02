@@ -34,8 +34,11 @@ import {
   jeMesicniClenstvi,
   jePouzitelnyEmail,
   jeStripeSubscriptionId,
+  BUCKET_KLIENT,
   SMAZAT_CLIENT_EMAIL,
   SMAZAT_EMAIL,
+  SMAZAT_USER_EMAIL,
+  SMAZAT_USER_ID,
 } from "./vyber.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") ?? "";
@@ -266,7 +269,12 @@ async function zmrazKontakty(admin: Admin, email: string, esc: string): Promise<
 }
 
 /** Vrátí "db", když osobní řádek zůstal a účet se ještě nemá smazat. */
-async function smazOsobniRadky(admin: Admin, email: string, esc: string): Promise<string | null> {
+async function smazOsobniRadky(
+  admin: Admin,
+  userId: string,
+  email: string,
+  esc: string,
+): Promise<string | null> {
   for (const table of SMAZAT_EMAIL) {
     const stop = await smazTabulku(admin, email, table, () =>
       admin.from(table).delete().ilike("email", esc)
@@ -279,10 +287,56 @@ async function smazOsobniRadky(admin: Admin, email: string, esc: string): Promis
     );
     if (stop) return stop;
   }
+  for (const table of SMAZAT_USER_ID) {
+    const stop = await smazTabulku(admin, email, table, () =>
+      admin.from(table).delete().eq("user_id", userId)
+    );
+    if (stop) return stop;
+  }
+  for (const table of SMAZAT_USER_EMAIL) {
+    const stop = await smazTabulku(admin, email, table, () =>
+      admin.from(table).delete().ilike("user_email", esc)
+    );
+    if (stop) return stop;
+  }
   const kosik = await smazTabulku(admin, email, "kosik_checkouty", () =>
     admin.from("kosik_checkouty").delete().ilike("email", esc).is("zaplaceno_at", null)
   );
-  return kosik;
+  if (kosik) return kosik;
+  return await smazSouboryKlienta(admin, email);
+}
+
+/**
+ * Soubory klienta v soukromém bucketu `client-docs/<email>/` (průvodce, podklady).
+ * Projde složku a jednu úroveň podsložek. Selhání vrátí "db", ať se dá požadavek zopakovat.
+ */
+async function smazSouboryKlienta(admin: Admin, email: string): Promise<string | null> {
+  try {
+    const bucket = admin.storage.from(BUCKET_KLIENT);
+    const cesty: string[] = [];
+    const slozky = [email];
+    for (let i = 0; i < slozky.length && i < 50; i++) {
+      const slozka = slozky[i];
+      const { data, error } = await bucket.list(slozka, { limit: 1000 });
+      if (error) throw new Error(String(error.message || error));
+      for (const o of data ?? []) {
+        const cesta = slozka + "/" + o.name;
+        if (o.id) cesty.push(cesta);
+        else if (slozka === email) slozky.push(cesta);
+      }
+    }
+    for (let i = 0; i < cesty.length; i += 100) {
+      const { error } = await bucket.remove(cesty.slice(i, i + 100));
+      if (error) throw new Error(String(error.message || error));
+    }
+    return null;
+  } catch (e) {
+    await alertAdmin(admin, "mazani souboru klienta selhalo: " + BUCKET_KLIENT, {
+      email,
+      chyba: String(e).slice(0, 160),
+    });
+    return "db";
+  }
 }
 
 async function smazTabulku(
@@ -336,7 +390,7 @@ Deno.serve(async (req: Request) => {
 
     await zrusMesicni(admin, email, esc);
     await odhlasTrvale(admin, email, esc);
-    const dbChyba = await smazOsobniRadky(admin, email, esc);
+    const dbChyba = await smazOsobniRadky(admin, userId, email, esc);
     if (dbChyba) return json({ ok: false, error: "db" }, C, 500);
 
     const { error: delErr } = await admin.auth.admin.deleteUser(userId);

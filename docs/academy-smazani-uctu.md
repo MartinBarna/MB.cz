@@ -6,6 +6,13 @@ Metoda: projité soubory `akademie/_supabase/**/*.sql` (101 souborů), bez dotaz
 
 Kde v těch SQL není `CREATE`, nebo není `ON DELETE`, je níž napsané **neověřeno**. Funkce takový řádek nemaže. Nevymýšlí se sloupec ani kaskáda.
 
+## Ověřeno v živé DB (2. 11. 2026, jen schéma)
+
+- Cizí klíče na `auth.users`: `profiles` a `progress` cascade, `checkins.user_id` cascade, `certificates` set null. Jiný klíč, který by `deleteUser` zablokoval, v `public` není.
+- `client_reports`, `client_intake`, `test_attempts`, `ai_flags`, `ai_usage`, `withdrawals` v DB jsou. Funkce teď maže všechny kromě `withdrawals`.
+- Soubory klienta jsou v soukromém bucketu `client-docs` ve složce `<email>/`. Funkce je smaže (složka a jedna úroveň podsložek). Selhání vrátí 500 a účet zůstane, ať se dá zopakovat.
+- `odhlaseni_trvale` nemá omezení na `zdroj`, insert s `academy-delete-account` projde.
+
 ## Co funkce dělá, v tomhle pořadí
 
 1. Ověří JWT volajícího přes `auth.getUser()`. Vezme `user.id` a e-mail (malá písmena, ořezaný). Tělo požadavku se nečte. Cizí účet smazat nejde.
@@ -75,12 +82,12 @@ Funkce je nemaže, kromě míst, kde je výslovně napsaný insert nebo update. 
 | leads | `CREATE` v repu není. Kód i SQL s `email` a `status` pracují. | Nemazat přímo. Úklid jen přes `odhlas_a_odstran`. |
 | customer_contacts | `CREATE` v repu není. Trigger v `odhlaseni-brana-customer-contacts.sql` nastavuje `status`, `unsubscribed_at`, `updated_at` a komentář říká NEMAŽE SE NIC. | Nemazat. Zmrazit `status` na `unsubscribed`. Jméno a další sloupce zůstávají. **Schéma mimo ty tři sloupce je neověřeno.** Osobní údaj (jméno) je mezera. |
 | email_events | `CREATE` v repu není. Komentáře u odhlášení: historie mailů se nemá mazat, `odhlas_a_odstran` prý `lead_id` odpojí. | Nemazat. Funkce sem jen vkládá alert (`lead_id` null), ať přežije úklid leadu. |
-| client_reports | `CREATE` v repu není. Dotazy a `ALTER` používají `email` (třeba `crm-refresh.sql`, `client-report`). `report_drafts` na `id` odkazuje kaskádou. | Nemazat. Tělo koučinkového reportu (váha, míry, text) může zůstat. Tohle je největší mezera výmazu. Doplnit až po ověření sloupců v živé DB, ne naslepo. |
-| client_intake | `CREATE` v repu není. `client-report` vkládá `{ email, data }`. | Nemazat. **neověřeno.** V `data` může být zdravotní dotazník. |
-| test_attempts | V SQL je policy, `CREATE` a sloupce v repu nejsou. `ba-academy.js` dělá `select *`. | Nemazat. **neověřeno.** |
-| withdrawals | `CREATE` v repu není. `security-fixes-2026-07.sql` přidává `ip` a index `(email, created_at)`. SQL ho používá jako odstoupení od smlouvy (okno 180 dní). | Nemazat. Vypadá to jako právní záznam, ale schéma je **neověřeno**, proto se mazání nevymýšlí. |
-| ai_flags | `CREATE` v repu není. `ai-martin` vkládá `user_id`, `user_email`, `note` (úryvek zprávy, max. 300 znaků). Soubor `ai-martin` tahle větev needituje. | Nemazat. **neověřeno.** Úryvek chatu může zůstat. |
-| ai_usage | `CREATE` v repu není. `ai-martin` vkládá `user_id` a tokeny, e-mail v insertu není. | Nemazat. **neověřeno.** Na `user_id` kaskáda z `auth.users` v SQL není. |
+| client_reports | `email` (živá DB) | Smaže funkce podle `email`. `report_drafts` na ně odkazuje kaskádou. |
+| client_intake | `email`, `data` (živá DB) | Smaže funkce podle `email`. Může obsahovat zdravotní dotazník. |
+| test_attempts | `user_id`, `email`, `full_name` (živá DB), bez cizího klíče na `auth.users` | Smaže funkce podle `email` i `user_id`. |
+| withdrawals | `email`, `order_number`, `product`, `message` (živá DB) | ZŮSTÁVÁ. Záznam o odstoupení od smlouvy je doklad pro případný spor. |
+| ai_flags | `user_id`, `user_email`, `note` (živá DB), bez cizího klíče | Smaže funkce podle `user_id` i `user_email`. |
+| ai_usage | `user_id`, tokeny, `provider` (živá DB), bez cizího klíče | Smaže funkce podle `user_id`. |
 | faktury a platby | `CREATE` tabulky faktur nebo plateb v projitých SQL není. | Nemazat. Zadání: účetní záznam zůstává. |
 
 ## Historie s AI Martinem

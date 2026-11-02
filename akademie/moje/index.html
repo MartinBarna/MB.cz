@@ -182,7 +182,7 @@
           if(lg) lg.addEventListener('click', function(e){ e.preventDefault(); window.BA.signOut().then(function(){ location.href='/akademie/prihlaseni/'; }); });
           if(del) del.addEventListener('click', function(){
             if(del.getAttribute('aria-busy')==='true') return;
-            var text='Opravdu smazat účet? Smaže se tvůj postup ve studiu, profil a historie s AI Martinem. Zaplacený přístup zůstává evidovaný u tvého e-mailu. Běžící měsíční členství se zruší. Tohle nejde vrátit.';
+            var text='Opravdu smazat účet? Smaže se tvůj postup ve studiu, profil, check-iny, reporty z koučinku a historie s AI Martinem. Zaplacený přístup zůstává evidovaný u tvého e-mailu. Běžící měsíční členství se zruší. Tohle nejde vrátit.';
             if(!window.confirm(text)) return;
             del.setAttribute('aria-busy','true');
             window.BA.deleteAccount().then(function(res){

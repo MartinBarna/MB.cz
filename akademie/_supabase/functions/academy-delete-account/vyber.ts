@@ -79,6 +79,8 @@ export function jeDuplicita(err: { code?: string; message?: string } | null | un
 export const SMAZAT_EMAIL = [
   "ai_lesson_peeks",
   "checkins",
+  "client_intake",
+  "client_reports",
   "client_targets",
   "consultation_calls",
   "consultation_intake",
@@ -86,8 +88,27 @@ export const SMAZAT_EMAIL = [
   "crm_enroll_queue",
   "en_leads",
   "mail_skip_log",
+  "test_attempts",
   "usage_events",
 ] as const;
+
+/**
+ * Mazání podle `user_id` (ověřeno v živé DB 2. 11. 2026, cizí klíč na auth.users tu není,
+ * kaskáda je tedy nesmaže). test_attempts se maže i podle e-mailu výš.
+ */
+export const SMAZAT_USER_ID = [
+  "ai_flags",
+  "ai_usage",
+  "test_attempts",
+] as const;
+
+/** ai_flags má e-mail ve sloupci `user_email` (živá DB 2. 11. 2026). */
+export const SMAZAT_USER_EMAIL = [
+  "ai_flags",
+] as const;
+
+/** Soukromý bucket se soubory klienta ve složce `<email>/`. */
+export const BUCKET_KLIENT = "client-docs";
 
 /** Stejné mazání, ale sloupec se jmenuje `client_email` (ověřeno v CREATE). */
 export const SMAZAT_CLIENT_EMAIL = [
